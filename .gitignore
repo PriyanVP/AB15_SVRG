@@ -1,0 +1,39 @@
+
+# TODO: use correct GUI project name ModerUI -> ?
+
+# Ignore debug files
+
+# Ignore VSCode debug/run configurations
+.vscode/
+
+# Ignore GUI binary files
+gui/ModernUI/[Oo]bj/
+gui/ModernUI/[Bb]in/
+
+# Ignore release GUI version log file
+application/gui/*.log
+
+# Ignore GUI  auxilary files
+gui/.vs/
+
+# # Ignore binaries files 
+# gui/ModernUI.Tests/[Oo]bj/
+# gui/ModernUI.Tests/[Bb]in/
+
+# # Ignore test result directory ...
+# gui/ModernUI.Tests/TestResults/*
+
+# # ... except actual log files
+# !gui/ModernUI.Tests/TestResults/*.html
+# !gui/ModernUI.Tests/TestResults/*.trx
+
+# Ignore environment forlder for Aurix
+firmware/.metadata/
+
+# Ignore folder with binaries for firmware
+firmware/mcu_esw/TriCore Debug (TASKING)/*
+
+# .. except certain files
+!firmware/mcu_esw/TriCore Debug (TASKING)/*.hex
+!firmware/mcu_esw/TriCore Debug (TASKING)/*.elf
+!firmware/mcu_esw/TriCore Debug (TASKING)/*.map

@@ -13,7 +13,7 @@
 [![License: BIOSL v4](http://bios.intranet.bosch.com/bioslv4-badge.svg)](#license)
 
 Add a brief description about the contents of this repository here.
-Consider linking to existing documentation.
+[Link to documentation]()
 
 ## Table of Contents  <!-- omit in toc -->
 
@@ -61,7 +61,12 @@ to get in contact with you or provide feedback.
 
 ### Maintainers <a name="maintainers"></a>
 
-List the maintainers of this repository here. Consider linking to their Bosch Connect profile pages. Mention or link to their email as a minimum.
+* Developer: [Brinkmann Matthias](https://connect.bosch.com/profiles/html/profileView.do?key=385a0c29-acbe-4645-a323-dd0f930db781#&tabinst=Updates)
+* Developer: [Dudnyk Oleksii](https://connect.bosch.com/profiles/html/profileView.do?key=7a5402e8-f7ce-4dd0-bc62-a9b66e4c6b9a#&tabinst=Updates)
+* Developer: [Tkachenko Nikita](https://connect.bosch.com/profiles/html/profileView.do?key=60124c2b-b45f-4bb6-a004-9323e6ea1a9a#&tabinst=Updates)
+* Developer: [Salziger Jan](https://connect.bosch.com/profiles/html/profileView.do?key=9a0923e5-6a55-4333-821e-a0001ec3c013#&tabinst=Updates)
+* Developer: [Hoefflinger Jens](https://connect.bosch.com/profiles/html/profileView.do?key=64ef3baf-ecf6-4a9c-bc42-4382113200d3#&tabinst=Updates)
+
 
 ### Contributors <a name="contributors"></a>
 
