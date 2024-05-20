@@ -27,7 +27,9 @@
     </RunConfiguration>
 
     <NUnit>
-		<TestOutputXml>.\TestResults</TestOutputXml>
+        <WorkDirectory>..\..\..\TestResults</WorkDirectory>
+        <OutputXmlFolderMode>RelativeToWorkFolder</OutputXmlFolderMode>
+        <TestOutputXml>.\</TestOutputXml>
     </NUnit>
 
 

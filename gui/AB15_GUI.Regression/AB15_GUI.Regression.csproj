@@ -45,4 +45,8 @@
     <Folder Include="Requirements\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\AB15_GUI.WPF\AB15_GUI.WPF.csproj" />
+  </ItemGroup>
+
 </Project>

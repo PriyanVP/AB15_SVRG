@@ -8,18 +8,16 @@ gui/.vs/
 .vscode/
 
 # Ignore GUI binary folders
-gui/**/[Oo]bj/
-gui/**/[Bb]in/
+gui/**/[Oo]bj/**
+gui/**/[Bb]in/**
 
 # Ignore release GUI version log file
 release/gui/*.log
 
-# Ignore test result directory ...
-gui/**/TestResults/*
-
 # ... except actual log files
 !gui/**/TestResults/*.html
 !gui/**/TestResults/*.trx
+!gui/**/TestResults/*.xml
 
 # Ignore environment forlder for Aurix
 firmware/.metadata/
