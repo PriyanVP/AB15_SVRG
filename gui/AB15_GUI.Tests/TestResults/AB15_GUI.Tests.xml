@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<test-run id="0" name="AB15_GUI.Tests.dll" fullname="C:\Users\DUO7KV\Projects\ab15_sw\gui\AB15_GUI.Tests\bin\Debug\net8.0-windows\AB15_GUI.Tests.dll" runstate="Runnable" testcasecount="1" result="Passed" total="1" passed="1" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.15.4.0" clr-version="8.0.5" start-time="2024-05-20 12:41:14Z" end-time="2024-05-20 12:41:14Z" duration="0.043357">
+  <command-line><![CDATA[C:\Users\DUO7KV\Projects\ab15_sw\gui\AB15_GUI.Tests\bin\Debug\net8.0-windows\testhost.dll --port 63034 --endpoint 127.0.0.1:063034 --role client --parentprocessid 31548 --telemetryoptedin true]]></command-line>
+  <filter>
+    <test>AB15_GUI.Tests.Tests.Test1</test>
+  </filter>
+  <test-suite type="Assembly" id="0-1002" name="AB15_GUI.Tests.dll" fullname="C:\Users\DUO7KV\Projects\ab15_sw\gui\AB15_GUI.Tests\bin\Debug\net8.0-windows\AB15_GUI.Tests.dll" runstate="Runnable" testcasecount="1" result="Passed" start-time="2024-05-20T12:41:14.8091958Z" end-time="2024-05-20T12:41:14.8325964Z" duration="0.023387" total="1" passed="1" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="0">
+    <environment framework-version="4.0.1.0" clr-version="8.0.5" os-version="Microsoft Windows 10.0.19045" platform="Win32NT" cwd="C:\Users\DUO7KV\Projects\ab15_sw\gui\AB15_GUI.Tests\TestResults" machine-name="KV5-C-0004C" user="DUO7KV" user-domain="EMEA" culture="uk-UA" uiculture="en-US" os-architecture="x64" />
+    <settings>
+      <setting name="SynchronousEvents" value="False" />
+      <setting name="InternalTraceLevel" value="Off" />
+      <setting name="RandomSeed" value="200908723" />
+      <setting name="SkipNonTestAssemblies" value="True" />
+      <setting name="ProcessModel" value="InProcess" />
+      <setting name="DomainUsage" value="Single" />
+      <setting name="DefaultTestNamePattern" value="{m}{a}" />
+      <setting name="WorkDirectory" value="C:\Users\DUO7KV\Projects\ab15_sw\gui\AB15_GUI.Tests\bin\Debug\net8.0-windows\..\..\..\TestResults" />
+      <setting name="NumberOfTestWorkers" value="12" />
+    </settings>
+    <properties>
+      <property name="_PID" value="22292" />
+      <property name="_APPDOMAIN" value="testhost" />
+    </properties>
+    <test-suite type="TestSuite" id="0-1003" name="AB15_GUI" fullname="AB15_GUI" runstate="Runnable" testcasecount="1" result="Passed" start-time="2024-05-20T12:41:14.8115041Z" end-time="2024-05-20T12:41:14.8325940Z" duration="0.021090" total="1" passed="1" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="0">
+      <test-suite type="TestSuite" id="0-1004" name="Tests" fullname="AB15_GUI.Tests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2024-05-20T12:41:14.8116829Z" end-time="2024-05-20T12:41:14.8325857Z" duration="0.020903" total="1" passed="1" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="0">
+        <test-suite type="TestFixture" id="0-1000" name="Tests" fullname="AB15_GUI.Tests.Tests" classname="AB15_GUI.Tests.Tests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2024-05-20T12:41:14.8122293Z" end-time="2024-05-20T12:41:14.8324446Z" duration="0.020216" total="1" passed="1" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="0">
+          <test-case id="0-1001" name="Test1" fullname="AB15_GUI.Tests.Tests.Test1" methodname="Test1" classname="AB15_GUI.Tests.Tests" runstate="Runnable" seed="1249365772" result="Passed" start-time="2024-05-20T12:41:14.8137862Z" end-time="2024-05-20T12:41:14.8310301Z" duration="0.017275" asserts="0" />
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>
