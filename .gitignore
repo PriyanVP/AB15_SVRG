@@ -1,31 +1,23 @@
 
-# TODO: use correct GUI project name ModerUI -> ?
-
 # Ignore debug files
+
+# Ignore GUI auxilary files
+gui/.vs/
 
 # Ignore VSCode debug/run configurations
 .vscode/
 
-# Ignore GUI binary files
-gui/ModernUI/[Oo]bj/
-gui/ModernUI/[Bb]in/
+# Ignore GUI binary folders
+gui/**/[Oo]bj/**
+gui/**/[Bb]in/**
 
 # Ignore release GUI version log file
-application/gui/*.log
+release/gui/*.log
 
-# Ignore GUI  auxilary files
-gui/.vs/
-
-# # Ignore binaries files 
-# gui/ModernUI.Tests/[Oo]bj/
-# gui/ModernUI.Tests/[Bb]in/
-
-# # Ignore test result directory ...
-# gui/ModernUI.Tests/TestResults/*
-
-# # ... except actual log files
-# !gui/ModernUI.Tests/TestResults/*.html
-# !gui/ModernUI.Tests/TestResults/*.trx
+# ... except actual log files
+!gui/**/TestResults/*.html
+!gui/**/TestResults/*.trx
+!gui/**/TestResults/*.xml
 
 # Ignore environment forlder for Aurix
 firmware/.metadata/

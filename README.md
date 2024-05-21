@@ -31,13 +31,45 @@ Add a brief description about the contents of this repository here.
 
 ## Getting Started <a name="getting-started"></a>
 
-This section should contain information on how to use the content of this
-repository. If it contains SW, consider explaining how it is installed, run or integrated.
+* Request access to repository from [Dudnyk Oleksii](https://connect.bosch.com/profiles/html/profileView.do?key=7a5402e8-f7ce-4dd0-bc62-a9b66e4c6b9a#&tabinst=Updates)
+* Clone this repository \
+	`git clone ssh://git@sourcecode.socialcoding.bosch.com:7999/mitocotadev/mitocota.git`
+* Install Aurix IDE
+* Launch Aurix IDE workspace in firmware folder
+* Select mcu_esw folder in firmware folder as project in Aurix IDE
+* Make this project as active
+* Rebuild MCU SW via button in Aurix IDE
+* Connect ShieldBuddy TC375 MCU to USB port
+* Flash MCU SW via button in Aurix IDE
+* Launch GUI from application/gui folder (double-click on exe file) 
 
 ## Building and Testing <a name="building-and-testing"></a>
 
-If the repository contains SW, add instructions on how to build it from source
-and test it in this section.
+Building MCU SW:
+* Launch Aurix IDE workspace in firmware folder (Aurix version 1.9.20)
+* Select mcu_esw folder in firmware folder as project in Aurix IDE
+* Make this project as active
+* Rebuild MCU SW via button in Aurix IDE
+
+Building GUI SW:
+* Launch Visual Studio (testes with Microsoft Visual Studio Professional 2022 (SCCMProf22) (64-bit) - 17.9.7)
+* Open Solution file (gui\AB15_GUI.sln)
+* Choose relase or debug build type
+* Build AB15_GUI.WPF project via Run button or context menu
+
+Unit testing GUI SW:
+* Launch Visual Studio (testes with Microsoft Visual Studio Professional 2022 (SCCMProf22) (64-bit) - 17.9.7)
+* Open Solution file (gui\AB15_GUI.sln)
+* Choose relase or debug build type
+* Build AB15_GUI.Tests project via context menu
+* Run tests in Test explorer (group AB15_GUI.Tests)
+
+Regression testing GUI SW:
+* Launch Visual Studio (testes with Microsoft Visual Studio Professional 2022 (SCCMProf22) (64-bit) - 17.9.7)
+* Open Solution file (gui\AB15_GUI.sln)
+* Choose relase or debug build type
+* Build AB15_GUI.Regression project via context menu
+* Run tests in Test explorer (group AB15_GUI.Regression)
 
 ## Contribution Guidelines <a name="contribution-guidelines"></a>
 
