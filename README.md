@@ -33,7 +33,7 @@ Add a brief description about the contents of this repository here.
 
 * Request access to repository from [Dudnyk Oleksii](https://connect.bosch.com/profiles/html/profileView.do?key=7a5402e8-f7ce-4dd0-bc62-a9b66e4c6b9a#&tabinst=Updates)
 * Clone this repository \
-	`git clone ssh://git@sourcecode.socialcoding.bosch.com:7999/mitocotadev/mitocota.git`
+	`git clone ssh://git@sourcecode.socialcoding.bosch.com:7999/abevbsw/ab15_sw.git`
 * Install Aurix IDE
 * Launch Aurix IDE workspace in firmware folder
 * Select mcu_esw folder in firmware folder as project in Aurix IDE
