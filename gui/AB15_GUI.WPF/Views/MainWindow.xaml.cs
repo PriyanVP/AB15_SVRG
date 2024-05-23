@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using AB15_GUI.WPF.Views;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -20,6 +21,9 @@ namespace AB15_GUI
         public MainWindow()
         {
             InitializeComponent();
+
+            LoggerWindow loggerWindow = new LoggerWindow();
+            loggerWindow.Show();
         }
     }
 }
