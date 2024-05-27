@@ -9,6 +9,7 @@ using System.Reflection;
 using NLog.Config;
 using System.Xml.Linq;
 using AB15_GUI.WPF.NLog;
+using AB15_GUI.WPF.Views;
 
 namespace AB15_GUI.WPF
 {
