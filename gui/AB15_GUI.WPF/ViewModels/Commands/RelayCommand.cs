@@ -9,14 +9,14 @@ namespace AB15_GUI.WPF.ViewModels.Commands
     public class RelayCommand : ICommand
     {
         private Action<object> execute;
-        private Func<object, bool> canExecute;
+        private Func<object, bool>? canExecute;
 
         /// <summary>
         /// Creates new Relay Command
         /// </summary>
         /// <param name="execute">function that will be executed</param>
         /// <param name="canExecute">function that checks if execute can run. If not provided returns true</param>
-        public RelayCommand(Action<object> execute, Func<object, bool> canExecute = null)
+        public RelayCommand(Action<object> execute, Func<object, bool>? canExecute = null)
         {
             if (execute == null)
             {

@@ -22,14 +22,13 @@ namespace AB15_GUI.WPF.ViewModels
         /// Constructor for creating LoggerViewModel. Data connection to observable property is done there
         /// </summary>
         /// <param name="logger">logger reference</param>
-        public LoggerViewModel(Logger logger)
+        public LoggerViewModel(Logger logger, LogMemoryRecordTarget target)
         {
             this.logger = logger;
 
             this.logger.Trace("In LoggerViewModel constructor");
 
             // Connect logger data to observable list in ViewModel
-            LogMemoryRecordTarget target = (LogMemoryRecordTarget)LogManager.Configuration.FindTargetByName("memory");
             LoggerRecords = target.Logs;
         }
     }

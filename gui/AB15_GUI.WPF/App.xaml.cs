@@ -65,6 +65,7 @@ namespace AB15_GUI.WPF
                                                  .SetupExtensions(ext => ext.RegisterLayoutRenderer<BuildConfigurationLayoutRenderer>("build-configuration"))
                                                  .SetupExtensions(ext => ext.RegisterTarget<LogMemoryRecordTarget>("MemoryRecord"))
                                                  .GetCurrentClassLogger()); // Same logger will be used across all classes - instance always created in App
+                            services.AddSingleton<LogMemoryRecordTarget>(sp => (LogMemoryRecordTarget)LogManager.Configuration.FindTargetByName("memory"));
 
                             #endregion // Other
                         })
