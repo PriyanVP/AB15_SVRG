@@ -91,9 +91,9 @@ namespace AB15_GUI.WPF.Models
                 { 
                     lock(_lock)
                     {
+                        T oldItem = _list[index];
                         _list[index] = value;
-                        OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, value));
-                        OnPropertyChanged(nameof(Count));
+                        OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, value, oldItem));
                     }
                 }
             }
