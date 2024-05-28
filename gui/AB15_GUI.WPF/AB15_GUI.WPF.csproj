@@ -8,4 +8,14 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Views\Components\Resources\sort_ascending_icon.png" />
+    <None Remove="Views\Components\Resources\sort_descending_icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Views\Components\Resources\sort_ascending_icon.png" />
+    <Resource Include="Views\Components\Resources\sort_descending_icon.png" />
+  </ItemGroup>
+
 </Project>

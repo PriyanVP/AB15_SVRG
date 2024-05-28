@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="LoggerWindow" Height="450" Width="800">
     <Window.Resources>
-        
+        <Image x:Key="AscendingSortIco" Source="Components/Resources/sort_ascending_icon.png"/>
     </Window.Resources>
     
     <Grid Background="{DynamicResource BackGroung}">
@@ -31,16 +31,18 @@
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
 
-            <Button x:Name="SortingButton" Grid.Column="0" Content="&#x21C5;" FontSize="14" MinWidth="20" HorizontalAlignment="Stretch" Background="Gray"/>
+            <Button x:Name="SortingButton" Grid.Column="0"  MinWidth="20" Style="{DynamicResource ButtonStyle}">
+                <Image Source="{StaticResource AscendingSortIco}" MaxHeight="25" Margin="2,2,2,2"/>
+            </Button>
 
-            <Button x:Name="IncreaaseFont" Grid.Column="2" Content="+" FontSize="14" HorizontalAlignment="Stretch" Background="Gray"/>
-            <Button x:Name="DecreaaseFont" Grid.Column="3" Content="-" FontSize="14" HorizontalAlignment="Stretch" Background="Gray"/>
-            <TextBlock x:Name="FontSizeTextBox" Grid.Column="4" MinWidth="40" HorizontalAlignment="Stretch" Background="White"/>
+            <Button x:Name="IncreaaseFont" Grid.Column="2" Content="+" Style="{DynamicResource ButtonStyle}"/>
+            <Button x:Name="DecreaaseFont" Grid.Column="3" Content="-" Style="{DynamicResource ButtonStyle}"/>
+            <TextBox x:Name="FontSizeTextBox" Grid.Column="4" MinWidth="40" HorizontalAlignment="Stretch" Background="White" Style="{DynamicResource TextBoxFont}"/>
 
-            <Button x:Name="ThemChamge" Grid.Column="6" Content="Light" FontSize="14" Background="Gray"/>
+            <Button x:Name="ThemChamge" Grid.Column="6" Content="Light" Style="{DynamicResource ButtonStyle}"/>
 
-            <TextBlock Text="Record format" Grid.Column="8" FontSize="14"/>
-            <ComboBox Name="RecordFormat" Grid.Column="9" FontSize="14" HorizontalAlignment="Stretch" MinWidth="75" SelectedIndex="0">
+            <TextBlock Text="Record format" Grid.Column="8" Style="{DynamicResource TextBlockFont}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0, 0, 2, 0"/>
+            <ComboBox Name="RecordFormat" Grid.Column="9" Style="{DynamicResource ComboBoxFont}" HorizontalAlignment="Stretch" MinWidth="75" SelectedIndex="0">
                 <TextBlock Text="Full"/>
                 <TextBlock Text="Short"/>
             </ComboBox>
