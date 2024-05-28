@@ -71,7 +71,7 @@ namespace AB15_GUI.WPF
                         .Build();
             
             this.logger = AppHost.Services.GetRequiredService<Logger>();
-            logger.Info("Starting application.");
+            logger.Trace("Starting application.");
 
             // Subscribe to the UnhandledException event
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
@@ -97,7 +97,7 @@ namespace AB15_GUI.WPF
         /// <param name="e">exit event arguments</param>
         protected override async void OnExit(ExitEventArgs e)
         {
-            logger.Info("App exit event");
+            logger.Trace("App exit event");
 
             await AppHost!.StopAsync();
             AppHost?.Dispose();
