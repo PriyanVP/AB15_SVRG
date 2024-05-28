@@ -1,5 +1,7 @@
-﻿using System;
+﻿using NLog;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,16 +10,17 @@ namespace AB15_GUI.WPF.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
-        // TODO: add public properties for contained view models
+        private readonly Logger logger;
 
-        public MainWindowViewModel()
+        public readonly LoggerViewModel LoggerViewModel;
+
+
+        public MainWindowViewModel(Logger logger, LoggerViewModel loggerViewModel)
         {
-            // TODO: Instantiate view models
+            this.logger = logger;
+            LoggerViewModel = loggerViewModel;
 
-
-            //// TODO: connect logger data in ViewModel
-            //LogMemoryRecordtTarget target = (LogMemoryRecordtTarget)LogManager.Configuration.FindTargetByName("memory");
-            //var log = string.Join("\r\n", target.Logs);
+            logger.Trace("In MainWindowViewModel");
         }
     }
 }
