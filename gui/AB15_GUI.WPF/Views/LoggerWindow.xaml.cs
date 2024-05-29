@@ -18,8 +18,48 @@ namespace AB15_GUI.WPF.Views;
 /// </summary>
 public partial class LoggerWindow : Window
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    private Image _imageBrush1;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    private Image _imageBrush2;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    private bool _isImage1Active;
+
+    /// <summary>
+    /// 
+    /// </summary>
     public LoggerWindow()
     {
         InitializeComponent();
+        _imageBrush1 = (Image)this.FindResource("AscendingSortIco");
+        _imageBrush2 = (Image)this.FindResource("DescendingSortIco");
+        _isImage1Active = true;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void SortingButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_isImage1Active)
+        {
+            SortingButton.Content = _imageBrush2;
+        }
+        else
+        {
+            SortingButton.Content = _imageBrush1;
+        }
+
+        _isImage1Active = !_isImage1Active;
     }
 }

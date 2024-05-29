@@ -8,6 +8,7 @@
         Title="LoggerWindow" Height="450" Width="800">
     <Window.Resources>
         <Image x:Key="AscendingSortIco" Source="Components/Resources/sort_ascending_icon.png"/>
+        <Image x:Key="DescendingSortIco" Source="Components/Resources/sort_descending_icon.png"/>
     </Window.Resources>
     
     <Grid Background="{DynamicResource BackGroung}">
@@ -31,9 +32,7 @@
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
 
-            <Button x:Name="SortingButton" Grid.Column="0"  MinWidth="20" Style="{DynamicResource ButtonStyle}">
-                <Image Source="{StaticResource AscendingSortIco}" MaxHeight="25" Margin="2,2,2,2"/>
-            </Button>
+            <Button x:Name="SortingButton" Grid.Column="0"  MinWidth="20" Style="{DynamicResource ButtonStyle}" Content="{StaticResource AscendingSortIco}" Click="SortingButton_Click"/>
 
             <Button x:Name="IncreaaseFont" Grid.Column="2" Content="+" Style="{DynamicResource ButtonStyle}"/>
             <Button x:Name="DecreaaseFont" Grid.Column="3" Content="-" Style="{DynamicResource ButtonStyle}"/>
