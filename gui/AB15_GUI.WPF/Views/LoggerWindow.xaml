@@ -5,18 +5,57 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AB15_GUI.WPF.Views"
         mc:Ignorable="d"
-        Title="LoggerWindow" Height="450" Width="800">
+        Title="LoggerWindow" Height="450" Width="800"
+        SizeChanged="Window_SizeChanged"
+        MinWidth="400" MinHeight="200">
     <Window.Resources>
+        <Image x:Key="FontSizeDecreaseIco" Source="Components/Resources/font_decrease_filled_icon.ico"/>
+        <Image x:Key="FontSizeIncreaseIco" Source="Components/Resources/font_increase_filled_icon.ico"/>
         <Image x:Key="AscendingSortIco" Source="Components/Resources/sort_ascending_icon.png"/>
         <Image x:Key="DescendingSortIco" Source="Components/Resources/sort_descending_icon.png"/>
     </Window.Resources>
     
     <Grid Background="{DynamicResource BackGroung}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto" MinHeight="10"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto" MinHeight="10"/>
         </Grid.RowDefinitions>
+
+        <ListView Grid.Row="1" Name="LogTable" ItemsSource="{Binding Items}" Style="{DynamicResource ListViewStyle}" >
+            <ListView.View>
+                <GridView ColumnHeaderContainerStyle="{DynamicResource GridViewColumnHeaderStyle1}">
+                    <GridViewColumn x:Name="TimeColumn" Width="auto" Header="Time">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock TextWrapping="Wrap" Text="{Binding Time, StringFormat='yyyy-MM-ddTHH:mm:ss.fff'}" FontSize="16"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn x:Name="LogLevelColumn" Width="auto" Header="Log Level">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock TextWrapping="Wrap" Text="{Binding LogLevel}" FontSize="16"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn x:Name="NumberColumn" Width="auto" Header="№" >
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock TextWrapping="Wrap" Text="{Binding LogNumber}" FontSize="16"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn x:Name="MessageColumn" Width="*" Header="Message">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock TextWrapping="Wrap" Text="{Binding Message}" FontSize="16"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
 
         <Grid Grid.Row="0" Grid.IsSharedSizeScope="True">
             <Grid.ColumnDefinitions>
@@ -32,19 +71,39 @@
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
 
-            <Button x:Name="SortingButton" Grid.Column="0"  MinWidth="20" Style="{DynamicResource ButtonStyle}" Content="{StaticResource AscendingSortIco}" Click="SortingButton_Click"/>
+            <Button x:Name="SortingButton" Grid.Column="0" MinWidth="20" Style="{DynamicResource ButtonStyle}" Content="{StaticResource AscendingSortIco}" Click="SortingButton_Click"/>
 
-            <Button x:Name="IncreaaseFont" Grid.Column="2" Content="+" Style="{DynamicResource ButtonStyle}"/>
-            <Button x:Name="DecreaaseFont" Grid.Column="3" Content="-" Style="{DynamicResource ButtonStyle}"/>
-            <TextBox x:Name="FontSizeTextBox" Grid.Column="4" MinWidth="40" HorizontalAlignment="Stretch" Background="White" Style="{DynamicResource TextBoxFont}"/>
+            <Button x:Name="IncreaaseFont" Grid.Column="2" MinWidth="20" Style="{DynamicResource ButtonStyle}" Content="{StaticResource FontSizeIncreaseIco}"/>
+            <Button x:Name="DecreaaseFont" Grid.Column="3" MinWidth="20" Style="{DynamicResource ButtonStyle}" Content="{StaticResource FontSizeDecreaseIco}"/>
+
+            <TextBox x:Name="FontSizeTextBox" Grid.Column="4" MinWidth="40" Style="{DynamicResource TextBoxFont}" 
+                     PreviewTextInput="FontSizeTextBox_PreviewTextInput"
+                     DataObject.Pasting="FontSizeTextBox_Pasting"/>
 
             <Button x:Name="ThemChamge" Grid.Column="6" Content="Light" Style="{DynamicResource ButtonStyle}"/>
 
-            <TextBlock Text="Record format" Grid.Column="8" Style="{DynamicResource TextBlockFont}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0, 0, 2, 0"/>
-            <ComboBox Name="RecordFormat" Grid.Column="9" Style="{DynamicResource ComboBoxFont}" HorizontalAlignment="Stretch" MinWidth="75" SelectedIndex="0">
-                <TextBlock Text="Full"/>
-                <TextBlock Text="Short"/>
+            <TextBlock Text="Record format" Grid.Column="8" Style="{DynamicResource TextBlockFont}"/>
+            <ComboBox Name="RecordFormat" Grid.Column="9" Style="{DynamicResource ComboBoxFont}" 
+                      HorizontalAlignment="Stretch" MinWidth="80" SelectedIndex="0" SelectionChanged="RecordFormat_SelectionChanged">
+                <ComboBoxItem  Content="Full"/>
+                <ComboBoxItem  Content="Short"/>
             </ComboBox>
+
+
+        </Grid>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Text="GUI:" Grid.Column="0" Style="{DynamicResource TextBlockFont}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2,2"/>
+            <TextBlock Text="XXX" Grid.Column="1" Style="{DynamicResource TextBlockFont}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2,2"/>
+            <TextBlock Text="MCU:" Grid.Column="2" Style="{DynamicResource TextBlockFont}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2,2"/>
+            <TextBlock Text="YYY" Grid.Column="3" Style="{DynamicResource TextBlockFont}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2,2"/>
 
         </Grid>
     </Grid>
