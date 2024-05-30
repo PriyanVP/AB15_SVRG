@@ -9,7 +9,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace AB15_GUI
+namespace AB15_GUI.WPF.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
