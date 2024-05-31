@@ -26,5 +26,41 @@ namespace AB15_GUI.WPF.Models
         /// Log message text
         /// </summary>
         public string? Message { get; set; }
+
+        /// <summary>
+        ///  Color associated with logging level property
+        /// </summary>
+        public string LevelColor
+        {
+            get 
+            {
+                string color;
+                switch (Level)
+                {
+                    case "TRACE":
+                        color = "grey";
+                        break;
+                    case "DEBUG":
+                        color = "light green";
+                        break;
+                    case "INFO":
+                        color = "green";
+                        break;
+                    case "WARN":
+                        color = "yellow";
+                        break;
+                    case "ERROR":
+                        color = "red";
+                        break;
+                    case "FATAL":
+                        color = "dark red";
+                        break;
+                    default:
+                        color = "black";
+                        break;
+                }
+                return color;
+            }
+        } 
     }
 }
