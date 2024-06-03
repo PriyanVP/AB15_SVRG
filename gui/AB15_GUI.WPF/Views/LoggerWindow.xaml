@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AB15_GUI.WPF.Views"
+        xmlns:cnvrt="clr-namespace:AB15_GUI.WPF.Views.Converters"
         mc:Ignorable="d"
         Title="LoggerWindow" Height="450" Width="800"
         SizeChanged="Window_SizeChanged"
@@ -13,6 +14,7 @@
         <Image x:Key="FontSizeIncreaseIco" Source="Components/Resources/font_increase_filled_icon.ico"/>
         <Image x:Key="AscendingSortIco" Source="Components/Resources/sort_ascending_icon.png"/>
         <Image x:Key="DescendingSortIco" Source="Components/Resources/sort_descending_icon.png"/>
+        <cnvrt:CustomDayTimeConverter x:Key="CustomDayTimeConverter"/>
     </Window.Resources>
     
     <Grid Background="{DynamicResource BackGroung}">
@@ -22,39 +24,44 @@
             <RowDefinition Height="auto" MinHeight="10"/>
         </Grid.RowDefinitions>
 
-        <ListView Grid.Row="1" Name="LogTable" ItemsSource="{Binding Items}" Style="{DynamicResource ListViewStyle}" >
-            <ListView.View>
-                <GridView ColumnHeaderContainerStyle="{DynamicResource GridViewColumnHeaderStyle1}">
-                    <GridViewColumn x:Name="TimeColumn" Width="auto" Header="Time">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock TextWrapping="Wrap" Text="{Binding Time, StringFormat='yyyy-MM-ddTHH:mm:ss.fff'}" FontSize="16"/>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <GridViewColumn x:Name="LogLevelColumn" Width="auto" Header="Log Level">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock TextWrapping="Wrap" Text="{Binding LogLevel}" FontSize="16"/>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <GridViewColumn x:Name="NumberColumn" Width="auto" Header="№" >
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock TextWrapping="Wrap" Text="{Binding LogNumber}" FontSize="16"/>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <GridViewColumn x:Name="MessageColumn" Width="*" Header="Message">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock TextWrapping="Wrap" Text="{Binding Message}" FontSize="16"/>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                </GridView>
-            </ListView.View>
+        <ListView Grid.Row="1" Name="LogTable" ItemsSource="{Binding Items}" Style="{DynamicResource ListViewStyle}" ItemContainerStyle="{DynamicResource ListViewItemStyle}" 
+                  FontSize="{Binding LogTableFontSize}">
+            <ListView.ItemTemplate>
+                <DataTemplate >
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="5" />
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="5" />
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="1"/>
+                        </Grid.RowDefinitions>
+
+                        <Canvas Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="4" Background="#5effffff"/>
+
+                        <TextBlock Grid.Column="1" Margin="0,0,5,0">
+                            <TextBlock.Text>
+                                <MultiBinding Converter = "{StaticResource CustomDayTimeConverter}" >
+                                    <Binding Path = "Time"/>
+                                    <Binding ElementName = "RecordFormat" Path = "SelectedIndex" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                            
+                        <TextBlock Grid.Column="2" Text="{Binding LogLevel}" Margin="5,0,5,0"/>
+                        <TextBlock Grid.Column="3" Text="{Binding LogNumber}" Margin="5,0,5,0"/>
+                        <WrapPanel Grid.Column="4">
+                            <TextBlock  TextWrapping="Wrap" Text="{Binding Message}" Margin="5,0,0,0"/>
+                        </WrapPanel>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
         </ListView>
 
         <Grid Grid.Row="0" Grid.IsSharedSizeScope="True">
@@ -73,18 +80,19 @@
 
             <Button x:Name="SortingButton" Grid.Column="0" MinWidth="20" Style="{DynamicResource ButtonStyle}" Content="{StaticResource AscendingSortIco}" Click="SortingButton_Click"/>
 
-            <Button x:Name="IncreaaseFont" Grid.Column="2" MinWidth="20" Style="{DynamicResource ButtonStyle}" Content="{StaticResource FontSizeIncreaseIco}"/>
-            <Button x:Name="DecreaaseFont" Grid.Column="3" MinWidth="20" Style="{DynamicResource ButtonStyle}" Content="{StaticResource FontSizeDecreaseIco}"/>
+            <Button x:Name="IncreaaseFont" Grid.Column="2" MinWidth="20" Style="{DynamicResource ButtonStyle}" Content="{StaticResource FontSizeIncreaseIco}" Click="IncreaaseFont_Click"/>
+            <Button x:Name="DecreaaseFont" Grid.Column="3" MinWidth="20" Style="{DynamicResource ButtonStyle}" Content="{StaticResource FontSizeDecreaseIco}" Click="DecreaaseFont_Click"/>
 
-            <TextBox x:Name="FontSizeTextBox" Grid.Column="4" MinWidth="40" Style="{DynamicResource TextBoxFont}" 
+            <TextBox x:Name="FontSizeTextBox" Grid.Column="4" MinWidth="40" Style="{DynamicResource TextBoxStyle}"  Text="{Binding LogTableFontSize}"
                      PreviewTextInput="FontSizeTextBox_PreviewTextInput"
-                     DataObject.Pasting="FontSizeTextBox_Pasting"/>
+                     DataObject.Pasting="FontSizeTextBox_Pasting"
+                     KeyDown="FontSizeTextBox_KeyDown"/>
 
-            <Button x:Name="ThemChamge" Grid.Column="6" Content="Light" Style="{DynamicResource ButtonStyle}"/>
+            <CheckBox x:Name="ThemChamge" Grid.Column="6" Style="{DynamicResource ToggleSwitch}" IsChecked="True" FontSize="20"/>
 
             <TextBlock Text="Record format" Grid.Column="8" Style="{DynamicResource TextBlockFont}"/>
             <ComboBox Name="RecordFormat" Grid.Column="9" Style="{DynamicResource ComboBoxFont}" 
-                      HorizontalAlignment="Stretch" MinWidth="80" SelectedIndex="0" SelectionChanged="RecordFormat_SelectionChanged">
+                      HorizontalAlignment="Stretch" MinWidth="80" SelectedIndex="0">
                 <ComboBoxItem  Content="Full"/>
                 <ComboBoxItem  Content="Short"/>
             </ComboBox>
@@ -100,10 +108,10 @@
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
 
-            <TextBlock Text="GUI:" Grid.Column="0" Style="{DynamicResource TextBlockFont}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2,2"/>
-            <TextBlock Text="XXX" Grid.Column="1" Style="{DynamicResource TextBlockFont}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2,2"/>
-            <TextBlock Text="MCU:" Grid.Column="2" Style="{DynamicResource TextBlockFont}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2,2"/>
-            <TextBlock Text="YYY" Grid.Column="3" Style="{DynamicResource TextBlockFont}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2,2"/>
+            <TextBlock Text="GUI:" Grid.Column="0" FontSize="14" Style="{DynamicResource TextBlockFont}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2,2"/>
+            <TextBlock Text="XXX" Grid.Column="1" FontSize="14" Style="{DynamicResource TextBlockFont}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2,2"/>
+            <TextBlock Text="MCU:" Grid.Column="2" FontSize="14" Style="{DynamicResource TextBlockFont}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2,2"/>
+            <TextBlock Text="YYY" Grid.Column="3" FontSize="14" Style="{DynamicResource TextBlockFont}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2,2"/>
 
         </Grid>
     </Grid>

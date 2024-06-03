@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -29,7 +30,7 @@ public class Person
 /// <summary>
 /// Interaction logic for LoggerWindow.xaml
 /// </summary>
-public partial class LoggerWindow : Window
+public partial class LoggerWindow : Window, INotifyPropertyChanged
 {
     /// <summary>
     /// 
@@ -46,15 +47,29 @@ public partial class LoggerWindow : Window
     /// </summary>
     private bool _isImage1Active;
 
-    private bool _dateFormat;
+    private double _logTableFontSize = 20;
 
-    private static readonly Regex _regex = new Regex("[^0-9]+");
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    public double LogTableFontSize
+    {
+        get { return _logTableFontSize; }
+        set 
+        { 
+            _logTableFontSize = value;
+            OnPropertyChanged(); 
+        }
+    }
+    private static readonly Regex _regex = new Regex(@"^[0-9]{1,2}$");
 
     private ObservableCollection<Person> _items;
 
     public ObservableCollection<Person> Items
     {
-        get { return _items; } 
+        get 
+        { 
+            return _items; 
+        } 
         set 
         {
             _items = value;
@@ -62,16 +77,15 @@ public partial class LoggerWindow : Window
         }
     }
 
-
-
     /// <summary>
     /// 
     /// </summary>
     public LoggerWindow()
     {
-        _dateFormat = true;
         InitializeComponent();
+
         DataContext = this;
+
         _imageBrush1 = (Image)this.FindResource("AscendingSortIco");
         _imageBrush2 = (Image)this.FindResource("DescendingSortIco");
         _isImage1Active = true;
@@ -82,13 +96,11 @@ public partial class LoggerWindow : Window
             new Person {Time = new DateTime(2023, 10, 4, 11, 55, 42, 769), LogLevel = "Debug", LogNumber = 30, Message = "XML regmap loadedXML regmap loadedXML regmap loadedXML regmap loadedXML regmap loadedXML regmap loadedXML regmap loadedXML regmap loaded"},
             new Person {Time = new DateTime(2023, 10, 4, 11, 55, 43, 769), LogLevel = "Debug", LogNumber = 30, Message = "XML regmap loadedXML regmap loadedXML regmap loadedXML regmap loadedvXML regmap loaded"}
         };
-
-        AdjustSizeLastColumn();
+        CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(LogTable.ItemsSource);
+        //view.SortDescriptions.Add(new SortDescription("Time", ListSortDirection.Ascending));
     }
 
-    public event PropertyChangedEventHandler PropertyChanged;
-
-    protected void OnPropertyChanged(string name)
+    protected void OnPropertyChanged([CallerMemberName] string name = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
@@ -108,7 +120,6 @@ public partial class LoggerWindow : Window
         {
             SortingButton.Content = _imageBrush1;
         }
-
         _isImage1Active = !_isImage1Active;
     }
 
@@ -119,31 +130,6 @@ public partial class LoggerWindow : Window
 
     private void AdjustSizeLastColumn()
     {
-        double newSize = LogTable.ActualWidth - (TimeColumn.ActualWidth + LogLevelColumn.ActualWidth + NumberColumn.ActualWidth + SystemParameters.VerticalScrollBarWidth);
-        if (newSize < 0) { return; }
-        MessageColumn.Width = newSize;
-    }
-
-    private void RecordFormat_SelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        if (RecordFormat.SelectedIndex == 0)
-        {
-            var newBinding = new Binding("Time")
-            {
-                StringFormat = "yyyy-MM-ddTHH:mm:ss.fff"
-            };
-            TimeColumn.DisplayMemberBinding = newBinding;
-        }
-        else
-        {
-            var newBinding = new Binding("Time")
-            {
-                StringFormat = "HH:mm:ss"
-            };
-            TimeColumn.DisplayMemberBinding = newBinding;
-        }
-        TimeColumn.Width = TimeColumn.ActualWidth;
-        TimeColumn.Width = double.NaN;
     }
 
     /// <summary>
@@ -183,6 +169,46 @@ public partial class LoggerWindow : Window
     /// <returns>True if contain</returns>
     private static bool IsTextAllowed(string text)
     {
-        return _regex.IsMatch(text);
+        return !_regex.IsMatch(text);
+    }
+
+    private void IncreaaseFont_Click(object sender, RoutedEventArgs e)
+    {
+        LogTableFontSize += 1;
+    }
+
+    private void DecreaaseFont_Click(object sender, RoutedEventArgs e)
+    {
+        if (LogTableFontSize > 10)
+        {
+            LogTableFontSize -= 1;
+        }
+    }
+
+    private void FontSizeTextBox_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        
+    }
+
+    private void FontSizeTextBox_KeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key != Key.Enter)
+        { 
+            return; 
+        }
+
+        if (FontSizeTextBox.Text == "")
+        {
+            LogTableFontSize = 20;
+        }
+        else if (double.Parse(FontSizeTextBox.Text) < 10)
+        {
+            LogTableFontSize = 10;
+        }
+        else
+        {
+            LogTableFontSize = double.Parse(FontSizeTextBox.Text);
+        }
+        Keyboard.ClearFocus();
     }
 }
