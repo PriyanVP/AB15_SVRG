@@ -13,12 +13,12 @@ namespace AB15_GUI.WPF.Views.Converters
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             DateTime dateTime;
-            int format;
+            bool IsChecked;
 
             dateTime = (DateTime)values[0];
-            format = (int)values[1];
+            IsChecked = (bool)values[1];
 
-            if (format == 0)
+            if (IsChecked == false)
             {
                 return dateTime.ToString("yyyy-MM-ddTHH:mm:ss.fff");
             }

@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:AB15_GUI.WPF">
     <Application.Resources>
-        <ResourceDictionary x:Name="DarkThem" Source="Views/Components/Themes/Dark.xaml"/>
+        <ResourceDictionary x:Name="DarkThem" Source="Views/Themes/Light.xaml"/>
         <!--<ResourceDictionary x:Name="LightThem" Source="Views/Themes/Light.xaml"/>-->
     </Application.Resources>
 </Application>

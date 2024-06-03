@@ -47,9 +47,12 @@ public partial class LoggerWindow : Window, INotifyPropertyChanged
     /// </summary>
     private bool _isImage1Active;
 
-    private double _logTableFontSize = 20;
+    private static readonly Regex _regex = new Regex(@"^[0-9]{1,2}$");
+
 
     public event PropertyChangedEventHandler PropertyChanged;
+
+    private double _logTableFontSize = 20;
 
     public double LogTableFontSize
     {
@@ -60,7 +63,6 @@ public partial class LoggerWindow : Window, INotifyPropertyChanged
             OnPropertyChanged(); 
         }
     }
-    private static readonly Regex _regex = new Regex(@"^[0-9]{1,2}$");
 
     private ObservableCollection<Person> _items;
 
@@ -97,9 +99,12 @@ public partial class LoggerWindow : Window, INotifyPropertyChanged
             new Person {Time = new DateTime(2023, 10, 4, 11, 55, 43, 769), LogLevel = "Debug", LogNumber = 30, Message = "XML regmap loadedXML regmap loadedXML regmap loadedXML regmap loadedvXML regmap loaded"}
         };
         CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(LogTable.ItemsSource);
-        //view.SortDescriptions.Add(new SortDescription("Time", ListSortDirection.Ascending));
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="name"></param>
     protected void OnPropertyChanged([CallerMemberName] string name = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
@@ -121,15 +126,6 @@ public partial class LoggerWindow : Window, INotifyPropertyChanged
             SortingButton.Content = _imageBrush1;
         }
         _isImage1Active = !_isImage1Active;
-    }
-
-    private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
-    {
-        AdjustSizeLastColumn();
-    }
-
-    private void AdjustSizeLastColumn()
-    {
     }
 
     /// <summary>
@@ -172,11 +168,21 @@ public partial class LoggerWindow : Window, INotifyPropertyChanged
         return !_regex.IsMatch(text);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     private void IncreaaseFont_Click(object sender, RoutedEventArgs e)
     {
         LogTableFontSize += 1;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     private void DecreaaseFont_Click(object sender, RoutedEventArgs e)
     {
         if (LogTableFontSize > 10)
@@ -185,11 +191,11 @@ public partial class LoggerWindow : Window, INotifyPropertyChanged
         }
     }
 
-    private void FontSizeTextBox_TextChanged(object sender, TextChangedEventArgs e)
-    {
-        
-    }
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     private void FontSizeTextBox_KeyDown(object sender, KeyEventArgs e)
     {
         if (e.Key != Key.Enter)

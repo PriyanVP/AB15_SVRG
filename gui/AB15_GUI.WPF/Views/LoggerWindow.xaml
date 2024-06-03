@@ -7,7 +7,6 @@
         xmlns:cnvrt="clr-namespace:AB15_GUI.WPF.Views.Converters"
         mc:Ignorable="d"
         Title="LoggerWindow" Height="450" Width="800"
-        SizeChanged="Window_SizeChanged"
         MinWidth="400" MinHeight="200">
     <Window.Resources>
         <Image x:Key="FontSizeDecreaseIco" Source="Components/Resources/font_decrease_filled_icon.ico"/>
@@ -24,7 +23,9 @@
             <RowDefinition Height="auto" MinHeight="10"/>
         </Grid.RowDefinitions>
 
-        <ListView Grid.Row="1" Name="LogTable" ItemsSource="{Binding Items}" Style="{DynamicResource ListViewStyle}" ItemContainerStyle="{DynamicResource ListViewItemStyle}" 
+        <ListView Grid.Row="1" Name="LogTable" 
+                  ItemsSource="{Binding Items}"
+                  ItemContainerStyle="{DynamicResource ListViewItemStyle}" 
                   FontSize="{Binding LogTableFontSize}">
             <ListView.ItemTemplate>
                 <DataTemplate >
@@ -40,16 +41,17 @@
 
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto"/>
+                            <RowDefinition Height="2"/>
                             <RowDefinition Height="1"/>
                         </Grid.RowDefinitions>
 
-                        <Canvas Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="4" Background="#5effffff"/>
+                        <Canvas Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="4" Background="{DynamicResource SeparateLine}"/>
 
                         <TextBlock Grid.Column="1" Margin="0,0,5,0">
                             <TextBlock.Text>
                                 <MultiBinding Converter = "{StaticResource CustomDayTimeConverter}" >
                                     <Binding Path = "Time"/>
-                                    <Binding ElementName = "RecordFormat" Path = "SelectedIndex" />
+                                    <Binding ElementName = "RecordToggle" Path = "IsChecked" />
                                 </MultiBinding>
                             </TextBlock.Text>
                         </TextBlock>
@@ -66,6 +68,7 @@
 
         <Grid Grid.Row="0" Grid.IsSharedSizeScope="True">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="5"/>
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="5"/>
                 <ColumnDefinition Width="auto" SharedSizeGroup="A" />
@@ -75,27 +78,50 @@
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto" MinWidth="130"/>
+                <ColumnDefinition Width="5"/>
             </Grid.ColumnDefinitions>
 
-            <Button x:Name="SortingButton" Grid.Column="0" MinWidth="20" Style="{DynamicResource ButtonStyle}" Content="{StaticResource AscendingSortIco}" Click="SortingButton_Click"/>
+            <!--<Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="1"/>
+            </Grid.RowDefinitions>
 
-            <Button x:Name="IncreaaseFont" Grid.Column="2" MinWidth="20" Style="{DynamicResource ButtonStyle}" Content="{StaticResource FontSizeIncreaseIco}" Click="IncreaaseFont_Click"/>
-            <Button x:Name="DecreaaseFont" Grid.Column="3" MinWidth="20" Style="{DynamicResource ButtonStyle}" Content="{StaticResource FontSizeDecreaseIco}" Click="DecreaaseFont_Click"/>
+            <Canvas Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="10" Background="{DynamicResource SeparateLine}"/>-->
 
-            <TextBox x:Name="FontSizeTextBox" Grid.Column="4" MinWidth="40" Style="{DynamicResource TextBoxStyle}"  Text="{Binding LogTableFontSize}"
+            <Button x:Name="SortingButton" Grid.Column="1" MinWidth="20" Content="{StaticResource AscendingSortIco}" Click="SortingButton_Click"/>
+
+            <Button x:Name="IncreaaseFont" Grid.Column="3" MinWidth="20" Content="{StaticResource FontSizeIncreaseIco}" Click="IncreaaseFont_Click"/>
+            <Button x:Name="DecreaaseFont" Grid.Column="4" MinWidth="20" Content="{StaticResource FontSizeDecreaseIco}" Click="DecreaaseFont_Click"/>
+
+            <TextBox x:Name="FontSizeTextBox" Grid.Column="5" MinWidth="40" Text="{Binding LogTableFontSize}"
                      PreviewTextInput="FontSizeTextBox_PreviewTextInput"
                      DataObject.Pasting="FontSizeTextBox_Pasting"
                      KeyDown="FontSizeTextBox_KeyDown"/>
 
-            <CheckBox x:Name="ThemChamge" Grid.Column="6" Style="{DynamicResource ToggleSwitch}" IsChecked="True" FontSize="20"/>
+            <!--<CheckBox x:Name="ThemChamge" Grid.Column="7" FontSize="20"/>-->
 
-            <TextBlock Text="Record format" Grid.Column="8" Style="{DynamicResource TextBlockFont}"/>
-            <ComboBox Name="RecordFormat" Grid.Column="9" Style="{DynamicResource ComboBoxFont}" 
+            <!--<TextBlock Text="Record format" Grid.Column="9" Style="{DynamicResource TextBlockFont}"/>
+            <ComboBox Name="RecordFormat" Grid.Column="10" Style="{DynamicResource ComboBoxFont}" 
                       HorizontalAlignment="Stretch" MinWidth="80" SelectedIndex="0">
                 <ComboBoxItem  Content="Full"/>
                 <ComboBoxItem  Content="Short"/>
-            </ComboBox>
+            </ComboBox>-->
+
+            <CheckBox x:Name="RecordToggle" Grid.Column="9" Margin="2,0" IsChecked="False"/>
+            <TextBlock Grid.Column="10" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Text" Value="Long Format" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=RecordToggle, Path=IsChecked}" Value="True">
+                                <Setter Property="Text" Value="Short Format" />
+                            </DataTrigger>
+
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
 
 
         </Grid>
@@ -108,10 +134,10 @@
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
 
-            <TextBlock Text="GUI:" Grid.Column="0" FontSize="14" Style="{DynamicResource TextBlockFont}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2,2"/>
-            <TextBlock Text="XXX" Grid.Column="1" FontSize="14" Style="{DynamicResource TextBlockFont}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2,2"/>
-            <TextBlock Text="MCU:" Grid.Column="2" FontSize="14" Style="{DynamicResource TextBlockFont}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2,2"/>
-            <TextBlock Text="YYY" Grid.Column="3" FontSize="14" Style="{DynamicResource TextBlockFont}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2,2"/>
+            <TextBlock Text="GUI:" Grid.Column="0" />
+            <TextBlock Text="XXX"  Grid.Column="1" />
+            <TextBlock Text="MCU:" Grid.Column="2" />
+            <TextBlock Text="YYY"  Grid.Column="3" />
 
         </Grid>
     </Grid>

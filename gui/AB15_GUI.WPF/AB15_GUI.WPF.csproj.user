@@ -12,16 +12,16 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="Views\Components\Themes\Common.xaml">
+    <Page Update="Views\Themes\Common.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\LoggerWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\Components\Themes\Dark.xaml">
+    <Page Update="Views\Themes\Dark.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\Components\Themes\Light.xaml">
+    <Page Update="Views\Themes\Light.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
