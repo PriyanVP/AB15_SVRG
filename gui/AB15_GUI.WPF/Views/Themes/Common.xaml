@@ -1,5 +1,3 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Image x:Key="AscendingSortIco" Source="Views/Components/Resources/sort_ascending_icon.png"/>
-    <Image x:Key="DescendingSortIco" Source="Views/Components/Resources/sort_descending_icon.png"/>
 </ResourceDictionary>

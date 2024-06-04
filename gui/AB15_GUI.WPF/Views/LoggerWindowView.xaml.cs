@@ -1,21 +1,8 @@
-﻿using Microsoft.VisualBasic;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace AB15_GUI.WPF.Views;
 
@@ -27,22 +14,17 @@ public partial class LoggerWindow : Window, INotifyPropertyChanged
     /// <summary>
     /// Image source for ascending sort ico
     /// </summary>
-    private Image AscendingSortIco;
+    private Image _ascendingSortIco;
 
     /// <summary>
     /// Image source for descending sort ico
     /// </summary>
-    private Image DescendingSortIco;
+    private Image _descendingSortIco;
 
     /// <summary>
     /// Flag to tell in which sort mode table set now
     /// </summary>
-    private bool _isImage1Active;
-
-    /// <summary>
-    /// Used to sort ObservableCollection
-    /// </summary>
-    private CollectionView collectionView;
+    private bool _isDescendingOrder = true;
 
     /// <summary>
     /// Event to update changes in view
@@ -77,18 +59,15 @@ public partial class LoggerWindow : Window, INotifyPropertyChanged
         DataContext = this;
 
         // Find image source and safe
-        AscendingSortIco = (Image)this.FindResource("AscendingSortIco");
-        DescendingSortIco = (Image)this.FindResource("DescendingSortIco");
-
-        // set defoult flag
-        _isImage1Active = true;
+        _ascendingSortIco = (Image)this.FindResource("AscendingSortIco");
+        _descendingSortIco = (Image)this.FindResource("DescendingSortIco");
 
         // Create method for sorting
         //collectionView = (CollectionView)CollectionViewSource.GetDefaultView(Items);
     }
 
     /// <summary>
-    /// update on view updated value
+    /// Method to fire PropertyChanged event for UI binding
     /// </summary>
     /// <param name="name">Name of Property</param>
     protected void OnPropertyChanged([CallerMemberName] string name = null)
@@ -101,23 +80,23 @@ public partial class LoggerWindow : Window, INotifyPropertyChanged
     /// </summary>
     private void SortingButton_Click(object sender, RoutedEventArgs e)
     {
-        if (_isImage1Active)
+        if (_isDescendingOrder)
         {
-            SortingButton.Content = DescendingSortIco;
+            SortingButton.Content = _descendingSortIco;
 
             // delete and create new sort descriptions
             //collectionView.SortDescriptions.Clear();
             //collectionView.SortDescriptions.Add(new SortDescription("LogNumber", ListSortDirection.Descending));
-            _isImage1Active = false;
+            _isDescendingOrder = false;
         }
         else
         {
-            SortingButton.Content = AscendingSortIco;
+            SortingButton.Content = _ascendingSortIco;
 
             // delete and create new sort descriptions
             //collectionView.SortDescriptions.Clear();
             //collectionView.SortDescriptions.Add(new SortDescription("LogNumber", ListSortDirection.Ascending));
-            _isImage1Active = true;
+            _isDescendingOrder = true;
         }
     }
 

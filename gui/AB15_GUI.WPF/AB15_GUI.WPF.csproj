@@ -11,15 +11,15 @@
   <ItemGroup>
     <None Remove="Views\Components\Resources\font_decrease.png" />
     <None Remove="Views\Components\Resources\font_increase.png" />
-    <None Remove="Views\Components\Resources\sort_ascending_icon.png" />
-    <None Remove="Views\Components\Resources\sort_descending_icon.png" />
+    <None Remove="Views\Components\Resources\sort_ascending.png" />
+    <None Remove="Views\Components\Resources\sort_descending.png" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="Views\Components\Resources\font_decrease.png" />
     <Resource Include="Views\Components\Resources\font_increase.png" />
-    <Resource Include="Views\Components\Resources\sort_ascending_icon.png" />
-    <Resource Include="Views\Components\Resources\sort_descending_icon.png" />
+    <Resource Include="Views\Components\Resources\sort_ascending.png" />
+    <Resource Include="Views\Components\Resources\sort_descending.png" />
   </ItemGroup>
 
   <ItemGroup>

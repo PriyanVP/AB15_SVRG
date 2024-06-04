@@ -12,8 +12,8 @@
     <Window.Resources>
         <Image x:Key="FontSizeDecreaseIco" Source="Components/Resources/font_decrease.png"/>
         <Image x:Key="FontSizeIncreaseIco" Source="Components/Resources/font_increase.png"/>
-        <Image x:Key="AscendingSortIco" Source="Components/Resources/sort_ascending_icon.png"/>
-        <Image x:Key="DescendingSortIco" Source="Components/Resources/sort_descending_icon.png"/>
+        <Image x:Key="AscendingSortIco" Source="Components/Resources/sort_ascending.png"/>
+        <Image x:Key="DescendingSortIco" Source="Components/Resources/sort_descending.png"/>
         <cnvrt:CustomDayTimeConverter x:Key="CustomDayTimeConverter"/>
     </Window.Resources>
     
@@ -23,7 +23,8 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto" MinHeight="10"/>
         </Grid.RowDefinitions>
-
+        
+        <!--Log Table-->
         <ListView Grid.Row="1" Name="LogTable" 
                   ItemsSource="{Binding Items}"
                   ItemContainerStyle="{DynamicResource ListViewItemStyle}" 
@@ -66,7 +67,8 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-
+        
+        <!--Top control panle-->
         <Grid Grid.Row="0" Grid.IsSharedSizeScope="True">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="5"/>
@@ -88,7 +90,7 @@
             <Button Grid.Column="3" MinWidth="20" Content="{StaticResource FontSizeIncreaseIco}" Click="IncreaseFont_Click" Height="35"/>
             <Button Grid.Column="4" MinWidth="20" Content="{StaticResource FontSizeDecreaseIco}" Click="DecreaseFont_Click" Height="35"/>
 
-            <TextBox Grid.Column="5" MinWidth="40">
+            <TextBox Grid.Column="5" MinWidth="40" Style="{DynamicResource TextBoxStyle}" FontSize="20">
                 <TextBox.Text>
                     <Binding Path="LogTableFontSize"
                              Mode="TwoWay"
@@ -97,10 +99,9 @@
                              ValidatesOnDataErrors="True"
                              NotifyOnValidationError="True">
                         <Binding.ValidationRules>
-                            <vlrls:NumericValidationRule
-                                                                   MinValue="10"
-                                                                   MaxValue="100"
-                                                       ValidatesOnTargetUpdated="True" />
+                            <vlrls:NumericValidationRule MinValue="10"
+                                                         MaxValue="100"
+                                                         ValidatesOnTargetUpdated="True" />
                         </Binding.ValidationRules>
                     </Binding>
                 </TextBox.Text>
@@ -115,15 +116,13 @@
                             <DataTrigger Binding="{Binding ElementName=RecordToggle, Path=IsChecked}" Value="True">
                                 <Setter Property="Text" Value="Long Format" />
                             </DataTrigger>
-
                         </Style.Triggers>
                     </Style>
                 </TextBlock.Style>
             </TextBlock>
-
-
         </Grid>
-
+        
+        <!--Bottom control panel-->
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>
