@@ -9,14 +9,13 @@ using System.Windows.Data;
 namespace AB15_GUI.WPF.Views.Converters
 {
     /// <summary>
-    /// Convert date time style format
+    /// Convert date+time to short or long fromat
     /// </summary>
     public class CustomDayTimeConverter : IMultiValueConverter
     {
         /// <summary>
-        /// Based on input values change output string format of day and time
+        /// Based on input values conver data+time to long/short string
         /// </summary>
-        /// <returns></returns>
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             DateTime dateTime;
@@ -42,7 +41,7 @@ namespace AB15_GUI.WPF.Views.Converters
         }
 
         /// <summary>
-        /// ToDo
+        /// Unused method
         /// </summary>
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {

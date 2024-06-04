@@ -1,18 +1,11 @@
-﻿using System.Configuration;
-using System.Data;
+﻿using System;
 using System.Windows;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using NLog;
-using NLog.Targets;
-using System;
-using System.Reflection;
-using NLog.Config;
-using System.Xml.Linq;
 using AB15_GUI.WPF.NLog;
 using AB15_GUI.WPF.Views;
 using AB15_GUI.WPF.ViewModels;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using NLog.Fluent;
 
 namespace AB15_GUI.WPF
 {

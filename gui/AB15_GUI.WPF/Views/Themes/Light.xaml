@@ -108,7 +108,7 @@
     <SolidColorBrush x:Key="CheckBox.UnChecked.Background" Color="#FFEDEDED" />
     <SolidColorBrush x:Key="CheckBox.UnChecked.BorderBrush" Color="#FF858585" />
     <SolidColorBrush x:Key="CheckBox.UnChecked.Fill" Color="#554d56" />
-    <Style x:Key="DateStyleChangeCheckBoxStyle" TargetType="CheckBox">
+    <Style x:Key="ToggelSwitchStyle" TargetType="CheckBox">
         <Setter Property="Height" Value="20" />
         <Setter Property="Template">
             <Setter.Value>
