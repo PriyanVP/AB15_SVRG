@@ -53,11 +53,6 @@ public partial class LoggerWindow : Window, INotifyPropertyChanged
     private CollectionView collectionView;
 
     /// <summary>
-    /// Regex to validate enteret text in textBox
-    /// </summary>
-    private static readonly Regex _regex = new Regex(@"^[0-9]{1,2}$");
-
-    /// <summary>
     /// Event to update changes in view
     /// </summary>
     public event PropertyChangedEventHandler PropertyChanged;
@@ -80,23 +75,6 @@ public partial class LoggerWindow : Window, INotifyPropertyChanged
         }
     }
 
-    // debug code
-    private ObservableCollection<Person> _items;
-
-    // debug code
-    public ObservableCollection<Person> Items
-    {
-        get 
-        { 
-            return _items; 
-        } 
-        set 
-        {
-            _items = value;
-            OnPropertyChanged("Items");
-        }
-    }
-
     /// <summary>
     /// Constructor for LoggerView
     /// </summary>
@@ -113,15 +91,8 @@ public partial class LoggerWindow : Window, INotifyPropertyChanged
         // set defoult flag
         _isImage1Active = true;
 
-        // debug code
-        Items = new ObservableCollection<Person>()
-        {
-            new Person {Time = new DateTime(2023, 10, 4, 11, 55, 41, 769), LogLevel = "Debug", LogNumber = 30, Message = "XML regmap loaded"},
-            new Person {Time = new DateTime(2023, 10, 4, 11, 55, 42, 769), LogLevel = "Debug", LogNumber = 31, Message = "XML regmap loadedXML regmap loadedXML regmap loadedXML regmap loadedXML regmap loadedXML regmap loadedXML regmap loadedXML regmap loaded"},
-            new Person {Time = new DateTime(2023, 10, 4, 11, 55, 43, 769), LogLevel = "Debug", LogNumber = 32, Message = "XML regmap loadedXML regmap loadedXML regmap loadedXML regmap loadedvXML regmap loaded"}
-        };
-
-        collectionView = (CollectionView)CollectionViewSource.GetDefaultView(Items);
+        // Create method for sorting
+        //collectionView = (CollectionView)CollectionViewSource.GetDefaultView(Items);
     }
 
     /// <summary>
@@ -141,27 +112,21 @@ public partial class LoggerWindow : Window, INotifyPropertyChanged
         if (_isImage1Active)
         {
             SortingButton.Content = DescendingSortIco;
-            collectionView.SortDescriptions.Clear();
-            collectionView.SortDescriptions.Add(new SortDescription("LogNumber", ListSortDirection.Descending));
+
+            // delete and create new sort descriptions
+            //collectionView.SortDescriptions.Clear();
+            //collectionView.SortDescriptions.Add(new SortDescription("LogNumber", ListSortDirection.Descending));
             _isImage1Active = false;
         }
         else
         {
             SortingButton.Content = AscendingSortIco;
-            collectionView.SortDescriptions.Clear();
-            collectionView.SortDescriptions.Add(new SortDescription("LogNumber", ListSortDirection.Ascending));
+
+            // delete and create new sort descriptions
+            //collectionView.SortDescriptions.Clear();
+            //collectionView.SortDescriptions.Add(new SortDescription("LogNumber", ListSortDirection.Ascending));
             _isImage1Active = true;
         }
-    }
-
-    /// <summary>
-    /// Check if input string contain ONLY numbers
-    /// </summary>
-    /// <param name="text">String to check</param>
-    /// <returns>True if contain</returns>
-    private static bool IsTextAllowed(string text)
-    {
-        return !_regex.IsMatch(text);
     }
 
     /// <summary>
