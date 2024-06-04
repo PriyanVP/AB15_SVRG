@@ -33,27 +33,43 @@ public class Person
 public partial class LoggerWindow : Window, INotifyPropertyChanged
 {
     /// <summary>
-    /// 
+    /// Image source for ascending sort ico
     /// </summary>
-    private Image _imageBrush1;
+    private Image AscendingSortIco;
 
     /// <summary>
-    /// 
+    /// Image source for descending sort ico
     /// </summary>
-    private Image _imageBrush2;
+    private Image DescendingSortIco;
 
     /// <summary>
-    /// 
+    /// Flag to tell in which sort mode table set now
     /// </summary>
     private bool _isImage1Active;
 
+    /// <summary>
+    /// Used to sort ObservableCollection
+    /// </summary>
+    private CollectionView collectionView;
+
+    /// <summary>
+    /// Regex to validate enteret text in textBox
+    /// </summary>
     private static readonly Regex _regex = new Regex(@"^[0-9]{1,2}$");
 
-
+    /// <summary>
+    /// Event to update changes in view
+    /// </summary>
     public event PropertyChangedEventHandler PropertyChanged;
 
+    /// <summary>
+    /// Font size in log table
+    /// </summary>
     private double _logTableFontSize = 20;
 
+    /// <summary>
+    /// Getter and setter for _logTableFontSize
+    /// </summary>
     public double LogTableFontSize
     {
         get { return _logTableFontSize; }
@@ -64,8 +80,10 @@ public partial class LoggerWindow : Window, INotifyPropertyChanged
         }
     }
 
+    // debug code
     private ObservableCollection<Person> _items;
 
+    // debug code
     public ObservableCollection<Person> Items
     {
         get 
@@ -80,7 +98,7 @@ public partial class LoggerWindow : Window, INotifyPropertyChanged
     }
 
     /// <summary>
-    /// 
+    /// Constructor for LoggerView
     /// </summary>
     public LoggerWindow()
     {
@@ -88,51 +106,57 @@ public partial class LoggerWindow : Window, INotifyPropertyChanged
 
         DataContext = this;
 
-        _imageBrush1 = (Image)this.FindResource("AscendingSortIco");
-        _imageBrush2 = (Image)this.FindResource("DescendingSortIco");
+        // Find image source and safe
+        AscendingSortIco = (Image)this.FindResource("AscendingSortIco");
+        DescendingSortIco = (Image)this.FindResource("DescendingSortIco");
+
+        // set defoult flag
         _isImage1Active = true;
-        List<Person> people = new List<Person>();
+
+        // debug code
         Items = new ObservableCollection<Person>()
         {
             new Person {Time = new DateTime(2023, 10, 4, 11, 55, 41, 769), LogLevel = "Debug", LogNumber = 30, Message = "XML regmap loaded"},
-            new Person {Time = new DateTime(2023, 10, 4, 11, 55, 42, 769), LogLevel = "Debug", LogNumber = 30, Message = "XML regmap loadedXML regmap loadedXML regmap loadedXML regmap loadedXML regmap loadedXML regmap loadedXML regmap loadedXML regmap loaded"},
-            new Person {Time = new DateTime(2023, 10, 4, 11, 55, 43, 769), LogLevel = "Debug", LogNumber = 30, Message = "XML regmap loadedXML regmap loadedXML regmap loadedXML regmap loadedvXML regmap loaded"}
+            new Person {Time = new DateTime(2023, 10, 4, 11, 55, 42, 769), LogLevel = "Debug", LogNumber = 31, Message = "XML regmap loadedXML regmap loadedXML regmap loadedXML regmap loadedXML regmap loadedXML regmap loadedXML regmap loadedXML regmap loaded"},
+            new Person {Time = new DateTime(2023, 10, 4, 11, 55, 43, 769), LogLevel = "Debug", LogNumber = 32, Message = "XML regmap loadedXML regmap loadedXML regmap loadedXML regmap loadedvXML regmap loaded"}
         };
-        CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(LogTable.ItemsSource);
+
+        collectionView = (CollectionView)CollectionViewSource.GetDefaultView(Items);
     }
 
     /// <summary>
-    /// 
+    /// update on view updated value
     /// </summary>
-    /// <param name="name"></param>
+    /// <param name="name">Name of Property</param>
     protected void OnPropertyChanged([CallerMemberName] string name = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 
     /// <summary>
-    /// 
+    /// Change sorting rule for log table
     /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
     private void SortingButton_Click(object sender, RoutedEventArgs e)
     {
         if (_isImage1Active)
         {
-            SortingButton.Content = _imageBrush2;
+            SortingButton.Content = DescendingSortIco;
+            collectionView.SortDescriptions.Clear();
+            collectionView.SortDescriptions.Add(new SortDescription("LogNumber", ListSortDirection.Descending));
+            _isImage1Active = false;
         }
         else
         {
-            SortingButton.Content = _imageBrush1;
+            SortingButton.Content = AscendingSortIco;
+            collectionView.SortDescriptions.Clear();
+            collectionView.SortDescriptions.Add(new SortDescription("LogNumber", ListSortDirection.Ascending));
+            _isImage1Active = true;
         }
-        _isImage1Active = !_isImage1Active;
     }
 
     /// <summary>
     /// Check of input text valid
     /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
     private void FontSizeTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
     {
         if (IsTextAllowed(e.Text))
@@ -148,8 +172,6 @@ public partial class LoggerWindow : Window, INotifyPropertyChanged
     /// <summary>
     /// Check if pasted text valid (CTRL+V)
     /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
     private void FontSizeTextBox_Pasting(object sender, DataObjectPastingEventArgs e)
     {
         if (IsTextAllowed((string)e.DataObject.GetData(typeof(string))))
@@ -169,21 +191,46 @@ public partial class LoggerWindow : Window, INotifyPropertyChanged
     }
 
     /// <summary>
-    /// 
+    /// Set Font size from nymber in text box
     /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void IncreaaseFont_Click(object sender, RoutedEventArgs e)
+    private void FontSizeTextBox_KeyDown(object sender, KeyEventArgs e)
+    {
+        // Check if button Enter clicked
+        if (e.Key != Key.Enter)
+        {
+            return;
+        }
+
+        // Safty check from blunk text box
+        if (FontSizeTextBox.Text == "")
+        {
+            LogTableFontSize = 20;
+        }
+        else if (double.Parse(FontSizeTextBox.Text) < 10) // check if number smaller than 10, if less text unreadeble
+        {
+            LogTableFontSize = 10;
+        }
+        else // apply font size to log table
+        {
+            LogTableFontSize = double.Parse(FontSizeTextBox.Text);
+        }
+
+        // Lose focuse on this element
+        Keyboard.ClearFocus();
+    }
+
+    /// <summary>
+    /// Increase Font size of log table
+    /// </summary>
+    private void IncreaseFont_Click(object sender, RoutedEventArgs e)
     {
         LogTableFontSize += 1;
     }
 
     /// <summary>
-    /// 
+    /// Decrease Font size of log table
     /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void DecreaaseFont_Click(object sender, RoutedEventArgs e)
+    private void DecreaseFont_Click(object sender, RoutedEventArgs e)
     {
         if (LogTableFontSize > 10)
         {
@@ -191,30 +238,4 @@ public partial class LoggerWindow : Window, INotifyPropertyChanged
         }
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void FontSizeTextBox_KeyDown(object sender, KeyEventArgs e)
-    {
-        if (e.Key != Key.Enter)
-        { 
-            return; 
-        }
-
-        if (FontSizeTextBox.Text == "")
-        {
-            LogTableFontSize = 20;
-        }
-        else if (double.Parse(FontSizeTextBox.Text) < 10)
-        {
-            LogTableFontSize = 10;
-        }
-        else
-        {
-            LogTableFontSize = double.Parse(FontSizeTextBox.Text);
-        }
-        Keyboard.ClearFocus();
-    }
 }

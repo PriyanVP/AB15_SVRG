@@ -42,7 +42,7 @@
         </Style.Triggers>
     </Style>
 
-    <Style TargetType="{x:Type TextBlock}">
+    <Style x:Key="TextBlockStyle" TargetType="TextBlock">
         <Setter Property="FontSize" Value="20"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
@@ -102,9 +102,9 @@
 
     <!-- This is the sliding toggle switch. there's not a native WPF equivalent, so this is a re-styled checkbox -->
     <!--ToDo: Need to set up color select for black theme-->
-    <SolidColorBrush x:Key="CheckBox.Checked.Background" Color="#c1bec1" />
+    <SolidColorBrush x:Key="CheckBox.Checked.Background" Color="#554d56" />
     <SolidColorBrush x:Key="CheckBox.Checked.BorderBrush" Color="#edeced" />
-    <SolidColorBrush x:Key="CheckBox.Checked.Fill" Color="#554d56" />
+    <SolidColorBrush x:Key="CheckBox.Checked.Fill" Color="#FFEDEDED" />
     <SolidColorBrush x:Key="CheckBox.UnChecked.Background" Color="#FFEDEDED" />
     <SolidColorBrush x:Key="CheckBox.UnChecked.BorderBrush" Color="#FF858585" />
     <SolidColorBrush x:Key="CheckBox.UnChecked.Fill" Color="#554d56" />
@@ -153,17 +153,17 @@
                                             </ThicknessAnimationUsingKeyFrames>
                                             <ColorAnimation Storyboard.TargetName="bk" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"
                                         From="#FFEDEDED"
-                                        To="#FF005FB8"
+                                        To="#554d56"
                                         FillBehavior="Stop" 
                                         Duration="0:0:0.125"/>
                                             <ColorAnimation Storyboard.TargetName="bk" Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"
                                         From="#FF858585"
-                                        To="#FF005FB8"
+                                        To="#edeced"
                                         FillBehavior="Stop" 
                                         Duration="0:0:0.125"/>
                                             <ColorAnimation Storyboard.TargetName="ep" Storyboard.TargetProperty="Fill.(SolidColorBrush.Color)"
-                                        From="#FF5A5A5A"
-                                        To="#FFFFFFFF"
+                                        From="#554d56"
+                                        To="#FFEDEDED"
                                         FillBehavior="Stop" 
                                         Duration="0:0:0.125"/>
                                         </ParallelTimeline>
@@ -181,17 +181,17 @@
                                             </ThicknessAnimationUsingKeyFrames>
                                             <ColorAnimation Storyboard.TargetName="bk" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"
                                         To="#FFEDEDED"
-                                        From="#FF005FB8"
+                                        From="#554d56"
                                         FillBehavior="Stop" 
                                         Duration="0:0:0.125"/>
                                             <ColorAnimation Storyboard.TargetName="bk" Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"
                                         To="#FF858585"
-                                        From="#FF005FB8"
+                                        From="#edeced"
                                         FillBehavior="Stop" 
                                         Duration="0:0:0.125"/>
                                             <ColorAnimation Storyboard.TargetName="ep" Storyboard.TargetProperty="Fill.(SolidColorBrush.Color)"
-                                        To="#FF5A5A5A"
-                                        From="#FFFFFFFF"
+                                        To="#554d56"
+                                        From="#FFEDEDED"
                                         FillBehavior="Stop" 
                                         Duration="0:0:0.0625"/>
 
