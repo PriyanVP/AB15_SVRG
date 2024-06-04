@@ -155,32 +155,6 @@ public partial class LoggerWindow : Window, INotifyPropertyChanged
     }
 
     /// <summary>
-    /// Check of input text valid
-    /// </summary>
-    private void FontSizeTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
-    {
-        if (IsTextAllowed(e.Text))
-        {
-            e.Handled = true;
-        }
-        else
-        {
-            e.Handled = false;
-        }
-    }
-
-    /// <summary>
-    /// Check if pasted text valid (CTRL+V)
-    /// </summary>
-    private void FontSizeTextBox_Pasting(object sender, DataObjectPastingEventArgs e)
-    {
-        if (IsTextAllowed((string)e.DataObject.GetData(typeof(string))))
-        {
-            e.CancelCommand();
-        }
-    }
-
-    /// <summary>
     /// Check if input string contain ONLY numbers
     /// </summary>
     /// <param name="text">String to check</param>
@@ -188,35 +162,6 @@ public partial class LoggerWindow : Window, INotifyPropertyChanged
     private static bool IsTextAllowed(string text)
     {
         return !_regex.IsMatch(text);
-    }
-
-    /// <summary>
-    /// Set Font size from nymber in text box
-    /// </summary>
-    private void FontSizeTextBox_KeyDown(object sender, KeyEventArgs e)
-    {
-        // Check if button Enter clicked
-        if (e.Key != Key.Enter)
-        {
-            return;
-        }
-
-        // Safty check from blunk text box
-        if (FontSizeTextBox.Text == "")
-        {
-            LogTableFontSize = 20;
-        }
-        else if (double.Parse(FontSizeTextBox.Text) < 10) // check if number smaller than 10, if less text unreadeble
-        {
-            LogTableFontSize = 10;
-        }
-        else // apply font size to log table
-        {
-            LogTableFontSize = double.Parse(FontSizeTextBox.Text);
-        }
-
-        // Lose focuse on this element
-        Keyboard.ClearFocus();
     }
 
     /// <summary>

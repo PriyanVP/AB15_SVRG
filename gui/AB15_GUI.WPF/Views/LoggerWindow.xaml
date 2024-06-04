@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AB15_GUI.WPF.Views"
         xmlns:cnvrt="clr-namespace:AB15_GUI.WPF.Views.Converters"
+        xmlns:vlrls="clr-namespace:AB15_GUI.WPF.Views.Validations"
         mc:Ignorable="d"
         Title="LoggerWindow" Height="450" Width="800"
         MinWidth="400" MinHeight="200">
@@ -87,10 +88,23 @@
             <Button Grid.Column="3" MinWidth="20" Content="{StaticResource FontSizeIncreaseIco}" Click="IncreaseFont_Click" Height="35"/>
             <Button Grid.Column="4" MinWidth="20" Content="{StaticResource FontSizeDecreaseIco}" Click="DecreaseFont_Click" Height="35"/>
 
-            <TextBox x:Name="FontSizeTextBox" Grid.Column="5" MinWidth="40" Text="{Binding LogTableFontSize}"
-                     PreviewTextInput="FontSizeTextBox_PreviewTextInput"
-                     DataObject.Pasting="FontSizeTextBox_Pasting"
-                     KeyDown="FontSizeTextBox_KeyDown"/>
+            <TextBox x:Name="FontSizeTextBox" Grid.Column="5" MinWidth="40">
+                <TextBox.Text>
+                    <Binding Path="LogTableFontSize"
+                             Mode="TwoWay"
+                             UpdateSourceTrigger="PropertyChanged"
+                             ValidatesOnNotifyDataErrors="True"
+                             ValidatesOnDataErrors="True"
+                             NotifyOnValidationError="True">
+                        <Binding.ValidationRules>
+                            <vlrls:NumericValidationRule
+                                                                   MinValue="10"
+                                                                   MaxValue="100"
+                                                       ValidatesOnTargetUpdated="True" />
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
 
             <CheckBox x:Name="RecordToggle" Grid.Column="9" Margin="2,0" IsChecked="False"/>
             <TextBlock Grid.Column="10" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center">
