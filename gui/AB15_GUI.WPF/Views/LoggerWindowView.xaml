@@ -88,7 +88,7 @@
             <Button Grid.Column="3" MinWidth="20" Content="{StaticResource FontSizeIncreaseIco}" Click="IncreaseFont_Click" Height="35"/>
             <Button Grid.Column="4" MinWidth="20" Content="{StaticResource FontSizeDecreaseIco}" Click="DecreaseFont_Click" Height="35"/>
 
-            <TextBox x:Name="FontSizeTextBox" Grid.Column="5" MinWidth="40">
+            <TextBox Grid.Column="5" MinWidth="40">
                 <TextBox.Text>
                     <Binding Path="LogTableFontSize"
                              Mode="TwoWay"
