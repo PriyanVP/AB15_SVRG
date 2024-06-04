@@ -7,7 +7,7 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="Views\LoggerWindow.xaml.cs">
+    <Compile Update="Views\LoggerWindowView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
@@ -15,7 +15,7 @@
     <Page Update="Views\Themes\Common.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\LoggerWindow.xaml">
+    <Page Update="Views\LoggerWindowView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\Themes\Dark.xaml">
