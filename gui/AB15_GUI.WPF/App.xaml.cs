@@ -43,21 +43,21 @@ namespace AB15_GUI.WPF
                         {
                             #region ViewModels
 
-                            services.AddSingleton<MainWindowViewModel>();
+                            services.AddSingleton<MainViewModel>();
                             services.AddSingleton<LoggerViewModel>();
 
                             #endregion // ViewModels
 
                             #region Views
 
-                            services.AddSingleton<MainWindowView>(sp =>
+                            services.AddSingleton<MainView>(sp =>
                             {
-                                MainWindowView mainWindow = new MainWindowView();
-                                mainWindow.DataContext = sp.GetRequiredService<MainWindowViewModel>();
+                                MainView mainWindow = new MainView();
+                                mainWindow.DataContext = sp.GetRequiredService<MainViewModel>();
                                 return mainWindow;
                             });
 
-                            services.AddSingleton<LoggerWindowView>();
+                            services.AddSingleton<LoggerView>();
 
                             #endregion // Views
 
@@ -88,7 +88,7 @@ namespace AB15_GUI.WPF
         {
             await AppHost!.StartAsync();
 
-            MainWindowView startupForm = AppHost.Services.GetRequiredService<MainWindowView>();
+            MainView startupForm = AppHost.Services.GetRequiredService<MainView>();
             startupForm.Show();
 
             base.OnStartup(e);

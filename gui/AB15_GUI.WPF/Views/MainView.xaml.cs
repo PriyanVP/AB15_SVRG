@@ -16,9 +16,9 @@ namespace AB15_GUI.WPF.Views
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     /// 
-    public partial class MainWindowView : Window
+    public partial class MainView : Window
     {
-        public MainWindowView()
+        public MainView()
         {
             InitializeComponent();
         }
