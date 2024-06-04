@@ -87,20 +87,20 @@ public partial class LoggerView : Window, INotifyPropertyChanged
     {
         if (_isDescendingOrder)
         {
-            SortingButton.Content = _descendingSortIco;
-
-            // delete and create new sort descriptions
-            _referenceForSorting.SortDescriptions.Clear();
-            _referenceForSorting.SortDescriptions.Add(new SortDescription("Index", ListSortDirection.Descending));
-            _isDescendingOrder = false;
-        }
-        else
-        {
             SortingButton.Content = _ascendingSortIco;
 
             // delete and create new sort descriptions
             _referenceForSorting.SortDescriptions.Clear();
             _referenceForSorting.SortDescriptions.Add(new SortDescription("Index", ListSortDirection.Ascending));
+            _isDescendingOrder = false;
+        }
+        else
+        {
+            SortingButton.Content = _descendingSortIco;
+
+            // delete and create new sort descriptions
+            _referenceForSorting.SortDescriptions.Clear();
+            _referenceForSorting.SortDescriptions.Add(new SortDescription("Index", ListSortDirection.Descending));
             _isDescendingOrder = true;
         }
     }
