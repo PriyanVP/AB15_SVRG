@@ -19,14 +19,6 @@ using System.Windows.Shapes;
 
 namespace AB15_GUI.WPF.Views;
 
-public class Person
-{
-    public DateTime Time { get; set; }
-    public string LogLevel{ get; set; }
-    public int LogNumber{ get; set; }
-    public string Message{ get; set; }
-}
-
 /// <summary>
 /// Interaction logic for LoggerWindow.xaml
 /// </summary>
