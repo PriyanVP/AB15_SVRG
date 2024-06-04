@@ -56,8 +56,6 @@ public partial class LoggerWindow : Window, INotifyPropertyChanged
     {
         InitializeComponent();
 
-        DataContext = this;
-
         // Find image source and safe
         _ascendingSortIco = (Image)this.FindResource("AscendingSortIco");
         _descendingSortIco = (Image)this.FindResource("DescendingSortIco");
