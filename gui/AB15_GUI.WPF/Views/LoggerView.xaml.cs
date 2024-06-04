@@ -22,14 +22,14 @@ public partial class LoggerView : Window, INotifyPropertyChanged
     private Image _descendingSortIco;
 
     /// <summary>
-    /// Flag to tell in which sort mode table set now
+    /// Flag to tell in which sort mode table is set now
     /// </summary>
-    private bool _isDescendingOrder = true;
+    private bool _isDescendingOrder = false;
 
     /// <summary>
-    /// Event to update changes in view
+    /// Event to update binded properties in View
     /// </summary>
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     /// <summary>
     /// Font size in log table
@@ -50,6 +50,11 @@ public partial class LoggerView : Window, INotifyPropertyChanged
     }
 
     /// <summary>
+    /// Hndle to apply sorting for ListView
+    /// </summary>
+    private CollectionView _referenceForSorting;
+
+    /// <summary>
     /// Constructor for LoggerView
     /// </summary>
     public LoggerView()
@@ -60,8 +65,10 @@ public partial class LoggerView : Window, INotifyPropertyChanged
         _ascendingSortIco = (Image)this.FindResource("AscendingSortIco");
         _descendingSortIco = (Image)this.FindResource("DescendingSortIco");
 
-        // Create method for sorting
-        //collectionView = (CollectionView)CollectionViewSource.GetDefaultView(Items);
+        // Init reference for applying sorting
+        _referenceForSorting = (CollectionView)CollectionViewSource.GetDefaultView(LogTable.Items);
+        _referenceForSorting.SortDescriptions.Clear();
+        _referenceForSorting.SortDescriptions.Add(new SortDescription("Index", ListSortDirection.Ascending));
     }
 
     /// <summary>
@@ -83,8 +90,8 @@ public partial class LoggerView : Window, INotifyPropertyChanged
             SortingButton.Content = _descendingSortIco;
 
             // delete and create new sort descriptions
-            //collectionView.SortDescriptions.Clear();
-            //collectionView.SortDescriptions.Add(new SortDescription("LogNumber", ListSortDirection.Descending));
+            _referenceForSorting.SortDescriptions.Clear();
+            _referenceForSorting.SortDescriptions.Add(new SortDescription("Index", ListSortDirection.Descending));
             _isDescendingOrder = false;
         }
         else
@@ -92,8 +99,8 @@ public partial class LoggerView : Window, INotifyPropertyChanged
             SortingButton.Content = _ascendingSortIco;
 
             // delete and create new sort descriptions
-            //collectionView.SortDescriptions.Clear();
-            //collectionView.SortDescriptions.Add(new SortDescription("LogNumber", ListSortDirection.Ascending));
+            _referenceForSorting.SortDescriptions.Clear();
+            _referenceForSorting.SortDescriptions.Add(new SortDescription("Index", ListSortDirection.Ascending));
             _isDescendingOrder = true;
         }
     }

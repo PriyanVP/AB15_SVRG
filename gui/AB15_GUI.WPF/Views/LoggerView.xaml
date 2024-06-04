@@ -4,12 +4,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AB15_GUI.WPF.Views"
+        xmlns:vm="clr-namespace:AB15_GUI.WPF.ViewModels"
         xmlns:cnvrt="clr-namespace:AB15_GUI.WPF.Views.Converters"
         xmlns:vlrls="clr-namespace:AB15_GUI.WPF.Views.Validations"
         mc:Ignorable="d"
         Title="LoggerWindow" Height="450" Width="800"
-        MinWidth="600" MinHeight="300"
-        DataContext="AB15_GUI.WPF.ViewModels.LoggerViewModel">
+        MinWidth="600" MinHeight="300">
     <Window.Resources>
         <Image x:Key="FontSizeDecreaseIco" Source="Resources/font_decrease.png"/>
         <Image x:Key="FontSizeIncreaseIco" Source="Resources/font_increase.png"/>
@@ -27,7 +27,7 @@
         
         <!--Log Table-->
         <ListView Grid.Row="1" Name="LogTable" 
-                  ItemsSource="{Binding Items}"
+                  ItemsSource="{Binding LoggerRecords}"
                   ItemContainerStyle="{DynamicResource ListViewItemStyle}" 
                   FontSize="{Binding LogTableFontSize, RelativeSource={RelativeSource AncestorType={x:Type local:LoggerView}}}">
             <ListView.ItemTemplate>
@@ -53,14 +53,14 @@
                         <TextBlock Grid.Column="1" Margin="0,0,5,0">
                             <TextBlock.Text>
                                 <MultiBinding Converter = "{StaticResource CustomDayTimeConverter}" >
-                                    <Binding Path = "Time"/>
+                                    <Binding Path = "TimeStamp"/>
                                     <Binding ElementName = "RecordToggle" Path = "IsChecked" />
                                 </MultiBinding>
                             </TextBlock.Text>
                         </TextBlock>
                             
-                        <TextBlock Grid.Column="2" Text="{Binding LogLevel}" Margin="5,0,5,0"/>
-                        <TextBlock Grid.Column="3" Text="{Binding LogNumber}" Margin="5,0,5,0"/>
+                        <TextBlock Grid.Column="2" Text="{Binding Level}" Margin="5,0,5,0"/>
+                        <TextBlock Grid.Column="3" Text="{Binding Index}" Margin="5,0,5,0"/>
                         <WrapPanel Grid.Column="4">
                             <TextBlock  TextWrapping="Wrap" Text="{Binding Message}" Margin="5,0,0,0"/>
                         </WrapPanel>
@@ -109,7 +109,7 @@
                 </TextBox.Text>
             </TextBox>
 
-            <CheckBox Style="{DynamicResource DateStyleChangeCheckBoxStyle}" Grid.Column="9" Margin="2,0" IsChecked="False"/>
+            <CheckBox Name="RecordToggle" Style="{DynamicResource DateStyleChangeCheckBoxStyle}" Grid.Column="9" Margin="2,0" IsChecked="False"/>
             <TextBlock Grid.Column="10" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Right">
                 <TextBlock.Style>
                     <Style TargetType="TextBlock">

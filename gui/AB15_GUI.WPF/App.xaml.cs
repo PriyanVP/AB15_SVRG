@@ -57,7 +57,12 @@ namespace AB15_GUI.WPF
                                 return mainWindow;
                             });
 
-                            services.AddSingleton<LoggerView>();
+                            services.AddSingleton<LoggerView>(sp =>
+                            {
+                                LoggerView tmpWindow = new LoggerView();
+                                tmpWindow.DataContext = sp.GetRequiredService<LoggerViewModel>();
+                                return tmpWindow;
+                            });
 
                             #endregion // Views
 
