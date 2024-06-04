@@ -18,7 +18,7 @@ namespace AB15_GUI.WPF.Views.Converters
             dateTime = (DateTime)values[0];
             IsChecked = (bool)values[1];
 
-            if (IsChecked == false)
+            if (IsChecked == true)
             {
                 return dateTime.ToString("yyyy-MM-ddTHH:mm:ss.fff");
             }
