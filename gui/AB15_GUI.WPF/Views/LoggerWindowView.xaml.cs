@@ -9,7 +9,7 @@ namespace AB15_GUI.WPF.Views;
 /// <summary>
 /// Interaction logic for LoggerWindow.xaml
 /// </summary>
-public partial class LoggerWindow : Window, INotifyPropertyChanged
+public partial class LoggerWindowView : Window, INotifyPropertyChanged
 {
     /// <summary>
     /// Image source for ascending sort ico
@@ -52,7 +52,7 @@ public partial class LoggerWindow : Window, INotifyPropertyChanged
     /// <summary>
     /// Constructor for LoggerView
     /// </summary>
-    public LoggerWindow()
+    public LoggerWindowView()
     {
         InitializeComponent();
 

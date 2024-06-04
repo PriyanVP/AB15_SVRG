@@ -50,12 +50,14 @@ namespace AB15_GUI.WPF
 
                             #region Views
 
-                            services.AddSingleton<MainWindow>(sp =>
+                            services.AddSingleton<MainWindowView>(sp =>
                             {
-                                MainWindow mainWindow = new MainWindow();
+                                MainWindowView mainWindow = new MainWindowView();
                                 mainWindow.DataContext = sp.GetRequiredService<MainWindowViewModel>();
                                 return mainWindow;
                             });
+
+                            services.AddSingleton<LoggerWindowView>();
 
                             #endregion // Views
 
@@ -86,7 +88,7 @@ namespace AB15_GUI.WPF
         {
             await AppHost!.StartAsync();
 
-            MainWindow startupForm = AppHost.Services.GetRequiredService<MainWindow>();
+            MainWindowView startupForm = AppHost.Services.GetRequiredService<MainWindowView>();
             startupForm.Show();
 
             base.OnStartup(e);
