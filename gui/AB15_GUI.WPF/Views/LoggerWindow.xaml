@@ -8,7 +8,7 @@
         xmlns:vlrls="clr-namespace:AB15_GUI.WPF.Views.Validations"
         mc:Ignorable="d"
         Title="LoggerWindow" Height="450" Width="800"
-        MinWidth="400" MinHeight="200">
+        MinWidth="600" MinHeight="300">
     <Window.Resources>
         <Image x:Key="FontSizeDecreaseIco" Source="Components/Resources/font_decrease.png"/>
         <Image x:Key="FontSizeIncreaseIco" Source="Components/Resources/font_increase.png"/>
