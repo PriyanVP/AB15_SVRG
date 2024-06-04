@@ -4,6 +4,6 @@
              xmlns:local="clr-namespace:AB15_GUI.WPF"
              ShutdownMode="OnMainWindowClose">
     <Application.Resources>
-         
+        <ResourceDictionary x:Name="LightTheme" Source="Views/Themes/Light.xaml"/>
     </Application.Resources>
 </Application>

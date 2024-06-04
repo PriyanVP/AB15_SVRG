@@ -1,18 +1,11 @@
-﻿using System.Configuration;
-using System.Data;
+﻿using System;
 using System.Windows;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using NLog;
-using NLog.Targets;
-using System;
-using System.Reflection;
-using NLog.Config;
-using System.Xml.Linq;
 using AB15_GUI.WPF.NLog;
 using AB15_GUI.WPF.Views;
 using AB15_GUI.WPF.ViewModels;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using NLog.Fluent;
 
 namespace AB15_GUI.WPF
 {
@@ -43,18 +36,25 @@ namespace AB15_GUI.WPF
                         {
                             #region ViewModels
 
-                            services.AddSingleton<MainWindowViewModel>();
+                            services.AddSingleton<MainViewModel>();
                             services.AddSingleton<LoggerViewModel>();
 
                             #endregion // ViewModels
 
                             #region Views
 
-                            services.AddSingleton<MainWindow>(sp =>
+                            services.AddSingleton<MainView>(sp =>
                             {
-                                MainWindow mainWindow = new MainWindow();
-                                mainWindow.DataContext = sp.GetRequiredService<MainWindowViewModel>();
+                                MainView mainWindow = new MainView();
+                                mainWindow.DataContext = sp.GetRequiredService<MainViewModel>();
                                 return mainWindow;
+                            });
+
+                            services.AddSingleton<LoggerView>(sp =>
+                            {
+                                LoggerView tmpWindow = new LoggerView();
+                                tmpWindow.DataContext = sp.GetRequiredService<LoggerViewModel>();
+                                return tmpWindow;
                             });
 
                             #endregion // Views
@@ -86,7 +86,7 @@ namespace AB15_GUI.WPF
         {
             await AppHost!.StartAsync();
 
-            MainWindow startupForm = AppHost.Services.GetRequiredService<MainWindow>();
+            MainView startupForm = AppHost.Services.GetRequiredService<MainView>();
             startupForm.Show();
 
             base.OnStartup(e);
