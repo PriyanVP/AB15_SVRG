@@ -98,7 +98,7 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="5" />
                             <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto" MinWidth="80"/>
                             <ColumnDefinition Width="auto"/>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="5" />
@@ -120,8 +120,34 @@
                                 </MultiBinding>
                             </TextBlock.Text>
                         </TextBlock>
-                            
-                        <TextBlock Grid.Column="2" Text="{Binding Level}" Margin="5,0,5,0"/>
+
+                        <TextBlock Grid.Column="2" Text="{Binding Level}" Margin="5,0,5,0" HorizontalAlignment="Center">
+                            <TextBlock.Style>
+                                <Style>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Level}" Value="TRACE">
+                                            <Setter Property="TextBlock.Foreground" Value="{DynamicResource FontTraceColor}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Level}" Value="DEBUG">
+                                            <Setter Property="TextBlock.Foreground" Value="{DynamicResource FontDebugColor}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Level}" Value="INFO">
+                                            <Setter Property="TextBlock.Foreground" Value="{DynamicResource FontInfoColor}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Level}" Value="WARN">
+                                            <Setter Property="TextBlock.Foreground" Value="{DynamicResource FontWarnColor}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Level}" Value="ERROR">
+                                            <Setter Property="TextBlock.Foreground" Value="{DynamicResource FontErrorColor}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Level}" Value="FATAL">
+                                            <Setter Property="TextBlock.Foreground" Value="{DynamicResource FontFatalColor}"/>
+                                            <Setter Property="TextBlock.FontWeight" Value="Bold"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
                         <TextBlock Grid.Column="3" Text="{Binding Index}" Margin="5,0,5,0"/>
                         <WrapPanel Grid.Column="4">
                             <TextBlock  TextWrapping="Wrap" Text="{Binding Message}" Margin="5,0,0,0"/>
