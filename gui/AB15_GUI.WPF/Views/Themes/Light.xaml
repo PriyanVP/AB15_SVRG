@@ -9,8 +9,8 @@
     <SolidColorBrush x:Key="FontHelperColor" Color="#c0c0c0c0"/>
     <SolidColorBrush x:Key="FontDefaultColor" Color="Black"/>
     <SolidColorBrush x:Key="FontTraceColor" Color="#8a8886"/>
-    <SolidColorBrush x:Key="FontDebugColor" Color="#006A80"/>
-    <SolidColorBrush x:Key="FontInfoColor" Color="#008000"/>
+    <SolidColorBrush x:Key="FontDebugColor" Color="#387C44"/>
+    <SolidColorBrush x:Key="FontInfoColor" Color="#046307"/>
     <SolidColorBrush x:Key="FontWarnColor" Color="#FFC31E"/>
     <SolidColorBrush x:Key="FontErrorColor" Color="#f50000"/>
     <SolidColorBrush x:Key="FontFatalColor" Color="#800000"/>
