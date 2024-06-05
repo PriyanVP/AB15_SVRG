@@ -6,6 +6,9 @@ using NLog;
 using AB15_GUI.WPF.NLog;
 using AB15_GUI.WPF.Views;
 using AB15_GUI.WPF.ViewModels;
+using System.Collections.Generic;
+using NLog.Config;
+using System.Configuration;
 
 namespace AB15_GUI.WPF
 {
@@ -25,10 +28,33 @@ namespace AB15_GUI.WPF
         private readonly Logger logger;
 
         /// <summary>
+        /// Command line parameters
+        /// </summary>
+        private Dictionary<string, string> arguments; 
+
+        /// <summary>
         /// Application constructor. First method that will run at GUI startup
         /// </summary>
         public App()
         {
+            // Get and parse command line arguments
+            arguments = GetCommandLineArguments();
+
+            // Test - conditionally modify logging rule (level only)
+            // TODO: check if rules are changed for existing loggers after LogManager reconfiguration
+            // Logger tmpLogger = LogManager.Setup()
+            //                                      .SetupExtensions(ext => ext.RegisterLayoutRenderer<BuildConfigurationLayoutRenderer>("build-configuration"))
+            //                                      .SetupExtensions(ext => ext.RegisterTarget<LogMemoryRecordTarget>("MemoryRecord"))
+            //                                      .GetCurrentClassLogger();
+            // LoggingConfiguration logConfig = LogManager.Configuration;
+            //logConfig.RemoveRuleByName
+
+
+
+                //Setup()
+                //                                    .SetupExtensions(ext => ext.RegisterLayoutRenderer<BuildConfigurationLayoutRenderer>("build-configuration"))
+                //                                    .SetupExtensions(ext => ext.RegisterTarget<LogMemoryRecordTarget>("MemoryRecord")).GetCurrentClassLogger()
+
             // Application container initialization. All ViewModels. services should be present here
             // Please add them to corresponding regions for maintainability
             AppHost = Host.CreateDefaultBuilder()
@@ -70,8 +96,15 @@ namespace AB15_GUI.WPF
                             #endregion // Other
                         })
                         .Build();
-            
+
             this.logger = AppHost.Services.GetRequiredService<Logger>();
+
+            // Overwrite logging levels for Logger regression testing
+            if (arguments.ContainsKey("loggerTests"))
+            {
+                EnableAllLogLevels();
+            }
+
             logger.Trace("Starting application.");
 
             // Subscribe to the UnhandledException event
@@ -117,6 +150,52 @@ namespace AB15_GUI.WPF
         {
             logger.Fatal((Exception)ex.ExceptionObject, "Unhandled exception!");
             LogManager.Shutdown();
+        }
+
+        /// <summary>
+        /// Get and parse command line arguments for application
+        /// Command line arguments expected format: -key value
+        /// </summary>
+        /// <returns>Dictionary with command line arguments</returns>
+        private Dictionary<string, string> GetCommandLineArguments()
+        {
+            arguments = new Dictionary<string, string>();
+            string[] args = Environment.GetCommandLineArgs();
+
+            // Store arguments to dictionary (element at 0 - name of the program)
+            try
+            {
+                for (int index = 1; index < args.Length; index += 2)
+                {
+                    string arg = args[index].Replace("-", "");
+                    arguments.Add(arg, args[index + 1]);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Do nothing as logger is not yet initialized
+            }
+
+            return arguments;
+        }
+
+        /// <summary>
+        /// Overwrite all logging rules to support all levels
+        /// Warning: at least one logger should be created before calling this method
+        /// </summary>
+        private void EnableAllLogLevels()
+        {
+            // Get reference to configuration (loaded from config file)
+            LoggingConfiguration logConfig = LogManager.Configuration;
+
+            // Modify all rules to log all levels
+            foreach (LoggingRule rule in logConfig.LoggingRules)
+            {
+                rule.SetLoggingLevels(LogLevel.Trace, LogLevel.Fatal);
+            }
+
+            // Apply new configuration to all loggers
+            LogManager.Configuration = logConfig;
         }
     }
 }
