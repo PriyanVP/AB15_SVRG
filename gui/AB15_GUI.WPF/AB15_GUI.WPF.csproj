@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Views\Resources\bosch.ico" />
     <None Remove="Views\Resources\font_decrease.png" />
     <None Remove="Views\Resources\font_increase.png" />
     <None Remove="Views\Resources\sort_ascending.png" />
@@ -16,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Views\Resources\bosch.ico" />
     <Resource Include="Views\Resources\font_decrease.png" />
     <Resource Include="Views\Resources\font_increase.png" />
     <Resource Include="Views\Resources\sort_ascending.png" />

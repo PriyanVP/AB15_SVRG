@@ -7,8 +7,9 @@
         xmlns:cnvrt="clr-namespace:AB15_GUI.WPF.Views.Converters"
         xmlns:vlrls="clr-namespace:AB15_GUI.WPF.Views.Validations"
         mc:Ignorable="d"
-        Title="LoggerWindow" Height="450" Width="800"
-        MinWidth="600" MinHeight="300">
+        Title="Logger Window" Height="450" Width="800"
+        MinWidth="600" MinHeight="300"
+        Icon="Resources/bosch.ico">
     <Window.Resources>
         <Image x:Key="FontSizeDecreaseIco" Source="Resources/font_decrease.png"/>
         <Image x:Key="FontSizeIncreaseIco" Source="Resources/font_increase.png"/>
