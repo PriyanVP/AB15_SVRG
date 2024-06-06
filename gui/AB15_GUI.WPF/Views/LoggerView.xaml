@@ -83,14 +83,14 @@
                 </TextBlock.Style>
             </TextBlock>
 
-            <CheckBox Name="RecordToggle" Style="{DynamicResource ToggleSwitchStyle}" Grid.Column="9" Margin="2,0" IsChecked="False"/>
+            <CheckBox Name="RecordFormatToggle" Style="{DynamicResource ToggleSwitchStyle}" Grid.Column="9" Margin="2,0" IsChecked="False"/>
             <TextBlock Grid.Column="10" FontSize="20" Margin="2,0" VerticalAlignment="Center" HorizontalAlignment="Right"
                        Foreground="{DynamicResource Foreground.Default}">
                 <TextBlock.Style>
                     <Style TargetType="TextBlock">
                         <Setter Property="Text" Value="Short Format" />
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding ElementName=RecordToggle, Path=IsChecked}" Value="True">
+                            <DataTrigger Binding="{Binding ElementName=RecordFormatToggle, Path=IsChecked}" Value="True">
                                 <Setter Property="Text" Value=" Long Format" />
                             </DataTrigger>
                         </Style.Triggers>
@@ -128,7 +128,7 @@
                             <TextBlock.Text>
                                 <MultiBinding Converter = "{StaticResource CustomDayTimeConverter}" >
                                     <Binding Path = "TimeStamp"/>
-                                    <Binding ElementName = "RecordToggle" Path = "IsChecked" />
+                                    <Binding ElementName = "RecordFormatToggle" Path = "IsChecked" />
                                 </MultiBinding>
                             </TextBlock.Text>
                         </TextBlock>

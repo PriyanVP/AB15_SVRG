@@ -4,6 +4,12 @@ using NLog;
 
 namespace AB15_GUI.Tests.ViewModels
 {
+    /// <summary>
+    /// Logger View Model tests
+    /// </summary>
+    /// <tc_links>
+    ///     <link ID="ABEVBSW-64" Link="https://rb-tracker.bosch.com/tracker19/browse/ABEVBSW-64" />
+    /// </tc_links>
     [TestFixture]
     [NonParallelizable]
     public class ThreadSafeObservableList_Tests
