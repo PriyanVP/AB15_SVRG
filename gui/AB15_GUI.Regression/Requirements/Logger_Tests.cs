@@ -5,6 +5,7 @@ using FlaUI.Core.Conditions;
 using FlaUI.Core.AutomationElements;
 using FlaUI.UIA3;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace AB15_GUI.Regression.Requirements
 {
@@ -45,6 +46,11 @@ namespace AB15_GUI.Regression.Requirements
         /// Reference to LoggerView of GUI
         /// </summary>
         private Window? loggerView = null;
+
+        /// <summary>
+        /// Collection of expected logging levels
+        /// </summary>
+        private string[] logLevels = { "TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL" };
 
         /// <summary>
         /// Set up test environment. This method is called only once before running tests
@@ -108,7 +114,7 @@ namespace AB15_GUI.Regression.Requirements
             Window[] allWindows = app.GetAllTopLevelWindows(automation);
             foreach (Window window in allWindows)
             {
-                if (window.Title == "LoggerWindow")
+                if (window.Title == "Logger Window")
                 {
                     loggerView = window;
                     break;
@@ -126,27 +132,39 @@ namespace AB15_GUI.Regression.Requirements
         [NonParallelizable]
         public void WhenMessagesArePresent_ThenItemFormatIsExpected()
         {
-            // TODO: add when functionality for opening logger will be available on main view
-            // TODO: 1) Should apply control action to open logger window (like button click)
-
             // Arrange
-            var test = loggerView.FindAllDescendants();
-            CheckBox? formatSwitch = loggerView.FindFirstDescendant(cf.ByName("RecordFormatToggle"))?.AsCheckBox();
-            //var formatText = loggerView.FindFirstDescendant(cf.ByAutomationId)
+            int iterationsCount;
+            string dateTimePattern;
+
+            CheckBox? formatSwitch = loggerView.FindFirstDescendant(cf.ByAutomationId("RecordFormatToggle"))?.AsCheckBox();
+            ListBox? listView = loggerView.FindFirstDescendant(cf.ByAutomationId("LogTable"))?.AsListBox();
+            AutomationElement[]? listViewItems = listView?.FindAllChildren();
 
             // Act
-            Window[] allWindows = app.GetAllTopLevelWindows(automation);
-            foreach (Window window in allWindows)
-            {
-                if (window.Title == "LoggerWindow")
-                {
-                    loggerView = window;
-                    break;
-                }
-            }
+            iterationsCount = (listViewItems.Length > 10) ? 10 : listViewItems.Length;
+            dateTimePattern = (bool) formatSwitch.IsChecked ? (@"\d{4}-\d{2}-d{2}T\d{2}:\d{2}:\d\{2}\.\d{3}") : (@"\d{2}:\d{2}:\d{2}");
 
             // Assert
-            Assert.That(loggerView, Is.Not.Null);
+            for (int i = 0; i < iterationsCount; i++)
+            {
+                AutomationElement[] elementsOfRecord = listViewItems[i].AsListBoxItem().FindAllChildren();
+
+                // Check number of fields
+                Assert.That(elementsOfRecord.Length, Is.EqualTo(4));
+
+                // Check that datetime column mathces expected pattern
+                Assert.That(Regex.IsMatch(elementsOfRecord[0].Name, dateTimePattern));
+
+                // Check if log level is from expected range
+                Assert.That(elementsOfRecord[1].Name, Is.AnyOf(logLevels));
+
+                // Check that column with numbers contains numbers
+                Assert.That(int.Parse(elementsOfRecord[2].Name), Is.TypeOf<int>());
+
+                // Check that message colum is not empty
+                Assert.That(elementsOfRecord[3].Name, Is.Not.Null);
+
+            }
         }
     }
 }
