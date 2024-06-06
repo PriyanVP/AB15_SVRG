@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
+using System.Resources;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,21 +13,6 @@ namespace AB15_GUI.WPF.Views;
 /// </summary>
 public partial class LoggerView : Window, INotifyPropertyChanged
 {
-    /// <summary>
-    /// Image source for ascending sort ico
-    /// </summary>
-    private Image _ascendingSortIco;
-
-    /// <summary>
-    /// Image source for descending sort ico
-    /// </summary>
-    private Image _descendingSortIco;
-
-    /// <summary>
-    /// Flag to tell in which sort mode table is set now
-    /// </summary>
-    private bool _isDescendingOrder = false;
-
     /// <summary>
     /// Event to update binded properties in View
     /// </summary>
@@ -61,10 +48,6 @@ public partial class LoggerView : Window, INotifyPropertyChanged
     {
         InitializeComponent();
 
-        // Find image source and safe
-        _ascendingSortIco = (Image)this.FindResource("AscendingSortIco");
-        _descendingSortIco = (Image)this.FindResource("DescendingSortIco");
-
         // Init reference for applying sorting
         _referenceForSorting = (CollectionView)CollectionViewSource.GetDefaultView(LogTable.Items);
         _referenceForSorting.SortDescriptions.Clear();
@@ -85,23 +68,17 @@ public partial class LoggerView : Window, INotifyPropertyChanged
     /// </summary>
     private void SortingButton_Click(object sender, RoutedEventArgs e)
     {
-        if (_isDescendingOrder)
+        if (SortingButton.IsChecked == false)
         {
-            SortingButton.Content = _ascendingSortIco;
-
             // delete and create new sort descriptions
             _referenceForSorting.SortDescriptions.Clear();
             _referenceForSorting.SortDescriptions.Add(new SortDescription("Index", ListSortDirection.Ascending));
-            _isDescendingOrder = false;
         }
         else
         {
-            SortingButton.Content = _descendingSortIco;
-
             // delete and create new sort descriptions
             _referenceForSorting.SortDescriptions.Clear();
             _referenceForSorting.SortDescriptions.Add(new SortDescription("Index", ListSortDirection.Descending));
-            _isDescendingOrder = true;
         }
     }
 
@@ -124,4 +101,19 @@ public partial class LoggerView : Window, INotifyPropertyChanged
         }
     }
 
+    public void ChangeTheme(Uri uri)
+    {
+        App.Current.Resources.Clear();
+        App.Current.Resources.MergedDictionaries.Add(new ResourceDictionary() { Source = uri });
+    }
+
+    private void CheckBox_Checked(object sender, RoutedEventArgs e)
+    {
+        ChangeTheme(new Uri("Views/Themes/Dark.xaml", UriKind.RelativeOrAbsolute));
+    }
+
+    private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
+    {
+        ChangeTheme(new Uri("Views/Themes/Light.xaml", UriKind.RelativeOrAbsolute));
+    }
 }

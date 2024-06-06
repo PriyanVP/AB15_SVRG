@@ -14,9 +14,9 @@
 
     <SolidColorBrush x:Key="TextBoxBackground" Color="#91ffffff"/>
 
-    <SolidColorBrush x:Key="Button.Background.StandBy" Color="#91ffffff"/>
-    <SolidColorBrush x:Key="Button.Background.IsMouseOver" Color="#91ffffff"/>
-    <SolidColorBrush x:Key="Button.Background.IsPressed" Color="#91ffffff"/>
+    <SolidColorBrush x:Key="Button.Background.StandBy" Color="Transparent"/>
+    <SolidColorBrush x:Key="Button.Background.IsMouseOver" Color="#C0C0C0"/>
+    <SolidColorBrush x:Key="Button.Background.IsPressed" Color="#979197"/>
 
     <SolidColorBrush x:Key="Foreground.Helper" Color="#c0c0c0c0"/>
     <SolidColorBrush x:Key="Foreground.Default" Color="Black"/>
@@ -81,6 +81,39 @@
         </Style.Triggers>
     </Style>
 
+    <!-- Default ToggleButton style define -->
+    <Style x:Key="SortingToggleButtonStyle" TargetType="{x:Type ToggleButton}">
+        <Setter Property="Background" Value="{DynamicResource Button.Background.StandBy}"/>
+        <Setter Property="Foreground" Value="{DynamicResource Foreground.Default}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Margin" Value="1,2,1,2"/>
+
+        <Setter Property="Content" Value="{DynamicResource AscendingSortIco}"/>
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Border Background="{TemplateBinding Background}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource Button.Background.IsMouseOver}"/>
+                <Setter Property="Cursor" Value="Hand"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="{DynamicResource Button.Background.IsPressed}"/>
+            </Trigger>
+            <Trigger Property="IsChecked" Value="True">
+                <Setter Property="Content" Value="{DynamicResource DescendingSortIco}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    
     <!-- TextBlock style define -->
     <Style x:Key="TextBlockStyle" TargetType="TextBlock">
         <Setter Property="FontSize" Value="20"/>
@@ -133,7 +166,7 @@
     </Style>
 
     <!-- Sliding toggle switch -->
-    <Style x:Key="ToggelSwitchStyle" TargetType="CheckBox">
+    <Style x:Key="ToggleSwitchStyle" TargetType="CheckBox">
         <Setter Property="Height" Value="20" />
         <Setter Property="Template">
             <Setter.Value>
@@ -247,6 +280,10 @@
                             <Setter Property="BorderBrush" TargetName="bk" Value="{DynamicResource CheckBox.Checked.BorderBrush}" />
                             <Setter Property="Fill" TargetName="ep" Value="{DynamicResource CheckBox.Checked.Fill}" />
                         </MultiTrigger>
+
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Cursor" Value="Hand"/>
+                        </Trigger>
 
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
