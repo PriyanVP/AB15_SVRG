@@ -2,10 +2,10 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <!--Image source-->
-    <Image x:Key="FontSizeDecreaseIco" Source="../Resources/font_decrease.png"/>
-    <Image x:Key="FontSizeIncreaseIco" Source="../Resources/font_increase.png"/>
-    <Image x:Key="AscendingSortIco" Source="../Resources/sort_ascending.png"/>
-    <Image x:Key="DescendingSortIco" Source="../Resources/sort_descending.png"/>
+    <Image x:Key="FontSizeDecreaseIco" Source="../Resources/font_decrease_light.png"/>
+    <Image x:Key="FontSizeIncreaseIco" Source="../Resources/font_increase_light.png"/>
+    <Image x:Key="AscendingSortIco" Source="../Resources/sort_ascending_light.png"/>
+    <Image x:Key="DescendingSortIco" Source="../Resources/sort_descending_light.png"/>
     
     <!--All colors defines-->
     <SolidColorBrush x:Key="BackGroung" Color="#fbfbfb"/>
@@ -298,6 +298,7 @@
         <Setter Property="BorderBrush" Value="{StaticResource TextBox.Static.Border}" />
         <Setter Property="Foreground"
                     Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+        <Setter Property="Margin" Value="2,2,2,2"/>
         <Setter Property="Padding" Value="8,4,4,8" />
         <Setter Property="BorderThickness" Value="1,1,1,2" />
         <Setter Property="FontFamily" Value="Segoe UI" />
@@ -350,5 +351,4 @@
             </MultiTrigger>
         </Style.Triggers>
     </Style>
-
 </ResourceDictionary>
