@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Resources;
 using System.Runtime.CompilerServices;
+using System.Security.Policy;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -21,12 +22,12 @@ public partial class LoggerView : Window, INotifyPropertyChanged
     /// <summary>
     /// Font size in log table
     /// </summary>
-    private double _logTableFontSize = 20;
+    private uint _logTableFontSize = 20;
 
     /// <summary>
     /// Getter and setter for _logTableFontSize
     /// </summary>
-    public double LogTableFontSize
+    public uint LogTableFontSize
     {
         get { return _logTableFontSize; }
         set 
@@ -68,16 +69,15 @@ public partial class LoggerView : Window, INotifyPropertyChanged
     /// </summary>
     private void SortingButton_Click(object sender, RoutedEventArgs e)
     {
+        _referenceForSorting.SortDescriptions.Clear();
         if (SortingButton.IsChecked == false)
         {
             // delete and create new sort descriptions
-            _referenceForSorting.SortDescriptions.Clear();
             _referenceForSorting.SortDescriptions.Add(new SortDescription("Index", ListSortDirection.Ascending));
         }
         else
         {
             // delete and create new sort descriptions
-            _referenceForSorting.SortDescriptions.Clear();
             _referenceForSorting.SortDescriptions.Add(new SortDescription("Index", ListSortDirection.Descending));
         }
     }
@@ -101,19 +101,23 @@ public partial class LoggerView : Window, INotifyPropertyChanged
         }
     }
 
-    public void ChangeTheme(Uri uri)
+    /// <summary>
+    /// Event to change themes (light/dark)
+    /// </summary>
+    /// <param name="sender">theme change switch</param>
+    /// <param name="e">parameters</param>
+    private void ThemeChangeToggle_Click(object sender, RoutedEventArgs e)
     {
         App.Current.Resources.Clear();
-        App.Current.Resources.MergedDictionaries.Add(new ResourceDictionary() { Source = uri });
-    }
-
-    private void CheckBox_Checked(object sender, RoutedEventArgs e)
-    {
-        ChangeTheme(new Uri("Views/Themes/Dark.xaml", UriKind.RelativeOrAbsolute));
-    }
-
-    private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
-    {
-        ChangeTheme(new Uri("Views/Themes/Light.xaml", UriKind.RelativeOrAbsolute));
+        if (ThemeChangeToggle.IsChecked == false)
+        {
+            // Light theme
+            App.Current.Resources.MergedDictionaries.Add(new ResourceDictionary() { Source = new Uri("Views/Themes/Light.xaml", UriKind.RelativeOrAbsolute) });
+        }
+        else
+        {
+            // Dark theme
+            App.Current.Resources.MergedDictionaries.Add(new ResourceDictionary() { Source = new Uri("Views/Themes/Dark.xaml", UriKind.RelativeOrAbsolute) });
+        }
     }
 }
