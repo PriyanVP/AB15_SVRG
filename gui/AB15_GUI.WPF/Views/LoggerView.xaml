@@ -11,10 +11,6 @@
         MinWidth="600" MinHeight="300"
         Icon="Resources/bosch.ico">
     <Window.Resources>
-        <Image x:Key="FontSizeDecreaseIco" Source="Resources/font_decrease.png"/>
-        <Image x:Key="FontSizeIncreaseIco" Source="Resources/font_increase.png"/>
-        <Image x:Key="AscendingSortIco" Source="Resources/sort_ascending.png"/>
-        <Image x:Key="DescendingSortIco" Source="Resources/sort_descending.png"/>
         <cnvrt:CustomDayTimeConverter x:Key="CustomDayTimeConverter"/>
     </Window.Resources>
     
@@ -77,6 +73,7 @@
                 <TextBlock.Style>
                     <Style TargetType="TextBlock">
                         <Setter Property="Text" Value="Short Format" />
+                        <Setter Property="Foreground" Value="{DynamicResource Foreground.Default}"/>
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding ElementName=RecordToggle, Path=IsChecked}" Value="True">
                                 <Setter Property="Text" Value="Long Format" />

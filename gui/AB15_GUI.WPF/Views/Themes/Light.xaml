@@ -1,6 +1,12 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
+    <!--Image source-->
+    <Image x:Key="FontSizeDecreaseIco" Source="../Resources/font_decrease.png"/>
+    <Image x:Key="FontSizeIncreaseIco" Source="../Resources/font_increase.png"/>
+    <Image x:Key="AscendingSortIco" Source="../Resources/sort_ascending.png"/>
+    <Image x:Key="DescendingSortIco" Source="../Resources/sort_descending.png"/>
+    
     <!--All colors defines-->
     <SolidColorBrush x:Key="BackGroung" Color="#fbfbfb"/>
 
