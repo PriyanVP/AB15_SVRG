@@ -28,14 +28,6 @@ namespace AB15_GUI.WPF.ViewModels
 
             this.logger.Trace("In LoggerViewModel constructor");
 
-            // debug code
-            this.logger.Trace("debug test color log");
-            this.logger.Debug("debug test color log");
-            this.logger.Info("debug test color log");
-            this.logger.Warn("debug test color log");
-            this.logger.Error("debug test color log");
-            this.logger.Fatal("debug test color log");
-
             // Connect logger data to observable list in ViewModel
             LoggerRecords = target.Logs;
         }
