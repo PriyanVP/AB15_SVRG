@@ -295,7 +295,7 @@
     <!-- TextBox -->
     <Style x:Key="TextBoxStyle" TargetType="{x:Type TextBox}">
         <Setter Property="Background" 
-                    Value="{DynamicResource TextBox.Static.backgroung}" />
+                    Value="{DynamicResource TextBox.Static.Backgroung}" />
         <Setter Property="BorderBrush" Value="{DynamicResource TextBox.Static.Border}" />
         <Setter Property="Foreground" 
                     Value="{DynamicResource Foreground.Default}" />
