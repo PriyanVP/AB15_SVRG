@@ -3,6 +3,12 @@ using System.Threading.Tasks;
 
 namespace AB15_GUI.Tests.Models
 {
+    /// <summary>
+    /// Thread safe observable list tests. Initially used for logger
+    /// </summary>
+    /// <tc_links>
+    ///     <link ID="ABEVBSW-64" Link="https://rb-tracker.bosch.com/tracker19/browse/ABEVBSW-64" />
+    /// </tc_links>
     [TestFixture]
     [Parallelizable(scope: ParallelScope.Self)]
     public class ThreadSafeObservableList_Tests
