@@ -40,21 +40,6 @@ namespace AB15_GUI.WPF
             // Get and parse command line arguments
             arguments = GetCommandLineArguments();
 
-            // Test - conditionally modify logging rule (level only)
-            // TODO: check if rules are changed for existing loggers after LogManager reconfiguration
-            // Logger tmpLogger = LogManager.Setup()
-            //                                      .SetupExtensions(ext => ext.RegisterLayoutRenderer<BuildConfigurationLayoutRenderer>("build-configuration"))
-            //                                      .SetupExtensions(ext => ext.RegisterTarget<LogMemoryRecordTarget>("MemoryRecord"))
-            //                                      .GetCurrentClassLogger();
-            // LoggingConfiguration logConfig = LogManager.Configuration;
-            //logConfig.RemoveRuleByName
-
-
-
-                //Setup()
-                //                                    .SetupExtensions(ext => ext.RegisterLayoutRenderer<BuildConfigurationLayoutRenderer>("build-configuration"))
-                //                                    .SetupExtensions(ext => ext.RegisterTarget<LogMemoryRecordTarget>("MemoryRecord")).GetCurrentClassLogger()
-
             // Application container initialization. All ViewModels. services should be present here
             // Please add them to corresponding regions for maintainability
             AppHost = Host.CreateDefaultBuilder()

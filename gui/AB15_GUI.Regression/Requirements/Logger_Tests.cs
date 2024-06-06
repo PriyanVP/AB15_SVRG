@@ -130,6 +130,9 @@ namespace AB15_GUI.Regression.Requirements
             // TODO: 1) Should apply control action to open logger window (like button click)
 
             // Arrange
+            var test = loggerView.FindAllDescendants();
+            CheckBox? formatSwitch = loggerView.FindFirstDescendant(cf.ByName("RecordFormatToggle"))?.AsCheckBox();
+            //var formatText = loggerView.FindFirstDescendant(cf.ByAutomationId)
 
             // Act
             Window[] allWindows = app.GetAllTopLevelWindows(automation);
