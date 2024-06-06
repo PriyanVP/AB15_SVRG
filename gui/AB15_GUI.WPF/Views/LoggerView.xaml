@@ -126,22 +126,22 @@
                                 <Style>
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding Level}" Value="TRACE">
-                                            <Setter Property="TextBlock.Foreground" Value="{DynamicResource FontTraceColor}"/>
+                                            <Setter Property="TextBlock.Foreground" Value="{DynamicResource Foreground.Trace}"/>
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding Level}" Value="DEBUG">
-                                            <Setter Property="TextBlock.Foreground" Value="{DynamicResource FontDebugColor}"/>
+                                            <Setter Property="TextBlock.Foreground" Value="{DynamicResource Foreground.Debug}"/>
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding Level}" Value="INFO">
-                                            <Setter Property="TextBlock.Foreground" Value="{DynamicResource FontInfoColor}"/>
+                                            <Setter Property="TextBlock.Foreground" Value="{DynamicResource Foreground.Info}"/>
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding Level}" Value="WARN">
-                                            <Setter Property="TextBlock.Foreground" Value="{DynamicResource FontWarnColor}"/>
+                                            <Setter Property="TextBlock.Foreground" Value="{DynamicResource Foreground.Warn}"/>
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding Level}" Value="ERROR">
-                                            <Setter Property="TextBlock.Foreground" Value="{DynamicResource FontErrorColor}"/>
+                                            <Setter Property="TextBlock.Foreground" Value="{DynamicResource Foreground.Error}"/>
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding Level}" Value="FATAL">
-                                            <Setter Property="TextBlock.Foreground" Value="{DynamicResource FontFatalColor}"/>
+                                            <Setter Property="TextBlock.Foreground" Value="{DynamicResource Foreground.Fatal}"/>
                                             <Setter Property="TextBlock.FontWeight" Value="Bold"/>
                                         </DataTrigger>
                                     </Style.Triggers>

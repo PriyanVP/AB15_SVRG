@@ -6,14 +6,20 @@
 
     <SolidColorBrush x:Key="SeparateLine" Color="#979197"/>
 
-    <SolidColorBrush x:Key="FontHelperColor" Color="#c0c0c0c0"/>
-    <SolidColorBrush x:Key="FontDefaultColor" Color="Black"/>
-    <SolidColorBrush x:Key="FontTraceColor" Color="#8a8886"/>
-    <SolidColorBrush x:Key="FontDebugColor" Color="#387C44"/>
-    <SolidColorBrush x:Key="FontInfoColor" Color="#046307"/>
-    <SolidColorBrush x:Key="FontWarnColor" Color="#FFC31E"/>
-    <SolidColorBrush x:Key="FontErrorColor" Color="#f50000"/>
-    <SolidColorBrush x:Key="FontFatalColor" Color="#800000"/>
+    <SolidColorBrush x:Key="TextBoxBackground" Color="#91ffffff"/>
+
+    <SolidColorBrush x:Key="Button.Background.StandBy" Color="#91ffffff"/>
+    <SolidColorBrush x:Key="Button.Background.IsMouseOver" Color="#91ffffff"/>
+    <SolidColorBrush x:Key="Button.Background.IsPressed" Color="#91ffffff"/>
+
+    <SolidColorBrush x:Key="Foreground.Helper" Color="#c0c0c0c0"/>
+    <SolidColorBrush x:Key="Foreground.Default" Color="Black"/>
+    <SolidColorBrush x:Key="Foreground.Trace" Color="#8a8886"/>
+    <SolidColorBrush x:Key="Foreground.Debug" Color="#32B232"/>
+    <SolidColorBrush x:Key="Foreground.Info" Color="#008000"/>
+    <SolidColorBrush x:Key="Foreground.Warn" Color="#FFC31E"/>
+    <SolidColorBrush x:Key="Foreground.Error" Color="#f50000"/>
+    <SolidColorBrush x:Key="Foreground.Fatal" Color="#800000"/>
 
     <SolidColorBrush x:Key="CheckBox.Checked.Background" Color="#554d56" />
     <SolidColorBrush x:Key="CheckBox.Checked.BorderBrush" Color="#edeced" />
@@ -26,21 +32,25 @@
     <SolidColorBrush x:Key="TextBox.MouseOver.Border" Color="#FF005FB8" />
     <SolidColorBrush x:Key="TextBox.Focus.Border" Color="#FF005FB8" />
 
+    <SolidColorBrush x:Key="ListView.Background" Color="Transparent" />
+
+    <SolidColorBrush x:Key="ListViewItem.Background" Color="Transparent" />
+
     <!--Default TextBox style define -->
     <Style TargetType="{x:Type TextBox}">
         <Setter Property="FontSize" Value="20"/>
-        <Setter Property="Foreground" Value="#ff000000"/>
+        <Setter Property="Foreground" Value="{DynamicResource Foreground.Default}"/>
         <Setter Property="Text" Value="20"/>
         <Setter Property="TextAlignment" Value="Center"/>
         <Setter Property="Margin" Value="1, 2, 1, 2"/>
-        <Setter Property="Background" Value="#91ffffff"/>
+        <Setter Property="Background" Value="{DynamicResource TextBoxBackground}"/>
     </Style>
 
     <!-- Default Button style define -->
     <Style TargetType="{x:Type Button}">
         <Setter Property="FontSize" Value="20"/>
-        <Setter Property="Background" Value="#f7f7f7"/>
-        <Setter Property="Foreground" Value="#ff000000"/>
+        <Setter Property="Background" Value="{DynamicResource Button.Background.StandBy}"/>
+        <Setter Property="Foreground" Value="{DynamicResource Foreground.Default}"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Margin" Value="1,2,1,2"/>
 
@@ -56,11 +66,11 @@
 
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="#edeced"/>
+                <Setter Property="Background" Value="{DynamicResource Button.Background.IsMouseOver}"/>
                 <Setter Property="Cursor" Value="Hand"/>
             </Trigger>
             <Trigger Property="IsPressed" Value="True">
-                <Setter Property="Background" Value="#c1bec1"/>
+                <Setter Property="Background" Value="{DynamicResource Button.Background.IsPressed}"/>
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -71,7 +81,7 @@
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
         <Setter Property="Margin" Value="2,2"/>
-        <Setter Property="Foreground" Value="{DynamicResource FontDefaultColor}"/>
+        <Setter Property="Foreground" Value="{DynamicResource Foreground.Default}"/>
     </Style>
 
     <!-- Default ListView style define -->
@@ -79,8 +89,8 @@
         <Setter Property="Padding" Value="2,4,2,2"/>
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
         <Setter Property="VerticalAlignment" Value="Stretch"/>
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="Foreground" Value="#ff000000"/>
+        <Setter Property="Background" Value="{DynamicResource ListView.Background}"/>
+        <Setter Property="Foreground" Value="{DynamicResource Foreground.Default}"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Hidden"/>
         <Setter Property="ScrollViewer.CanContentScroll" Value="False"/>
@@ -93,7 +103,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ListViewItem">
-                    <Border x:Name="border" Background="Transparent">
+                    <Border x:Name="border" Background="{DynamicResource ListViewItem.Background}">
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
                                 <VisualState x:Name="Normal" />
@@ -102,6 +112,7 @@
                                     <Storyboard>
                                         <ColorAnimationUsingKeyFrames Storyboard.TargetName="border"
                                                               Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)">
+                                            <!--Animation colors cannot be change dynamicly-->
                                             <EasingColorKeyFrame KeyTime="0" Value="#edeced" />
                                         </ColorAnimationUsingKeyFrames>
                                     </Storyboard>
@@ -159,16 +170,22 @@
                                                 <SplineThicknessKeyFrame KeyTime="00:00:00" Value="0,2,14,2" />
                                                 <SplineThicknessKeyFrame KeyTime="00:00:00.125" Value="14,2,3,2" />
                                             </ThicknessAnimationUsingKeyFrames>
+                                            <!--Fill animation-->
+                                            <!--From CheckBox.Checked.Fill -> To CheckBox.UnChecked.Fill-->
                                             <ColorAnimation Storyboard.TargetName="bk" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"
                                         From="#FFEDEDED"
                                         To="#554d56"
                                         FillBehavior="Stop" 
                                         Duration="0:0:0.125"/>
+                                            <!--BorderBrush animation-->
+                                            <!--From CheckBox.Checked.BorderBrush -> To CheckBox.UnChecked.BorderBrush-->
                                             <ColorAnimation Storyboard.TargetName="bk" Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"
                                         From="#FF858585"
                                         To="#edeced"
                                         FillBehavior="Stop" 
                                         Duration="0:0:0.125"/>
+                                            <!--Background animation-->
+                                            <!--From CheckBox.Checked.Background -> To CheckBox.UnChecked.Background-->
                                             <ColorAnimation Storyboard.TargetName="ep" Storyboard.TargetProperty="Fill.(SolidColorBrush.Color)"
                                         From="#554d56"
                                         To="#FFEDEDED"
@@ -192,17 +209,22 @@
                                         From="#554d56"
                                         FillBehavior="Stop" 
                                         Duration="0:0:0.125"/>
+                                            <!--Fill animation-->
+                                            <!--From CheckBox.Checked.Fill <- To CheckBox.UnChecked.Fill-->
                                             <ColorAnimation Storyboard.TargetName="bk" Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"
                                         To="#FF858585"
                                         From="#edeced"
                                         FillBehavior="Stop" 
                                         Duration="0:0:0.125"/>
+                                            <!--BorderBrush animation-->
+                                            <!--From CheckBox.Checked.BorderBrush <- To CheckBox.UnChecked.BorderBrush-->
                                             <ColorAnimation Storyboard.TargetName="ep" Storyboard.TargetProperty="Fill.(SolidColorBrush.Color)"
                                         To="#554d56"
                                         From="#FFEDEDED"
                                         FillBehavior="Stop" 
                                         Duration="0:0:0.0625"/>
-
+                                            <!--Background animation-->
+                                            <!--From CheckBox.Checked.Background <- To CheckBox.UnChecked.Background-->
                                         </ParallelTimeline>
                                     </Storyboard>
                                 </BeginStoryboard>
