@@ -10,26 +10,26 @@
 
   <ItemGroup>
     <None Remove="Views\Resources\bosch.ico" />
-    <None Remove="Views\Resources\font_decrease.png" />
     <None Remove="Views\Resources\font_decrease_light.png" />
-    <None Remove="Views\Resources\font_increase.png" />
+    <None Remove="Views\Resources\font_decrease_dark.png" />
     <None Remove="Views\Resources\font_increase_light.png" />
-    <None Remove="Views\Resources\sort_ascending.png" />
+    <None Remove="Views\Resources\font_increase_dark.png" />
     <None Remove="Views\Resources\sort_ascending_light.png" />
-    <None Remove="Views\Resources\sort_descending.png" />
+    <None Remove="Views\Resources\sort_ascending_dark.png" />
     <None Remove="Views\Resources\sort_descending_light.png" />
+    <None Remove="Views\Resources\sort_descending_dark.png" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="Views\Resources\bosch.ico" />
-    <Resource Include="Views\Resources\font_decrease.png" />
     <Resource Include="Views\Resources\font_decrease_light.png" />
-    <Resource Include="Views\Resources\font_increase.png" />
+    <Resource Include="Views\Resources\font_decrease_dark.png" />
     <Resource Include="Views\Resources\font_increase_light.png" />
-    <Resource Include="Views\Resources\sort_ascending.png" />
+    <Resource Include="Views\Resources\font_increase_dark.png" />
     <Resource Include="Views\Resources\sort_ascending_light.png" />
-    <Resource Include="Views\Resources\sort_descending.png" />
+    <Resource Include="Views\Resources\sort_ascending_dark.png" />
     <Resource Include="Views\Resources\sort_descending_light.png" />
+    <Resource Include="Views\Resources\sort_descending_dark.png" />
   </ItemGroup>
 
   <ItemGroup>
