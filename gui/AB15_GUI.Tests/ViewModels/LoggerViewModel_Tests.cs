@@ -12,7 +12,7 @@ namespace AB15_GUI.Tests.ViewModels
     /// </tc_links>
     [TestFixture]
     [NonParallelizable]
-    public class ThreadSafeObservableList_Tests
+    public class LoggerViewModel_Tests
     {
         private Logger logger;
         private LogMemoryRecordTarget target;
