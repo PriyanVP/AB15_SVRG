@@ -14,6 +14,9 @@ gui/**/[Bb]in/**
 # Ignore release GUI version log file
 release/gui/*.log
 
+# Ignoring test log files
+gui/**/TestResults/*.log
+
 # ... except actual log files
 !gui/**/TestResults/*.html
 !gui/**/TestResults/*.trx

@@ -52,20 +52,20 @@ Building MCU SW:
 * Rebuild MCU SW via button in Aurix IDE
 
 Building GUI SW:
-* Launch Visual Studio (testes with Microsoft Visual Studio Professional 2022 (SCCMProf22) (64-bit) - 17.9.7)
+* Launch Visual Studio (testes with Microsoft Visual Studio Professional 2022 (SCCMProf22) (64-bit) - 17.10.1)
 * Open Solution file (gui\AB15_GUI.sln)
 * Choose relase or debug build type
 * Build AB15_GUI.WPF project via Run button or context menu
 
 Unit testing GUI SW:
-* Launch Visual Studio (testes with Microsoft Visual Studio Professional 2022 (SCCMProf22) (64-bit) - 17.9.7)
+* Launch Visual Studio (testes with Microsoft Visual Studio Professional 2022 (SCCMProf22) (64-bit) - 17.10.1)
 * Open Solution file (gui\AB15_GUI.sln)
 * Choose relase or debug build type
 * Build AB15_GUI.Tests project via context menu
 * Run tests in Test explorer (group AB15_GUI.Tests)
 
 Regression testing GUI SW:
-* Launch Visual Studio (testes with Microsoft Visual Studio Professional 2022 (SCCMProf22) (64-bit) - 17.9.7)
+* Launch Visual Studio (testes with Microsoft Visual Studio Professional 2022 (SCCMProf22) (64-bit) - 17.10.1)
 * Open Solution file (gui\AB15_GUI.sln)
 * Choose relase or debug build type
 * Build AB15_GUI.Regression project via context menu
