@@ -35,8 +35,11 @@
 /*------------------------------------------------------Macros-------------------------------------------------------*/
 /*********************************************************************************************************************/
 
-/* LED -> overlaps with SPI function (share pin with SCK)*/
+/* onboard LED -> overlaps with SPI function (share pin with SCK) we dont use it.*/
 //#define LED                          &MODULE_P10,2                           /* LED Port Pin                         */
+/* added 4 LEDs on breadboard
+ * 1= red;  2= yel; 3= gn; 4 = blue
+ * */
 #define LED1                         &MODULE_P02,0                           /* LED Port Pin                         */
 #define LED2                         &MODULE_P02,1                           /* LED Port Pin                         */
 #define LED3                         &MODULE_P02,3                           /* LED Port Pin                         */
@@ -134,9 +137,9 @@ void ToggleLED4(void)
     IfxPort_setPinState(LED4, IfxPort_State_toggled);
 }
 
-/*blink LED in 0,5Hz rate
- * used for call in 2ms cycle*/
-void Blink_LED1_05Hz(void)
+/* create some blink funktion
+ * if triggered in 2ms cycle, led  will blink in 1Hz rate */
+void Blink_LED1_1Hz(void)
 {
     static uint16 cntr;
 

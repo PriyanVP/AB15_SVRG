@@ -65,133 +65,17 @@ IFX_ALIGN(4) IfxCpu_syncEvent g_cpuSyncEvent = 0;
 
 #define WAIT_TIME 2   /*mseconds */
 
-/** \brief Watchdog interrupt routine
- * Arms single acknowledgement of CS600 watchdog
- */
-void WatchdogInterruptRoutine(void)
-{
-    // Watchdog serving is an internal command
-    USBReceiveData serveWatchdogCommand;
-    serveWatchdogCommand.command = INT_CMD_ACK_WATCHDOG;
-    serveWatchdogCommand.dataLength = 0;
-    // Add WD serving internal command to command queue
-    QueueWriteTail(&serveWatchdogCommand);
-}
-
-/** \brief Error check interrupt routine
- * Arms single read of error registers in error check execution
- */
-void ErrorCheckInterruptRoutine(void)
-{
-    USBReceiveData serveErrorCheckCommand;
-    serveErrorCheckCommand.command = INT_CMD_CS600_ERR_CHECK;
-    serveErrorCheckCommand.dataLength = 0;
-    // Add error check serving internal command to command queue
-    QueueWrite(&serveErrorCheckCommand);
-}
-
-/** \brief Continuous read interrupt routine
- * Arms single read of register set in continuous read execution
- */
-void ContinuousReadInterruptRoutine(void)
-{
-    // Create command for performing one iteration of continuous read
-    // msg_id and data fields are unused, only command matters
-    USBReceiveData commandPackage;
-    commandPackage.command = INT_CMD_CONT_READ;
-    commandPackage.dataLength = 0;
-
-    QueueWrite(&commandPackage);
-}
-
-/** \brief GPIO handling interrupt routine
- * Arms single read of GPIO register
- */
-void GPIOInterruptRoutine(void)
-{
-    // Create command to read single GPIO register
-    USBReceiveData commandPackage;
-    commandPackage.command = INT_CMD_GPIO_READ;
-    commandPackage.dataLength = 0;
-
-    QueueWrite(&commandPackage);
-}
 
 
-/** \brief Service timer interrupt routine
- */
-void ServiceInterruptRoutine(void)
-{
-    // Variable for checking if SPI should be enabled/disabled (done only if SELECT pin state changed)
-    static boolean mcuBypassPrevState = FALSE;
-
-    // TODO: add implementation
-    // Proposed features:
-    // 1) MCU status handling
-    // 4) internal watchdog ack
-
-    // Bypass for SPI (MCU) if request on SELECT pin received
-    // If QSPI was deinitied and init request was received -> init QSPI
-    if ((mcuBypassPrevState == TRUE) && (IsMCUBypassSelected() == FALSE))
-    {
-        // Init QSPI module and pins
-        QSPIInit();
-        mcuBypassPrevState = FALSE;
-        // TODO: send msg on GUI?
-    }
-    // If QSPI was initialized and deinit request was received -> deinit QSPI
-    else if ((mcuBypassPrevState == FALSE) && (IsMCUBypassSelected() == TRUE))
-    {
-        // Deinit QSPI module and pins
-        QSPIDeinit();
-        mcuBypassPrevState = TRUE;
-
-        // Disable continuous features
-        USBReceiveData dummyPackage;
-
-        // Stop continuous reading
-        dummyPackage.msg_id = SetResponseBit(USB_RESERVED_ID_2);
-        dummyPackage.command = USB_CMD_STOP_READING;
-        CmdStopReading(&dummyPackage);
-
-        // Stop watchdog
-        dummyPackage.msg_id = SetResponseBit(USB_RESERVED_ID_2);
-        dummyPackage.command = USB_CMD_STOP_WATCHDOG;
-        CmdStopWatchdog(&dummyPackage);
-
-        // Stop error check
-        dummyPackage.msg_id = SetResponseBit(USB_RESERVED_ID_2);
-        dummyPackage.command = USB_CMD_STOP_READ_ERRORS;
-        CmdStopReadErrors(&dummyPackage);
-
-        // Stop GPIO reading
-        dummyPackage.msg_id = SetResponseBit(USB_RESERVED_ID_2);
-        dummyPackage.command = USB_CMD_STOP_GPIO_READING;
-        CmdStopGPIOReading(&dummyPackage);
-    }
-
-    // Check of queue health state - will send error msg with predefined ID in case queue has more than defined number of messages
-    // Send of such error message means that MCU receives commands faster than it can process them
-    if (QueueGetOccupiedSize() > 5) /* arbitrary number */
-    {
-        USBTransmitData packageToSend;
-        packageToSend.msg_id = SetResponseBit(USB_RESERVED_ID_1);// reserved msg ID
-        // Generate error frame
-        packageToSend.status = USB_STATUS_ERROR;
-        packageToSend.dataLength = 0;
-        // Send response back to MCU
-        SendUSBPackage(&packageToSend);
-    }
-}
 
 /** \brief Main function
  */
 void core0_main(void)
 {
-    // debug
-    static uint16 debug_counter;
-    uint8 debug_ret;
-    uint32 buffer_new;
+    /* add some globals for debugging*/
+    //static uint16 debug_counter;
+    //uint8 debug_ret;
+    //uint32 buffer_new;
 
 
     IfxCpu_enableInterrupts();
@@ -206,10 +90,11 @@ void core0_main(void)
     IfxCpu_emitEvent(&g_cpuSyncEvent);
     IfxCpu_waitEvent(&g_cpuSyncEvent, 1);
     
-    initLEDs();  /* Initialize the LED port pin      */
+    /* Initialize the LED port pins      */
+    initLEDs();
 
 
-// Init pins
+    /* Init pins*/
     ConfigureSelectPin();
     InitGPIOPins();
 
@@ -229,7 +114,7 @@ void core0_main(void)
     InitGpt12Timer();
 
     // Start service irq
-    // JS: 19.4.2024 inhibit timers for debugging
+    // JS: 19.4.2024 inhibit timers for not interrupt debugging
     //StartServiceTimer();
 
     // Start general timer
@@ -248,7 +133,7 @@ void core0_main(void)
     {
 
         //ToggleLED1();
-        Blink_LED1_05Hz();
+        Blink_LED1_1Hz();
 
        if(get_button_state())
        {
@@ -309,6 +194,7 @@ void core0_main(void)
         {
             // Store data to queue and proceed
             QueueWrite(&receivedPackage);
+            /* package sucessul received*/
             ToggleLED3();
             // Clean package
             receivedPackage.command = _USB_CMD_MIN;
@@ -330,20 +216,27 @@ void core0_main(void)
             case USB_CMD_IS_ALIVE:
                 CmdIsAlive(&cmdPackage);
                 break;
+            case USB_CMD_SPI_INSTR_NO_DATA:
+                // CmdReadReg(&cmdPackage);
+                break;
+            case USB_CMD_SPI_INSTR_16B_DATA:
+                CmdSpiInst16BData(&cmdPackage);
+                break;
+            case USB_CMD_READ_DEV_ID:
+                // CmdReadReg(&cmdPackage);
+                break;
+            // case :
+            //     break;
+            // case :
+            //     break;
+            // case :
+            //     break;
+            // case :
+            //     break;
             case USB_CMD_GET_MCU_VERSION:
                 CmdGetMcuVersion(&cmdPackage);
                 break;
-            case USB_CMD_READ_REG:
-                CmdReadReg(&cmdPackage);
-                break;
-            // case :
-            //     break;
-            // case :
-            //     break;
-            // case :
-            //     break;
-            // case :
-            //     break;
+
             case _USB_CMD_MAX:
                 break;
             default :

@@ -1,6 +1,6 @@
 	; Module start
 	.compiler_version	"TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler v1.1r8 Build 22011964"
-	.compiler_invocation	"ctc -f cc6776a --dep-file=top/spi_wrapper.d -c99 --fp-model=3cflnrSTz -D__CPU__=tc37x -D__CPU_TC37X__ --core=tc1.6.2 --fp-model=+float -D__CPU__=tc37x -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Configurations -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Infra -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Infra\\\\Platform -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Infra\\\\Platform\\\\Tricore -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Infra\\\\Platform\\\\Tricore\\\\Compilers -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Infra\\\\Sfr -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Infra\\\\Sfr\\\\TC37A -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Infra\\\\Sfr\\\\TC37A\\\\_Reg -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Infra\\\\Ssw -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Infra\\\\Ssw\\\\TC37A -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Infra\\\\Ssw\\\\TC37A\\\\Tricore -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Service -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Service\\\\CpuGeneric -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Service\\\\CpuGeneric\\\\If -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Service\\\\CpuGeneric\\\\StdIf -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Service\\\\CpuGeneric\\\\SysSe -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Service\\\\CpuGeneric\\\\SysSe\\\\Bsp -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Service\\\\CpuGeneric\\\\_Utilities -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Asclin -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Asclin\\\\Asc -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Asclin\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Cpu -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Cpu\\\\Irq -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Cpu\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Cpu\\\\Trap -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Dma -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Dma\\\\Dma -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Dma\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Gpt12 -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Gpt12\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Gtm -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Gtm\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Mtu -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Mtu\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Pms -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Pms\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Port -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Port\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Qspi -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Qspi\\\\SpiMaster -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Qspi\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Scu -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Scu\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Src -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Src\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Stm -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Stm\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\_Impl -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\_Lib -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\_Lib\\\\DataHandling -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\_PinMap -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\cmd -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\common -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\periphery -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\top -g2 -w544 -w557 -t4 --language=+volatile -N0 -O0 -Y0 -Z0 --compact-max-size=200 --misrac-version=2004 -o top/spi_wrapper.src ../top/spi_wrapper.c"
+	.compiler_invocation	"ctc -f cc30536a --dep-file=top/spi_wrapper.d -c99 --fp-model=3cflnrSTz -D__CPU__=tc37x -D__CPU_TC37X__ --core=tc1.6.2 --fp-model=+float -D__CPU__=tc37x -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Configurations -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Infra -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Infra\\\\Platform -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Infra\\\\Platform\\\\Tricore -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Infra\\\\Platform\\\\Tricore\\\\Compilers -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Infra\\\\Sfr -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Infra\\\\Sfr\\\\TC37A -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Infra\\\\Sfr\\\\TC37A\\\\_Reg -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Infra\\\\Ssw -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Infra\\\\Ssw\\\\TC37A -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Infra\\\\Ssw\\\\TC37A\\\\Tricore -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Service -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Service\\\\CpuGeneric -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Service\\\\CpuGeneric\\\\If -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Service\\\\CpuGeneric\\\\StdIf -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Service\\\\CpuGeneric\\\\SysSe -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Service\\\\CpuGeneric\\\\SysSe\\\\Bsp -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Service\\\\CpuGeneric\\\\_Utilities -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Asclin -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Asclin\\\\Asc -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Asclin\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Cpu -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Cpu\\\\Irq -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Cpu\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Cpu\\\\Trap -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Dma -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Dma\\\\Dma -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Dma\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Gpt12 -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Gpt12\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Gtm -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Gtm\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Mtu -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Mtu\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Pms -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Pms\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Port -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Port\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Qspi -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Qspi\\\\SpiMaster -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Qspi\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Scu -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Scu\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Src -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Src\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Stm -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Stm\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\_Impl -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\_Lib -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\_Lib\\\\DataHandling -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\_PinMap -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\cmd -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\common -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\periphery -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\top -g2 -w544 -w557 -t4 --language=+volatile -N0 -O0 -Y0 -Z0 --compact-max-size=200 --misrac-version=2004 -o top/spi_wrapper.src ../top/spi_wrapper.c"
 	.compiler_name		"ctc"
 	;source	'../top/spi_wrapper.c'
 
@@ -644,7 +644,7 @@ enSPICommunication:	.type	object
 	.sdecl	'.debug_info',debug
 	.sect	'.debug_info'
 .L64:
-	.word	196466
+	.word	195914
 	.half	3
 	.word	.L65
 	.byte	4
@@ -28129,30 +28129,9 @@ enSPICommunication:	.type	object
 	.byte	15,44,65,9,1,16
 	.byte	'_USB_CMD_MIN',0,0,16
 	.byte	'USB_CMD_IS_ALIVE',0,1,16
-	.byte	'USB_CMD_READ_REG',0,2,16
-	.byte	'USB_CMD_WRITE_REG',0,3,16
-	.byte	'USB_CMD_READ_REG_RAW',0,4,16
-	.byte	'USB_CMD_WRITE_REG_RAW',0,5,16
-	.byte	'USB_CMD_ABORT',0,6,16
-	.byte	'USB_CMD_STOP_READING',0,7,16
-	.byte	'USB_CMD_STOP_WATCHDOG',0,8,16
-	.byte	'USB_CMD_STOP_GPIO_READING',0,9,16
-	.byte	'USB_CMD_STOP_READ_ERRORS',0,10,16
-	.byte	'USB_CMD_EXECUTE_RW_SEQUENCE',0,11,16
-	.byte	'USB_CMD_EXECUTE_READ_SEQUENCE',0,12,16
-	.byte	'USB_CMD_EXECUTE_WRITE_SEQUENCE',0,13,16
-	.byte	'USB_CMD_CONFIGURE_READING',0,14,16
-	.byte	'USB_CMD_CONFIGURE_WATCHDOG',0,15,16
-	.byte	'USB_CMD_START_READING',0,16,16
-	.byte	'USB_CMD_START_WATCHDOG',0,17,16
-	.byte	'USB_CMD_START_GPIO_READING',0,18,16
-	.byte	'USB_CMD_START_READ_ERRORS',0,19,16
-	.byte	'USB_CMD_RESET_TO_IDLE',0,20,16
-	.byte	'USB_CMD_GET_CONFIG_WATCHDOG',0,21,16
-	.byte	'USB_CMD_START_MONITORING_WATCHDOG',0,22,16
-	.byte	'USB_CMD_STOP_MONITORING_WATCHDOG',0,23,16
-	.byte	'USB_CMD_BYPASS_MCU',0,24,16
-	.byte	'USB_CMD_ACTIVATE_MCU',0,25,16
+	.byte	'USB_CMD_SPI_INSTR_NO_DATA',0,2,16
+	.byte	'USB_CMD_SPI_INSTR_16B_DATA',0,3,16
+	.byte	'USB_CMD_READ_DEV_ID',0,4,16
 	.byte	'USB_CMD_GET_MCU_VERSION',0,26,16
 	.byte	'_USB_EXT_CMD_MAX',0,63,16
 	.byte	'INT_CMD_SYS_TIMER_UPD',0,192,0,16
@@ -28161,9 +28140,9 @@ enSPICommunication:	.type	object
 	.byte	'INT_CMD_CONT_READ',0,195,0,16
 	.byte	'INT_CMD_GPIO_READ',0,196,0,16
 	.byte	'_USB_CMD_MAX',0,255,0,0,31
-	.byte	'USBCommandsEnum',0,44,105,3
+	.byte	'USBCommandsEnum',0,44,106,3
 	.word	195400
-	.byte	15,44,110,9,1,16
+	.byte	15,44,111,9,1,16
 	.byte	'_USB_STATUS_MIN',0,255,0,16
 	.byte	'USB_STATUS_ACK',0,128,1,16
 	.byte	'USB_STATUS_ERROR',0,129,1,16
@@ -28172,8 +28151,8 @@ enSPICommunication:	.type	object
 	.byte	'USB_STATUS_BUSY',0,132,1,16
 	.byte	'USB_STATUS_DATA',0,133,1,16
 	.byte	'_USB_STATUS_MAX',0,255,1,0,31
-	.byte	'USBStatusesEnum',0,44,122,3
-	.word	196274
+	.byte	'USBStatusesEnum',0,44,123,3
+	.word	195722
 	.byte	0
 	.sdecl	'.debug_abbrev',debug
 	.sect	'.debug_abbrev'
@@ -28965,42 +28944,42 @@ enSPICommunication:	.type	object
 	.byte	2
 	.word	.L63
 	.byte	3
-	.byte	'QSPIReadWriteSequence',0,1,130,2,9
+	.byte	'QSPIReadWriteSequence',0,1,132,2,9
 	.word	.L106
 	.byte	1,1,1
 	.word	.L62,.L150,.L61
 	.byte	4
-	.byte	'addressBuffer',0,1,130,2,52
+	.byte	'addressBuffer',0,1,132,2,52
 	.word	.L151,.L152
 	.byte	4
-	.byte	'dataBuffer',0,1,130,2,82
+	.byte	'dataBuffer',0,1,132,2,82
 	.word	.L153,.L154
 	.byte	4
-	.byte	'rwBuffer',0,1,130,2,120
+	.byte	'rwBuffer',0,1,132,2,120
 	.word	.L155,.L156
 	.byte	4
-	.byte	'length',0,1,130,2,145,1
+	.byte	'length',0,1,132,2,145,1
 	.word	.L157,.L158
 	.byte	5
 	.word	.L62,.L150
 	.byte	5
 	.word	.L38,.L150
 	.byte	6
-	.byte	'isReceivedDataValid',0,1,136,2,13
+	.byte	'isReceivedDataValid',0,1,138,2,13
 	.word	.L106,.L159
 	.byte	6
-	.byte	'numberOfFrames',0,1,137,2,12
+	.byte	'numberOfFrames',0,1,139,2,12
 	.word	.L108,.L160
 	.byte	6
-	.byte	'dataToTransmit',0,1,138,2,21
+	.byte	'dataToTransmit',0,1,140,2,21
 	.word	.L113,.L161
 	.byte	6
-	.byte	'dataToReceive',0,1,139,2,20
+	.byte	'dataToReceive',0,1,141,2,20
 	.word	.L115,.L162
 	.byte	5
 	.word	.L163,.L164
 	.byte	6
-	.byte	'i',0,1,176,2,17
+	.byte	'i',0,1,178,2,17
 	.word	.L108,.L165
 	.byte	0,0,0,0,0
 	.sdecl	'.debug_abbrev',debug,cluster('QSPIReadWriteSequence')
@@ -29022,7 +29001,7 @@ enSPICommunication:	.type	object
 .L343:
 	.byte	5,9,7,0,5,2
 	.word	.L62
-	.byte	3,129,2,1,9
+	.byte	3,131,2,1,9
 	.half	.L194-.L62
 	.byte	3,3,1,5,5,9
 	.half	.L344-.L194

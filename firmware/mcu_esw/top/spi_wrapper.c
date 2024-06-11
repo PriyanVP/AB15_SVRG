@@ -255,6 +255,8 @@ boolean QSPIWriteSequence(const uint16 * const addressBuffer, const uint16 * con
     return TRUE;
 }
 
+/*
+ * use QSPI command from CS600 for AB12. using adress instead of instruction*/
 boolean QSPIReadWriteSequence(const uint16 * const addressBuffer, uint32 * const dataBuffer, const enum RWFlag * const rwBuffer, uint16 * const length)
 {
     // Execute only if enabled

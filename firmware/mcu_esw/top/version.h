@@ -11,7 +11,7 @@
 
 #define VERSION_MAJOR "0"
 #define VERSION_MINOR "1"
-#define VERSION_PATCH "2"
+#define VERSION_PATCH "3"
 
 /*
 
@@ -32,7 +32,10 @@
     - added 1hz blinking for LED1
     - added USB_CMD_GET_MCU_VERSION             = 26,                  returns MCU SW version and build date
 
-
+0.1.3
+    - cleaned up main
+    -  renamed some USB commands
+    - renamed CmdReadReg to more sying command
 
  */
 

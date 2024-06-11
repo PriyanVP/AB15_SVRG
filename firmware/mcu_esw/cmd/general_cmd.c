@@ -59,14 +59,6 @@ void CmdIsAlive(USBReceiveData const * const commandPackage)
     packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
     packageToSend.status = USB_STATUS_ACK;
     packageToSend.dataLength = 0;
-
-
-
-
-
-
-
-
     // Send data back to MCU
     SendUSBPackage(&packageToSend);
 }
@@ -80,9 +72,9 @@ void CmdGetMcuVersion(USBReceiveData const * const commandPackage)
     packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
     packageToSend.status = USB_STATUS_ACK;
     packageToSend.dataLength = 8;
-    packageToSend.data[0] = 0; // shall return VERSION_MAJOR;
-    packageToSend.data[1] = 1 ; // shall rezturn VERSION_MINOR;
-    packageToSend.data[2] = 2 ; // VERSION_PATCH;
+    packageToSend.data[0] = (char)VERSION_MAJOR;
+    packageToSend.data[1] = (char)VERSION_MINOR;
+    packageToSend.data[2] = (char)VERSION_PATCH;
     packageToSend.data[3] = '.';
     packageToSend.data[4] = BUILD_MONTH_CH0;
     packageToSend.data[5] = BUILD_MONTH_CH1;
@@ -150,11 +142,11 @@ void CmdWriteReg(USBReceiveData const * const commandPackage)
     ToggleLED4();
 }
 
-void CmdReadReg(USBReceiveData const * const commandPackage)
+void CmdSpiInst16BData(USBReceiveData const * const commandPackage)
 {
     // Parameters for SPI packages and variable to store output data
     USBTransmitData packageToSend;
-    uint16 address;
+    uint16 instruction;
     uint32 data;
     SPIReceiveData dataRecived;
     enum RWFlag rwOption = READ;
@@ -162,10 +154,10 @@ void CmdReadReg(USBReceiveData const * const commandPackage)
     boolean isSuccessfulFlag = FALSE;
 
     // Unpack received data to variables
-    address = ConstructWordFromBytes(commandPackage->data[1], commandPackage->data[0]);
+    instruction = ConstructWordFromBytes(commandPackage->data[1], commandPackage->data[0]);
 
     // Send data to SPI with waiting for response
-    isSuccessfulFlag = QSPIReadWriteSequence(&address, &data, &rwOption, &length);
+    isSuccessfulFlag = QSPIReadWriteSequence(&instruction, &data, &rwOption, &length);
 
     // Construct package to PC
     packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);

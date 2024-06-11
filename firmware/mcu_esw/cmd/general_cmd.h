@@ -68,7 +68,7 @@ void CmdWriteReg(USBReceiveData const * const commandPackage);
  * \param commandPackage package with command
  * \return Nothing
  */
-void CmdReadReg(USBReceiveData const * const commandPackage);
+void CmdSpiInst16BData(USBReceiveData const * const commandPackage);
 
 /** \brief Handling WRITE_REG_RAW command from PC
  *

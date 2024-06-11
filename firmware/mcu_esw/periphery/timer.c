@@ -46,25 +46,25 @@
 /*------------------------------------------------Function Prototypes------------------------------------------------*/
 /*********************************************************************************************************************/
 
-extern void ServiceInterruptRoutine(void);
-extern void WatchdogInterruptRoutine(void);
-extern void ErrorCheckInterruptRoutine(void);
-extern void ContinuousReadInterruptRoutine(void);
-extern void GPIOInterruptRoutine(void);
-
-/** \brief General timer interrupt routine
- * Implements timers for CS600 watchdog, error check and continuous read
- *
- * \return Returns nothing
- */
-void UpdateTimersRoutine(void);
-
-/** \brief Service timer interrupt routine wrapper - calls service interrupt routine function
- * Required for correct interrupt handling
- *
- * \return Returns nothing
- */
-void ServiceTimerRoutineWrapper(void);
+//extern void ServiceInterruptRoutine(void);
+//extern void WatchdogInterruptRoutine(void);
+//extern void ErrorCheckInterruptRoutine(void);
+//extern void ContinuousReadInterruptRoutine(void);
+//extern void GPIOInterruptRoutine(void);
+//
+///** \brief General timer interrupt routine
+// * Implements timers for CS600 watchdog, error check and continuous read
+// *
+// * \return Returns nothing
+// */
+//void UpdateTimersRoutine(void);
+//
+///** \brief Service timer interrupt routine wrapper - calls service interrupt routine function
+// * Required for correct interrupt handling
+// *
+// * \return Returns nothing
+// */
+//void ServiceTimerRoutineWrapper(void);
 
 /*********************************************************************************************************************/
 /*-------------------------------------------------Global variables--------------------------------------------------*/
@@ -241,33 +241,33 @@ void UpdateTimersRoutine(void)
     {
         // Watchdog acknowledge
         watchdogCounter = 0;
-        WatchdogInterruptRoutine();
+        //WatchdogInterruptRoutine();
     }
 
     if ((g_errorCheckEnable == TRUE) && (errorCheckCounter >= g_errorCheckReload))
     {
         // Continuous CS600 error check
         errorCheckCounter = 0;
-        ErrorCheckInterruptRoutine();
+        //ErrorCheckInterruptRoutine();
     }
 
     if ((g_continuousReadEnable == TRUE) && (continuousReadCounter >= g_continuousReadReload))
     {
         // Continuous registers reading
         continuousReadCounter = 0;
-        ContinuousReadInterruptRoutine();
+        //ContinuousReadInterruptRoutine();
     }
 
     if ((g_GPIOEnable == TRUE) && (GPIOCounter >= g_GPIOReload))
     {
         // GPIO handling
         GPIOCounter = 0;
-        GPIOInterruptRoutine();
+        //GPIOInterruptRoutine();
     }
 }
 
 void ServiceTimerRoutineWrapper(void)
 {
     // Call interrupt routine function from other file
-    ServiceInterruptRoutine();
+    //ServiceInterruptRoutine();
 }
