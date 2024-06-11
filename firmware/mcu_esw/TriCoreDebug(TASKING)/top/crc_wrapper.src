@@ -1,0 +1,834 @@
+	; Module start
+	.compiler_version	"TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler v1.1r8 Build 22011964"
+	.compiler_invocation	"ctc -f cc24744a --dep-file=top/crc_wrapper.d -c99 --fp-model=3cflnrSTz -D__CPU__=tc37x -D__CPU_TC37X__ --core=tc1.6.2 --fp-model=+float -D__CPU__=tc37x -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Configurations -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Infra -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Infra\\\\Platform -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Infra\\\\Platform\\\\Tricore -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Infra\\\\Platform\\\\Tricore\\\\Compilers -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Infra\\\\Sfr -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Infra\\\\Sfr\\\\TC37A -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Infra\\\\Sfr\\\\TC37A\\\\_Reg -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Infra\\\\Ssw -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Infra\\\\Ssw\\\\TC37A -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Infra\\\\Ssw\\\\TC37A\\\\Tricore -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Service -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Service\\\\CpuGeneric -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Service\\\\CpuGeneric\\\\If -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Service\\\\CpuGeneric\\\\StdIf -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Service\\\\CpuGeneric\\\\SysSe -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Service\\\\CpuGeneric\\\\SysSe\\\\Bsp -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Service\\\\CpuGeneric\\\\_Utilities -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Asclin -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Asclin\\\\Asc -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Asclin\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Cpu -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Cpu\\\\Irq -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Cpu\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Cpu\\\\Trap -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Dma -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Dma\\\\Dma -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Dma\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Gpt12 -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Gpt12\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Gtm -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Gtm\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Mtu -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Mtu\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Pms -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Pms\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Port -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Port\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Qspi -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Qspi\\\\SpiMaster -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Qspi\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Scu -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Scu\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Src -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Src\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Stm -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Stm\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\_Impl -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\_Lib -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\_Lib\\\\DataHandling -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\_PinMap -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\cmd -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\common -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\periphery -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\top -g2 -w544 -w557 -t4 --language=+volatile -N0 -O0 -Y0 -Z0 --compact-max-size=200 --misrac-version=2004 -o top/crc_wrapper.src ../top/crc_wrapper.c"
+	.compiler_name		"ctc"
+	;source	'../top/crc_wrapper.c'
+
+	
+$TC162
+	
+	.sdecl	'.text.crc_wrapper.IsCRC8Correct',code,cluster('IsCRC8Correct')
+	.sect	'.text.crc_wrapper.IsCRC8Correct'
+	.align	2
+	
+	.global	IsCRC8Correct
+; Function IsCRC8Correct
+.L14:
+IsCRC8Correct:	.type	func
+	mov	d15,d5
+.L73:
+	mov	d2,#0
+.L74:
+	jz.a	a4,.L2
+.L91:
+	call	CRC8
+.L72:
+	jne	d15,d2,.L3
+.L92:
+	mov	d2,#1
+.L75:
+	j	.L4
+.L3:
+	mov	d2,#0
+.L4:
+.L2:
+	j	.L5
+.L5:
+	ret
+.L46:
+	
+__IsCRC8Correct_function_end:
+	.size	IsCRC8Correct,__IsCRC8Correct_function_end-IsCRC8Correct
+.L29:
+	; End of function
+	
+	.sdecl	'.text.crc_wrapper.IsCRC5Correct',code,cluster('IsCRC5Correct')
+	.sect	'.text.crc_wrapper.IsCRC5Correct'
+	.align	2
+	
+	.global	IsCRC5Correct
+; Function IsCRC5Correct
+.L16:
+IsCRC5Correct:	.type	func
+	ld.bu	d15,[a4]
+.L77:
+	and	d15,#7
+.L97:
+	ld.w	d4,[a4]
+.L78:
+	sh	d4,#-3
+.L98:
+	call	CRC5
+.L76:
+	jne	d15,d2,.L6
+.L99:
+	mov	d2,#1
+.L79:
+	j	.L7
+.L6:
+	mov	d2,#0
+.L7:
+	j	.L8
+.L8:
+	ret
+.L54:
+	
+__IsCRC5Correct_function_end:
+	.size	IsCRC5Correct,__IsCRC5Correct_function_end-IsCRC5Correct
+.L34:
+	; End of function
+	
+	.sdecl	'.text.crc_wrapper.GetCRC8',code,cluster('GetCRC8')
+	.sect	'.text.crc_wrapper.GetCRC8'
+	.align	2
+	
+	.global	GetCRC8
+; Function GetCRC8
+.L18:
+GetCRC8:	.type	func
+	mov	d2,#0
+.L80:
+	jz.a	a4,.L9
+.L104:
+	call	CRC8
+.L9:
+	j	.L10
+.L10:
+	ret
+.L62:
+	
+__GetCRC8_function_end:
+	.size	GetCRC8,__GetCRC8_function_end-GetCRC8
+.L39:
+	; End of function
+	
+	.sdecl	'.text.crc_wrapper.GetCRC5',code,cluster('GetCRC5')
+	.sect	'.text.crc_wrapper.GetCRC5'
+	.align	2
+	
+	.global	GetCRC5
+; Function GetCRC5
+.L20:
+GetCRC5:	.type	func
+	mov	d2,#0
+.L81:
+	jz.a	a4,.L11
+.L109:
+	ld.w	d4,[a4]
+.L82:
+	sh	d4,#-3
+.L110:
+	call	CRC5
+.L11:
+	j	.L12
+.L12:
+	ret
+.L67:
+	
+__GetCRC5_function_end:
+	.size	GetCRC5,__GetCRC5_function_end-GetCRC5
+.L44:
+	; End of function
+	
+	.calls	'IsCRC8Correct','CRC8'
+	.calls	'IsCRC5Correct','CRC5'
+	.calls	'GetCRC8','CRC8'
+	.calls	'GetCRC5','CRC5'
+	.calls	'IsCRC8Correct','',0
+	.calls	'IsCRC5Correct','',0
+	.calls	'GetCRC8','',0
+	.extern	CRC8
+	.extern	CRC5
+	.calls	'GetCRC5','',0
+	.sdecl	'.debug_info',debug
+	.sect	'.debug_info'
+.L22:
+	.word	2116
+	.half	3
+	.word	.L23
+	.byte	4
+.L21:
+	.byte	1
+	.byte	'../top/crc_wrapper.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\Entwicklung\\AB15_Demo_Board\\AB15_dev_Git\\ab15_sw\\firmware\\mcu_esw\\TriCoreDebug(TASKING)\\',0
+	.byte	12,1
+	.word	.L24
+.L45:
+	.byte	2
+	.byte	'unsigned char',0,1,8,3
+	.word	208
+	.byte	4
+	.word	225
+.L49:
+	.byte	2
+	.byte	'unsigned short int',0,2,7,5
+	.byte	'CRC8',0,1,51,7
+	.word	208
+	.byte	1,1,1,1,6
+	.byte	'buffer',0,1,51,26
+	.word	230
+	.byte	6
+	.byte	'length',0,1,51,41
+	.word	235
+	.byte	0
+.L60:
+	.byte	2
+	.byte	'unsigned long int',0,4,7,4
+	.word	305
+	.byte	5
+	.byte	'CRC5',0,1,60,7
+	.word	208
+	.byte	1,1,1,1,6
+	.byte	'buffer',0,1,60,25
+	.word	326
+	.byte	0
+.L47:
+	.byte	4
+	.word	225
+	.byte	7,2,70,5,4,8
+	.byte	'crc',0,1
+	.word	208
+	.byte	3,5,2,35,0,8
+	.byte	'gs_flag',0,1
+	.word	208
+	.byte	1,4,2,35,0,8
+	.byte	'output_data',0,4
+	.word	305
+	.byte	16,12,2,35,0,8
+	.byte	'sid_add_status',0,2
+	.word	235
+	.byte	5,7,2,35,2,8
+	.byte	's_bit',0,1
+	.word	208
+	.byte	1,6,2,35,3,8
+	.byte	'gen_status',0,1
+	.word	208
+	.byte	6,0,2,35,3,0,9,2,68,9,4,10
+	.byte	'bf',0
+	.word	369
+	.byte	4,2,35,0,10
+	.byte	'dw',0
+	.word	305
+	.byte	4,2,35,0,0,3
+	.word	497
+.L55:
+	.byte	4
+	.word	527
+.L63:
+	.byte	4
+	.word	225
+	.byte	7,2,55,5,4,8
+	.byte	'stuff',0,1
+	.word	208
+	.byte	2,6,2,35,0,8
+	.byte	'crc',0,1
+	.word	208
+	.byte	3,3,2,35,0,8
+	.byte	'inputdata',0,4
+	.word	305
+	.byte	16,11,2,35,0,8
+	.byte	'pe',0,1
+	.word	208
+	.byte	1,2,2,35,2,8
+	.byte	'instruction',0,2
+	.word	235
+	.byte	10,0,2,35,2,0,9,2,53,9,4,10
+	.byte	'bf',0
+	.word	542
+	.byte	4,2,35,0,10
+	.byte	'dw',0
+	.word	305
+	.byte	4,2,35,0,0,3
+	.word	638
+.L68:
+	.byte	4
+	.word	668
+	.byte	2
+	.byte	'short int',0,2,5,11
+	.byte	'__wchar_t',0,3,1,1
+	.word	678
+	.byte	2
+	.byte	'unsigned int',0,4,7,11
+	.byte	'__size_t',0,3,1,1
+	.word	709
+	.byte	2
+	.byte	'int',0,4,5,11
+	.byte	'__ptrdiff_t',0,3,1,1
+	.word	742
+	.byte	12,1,3
+	.word	769
+	.byte	11
+	.byte	'__codeptr',0,3,1,1
+	.word	771
+	.byte	11
+	.byte	'boolean',0,4,104,29
+	.word	208
+	.byte	11
+	.byte	'uint8',0,4,108,29
+	.word	208
+	.byte	11
+	.byte	'uint16',0,4,112,29
+	.word	235
+	.byte	11
+	.byte	'uint32',0,4,116,29
+	.word	305
+	.byte	11
+	.byte	'sint16',0,4,129,1,29
+	.word	678
+	.byte	2
+	.byte	'long int',0,4,5,11
+	.byte	'sint32',0,4,134,1,29
+	.word	870
+	.byte	2
+	.byte	'long long int',0,8,5,11
+	.byte	'sint64',0,4,141,1,29
+	.word	898
+	.byte	2
+	.byte	'float',0,4,4,11
+	.byte	'float32',0,4,170,1,29
+	.word	931
+	.byte	13
+	.byte	'void',0,3
+	.word	957
+	.byte	11
+	.byte	'pvoid',0,5,54,28
+	.word	963
+	.byte	11
+	.byte	'Ifx_TickTime',0,5,76,28
+	.word	898
+	.byte	14,6,65,9,1,15
+	.byte	'_USB_CMD_MIN',0,0,15
+	.byte	'USB_CMD_IS_ALIVE',0,1,15
+	.byte	'USB_CMD_READ_REG',0,2,15
+	.byte	'USB_CMD_WRITE_REG',0,3,15
+	.byte	'USB_CMD_READ_REG_RAW',0,4,15
+	.byte	'USB_CMD_WRITE_REG_RAW',0,5,15
+	.byte	'USB_CMD_ABORT',0,6,15
+	.byte	'USB_CMD_STOP_READING',0,7,15
+	.byte	'USB_CMD_STOP_WATCHDOG',0,8,15
+	.byte	'USB_CMD_STOP_GPIO_READING',0,9,15
+	.byte	'USB_CMD_STOP_READ_ERRORS',0,10,15
+	.byte	'USB_CMD_EXECUTE_RW_SEQUENCE',0,11,15
+	.byte	'USB_CMD_EXECUTE_READ_SEQUENCE',0,12,15
+	.byte	'USB_CMD_EXECUTE_WRITE_SEQUENCE',0,13,15
+	.byte	'USB_CMD_CONFIGURE_READING',0,14,15
+	.byte	'USB_CMD_CONFIGURE_WATCHDOG',0,15,15
+	.byte	'USB_CMD_START_READING',0,16,15
+	.byte	'USB_CMD_START_WATCHDOG',0,17,15
+	.byte	'USB_CMD_START_GPIO_READING',0,18,15
+	.byte	'USB_CMD_START_READ_ERRORS',0,19,15
+	.byte	'USB_CMD_RESET_TO_IDLE',0,20,15
+	.byte	'USB_CMD_GET_CONFIG_WATCHDOG',0,21,15
+	.byte	'USB_CMD_START_MONITORING_WATCHDOG',0,22,15
+	.byte	'USB_CMD_STOP_MONITORING_WATCHDOG',0,23,15
+	.byte	'USB_CMD_BYPASS_MCU',0,24,15
+	.byte	'USB_CMD_ACTIVATE_MCU',0,25,15
+	.byte	'USB_CMD_GET_MCU_VERSION',0,26,15
+	.byte	'_USB_EXT_CMD_MAX',0,63,15
+	.byte	'INT_CMD_SYS_TIMER_UPD',0,192,0,15
+	.byte	'INT_CMD_ACK_WATCHDOG',0,193,0,15
+	.byte	'INT_CMD_CS600_ERR_CHECK',0,194,0,15
+	.byte	'INT_CMD_CONT_READ',0,195,0,15
+	.byte	'INT_CMD_GPIO_READ',0,196,0,15
+	.byte	'_USB_CMD_MAX',0,255,0,0,11
+	.byte	'USBCommandsEnum',0,6,105,3
+	.word	1003
+	.byte	14,6,110,9,1,15
+	.byte	'_USB_STATUS_MIN',0,255,0,15
+	.byte	'USB_STATUS_ACK',0,128,1,15
+	.byte	'USB_STATUS_ERROR',0,129,1,15
+	.byte	'USB_STATUS_ERROR_TELEMETRY',0,130,1,15
+	.byte	'USB_STATUS_STATUS',0,131,1,15
+	.byte	'USB_STATUS_BUSY',0,132,1,15
+	.byte	'USB_STATUS_DATA',0,133,1,15
+	.byte	'_USB_STATUS_MAX',0,255,1,0,11
+	.byte	'USBStatusesEnum',0,6,122,3
+	.word	1877
+	.byte	11
+	.byte	'SPITransmitData',0,2,64,3
+	.word	638
+	.byte	11
+	.byte	'SPIReceiveData',0,2,80,3
+	.word	497
+	.byte	0
+	.sdecl	'.debug_abbrev',debug
+	.sect	'.debug_abbrev'
+.L23:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,16,6,0,0,2,36,0,3,8,11,15,62,15,0,0,3,15,0,73,19,0,0,4,38,0,73,19
+	.byte	0,0,5,46,1,3,8,58,15,59,15,57,15,73,19,54,15,39,12,63,12,60,12,0,0,6,5,0,3,8,58,15,59,15,57,15,73,19,0
+	.byte	0,7,19,1,58,15,59,15,57,15,11,15,0,0,8,13,0,3,8,11,15,73,19,13,15,12,15,56,9,0,0,9,23,1,58,15,59,15,57
+	.byte	15,11,15,0,0,10,13,0,3,8,73,19,11,15,56,9,0,0,11,22,0,3,8,58,15,59,15,57,15,73,19,0,0,12,21,0,54,15,0
+	.byte	0,13,59,0,3,8,0,0,14,4,1,58,15,59,15,57,15,11,15,0,0,15,40,0,3,8,28,13,0,0,0
+	.sdecl	'.debug_line',debug
+	.sect	'.debug_line'
+.L24:
+	.word	.L84-.L83
+.L83:
+	.half	3
+	.word	.L86-.L85
+.L85:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1
+	.byte	'C:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Cpu\\\\Std',0
+	.byte	0
+	.byte	'C:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\common\\crc.h',0
+	.byte	0,0,0
+	.byte	'C:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\common\\spi_data_types.h',0
+	.byte	0,0,0
+	.byte	'../top/crc_wrapper.c',0,0,0,0
+	.byte	'Platform_Types.h',0,1,0,0
+	.byte	'Ifx_Types.h',0,1,0,0
+	.byte	'C:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\common\\usb_data_types.h',0
+	.byte	0,0,0,0
+.L86:
+.L84:
+	.sdecl	'.debug_info',debug,cluster('IsCRC8Correct')
+	.sect	'.debug_info'
+.L25:
+	.word	367
+	.half	3
+	.word	.L26
+	.byte	4,1
+	.byte	'../top/crc_wrapper.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\Entwicklung\\AB15_Demo_Board\\AB15_dev_Git\\ab15_sw\\firmware\\mcu_esw\\TriCoreDebug(TASKING)\\',0
+	.byte	12,1
+	.word	.L28,.L27
+	.byte	2
+	.word	.L21
+	.byte	3
+	.byte	'IsCRC8Correct',0,1,54,9
+	.word	.L45
+	.byte	1,1,1
+	.word	.L14,.L46,.L13
+	.byte	4
+	.byte	'data',0,1,54,37
+	.word	.L47,.L48
+	.byte	4
+	.byte	'length',0,1,54,50
+	.word	.L49,.L50
+	.byte	4
+	.byte	'expectedCrc',0,1,54,64
+	.word	.L45,.L51
+	.byte	5
+	.word	.L14,.L46
+	.byte	6
+	.byte	'calculatedCRC',0,1,56,11
+	.word	.L45,.L52
+	.byte	6
+	.byte	'result',0,1,57,13
+	.word	.L45,.L53
+	.byte	0,0,0
+	.sdecl	'.debug_abbrev',debug,cluster('IsCRC8Correct')
+	.sect	'.debug_abbrev'
+.L26:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,73,16
+	.byte	54,15,39,12,63,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,1,17,1,18,1,0,0,6
+	.byte	52,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,0
+	.sdecl	'.debug_line',debug,cluster('IsCRC8Correct')
+	.sect	'.debug_line'
+.L27:
+	.word	.L88-.L87
+.L87:
+	.half	3
+	.word	.L90-.L89
+.L89:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'../top/crc_wrapper.c',0,0,0,0,0
+.L90:
+	.byte	5,9,7,0,5,2
+	.word	.L14
+	.byte	3,53,1,5,20,9
+	.half	.L73-.L14
+	.byte	3,3,1,5,5,9
+	.half	.L74-.L73
+	.byte	3,1,1,5,36,7,9
+	.half	.L91-.L74
+	.byte	3,2,1,5,18,9
+	.half	.L72-.L91
+	.byte	3,1,1,5,49,7,9
+	.half	.L92-.L72
+	.byte	1,5,58,9
+	.half	.L75-.L92
+	.byte	1,5,49,9
+	.half	.L3-.L75
+	.byte	1,5,5,9
+	.half	.L2-.L3
+	.byte	3,3,1,5,1,9
+	.half	.L5-.L2
+	.byte	3,1,1,7,9
+	.half	.L29-.L5
+	.byte	0,1,1
+.L88:
+	.sdecl	'.debug_ranges',debug,cluster('IsCRC8Correct')
+	.sect	'.debug_ranges'
+.L28:
+	.word	-1,.L14,0,.L29-.L14,0,0
+	.sdecl	'.debug_info',debug,cluster('IsCRC5Correct')
+	.sect	'.debug_info'
+.L30:
+	.word	379
+	.half	3
+	.word	.L31
+	.byte	4,1
+	.byte	'../top/crc_wrapper.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\Entwicklung\\AB15_Demo_Board\\AB15_dev_Git\\ab15_sw\\firmware\\mcu_esw\\TriCoreDebug(TASKING)\\',0
+	.byte	12,1
+	.word	.L33,.L32
+	.byte	2
+	.word	.L21
+	.byte	3
+	.byte	'IsCRC5Correct',0,1,67,9
+	.word	.L45
+	.byte	1,1,1
+	.word	.L16,.L54,.L15
+	.byte	4
+	.byte	'data',0,1,67,46
+	.word	.L55,.L56
+	.byte	5
+	.word	.L16,.L54
+	.byte	6
+	.byte	'calculatedCRC',0,1,69,11
+	.word	.L45,.L57
+	.byte	6
+	.byte	'result',0,1,70,13
+	.word	.L45,.L58
+	.byte	6
+	.byte	'expectedCrc',0,1,71,11
+	.word	.L45,.L59
+	.byte	6
+	.byte	'twentySevenBitData',0,1,72,12
+	.word	.L60,.L61
+	.byte	0,0,0
+	.sdecl	'.debug_abbrev',debug,cluster('IsCRC5Correct')
+	.sect	'.debug_abbrev'
+.L31:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,73,16
+	.byte	54,15,39,12,63,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,1,17,1,18,1,0,0,6
+	.byte	52,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,0
+	.sdecl	'.debug_line',debug,cluster('IsCRC5Correct')
+	.sect	'.debug_line'
+.L32:
+	.word	.L94-.L93
+.L93:
+	.half	3
+	.word	.L96-.L95
+.L95:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'../top/crc_wrapper.c',0,0,0,0,0
+.L96:
+	.byte	5,33,7,0,5,2
+	.word	.L16
+	.byte	3,198,0,1,5,38,9
+	.half	.L97-.L16
+	.byte	3,1,1,5,44,9
+	.half	.L78-.L97
+	.byte	1,5,26,9
+	.half	.L98-.L78
+	.byte	3,2,1,5,14,9
+	.half	.L76-.L98
+	.byte	3,1,1,5,45,7,9
+	.half	.L99-.L76
+	.byte	1,5,54,9
+	.half	.L79-.L99
+	.byte	1,5,45,9
+	.half	.L6-.L79
+	.byte	1,5,5,9
+	.half	.L7-.L6
+	.byte	3,2,1,5,1,9
+	.half	.L8-.L7
+	.byte	3,1,1,7,9
+	.half	.L34-.L8
+	.byte	0,1,1
+.L94:
+	.sdecl	'.debug_ranges',debug,cluster('IsCRC5Correct')
+	.sect	'.debug_ranges'
+.L33:
+	.word	-1,.L16,0,.L34-.L16,0,0
+	.sdecl	'.debug_info',debug,cluster('GetCRC8')
+	.sect	'.debug_info'
+.L35:
+	.word	318
+	.half	3
+	.word	.L36
+	.byte	4,1
+	.byte	'../top/crc_wrapper.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\Entwicklung\\AB15_Demo_Board\\AB15_dev_Git\\ab15_sw\\firmware\\mcu_esw\\TriCoreDebug(TASKING)\\',0
+	.byte	12,1
+	.word	.L38,.L37
+	.byte	2
+	.word	.L21
+	.byte	3
+	.byte	'GetCRC8',0,1,80,7
+	.word	.L45
+	.byte	1,1,1
+	.word	.L18,.L62,.L17
+	.byte	4
+	.byte	'data',0,1,80,29
+	.word	.L63,.L64
+	.byte	4
+	.byte	'length',0,1,80,42
+	.word	.L49,.L65
+	.byte	5
+	.word	.L18,.L62
+	.byte	6
+	.byte	'calculatedCRC',0,1,82,11
+	.word	.L45,.L66
+	.byte	0,0,0
+	.sdecl	'.debug_abbrev',debug,cluster('GetCRC8')
+	.sect	'.debug_abbrev'
+.L36:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,73,16
+	.byte	54,15,39,12,63,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,1,17,1,18,1,0,0,6
+	.byte	52,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,0
+	.sdecl	'.debug_line',debug,cluster('GetCRC8')
+	.sect	'.debug_line'
+.L37:
+	.word	.L101-.L100
+.L100:
+	.half	3
+	.word	.L103-.L102
+.L102:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'../top/crc_wrapper.c',0,0,0,0,0
+.L103:
+	.byte	5,25,7,0,5,2
+	.word	.L18
+	.byte	3,209,0,1,5,5,9
+	.half	.L80-.L18
+	.byte	3,1,1,5,36,7,9
+	.half	.L104-.L80
+	.byte	3,2,1,5,5,9
+	.half	.L9-.L104
+	.byte	3,2,1,5,1,9
+	.half	.L10-.L9
+	.byte	3,1,1,7,9
+	.half	.L39-.L10
+	.byte	0,1,1
+.L101:
+	.sdecl	'.debug_ranges',debug,cluster('GetCRC8')
+	.sect	'.debug_ranges'
+.L38:
+	.word	-1,.L18,0,.L39-.L18,0,0
+	.sdecl	'.debug_info',debug,cluster('GetCRC5')
+	.sect	'.debug_info'
+.L40:
+	.word	330
+	.half	3
+	.word	.L41
+	.byte	4,1
+	.byte	'../top/crc_wrapper.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\Entwicklung\\AB15_Demo_Board\\AB15_dev_Git\\ab15_sw\\firmware\\mcu_esw\\TriCoreDebug(TASKING)\\',0
+	.byte	12,1
+	.word	.L43,.L42
+	.byte	2
+	.word	.L21
+	.byte	3
+	.byte	'GetCRC5',0,1,90,7
+	.word	.L45
+	.byte	1,1,1
+	.word	.L20,.L67,.L19
+	.byte	4
+	.byte	'data',0,1,90,39
+	.word	.L68,.L69
+	.byte	5
+	.word	.L20,.L67
+	.byte	6
+	.byte	'calculatedCRC',0,1,92,11
+	.word	.L45,.L70
+	.byte	6
+	.byte	'twentySevenBitData',0,1,93,12
+	.word	.L60,.L71
+	.byte	0,0,0
+	.sdecl	'.debug_abbrev',debug,cluster('GetCRC5')
+	.sect	'.debug_abbrev'
+.L41:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,73,16
+	.byte	54,15,39,12,63,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,1,17,1,18,1,0,0,6
+	.byte	52,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,0
+	.sdecl	'.debug_line',debug,cluster('GetCRC5')
+	.sect	'.debug_line'
+.L42:
+	.word	.L106-.L105
+.L105:
+	.half	3
+	.word	.L108-.L107
+.L107:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'../top/crc_wrapper.c',0,0,0,0,0
+.L108:
+	.byte	5,25,7,0,5,2
+	.word	.L20
+	.byte	3,219,0,1,5,5,9
+	.half	.L81-.L20
+	.byte	3,2,1,5,35,7,9
+	.half	.L109-.L81
+	.byte	3,2,1,5,41,9
+	.half	.L82-.L109
+	.byte	1,5,30,9
+	.half	.L110-.L82
+	.byte	3,1,1,5,5,9
+	.half	.L11-.L110
+	.byte	3,2,1,5,1,9
+	.half	.L12-.L11
+	.byte	3,1,1,7,9
+	.half	.L44-.L12
+	.byte	0,1,1
+.L106:
+	.sdecl	'.debug_ranges',debug,cluster('GetCRC5')
+	.sect	'.debug_ranges'
+.L43:
+	.word	-1,.L20,0,.L44-.L20,0,0
+	.sdecl	'.debug_loc',debug,cluster('GetCRC5')
+	.sect	'.debug_loc'
+.L19:
+	.word	-1,.L20,0,.L67-.L20
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L70:
+	.word	-1,.L20,.L81-.L20,.L67-.L20
+	.half	1
+	.byte	82
+	.word	0,0
+.L69:
+	.word	-1,.L20,0,.L11-.L20
+	.half	1
+	.byte	100
+	.word	0,0
+.L71:
+	.word	-1,.L20,.L82-.L20,.L11-.L20
+	.half	1
+	.byte	84
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('GetCRC8')
+	.sect	'.debug_loc'
+.L17:
+	.word	-1,.L18,0,.L62-.L18
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L66:
+	.word	-1,.L18,.L80-.L18,.L62-.L18
+	.half	1
+	.byte	82
+	.word	0,0
+.L64:
+	.word	-1,.L18,0,.L9-.L18
+	.half	1
+	.byte	100
+	.word	0,0
+.L65:
+	.word	-1,.L18,0,.L9-.L18
+	.half	1
+	.byte	84
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('IsCRC5Correct')
+	.sect	'.debug_loc'
+.L15:
+	.word	-1,.L16,0,.L54-.L16
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L57:
+	.word	-1,.L16,.L76-.L16,.L79-.L16
+	.half	1
+	.byte	82
+	.word	.L6-.L16,.L7-.L16
+	.half	1
+	.byte	82
+	.word	0,0
+.L56:
+	.word	-1,.L16,0,.L76-.L16
+	.half	1
+	.byte	100
+	.word	0,0
+.L59:
+	.word	-1,.L16,.L77-.L16,.L54-.L16
+	.half	1
+	.byte	95
+	.word	0,0
+.L58:
+	.word	-1,.L16,.L79-.L16,.L6-.L16
+	.half	1
+	.byte	82
+	.word	.L7-.L16,.L54-.L16
+	.half	1
+	.byte	82
+	.word	0,0
+.L61:
+	.word	-1,.L16,.L78-.L16,.L76-.L16
+	.half	1
+	.byte	84
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('IsCRC8Correct')
+	.sect	'.debug_loc'
+.L13:
+	.word	-1,.L14,0,.L46-.L14
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L52:
+	.word	-1,.L14,.L72-.L14,.L75-.L14
+	.half	1
+	.byte	82
+	.word	.L3-.L14,.L2-.L14
+	.half	1
+	.byte	82
+	.word	0,0
+.L48:
+	.word	-1,.L14,0,.L72-.L14
+	.half	1
+	.byte	100
+	.word	0,0
+.L51:
+	.word	-1,.L14,0,.L72-.L14
+	.half	1
+	.byte	85
+	.word	.L73-.L14,.L46-.L14
+	.half	1
+	.byte	95
+	.word	0,0
+.L50:
+	.word	-1,.L14,0,.L72-.L14
+	.half	1
+	.byte	84
+	.word	0,0
+.L53:
+	.word	-1,.L14,.L74-.L14,.L72-.L14
+	.half	1
+	.byte	82
+	.word	.L75-.L14,.L3-.L14
+	.half	1
+	.byte	82
+	.word	.L2-.L14,.L46-.L14
+	.half	1
+	.byte	82
+	.word	0,0
+	.sdecl	'.debug_frame',debug
+	.sect	'.debug_frame'
+.L111:
+	.word	48
+	.word	-1
+	.byte	3,0,2,1,27,12,26,0,8,26,8,27,8,30,8,29,8,28,8,16,8,17,8,24,8,25,8,31,8,32,8,33,8,34,8,35,8,36,8,37,8,38
+	.byte	8,39
+	.sdecl	'.debug_frame',debug,cluster('IsCRC8Correct')
+	.sect	'.debug_frame'
+	.word	12
+	.word	.L111,.L14,.L46-.L14
+	.sdecl	'.debug_frame',debug,cluster('IsCRC5Correct')
+	.sect	'.debug_frame'
+	.word	12
+	.word	.L111,.L16,.L54-.L16
+	.sdecl	'.debug_frame',debug,cluster('GetCRC8')
+	.sect	'.debug_frame'
+	.word	12
+	.word	.L111,.L18,.L62-.L18
+	.sdecl	'.debug_frame',debug,cluster('GetCRC5')
+	.sect	'.debug_frame'
+	.word	12
+	.word	.L111,.L20,.L67-.L20
+	; Module end

@@ -1,0 +1,3041 @@
+	; Module start
+	.compiler_version	"TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler v1.1r8 Build 22011964"
+	.compiler_invocation	"ctc -f cc25468a --dep-file=cmd/watchdog.d -c99 --fp-model=3cflnrSTz -D__CPU__=tc37x -D__CPU_TC37X__ --core=tc1.6.2 --fp-model=+float -D__CPU__=tc37x -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Configurations -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Infra -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Infra\\\\Platform -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Infra\\\\Platform\\\\Tricore -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Infra\\\\Platform\\\\Tricore\\\\Compilers -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Infra\\\\Sfr -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Infra\\\\Sfr\\\\TC37A -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Infra\\\\Sfr\\\\TC37A\\\\_Reg -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Infra\\\\Ssw -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Infra\\\\Ssw\\\\TC37A -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Infra\\\\Ssw\\\\TC37A\\\\Tricore -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Service -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Service\\\\CpuGeneric -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Service\\\\CpuGeneric\\\\If -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Service\\\\CpuGeneric\\\\StdIf -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Service\\\\CpuGeneric\\\\SysSe -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Service\\\\CpuGeneric\\\\SysSe\\\\Bsp -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Service\\\\CpuGeneric\\\\_Utilities -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Asclin -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Asclin\\\\Asc -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Asclin\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Cpu -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Cpu\\\\Irq -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Cpu\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Cpu\\\\Trap -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Dma -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Dma\\\\Dma -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Dma\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Gpt12 -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Gpt12\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Gtm -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Gtm\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Mtu -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Mtu\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Pms -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Pms\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Port -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Port\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Qspi -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Qspi\\\\SpiMaster -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Qspi\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Scu -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Scu\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Src -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Src\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Stm -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Stm\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\_Impl -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\_Lib -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\_Lib\\\\DataHandling -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\_PinMap -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\cmd -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\common -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\periphery -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\top -g2 -w544 -w557 -t4 --language=+volatile -N0 -O0 -Y0 -Z0 --compact-max-size=200 --misrac-version=2004 -o cmd/watchdog.src ../cmd/watchdog.c"
+	.compiler_name		"ctc"
+	;source	'../cmd/watchdog.c'
+
+	
+$TC162
+	
+	.sdecl	'.text.watchdog.CmdConfigureWatchdog',code,cluster('CmdConfigureWatchdog')
+	.sect	'.text.watchdog.CmdConfigureWatchdog'
+	.align	2
+	
+	.global	CmdConfigureWatchdog
+; Function CmdConfigureWatchdog
+.L17:
+CmdConfigureWatchdog:	.type	func
+	sub.a	a10,#152
+.L190:
+	mov.aa	a15,a4
+.L192:
+	movh.a	a2,#@his(.1.ini)
+	lea	a2,[a2]@los(.1.ini)
+	ld.w	d1,[a2]4
+	ld.w	d0,[a2]
+.L246:
+	st.w	[a10]4,d1
+	st.w	[a10],d0
+.L247:
+	movh.a	a2,#@his(.2.ini)
+	lea	a2,[a2]@los(.2.ini)
+	ld.w	d1,[a2]4
+	ld.w	d0,[a2]
+.L248:
+	st.w	[a10]12,d1
+	st.w	[a10]8,d0
+.L249:
+	mov	d15,#4
+.L250:
+	st.h	[a10]16,d15
+.L251:
+	mov	d4,#0
+.L252:
+	ld.bu	d5,[a15]3
+	call	ConstructWordFromBytes
+.L191:
+	st.h	[a10]8,d2
+.L253:
+	mov	d4,#0
+.L254:
+	ld.bu	d5,[a15]4
+	call	ConstructWordFromBytes
+.L255:
+	st.h	[a10]10,d2
+.L256:
+	ld.bu	d4,[a15]6
+.L257:
+	ld.bu	d5,[a15]5
+	call	ConstructWordFromBytes
+.L258:
+	st.h	[a10]12,d2
+.L259:
+	ld.bu	d4,[a15]8
+.L260:
+	ld.bu	d5,[a15]7
+	call	ConstructWordFromBytes
+.L261:
+	st.h	[a10]14,d2
+.L262:
+	movh.a	a2,#@his(respTimeValue)
+	lea	a2,[a2]@los(respTimeValue)
+.L263:
+	ld.hu	d15,[a10]14
+.L264:
+	st.h	[a2],d15
+.L265:
+	lea	a4,[a10]0
+.L266:
+	lea	a5,[a10]8
+.L267:
+	lea	a6,[a10]16
+	call	QSPIWriteSequence
+.L194:
+	mov	d15,d2
+.L115:
+	ld.bu	d4,[a15]
+	call	SetResponseBit
+.L195:
+	st.b	[a10]20,d2
+.L268:
+	jne	d15,#0,.L2
+.L269:
+	mov	d15,#129
+.L196:
+	st.b	[a10]21,d15
+.L270:
+	mov	d15,#0
+.L271:
+	st.b	[a10]22,d15
+.L272:
+	j	.L3
+.L2:
+	movh.a	a15,#@his(WatchdogManagementFlags)
+.L193:
+	lea	a15,[a15]@los(WatchdogManagementFlags)
+.L273:
+	mov	d15,#1
+.L197:
+	st.b	[a15]2,d15
+.L274:
+	mov	d15,#128
+.L275:
+	st.b	[a10]21,d15
+.L276:
+	mov	d15,#0
+.L277:
+	st.b	[a10]22,d15
+.L3:
+	lea	a4,[a10]20
+	call	SendUSBPackage
+.L278:
+	ret
+.L105:
+	
+__CmdConfigureWatchdog_function_end:
+	.size	CmdConfigureWatchdog,__CmdConfigureWatchdog_function_end-CmdConfigureWatchdog
+.L46:
+	; End of function
+	
+	.sdecl	'.text.watchdog.CmdGetConfigWatchdog',code,cluster('CmdGetConfigWatchdog')
+	.sect	'.text.watchdog.CmdGetConfigWatchdog'
+	.align	2
+	
+	.global	CmdGetConfigWatchdog
+; Function CmdGetConfigWatchdog
+.L19:
+CmdGetConfigWatchdog:	.type	func
+	sub.a	a10,#160
+.L198:
+	mov.aa	a12,a4
+.L200:
+	movh.a	a15,#@his(.1.ini)
+	lea	a15,[a15]@los(.1.ini)
+	ld.w	d1,[a15]4
+	ld.w	d0,[a15]
+.L283:
+	st.w	[a10]4,d1
+	st.w	[a10],d0
+.L284:
+	mov	d15,#4
+.L285:
+	st.h	[a10]24,d15
+.L286:
+	lea	a4,[a10]0
+.L199:
+	lea	a5,[a10]8
+.L287:
+	lea	a6,[a10]24
+	call	QSPIReadSequence
+.L201:
+	mov	d15,d2
+.L126:
+	ld.bu	d4,[a12]
+	call	SetResponseBit
+.L202:
+	st.b	[a10]28,d2
+.L288:
+	jne	d15,#0,.L4
+.L289:
+	mov	d15,#129
+.L203:
+	st.b	[a10]29,d15
+.L290:
+	mov	d15,#0
+.L291:
+	st.b	[a10]30,d15
+.L292:
+	j	.L5
+.L4:
+	mov	d15,#133
+.L204:
+	st.b	[a10]29,d15
+.L293:
+	mov	d15,#6
+.L294:
+	st.b	[a10]30,d15
+.L295:
+	ld.w	d15,[a10]8
+	extr.u	d4,d15,#4,#16
+	call	GetLSB
+.L296:
+	st.b	[a10]31,d2
+.L297:
+	ld.w	d15,[a10]12
+	extr.u	d4,d15,#4,#16
+	call	GetLSB
+.L298:
+	st.b	[a10]32,d2
+.L299:
+	ld.w	d15,[a10]16
+	extr.u	d4,d15,#4,#16
+	call	GetLSB
+.L300:
+	st.b	[a10]33,d2
+.L301:
+	ld.w	d15,[a10]16
+	extr.u	d4,d15,#4,#16
+	call	GetMSB
+.L302:
+	st.b	[a10]34,d2
+.L303:
+	ld.w	d15,[a10]20
+	extr.u	d4,d15,#4,#16
+	call	GetLSB
+.L304:
+	st.b	[a10]35,d2
+.L305:
+	ld.w	d15,[a10]20
+	extr.u	d4,d15,#4,#16
+	call	GetMSB
+.L306:
+	st.b	[a10]36,d2
+.L5:
+	lea	a4,[a10]28
+	call	SendUSBPackage
+.L307:
+	ret
+.L118:
+	
+__CmdGetConfigWatchdog_function_end:
+	.size	CmdGetConfigWatchdog,__CmdGetConfigWatchdog_function_end-CmdGetConfigWatchdog
+.L51:
+	; End of function
+	
+	.sdecl	'.text.watchdog.CmdStartMonitoringWatchdog',code,cluster('CmdStartMonitoringWatchdog')
+	.sect	'.text.watchdog.CmdStartMonitoringWatchdog'
+	.align	2
+	
+	.global	CmdStartMonitoringWatchdog
+; Function CmdStartMonitoringWatchdog
+.L21:
+CmdStartMonitoringWatchdog:	.type	func
+	movh.a	a15,#@his(monitoringMessageID)
+	lea	a15,[a15]@los(monitoringMessageID)
+.L356:
+	ld.bu	d15,[a4]
+.L357:
+	st.b	[a15],d15
+.L358:
+	movh.a	a15,#@his(WatchdogManagementFlags)
+	lea	a15,[a15]@los(WatchdogManagementFlags)
+.L359:
+	mov	d15,#1
+.L360:
+	st.b	[a15]1,d15
+.L361:
+	ret
+.L141:
+	
+__CmdStartMonitoringWatchdog_function_end:
+	.size	CmdStartMonitoringWatchdog,__CmdStartMonitoringWatchdog_function_end-CmdStartMonitoringWatchdog
+.L66:
+	; End of function
+	
+	.sdecl	'.text.watchdog.CmdStopMonitoringWatchdog',code,cluster('CmdStopMonitoringWatchdog')
+	.sect	'.text.watchdog.CmdStopMonitoringWatchdog'
+	.align	2
+	
+	.global	CmdStopMonitoringWatchdog
+; Function CmdStopMonitoringWatchdog
+.L23:
+CmdStopMonitoringWatchdog:	.type	func
+	sub.a	a10,#136
+.L205:
+	movh.a	a15,#@his(WatchdogManagementFlags)
+	lea	a15,[a15]@los(WatchdogManagementFlags)
+.L366:
+	mov	d15,#0
+.L367:
+	st.b	[a15]1,d15
+.L147:
+	ld.bu	d4,[a4]
+	call	SetResponseBit
+.L206:
+	st.b	[a10],d2
+.L368:
+	mov	d15,#128
+.L369:
+	st.b	[a10]1,d15
+.L370:
+	mov	d15,#0
+.L371:
+	st.b	[a10]2,d15
+.L372:
+	lea	a4,[a10]0
+	call	SendUSBPackage
+.L373:
+	ret
+.L144:
+	
+__CmdStopMonitoringWatchdog_function_end:
+	.size	CmdStopMonitoringWatchdog,__CmdStopMonitoringWatchdog_function_end-CmdStopMonitoringWatchdog
+.L71:
+	; End of function
+	
+	.sdecl	'.text.watchdog.IntCmdServeWatchdog',code,cluster('IntCmdServeWatchdog')
+	.sect	'.text.watchdog.IntCmdServeWatchdog'
+	.align	2
+	
+	.global	IntCmdServeWatchdog
+; Function IntCmdServeWatchdog
+.L25:
+IntCmdServeWatchdog:	.type	func
+	sub.a	a10,#144
+.L207:
+	mov	d15,#0
+.L378:
+	st.h	[a10]2,d15
+.L379:
+	mov	d15,#0
+.L380:
+	st.h	[a10]6,d15
+.L381:
+	call	GetREQUValue
+.L208:
+	mov	d8,d2
+.L210:
+	mov	d5,#1
+	mov	d4,d8
+.L209:
+	call	GetResponseWord
+.L212:
+	st.h	[a10]2,d2
+.L382:
+	mov	d5,#0
+	mov	d4,d8
+.L213:
+	call	GetResponseWord
+.L214:
+	st.h	[a10],d2
+.L383:
+	mov	d15,#19
+.L384:
+	st.h	[a10]4,d15
+.L385:
+	mov	d15,#1
+.L386:
+	st.h	[a10]6,d15
+.L387:
+	lea	a4,[a10]4
+.L388:
+	lea	a5,[a10]2
+.L389:
+	lea	a6,[a10]6
+	call	QSPIWriteSequence
+.L390:
+	lea	a4,[a10]4
+.L391:
+	lea	a5,[a10]0
+.L392:
+	lea	a6,[a10]6
+	call	QSPIWriteSequence
+.L393:
+	movh.a	a15,#@his(WatchdogManagementFlags)
+	lea	a15,[a15]@los(WatchdogManagementFlags)
+.L394:
+	ld.bu	d15,[a15]1
+.L395:
+	jne	d15,#1,.L6
+.L155:
+	movh.a	a15,#@his(monitoringMessageID)
+	lea	a15,[a15]@los(monitoringMessageID)
+	ld.bu	d4,[a15]
+	call	SetResponseBit
+.L396:
+	st.b	[a10]8,d2
+.L397:
+	mov	d15,#22
+.L398:
+	st.h	[a10]4,d15
+.L157:
+	mov	d15,#1
+.L399:
+	st.h	[a10]6,d15
+.L160:
+	lea	a4,[a10]4
+.L400:
+	lea	a5,[a10]140
+.L401:
+	lea	a6,[a10]6
+	call	QSPIReadSequence
+.L215:
+	jne	d2,#0,.L7
+.L402:
+	mov	d15,#129
+.L403:
+	st.b	[a10]9,d15
+.L404:
+	mov	d15,#0
+.L405:
+	st.b	[a10]10,d15
+.L406:
+	j	.L8
+.L7:
+	call	GetWatchdogPeriodicity
+.L216:
+	movh.a	a15,#@his(durationOfTimerInterruptUs)
+	lea	a15,[a15]@los(durationOfTimerInterruptUs)
+	ld.w	d15,[a15]
+.L407:
+	mul	d2,d15
+.L408:
+	mov	d15,#1000
+.L409:
+	div.u	e0,d2,d15
+	extr.u	d9,d0,#0,#16
+.L217:
+	mov	d15,#133
+.L410:
+	st.b	[a10]9,d15
+.L411:
+	mov	d15,#8
+.L412:
+	st.b	[a10]10,d15
+.L413:
+	mov	d4,d9
+.L218:
+	call	GetLSB
+.L219:
+	st.b	[a10]11,d2
+.L414:
+	mov	d4,d9
+.L220:
+	call	GetMSB
+.L221:
+	st.b	[a10]12,d2
+.L415:
+	ld.hu	d4,[a10]2
+	call	GetLSB
+.L416:
+	st.b	[a10]13,d2
+.L417:
+	ld.hu	d4,[a10]2
+	call	GetMSB
+.L418:
+	st.b	[a10]14,d2
+.L419:
+	ld.hu	d4,[a10]0
+	call	GetLSB
+.L420:
+	st.b	[a10]15,d2
+.L421:
+	ld.hu	d4,[a10]0
+	call	GetMSB
+.L422:
+	st.b	[a10]16,d2
+.L163:
+	ld.w	d15,[a10]140
+	extr.u	d15,d15,#4,#16
+.L423:
+	mov.u	d0,#65520
+.L424:
+	and	d15,d0
+.L222:
+	or	d8,d15
+.L211:
+	mov	d4,d8
+.L223:
+	call	GetLSB
+.L224:
+	st.b	[a10]17,d2
+.L425:
+	mov	d4,d8
+.L225:
+	call	GetMSB
+.L226:
+	st.b	[a10]18,d2
+.L8:
+	lea	a4,[a10]8
+	call	SendUSBPackage
+.L6:
+	ret
+.L149:
+	
+__IntCmdServeWatchdog_function_end:
+	.size	IntCmdServeWatchdog,__IntCmdServeWatchdog_function_end-IntCmdServeWatchdog
+.L76:
+	; End of function
+	
+	.sdecl	'.text.watchdog.CmdStartWatchdog',code,cluster('CmdStartWatchdog')
+	.sect	'.text.watchdog.CmdStartWatchdog'
+	.align	2
+	
+	.global	CmdStartWatchdog
+; Function CmdStartWatchdog
+.L27:
+CmdStartWatchdog:	.type	func
+	sub.a	a10,#144
+.L227:
+	ld.bu	d4,[a4]
+	call	SetResponseBit
+.L228:
+	st.b	[a10],d2
+.L312:
+	mov	d15,#0
+.L313:
+	st.b	[a10]2,d15
+.L132:
+	movh.a	a15,#@his(WatchdogManagementFlags)
+	lea	a15,[a15]@los(WatchdogManagementFlags)
+.L314:
+	ld.bu	d15,[a15]2
+.L315:
+	jne	d15,#1,.L9
+.L316:
+	mov	d15,#19
+.L317:
+	st.h	[a10]132,d15
+.L318:
+	mov	d15,#1
+.L319:
+	st.h	[a10]134,d15
+.L320:
+	mov	d4,#0
+.L321:
+	mov	d5,#0
+	call	GetResponseWord
+.L322:
+	st.h	[a10]136,d2
+.L323:
+	lea	a4,[a10]132
+.L324:
+	lea	a5,[a10]136
+.L325:
+	lea	a6,[a10]134
+	call	QSPIWriteSequence
+.L326:
+	lea	a4,[a10]132
+.L327:
+	lea	a5,[a10]136
+.L328:
+	lea	a6,[a10]134
+	call	QSPIWriteSequence
+.L329:
+	call	CalculateWatchdogAckPeriodicity
+	mov	d4,d2
+	call	ConfigureWatchdogPeriodicity
+.L330:
+	call	EnableWatchdogInterrupt
+.L331:
+	movh.a	a15,#@his(WatchdogManagementFlags)
+	lea	a15,[a15]@los(WatchdogManagementFlags)
+.L332:
+	mov	d15,#1
+.L333:
+	st.b	[a15],d15
+.L334:
+	mov	d15,#128
+.L335:
+	st.b	[a10]1,d15
+.L336:
+	j	.L10
+.L9:
+	mov	d15,#129
+.L337:
+	st.b	[a10]1,d15
+.L10:
+	lea	a4,[a10]0
+	call	SendUSBPackage
+.L338:
+	ret
+.L128:
+	
+__CmdStartWatchdog_function_end:
+	.size	CmdStartWatchdog,__CmdStartWatchdog_function_end-CmdStartWatchdog
+.L56:
+	; End of function
+	
+	.sdecl	'.text.watchdog.CmdStopWatchdog',code,cluster('CmdStopWatchdog')
+	.sect	'.text.watchdog.CmdStopWatchdog'
+	.align	2
+	
+	.global	CmdStopWatchdog
+; Function CmdStopWatchdog
+.L29:
+CmdStopWatchdog:	.type	func
+	sub.a	a10,#136
+.L229:
+	mov.aa	a15,a4
+.L231:
+	call	DisableWatchdogInterrupt
+.L230:
+	movh.a	a2,#@his(WatchdogManagementFlags)
+	lea	a2,[a2]@los(WatchdogManagementFlags)
+.L343:
+	mov	d15,#0
+.L344:
+	st.b	[a2],d15
+.L139:
+	ld.bu	d4,[a15]
+	call	SetResponseBit
+.L345:
+	st.b	[a10],d2
+.L346:
+	mov	d15,#128
+.L347:
+	st.b	[a10]1,d15
+.L348:
+	mov	d15,#0
+.L349:
+	st.b	[a10]2,d15
+.L350:
+	lea	a4,[a10]0
+	call	SendUSBPackage
+.L351:
+	ret
+.L136:
+	
+__CmdStopWatchdog_function_end:
+	.size	CmdStopWatchdog,__CmdStopWatchdog_function_end-CmdStopWatchdog
+.L61:
+	; End of function
+	
+	.sdecl	'.text.watchdog.GetResponseWord',code,cluster('GetResponseWord')
+	.sect	'.text.watchdog.GetResponseWord'
+	.align	2
+	
+	.global	GetResponseWord
+; Function GetResponseWord
+.L31:
+GetResponseWord:	.type	func
+	sub.a	a10,#64
+.L232:
+	movh.a	a15,#@his(.3.ini)
+	lea	a15,[a15]@los(.3.ini)
+	lea	a15,[a15]0
+.L430:
+	lea	a2,[a10]0
+	mov.a	a4,#15
+.L11:
+	ld.w	d15,[a15+]
+	st.w	[a2+],d15
+	loop	a4,.L11
+.L431:
+	mul	d0,d5,#2
+.L432:
+	mul	d15,d4,#4
+	addsc.a	a15,a10,d15,#0
+.L433:
+	addsc.a	a15,a15,d0,#0
+	ld.hu	d2,[a15]0
+.L434:
+	j	.L12
+.L12:
+	ret
+.L165:
+	
+__GetResponseWord_function_end:
+	.size	GetResponseWord,__GetResponseWord_function_end-GetResponseWord
+.L81:
+	; End of function
+	
+	.sdecl	'.text.watchdog.GetRespCnt',code,cluster('GetRespCnt')
+	.sect	'.text.watchdog.GetRespCnt'
+	.align	2
+	
+	.global	GetRespCnt
+; Function GetRespCnt
+.L33:
+GetRespCnt:	.type	func
+	sub.a	a10,#8
+.L233:
+	mov	d15,#22
+.L439:
+	st.h	[a10],d15
+.L440:
+	mov	d15,#1
+.L441:
+	st.h	[a10]6,d15
+.L442:
+	lea	a4,[a10]0
+.L443:
+	lea	a5,[a10]2
+.L444:
+	lea	a6,[a10]6
+	call	QSPIReadSequence
+.L174:
+	ld.w	d15,[a10]2
+	extr.u	d15,d15,#4,#16
+.L445:
+	mov	d0,#16384
+.L446:
+	and	d15,d0
+.L447:
+	sha	d2,d15,#-14
+.L234:
+	j	.L13
+.L13:
+	ret
+.L170:
+	
+__GetRespCnt_function_end:
+	.size	GetRespCnt,__GetRespCnt_function_end-GetRespCnt
+.L86:
+	; End of function
+	
+	.sdecl	'.text.watchdog.GetREQUValue',code,cluster('GetREQUValue')
+	.sect	'.text.watchdog.GetREQUValue'
+	.align	2
+	
+	.global	GetREQUValue
+; Function GetREQUValue
+.L35:
+GetREQUValue:	.type	func
+	sub.a	a10,#8
+.L235:
+	mov	d15,#22
+.L452:
+	st.h	[a10],d15
+.L453:
+	mov	d15,#1
+.L454:
+	st.h	[a10]6,d15
+.L455:
+	lea	a4,[a10]0
+.L456:
+	lea	a5,[a10]2
+.L457:
+	lea	a6,[a10]6
+	call	QSPIReadSequence
+.L180:
+	ld.w	d15,[a10]2
+	extr.u	d15,d15,#4,#16
+.L458:
+	and	d2,d15,#15
+.L236:
+	j	.L14
+.L14:
+	ret
+.L176:
+	
+__GetREQUValue_function_end:
+	.size	GetREQUValue,__GetREQUValue_function_end-GetREQUValue
+.L91:
+	; End of function
+	
+	.sdecl	'.text.watchdog.CalculateWatchdogAckPeriodicity',code,cluster('CalculateWatchdogAckPeriodicity')
+	.sect	'.text.watchdog.CalculateWatchdogAckPeriodicity'
+	.align	2
+	
+	.global	CalculateWatchdogAckPeriodicity
+; Function CalculateWatchdogAckPeriodicity
+.L37:
+CalculateWatchdogAckPeriodicity:	.type	func
+	sub.a	a10,#8
+.L237:
+	movh.a	a15,#@his(durationOfTimerInterruptUs)
+	lea	a15,[a15]@los(durationOfTimerInterruptUs)
+.L463:
+	mov	d15,#10000
+.L464:
+	st.w	[a15],d15
+.L183:
+	movh.a	a15,#@his(respTimeValue)
+	lea	a15,[a15]@los(respTimeValue)
+	ld.hu	d15,[a15]0
+.L465:
+	mul	d15,d15,#100
+.L466:
+	st.w	[a10],d15
+.L467:
+	ld.w	d15,[a10]
+.L468:
+	movh.a	a15,#@his(durationOfTimerInterruptUs)
+	lea	a15,[a15]@los(durationOfTimerInterruptUs)
+	ld.w	d0,[a15]
+.L469:
+	div.u	e0,d15,d0
+.L470:
+	st.h	[a10]4,d0
+.L471:
+	ld.hu	d2,[a10]4
+.L472:
+	j	.L15
+.L15:
+	ret
+.L182:
+	
+__CalculateWatchdogAckPeriodicity_function_end:
+	.size	CalculateWatchdogAckPeriodicity,__CalculateWatchdogAckPeriodicity_function_end-CalculateWatchdogAckPeriodicity
+.L96:
+	; End of function
+	
+	.sdecl	'.data.watchdog.WatchdogManagementFlags',data,cluster('WatchdogManagementFlags')
+	.sect	'.data.watchdog.WatchdogManagementFlags'
+	.global	WatchdogManagementFlags
+	.align	2
+WatchdogManagementFlags:	.type	object
+	.size	WatchdogManagementFlags,4
+	.byte	1
+	.space	3
+	.sdecl	'.bss.watchdog.monitoringMessageID',data,cluster('monitoringMessageID')
+	.sect	'.bss.watchdog.monitoringMessageID'
+monitoringMessageID:	.type	object
+	.size	monitoringMessageID,1
+	.space	1
+	.sdecl	'.bss.watchdog.respTimeValue',data,cluster('respTimeValue')
+	.sect	'.bss.watchdog.respTimeValue'
+	.align	2
+respTimeValue:	.type	object
+	.size	respTimeValue,2
+	.space	2
+	.sdecl	'.bss.watchdog.durationOfTimerInterruptUs',data,cluster('durationOfTimerInterruptUs')
+	.sect	'.bss.watchdog.durationOfTimerInterruptUs'
+	.align	2
+durationOfTimerInterruptUs:	.type	object
+	.size	durationOfTimerInterruptUs,4
+	.space	4
+	.sdecl	'.rodata.watchdog..1.ini',data,rom
+	.sect	'.rodata.watchdog..1.ini'
+	.align	2
+.1.ini:	.type	object
+	.size	.1.ini,8
+	.half	16,17,20,18
+	.sdecl	'.rodata.watchdog..2.ini',data,rom
+	.sect	'.rodata.watchdog..2.ini'
+	.align	2
+.2.ini:	.type	object
+	.size	.2.ini,8
+	.space	8
+	.sdecl	'.rodata.watchdog..3.ini',data,rom
+	.sect	'.rodata.watchdog..3.ini'
+	.align	2
+.3.ini:	.type	object
+	.size	.3.ini,64
+	.half	61440,4095,48975,16560,58902,6633,43353,22182
+	.half	31370,34165,13765,51770,27804,37731,9171,56364
+	.half	56621,8914,37474,28061,52027,13508,33908,31627
+	.half	22439,43096,6376,59159,16817,48718,3838,61697
+	.calls	'CmdConfigureWatchdog','ConstructWordFromBytes'
+	.calls	'CmdConfigureWatchdog','QSPIWriteSequence'
+	.calls	'CmdConfigureWatchdog','SetResponseBit'
+	.calls	'CmdConfigureWatchdog','SendUSBPackage'
+	.calls	'CmdGetConfigWatchdog','QSPIReadSequence'
+	.calls	'CmdGetConfigWatchdog','SetResponseBit'
+	.calls	'CmdGetConfigWatchdog','GetLSB'
+	.calls	'CmdGetConfigWatchdog','GetMSB'
+	.calls	'CmdGetConfigWatchdog','SendUSBPackage'
+	.calls	'CmdStopMonitoringWatchdog','SetResponseBit'
+	.calls	'CmdStopMonitoringWatchdog','SendUSBPackage'
+	.calls	'IntCmdServeWatchdog','GetREQUValue'
+	.calls	'IntCmdServeWatchdog','GetResponseWord'
+	.calls	'IntCmdServeWatchdog','QSPIWriteSequence'
+	.calls	'IntCmdServeWatchdog','SetResponseBit'
+	.calls	'IntCmdServeWatchdog','QSPIReadSequence'
+	.calls	'IntCmdServeWatchdog','GetWatchdogPeriodicity'
+	.calls	'IntCmdServeWatchdog','GetLSB'
+	.calls	'IntCmdServeWatchdog','GetMSB'
+	.calls	'IntCmdServeWatchdog','SendUSBPackage'
+	.calls	'CmdStartWatchdog','SetResponseBit'
+	.calls	'CmdStartWatchdog','GetResponseWord'
+	.calls	'CmdStartWatchdog','QSPIWriteSequence'
+	.calls	'CmdStartWatchdog','CalculateWatchdogAckPeriodicity'
+	.calls	'CmdStartWatchdog','ConfigureWatchdogPeriodicity'
+	.calls	'CmdStartWatchdog','EnableWatchdogInterrupt'
+	.calls	'CmdStartWatchdog','SendUSBPackage'
+	.calls	'CmdStopWatchdog','DisableWatchdogInterrupt'
+	.calls	'CmdStopWatchdog','SetResponseBit'
+	.calls	'CmdStopWatchdog','SendUSBPackage'
+	.calls	'GetRespCnt','QSPIReadSequence'
+	.calls	'GetREQUValue','QSPIReadSequence'
+	.calls	'CmdConfigureWatchdog','',152
+	.calls	'CmdGetConfigWatchdog','',160
+	.calls	'CmdStartMonitoringWatchdog','',0
+	.calls	'CmdStopMonitoringWatchdog','',136
+	.calls	'IntCmdServeWatchdog','',144
+	.calls	'CmdStartWatchdog','',144
+	.calls	'CmdStopWatchdog','',136
+	.calls	'GetResponseWord','',64
+	.calls	'GetRespCnt','',8
+	.calls	'GetREQUValue','',8
+	.extern	ConstructWordFromBytes
+	.extern	GetMSB
+	.extern	GetLSB
+	.extern	SetResponseBit
+	.extern	QSPIReadSequence
+	.extern	QSPIWriteSequence
+	.extern	SendUSBPackage
+	.extern	ConfigureWatchdogPeriodicity
+	.extern	EnableWatchdogInterrupt
+	.extern	DisableWatchdogInterrupt
+	.extern	GetWatchdogPeriodicity
+	.calls	'CalculateWatchdogAckPeriodicity','',8
+	.sdecl	'.debug_info',debug
+	.sect	'.debug_info'
+.L39:
+	.word	2861
+	.half	3
+	.word	.L40
+	.byte	4
+.L38:
+	.byte	1
+	.byte	'../cmd/watchdog.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\Entwicklung\\AB15_Demo_Board\\AB15_dev_Git\\ab15_sw\\firmware\\mcu_esw\\TriCoreDebug(TASKING)\\',0
+	.byte	12,1
+	.word	.L41
+.L113:
+	.byte	2
+	.byte	'unsigned short int',0,2,7
+.L108:
+	.byte	2
+	.byte	'unsigned char',0,1,8,3
+	.byte	'ConstructWordFromBytes',0,1,50,8
+	.word	205
+	.byte	1,1,1,1,4
+	.byte	'msb',0,1,50,37
+	.word	227
+	.byte	4
+	.byte	'lsb',0,1,50,48
+	.word	227
+	.byte	0,3
+	.byte	'GetMSB',0,1,57,7
+	.word	227
+	.byte	1,1,1,1,4
+	.byte	'word',0,1,57,21
+	.word	205
+	.byte	0,3
+	.byte	'GetLSB',0,1,64,7
+	.word	227
+	.byte	1,1,1,1,4
+	.byte	'word',0,1,64,21
+	.word	205
+	.byte	0,3
+	.byte	'SetResponseBit',0,1,79,7
+	.word	227
+	.byte	1,1,1,1,4
+	.byte	'msgID',0,1,79,28
+	.word	227
+	.byte	0,5
+	.word	205
+	.byte	6
+	.word	412
+	.byte	5
+	.word	417
+.L189:
+	.byte	2
+	.byte	'unsigned long int',0,4,7,6
+	.word	427
+	.byte	5
+	.word	448
+	.byte	6
+	.word	205
+	.byte	5
+	.word	458
+	.byte	3
+	.byte	'QSPIReadSequence',0,2,99,9
+	.word	227
+	.byte	1,1,1,1,4
+	.byte	'addressBuffer',0,2,99,47
+	.word	422
+	.byte	4
+	.byte	'dataBuffer',0,2,99,77
+	.word	453
+	.byte	4
+	.byte	'length',0,2,99,104
+	.word	463
+	.byte	0,5
+	.word	417
+	.byte	5
+	.word	417
+	.byte	5
+	.word	458
+	.byte	3
+	.byte	'QSPIWriteSequence',0,2,109,9
+	.word	227
+	.byte	1,1,1,1,4
+	.byte	'addressBuffer',0,2,109,48
+	.word	554
+	.byte	4
+	.byte	'dataBuffer',0,2,109,84
+	.word	559
+	.byte	4
+	.byte	'length',0,2,109,111
+	.word	564
+	.byte	0,7,4,110,9,1,8
+	.byte	'_USB_STATUS_MIN',0,255,0,8
+	.byte	'USB_STATUS_ACK',0,128,1,8
+	.byte	'USB_STATUS_ERROR',0,129,1,8
+	.byte	'USB_STATUS_ERROR_TELEMETRY',0,130,1,8
+	.byte	'USB_STATUS_STATUS',0,131,1,8
+	.byte	'USB_STATUS_BUSY',0,132,1,8
+	.byte	'USB_STATUS_DATA',0,133,1,8
+	.byte	'_USB_STATUS_MAX',0,255,1,0,9,128,1
+	.word	227
+	.byte	10,127,0
+.L116:
+	.byte	11,4,140,1,9,132,1,12
+	.byte	'msg_id',0
+	.word	227
+	.byte	1,2,35,0,12
+	.byte	'status',0
+	.word	656
+	.byte	1,2,35,1,12
+	.byte	'dataLength',0
+	.word	227
+	.byte	1,2,35,2,12
+	.byte	'data',0
+	.word	827
+	.byte	128,1,2,35,3,0,5
+	.word	837
+	.byte	6
+	.word	912
+	.byte	3
+	.byte	'SendUSBPackage',0,3,57,9
+	.word	227
+	.byte	1,1,1,1,4
+	.byte	'data',0,3,57,48
+	.word	917
+	.byte	0,13
+	.byte	'ConfigureWatchdogPeriodicity',0,5,102,6,1,1,1,1,4
+	.byte	'watchdogPeriodicity',0,5,102,42
+	.word	205
+	.byte	0,14
+	.byte	'EnableWatchdogInterrupt',0,5,133,1,6,1,1,1,1,14
+	.byte	'DisableWatchdogInterrupt',0,5,160,1,6,1,1,1,1,15
+	.byte	'GetWatchdogPeriodicity',0,5,208,1,8
+	.word	205
+	.byte	1,1,1,1,7,4,65,9,1,8
+	.byte	'_USB_CMD_MIN',0,0,8
+	.byte	'USB_CMD_IS_ALIVE',0,1,8
+	.byte	'USB_CMD_READ_REG',0,2,8
+	.byte	'USB_CMD_WRITE_REG',0,3,8
+	.byte	'USB_CMD_READ_REG_RAW',0,4,8
+	.byte	'USB_CMD_WRITE_REG_RAW',0,5,8
+	.byte	'USB_CMD_ABORT',0,6,8
+	.byte	'USB_CMD_STOP_READING',0,7,8
+	.byte	'USB_CMD_STOP_WATCHDOG',0,8,8
+	.byte	'USB_CMD_STOP_GPIO_READING',0,9,8
+	.byte	'USB_CMD_STOP_READ_ERRORS',0,10,8
+	.byte	'USB_CMD_EXECUTE_RW_SEQUENCE',0,11,8
+	.byte	'USB_CMD_EXECUTE_READ_SEQUENCE',0,12,8
+	.byte	'USB_CMD_EXECUTE_WRITE_SEQUENCE',0,13,8
+	.byte	'USB_CMD_CONFIGURE_READING',0,14,8
+	.byte	'USB_CMD_CONFIGURE_WATCHDOG',0,15,8
+	.byte	'USB_CMD_START_READING',0,16,8
+	.byte	'USB_CMD_START_WATCHDOG',0,17,8
+	.byte	'USB_CMD_START_GPIO_READING',0,18,8
+	.byte	'USB_CMD_START_READ_ERRORS',0,19,8
+	.byte	'USB_CMD_RESET_TO_IDLE',0,20,8
+	.byte	'USB_CMD_GET_CONFIG_WATCHDOG',0,21,8
+	.byte	'USB_CMD_START_MONITORING_WATCHDOG',0,22,8
+	.byte	'USB_CMD_STOP_MONITORING_WATCHDOG',0,23,8
+	.byte	'USB_CMD_BYPASS_MCU',0,24,8
+	.byte	'USB_CMD_ACTIVATE_MCU',0,25,8
+	.byte	'USB_CMD_GET_MCU_VERSION',0,26,8
+	.byte	'_USB_EXT_CMD_MAX',0,63,8
+	.byte	'INT_CMD_SYS_TIMER_UPD',0,192,0,8
+	.byte	'INT_CMD_ACK_WATCHDOG',0,193,0,8
+	.byte	'INT_CMD_CS600_ERR_CHECK',0,194,0,8
+	.byte	'INT_CMD_CONT_READ',0,195,0,8
+	.byte	'INT_CMD_GPIO_READ',0,196,0,8
+	.byte	'_USB_CMD_MAX',0,255,0,0,9,64
+	.word	227
+	.byte	10,63,0,11,4,130,1,9,68,12
+	.byte	'msg_id',0
+	.word	227
+	.byte	1,2,35,0,12
+	.byte	'command',0
+	.word	1132
+	.byte	1,2,35,1,12
+	.byte	'dataLength',0
+	.word	227
+	.byte	1,2,35,2,12
+	.byte	'data',0
+	.word	1982
+	.byte	64,2,35,3,0,5
+	.word	1991
+	.byte	6
+	.word	2065
+.L106:
+	.byte	5
+	.word	2070
+.L110:
+	.byte	9,8
+	.word	205
+	.byte	10,3,0
+.L119:
+	.byte	5
+	.word	2070
+	.byte	11,6,70,5,4,16
+	.byte	'crc',0,1
+	.word	227
+	.byte	3,5,2,35,0,16
+	.byte	'gs_flag',0,1
+	.word	227
+	.byte	1,4,2,35,0,16
+	.byte	'output_data',0,4
+	.word	427
+	.byte	16,12,2,35,0,16
+	.byte	'sid_add_status',0,2
+	.word	205
+	.byte	5,7,2,35,2,16
+	.byte	's_bit',0,1
+	.word	227
+	.byte	1,6,2,35,3,16
+	.byte	'gen_status',0,1
+	.word	227
+	.byte	6,0,2,35,3,0
+.L158:
+	.byte	17,6,68,9,4,12
+	.byte	'bf',0
+	.word	2094
+	.byte	4,2,35,0,12
+	.byte	'dw',0
+	.word	427
+	.byte	4,2,35,0,0
+.L122:
+	.byte	9,16
+	.word	2222
+	.byte	10,3,0
+.L129:
+	.byte	5
+	.word	2070
+.L137:
+	.byte	5
+	.word	2070
+.L142:
+	.byte	5
+	.word	2070
+.L145:
+	.byte	5
+	.word	2070
+	.byte	9,4
+	.word	205
+	.byte	10,1,0
+.L168:
+	.byte	9,64
+	.word	2281
+	.byte	10,15,0
+.L184:
+	.byte	18
+	.word	427
+.L186:
+	.byte	18
+	.word	205
+	.byte	2
+	.byte	'short int',0,2,5,19
+	.byte	'__wchar_t',0,7,1,1
+	.word	2309
+	.byte	2
+	.byte	'unsigned int',0,4,7,19
+	.byte	'__size_t',0,7,1,1
+	.word	2340
+	.byte	2
+	.byte	'int',0,4,5,19
+	.byte	'__ptrdiff_t',0,7,1,1
+	.word	2373
+	.byte	20,1,6
+	.word	2400
+	.byte	19
+	.byte	'__codeptr',0,7,1,1
+	.word	2402
+	.byte	19
+	.byte	'boolean',0,8,104,29
+	.word	227
+	.byte	19
+	.byte	'uint8',0,8,108,29
+	.word	227
+	.byte	19
+	.byte	'uint16',0,8,112,29
+	.word	205
+	.byte	19
+	.byte	'uint32',0,8,116,29
+	.word	427
+	.byte	19
+	.byte	'sint16',0,8,129,1,29
+	.word	2309
+	.byte	2
+	.byte	'long int',0,4,5,19
+	.byte	'sint32',0,8,134,1,29
+	.word	2501
+	.byte	2
+	.byte	'long long int',0,8,5,19
+	.byte	'sint64',0,8,141,1,29
+	.word	2529
+	.byte	2
+	.byte	'float',0,4,4,19
+	.byte	'float32',0,8,170,1,29
+	.word	2562
+	.byte	21
+	.byte	'void',0,6
+	.word	2588
+	.byte	19
+	.byte	'pvoid',0,9,54,28
+	.word	2594
+	.byte	19
+	.byte	'Ifx_TickTime',0,9,76,28
+	.word	2529
+	.byte	19
+	.byte	'USBCommandsEnum',0,4,105,3
+	.word	1132
+	.byte	19
+	.byte	'USBStatusesEnum',0,4,122,3
+	.word	656
+	.byte	19
+	.byte	'USBReceiveData',0,4,136,1,3
+	.word	1991
+	.byte	19
+	.byte	'USBTransmitData',0,4,146,1,3
+	.word	837
+.L188:
+	.byte	11,7,44,9,4,12
+	.byte	'isEnabledAckWatchdog',0
+	.word	227
+	.byte	1,2,35,0,12
+	.byte	'isEnabledMonitoringWatchdog',0
+	.word	227
+	.byte	1,2,35,1,12
+	.byte	'isConfigured',0
+	.word	227
+	.byte	1,2,35,2,0,19
+	.byte	'WatchdogManagementFlagsStruct',0,7,49,3
+	.word	2731
+	.byte	0
+	.sdecl	'.debug_abbrev',debug
+	.sect	'.debug_abbrev'
+.L40:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,16,6,0,0,2,36,0,3,8,11,15,62,15,0,0,3,46,1,3,8,58,15,59,15,57,15
+	.byte	73,19,54,15,39,12,63,12,60,12,0,0,4,5,0,3,8,58,15,59,15,57,15,73,19,0,0,5,38,0,73,19,0,0,6,15,0,73,19
+	.byte	0,0,7,4,1,58,15,59,15,57,15,11,15,0,0,8,40,0,3,8,28,13,0,0,9,1,1,11,15,73,19,0,0,10,33,0,47,15,0,0,11
+	.byte	19,1,58,15,59,15,57,15,11,15,0,0,12,13,0,3,8,73,19,11,15,56,9,0,0,13,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,60,12,0,0,14,46,0,3,8,58,15,59,15,57,15,54,15,39,12,63,12,60,12,0,0,15,46,0,3,8,58,15,59,15
+	.byte	57,15,73,19,54,15,39,12,63,12,60,12,0,0,16,13,0,3,8,11,15,73,19,13,15,12,15,56,9,0,0,17,23,1,58,15,59
+	.byte	15,57,15,11,15,0,0,18,53,0,73,19,0,0,19,22,0,3,8,58,15,59,15,57,15,73,19,0,0,20,21,0,54,15,0,0,21,59,0
+	.byte	3,8,0,0,0
+	.sdecl	'.debug_line',debug
+	.sect	'.debug_line'
+.L41:
+	.word	.L239-.L238
+.L238:
+	.half	3
+	.word	.L241-.L240
+.L240:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1
+	.byte	'C:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Cpu\\\\Std',0
+	.byte	0
+	.byte	'C:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\common\\bit_manipulation.h',0
+	.byte	0,0,0
+	.byte	'C:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\top\\spi_wrapper.h',0
+	.byte	0,0,0
+	.byte	'C:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\top\\usb_wrapper.h',0
+	.byte	0,0,0
+	.byte	'C:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\common\\usb_data_types.h',0
+	.byte	0,0,0
+	.byte	'C:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\periphery\\timer.h',0
+	.byte	0,0,0
+	.byte	'C:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\common\\spi_data_types.h',0
+	.byte	0,0,0
+	.byte	'../cmd/watchdog.c',0,0,0,0
+	.byte	'Platform_Types.h',0,1,0,0
+	.byte	'Ifx_Types.h',0,1,0,0,0
+.L241:
+.L239:
+	.sdecl	'.debug_info',debug,cluster('CmdConfigureWatchdog')
+	.sect	'.debug_info'
+.L42:
+	.word	410
+	.half	3
+	.word	.L43
+	.byte	4,1
+	.byte	'../cmd/watchdog.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\Entwicklung\\AB15_Demo_Board\\AB15_dev_Git\\ab15_sw\\firmware\\mcu_esw\\TriCoreDebug(TASKING)\\',0
+	.byte	12,1
+	.word	.L45,.L44
+	.byte	2
+	.word	.L38
+	.byte	3
+	.byte	'CmdConfigureWatchdog',0,1,75,6,1,1,1
+	.word	.L17,.L105,.L16
+	.byte	4
+	.byte	'commandPackage',0,1,75,56
+	.word	.L106,.L107
+	.byte	5
+	.word	.L17,.L105
+	.byte	6
+	.byte	'isSuccessfulFlag',0,1,77,13
+	.word	.L108,.L109
+	.byte	6
+	.byte	'address',0,1,80,12
+	.word	.L110,.L111
+	.byte	6
+	.byte	'data',0,1,81,12
+	.word	.L110,.L112
+	.byte	6
+	.byte	'length',0,1,82,12
+	.word	.L113,.L114
+	.byte	5
+	.word	.L115,.L105
+	.byte	6
+	.byte	'packageToSend',0,1,97,21
+	.word	.L116,.L117
+	.byte	0,0,0,0
+	.sdecl	'.debug_abbrev',debug,cluster('CmdConfigureWatchdog')
+	.sect	'.debug_abbrev'
+.L43:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,1,17,1,18,1,0,0,6,52,0,3
+	.byte	8,58,15,59,15,57,15,73,16,2,6,0,0,0
+	.sdecl	'.debug_line',debug,cluster('CmdConfigureWatchdog')
+	.sect	'.debug_line'
+.L44:
+	.word	.L243-.L242
+.L242:
+	.half	3
+	.word	.L245-.L244
+.L244:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'../cmd/watchdog.c',0,0,0,0,0
+.L245:
+	.byte	5,6,7,0,5,2
+	.word	.L17
+	.byte	3,202,0,1,5,42,9
+	.half	.L192-.L17
+	.byte	3,5,1,5,40,9
+	.half	.L246-.L192
+	.byte	1,5,39,9
+	.half	.L247-.L246
+	.byte	3,1,1,5,37,9
+	.half	.L248-.L247
+	.byte	1,5,21,9
+	.half	.L249-.L248
+	.byte	3,1,1,5,19,9
+	.half	.L250-.L249
+	.byte	1,5,38,9
+	.half	.L251-.L250
+	.byte	3,3,1,5,61,9
+	.half	.L252-.L251
+	.byte	1,5,13,9
+	.half	.L191-.L252
+	.byte	1,5,38,9
+	.half	.L253-.L191
+	.byte	3,1,1,5,61,9
+	.half	.L254-.L253
+	.byte	1,5,13,9
+	.half	.L255-.L254
+	.byte	1,5,58,9
+	.half	.L256-.L255
+	.byte	3,1,1,5,83,9
+	.half	.L257-.L256
+	.byte	1,5,13,9
+	.half	.L258-.L257
+	.byte	1,5,58,9
+	.half	.L259-.L258
+	.byte	3,1,1,5,83,9
+	.half	.L260-.L259
+	.byte	1,5,13,9
+	.half	.L261-.L260
+	.byte	1,5,5,9
+	.half	.L262-.L261
+	.byte	3,3,1,5,33,9
+	.half	.L263-.L262
+	.byte	1,5,19,9
+	.half	.L264-.L263
+	.byte	1,5,44,9
+	.half	.L265-.L264
+	.byte	3,3,1,5,56,9
+	.half	.L266-.L265
+	.byte	1,5,64,9
+	.half	.L267-.L266
+	.byte	1,5,22,9
+	.half	.L194-.L267
+	.byte	1,5,57,9
+	.half	.L115-.L194
+	.byte	3,4,1,5,26,9
+	.half	.L195-.L115
+	.byte	1,5,5,9
+	.half	.L268-.L195
+	.byte	3,2,1,5,32,7,9
+	.half	.L269-.L268
+	.byte	3,3,1,5,30,9
+	.half	.L196-.L269
+	.byte	1,5,36,9
+	.half	.L270-.L196
+	.byte	3,1,1,5,34,9
+	.half	.L271-.L270
+	.byte	1,5,48,9
+	.half	.L272-.L271
+	.byte	3,127,1,5,9,9
+	.half	.L2-.L272
+	.byte	3,5,1,5,48,9
+	.half	.L273-.L2
+	.byte	1,5,46,9
+	.half	.L197-.L273
+	.byte	1,5,32,9
+	.half	.L274-.L197
+	.byte	3,1,1,5,30,9
+	.half	.L275-.L274
+	.byte	1,5,36,9
+	.half	.L276-.L275
+	.byte	3,1,1,5,34,9
+	.half	.L277-.L276
+	.byte	1,5,21,9
+	.half	.L3-.L277
+	.byte	3,4,1,5,1,9
+	.half	.L278-.L3
+	.byte	3,1,1,7,9
+	.half	.L46-.L278
+	.byte	0,1,1
+.L243:
+	.sdecl	'.debug_ranges',debug,cluster('CmdConfigureWatchdog')
+	.sect	'.debug_ranges'
+.L45:
+	.word	-1,.L17,0,.L46-.L17,0,0
+	.sdecl	'.debug_info',debug,cluster('CmdGetConfigWatchdog')
+	.sect	'.debug_info'
+.L47:
+	.word	411
+	.half	3
+	.word	.L48
+	.byte	4,1
+	.byte	'../cmd/watchdog.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\Entwicklung\\AB15_Demo_Board\\AB15_dev_Git\\ab15_sw\\firmware\\mcu_esw\\TriCoreDebug(TASKING)\\',0
+	.byte	12,1
+	.word	.L50,.L49
+	.byte	2
+	.word	.L38
+	.byte	3
+	.byte	'CmdGetConfigWatchdog',0,1,117,6,1,1,1
+	.word	.L19,.L118,.L18
+	.byte	4
+	.byte	'commandPackage',0,1,117,56
+	.word	.L119,.L120
+	.byte	5
+	.word	.L19,.L118
+	.byte	6
+	.byte	'address',0,1,120,12
+	.word	.L110,.L121
+	.byte	6
+	.byte	'data',0,1,121,20
+	.word	.L122,.L123
+	.byte	6
+	.byte	'length',0,1,122,12
+	.word	.L113,.L124
+	.byte	6
+	.byte	'isSuccessfulFlag',0,1,124,13
+	.word	.L108,.L125
+	.byte	5
+	.word	.L126,.L118
+	.byte	6
+	.byte	'packageToSend',0,1,130,1,21
+	.word	.L116,.L127
+	.byte	0,0,0,0
+	.sdecl	'.debug_abbrev',debug,cluster('CmdGetConfigWatchdog')
+	.sect	'.debug_abbrev'
+.L48:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,1,17,1,18,1,0,0,6,52,0,3
+	.byte	8,58,15,59,15,57,15,73,16,2,6,0,0,0
+	.sdecl	'.debug_line',debug,cluster('CmdGetConfigWatchdog')
+	.sect	'.debug_line'
+.L49:
+	.word	.L280-.L279
+.L279:
+	.half	3
+	.word	.L282-.L281
+.L281:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'../cmd/watchdog.c',0,0,0,0,0
+.L282:
+	.byte	5,6,7,0,5,2
+	.word	.L19
+	.byte	3,244,0,1,5,42,9
+	.half	.L200-.L19
+	.byte	3,3,1,5,40,9
+	.half	.L283-.L200
+	.byte	1,5,21,9
+	.half	.L284-.L283
+	.byte	3,2,1,5,19,9
+	.half	.L285-.L284
+	.byte	1,5,42,9
+	.half	.L286-.L285
+	.byte	3,3,1,5,52,9
+	.half	.L199-.L286
+	.byte	1,5,59,9
+	.half	.L287-.L199
+	.byte	1,5,22,9
+	.half	.L201-.L287
+	.byte	1,5,57,9
+	.half	.L126-.L201
+	.byte	3,6,1,5,26,9
+	.half	.L202-.L126
+	.byte	1,5,5,9
+	.half	.L288-.L202
+	.byte	3,2,1,5,32,7,9
+	.half	.L289-.L288
+	.byte	3,3,1,5,30,9
+	.half	.L203-.L289
+	.byte	1,5,36,9
+	.half	.L290-.L203
+	.byte	3,1,1,5,34,9
+	.half	.L291-.L290
+	.byte	1,5,48,9
+	.half	.L292-.L291
+	.byte	3,127,1,5,32,9
+	.half	.L4-.L292
+	.byte	3,5,1,5,30,9
+	.half	.L204-.L4
+	.byte	1,5,36,9
+	.half	.L293-.L204
+	.byte	3,1,1,5,34,9
+	.half	.L294-.L293
+	.byte	1,5,50,9
+	.half	.L295-.L294
+	.byte	3,2,1,5,31,9
+	.half	.L296-.L295
+	.byte	1,5,50,9
+	.half	.L297-.L296
+	.byte	3,1,1,5,31,9
+	.half	.L298-.L297
+	.byte	1,5,50,9
+	.half	.L299-.L298
+	.byte	3,1,1,5,31,9
+	.half	.L300-.L299
+	.byte	1,5,50,9
+	.half	.L301-.L300
+	.byte	3,1,1,5,31,9
+	.half	.L302-.L301
+	.byte	1,5,50,9
+	.half	.L303-.L302
+	.byte	3,1,1,5,31,9
+	.half	.L304-.L303
+	.byte	1,5,50,9
+	.half	.L305-.L304
+	.byte	3,1,1,5,31,9
+	.half	.L306-.L305
+	.byte	1,5,21,9
+	.half	.L5-.L306
+	.byte	3,3,1,5,1,9
+	.half	.L307-.L5
+	.byte	3,1,1,7,9
+	.half	.L51-.L307
+	.byte	0,1,1
+.L280:
+	.sdecl	'.debug_ranges',debug,cluster('CmdGetConfigWatchdog')
+	.sect	'.debug_ranges'
+.L50:
+	.word	-1,.L19,0,.L51-.L19,0,0
+	.sdecl	'.debug_info',debug,cluster('CmdStartWatchdog')
+	.sect	'.debug_info'
+.L52:
+	.word	383
+	.half	3
+	.word	.L53
+	.byte	4,1
+	.byte	'../cmd/watchdog.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\Entwicklung\\AB15_Demo_Board\\AB15_dev_Git\\ab15_sw\\firmware\\mcu_esw\\TriCoreDebug(TASKING)\\',0
+	.byte	12,1
+	.word	.L55,.L54
+	.byte	2
+	.word	.L38
+	.byte	3
+	.byte	'CmdStartWatchdog',0,1,244,1,6,1,1,1
+	.word	.L27,.L128,.L26
+	.byte	4
+	.byte	'commandPackage',0,1,244,1,52
+	.word	.L129,.L130
+	.byte	5
+	.word	.L27,.L128
+	.byte	6
+	.byte	'packageToSend',0,1,246,1,21
+	.word	.L116,.L131
+	.byte	5
+	.word	.L132,.L128
+	.byte	6
+	.byte	'address',0,1,249,1,12
+	.word	.L113,.L133
+	.byte	6
+	.byte	'length',0,1,249,1,21
+	.word	.L113,.L134
+	.byte	6
+	.byte	'data',0,1,249,1,29
+	.word	.L113,.L135
+	.byte	0,0,0,0
+	.sdecl	'.debug_abbrev',debug,cluster('CmdStartWatchdog')
+	.sect	'.debug_abbrev'
+.L53:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,1,17,1,18,1,0,0,6,52,0,3
+	.byte	8,58,15,59,15,57,15,73,16,2,6,0,0,0
+	.sdecl	'.debug_line',debug,cluster('CmdStartWatchdog')
+	.sect	'.debug_line'
+.L54:
+	.word	.L309-.L308
+.L308:
+	.half	3
+	.word	.L311-.L310
+.L310:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'../cmd/watchdog.c',0,0,0,0,0
+.L311:
+	.byte	5,6,7,0,5,2
+	.word	.L27
+	.byte	3,243,1,1,5,57,9
+	.half	.L227-.L27
+	.byte	3,3,1,5,26,9
+	.half	.L228-.L227
+	.byte	1,5,32,9
+	.half	.L312-.L228
+	.byte	3,1,1,5,30,9
+	.half	.L313-.L312
+	.byte	1,5,9,9
+	.half	.L132-.L313
+	.byte	3,3,1,5,32,9
+	.half	.L314-.L132
+	.byte	1,5,5,9
+	.half	.L315-.L314
+	.byte	1,5,19,7,9
+	.half	.L316-.L315
+	.byte	3,4,1,5,17,9
+	.half	.L317-.L316
+	.byte	1,5,18,9
+	.half	.L318-.L317
+	.byte	3,1,1,5,16,9
+	.half	.L319-.L318
+	.byte	1,5,32,9
+	.half	.L320-.L319
+	.byte	3,1,1,5,35,9
+	.half	.L321-.L320
+	.byte	1,5,14,9
+	.half	.L322-.L321
+	.byte	1,5,28,9
+	.half	.L323-.L322
+	.byte	3,1,1,5,38,9
+	.half	.L324-.L323
+	.byte	1,5,45,9
+	.half	.L325-.L324
+	.byte	1,5,28,9
+	.half	.L326-.L325
+	.byte	3,1,1,5,38,9
+	.half	.L327-.L326
+	.byte	1,5,45,9
+	.half	.L328-.L327
+	.byte	1,5,69,9
+	.half	.L329-.L328
+	.byte	3,3,1,5,32,9
+	.half	.L330-.L329
+	.byte	3,2,1,5,9,9
+	.half	.L331-.L330
+	.byte	3,2,1,5,56,9
+	.half	.L332-.L331
+	.byte	1,5,54,9
+	.half	.L333-.L332
+	.byte	1,5,32,9
+	.half	.L334-.L333
+	.byte	3,1,1,5,30,9
+	.half	.L335-.L334
+	.byte	1,5,34,9
+	.half	.L336-.L335
+	.byte	3,116,1,5,32,9
+	.half	.L9-.L336
+	.byte	3,17,1,5,30,9
+	.half	.L337-.L9
+	.byte	1,5,21,9
+	.half	.L10-.L337
+	.byte	3,4,1,5,1,9
+	.half	.L338-.L10
+	.byte	3,1,1,7,9
+	.half	.L56-.L338
+	.byte	0,1,1
+.L309:
+	.sdecl	'.debug_ranges',debug,cluster('CmdStartWatchdog')
+	.sect	'.debug_ranges'
+.L55:
+	.word	-1,.L27,0,.L56-.L27,0,0
+	.sdecl	'.debug_info',debug,cluster('CmdStopWatchdog')
+	.sect	'.debug_info'
+.L57:
+	.word	323
+	.half	3
+	.word	.L58
+	.byte	4,1
+	.byte	'../cmd/watchdog.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\Entwicklung\\AB15_Demo_Board\\AB15_dev_Git\\ab15_sw\\firmware\\mcu_esw\\TriCoreDebug(TASKING)\\',0
+	.byte	12,1
+	.word	.L60,.L59
+	.byte	2
+	.word	.L38
+	.byte	3
+	.byte	'CmdStopWatchdog',0,1,151,2,6,1,1,1
+	.word	.L29,.L136,.L28
+	.byte	4
+	.byte	'commandPackage',0,1,151,2,51
+	.word	.L137,.L138
+	.byte	5
+	.word	.L29,.L136
+	.byte	5
+	.word	.L139,.L136
+	.byte	6
+	.byte	'packageToSend',0,1,159,2,21
+	.word	.L116,.L140
+	.byte	0,0,0,0
+	.sdecl	'.debug_abbrev',debug,cluster('CmdStopWatchdog')
+	.sect	'.debug_abbrev'
+.L58:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,1,17,1,18,1,0,0,6,52,0,3
+	.byte	8,58,15,59,15,57,15,73,16,2,6,0,0,0
+	.sdecl	'.debug_line',debug,cluster('CmdStopWatchdog')
+	.sect	'.debug_line'
+.L59:
+	.word	.L340-.L339
+.L339:
+	.half	3
+	.word	.L342-.L341
+.L341:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'../cmd/watchdog.c',0,0,0,0,0
+.L342:
+	.byte	5,6,7,0,5,2
+	.word	.L29
+	.byte	3,150,2,1,5,29,9
+	.half	.L231-.L29
+	.byte	3,3,1,5,5,9
+	.half	.L230-.L231
+	.byte	3,2,1,5,52,9
+	.half	.L343-.L230
+	.byte	1,5,50,9
+	.half	.L344-.L343
+	.byte	1,5,57,9
+	.half	.L139-.L344
+	.byte	3,4,1,5,26,9
+	.half	.L345-.L139
+	.byte	1,5,28,9
+	.half	.L346-.L345
+	.byte	3,1,1,5,26,9
+	.half	.L347-.L346
+	.byte	1,5,32,9
+	.half	.L348-.L347
+	.byte	3,1,1,5,30,9
+	.half	.L349-.L348
+	.byte	1,5,21,9
+	.half	.L350-.L349
+	.byte	3,2,1,5,1,9
+	.half	.L351-.L350
+	.byte	3,1,1,7,9
+	.half	.L61-.L351
+	.byte	0,1,1
+.L340:
+	.sdecl	'.debug_ranges',debug,cluster('CmdStopWatchdog')
+	.sect	'.debug_ranges'
+.L60:
+	.word	-1,.L29,0,.L61-.L29,0,0
+	.sdecl	'.debug_info',debug,cluster('CmdStartMonitoringWatchdog')
+	.sect	'.debug_info'
+.L62:
+	.word	296
+	.half	3
+	.word	.L63
+	.byte	4,1
+	.byte	'../cmd/watchdog.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\Entwicklung\\AB15_Demo_Board\\AB15_dev_Git\\ab15_sw\\firmware\\mcu_esw\\TriCoreDebug(TASKING)\\',0
+	.byte	12,1
+	.word	.L65,.L64
+	.byte	2
+	.word	.L38
+	.byte	3
+	.byte	'CmdStartMonitoringWatchdog',0,1,155,1,6,1,1,1
+	.word	.L21,.L141,.L20
+	.byte	4
+	.byte	'commandPackage',0,1,155,1,62
+	.word	.L142,.L143
+	.byte	5
+	.word	.L21,.L141
+	.byte	0,0
+	.sdecl	'.debug_abbrev',debug,cluster('CmdStartMonitoringWatchdog')
+	.sect	'.debug_abbrev'
+.L63:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,0,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('CmdStartMonitoringWatchdog')
+	.sect	'.debug_line'
+.L64:
+	.word	.L353-.L352
+.L352:
+	.half	3
+	.word	.L355-.L354
+.L354:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'../cmd/watchdog.c',0,0,0,0,0
+.L355:
+	.byte	5,5,7,0,5,2
+	.word	.L21
+	.byte	3,157,1,1,5,41,9
+	.half	.L356-.L21
+	.byte	1,5,25,9
+	.half	.L357-.L356
+	.byte	1,5,5,9
+	.half	.L358-.L357
+	.byte	3,2,1,5,59,9
+	.half	.L359-.L358
+	.byte	1,5,57,9
+	.half	.L360-.L359
+	.byte	1,5,1,9
+	.half	.L361-.L360
+	.byte	3,1,1,7,9
+	.half	.L66-.L361
+	.byte	0,1,1
+.L353:
+	.sdecl	'.debug_ranges',debug,cluster('CmdStartMonitoringWatchdog')
+	.sect	'.debug_ranges'
+.L65:
+	.word	-1,.L21,0,.L66-.L21,0,0
+	.sdecl	'.debug_info',debug,cluster('CmdStopMonitoringWatchdog')
+	.sect	'.debug_info'
+.L67:
+	.word	333
+	.half	3
+	.word	.L68
+	.byte	4,1
+	.byte	'../cmd/watchdog.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\Entwicklung\\AB15_Demo_Board\\AB15_dev_Git\\ab15_sw\\firmware\\mcu_esw\\TriCoreDebug(TASKING)\\',0
+	.byte	12,1
+	.word	.L70,.L69
+	.byte	2
+	.word	.L38
+	.byte	3
+	.byte	'CmdStopMonitoringWatchdog',0,1,163,1,6,1,1,1
+	.word	.L23,.L144,.L22
+	.byte	4
+	.byte	'commandPackage',0,1,163,1,61
+	.word	.L145,.L146
+	.byte	5
+	.word	.L23,.L144
+	.byte	5
+	.word	.L147,.L144
+	.byte	6
+	.byte	'packageToSend',0,1,169,1,21
+	.word	.L116,.L148
+	.byte	0,0,0,0
+	.sdecl	'.debug_abbrev',debug,cluster('CmdStopMonitoringWatchdog')
+	.sect	'.debug_abbrev'
+.L68:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,1,17,1,18,1,0,0,6,52,0,3
+	.byte	8,58,15,59,15,57,15,73,16,2,6,0,0,0
+	.sdecl	'.debug_line',debug,cluster('CmdStopMonitoringWatchdog')
+	.sect	'.debug_line'
+.L69:
+	.word	.L363-.L362
+.L362:
+	.half	3
+	.word	.L365-.L364
+.L364:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'../cmd/watchdog.c',0,0,0,0,0
+.L365:
+	.byte	5,6,7,0,5,2
+	.word	.L23
+	.byte	3,162,1,1,5,5,9
+	.half	.L205-.L23
+	.byte	3,3,1,5,59,9
+	.half	.L366-.L205
+	.byte	1,5,57,9
+	.half	.L367-.L366
+	.byte	1,9
+	.half	.L147-.L367
+	.byte	3,4,1,5,26,9
+	.half	.L206-.L147
+	.byte	1,5,28,9
+	.half	.L368-.L206
+	.byte	3,1,1,5,26,9
+	.half	.L369-.L368
+	.byte	1,5,32,9
+	.half	.L370-.L369
+	.byte	3,1,1,5,30,9
+	.half	.L371-.L370
+	.byte	1,5,21,9
+	.half	.L372-.L371
+	.byte	3,2,1,5,1,9
+	.half	.L373-.L372
+	.byte	3,1,1,7,9
+	.half	.L71-.L373
+	.byte	0,1,1
+.L363:
+	.sdecl	'.debug_ranges',debug,cluster('CmdStopMonitoringWatchdog')
+	.sect	'.debug_ranges'
+.L70:
+	.word	-1,.L23,0,.L71-.L23,0,0
+	.sdecl	'.debug_info',debug,cluster('IntCmdServeWatchdog')
+	.sect	'.debug_info'
+.L72:
+	.word	563
+	.half	3
+	.word	.L73
+	.byte	4,1
+	.byte	'../cmd/watchdog.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\Entwicklung\\AB15_Demo_Board\\AB15_dev_Git\\ab15_sw\\firmware\\mcu_esw\\TriCoreDebug(TASKING)\\',0
+	.byte	12,1
+	.word	.L75,.L74
+	.byte	2
+	.word	.L38
+	.byte	3
+	.byte	'IntCmdServeWatchdog',0,1,177,1,6,1,1,1
+	.word	.L25,.L149,.L24
+	.byte	4
+	.word	.L25,.L149
+	.byte	5
+	.byte	'requValue',0,1,179,1,11
+	.word	.L108,.L150
+	.byte	5
+	.byte	'responseWord0',0,1,180,1,12
+	.word	.L113,.L151
+	.byte	5
+	.byte	'responseWord1',0,1,180,1,27
+	.word	.L113,.L152
+	.byte	5
+	.byte	'address',0,1,181,1,12
+	.word	.L113,.L153
+	.byte	5
+	.byte	'length',0,1,181,1,21
+	.word	.L113,.L154
+	.byte	4
+	.word	.L155,.L6
+	.byte	5
+	.byte	'packageToSend',0,1,201,1,25
+	.word	.L116,.L156
+	.byte	4
+	.word	.L157,.L6
+	.byte	5
+	.byte	'data',0,1,206,1,24
+	.word	.L158,.L159
+	.byte	4
+	.word	.L160,.L6
+	.byte	5
+	.byte	'isSuccessfulFlag',0,1,208,1,17
+	.word	.L108,.L161
+	.byte	4
+	.word	.L7,.L8
+	.byte	5
+	.byte	'timeStampValueMs',0,1,220,1,20
+	.word	.L113,.L162
+	.byte	4
+	.word	.L163,.L8
+	.byte	5
+	.byte	'wdREQURegValue',0,1,234,1,20
+	.word	.L113,.L164
+	.byte	0,0,0,0,0,0,0,0
+	.sdecl	'.debug_abbrev',debug,cluster('IntCmdServeWatchdog')
+	.sect	'.debug_abbrev'
+.L73:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,11,1,17,1,18,1,0,0,5,52,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,0
+	.sdecl	'.debug_line',debug,cluster('IntCmdServeWatchdog')
+	.sect	'.debug_line'
+.L74:
+	.word	.L375-.L374
+.L374:
+	.half	3
+	.word	.L377-.L376
+.L376:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'../cmd/watchdog.c',0,0,0,0,0
+.L377:
+	.byte	5,6,7,0,5,2
+	.word	.L25
+	.byte	3,176,1,1,5,43,9
+	.half	.L207-.L25
+	.byte	3,3,1,5,41,9
+	.half	.L378-.L207
+	.byte	1,5,30,9
+	.half	.L379-.L378
+	.byte	3,1,1,5,28,9
+	.half	.L380-.L379
+	.byte	1,5,29,9
+	.half	.L381-.L380
+	.byte	3,4,1,5,15,9
+	.half	.L208-.L381
+	.byte	1,5,48,9
+	.half	.L210-.L208
+	.byte	3,3,1,5,19,9
+	.half	.L212-.L210
+	.byte	1,5,48,9
+	.half	.L382-.L212
+	.byte	3,1,1,5,19,9
+	.half	.L214-.L382
+	.byte	1,5,15,9
+	.half	.L383-.L214
+	.byte	3,3,1,5,13,9
+	.half	.L384-.L383
+	.byte	1,5,14,9
+	.half	.L385-.L384
+	.byte	3,1,1,5,12,9
+	.half	.L386-.L385
+	.byte	1,5,24,9
+	.half	.L387-.L386
+	.byte	3,1,1,5,34,9
+	.half	.L388-.L387
+	.byte	1,5,50,9
+	.half	.L389-.L388
+	.byte	1,5,24,9
+	.half	.L390-.L389
+	.byte	3,1,1,5,34,9
+	.half	.L391-.L390
+	.byte	1,5,50,9
+	.half	.L392-.L391
+	.byte	1,5,9,9
+	.half	.L393-.L392
+	.byte	3,3,1,5,32,9
+	.half	.L394-.L393
+	.byte	1,5,5,9
+	.half	.L395-.L394
+	.byte	1,5,47,7,9
+	.half	.L155-.L395
+	.byte	3,4,1,5,30,9
+	.half	.L396-.L155
+	.byte	1,5,19,9
+	.half	.L397-.L396
+	.byte	3,3,1,5,17,9
+	.half	.L398-.L397
+	.byte	1,5,18,9
+	.half	.L157-.L398
+	.byte	3,2,1,5,16,9
+	.half	.L399-.L157
+	.byte	1,5,54,9
+	.half	.L160-.L399
+	.byte	3,1,1,5,65,9
+	.half	.L400-.L160
+	.byte	1,5,76,9
+	.half	.L401-.L400
+	.byte	1,5,9,9
+	.half	.L215-.L401
+	.byte	3,2,1,5,36,7,9
+	.half	.L402-.L215
+	.byte	3,4,1,5,34,9
+	.half	.L403-.L402
+	.byte	1,5,40,9
+	.half	.L404-.L403
+	.byte	3,1,1,5,38,9
+	.half	.L405-.L404
+	.byte	1,5,52,9
+	.half	.L406-.L405
+	.byte	3,127,1,5,62,9
+	.half	.L7-.L406
+	.byte	3,6,1,5,68,9
+	.half	.L216-.L7
+	.byte	1,5,66,9
+	.half	.L407-.L216
+	.byte	1,5,95,9
+	.half	.L408-.L407
+	.byte	1,5,94,9
+	.half	.L409-.L408
+	.byte	1,5,36,9
+	.half	.L217-.L409
+	.byte	3,2,1,5,34,9
+	.half	.L410-.L217
+	.byte	1,5,40,9
+	.half	.L411-.L410
+	.byte	3,1,1,5,38,9
+	.half	.L412-.L411
+	.byte	1,5,44,9
+	.half	.L413-.L412
+	.byte	3,2,1,5,35,9
+	.half	.L219-.L413
+	.byte	1,5,44,9
+	.half	.L414-.L219
+	.byte	3,1,1,5,35,9
+	.half	.L221-.L414
+	.byte	1,5,44,9
+	.half	.L415-.L221
+	.byte	3,2,1,5,35,9
+	.half	.L416-.L415
+	.byte	1,5,44,9
+	.half	.L417-.L416
+	.byte	3,1,1,5,35,9
+	.half	.L418-.L417
+	.byte	1,5,44,9
+	.half	.L419-.L418
+	.byte	3,1,1,5,35,9
+	.half	.L420-.L419
+	.byte	1,5,44,9
+	.half	.L421-.L420
+	.byte	3,1,1,5,35,9
+	.half	.L422-.L421
+	.byte	1,5,55,9
+	.half	.L163-.L422
+	.byte	3,3,1,5,71,9
+	.half	.L423-.L163
+	.byte	1,5,69,9
+	.half	.L424-.L423
+	.byte	1,5,87,9
+	.half	.L222-.L424
+	.byte	1,5,44,9
+	.half	.L211-.L222
+	.byte	3,1,1,5,35,9
+	.half	.L224-.L211
+	.byte	1,5,44,9
+	.half	.L425-.L224
+	.byte	3,1,1,5,35,9
+	.half	.L226-.L425
+	.byte	1,5,25,9
+	.half	.L8-.L226
+	.byte	3,4,1,5,1,9
+	.half	.L6-.L8
+	.byte	3,2,1,7,9
+	.half	.L76-.L6
+	.byte	0,1,1
+.L375:
+	.sdecl	'.debug_ranges',debug,cluster('IntCmdServeWatchdog')
+	.sect	'.debug_ranges'
+.L75:
+	.word	-1,.L25,0,.L76-.L25,0,0
+	.sdecl	'.debug_info',debug,cluster('GetResponseWord')
+	.sect	'.debug_info'
+.L77:
+	.word	343
+	.half	3
+	.word	.L78
+	.byte	4,1
+	.byte	'../cmd/watchdog.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\Entwicklung\\AB15_Demo_Board\\AB15_dev_Git\\ab15_sw\\firmware\\mcu_esw\\TriCoreDebug(TASKING)\\',0
+	.byte	12,1
+	.word	.L80,.L79
+	.byte	2
+	.word	.L38
+	.byte	3
+	.byte	'GetResponseWord',0,1,167,2,8
+	.word	.L113
+	.byte	1,1,1
+	.word	.L31,.L165,.L30
+	.byte	4
+	.byte	'requValue',0,1,167,2,30
+	.word	.L108,.L166
+	.byte	4
+	.byte	'respWrdNumber',0,1,167,2,49
+	.word	.L108,.L167
+	.byte	5
+	.word	.L31,.L165
+	.byte	6
+	.byte	'responseWordArray',0,1,170,2,12
+	.word	.L168,.L169
+	.byte	0,0,0
+	.sdecl	'.debug_abbrev',debug,cluster('GetResponseWord')
+	.sect	'.debug_abbrev'
+.L78:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,73,16
+	.byte	54,15,39,12,63,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,1,17,1,18,1,0,0,6
+	.byte	52,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,0
+	.sdecl	'.debug_line',debug,cluster('GetResponseWord')
+	.sect	'.debug_line'
+.L79:
+	.word	.L427-.L426
+.L426:
+	.half	3
+	.word	.L429-.L428
+.L428:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'../cmd/watchdog.c',0,0,0,0,0
+.L429:
+	.byte	5,8,7,0,5,2
+	.word	.L31
+	.byte	3,166,2,1,5,39,9
+	.half	.L232-.L31
+	.byte	3,3,1,5,37,9
+	.half	.L430-.L232
+	.byte	1,5,41,9
+	.half	.L431-.L430
+	.byte	3,17,1,5,30,9
+	.half	.L432-.L431
+	.byte	1,5,41,9
+	.half	.L433-.L432
+	.byte	1,5,5,9
+	.half	.L434-.L433
+	.byte	1,5,1,9
+	.half	.L12-.L434
+	.byte	3,1,1,7,9
+	.half	.L81-.L12
+	.byte	0,1,1
+.L427:
+	.sdecl	'.debug_ranges',debug,cluster('GetResponseWord')
+	.sect	'.debug_ranges'
+.L80:
+	.word	-1,.L31,0,.L81-.L31,0,0
+	.sdecl	'.debug_info',debug,cluster('GetRespCnt')
+	.sect	'.debug_info'
+.L82:
+	.word	352
+	.half	3
+	.word	.L83
+	.byte	4,1
+	.byte	'../cmd/watchdog.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\Entwicklung\\AB15_Demo_Board\\AB15_dev_Git\\ab15_sw\\firmware\\mcu_esw\\TriCoreDebug(TASKING)\\',0
+	.byte	12,1
+	.word	.L85,.L84
+	.byte	2
+	.word	.L38
+	.byte	3
+	.byte	'GetRespCnt',0,1,190,2,7
+	.word	.L108
+	.byte	1,1,1
+	.word	.L33,.L170,.L32
+	.byte	4
+	.word	.L33,.L170
+	.byte	5
+	.byte	'address',0,1,193,2,12
+	.word	.L113,.L171
+	.byte	5
+	.byte	'data',0,1,194,2,20
+	.word	.L158,.L172
+	.byte	5
+	.byte	'length',0,1,195,2,12
+	.word	.L113,.L173
+	.byte	4
+	.word	.L174,.L170
+	.byte	5
+	.byte	'respCntValue',0,1,199,2,11
+	.word	.L108,.L175
+	.byte	0,0,0,0
+	.sdecl	'.debug_abbrev',debug,cluster('GetRespCnt')
+	.sect	'.debug_abbrev'
+.L83:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,73,16
+	.byte	54,15,39,12,63,12,17,1,18,1,64,6,0,0,4,11,1,17,1,18,1,0,0,5,52,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,0
+	.sdecl	'.debug_line',debug,cluster('GetRespCnt')
+	.sect	'.debug_line'
+.L84:
+	.word	.L436-.L435
+.L435:
+	.half	3
+	.word	.L438-.L437
+.L437:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'../cmd/watchdog.c',0,0,0,0,0
+.L438:
+	.byte	5,7,7,0,5,2
+	.word	.L33
+	.byte	3,189,2,1,5,22,9
+	.half	.L233-.L33
+	.byte	3,3,1,5,20,9
+	.half	.L439-.L233
+	.byte	1,5,21,9
+	.half	.L440-.L439
+	.byte	3,2,1,5,19,9
+	.half	.L441-.L440
+	.byte	1,5,23,9
+	.half	.L442-.L441
+	.byte	3,2,1,5,34,9
+	.half	.L443-.L442
+	.byte	1,5,45,9
+	.half	.L444-.L443
+	.byte	1,5,34,9
+	.half	.L174-.L444
+	.byte	3,2,1,5,49,9
+	.half	.L445-.L174
+	.byte	1,5,47,9
+	.half	.L446-.L445
+	.byte	1,5,68,9
+	.half	.L447-.L446
+	.byte	1,5,5,9
+	.half	.L234-.L447
+	.byte	3,1,1,5,1,9
+	.half	.L13-.L234
+	.byte	3,1,1,7,9
+	.half	.L86-.L13
+	.byte	0,1,1
+.L436:
+	.sdecl	'.debug_ranges',debug,cluster('GetRespCnt')
+	.sect	'.debug_ranges'
+.L85:
+	.word	-1,.L33,0,.L86-.L33,0,0
+	.sdecl	'.debug_info',debug,cluster('GetREQUValue')
+	.sect	'.debug_info'
+.L87:
+	.word	351
+	.half	3
+	.word	.L88
+	.byte	4,1
+	.byte	'../cmd/watchdog.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\Entwicklung\\AB15_Demo_Board\\AB15_dev_Git\\ab15_sw\\firmware\\mcu_esw\\TriCoreDebug(TASKING)\\',0
+	.byte	12,1
+	.word	.L90,.L89
+	.byte	2
+	.word	.L38
+	.byte	3
+	.byte	'GetREQUValue',0,1,203,2,7
+	.word	.L108
+	.byte	1,1,1
+	.word	.L35,.L176,.L34
+	.byte	4
+	.word	.L35,.L176
+	.byte	5
+	.byte	'address',0,1,206,2,12
+	.word	.L113,.L177
+	.byte	5
+	.byte	'data',0,1,207,2,20
+	.word	.L158,.L178
+	.byte	5
+	.byte	'length',0,1,208,2,12
+	.word	.L113,.L179
+	.byte	4
+	.word	.L180,.L176
+	.byte	5
+	.byte	'requValue',0,1,212,2,11
+	.word	.L108,.L181
+	.byte	0,0,0,0
+	.sdecl	'.debug_abbrev',debug,cluster('GetREQUValue')
+	.sect	'.debug_abbrev'
+.L88:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,73,16
+	.byte	54,15,39,12,63,12,17,1,18,1,64,6,0,0,4,11,1,17,1,18,1,0,0,5,52,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,0
+	.sdecl	'.debug_line',debug,cluster('GetREQUValue')
+	.sect	'.debug_line'
+.L89:
+	.word	.L449-.L448
+.L448:
+	.half	3
+	.word	.L451-.L450
+.L450:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'../cmd/watchdog.c',0,0,0,0,0
+.L451:
+	.byte	5,7,7,0,5,2
+	.word	.L35
+	.byte	3,202,2,1,5,22,9
+	.half	.L235-.L35
+	.byte	3,3,1,5,20,9
+	.half	.L452-.L235
+	.byte	1,5,21,9
+	.half	.L453-.L452
+	.byte	3,2,1,5,19,9
+	.half	.L454-.L453
+	.byte	1,5,23,9
+	.half	.L455-.L454
+	.byte	3,2,1,5,34,9
+	.half	.L456-.L455
+	.byte	1,5,45,9
+	.half	.L457-.L456
+	.byte	1,5,31,9
+	.half	.L180-.L457
+	.byte	3,2,1,5,44,9
+	.half	.L458-.L180
+	.byte	1,5,5,9
+	.half	.L236-.L458
+	.byte	3,1,1,5,1,9
+	.half	.L14-.L236
+	.byte	3,1,1,7,9
+	.half	.L91-.L14
+	.byte	0,1,1
+.L449:
+	.sdecl	'.debug_ranges',debug,cluster('GetREQUValue')
+	.sect	'.debug_ranges'
+.L90:
+	.word	-1,.L35,0,.L91-.L35,0,0
+	.sdecl	'.debug_info',debug,cluster('CalculateWatchdogAckPeriodicity')
+	.sect	'.debug_info'
+.L92:
+	.word	353
+	.half	3
+	.word	.L93
+	.byte	4,1
+	.byte	'../cmd/watchdog.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\Entwicklung\\AB15_Demo_Board\\AB15_dev_Git\\ab15_sw\\firmware\\mcu_esw\\TriCoreDebug(TASKING)\\',0
+	.byte	12,1
+	.word	.L95,.L94
+	.byte	2
+	.word	.L38
+	.byte	3
+	.byte	'CalculateWatchdogAckPeriodicity',0,1,216,2,8
+	.word	.L113
+	.byte	1,1,1
+	.word	.L37,.L182,.L36
+	.byte	4
+	.word	.L37,.L182
+	.byte	4
+	.word	.L183,.L182
+	.byte	5
+	.byte	'respTimeValueUs',0,1,226,2,21
+	.word	.L184,.L185
+	.byte	5
+	.byte	'watchdogAckPeriodicity',0,1,227,2,21
+	.word	.L186,.L187
+	.byte	0,0,0,0
+	.sdecl	'.debug_abbrev',debug,cluster('CalculateWatchdogAckPeriodicity')
+	.sect	'.debug_abbrev'
+.L93:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,73,16
+	.byte	54,15,39,12,63,12,17,1,18,1,64,6,0,0,4,11,1,17,1,18,1,0,0,5,52,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,0
+	.sdecl	'.debug_line',debug,cluster('CalculateWatchdogAckPeriodicity')
+	.sect	'.debug_line'
+.L94:
+	.word	.L460-.L459
+.L459:
+	.half	3
+	.word	.L462-.L461
+.L461:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'../cmd/watchdog.c',0,0,0,0,0
+.L462:
+	.byte	5,8,7,0,5,2
+	.word	.L37
+	.byte	3,215,2,1,5,5,9
+	.half	.L237-.L37
+	.byte	3,7,1,5,71,9
+	.half	.L463-.L237
+	.byte	1,5,32,9
+	.half	.L464-.L463
+	.byte	1,5,39,9
+	.half	.L183-.L464
+	.byte	3,3,1,5,52,9
+	.half	.L465-.L183
+	.byte	1,5,37,9
+	.half	.L466-.L465
+	.byte	1,5,46,9
+	.half	.L467-.L466
+	.byte	3,1,1,5,62,9
+	.half	.L468-.L467
+	.byte	1,5,61,9
+	.half	.L469-.L468
+	.byte	1,5,44,9
+	.half	.L470-.L469
+	.byte	1,5,12,9
+	.half	.L471-.L470
+	.byte	3,1,1,5,5,9
+	.half	.L472-.L471
+	.byte	1,5,1,9
+	.half	.L15-.L472
+	.byte	3,1,1,7,9
+	.half	.L96-.L15
+	.byte	0,1,1
+.L460:
+	.sdecl	'.debug_ranges',debug,cluster('CalculateWatchdogAckPeriodicity')
+	.sect	'.debug_ranges'
+.L95:
+	.word	-1,.L37,0,.L96-.L37,0,0
+	.sdecl	'.debug_info',debug,cluster('WatchdogManagementFlags')
+	.sect	'.debug_info'
+.L97:
+	.word	242
+	.half	3
+	.word	.L98
+	.byte	4,1
+	.byte	'../cmd/watchdog.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\Entwicklung\\AB15_Demo_Board\\AB15_dev_Git\\ab15_sw\\firmware\\mcu_esw\\TriCoreDebug(TASKING)\\',0
+	.byte	12,1,2
+	.word	.L38
+	.byte	3
+	.byte	'WatchdogManagementFlags',0,7,55,31
+	.word	.L188
+	.byte	1,5,3
+	.word	WatchdogManagementFlags
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('WatchdogManagementFlags')
+	.sect	'.debug_abbrev'
+.L98:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,73,16,63,12,2,9
+	.byte	0,0,0
+	.sdecl	'.debug_info',debug,cluster('monitoringMessageID')
+	.sect	'.debug_info'
+.L99:
+	.word	237
+	.half	3
+	.word	.L100
+	.byte	4,1
+	.byte	'../cmd/watchdog.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\Entwicklung\\AB15_Demo_Board\\AB15_dev_Git\\ab15_sw\\firmware\\mcu_esw\\TriCoreDebug(TASKING)\\',0
+	.byte	12,1,2
+	.word	.L38
+	.byte	3
+	.byte	'monitoringMessageID',0,7,63,14
+	.word	.L108
+	.byte	5,3
+	.word	monitoringMessageID
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('monitoringMessageID')
+	.sect	'.debug_abbrev'
+.L100:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,73,16,2,9,0,0,0
+	.sdecl	'.debug_info',debug,cluster('respTimeValue')
+	.sect	'.debug_info'
+.L101:
+	.word	231
+	.half	3
+	.word	.L102
+	.byte	4,1
+	.byte	'../cmd/watchdog.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\Entwicklung\\AB15_Demo_Board\\AB15_dev_Git\\ab15_sw\\firmware\\mcu_esw\\TriCoreDebug(TASKING)\\',0
+	.byte	12,1,2
+	.word	.L38
+	.byte	3
+	.byte	'respTimeValue',0,7,66,15
+	.word	.L113
+	.byte	5,3
+	.word	respTimeValue
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('respTimeValue')
+	.sect	'.debug_abbrev'
+.L102:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,73,16,2,9,0,0,0
+	.sdecl	'.debug_info',debug,cluster('durationOfTimerInterruptUs')
+	.sect	'.debug_info'
+.L103:
+	.word	244
+	.half	3
+	.word	.L104
+	.byte	4,1
+	.byte	'../cmd/watchdog.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\Entwicklung\\AB15_Demo_Board\\AB15_dev_Git\\ab15_sw\\firmware\\mcu_esw\\TriCoreDebug(TASKING)\\',0
+	.byte	12,1,2
+	.word	.L38
+	.byte	3
+	.byte	'durationOfTimerInterruptUs',0,7,69,15
+	.word	.L189
+	.byte	5,3
+	.word	durationOfTimerInterruptUs
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('durationOfTimerInterruptUs')
+	.sect	'.debug_abbrev'
+.L104:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,73,16,2,9,0,0,0
+	.sdecl	'.debug_loc',debug,cluster('CalculateWatchdogAckPeriodicity')
+	.sect	'.debug_loc'
+.L36:
+	.word	-1,.L37,0,.L237-.L37
+	.half	2
+	.byte	138,0
+	.word	.L237-.L37,.L182-.L37
+	.half	2
+	.byte	138,8
+	.word	.L182-.L37,.L182-.L37
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L185:
+	.word	-1,.L37,0,.L182-.L37
+	.half	2
+	.byte	145,120
+	.word	0,0
+.L187:
+	.word	-1,.L37,0,.L182-.L37
+	.half	2
+	.byte	145,124
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('CmdConfigureWatchdog')
+	.sect	'.debug_loc'
+.L16:
+	.word	-1,.L17,0,.L190-.L17
+	.half	2
+	.byte	138,0
+	.word	.L190-.L17,.L105-.L17
+	.half	3
+	.byte	138,152,1
+	.word	.L105-.L17,.L105-.L17
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L111:
+	.word	-1,.L17,0,.L105-.L17
+	.half	3
+	.byte	145,232,126
+	.word	0,0
+.L107:
+	.word	-1,.L17,0,.L191-.L17
+	.half	1
+	.byte	100
+	.word	.L192-.L17,.L193-.L17
+	.half	1
+	.byte	111
+	.word	0,0
+.L112:
+	.word	-1,.L17,0,.L105-.L17
+	.half	3
+	.byte	145,240,126
+	.word	0,0
+.L109:
+	.word	-1,.L17,.L194-.L17,.L195-.L17
+	.half	1
+	.byte	82
+	.word	.L115-.L17,.L196-.L17
+	.half	1
+	.byte	95
+	.word	.L2-.L17,.L197-.L17
+	.half	1
+	.byte	95
+	.word	0,0
+.L114:
+	.word	-1,.L17,0,.L105-.L17
+	.half	3
+	.byte	145,248,126
+	.word	0,0
+.L117:
+	.word	-1,.L17,0,.L105-.L17
+	.half	3
+	.byte	145,252,126
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('CmdGetConfigWatchdog')
+	.sect	'.debug_loc'
+.L18:
+	.word	-1,.L19,0,.L198-.L19
+	.half	2
+	.byte	138,0
+	.word	.L198-.L19,.L118-.L19
+	.half	3
+	.byte	138,160,1
+	.word	.L118-.L19,.L118-.L19
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L121:
+	.word	-1,.L19,0,.L118-.L19
+	.half	3
+	.byte	145,224,126
+	.word	0,0
+.L120:
+	.word	-1,.L19,0,.L199-.L19
+	.half	1
+	.byte	100
+	.word	.L200-.L19,.L118-.L19
+	.half	1
+	.byte	108
+	.word	0,0
+.L123:
+	.word	-1,.L19,0,.L118-.L19
+	.half	3
+	.byte	145,232,126
+	.word	0,0
+.L125:
+	.word	-1,.L19,.L201-.L19,.L202-.L19
+	.half	1
+	.byte	82
+	.word	.L126-.L19,.L203-.L19
+	.half	1
+	.byte	95
+	.word	.L4-.L19,.L204-.L19
+	.half	1
+	.byte	95
+	.word	0,0
+.L124:
+	.word	-1,.L19,0,.L118-.L19
+	.half	3
+	.byte	145,248,126
+	.word	0,0
+.L127:
+	.word	-1,.L19,0,.L118-.L19
+	.half	3
+	.byte	145,252,126
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('CmdStartMonitoringWatchdog')
+	.sect	'.debug_loc'
+.L20:
+	.word	-1,.L21,0,.L141-.L21
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L143:
+	.word	-1,.L21,0,.L141-.L21
+	.half	1
+	.byte	100
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('CmdStartWatchdog')
+	.sect	'.debug_loc'
+.L26:
+	.word	-1,.L27,0,.L227-.L27
+	.half	2
+	.byte	138,0
+	.word	.L227-.L27,.L128-.L27
+	.half	3
+	.byte	138,144,1
+	.word	.L128-.L27,.L128-.L27
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L133:
+	.word	-1,.L27,0,.L128-.L27
+	.half	2
+	.byte	145,116
+	.word	0,0
+.L130:
+	.word	-1,.L27,0,.L228-.L27
+	.half	1
+	.byte	100
+	.word	0,0
+.L135:
+	.word	-1,.L27,0,.L128-.L27
+	.half	2
+	.byte	145,120
+	.word	0,0
+.L134:
+	.word	-1,.L27,0,.L128-.L27
+	.half	2
+	.byte	145,118
+	.word	0,0
+.L131:
+	.word	-1,.L27,0,.L128-.L27
+	.half	3
+	.byte	145,240,126
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('CmdStopMonitoringWatchdog')
+	.sect	'.debug_loc'
+.L22:
+	.word	-1,.L23,0,.L205-.L23
+	.half	2
+	.byte	138,0
+	.word	.L205-.L23,.L144-.L23
+	.half	3
+	.byte	138,136,1
+	.word	.L144-.L23,.L144-.L23
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L146:
+	.word	-1,.L23,0,.L206-.L23
+	.half	1
+	.byte	100
+	.word	0,0
+.L148:
+	.word	-1,.L23,0,.L144-.L23
+	.half	3
+	.byte	145,248,126
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('CmdStopWatchdog')
+	.sect	'.debug_loc'
+.L28:
+	.word	-1,.L29,0,.L229-.L29
+	.half	2
+	.byte	138,0
+	.word	.L229-.L29,.L136-.L29
+	.half	3
+	.byte	138,136,1
+	.word	.L136-.L29,.L136-.L29
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L138:
+	.word	-1,.L29,0,.L230-.L29
+	.half	1
+	.byte	100
+	.word	.L231-.L29,.L136-.L29
+	.half	1
+	.byte	111
+	.word	0,0
+.L140:
+	.word	-1,.L29,0,.L136-.L29
+	.half	3
+	.byte	145,248,126
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('GetREQUValue')
+	.sect	'.debug_loc'
+.L34:
+	.word	-1,.L35,0,.L235-.L35
+	.half	2
+	.byte	138,0
+	.word	.L235-.L35,.L176-.L35
+	.half	2
+	.byte	138,8
+	.word	.L176-.L35,.L176-.L35
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L177:
+	.word	-1,.L35,0,.L176-.L35
+	.half	2
+	.byte	145,120
+	.word	0,0
+.L178:
+	.word	-1,.L35,0,.L176-.L35
+	.half	2
+	.byte	145,122
+	.word	0,0
+.L179:
+	.word	-1,.L35,0,.L176-.L35
+	.half	2
+	.byte	145,126
+	.word	0,0
+.L181:
+	.word	-1,.L35,.L236-.L35,.L176-.L35
+	.half	1
+	.byte	82
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('GetRespCnt')
+	.sect	'.debug_loc'
+.L32:
+	.word	-1,.L33,0,.L233-.L33
+	.half	2
+	.byte	138,0
+	.word	.L233-.L33,.L170-.L33
+	.half	2
+	.byte	138,8
+	.word	.L170-.L33,.L170-.L33
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L171:
+	.word	-1,.L33,0,.L170-.L33
+	.half	2
+	.byte	145,120
+	.word	0,0
+.L172:
+	.word	-1,.L33,0,.L170-.L33
+	.half	2
+	.byte	145,122
+	.word	0,0
+.L173:
+	.word	-1,.L33,0,.L170-.L33
+	.half	2
+	.byte	145,126
+	.word	0,0
+.L175:
+	.word	-1,.L33,.L234-.L33,.L170-.L33
+	.half	1
+	.byte	82
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('GetResponseWord')
+	.sect	'.debug_loc'
+.L30:
+	.word	-1,.L31,0,.L232-.L31
+	.half	2
+	.byte	138,0
+	.word	.L232-.L31,.L165-.L31
+	.half	3
+	.byte	138,192,0
+	.word	.L165-.L31,.L165-.L31
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L166:
+	.word	-1,.L31,0,.L165-.L31
+	.half	1
+	.byte	84
+	.word	0,0
+.L167:
+	.word	-1,.L31,0,.L165-.L31
+	.half	1
+	.byte	85
+	.word	0,0
+.L169:
+	.word	-1,.L31,0,.L165-.L31
+	.half	2
+	.byte	145,64
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('IntCmdServeWatchdog')
+	.sect	'.debug_loc'
+.L24:
+	.word	-1,.L25,0,.L207-.L25
+	.half	2
+	.byte	138,0
+	.word	.L207-.L25,.L149-.L25
+	.half	3
+	.byte	138,144,1
+	.word	.L149-.L25,.L149-.L25
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L153:
+	.word	-1,.L25,0,.L149-.L25
+	.half	3
+	.byte	145,244,126
+	.word	0,0
+.L159:
+	.word	-1,.L25,0,.L149-.L25
+	.half	2
+	.byte	145,124
+	.word	0,0
+.L161:
+	.word	-1,.L25,.L215-.L25,.L216-.L25
+	.half	1
+	.byte	82
+	.word	0,0
+.L154:
+	.word	-1,.L25,0,.L149-.L25
+	.half	3
+	.byte	145,246,126
+	.word	0,0
+.L156:
+	.word	-1,.L25,0,.L149-.L25
+	.half	3
+	.byte	145,248,126
+	.word	0,0
+.L150:
+	.word	-1,.L25,.L208-.L25,.L209-.L25
+	.half	1
+	.byte	82
+	.word	.L210-.L25,.L211-.L25
+	.half	1
+	.byte	88
+	.word	.L209-.L25,.L212-.L25
+	.half	1
+	.byte	84
+	.word	.L213-.L25,.L214-.L25
+	.half	1
+	.byte	84
+	.word	0,0
+.L151:
+	.word	-1,.L25,0,.L149-.L25
+	.half	3
+	.byte	145,240,126
+	.word	0,0
+.L152:
+	.word	-1,.L25,0,.L149-.L25
+	.half	3
+	.byte	145,242,126
+	.word	0,0
+.L162:
+	.word	-1,.L25,.L217-.L25,.L8-.L25
+	.half	1
+	.byte	89
+	.word	.L218-.L25,.L219-.L25
+	.half	1
+	.byte	84
+	.word	.L220-.L25,.L221-.L25
+	.half	1
+	.byte	84
+	.word	0,0
+.L164:
+	.word	-1,.L25,.L222-.L25,.L8-.L25
+	.half	1
+	.byte	88
+	.word	.L223-.L25,.L224-.L25
+	.half	1
+	.byte	84
+	.word	.L225-.L25,.L226-.L25
+	.half	1
+	.byte	84
+	.word	0,0
+	.sdecl	'.debug_frame',debug
+	.sect	'.debug_frame'
+.L473:
+	.word	48
+	.word	-1
+	.byte	3,0,2,1,27,12,26,0,8,26,8,27,8,30,8,29,8,28,8,16,8,17,8,24,8,25,8,31,8,32,8,33,8,34,8,35,8,36,8,37,8,38
+	.byte	8,39
+	.sdecl	'.debug_frame',debug,cluster('CmdConfigureWatchdog')
+	.sect	'.debug_frame'
+	.word	36
+	.word	.L473,.L17,.L105-.L17
+	.byte	4
+	.word	(.L190-.L17)/2
+	.byte	19,152,1,22,26,4,19,138,152,1,4
+	.word	(.L105-.L190)/2
+	.byte	19,0,8,26
+	.sdecl	'.debug_frame',debug,cluster('CmdGetConfigWatchdog')
+	.sect	'.debug_frame'
+	.word	36
+	.word	.L473,.L19,.L118-.L19
+	.byte	4
+	.word	(.L198-.L19)/2
+	.byte	19,160,1,22,26,4,19,138,160,1,4
+	.word	(.L118-.L198)/2
+	.byte	19,0,8,26
+	.sdecl	'.debug_frame',debug,cluster('CmdStartMonitoringWatchdog')
+	.sect	'.debug_frame'
+	.word	24
+	.word	.L473,.L21,.L141-.L21
+	.byte	8,18,8,19,8,21,8,22,8,23,0,0
+	.sdecl	'.debug_frame',debug,cluster('CmdStopMonitoringWatchdog')
+	.sect	'.debug_frame'
+	.word	36
+	.word	.L473,.L23,.L144-.L23
+	.byte	4
+	.word	(.L205-.L23)/2
+	.byte	19,136,1,22,26,4,19,138,136,1,4
+	.word	(.L144-.L205)/2
+	.byte	19,0,8,26
+	.sdecl	'.debug_frame',debug,cluster('IntCmdServeWatchdog')
+	.sect	'.debug_frame'
+	.word	36
+	.word	.L473,.L25,.L149-.L25
+	.byte	4
+	.word	(.L207-.L25)/2
+	.byte	19,144,1,22,26,4,19,138,144,1,4
+	.word	(.L149-.L207)/2
+	.byte	19,0,8,26
+	.sdecl	'.debug_frame',debug,cluster('CmdStartWatchdog')
+	.sect	'.debug_frame'
+	.word	36
+	.word	.L473,.L27,.L128-.L27
+	.byte	4
+	.word	(.L227-.L27)/2
+	.byte	19,144,1,22,26,4,19,138,144,1,4
+	.word	(.L128-.L227)/2
+	.byte	19,0,8,26
+	.sdecl	'.debug_frame',debug,cluster('CmdStopWatchdog')
+	.sect	'.debug_frame'
+	.word	36
+	.word	.L473,.L29,.L136-.L29
+	.byte	4
+	.word	(.L229-.L29)/2
+	.byte	19,136,1,22,26,4,19,138,136,1,4
+	.word	(.L136-.L229)/2
+	.byte	19,0,8,26
+	.sdecl	'.debug_frame',debug,cluster('GetResponseWord')
+	.sect	'.debug_frame'
+	.word	44
+	.word	.L473,.L31,.L165-.L31
+	.byte	8,19,8,21,8,22,8,23,4
+	.word	(.L232-.L31)/2
+	.byte	19,192,0,22,26,4,19,138,192,0,4
+	.word	(.L165-.L232)/2
+	.byte	19,0,8,26
+	.sdecl	'.debug_frame',debug,cluster('GetRespCnt')
+	.sect	'.debug_frame'
+	.word	36
+	.word	.L473,.L33,.L170-.L33
+	.byte	4
+	.word	(.L233-.L33)/2
+	.byte	19,8,22,26,3,19,138,8,4
+	.word	(.L170-.L233)/2
+	.byte	19,0,8,26,0,0
+	.sdecl	'.debug_frame',debug,cluster('GetREQUValue')
+	.sect	'.debug_frame'
+	.word	36
+	.word	.L473,.L35,.L176-.L35
+	.byte	4
+	.word	(.L235-.L35)/2
+	.byte	19,8,22,26,3,19,138,8,4
+	.word	(.L176-.L235)/2
+	.byte	19,0,8,26,0,0
+	.sdecl	'.debug_frame',debug,cluster('CalculateWatchdogAckPeriodicity')
+	.sect	'.debug_frame'
+	.word	48
+	.word	.L473,.L37,.L182-.L37
+	.byte	8,18,8,19,8,20,8,21,8,22,8,23,4
+	.word	(.L237-.L37)/2
+	.byte	19,8,22,26,3,19,138,8,4
+	.word	(.L182-.L237)/2
+	.byte	19,0,8,26,0,0
+	; Module end

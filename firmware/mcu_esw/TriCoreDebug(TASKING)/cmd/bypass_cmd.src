@@ -1,0 +1,513 @@
+	; Module start
+	.compiler_version	"TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler v1.1r8 Build 22011964"
+	.compiler_invocation	"ctc -f cc3940a --dep-file=cmd/bypass_cmd.d -c99 --fp-model=3cflnrSTz -D__CPU__=tc37x -D__CPU_TC37X__ --core=tc1.6.2 --fp-model=+float -D__CPU__=tc37x -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Configurations -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Infra -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Infra\\\\Platform -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Infra\\\\Platform\\\\Tricore -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Infra\\\\Platform\\\\Tricore\\\\Compilers -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Infra\\\\Sfr -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Infra\\\\Sfr\\\\TC37A -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Infra\\\\Sfr\\\\TC37A\\\\_Reg -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Infra\\\\Ssw -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Infra\\\\Ssw\\\\TC37A -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Infra\\\\Ssw\\\\TC37A\\\\Tricore -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Service -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Service\\\\CpuGeneric -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Service\\\\CpuGeneric\\\\If -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Service\\\\CpuGeneric\\\\StdIf -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Service\\\\CpuGeneric\\\\SysSe -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Service\\\\CpuGeneric\\\\SysSe\\\\Bsp -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\Service\\\\CpuGeneric\\\\_Utilities -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Asclin -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Asclin\\\\Asc -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Asclin\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Cpu -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Cpu\\\\Irq -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Cpu\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Cpu\\\\Trap -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Dma -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Dma\\\\Dma -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Dma\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Gpt12 -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Gpt12\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Gtm -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Gtm\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Mtu -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Mtu\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Pms -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Pms\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Port -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Port\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Qspi -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Qspi\\\\SpiMaster -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Qspi\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Scu -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Scu\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Src -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Src\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Stm -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Stm\\\\Std -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\_Impl -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\_Lib -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\_Lib\\\\DataHandling -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\_PinMap -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\cmd -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\common -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\periphery -IC:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\top -g2 -w544 -w557 -t4 --language=+volatile -N0 -O0 -Y0 -Z0 --compact-max-size=200 --misrac-version=2004 -o cmd/bypass_cmd.src ../cmd/bypass_cmd.c"
+	.compiler_name		"ctc"
+	;source	'../cmd/bypass_cmd.c'
+
+	
+$TC162
+	
+	.sdecl	'.text.bypass_cmd.CmdBypassMCU',code,cluster('CmdBypassMCU')
+	.sect	'.text.bypass_cmd.CmdBypassMCU'
+	.align	2
+	
+	.global	CmdBypassMCU
+; Function CmdBypassMCU
+.L4:
+CmdBypassMCU:	.type	func
+	movh.a	a15,#@his(g_mcuBypass)
+	lea	a15,[a15]@los(g_mcuBypass)
+.L48:
+	mov	d15,#1
+.L49:
+	st.b	[a15],d15
+.L50:
+	call	CmdIsAlive
+.L38:
+	ret
+.L30:
+	
+__CmdBypassMCU_function_end:
+	.size	CmdBypassMCU,__CmdBypassMCU_function_end-CmdBypassMCU
+.L17:
+	; End of function
+	
+	.sdecl	'.text.bypass_cmd.CmdActivateMCU',code,cluster('CmdActivateMCU')
+	.sect	'.text.bypass_cmd.CmdActivateMCU'
+	.align	2
+	
+	.global	CmdActivateMCU
+; Function CmdActivateMCU
+.L6:
+CmdActivateMCU:	.type	func
+	movh.a	a15,#@his(g_mcuBypass)
+	lea	a15,[a15]@los(g_mcuBypass)
+.L55:
+	mov	d15,#0
+.L56:
+	st.b	[a15],d15
+.L57:
+	call	CmdIsAlive
+.L39:
+	ret
+.L33:
+	
+__CmdActivateMCU_function_end:
+	.size	CmdActivateMCU,__CmdActivateMCU_function_end-CmdActivateMCU
+.L22:
+	; End of function
+	
+	.sdecl	'.text.bypass_cmd.GetMCUBypassFlag',code,cluster('GetMCUBypassFlag')
+	.sect	'.text.bypass_cmd.GetMCUBypassFlag'
+	.align	2
+	
+	.global	GetMCUBypassFlag
+; Function GetMCUBypassFlag
+.L8:
+GetMCUBypassFlag:	.type	func
+	movh.a	a15,#@his(g_mcuBypass)
+	lea	a15,[a15]@los(g_mcuBypass)
+	ld.bu	d2,[a15]
+.L62:
+	j	.L2
+.L2:
+	ret
+.L37:
+	
+__GetMCUBypassFlag_function_end:
+	.size	GetMCUBypassFlag,__GetMCUBypassFlag_function_end-GetMCUBypassFlag
+.L27:
+	; End of function
+	
+	.sdecl	'.data.bypass_cmd.g_mcuBypass',data,cluster('g_mcuBypass')
+	.sect	'.data.bypass_cmd.g_mcuBypass'
+g_mcuBypass:	.type	object
+	.size	g_mcuBypass,1
+	.space	1
+	.calls	'CmdBypassMCU','CmdIsAlive'
+	.calls	'CmdActivateMCU','CmdIsAlive'
+	.calls	'CmdBypassMCU','',0
+	.calls	'CmdActivateMCU','',0
+	.extern	CmdIsAlive
+	.calls	'GetMCUBypassFlag','',0
+	.sdecl	'.debug_info',debug
+	.sect	'.debug_info'
+.L10:
+	.word	1833
+	.half	3
+	.word	.L11
+	.byte	4
+.L9:
+	.byte	1
+	.byte	'../cmd/bypass_cmd.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\Entwicklung\\AB15_Demo_Board\\AB15_dev_Git\\ab15_sw\\firmware\\mcu_esw\\TriCoreDebug(TASKING)\\',0
+	.byte	12,1
+	.word	.L12
+.L36:
+	.byte	2
+	.byte	'unsigned char',0,1,8,3,2,65,9,1,4
+	.byte	'_USB_CMD_MIN',0,0,4
+	.byte	'USB_CMD_IS_ALIVE',0,1,4
+	.byte	'USB_CMD_READ_REG',0,2,4
+	.byte	'USB_CMD_WRITE_REG',0,3,4
+	.byte	'USB_CMD_READ_REG_RAW',0,4,4
+	.byte	'USB_CMD_WRITE_REG_RAW',0,5,4
+	.byte	'USB_CMD_ABORT',0,6,4
+	.byte	'USB_CMD_STOP_READING',0,7,4
+	.byte	'USB_CMD_STOP_WATCHDOG',0,8,4
+	.byte	'USB_CMD_STOP_GPIO_READING',0,9,4
+	.byte	'USB_CMD_STOP_READ_ERRORS',0,10,4
+	.byte	'USB_CMD_EXECUTE_RW_SEQUENCE',0,11,4
+	.byte	'USB_CMD_EXECUTE_READ_SEQUENCE',0,12,4
+	.byte	'USB_CMD_EXECUTE_WRITE_SEQUENCE',0,13,4
+	.byte	'USB_CMD_CONFIGURE_READING',0,14,4
+	.byte	'USB_CMD_CONFIGURE_WATCHDOG',0,15,4
+	.byte	'USB_CMD_START_READING',0,16,4
+	.byte	'USB_CMD_START_WATCHDOG',0,17,4
+	.byte	'USB_CMD_START_GPIO_READING',0,18,4
+	.byte	'USB_CMD_START_READ_ERRORS',0,19,4
+	.byte	'USB_CMD_RESET_TO_IDLE',0,20,4
+	.byte	'USB_CMD_GET_CONFIG_WATCHDOG',0,21,4
+	.byte	'USB_CMD_START_MONITORING_WATCHDOG',0,22,4
+	.byte	'USB_CMD_STOP_MONITORING_WATCHDOG',0,23,4
+	.byte	'USB_CMD_BYPASS_MCU',0,24,4
+	.byte	'USB_CMD_ACTIVATE_MCU',0,25,4
+	.byte	'USB_CMD_GET_MCU_VERSION',0,26,4
+	.byte	'_USB_EXT_CMD_MAX',0,63,4
+	.byte	'INT_CMD_SYS_TIMER_UPD',0,192,0,4
+	.byte	'INT_CMD_ACK_WATCHDOG',0,193,0,4
+	.byte	'INT_CMD_CS600_ERR_CHECK',0,194,0,4
+	.byte	'INT_CMD_CONT_READ',0,195,0,4
+	.byte	'INT_CMD_GPIO_READ',0,196,0,4
+	.byte	'_USB_CMD_MAX',0,255,0,0,5,64
+	.word	207
+	.byte	6,63,0,7,2,130,1,9,68,8
+	.byte	'msg_id',0
+	.word	207
+	.byte	1,2,35,0,8
+	.byte	'command',0
+	.word	224
+	.byte	1,2,35,1,8
+	.byte	'dataLength',0
+	.word	207
+	.byte	1,2,35,2,8
+	.byte	'data',0
+	.word	1074
+	.byte	64,2,35,3,0,9
+	.word	1083
+	.byte	10
+	.word	1157
+	.byte	9
+	.word	1162
+	.byte	11
+	.byte	'CmdIsAlive',0,1,50,6,1,1,1,1,12
+	.byte	'commandPackage',0,1,50,46
+	.word	1167
+	.byte	0
+.L31:
+	.byte	9
+	.word	1162
+.L34:
+	.byte	9
+	.word	1162
+	.byte	2
+	.byte	'short int',0,2,5,13
+	.byte	'__wchar_t',0,3,1,1
+	.word	1225
+	.byte	2
+	.byte	'unsigned int',0,4,7,13
+	.byte	'__size_t',0,3,1,1
+	.word	1256
+	.byte	2
+	.byte	'int',0,4,5,13
+	.byte	'__ptrdiff_t',0,3,1,1
+	.word	1289
+	.byte	14,1,10
+	.word	1316
+	.byte	13
+	.byte	'__codeptr',0,3,1,1
+	.word	1318
+	.byte	13
+	.byte	'boolean',0,4,104,29
+	.word	207
+	.byte	13
+	.byte	'uint8',0,4,108,29
+	.word	207
+	.byte	2
+	.byte	'unsigned short int',0,2,7,13
+	.byte	'uint16',0,4,112,29
+	.word	1371
+	.byte	2
+	.byte	'unsigned long int',0,4,7,13
+	.byte	'uint32',0,4,116,29
+	.word	1408
+	.byte	13
+	.byte	'sint16',0,4,129,1,29
+	.word	1225
+	.byte	2
+	.byte	'long int',0,4,5,13
+	.byte	'sint32',0,4,134,1,29
+	.word	1460
+	.byte	2
+	.byte	'long long int',0,8,5,13
+	.byte	'sint64',0,4,141,1,29
+	.word	1488
+	.byte	2
+	.byte	'float',0,4,4,13
+	.byte	'float32',0,4,170,1,29
+	.word	1521
+	.byte	15
+	.byte	'void',0,10
+	.word	1547
+	.byte	13
+	.byte	'pvoid',0,5,54,28
+	.word	1553
+	.byte	13
+	.byte	'Ifx_TickTime',0,5,76,28
+	.word	1488
+	.byte	13
+	.byte	'USBCommandsEnum',0,2,105,3
+	.word	224
+	.byte	3,2,110,9,1,4
+	.byte	'_USB_STATUS_MIN',0,255,0,4
+	.byte	'USB_STATUS_ACK',0,128,1,4
+	.byte	'USB_STATUS_ERROR',0,129,1,4
+	.byte	'USB_STATUS_ERROR_TELEMETRY',0,130,1,4
+	.byte	'USB_STATUS_STATUS',0,131,1,4
+	.byte	'USB_STATUS_BUSY',0,132,1,4
+	.byte	'USB_STATUS_DATA',0,133,1,4
+	.byte	'_USB_STATUS_MAX',0,255,1,0,13
+	.byte	'USBStatusesEnum',0,2,122,3
+	.word	1617
+	.byte	13
+	.byte	'USBReceiveData',0,2,136,1,3
+	.word	1083
+	.byte	0
+	.sdecl	'.debug_abbrev',debug
+	.sect	'.debug_abbrev'
+.L11:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,16,6,0,0,2,36,0,3,8,11,15,62,15,0,0,3,4,1,58,15,59,15,57,15,11,15
+	.byte	0,0,4,40,0,3,8,28,13,0,0,5,1,1,11,15,73,19,0,0,6,33,0,47,15,0,0,7,19,1,58,15,59,15,57,15,11,15,0,0,8,13
+	.byte	0,3,8,73,19,11,15,56,9,0,0,9,38,0,73,19,0,0,10,15,0,73,19,0,0,11,46,1,3,8,58,15,59,15,57,15,54,15,39,12
+	.byte	63,12,60,12,0,0,12,5,0,3,8,58,15,59,15,57,15,73,19,0,0,13,22,0,3,8,58,15,59,15,57,15,73,19,0,0,14,21,0
+	.byte	54,15,0,0,15,59,0,3,8,0,0,0
+	.sdecl	'.debug_line',debug
+	.sect	'.debug_line'
+.L12:
+	.word	.L41-.L40
+.L40:
+	.half	3
+	.word	.L43-.L42
+.L42:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1
+	.byte	'C:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\\\Libraries\\\\iLLD\\\\TC37A\\\\Tricore\\\\Cpu\\\\Std',0
+	.byte	0
+	.byte	'..\\cmd\\general_cmd.h',0,0,0,0
+	.byte	'C:\\\\Entwicklung\\\\AB15_Demo_Board\\\\AB15_dev_Git\\\\ab15_sw\\\\firmware\\\\mcu_esw\\common\\usb_data_types.h',0
+	.byte	0,0,0
+	.byte	'../cmd/bypass_cmd.c',0,0,0,0
+	.byte	'Platform_Types.h',0,1,0,0
+	.byte	'Ifx_Types.h',0,1,0,0,0
+.L43:
+.L41:
+	.sdecl	'.debug_info',debug,cluster('CmdBypassMCU')
+	.sect	'.debug_info'
+.L13:
+	.word	282
+	.half	3
+	.word	.L14
+	.byte	4,1
+	.byte	'../cmd/bypass_cmd.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\Entwicklung\\AB15_Demo_Board\\AB15_dev_Git\\ab15_sw\\firmware\\mcu_esw\\TriCoreDebug(TASKING)\\',0
+	.byte	12,1
+	.word	.L16,.L15
+	.byte	2
+	.word	.L9
+	.byte	3
+	.byte	'CmdBypassMCU',0,1,55,6,1,1,1
+	.word	.L4,.L30,.L3
+	.byte	4
+	.byte	'commandPackage',0,1,55,48
+	.word	.L31,.L32
+	.byte	5
+	.word	.L4,.L30
+	.byte	0,0
+	.sdecl	'.debug_abbrev',debug,cluster('CmdBypassMCU')
+	.sect	'.debug_abbrev'
+.L14:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,0,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('CmdBypassMCU')
+	.sect	'.debug_line'
+.L15:
+	.word	.L45-.L44
+.L44:
+	.half	3
+	.word	.L47-.L46
+.L46:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'../cmd/bypass_cmd.c',0,0,0,0,0
+.L47:
+	.byte	5,5,7,0,5,2
+	.word	.L4
+	.byte	3,57,1,5,19,9
+	.half	.L48-.L4
+	.byte	1,5,17,9
+	.half	.L49-.L48
+	.byte	1,5,16,9
+	.half	.L50-.L49
+	.byte	3,3,1,5,1,9
+	.half	.L38-.L50
+	.byte	3,1,1,7,9
+	.half	.L17-.L38
+	.byte	0,1,1
+.L45:
+	.sdecl	'.debug_ranges',debug,cluster('CmdBypassMCU')
+	.sect	'.debug_ranges'
+.L16:
+	.word	-1,.L4,0,.L17-.L4,0,0
+	.sdecl	'.debug_info',debug,cluster('CmdActivateMCU')
+	.sect	'.debug_info'
+.L18:
+	.word	284
+	.half	3
+	.word	.L19
+	.byte	4,1
+	.byte	'../cmd/bypass_cmd.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\Entwicklung\\AB15_Demo_Board\\AB15_dev_Git\\ab15_sw\\firmware\\mcu_esw\\TriCoreDebug(TASKING)\\',0
+	.byte	12,1
+	.word	.L21,.L20
+	.byte	2
+	.word	.L9
+	.byte	3
+	.byte	'CmdActivateMCU',0,1,64,6,1,1,1
+	.word	.L6,.L33,.L5
+	.byte	4
+	.byte	'commandPackage',0,1,64,50
+	.word	.L34,.L35
+	.byte	5
+	.word	.L6,.L33
+	.byte	0,0
+	.sdecl	'.debug_abbrev',debug,cluster('CmdActivateMCU')
+	.sect	'.debug_abbrev'
+.L19:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,0,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('CmdActivateMCU')
+	.sect	'.debug_line'
+.L20:
+	.word	.L52-.L51
+.L51:
+	.half	3
+	.word	.L54-.L53
+.L53:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'../cmd/bypass_cmd.c',0,0,0,0,0
+.L54:
+	.byte	5,5,7,0,5,2
+	.word	.L6
+	.byte	3,194,0,1,5,19,9
+	.half	.L55-.L6
+	.byte	1,5,17,9
+	.half	.L56-.L55
+	.byte	1,5,16,9
+	.half	.L57-.L56
+	.byte	3,3,1,5,1,9
+	.half	.L39-.L57
+	.byte	3,1,1,7,9
+	.half	.L22-.L39
+	.byte	0,1,1
+.L52:
+	.sdecl	'.debug_ranges',debug,cluster('CmdActivateMCU')
+	.sect	'.debug_ranges'
+.L21:
+	.word	-1,.L6,0,.L22-.L6,0,0
+	.sdecl	'.debug_info',debug,cluster('GetMCUBypassFlag')
+	.sect	'.debug_info'
+.L23:
+	.word	263
+	.half	3
+	.word	.L24
+	.byte	4,1
+	.byte	'../cmd/bypass_cmd.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\Entwicklung\\AB15_Demo_Board\\AB15_dev_Git\\ab15_sw\\firmware\\mcu_esw\\TriCoreDebug(TASKING)\\',0
+	.byte	12,1
+	.word	.L26,.L25
+	.byte	2
+	.word	.L9
+	.byte	3
+	.byte	'GetMCUBypassFlag',0,1,73,9
+	.word	.L36
+	.byte	1,1,1
+	.word	.L8,.L37,.L7
+	.byte	4
+	.word	.L8,.L37
+	.byte	0,0
+	.sdecl	'.debug_abbrev',debug,cluster('GetMCUBypassFlag')
+	.sect	'.debug_abbrev'
+.L24:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,73,16
+	.byte	54,15,39,12,63,12,17,1,18,1,64,6,0,0,4,11,0,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('GetMCUBypassFlag')
+	.sect	'.debug_line'
+.L25:
+	.word	.L59-.L58
+.L58:
+	.half	3
+	.word	.L61-.L60
+.L60:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'../cmd/bypass_cmd.c',0,0,0,0,0
+.L61:
+	.byte	5,12,7,0,5,2
+	.word	.L8
+	.byte	3,202,0,1,5,5,9
+	.half	.L62-.L8
+	.byte	1,5,1,9
+	.half	.L2-.L62
+	.byte	3,1,1,7,9
+	.half	.L27-.L2
+	.byte	0,1,1
+.L59:
+	.sdecl	'.debug_ranges',debug,cluster('GetMCUBypassFlag')
+	.sect	'.debug_ranges'
+.L26:
+	.word	-1,.L8,0,.L27-.L8,0,0
+	.sdecl	'.debug_info',debug,cluster('g_mcuBypass')
+	.sect	'.debug_info'
+.L28:
+	.word	231
+	.half	3
+	.word	.L29
+	.byte	4,1
+	.byte	'../cmd/bypass_cmd.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\Entwicklung\\AB15_Demo_Board\\AB15_dev_Git\\ab15_sw\\firmware\\mcu_esw\\TriCoreDebug(TASKING)\\',0
+	.byte	12,1,2
+	.word	.L9
+	.byte	3
+	.byte	'g_mcuBypass',0,3,49,16
+	.word	.L36
+	.byte	5,3
+	.word	g_mcuBypass
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('g_mcuBypass')
+	.sect	'.debug_abbrev'
+.L29:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,73,16,2,9,0,0,0
+	.sdecl	'.debug_loc',debug,cluster('CmdActivateMCU')
+	.sect	'.debug_loc'
+.L5:
+	.word	-1,.L6,0,.L33-.L6
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L35:
+	.word	-1,.L6,0,.L39-.L6
+	.half	1
+	.byte	100
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('CmdBypassMCU')
+	.sect	'.debug_loc'
+.L3:
+	.word	-1,.L4,0,.L30-.L4
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L32:
+	.word	-1,.L4,0,.L38-.L4
+	.half	1
+	.byte	100
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('GetMCUBypassFlag')
+	.sect	'.debug_loc'
+.L7:
+	.word	-1,.L8,0,.L37-.L8
+	.half	2
+	.byte	138,0
+	.word	0,0
+	.sdecl	'.debug_frame',debug
+	.sect	'.debug_frame'
+.L63:
+	.word	48
+	.word	-1
+	.byte	3,0,2,1,27,12,26,0,8,26,8,27,8,30,8,29,8,28,8,16,8,17,8,24,8,25,8,31,8,32,8,33,8,34,8,35,8,36,8,37,8,38
+	.byte	8,39
+	.sdecl	'.debug_frame',debug,cluster('CmdBypassMCU')
+	.sect	'.debug_frame'
+	.word	12
+	.word	.L63,.L4,.L30-.L4
+	.sdecl	'.debug_frame',debug,cluster('CmdActivateMCU')
+	.sect	'.debug_frame'
+	.word	12
+	.word	.L63,.L6,.L33-.L6
+	.sdecl	'.debug_frame',debug,cluster('GetMCUBypassFlag')
+	.sect	'.debug_frame'
+	.word	24
+	.word	.L63,.L8,.L37-.L8
+	.byte	8,18,8,19,8,20,8,21,8,22,8,23
+	; Module end
