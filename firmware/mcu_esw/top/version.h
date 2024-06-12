@@ -9,9 +9,9 @@
 #define VERSION_H_
 
 
-#define VERSION_MAJOR "0"
-#define VERSION_MINOR "1"
-#define VERSION_PATCH "3"
+#define VERSION_MAJOR '0'
+#define VERSION_MINOR '1'
+#define VERSION_PATCH '4'
 
 /*
 
@@ -34,8 +34,16 @@
 
 0.1.3
     - cleaned up main
-    -  renamed some USB commands
-    - renamed CmdReadReg to more sying command
+    - renamed some USB commands
+    - renamed CmdReadReg to more saying command
+
+0.1.4
+    - implemented
+        - USB_CMD_GET_MCU_VERSION              = 26,   //brief returns MCU SW version "V0.1.2"
+        - USB_CMD_GET_MCU_BUILD_DATE           = 27,  //brief returns MCU SW build date "mm.dd.jjj"
+        - USB_CMD_GET_MCU_BUILD_TIME           = 28,  //brief returns MCU SW build time like "hh:mm"
+    created interface Excel:
+    https://bosch.sharepoint.com/:x:/r/sites/msteams_7875996-PAC-IC-Airbag15DemoSWDevTeam/_layouts/15/Doc.aspx?sourcedoc=%7B9BB641AD-E116-4EC4-803F-113BAD0952D8%7D&file=AB_protocol_description.xlsx&action=default&mobileredirect=true
 
  */
 
@@ -50,6 +58,7 @@
 #define BUILD_YEAR_CH1 (__DATE__[ 8])
 #define BUILD_YEAR_CH2 (__DATE__[ 9])
 #define BUILD_YEAR_CH3 (__DATE__[10])
+
 #define BUILD_MONTH_IS_JAN (__DATE__[0] == 'J' && __DATE__[1] == 'a' && __DATE__[2] == 'n')
 #define BUILD_MONTH_IS_FEB (__DATE__[0] == 'F')
 #define BUILD_MONTH_IS_MAR (__DATE__[0] == 'M' && __DATE__[1] == 'a' && __DATE__[2] == 'r')

@@ -216,15 +216,12 @@ void core0_main(void)
             case USB_CMD_IS_ALIVE:
                 CmdIsAlive(&cmdPackage);
                 break;
-            case USB_CMD_SPI_INSTR_NO_DATA:
-                // CmdReadReg(&cmdPackage);
+            case USB_CMD_SPI_INSTRUCTION:
+                CmdSpiInstuction(&cmdPackage);
                 break;
-            case USB_CMD_SPI_INSTR_16B_DATA:
-                CmdSpiInst16BData(&cmdPackage);
-                break;
-            case USB_CMD_READ_DEV_ID:
-                // CmdReadReg(&cmdPackage);
-                break;
+            //case USB_CMD_READ_DEV_ID:
+            // CmdReadReg(&cmdPackage);
+            //    break;
             // case :
             //     break;
             // case :
@@ -236,6 +233,13 @@ void core0_main(void)
             case USB_CMD_GET_MCU_VERSION:
                 CmdGetMcuVersion(&cmdPackage);
                 break;
+            case USB_CMD_GET_MCU_BUILD_DATE:
+                CmdGetMcuBuildDate(&cmdPackage);
+                break;
+            case USB_CMD_GET_MCU_BUILD_TIME:
+                CmdGetMcuBuildTime(&cmdPackage);
+                break;
+
 
             case _USB_CMD_MAX:
                 break;

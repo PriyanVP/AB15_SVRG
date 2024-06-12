@@ -56,6 +56,20 @@ void CmdIsAlive(USBReceiveData const * const commandPackage);
  */
 void CmdGetMcuVersion(USBReceiveData const * const commandPackage);
 
+/** \brief Handling GET MCU DATE  command from PC
+ *
+ * \param commandPackage package with command, command not used
+ * \return Version and build date
+ */
+void CmdGetMcuBuildDate(USBReceiveData const * const commandPackage);
+
+/** \brief Handling GET MCU TIME  command from PC
+ *
+ * \param commandPackage package with command, command not used
+ * \return Version and build date
+ */
+void CmdGetMcuBuildTime(USBReceiveData const * const commandPackage);
+
 /** \brief Handling WRITE_REG command from PC
  *
  * \param commandPackage package with command
@@ -68,7 +82,7 @@ void CmdWriteReg(USBReceiveData const * const commandPackage);
  * \param commandPackage package with command
  * \return Nothing
  */
-void CmdSpiInst16BData(USBReceiveData const * const commandPackage);
+void CmdSpiInstuction(USBReceiveData const * const commandPackage);
 
 /** \brief Handling WRITE_REG_RAW command from PC
  *

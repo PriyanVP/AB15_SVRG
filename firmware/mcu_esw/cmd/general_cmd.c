@@ -52,10 +52,12 @@
 /*---------------------------------------------Function Implementations----------------------------------------------*/
 /*********************************************************************************************************************/
 
+/*handle
+ USB_CMD_IS_ALIVE
+ command*/
 void CmdIsAlive(USBReceiveData const * const commandPackage)
 {
     USBTransmitData packageToSend;
-
     packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
     packageToSend.status = USB_STATUS_ACK;
     packageToSend.dataLength = 0;
@@ -63,29 +65,69 @@ void CmdIsAlive(USBReceiveData const * const commandPackage)
     SendUSBPackage(&packageToSend);
 }
 
-
-
+/*handle
+ USB_CMD_GET_MCU_VERSION
+ command*/
 void CmdGetMcuVersion(USBReceiveData const * const commandPackage)
 {
     USBTransmitData packageToSend;
 
     packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
-    packageToSend.status = USB_STATUS_ACK;
-    packageToSend.dataLength = 8;
-    packageToSend.data[0] = (char)VERSION_MAJOR;
-    packageToSend.data[1] = (char)VERSION_MINOR;
-    packageToSend.data[2] = (char)VERSION_PATCH;
-    packageToSend.data[3] = '.';
-    packageToSend.data[4] = BUILD_MONTH_CH0;
-    packageToSend.data[5] = BUILD_MONTH_CH1;
-    packageToSend.data[6] = BUILD_DAY_CH0;
-    packageToSend.data[7] = BUILD_DAY_CH1;
+    packageToSend.status = USB_STATUS_STATUS;
+    packageToSend.dataLength = 6;
+    packageToSend.data[0] = 'V';
+    packageToSend.data[1] = (char)VERSION_MAJOR;
+    packageToSend.data[2] = '.';
+    packageToSend.data[3] = (char)VERSION_MINOR;
+    packageToSend.data[4] = '.';
+    packageToSend.data[5] = (char)VERSION_PATCH;
+    // Send data back to MCU
+    SendUSBPackage(&packageToSend);
+}
+/*handle
+ USB_CMD_GET_MCU_BUILD_DATE
+ command*/
+void CmdGetMcuBuildDate(USBReceiveData const * const commandPackage)
+{
+    USBTransmitData packageToSend;
 
-
+    packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
+    packageToSend.status = USB_STATUS_STATUS;
+    packageToSend.dataLength = 10;
+    packageToSend.data[0] = BUILD_DAY_CH0;
+    packageToSend.data[1] = BUILD_DAY_CH1;
+    packageToSend.data[2] = '.';
+    packageToSend.data[3] = BUILD_MONTH_CH0;
+    packageToSend.data[4] = BUILD_MONTH_CH1;
+    packageToSend.data[5] = '.';
+    packageToSend.data[6] = BUILD_YEAR_CH0;
+    packageToSend.data[7] = BUILD_YEAR_CH1;
+    packageToSend.data[8] = BUILD_YEAR_CH2;
+    packageToSend.data[9] = BUILD_YEAR_CH3;
     // Send data back to MCU
     SendUSBPackage(&packageToSend);
 }
 
+
+/*handle
+ USB_CMD_GET_MCU_BUILD_TIME
+ command*/
+void CmdGetMcuBuildTime(USBReceiveData const * const commandPackage)
+{
+    USBTransmitData packageToSend;
+
+    packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
+    packageToSend.status = USB_STATUS_STATUS;
+    packageToSend.dataLength = 6;
+    packageToSend.data[0] = 'T';
+    packageToSend.data[1] = BUILD_HOUR_CH0;
+    packageToSend.data[2] = BUILD_HOUR_CH1;
+    packageToSend.data[3] = ':';
+    packageToSend.data[4] = BUILD_MIN_CH0;
+    packageToSend.data[5] = BUILD_MIN_CH1;
+    // Send data back to MCU
+    SendUSBPackage(&packageToSend);
+}
 
 void CmdWriteReg(USBReceiveData const * const commandPackage)
 {
@@ -142,13 +184,14 @@ void CmdWriteReg(USBReceiveData const * const commandPackage)
     ToggleLED4();
 }
 
-void CmdSpiInst16BData(USBReceiveData const * const commandPackage)
+void CmdSpiInstuction(USBReceiveData const * const commandPackage)
 {
     // Parameters for SPI packages and variable to store output data
     USBTransmitData packageToSend;
     uint16 instruction;
     uint32 data;
     SPIReceiveData dataRecived;
+    //TODO: remove RWFlag rwOption, is rudiment from CS 600
     enum RWFlag rwOption = READ;
     uint16 length = 1;
     boolean isSuccessfulFlag = FALSE;

@@ -25,7 +25,6 @@ firmware/.metadata/
 # Ignore folder with binaries for firmware
 firmware/mcu_esw/TriCoreDebug*/
 
-
 # .. except certain files
 #!firmware/mcu_esw/TriCoreDebug\(TASKING\)/*.hex
 #!firmware/mcu_esw/TriCoreDebug\(TASKING\)/*.elf
