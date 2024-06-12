@@ -23,11 +23,10 @@ release/gui/*.log
 firmware/.metadata/
 
 # Ignore folder with binaries for firmware
-firmware/mcu_esw/TriCoreDebug\(TASKING\)/*
-firmware/mcu_esw/TriCoreDebug\(TASKING\)/periphery/*
-firmware/mcu_esw/TriCoreDebug\(TASKING\)/top/*
+firmware/mcu_esw/TriCoreDebug*/
+
 
 # .. except certain files
-!firmware/mcu_esw/TriCoreDebug\(TASKING\)/*.hex
-!firmware/mcu_esw/TriCoreDebug\(TASKING\)/*.elf
-!firmware/mcu_esw/TriCoreDebug\(TASKING\i)/*.map
+#!firmware/mcu_esw/TriCoreDebug\(TASKING\)/*.hex
+#!firmware/mcu_esw/TriCoreDebug\(TASKING\)/*.elf
+#!firmware/mcu_esw/TriCoreDebug\(TASKING\i)/*.map
