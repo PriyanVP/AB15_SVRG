@@ -34,7 +34,6 @@
 #include "common/usb_data_types.h"
 #include "top/crc_wrapper.h"
 #include "periphery/usb.h"
-
 #include "top/usb_wrapper.h"
 
 // for debugging commands JS 4/2024
@@ -74,25 +73,25 @@ boolean SendUSBPackage(const USBTransmitData * data)
     Ifx_SizeT itemCounter = 0;
 
     // Fill buffer with package
-    buffer[itemCounter] = USB_START_BYTE;             /* Start package byte  */
+    buffer[USB_STARTBYTE_POS] = USB_START_BYTE;             /* Start package byte  */
     itemCounter++;
 
-    buffer[itemCounter] = data->msg_id;
+    buffer[USB_MSG_ID_POS] = data->msg_id;
     itemCounter++;
 
-    buffer[itemCounter] = data->asic_id;
+    buffer[USB_ASIC_ID_POS] = data->asic_id;
     itemCounter++;
 
-    buffer[itemCounter] = data->status;
+    buffer[USB_CMD_STAT_POS] = data->status;
     itemCounter++;
 
-    buffer[itemCounter] = data->dataLength; /*   Payload length   */
+    buffer[USB_PAYLOAD_LEN_POS] = data->dataLength; /*   Payload length   */
     itemCounter++;
 
     for (uint16 i = 0; i < data->dataLength; i++)
     {
         //
-        buffer[itemCounter] = data->data[i]; /* Payload */
+        buffer[USB_PAYLOAD_POS + i] = data->data[i]; /* Payload */
         itemCounter++;
     }
 
@@ -124,11 +123,15 @@ boolean ReceiveUSBPackage(USBReceiveData * const data)
 
     // Initialize temporary variables
     static uint8 buffer[MAX_USB_PACKAGE_LENGTH] = {0};
-    static Ifx_SizeT itemCounter = 0;
+    static Ifx_SizeT messageLength = 0;
+    static Ifx_SizeT crcLength = 0;
+    static Ifx_SizeT remainingBytesInMessange = 0;
+    uint8 expectedCrc;
     static boolean previousReadNotFinished = FALSE;
-    Ifx_SizeT tmpCounter = 1;
+    Ifx_SizeT bytesToRead = 0;
     volatile sint32 bytesIncoming;
 
+    /*buffer is read in 3 steps, now doing step 1/3 */
     // Read beginning of package if previous read was finished
     if (previousReadNotFinished == FALSE)
     {
@@ -139,64 +142,78 @@ boolean ReceiveUSBPackage(USBReceiveData * const data)
         for (int i = 0; i < MAX_USB_PACKAGE_LENGTH; i++) buffer[i] = 0; // TODO: can be optimized
 
         // Start reading sequence
-        // Read first byte of message
-        ReceiveUSBData(buffer, &tmpCounter);
+        // Read first byte of message, searching for USB_START_BYTE
+        bytesToRead = USB_STARTBYTE_LENGTH;
+        ReceiveUSBData(buffer, &bytesToRead);
 
         // Verify that first byte of data is start byte
-        if (buffer[0] != USB_START_BYTE)
+        if (buffer[USB_STARTBYTE_POS] != USB_START_BYTE)
         {
             IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, FALSE);
 
             //poll buffer[0] for start of message
-            //Read buffer by byte till reach USB_START_BYTE
-            while (buffer[0] != USB_START_BYTE)
+            //Read buffer by byte till we find USB_START_BYTE
+            while (buffer[USB_STARTBYTE_POS] != USB_START_BYTE)
             {
                 // If read all buffer, but no required start byte - return
                 if (IsInBufferEmpty()) return FALSE;
 
-                tmpCounter = 1;
-                ReceiveUSBData(buffer, &tmpCounter);
+                bytesToRead = USB_STARTBYTE_LENGTH;
+                ReceiveUSBData(buffer, &bytesToRead);
             }
         }
-        // If encountered start byte - read remaining bytes till payload
-        tmpCounter = 4; // TODO: remove magic numbers - number of items to read at first
-        ReceiveUSBData(&(buffer[1]), &tmpCounter);
+        //TODO refactor :  loop above is ended in case first byte is found, if not the loop will loop "for ever" shall we find a better soution
 
-        itemCounter = buffer[USB_PAYLOAD_LEN_POS] + 2; /* payload length + CRC + end byte TODO: remove magic number*/
+        /*buffer is read in 3 steps, now doing read step 2/3 */
+        /*we found startbyte now read next bytes up to payload length in order to handle final read correct*/
 
+        bytesToRead = (USB_MSG_ID_LENGTH + USB_ASIC_ID_LENGTH + USB_CMD_LENGTH + USB_PAYLOADLEN_LENGTH);
+        ReceiveUSBData(&(buffer[USB_MSG_ID_POS]), &bytesToRead);
 
+        /*construct the number of remaining bytes to read */
+        //itemCounter = buffer[USB_PAYLOAD_LEN_POS] + 2; /* payload length + CRC + end byte TODO: remove magic number*/
+        remainingBytesInMessange =  buffer[USB_PAYLOAD_LEN_POS] + USB_CRC_LENGTH + USB_STOPBYTE_LENGTH; /* bytes = payload  + CRC + end byte */
 
-        // flag correct startbyte recieved
-        ToggleLED2();
-        // e.g. sending HEX AB 01 02 03 04 05 06 07 08  via HTerm lets LED toggle
-        // AB 02 03 03 CC BB CC 5E BA passes CRC check as well
     }
 
     // Check if package fully received
-    bytesIncoming = GetReadBufferLeft();
-    if (bytesIncoming < itemCounter)
+
+    bytesIncoming = GetReadBufferLeft(); // TODO: inlcude not found
+    if (bytesIncoming < remainingBytesInMessange)
     {
         previousReadNotFinished = TRUE;
         return FALSE;
     }
     else
     {
+        // TODO: might also check for BUffer end byte?
         previousReadNotFinished = FALSE;
     }
 
-    // Read second part of message (till end)
-    ReceiveUSBData(&(buffer[USB_PAYLOAD_POS]), &itemCounter);
-    itemCounter = USB_PAYLOAD_POS + itemCounter; /* all package length */
+    /*buffer is read in 3 steps, now doing read step 3/3 */
+    // Read last part of message (till end)
+    ReceiveUSBData(&(buffer[USB_PAYLOAD_POS]), &remainingBytesInMessange);
+    // reset the value becaus it coul have been modified
+
+
+    // construct full Message leghth
+    //itemCounter = USB_PAYLOAD_POS + itemCounter; /* all package length */
+    messageLength = USB_STARTBYTE_LENGTH + USB_MSG_ID_LENGTH + USB_ASIC_ID_LENGTH + USB_CMD_LENGTH + \
+            USB_PAYLOADLEN_LENGTH + buffer[USB_PAYLOAD_LEN_POS] + USB_CRC_LENGTH + USB_STOPBYTE_LENGTH;
+
 
     // Verify that second part of data is correct
-    if (buffer[itemCounter - 1] != USB_STOP_BYTE)
+    if (buffer[messageLength - 1] != USB_STOP_BYTE)
     {
         IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, FALSE);
         return FALSE;
     }
 
     // Check that CRC is correct (CRC occupies (end-1)th byte)
-    if (IsCRC8Correct(&(buffer[1]), (itemCounter - 3), buffer[itemCounter - 2]) == FALSE)
+    // calc CRC over the full meaasge without start, stop and crc
+    crcLength = messageLength - (USB_STARTBYTE_LENGTH + USB_CRC_LENGTH + USB_STOPBYTE_LENGTH);
+    expectedCrc = buffer[messageLength - (USB_CRC_LENGTH + USB_STOPBYTE_LENGTH)];
+    if (IsCRC8Correct(&(buffer[USB_MSG_ID_POS]), crcLength, expectedCrc) == FALSE)
     {
         IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, FALSE);
         //TODO: uncomment for debugging

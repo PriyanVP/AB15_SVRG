@@ -38,16 +38,39 @@
 /*------------------------------------------------------Macros-----------------------------------------------------------*/
 /*************************************************************************************************************************/
 
-#define MAX_USB_CMD_LENGTH              (1)                          /** \brief Max USB command length in bytes          */
+#define USB_STARTBYTE_LENGTH            (1)                          /** \brief USB startbyte length in bytes           */
+#define USB_MSG_ID_LENGTH               (1)                          /** \brief msg id length in bytes                  */
+#define USB_ASIC_ID_LENGTH              (1)                          /** \brief ASIC id length in bytes                 */
+#define USB_CMD_LENGTH                  (1)                          /** \brief USB command length in bytes             */
+#define USB_PAYLOADLEN_LENGTH           (1)                             /** \brief lenghth of the "payload lenght" information itself in bytes          */
+#define USB_CRC_LENGTH                  (1)                          /** \brief USB crc length in bytes                 */
+#define USB_STOPBYTE_LENGTH              (1)                          /** \brief USB Endbyte length in bytes             */
+
 #define MAX_USB_RECIEVE_PAYLOAD_LENGTH  (64)                         /** \brief Max USB payload length in bytes          */
 #define MAX_USB_TRANSMIT_PAYLOAD_LENGTH (128)                        /** \brief Max USB payload length in bytes          */
-#define MAX_USB_CRC_LENGTH              (1)                          /** \brief Max USB crc length in bytes              */
-#define MAX_USB_PACKAGE_LENGTH          (1 + 1 + MAX_USB_CMD_LENGTH + \
-                                         1 + MAX_USB_TRANSMIT_PAYLOAD_LENGTH + \
-                                         MAX_USB_CRC_LENGTH + 1)     /** \brief Max USB package length in bytes          */
-#define MIN_USB_MSG_LENGTH              (7)                          /** \brief Min USB message length in bytes          */
+#define MIN_USB_TRANSMIT_PAYLOAD_LENGTH (0)                          /** \brief Min USB payload length in bytes          */
 
-#define USB_MSG_ID_POS                  (1)                          /** \brief USB MSG_ID field posstion in package     */
+#define MAX_USB_PACKAGE_LENGTH          (USB_STARTBYTE_LENGTH + \
+                                         USB_MSG_ID_LENGTH + \
+                                         USB_ASIC_ID_LENGTH + \
+                                         USB_CMD_LENGTH + \
+                                         USB_PAYLOADLEN_LENGTH + \
+                                         MAX_USB_TRANSMIT_PAYLOAD_LENGTH + \
+                                         USB_CRC_LENGTH + \
+                                         USB_STOPBYTE_LENGTH)         /** \brief Max USB package length in bytes */
+
+
+#define MIN_USB_MSG_LENGTH              (USB_STARTBYTE_LENGTH + \
+                                         USB_MSG_ID_LENGTH + \
+                                         USB_ASIC_ID_LENGTH + \
+                                         USB_CMD_LENGTH + \
+                                         USB_PAYLOADLEN_LENGTH + \
+                                         MIN_USB_TRANSMIT_PAYLOAD_LENGTH + \
+                                         USB_CRC_LENGTH + \
+                                         USB_STOPBYTE_LENGTH)         /** \brief Min USB message length in bytes          */
+
+#define USB_STARTBYTE_POS               (0)                          /** \brief USB Start Byte field position in package     */
+#define USB_MSG_ID_POS                  (1)                          /** \brief USB MSG_ID field position in package     */
 #define USB_ASIC_ID_POS                 (2)                          /** \brief USB CMD ASIC ID  position in package */
 #define USB_CMD_STAT_POS                (3)                          /** \brief USB CMD/STATUS field position in package */
 #define USB_PAYLOAD_LEN_POS             (4)                          /** \brief USB PAYLOAD LEN field position in package*/

@@ -41,6 +41,7 @@
 #include "common/usb_data_types.h"
 #include "common/spi_data_types.h"
 #include "common/command_queue.h"
+#include "command_queue.h"
 #include "cmd/general_cmd.h"
 #include "cmd/seq_cmd.h"
 #include "cmd/bypass_cmd.h"
@@ -208,7 +209,7 @@ void core0_main(void)
         // Dispatch command
         // Also correctly handles empty queue dispatch
 
-        cmdPackage = QueueRead();
+        cmdPackage = QueueRead(); //TODO: include not found
 
         // Command handling. Empty queue will be handled in max command case
         switch (cmdPackage.command)

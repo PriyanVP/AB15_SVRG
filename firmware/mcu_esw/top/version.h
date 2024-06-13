@@ -11,7 +11,7 @@
 
 #define VERSION_MAJOR '0'
 #define VERSION_MINOR '1'
-#define VERSION_PATCH '4'
+#define VERSION_PATCH '5'
 
 /*
 
@@ -44,6 +44,11 @@
         - USB_CMD_GET_MCU_BUILD_TIME           = 28,  //brief returns MCU SW build time like "hh:mm"
     created interface Excel:
     https://bosch.sharepoint.com/:x:/r/sites/msteams_7875996-PAC-IC-Airbag15DemoSWDevTeam/_layouts/15/Doc.aspx?sourcedoc=%7B9BB641AD-E116-4EC4-803F-113BAD0952D8%7D&file=AB_protocol_description.xlsx&action=default&mobileredirect=true
+
+0.1.5
+  - added ASIC ID in pos
+  -  change USB_CMD_GET_MCU_BUILD_DATE according  https://rb-tracker.bosch.com/tracker19/browse/ABEVBSW-77 Hoefflinger Jens (ME/PJ-SW3) added a comment - 2024-06-13 08:42 to yyyy-mm-dd
+
 
  */
 

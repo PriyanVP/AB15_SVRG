@@ -606,9 +606,13 @@
 		</project-mappings>
 	</storageModule>
 	<storageModule moduleId="refreshScope" versionNumber="2">
+		<configuration configurationName="TriCoreRelease(TASKING)"/>
 		<configuration configurationName="TriCore Debug (TASKING)">
 			<resource resourceType="PROJECT" workspacePath="/mcu_esw"/>
 		</configuration>
+		<configuration configurationName="TriCoreDebug(TASKING)"/>
+		<configuration configurationName="TriCoreRelease(GCC)"/>
+		<configuration configurationName="TriCoreDebug(GCC)"/>
 		<configuration configurationName="TriCore Release (TASKING)">
 			<resource resourceType="PROJECT" workspacePath="/mcu_esw"/>
 		</configuration>
