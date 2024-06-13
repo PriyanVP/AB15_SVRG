@@ -32,7 +32,7 @@ public static class SerialPackageConstants
     public const int EndByteLength          = 1;
 
     // Minimum length of full package in bytes
-    public const int MinPackageLength       = 6;
+    public const int MinPackageLength       = 7;
 }
 
 /// <summary>
