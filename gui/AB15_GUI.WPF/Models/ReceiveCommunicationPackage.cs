@@ -102,7 +102,8 @@ public class ReceiveCommunicationPackage<T> : IReceiveCommunicationPackage where
         MsgID = (int)receivedPackage[SerialPackageConstants.MsgIDPosition];                                 // Message ID
         ASICID = (int)receivedPackage[SerialPackageConstants.ASICIDPosition];                               // ASIC ID
         Status = (MCUStatus)receivedPackage[SerialPackageConstants.CmdStatusPosition];                      // Status
-        Payload.Deserealize(receivedPackage.Slice(SerialPackageConstants.PayloadPosition, payloadLength));  // Payload
+        Payload.Deserialize(receivedPackage.Slice(SerialPackageConstants.PayloadPosition, payloadLength));  // Payload
+        // TODO: how will work with length of 0
 
         // Return flag signalizing if data was unpacked without errors
         return IsPackageValid;
