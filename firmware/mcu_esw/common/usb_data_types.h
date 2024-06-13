@@ -45,13 +45,13 @@
 #define MAX_USB_PACKAGE_LENGTH          (1 + 1 + MAX_USB_CMD_LENGTH + \
                                          1 + MAX_USB_TRANSMIT_PAYLOAD_LENGTH + \
                                          MAX_USB_CRC_LENGTH + 1)     /** \brief Max USB package length in bytes          */
-#define MIN_USB_MSG_LENGTH              (6)                          /** \brief Min USB message length in bytes          */
+#define MIN_USB_MSG_LENGTH              (7)                          /** \brief Min USB message length in bytes          */
 
 #define USB_MSG_ID_POS                  (1)                          /** \brief USB MSG_ID field posstion in package     */
 #define USB_ASIC_ID_POS                 (2)                          /** \brief USB CMD ASIC ID  position in package */
-#define USB_CMD_STAT_POS                (2)                          /** \brief USB CMD/STATUS field position in package */
-#define USB_PAYLOAD_LEN_POS             (3)                          /** \brief USB PAYLOAD LEN field position in package*/
-#define USB_PAYLOAD_POS                 (4)                          /** \brief USB PAYLOAD field position in package    */
+#define USB_CMD_STAT_POS                (3)                          /** \brief USB CMD/STATUS field position in package */
+#define USB_PAYLOAD_LEN_POS             (4)                          /** \brief USB PAYLOAD LEN field position in package*/
+#define USB_PAYLOAD_POS                 (5)                          /** \brief USB PAYLOAD field position in package    */
 
 #define USB_RESERVED_ID_1               (0x20)                       /** \brief Reserved ID for MCU messages             */
 #define USB_RESERVED_ID_2               (0x21)                       /** \brief Reserved ID for MCU messages             */
@@ -136,6 +136,7 @@ typedef enum
 typedef struct
 {
     uint8           msg_id;                                 /** \brief message ID */
+    uint8           asic_id;                                /** \brief ASIC ID */
     USBCommandsEnum command;                                /** \brief command from PC */
     uint8           dataLength;                             /** \brief data length in bytes */
     uint8           data[MAX_USB_RECIEVE_PAYLOAD_LENGTH];   /** \brief array with payload */
@@ -146,6 +147,7 @@ typedef struct
 typedef struct
 {
     uint8           msg_id;                                 /** \brief message ID */
+    uint8           asic_id;                                /** \brief ASIC ID */
     USBStatusesEnum status;                                 /** \brief MCU status */
     uint8           dataLength;                             /** \brief data length in bytes */
     uint8           data[MAX_USB_TRANSMIT_PAYLOAD_LENGTH];  /** \brief array with payload */

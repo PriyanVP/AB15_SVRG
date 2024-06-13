@@ -80,6 +80,9 @@ boolean SendUSBPackage(const USBTransmitData * data)
     buffer[itemCounter] = data->msg_id;
     itemCounter++;
 
+    buffer[itemCounter] = data->asic_id;
+    itemCounter++;
+
     buffer[itemCounter] = data->status;
     itemCounter++;
 
@@ -156,10 +159,10 @@ boolean ReceiveUSBPackage(USBReceiveData * const data)
             }
         }
         // If encountered start byte - read remaining bytes till payload
-        tmpCounter = 3;
+        tmpCounter = 4; // TODO: remove magic numbers - number of items to read at first
         ReceiveUSBData(&(buffer[1]), &tmpCounter);
 
-        itemCounter = buffer[USB_PAYLOAD_LEN_POS] + 2; /* payload length + CRC + end byte */
+        itemCounter = buffer[USB_PAYLOAD_LEN_POS] + 2; /* payload length + CRC + end byte TODO: remove magic number*/
 
 
 
@@ -203,6 +206,7 @@ boolean ReceiveUSBPackage(USBReceiveData * const data)
 
     // Unpack data from buffer to struct
     data->msg_id     = buffer[USB_MSG_ID_POS];
+    data->asic_id    = buffer[USB_ASIC_ID_POS];
     data->command    = (USBCommandsEnum) buffer[USB_CMD_STAT_POS];
     data->dataLength = buffer[USB_PAYLOAD_LEN_POS];
     for (uint16 i = 0; i < data->dataLength; i++)
