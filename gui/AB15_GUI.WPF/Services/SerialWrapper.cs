@@ -5,11 +5,10 @@ using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Timers;
-using SerialDataTypesNamespace;
-using CommonNamespace;
-using ModernUI.Back;
+using AB15_GUI.WPF.Models;
+using AB15_GUI.WPF.Models.Interfaces;
 
-namespace SerialWrapperNamespace;
+namespace AB15_GUI.WPF.Services;
 
 /// <summary>
 /// Class implementing waitlist for routing responses from MCU
@@ -69,7 +68,7 @@ public class Waitlist
         // No available IDs - error situation, communication not possible
         if (tmpMsgID > maxValueForID)
         {
-            CustomAssertions.Assert(false, "All msgIDs occupied!");
+            // TODO: replace CustomAssertions.Assert(false, "All msgIDs occupied!");
             return 0xFFFF;
         }
 
@@ -86,7 +85,7 @@ public class Waitlist
     /// <param name="msgID">message ID of send (!) transaction. Used to define which consumer will handle response from MCU</param>
     /// <param name="isContinuous">flag to define if MCU response can be received few times</param>
     /// <returns>true if adding was successful, false - otherwise</returns>
-    public bool AddItemToWaitlist(CallbackSerialDelegate deleg, int? msgID, bool isContinuous = false)
+    public bool AddItemToWaitlist(Action<IReceiveCommunicationPackage> deleg, int? msgID, bool isContinuous = false)
     {
         // Check if item with same msgID already exist
         if ((_waitlist.Count != 0) && (msgID != null))
@@ -113,7 +112,7 @@ public class Waitlist
         {
             // Call was incorrect (no valid msgID supplied)
             // or list is empty
-            CustomAssertions.Assert(false, "Tried to remove item from empty waitlist or item ID wasn't provided!");
+            // TODO: replace CustomAssertions.Assert(false, "Tried to remove item from empty waitlist or item ID wasn't provided!");
             return false;
         }
 
@@ -127,7 +126,7 @@ public class Waitlist
         else
         {
             // Item with msgID wasn't found
-            CustomAssertions.Assert(false, "Tried to remove unexisting item from waitlist!");
+            // TODO: replace CustomAssertions.Assert(false, "Tried to remove unexisting item from waitlist!");
             return false;
         }
     }
@@ -137,7 +136,7 @@ public class Waitlist
     /// </summary>
     /// <param name="receivedPackage">package from MCU</param>
     /// <returns>List with delegates that should be called for this package (max 2)</returns>
-    public List<CallbackSerialDelegate> GetDelegate(SerialDataReceive receivedPackage)
+    public List<Action<IReceiveCommunicationPackage>> GetDelegate(IReceiveCommunicationPackage receivedPackage)
     {
         // Return empty array if package not valid
         if (receivedPackage.IsPackageValid != true)
@@ -146,18 +145,18 @@ public class Waitlist
             // Bug with receivedPackage
             // in Debug mode receivedPackage have only zeros in it
             // occurs randomly in GUI runtime
-            // CustomAssertions is commented because it close GUI
-            //CustomAssertions.Assert(false, $"Invalid package received! Package: {receivedPackage.ToString()}");
+            // // TODO: replace CustomAssertions is commented because it close GUI
+            //// TODO: replace CustomAssertions.Assert(false, $"Invalid package received! Package: {receivedPackage.ToString()}");
 
             _log.Critical($"Invalid package received! Package: {receivedPackage}");
-            return (new List<CallbackSerialDelegate>(0));
+            return (new List<Action<IReceiveCommunicationPackage>>(0));
         }
 
         // Create temporary variables
         int msgID = receivedPackage.MsgID & (~(int) MsgIDMasks.ResponseBit); // clear response bit; can't be null!
         MCUStatus status = receivedPackage.Status;
         WaitlistItem?[] tmpWaitlistItems = new WaitlistItem?[2];
-        List<CallbackSerialDelegate> outputDelegates = new List<CallbackSerialDelegate>(2);
+        List<Action<IReceiveCommunicationPackage>> outputDelegates = new List<Action<IReceiveCommunicationPackage>>(2);
 
         // Find items that match msgID or status
         tmpWaitlistItems[0] = _waitlist.Find(itm => itm.msgID == msgID);
@@ -169,7 +168,7 @@ public class Waitlist
             if (itm != null)
             {
                 // Fill output variable
-                outputDelegates.Add(new CallbackSerialDelegate(itm.deleg));
+                outputDelegates.Add(new Action<IReceiveCommunicationPackage>(itm.deleg));
 
                 // Remove item from waitlist, if not continuous
                 // All checks for removal are passed at this point
@@ -198,7 +197,7 @@ public class Waitlist
         /// <param name="msgID">message ID of send (!) transaction. Used to define which consumer will handle response from MCU</param>
         /// <param name="status">status from MCU transaction. Used primarly for error, status transactions</param>
         /// <param name="isContinuous">flag to define if MCU response can be received few times</param>
-        public WaitlistItem(CallbackSerialDelegate deleg, int? msgID = null, MCUStatus status = MCUStatus._STATUS_MIN, bool isContinuous = false)
+        public WaitlistItem(Action<IReceiveCommunicationPackage> deleg, int? msgID = null, MCUStatus status = MCUStatus._STATUS_MIN, bool isContinuous = false)
         {
             this.deleg = deleg;
             this.msgID = msgID;
@@ -219,7 +218,7 @@ public class Waitlist
         /// <summary>
         /// Delegate that will be called for received msg
         /// </summary>
-        public CallbackSerialDelegate deleg;
+        public Action<IReceiveCommunicationPackage> deleg;
 
         /// <summary>
         /// Flag to define if MCU response can be received few times
@@ -329,7 +328,7 @@ public class SerialWrapper : IDisposable
         _serialInputDispatchTimer.Stop();
 
         // Temporary variables
-        List<CallbackSerialDelegate> msgCallbacks;
+        List<Action<IReceiveCommunicationPackage>> msgCallbacks;
         byte[] package;
         bool isPackageValid = false;
 
@@ -341,7 +340,7 @@ public class SerialWrapper : IDisposable
         // Call corresponding event handlers (delegates) for messages in queue
         for (int idx = 0; idx < _receivedPackages.Count; idx++)
         {
-            SerialDataReceive tmpReceivedPackage = new SerialDataReceive();
+            IReceiveCommunicationPackage tmpReceivedPackage = new ReceiveCommunicationPackage<>();
             package = _receivedPackages.Dequeue();
             isPackageValid = tmpReceivedPackage.UnpackPackage(package, package.Length);
 
@@ -447,12 +446,12 @@ public class SerialWrapper : IDisposable
     /// <param name="deleg">delegate that will be called after receiving response from MCU</param>
     /// <param name="isContinuous">flag to define if MCU response can be received few time</param>
     /// <returns>true if all operations were performed succesfully, false - otherwise (message wasn't send)</returns>
-    public bool SerialWrite(SerialDataSend packageToSend, CallbackSerialDelegate? deleg = null, bool isContinuous = false)
+    public bool SerialWrite(SerialDataSend packageToSend, Action<IReceiveCommunicationPackage>? deleg = null, bool isContinuous = false)
     {
         // Stop processing if package is not valid
         if (packageToSend.IsPackageValid == false)
         {
-            CustomAssertions.Assert(false, "Tried to send invalid package!");
+            // TODO: replace CustomAssertions.Assert(false, "Tried to send invalid package!");
             return false;
         }
 
@@ -470,7 +469,7 @@ public class SerialWrapper : IDisposable
                 // If adding item to list wasn't successfull, stop processing and return
                 if (addingStatus == false)
                 {
-                    CustomAssertions.Assert(false, "Adding item to waitlist failed!");
+                    // TODO: replace CustomAssertions.Assert(false, "Adding item to waitlist failed!");
                     return false;
                 }
             }
