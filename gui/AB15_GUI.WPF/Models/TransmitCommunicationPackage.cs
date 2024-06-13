@@ -40,14 +40,7 @@ public class TransmitCommunicationPackage<T> : ITransmitCommunicationPackage whe
     public MCUCommand Cmd
     {
         get { return _cmd; }
-        set
-        {
-            // Set only valid values of command
-            if ((value > MCUCommand._CMD_MIN) && (value < MCUCommand._EXT_CMD_MAX))
-            {
-                _cmd = value;
-            }
-        }
+        set { _cmd = value; }
     }
 
     /// <summary>
@@ -67,7 +60,7 @@ public class TransmitCommunicationPackage<T> : ITransmitCommunicationPackage whe
         get
         {
             // Return flag that package is valid only if required fields are set correctly
-            _packageValid = (_isCRCCorrect) && (_cmd != MCUCommand._CMD_MIN);
+            _packageValid = (_isCRCCorrect) && (_cmd > MCUCommand._CMD_MIN) && (_cmd < MCUCommand._EXT_CMD_MAX);
             return _packageValid;
         }
     }

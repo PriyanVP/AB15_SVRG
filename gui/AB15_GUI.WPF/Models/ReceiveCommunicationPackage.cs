@@ -40,14 +40,7 @@ public class ReceiveCommunicationPackage<T> : IReceiveCommunicationPackage where
     public MCUStatus Status
     {
         get { return _status; }
-        private set
-        {
-            // Set only valid values of statuses
-            if ((value > MCUStatus._STATUS_MIN) && (value < MCUStatus._STATUS_MAX))
-            {
-                _status = value;
-            }
-        }
+        private set { _status = value; }
     }
 
     /// <summary>
@@ -67,7 +60,7 @@ public class ReceiveCommunicationPackage<T> : IReceiveCommunicationPackage where
         get
         {
             // Return flag that package is valid only if required fields are set correctly
-            _packageValid = (_isCRCCorrect) && (_status != MCUStatus._STATUS_MIN);
+            _packageValid = (_isCRCCorrect) && (_status > MCUStatus._STATUS_MIN) && (_status < MCUStatus._STATUS_MAX);
             return _packageValid;
         }
     }

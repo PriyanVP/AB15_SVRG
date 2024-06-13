@@ -19,6 +19,7 @@ namespace AB15_GUI.WPF.Models
         public void Deserialize(List<byte> rawData)
         {
             // empty
+            // TODO: error messages?
         }
 
         /// <summary>
