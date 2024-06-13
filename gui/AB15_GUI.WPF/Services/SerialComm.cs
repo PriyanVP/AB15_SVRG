@@ -3,72 +3,77 @@ using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Threading;
 using System.Linq;
-using System.Text;
 using System.IO.Ports;
 using System.Management;
+using NLog;
+using System.Diagnostics.Contracts;
+using AB15_GUI.WPF.Services.Interfaces;
 
-namespace ModernUI.Back;
+namespace AB15_GUI.WPF.Services;
 
 /// <summary>
 /// Low-level class to work with COM port
 /// </summary>
-public class SerialComm
+public class SerialComm : ISerialComm
 {
     /// <summary>
-    /// Serial communication baud rate of ShieldBuddy
+    /// Serial communication baud rate (should match to baud rate of MCU target)
     /// </summary>
     private const int BAUD_RATE = 115200;
 
     /// <summary>
-    /// Create Attribute for virtualCOM instance
+    /// Logger reference with custom configuration
+    /// </summary>
+    private readonly Logger logger;
+
+    /// <summary>
+    /// COM port handle
     /// </summary>
     private SerialPort _port;
 
     /// <summary>
-    /// Local reference to gui backend instance
+    /// Create tread-safe input buffer (data from MCU)
     /// </summary>
-    private GuiStatusTop _guiReferenceVar;
-
-    /// <summary>
-    /// Create tread-safe input buffer
-    /// </summary>
-    public ConcurrentQueue<byte> inputBuffer;
+    public ConcurrentQueue<byte> ReceiveBuffer { get; private set; } = new ConcurrentQueue<byte>();
 
     /// <summary>
     /// Attribute used for overwriting automatic port detection
+    /// Default value corresponds to automatic COM port selection
     /// </summary>
-    public string manualCOMPort;
+    public string? manualCOMPortName = null;
+
+    /// <summary>
+    /// Lock object to avoid mixing messages
+    /// </summary>
+    private readonly object _lock = new object();
 
     /// <summary>
     /// Initialization of virtual COM port
     /// </summary>
     /// <param name="guiReference">Ensures operation of StatusPanel updates</param>
-    public SerialComm(GuiStatusTop guiReference)
+    public SerialComm(Logger logger)
     {
         // TODO: add error checking on opening (attemp to open opened port results in error)
-        //
-        _guiReferenceVar = guiReference;
 
-        // Init COM port instance selected manually
-        manualCOMPort = "auto";
+        // Init logger reference
+        this.logger = logger;
 
-        // Thread-safe FIFO collection
-        inputBuffer = new ConcurrentQueue<byte>();
-
-        // Init port
-        _port = new SerialPort();
-
-        // Set default configs for port
-        _port.BaudRate = BAUD_RATE;
-        _port.DataBits = 8;
-        _port.Parity = Parity.None;
-        _port.StopBits = StopBits.One;
+        // Init and configure port
+        _port = new SerialPort()
+        {
+            BaudRate = BAUD_RATE,
+            DataBits = 8,
+            Parity = Parity.None,
+            StopBits = StopBits.One,
+        };
 
         // Event handler for DataReceived assignment
         _port.DataReceived += new SerialDataReceivedEventHandler(port_DataReceived);
 
         // Connect COM port
         ConnectCOMPort();
+
+        logger.Trace("Finished SerialComm initialization");
     }
 
     /// <summary>
@@ -77,40 +82,35 @@ public class SerialComm
     /// <returns>true if connected, false if failed</returns>
     public bool ConnectCOMPort()
     {
-        Global.log.Info($"Try MCU connection...");
+        logger.Trace($"Trying to connect MCU...");
 
         // Attempt automatic port detection
-        string? detectedPortNumber = (manualCOMPort == "auto") ? (GetCOMPorts().LastOrDefault()) : (manualCOMPort);
+        string? detectedPortNumber = (manualCOMPortName is null) ? (GetCOMPorts().LastOrDefault()) : (manualCOMPortName);
 
         // Check if required port present
-        if (detectedPortNumber == null)
+        if (detectedPortNumber is null)
         {
             // Automatic connection was unsuccesfull, report in StatusPanel and log window
-            _guiReferenceVar.SetStatus("USB", StatusTypes.Disconnected);
-            Global.log.Info($"Automatic port detect do not found MCU");
+            logger.Warn($"Automatic port detect doesn't found MCU");
             return false;
         }
-        else
-        {
-            // Detection attempt was successfully
-            _port.Close();
-            _port.PortName = detectedPortNumber;
-            Global.log.Debug($"Found needed MCU port at - {detectedPortNumber}");
-        }
+
+        // Seting up port for opening
+        _port.Close();
+        _port.PortName = detectedPortNumber;
+        logger.Debug($"Found needed MCU port at {detectedPortNumber}");
 
         // Try to open port
         try
         {
             _port.Open();
-            _guiReferenceVar.SetStatus("USB", StatusTypes.Connected);
-            Global.log.Info("Connected to MCU at " + detectedPortNumber);
+            logger.Debug("Connected to MCU at " + detectedPortNumber);
             return true;
         }
         catch (Exception serEx)
         {
-            Global.log.Debug(serEx.Message);
-            _guiReferenceVar.SetStatus("USB", StatusTypes.Disconnected);
-            Global.log.Info($"Connection to MCU failed");
+            logger.Warn(serEx, "Couldn't open port! Check if port is not busy!");
+            logger.Warn($"Connection to MCU failed");
             return false;
         }
     }
@@ -121,17 +121,24 @@ public class SerialComm
     /// <returns>Port numbers list in format COMX (X number); empty list if port wasn't found</returns>
     public List<string> GetCOMPorts()
     {
-        List<string> availableCOMPorts = new List<string>(4);
+        // List of currently available com ports where ShieldBuddy TC375 are connected
+        List<string> availableCOMPorts = new List<string>();
 
         // Look for COM port connected device with specific description in Plug&Play devices list
         ManagementObjectSearcher managementObjectSearcher = new ManagementObjectSearcher("SELECT * FROM Win32_PnPEntity WHERE Caption LIKE '%Infineon DAS JDS COM  (COM%'");
 
-        // Extract COM port number from device's description
-        string tmpCOMName;
+        // Extract COM port short name with number from device's description
         foreach (ManagementObject currentObject in managementObjectSearcher.Get())
         {
-            tmpCOMName = (currentObject["Name"].ToString()).Split('(', ')')[1];
-            availableCOMPorts.Add(tmpCOMName);
+            try
+            {
+                availableCOMPorts.Add(currentObject["Name"].ToString().Split('(', ')')[1]);
+            }
+            catch (Exception ex)
+            {
+                logger.Warn(ex, "Unexpected data from COM ports list.");
+            }
+
         }
         return availableCOMPorts;
     }
@@ -147,7 +154,6 @@ public class SerialComm
         if (_port.IsOpen == false)
         {
             _port.Close(); // TODO: check if works without port name
-            _guiReferenceVar.SetStatus("USB", StatusTypes.Disconnected);
             return;
         }
 
@@ -159,76 +165,51 @@ public class SerialComm
         // Enqueue each byte in internal FIFO buffer
         foreach (byte b in buffer)
         {
-            inputBuffer.Enqueue(b);
+            ReceiveBuffer.Enqueue(b);
         }
-    }
-
-    // TODO: remove or redo -> currently error prone
-    /// <summary>
-    /// Read specified number of bytes from virtualCOM port's input buffer
-    /// If number of requested bytes is not present in queue - will return all that are present
-    /// </summary>
-    /// <param name="numberOfBytes">number of bytes to acquire from virtualCOM port's input buffer</param>
-    public byte[] Read(int numberOfBytes)
-    {
-        // Create byte array with len == required number of bytes to read from input buffer (will be function's return value)
-        byte[] readBuffer = new byte[numberOfBytes];
-
-        // Copy required number of bytes into byte array to-be-returned
-        for (int i = 0; i < readBuffer.Length; i++)
-        {
-            byte outBufferElement = 0;
-            inputBuffer.TryDequeue(out outBufferElement);
-            readBuffer[i] = outBufferElement;
-        }
-
-        return readBuffer;
     }
 
     /// <summary>
     /// Send array of bytes via virtualCOM port (must be already open)
     /// </summary>
-    /// <param name="sendData">array with bytes to send to MCU</param>
+    /// <param name="dataToSend">array with bytes to send to MCU</param>
     /// <param name="length">length of valid bytes in array</param>
-    public void Write(byte[] sendData, int length)
+    public void Write(byte[] dataToSend, int length)
     {
+        // Sanity checks
+        Contract.Requires<ArgumentOutOfRangeException>(length <= 0, "Length of buffer must be positive integer");
+
         // Stop execution if port is closed TODO: add error reporting
         if (_port.IsOpen == false)
         {
             _port.Close(); // TODO: check if works without port name
-            _guiReferenceVar.SetStatus("USB", StatusTypes.Disconnected);
             return;
         }
 
+        // Send data to MCU with chuncks that can be handled
         int offset = 0;
         int dataChunk = 16; // Number 16 is defined by MCU HW (ASCLIN HW buffer size)
 
-        while (length / dataChunk > 0) // incorrect handling
+        lock (_lock)
         {
-            // Write data by chunks
-            _port.Write(sendData, offset, dataChunk);
-
-            // Handle offset and length variables
-            offset += dataChunk;
-            length -= dataChunk;
-
+            while (length / dataChunk > 0)
+            {
+                // Write data by chunks
+                _port.Write(dataToSend, offset, dataChunk);
+    
+                // Handle offset and length variables
+                offset += dataChunk;
+                length -= dataChunk;
+    
+                // Pause is required for MCU to empty HW buffer
+                Thread.Sleep(1);
+            }
+    
+            // Send remaining data if present
+            if (length > 0) _port.Write(dataToSend, offset, length);
+    
             // Pause is required for MCU to empty HW buffer
             Thread.Sleep(1);
         }
-
-        // Send remaining data if present
-        if (length > 0) _port.Write(sendData, offset, length); // TODO: use separate thread
-
-        // Pause is required for MCU to empty HW buffer
-        Thread.Sleep(1);
-    }
-
-    /// <summary>
-    /// Returns reference to internal input buffer
-    /// </summary>
-    /// <returns>Reference to internal input buffer</returns>
-    public ConcurrentQueue<byte> GetReadBufferRef()
-    {
-        return inputBuffer;
     }
 }
