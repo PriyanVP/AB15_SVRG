@@ -34,7 +34,7 @@ public class SerialComm : ISerialComm
     /// <summary>
     /// Create tread-safe input buffer (data from MCU)
     /// </summary>
-    public ConcurrentQueue<byte> ReceiveBuffer { get; private set; } = new ConcurrentQueue<byte>();
+    public ConcurrentQueue<byte> ReceiveBuffer { get; set; } = new ConcurrentQueue<byte>();
 
     /// <summary>
     /// Attribute used for overwriting automatic port detection
