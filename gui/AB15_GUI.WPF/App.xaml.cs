@@ -6,6 +6,8 @@ using NLog;
 using AB15_GUI.WPF.NLog;
 using AB15_GUI.WPF.Views;
 using AB15_GUI.WPF.ViewModels;
+using AB15_GUI.WPF.Services;
+using AB15_GUI.WPF.Services.Interfaces;
 using System.Collections.Generic;
 using NLog.Config;
 using System.Configuration;
@@ -70,12 +72,21 @@ namespace AB15_GUI.WPF
 
                             #endregion // Views
 
-                            #region Other
+                            #region Services
 
                             services.AddTransient<Logger>(sp => LogManager.Setup()
                                                  .SetupExtensions(ext => ext.RegisterLayoutRenderer<BuildConfigurationLayoutRenderer>("build-configuration"))
                                                  .SetupExtensions(ext => ext.RegisterTarget<LogMemoryRecordTarget>("MemoryRecord"))
                                                  .GetCurrentClassLogger()); // Same logger will be used across all classes - instance always created in App
+
+                            services.AddSingleton<Waitlist>();
+                            services.AddSingleton<ISerialComm>();
+                            services.AddSingleton<SerialWrapper>();
+
+                            #endregion // Services
+
+                            #region Other
+
                             services.AddSingleton<LogMemoryRecordTarget>(sp => (LogMemoryRecordTarget)LogManager.Configuration.FindTargetByName("memory"));
 
                             #endregion // Other
