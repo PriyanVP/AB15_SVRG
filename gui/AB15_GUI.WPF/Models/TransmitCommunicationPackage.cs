@@ -10,7 +10,6 @@ namespace AB15_GUI.WPF.Models;
 public class TransmitCommunicationPackage<T> : ITransmitCommunicationPackage where T : IByteListSerializable 
 {
     private bool _packageValid = false;
-    private bool _isCRCCorrect = false;
     private int _msgID;
     private int _ASICID;
     private T _payload;
@@ -22,7 +21,7 @@ public class TransmitCommunicationPackage<T> : ITransmitCommunicationPackage whe
     public int MsgID
     {
         get { return _msgID; }
-        private set { _msgID = value; }
+        set { _msgID = value; }
     }
 
     /// <summary>
@@ -31,7 +30,7 @@ public class TransmitCommunicationPackage<T> : ITransmitCommunicationPackage whe
     public int ASICID
     {
         get { return _ASICID; }
-        private set { _ASICID = value; }
+        set { _ASICID = value; }
     }
 
     /// <summary>
@@ -60,7 +59,8 @@ public class TransmitCommunicationPackage<T> : ITransmitCommunicationPackage whe
         get
         {
             // Return flag that package is valid only if required fields are set correctly
-            _packageValid = (_isCRCCorrect) && (_cmd > MCUCommand._CMD_MIN) && (_cmd < MCUCommand._EXT_CMD_MAX);
+            _packageValid = (_cmd > MCUCommand._CMD_MIN) && (_cmd < MCUCommand._EXT_CMD_MAX)
+                            && (_ASICID > 0) && (_ASICID < 256);
             return _packageValid;
         }
     }

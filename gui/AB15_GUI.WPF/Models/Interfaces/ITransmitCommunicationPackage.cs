@@ -10,12 +10,12 @@ namespace AB15_GUI.WPF.Models.Interfaces
         /// <summary>
         /// Message ID
         /// </summary>
-        int MsgID { get; }
+        int MsgID { get; set; }
 
         /// <summary>
         /// ASIC ID
         /// </summary>
-        int ASICID { get; }
+        int ASICID { get; set; }
 
         /// <summary>
         /// Command to send in package
