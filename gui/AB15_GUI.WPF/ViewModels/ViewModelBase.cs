@@ -50,7 +50,7 @@ namespace AB15_GUI.WPF.ViewModels
         /// </summary>
         /// <param name="errorMessage">error message</param>
         /// <param name="propertyName">name of property</param>
-        private void AddError(string errorMessage, [CallerMemberName] string? propertyName = null)
+        protected void AddError(string errorMessage, [CallerMemberName] string? propertyName = null)
         {
             Contract.Requires<ArgumentNullException>((propertyName is not null), "Argument can't be null!");
 
@@ -71,7 +71,7 @@ namespace AB15_GUI.WPF.ViewModels
         /// Clear all errors for certain property
         /// </summary>
         /// <param name="propertyName">name of property</param>
-        private void ClearErrors([CallerMemberName] string? propertyName = null)
+        protected virtual void ClearErrors([CallerMemberName] string? propertyName = null)
         {
             Contract.Requires<ArgumentNullException>((propertyName is not null), "Argument can't be null!");
 
@@ -86,7 +86,7 @@ namespace AB15_GUI.WPF.ViewModels
         /// Raise event to notify about error state change
         /// </summary>
         /// <param name="propertyName">name of property</param>
-        private void OnErrorsChanged([CallerMemberName] string? propertyName = null)
+        protected virtual void OnErrorsChanged([CallerMemberName] string? propertyName = null)
         {
             Contract.Requires<ArgumentNullException>((propertyName is not null), "Argument can't be null!");
 
