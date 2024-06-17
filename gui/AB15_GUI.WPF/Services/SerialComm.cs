@@ -32,15 +32,15 @@ public class SerialComm : ISerialComm
     private SerialPort _port;
 
     /// <summary>
-    /// Create tread-safe input buffer (data from MCU)
+    /// Tread-safe input buffer (data from MCU)
     /// </summary>
     public ConcurrentQueue<byte> ReceiveBuffer { get; set; } = new ConcurrentQueue<byte>();
 
     /// <summary>
-    /// Attribute used for overwriting automatic port detection
+    /// Property used for overwriting automatic port detection
     /// Default value corresponds to automatic COM port selection
     /// </summary>
-    public string? manualCOMPortName = null;
+    public string? ManualCOMPortName { get; set; } = null;
 
     /// <summary>
     /// Lock object to avoid mixing messages
@@ -53,8 +53,6 @@ public class SerialComm : ISerialComm
     /// <param name="guiReference">Ensures operation of StatusPanel updates</param>
     public SerialComm(Logger logger)
     {
-        // TODO: add error checking on opening (attemp to open opened port results in error)
-
         // Init logger reference
         this.logger = logger;
 
@@ -85,7 +83,7 @@ public class SerialComm : ISerialComm
         logger.Trace($"Trying to connect MCU...");
 
         // Attempt automatic port detection
-        string? detectedPortNumber = (manualCOMPortName is null) ? (GetCOMPorts().LastOrDefault()) : (manualCOMPortName);
+        string? detectedPortNumber = (ManualCOMPortName is null) ? (GetCOMPorts().LastOrDefault()) : (ManualCOMPortName);
 
         // Check if required port present
         if (detectedPortNumber is null)
@@ -182,6 +180,7 @@ public class SerialComm : ISerialComm
         // Stop execution if port is closed TODO: add error reporting
         if (_port.IsOpen == false)
         {
+            logger.Warn($"Attempt to write package when port in closed!\nPackage: {string.Join(" ", dataToSend)}");
             _port.Close(); // TODO: check if works without port name
             return;
         }

@@ -74,11 +74,11 @@ public class SerialWrapper : IDisposable, ISerialWrapper
     {
         get
         {
-            return _serialPort.manualCOMPortName;
+            return _serialPort.ManualCOMPortName;
         }
         set
         {
-            _serialPort.manualCOMPortName = value;
+            _serialPort.ManualCOMPortName = value;
         }
     }
 
@@ -121,8 +121,10 @@ public class SerialWrapper : IDisposable, ISerialWrapper
     }
 
     /// <summary>
-    /// Funcion that is called by timer elapsed event. Used for handling serial communicaton from MCU
+    /// Function that is called by timer elapsed event. Used for handling serial communicaton from MCU
     /// </summary>
+    /// <param name="source">caller</param>
+    /// <param name="e">event arguments</param>
     private void OnTimedEvent(object source, ElapsedEventArgs e)
     {
         // Stop timer
@@ -274,7 +276,7 @@ public class SerialWrapper : IDisposable, ISerialWrapper
             // Create item in waitlist waiting for response if delegate is present
             if (deleg != null)
             {
-                (packageToSend.MsgID, bool addingStatus) = _responseWaitlist.AddItemToWaitlist(deleg, isContinuous);
+                (packageToSend.MsgID, bool addingStatus) = _responseWaitlist.AddItemToWaitlist(deleg, packageToSend.PayloadType, isContinuous);
 
                 // If adding item to list wasn't successfull, stop processing and return
                 if (addingStatus == false)
@@ -303,6 +305,7 @@ public class SerialWrapper : IDisposable, ISerialWrapper
         return _serialPort.ConnectCOMPort();
     }
 
+    /// <summary>
     /// Removes item from waitlist by msg_id
     /// </summary>
     /// <param name="msgID">message ID of command that should be removed</param>
