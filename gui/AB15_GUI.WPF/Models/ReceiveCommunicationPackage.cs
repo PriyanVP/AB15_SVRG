@@ -53,7 +53,7 @@ public class ReceiveCommunicationPackage<T> : IReceiveCommunicationPackage where
     }
 
     /// <summary>
-    /// Flag to check if package has valid value TODO: validation is different for send and receive packages
+    /// Flag to check if package has valid value
     /// </summary>
     public bool IsPackageValid
     {
@@ -92,11 +92,10 @@ public class ReceiveCommunicationPackage<T> : IReceiveCommunicationPackage where
         int payloadLength = (int)receivedPackage[SerialPackageConstants.PayloadLengthPosition];
 
         // Unpack data
-        MsgID = (int)receivedPackage[SerialPackageConstants.MsgIDPosition];                                 // Message ID
-        ASICID = (int)receivedPackage[SerialPackageConstants.ASICIDPosition];                               // ASIC ID
-        Status = (MCUStatus)receivedPackage[SerialPackageConstants.CmdStatusPosition];                      // Status
-        Payload.Deserialize(receivedPackage.Slice(SerialPackageConstants.PayloadPosition, payloadLength));  // Payload
-        // TODO: how will work with length of 0
+        MsgID = (int)receivedPackage[SerialPackageConstants.MsgIDPosition];                                         // Message ID
+        ASICID = (int)receivedPackage[SerialPackageConstants.ASICIDPosition];                                       // ASIC ID
+        Status = (MCUStatus)receivedPackage[SerialPackageConstants.CmdStatusPosition];                              // Status
+        Payload.Deserialize(Status, receivedPackage.Slice(SerialPackageConstants.PayloadPosition, payloadLength));  // Payload
 
         // Return flag signalizing if data was unpacked without errors
         return IsPackageValid;

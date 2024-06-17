@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace AB15_GUI.WPF.Models.Interfaces
@@ -23,9 +24,13 @@ namespace AB15_GUI.WPF.Models.Interfaces
         MCUCommand Cmd { get; set; }
 
         /// <summary>
-        /// TODO: redo?
+        /// Package payload type
         /// </summary>
-        /// <value></value>
+        Type PayloadType { get; }
+
+        /// <summary> 
+        /// Flag to indicate if package is valid
+        /// </summary>
         bool IsPackageValid { get; }
        
         /// <summary>

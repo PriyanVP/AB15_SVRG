@@ -23,9 +23,8 @@ namespace AB15_GUI.WPF.Models.Interfaces
         MCUStatus Status { get; }
 
         /// <summary>
-        /// TODO: redo?
+        /// Flag to indicate if package is valid
         /// </summary>
-        /// <value></value>
         bool IsPackageValid { get; }
        
         /// <summary>

@@ -52,7 +52,15 @@ public class TransmitCommunicationPackage<T> : ITransmitCommunicationPackage whe
     }
 
     /// <summary>
-    /// Flag to check if package has valid value TODO: validation is different for send and receive packages
+    /// Package payload type
+    /// </summary>
+    public Type PayloadType
+    {
+        get { return typeof(T); }
+    }
+
+    /// <summary>
+    /// Flag to check if package has valid value
     /// </summary>
     public bool IsPackageValid
     {
@@ -60,7 +68,7 @@ public class TransmitCommunicationPackage<T> : ITransmitCommunicationPackage whe
         {
             // Return flag that package is valid only if required fields are set correctly
             _packageValid = (_cmd > MCUCommand._CMD_MIN) && (_cmd < MCUCommand._EXT_CMD_MAX)
-                            && (_ASICID > 0) && (_ASICID < 256);
+                            && (_ASICID >= 0) && (_ASICID < 256);
             return _packageValid;
         }
     }
