@@ -241,7 +241,7 @@ void UpdateTimersRoutine(void)
     {
         // Watchdog acknowledge
         watchdogCounter = 0;
-        //WatchdogInterruptRoutine();
+        WatchdogInterruptRoutine();
     }
 
     if ((g_errorCheckEnable == TRUE) && (errorCheckCounter >= g_errorCheckReload))

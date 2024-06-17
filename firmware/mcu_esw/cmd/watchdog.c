@@ -91,7 +91,10 @@ void CmdConfigureWatchdog(USBReceiveData const * const commandPackage)
     respTimeValue = (uint16)data[3];
 
     // Write to CS600
-    isSuccessfulFlag = QSPIWriteSequence(&(address), &(data), &length);
+
+    //TODO: JS: 17.6. bruteforce set to true to allow enable watchdog for test purpose +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    isSuccessfulFlag = TRUE;
+    //isSuccessfulFlag = QSPIWriteSequence(&(address), &(data), &length);
 
     // Prepare report for GUI
     USBTransmitData packageToSend;
@@ -255,8 +258,8 @@ void CmdStartWatchdog(USBReceiveData const * const commandPackage)
         address = WD_RESP_ADDRESS;
         length = 1;
         data = GetResponseWord(0, 0);
-        QSPIWriteSequence(&address, &data, &length);
-        QSPIWriteSequence(&address, &data, &length);
+        //QSPIWriteSequence(&address, &data, &length);
+        //QSPIWriteSequence(&address, &data, &length);
 
         // Configure periodicity of Watchdog serving MCU interrupt
         ConfigureWatchdogPeriodicity(CalculateWatchdogAckPeriodicity());
