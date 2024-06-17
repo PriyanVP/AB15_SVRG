@@ -11,7 +11,7 @@ namespace AB15_GUI.Tests.Models
     /// </tc_links>
     [TestFixture]
     [Parallelizable(scope: ParallelScope.Self)]
-    public class GetCRC8_tests
+    public class GetCRC8_Tests
     {
         /// <summary>
         /// Set up test environment
