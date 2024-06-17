@@ -70,6 +70,16 @@ public class ReceiveCommunicationPackage<T> : IReceiveCommunicationPackage where
     /// </summary>
     public ReceiveCommunicationPackage()
     {
+        Payload = Activator.CreateInstance<T>();
+    }
+
+    /// <summary>
+    /// Init serial receive package class
+    /// </summary>
+    /// <param name="payload">payload instance</param>
+    public ReceiveCommunicationPackage(T payload)
+    {
+        Payload = payload;
     }
 
     /// <summary>
@@ -82,7 +92,7 @@ public class ReceiveCommunicationPackage<T> : IReceiveCommunicationPackage where
         if (receivedPackage.Count < SerialPackageConstants.MinPackageLength) return false;
 
         // Check if CRC is correct
-        int crcDataLength = receivedPackage.Count - 3; // 3 is number of bytes unused in CRC calculation: start byte, end byte and crc itself
+        int crcDataLength = receivedPackage.Count -  SerialPackageConstants.StartByteLength - SerialPackageConstants.CRCLength - SerialPackageConstants.EndByteLength ; // substract number of bytes unused in CRC calculation
         _isCRCCorrect = receivedPackage[receivedPackage.Count - Math.Abs(SerialPackageConstants.CRCPosition)] == receivedPackage.GetCRC8(SerialPackageConstants.MsgIDPosition, crcDataLength);
 
         // Exit processing if CRC is not correct

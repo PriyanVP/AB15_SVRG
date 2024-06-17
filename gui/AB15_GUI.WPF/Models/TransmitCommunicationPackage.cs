@@ -78,6 +78,16 @@ public class TransmitCommunicationPackage<T> : ITransmitCommunicationPackage whe
     /// </summary>
     public TransmitCommunicationPackage()
     {
+        Payload = Activator.CreateInstance<T>();
+    }
+
+    /// <summary>
+    /// Init serial transmit package class
+    /// </summary>
+    /// <param name="payload">payload instance</param>
+    public TransmitCommunicationPackage(T payload)
+    {
+        Payload = payload;
     }
 
     /// <summary>
