@@ -2,8 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using NLog;
 
 namespace AB15_GUI.WPF.Models
 {
@@ -13,13 +12,37 @@ namespace AB15_GUI.WPF.Models
     public class EmptyPayload : IByteListSerializable
     {
         /// <summary>
+        /// Logger reference with custom configuration
+        /// </summary>
+        private readonly Logger logger;
+
+        public EmptyPayload(Logger logger)
+        {
+            this.logger = logger;
+        }
+
+        /// <summary>
         /// Convert byte list to field values
         /// </summary>
+        /// <param name="status">status field of package</param>
         /// <param name="rawData">Data that should be converted to parameters values</param>
-        public void Deserialize(List<byte> rawData)
+        public void Deserialize(MCUStatus status, List<byte> rawData)
         {
-            // empty
-            // TODO: error messages?
+            // Apply different handling based on status
+            switch (status)
+            {
+                case MCUStatus.ERROR:
+                    // Error handling -> report via logger
+                    byte asicID = rawData.ElementAt(SerialPackageConstants.ASICIDPosition);
+                    List<byte> payload = rawData.Slice(SerialPackageConstants.PayloadPosition, rawData.ElementAt(SerialPackageConstants.PayloadLengthPosition));
+                    logger.Warn($"Message with error status received: ASIC ID {asicID} Payload {string.Join(" ", payload)}");
+                    break;
+                case MCUStatus.ACK:
+                    // empty
+                    break;
+                default:
+                    throw new ArgumentException($"Unexpected status received: {status}");
+            }
         }
 
         /// <summary>
