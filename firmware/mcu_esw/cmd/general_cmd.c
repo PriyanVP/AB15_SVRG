@@ -94,16 +94,16 @@ void CmdGetMcuBuildDate(USBReceiveData const * const commandPackage)
     packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
     packageToSend.status = USB_STATUS_STATUS;
     packageToSend.dataLength = 10;
-    packageToSend.data[0] = BUILD_DAY_CH0;
-    packageToSend.data[1] = BUILD_DAY_CH1;
-    packageToSend.data[2] = '.';
-    packageToSend.data[3] = BUILD_MONTH_CH0;
-    packageToSend.data[4] = BUILD_MONTH_CH1;
-    packageToSend.data[5] = '.';
     packageToSend.data[6] = BUILD_YEAR_CH0;
     packageToSend.data[7] = BUILD_YEAR_CH1;
     packageToSend.data[8] = BUILD_YEAR_CH2;
     packageToSend.data[9] = BUILD_YEAR_CH3;
+    packageToSend.data[2] = '-';
+    packageToSend.data[3] = BUILD_MONTH_CH0;
+    packageToSend.data[4] = BUILD_MONTH_CH1;
+    packageToSend.data[5] = '-';
+    packageToSend.data[0] = BUILD_DAY_CH0;
+    packageToSend.data[1] = BUILD_DAY_CH1;
     // Send data back to MCU
     SendUSBPackage(&packageToSend);
 }
