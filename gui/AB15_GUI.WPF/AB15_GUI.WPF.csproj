@@ -8,4 +8,52 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Views\Resources\bosch.ico" />
+    <None Remove="Views\Resources\font_decrease_light.png" />
+    <None Remove="Views\Resources\font_decrease_dark.png" />
+    <None Remove="Views\Resources\font_increase_light.png" />
+    <None Remove="Views\Resources\font_increase_dark.png" />
+    <None Remove="Views\Resources\sort_ascending_light.png" />
+    <None Remove="Views\Resources\sort_ascending_dark.png" />
+    <None Remove="Views\Resources\sort_descending_light.png" />
+    <None Remove="Views\Resources\sort_descending_dark.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Views\Resources\bosch.ico" />
+    <Resource Include="Views\Resources\font_decrease_light.png" />
+    <Resource Include="Views\Resources\font_decrease_dark.png" />
+    <Resource Include="Views\Resources\font_increase_light.png" />
+    <Resource Include="Views\Resources\font_increase_dark.png" />
+    <Resource Include="Views\Resources\sort_ascending_light.png" />
+    <Resource Include="Views\Resources\sort_ascending_dark.png" />
+    <Resource Include="Views\Resources\sort_descending_light.png" />
+    <Resource Include="Views\Resources\sort_descending_dark.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+    <PackageReference Include="NLog" Version="5.3.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="NLog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
 </Project>

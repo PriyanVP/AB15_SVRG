@@ -7,4 +7,15 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <Page Update="Views\Themes\Common.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Themes\Dark.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Themes\Light.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
 </Project>
