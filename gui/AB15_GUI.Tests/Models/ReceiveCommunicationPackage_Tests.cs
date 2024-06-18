@@ -64,14 +64,26 @@ namespace AB15_GUI.Tests.Models
         public void WhenDataIsNotValid_ThenDataHandledExpectedly(List<byte> receivedPackage)
         {
             // Arrange
-            //byte calculatedCRC = receivedPackage.GetCRC8(1, receivedPackage.Count - 3);
+            ReceiveCommunicationPackage<ByteListSeializableMock> tstPackage = new ReceiveCommunicationPackage<ByteListSeializableMock>();
 
-            //// Act
-            //length = testCaseParams.data.Count - testCaseParams.startIdx;
-            //calculatedCRC = testCaseParams.data.GetCRC8(testCaseParams.startIdx, length);
+            // Act
+            tstPackage.UnpackPackage(receivedPackage);
 
-            //// Assert
-            //Assert.That(calculatedCRC, Is.EqualTo(testCaseParams.expectedCRC));
+            // Assert
+            // Validation hasn't passed
+            Assert.That(tstPackage.IsPackageValid, Is.False);
+
+            // Message ID is empty
+            Assert.That(tstPackage.MsgID, Is.EqualTo(default(int)));
+
+            // ASIC ID is empty
+            Assert.That(tstPackage.ASICID, Is.EqualTo(default(int)));
+
+            // Status is empty
+            Assert.That(tstPackage.Status, Is.EqualTo(MCUStatus._STATUS_MIN));
+
+            // Payload is empty
+            Assert.That(tstPackage.Payload.ReceivedData.Count, Is.EqualTo(0));
         }
 
         /// <summary>
@@ -90,10 +102,10 @@ namespace AB15_GUI.Tests.Models
         /// </summary>
         public static IEnumerable<List<byte>> InValidTestCases() // TODO: CRC not correct
         {
-            yield return new List<byte>() { 0xAB, 0x01, 0x00, 0x82, 0x00, 0x69, 0xBA };
-            yield return new List<byte>() { 0xAB, 0xAB, 0x01, 0x83, 0x01, 0xBA, 0x88, 0xBA };
-            yield return new List<byte>() { 0xAB, 0xBA, 0x02, 0x87, 0x03, 0xAA, 0xBB, 0xCC, 0xC2, 0xBA };
-            yield return new List<byte>() { 0xAB, 0x00, 0x03, 0x08, 0x00, 0x40, 0xBA };
+            yield return new List<byte>() { 0xAB, 0x01, 0x00, 0x82, 0x00, 0xB9 };                           // size incorrect
+            yield return new List<byte>() { 0xAB, 0xAB, 0x01, 0x83, 0x01, 0xBA, 0x88, 0xBA };               // CRC incorrect
+            yield return new List<byte>() { 0xAB, 0xBA, 0x02, 0x07, 0x03, 0xAA, 0xBB, 0xCC, 0xC2, 0xBA };   // status invalid
+            yield return new List<byte>() { 0xAB, 0x00, 0x03, 0x08, 0x00, 0x40, 0xBA };                     // status invalid
         }
 
         /// <summary>
@@ -101,7 +113,7 @@ namespace AB15_GUI.Tests.Models
         /// </summary>
         public class ByteListSeializableMock : IByteListSerializable
         {
-            public List<byte> ReceivedData;
+            public List<byte> ReceivedData = new List<byte>();
 
             public void Deserialize(MCUStatus status, List<byte> rawData)
             {
