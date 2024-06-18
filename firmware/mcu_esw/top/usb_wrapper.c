@@ -55,7 +55,9 @@
 /*********************************************************************************************************************/
 
 /*********************************************************************************************************************/
-/*---------------------------------------------Function Implementations----------------------------------------------*/
+/*---------------------------------------------Function Implementations----------------------------------------------
+ * https://rb-tracker.bosch.com/tracker19/browse/ABEVBSW-68
+ */
 /*********************************************************************************************************************/
 
 void USBInit(void)
@@ -90,11 +92,11 @@ boolean SendUSBPackage(const USBTransmitData * data)
 
     for (uint16 i = 0; i < data->dataLength; i++)
     {
-        //
+        // TODO: needs check for same function JS
         buffer[USB_PAYLOAD_POS + i] = data->data[i]; /* Payload */
         itemCounter++;
     }
-
+    // TODO: refactor
     buffer[itemCounter] = GetCRC8(&(buffer[1]), itemCounter-1); /*   CRC, ommit 1st byte   */
     itemCounter++;
 
@@ -153,6 +155,7 @@ boolean ReceiveUSBPackage(USBReceiveData * const data)
 
             //poll buffer[0] for start of message
             //Read buffer by byte till we find USB_START_BYTE
+            //TODO refactor :  loop is ended in case first byte is found, if not the loop will loop "for ever" shall we find a better soution
             while (buffer[USB_STARTBYTE_POS] != USB_START_BYTE)
             {
                 // If read all buffer, but no required start byte - return
@@ -162,11 +165,10 @@ boolean ReceiveUSBPackage(USBReceiveData * const data)
                 ReceiveUSBData(buffer, &bytesToRead);
             }
         }
-        //TODO refactor :  loop above is ended in case first byte is found, if not the loop will loop "for ever" shall we find a better soution
+
 
         /*buffer is read in 3 steps, now doing read step 2/3 */
         /*we found startbyte now read next bytes up to payload length in order to handle final read correct*/
-
         bytesToRead = (USB_MSG_ID_LENGTH + USB_ASIC_ID_LENGTH + USB_CMD_LENGTH + USB_PAYLOADLEN_LENGTH);
         ReceiveUSBData(&(buffer[USB_MSG_ID_POS]), &bytesToRead);
 
