@@ -45,7 +45,7 @@
  *
  * \return Returns nothing
  */
-void initLEDs(void);
+void InitLEDs(void);
 
 /** \brief Turns LED on
  *

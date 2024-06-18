@@ -1,5 +1,5 @@
 /**********************************************************************************************************************
- * \file Cpu0_Main.c
+ * \file Cpu0_Main.c        TODO: remove license comment if not strictly required
  * \copyright Copyright (C) Infineon Technologies AG 2019
  * 
  * Use of this file is subject to the terms of use agreed between (i) you or the company in which ordinary course of 
@@ -92,7 +92,7 @@ void core0_main(void)
     IfxCpu_waitEvent(&g_cpuSyncEvent, 1);
     
     /* Initialize the LED port pins      */
-    initLEDs();
+    InitLEDs();
 
 
     /* Init pins*/
@@ -136,7 +136,7 @@ void core0_main(void)
         //ToggleLED1();
         Blink_LED1_1Hz();
 
-       if(get_button_state())
+       if(GetButtonState())
        {
            OnLED2();
 

@@ -58,7 +58,7 @@
 /*---------------------------------------------Function Implementations----------------------------------------------*/
 /*********************************************************************************************************************/
 
-void initLEDs(void)
+void InitLEDs(void)
 {
     /* Initialize GPIO pins for the LED */
     IfxPort_setPinMode(LED1, IfxPort_Mode_outputPushPullGeneral);

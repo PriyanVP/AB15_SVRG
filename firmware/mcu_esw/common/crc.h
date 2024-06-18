@@ -58,7 +58,23 @@ uint8 CRC8(uint8 * const buffer, uint16 length);
  * \return Returns CRC
  */
 uint8 CRC5(const uint32 buffer);
+
+/** \brief Calculate CRC for master output () TODO: needs refactoring. Notes in .c file
+ * Polynom: x^3 + x + 1 
+ *
+ * \param buffer buffer with data to calculate CRC
+ * \param length number of bits to use for calculation
+ * \return Returns CRC
+ */
 uint8 CRC3MO(const uint32 buffer);
+
+/** \brief Calculate CRC for master input () TODO: needs refactoring. Notes in .c file
+ * Polynom: x^3 + x + 1 
+ *
+ * \param buffer buffer with data to calculate CRC
+ * \param length number of bits to use for calculation
+ * \return Returns CRC
+ */
 uint8 CRC3MI(const uint32 buffer);
 
 

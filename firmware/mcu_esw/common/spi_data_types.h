@@ -48,7 +48,7 @@
 /*-------------------------------------------------Data Structures---------------------------------------------------*/
 /*********************************************************************************************************************/
 
-/** \brief Structure for transmit SPI data
+/** \brief Structure for transmit SPI data TODO: needs refactoring, adding more descriptive comments
  */
 typedef union
 {
@@ -63,7 +63,7 @@ typedef union
     uint32 dw;
 } SPITransmitData;
 
-/** \brief Structure for received SPI data
+/** \brief Structure for received SPI data TODO: needs refactoring, adding more descriptive comments
  */
 typedef union
 {

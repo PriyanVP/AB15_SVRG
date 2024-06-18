@@ -40,8 +40,8 @@
 /*********************************************************************************************************************/
 /*---------------------------------------------Function Implementations----------------------------------------------*/
 /*********************************************************************************************************************/
-/* Function to configure the port pins for the push button and the LED */
-void init_button(void)
+
+void InitButton(void)
 {
 
     /* Setup the port pin connected to the push button to input mode. This function can be used to initialize any
@@ -50,8 +50,7 @@ void init_button(void)
     IfxPort_setPinMode(BUTTON, IfxPort_Mode_inputPullUp);
 }
 
-/* Depending on the the state of the "BUTTON" port pin, the LED is turned on or off */
-uint8 get_button_state(void)
+uint8 GetButtonState(void)
 {
     uint8 retval = 0;
     /* With the routine getPinState() the value of a particular pin can be retrieved. This
