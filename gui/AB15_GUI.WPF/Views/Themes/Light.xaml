@@ -6,7 +6,16 @@
     <Image x:Key="FontSizeIncreaseIco" Source="../Resources/font_increase_light.png"/>
     <Image x:Key="AscendingSortIco" Source="../Resources/sort_ascending_light.png"/>
     <Image x:Key="DescendingSortIco" Source="../Resources/sort_descending_light.png"/>
-    
+
+    <BitmapImage  x:Key="Ico.home" UriSource="../Resources/home.png"/>
+    <BitmapImage x:Key="ico.config" UriSource="../Resources/config.png"/>
+    <BitmapImage x:Key="Ico.sensor" UriSource="../Resources/sensor.png"/>
+    <BitmapImage x:Key="Ico.whatchdog" UriSource="../Resources/whatchdog.png"/>
+    <BitmapImage x:Key="Ico.airbag" UriSource="../Resources/airbag.png"/>
+    <BitmapImage x:Key="Ico.chip" UriSource="../Resources/chip.png"/>
+    <BitmapImage x:Key="Ico.menu" UriSource="../Resources/menu.png"/>
+    <BitmapImage x:Key="Ico.zoom" UriSource="../Resources/zoom.png"/>
+
     <!--All colors defines-->
     <SolidColorBrush x:Key="BackGroung" Color="#fbfbfb"/>
 

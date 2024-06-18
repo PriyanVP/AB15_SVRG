@@ -3,10 +3,352 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:custom="clr-namespace:AB15_GUI.WPF.Views.Components"
         xmlns:local="clr-namespace:AB15_GUI.WPF.Views"
         mc:Ignorable="d"
-        Title="AB15_GUI_MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="Bosch AB15" Height="650" Width="1000"
+        Icon="Resources/bosch.ico">
+    <Window.Resources>
+        <Storyboard  x:Key="TestAnimation" RepeatBehavior="Forever">
+            <DoubleAnimation
+                Storyboard.TargetName="MCUPCspark"
+                Storyboard.TargetProperty="(Canvas.Top)"
+                From="30" To="-15"
+                Duration="0:0:1"
+                AutoReverse="False"/>
+        </Storyboard>
+        <Storyboard  x:Key="TestAnimation1" RepeatBehavior="Forever">
+            <DoubleAnimation
+                Storyboard.TargetName="PCMCUspark"
+                Storyboard.TargetProperty="(Canvas.Top)"
+                From="-15" To="30"
+                Duration="0:0:1"
+                AutoReverse="False"/>
+        </Storyboard>
 
+        <Storyboard  x:Key="TestAnimation2" RepeatBehavior="Forever">
+            <DoubleAnimation
+                Storyboard.TargetName="ABMCUspark"
+                Storyboard.TargetProperty="(Canvas.Top)"
+                From="30" To="-15"
+                Duration="0:0:1"
+                AutoReverse="False"/>
+        </Storyboard>
+        <Storyboard  x:Key="TestAnimation3" RepeatBehavior="Forever">
+            <DoubleAnimation
+                Storyboard.TargetName="MCUABspark"
+                Storyboard.TargetProperty="(Canvas.Top)"
+                From="-15" To="30"
+                Duration="0:0:1"
+                AutoReverse="False"/>
+        </Storyboard>
+    </Window.Resources>
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="Window.Loaded">
+            <BeginStoryboard Storyboard="{StaticResource TestAnimation}"/>
+            <BeginStoryboard Storyboard="{StaticResource TestAnimation1}"/>
+            <BeginStoryboard Storyboard="{StaticResource TestAnimation2}"/>
+            <BeginStoryboard Storyboard="{StaticResource TestAnimation3}"/>
+        </EventTrigger>
+    </Window.Triggers>
+    <Grid>
+        <!--Separate control group-->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" MinHeight="20"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto" MinHeight="20"/>
+        </Grid.RowDefinitions>
+
+        <!--Top panel group-->
+        <Grid Grid.Row="0">
+            <!--User menu control group-->
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="auto" MinWidth="20"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="auto" MinWidth="20"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="auto" MinWidth="20"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto" MinWidth="20"/>
+                <ColumnDefinition Width="5"/>
+            </Grid.ColumnDefinitions>
+
+            <Menu Grid.Column="1" FontSize="20">
+                <MenuItem Header="File">
+                    <MenuItem Header="Load Register settings"/>
+                    <MenuItem Header="Save Register settings"/>
+                </MenuItem>
+            </Menu>
+
+            <Menu Grid.Column="3" FontSize="20">
+                <MenuItem Header="TODO"/>
+            </Menu>
+            <!--<Button Content="View" Grid.Column="3"/>-->
+
+            <Menu Grid.Column="5" FontSize="20">
+                <MenuItem Header="More">
+                    <MenuItem Header="RA1xx Documantation"/>
+                    <MenuItem Header="RA1xx GUI User Manual"/>
+                    <MenuItem Header="RA1xx TCD"/>
+                    <MenuItem Header="RA1xx Application Note"/>
+                    <MenuItem Header="RA1xx Register Maps"/>
+                    <MenuItem Header="Sensor details"/>
+                </MenuItem>
+            </Menu>
+            <!--<Button Content="More" Grid.Column="5"/>-->
+
+            <Button Content="TODO" Grid.Column="7"/>
+        </Grid>
+
+        <!--Middle panel group-->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" MinWidth="20"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!--<Grid.Style>
+                <Style TargetType="{x:Type Grid}">
+                    <Style.Triggers>
+                        <Trigger Property="{Binding ElementName=MenuSiuzeToggle, Path=IsChecked}" Value="True">
+                            
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>-->
+
+            <!--Subsection-->
+            <Grid Grid.Column="0" x:Name="MenuPanel" Margin="3,3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" MinWidth="160"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" MinHeight="20"/>
+                    <RowDefinition Height="auto" MinHeight="20"/>
+                    <RowDefinition Height="auto" MinHeight="20"/>
+                    <RowDefinition Height="auto" MinHeight="20"/>
+                    <RowDefinition Height="auto" MinHeight="20"/>
+                    <RowDefinition Height="auto" MinHeight="20"/>
+                    <RowDefinition Height="auto" MinHeight="20"/>
+                    <RowDefinition Height="auto" MinHeight="20"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="auto" MinHeight="20"/>
+                </Grid.RowDefinitions>
+
+                <Grid.Resources>
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="Background" Value="{DynamicResource Button.Background.StandBy}"/>
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="Margin" Value="0,1"/>
+                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource Button.Background.IsMouseOver}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource Button.Background.IsPressed}"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Resources>
+
+                <ToggleButton x:Name="MenuSizeToggle" HorizontalAlignment="Left" IsChecked="True"
+                        Grid.Row="0" Background="Transparent" BorderThickness="0">
+                    <Image Source="{DynamicResource Ico.menu}" Width="30" Margin="3,0,0,0"/>
+                    <ToggleButton.Triggers>
+                        <EventTrigger RoutedEvent="ToggleButton.Unchecked">
+                            <BeginStoryboard>
+                                <Storyboard x:Name="HideMenuPanel">
+                                    <DoubleAnimation 
+                                        Storyboard.TargetName="MenuPanel"
+                                        Storyboard.TargetProperty="Width"
+                                        BeginTime="0:0:0"
+                                        From="160" To="40"
+                                        Duration="0:0:0.2"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="ToggleButton.Checked">
+                            <BeginStoryboard>
+                                <Storyboard x:Name="ShowMenuPanel">
+                                    <DoubleAnimation 
+                                        Storyboard.TargetName="MenuPanel"
+                                        Storyboard.TargetProperty="Width"
+                                        BeginTime="0:0:0"
+                                        To="166" From="46"
+                                        Duration="0:0:0.2"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </ToggleButton.Triggers>
+                </ToggleButton>
+
+                <!--Subsection Definition-->
+                <Button Grid.Row="1">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Image Source="{DynamicResource Ico.home}" Grid.Column="0" Width="20"/>
+                        <TextBlock Text="Home" FontSize="20" Grid.Column="1"/>
+
+                    </Grid>
+                </Button>
+                <Button Grid.Row="2">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Image Source="{DynamicResource Ico.zoom}" Grid.Column="0" Width="20"/>
+                        <TextBlock Text="SPI Learning" FontSize="20" Grid.Column="1"/>
+                    </Grid>
+                </Button>
+                <Button Grid.Row="3">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Image Source="{DynamicResource Ico.whatchdog}" Grid.Column="0" Width="20"/>
+                        <TextBlock Text="Watchdog" FontSize="20" Grid.Column="1"/>
+                    </Grid>
+                </Button>
+                <Button Grid.Row="4">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Image Source="{DynamicResource Ico.airbag}" Grid.Column="0" Width="20"/>
+                        <TextBlock Text="Firing" FontSize="20" Grid.Column="1"/>
+                    </Grid>
+                </Button>
+                <Button Grid.Row="5">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Image Source="{DynamicResource Ico.chip}" Grid.Column="0" Width="20"/>
+                        <TextBlock Text="RA1xx Data" FontSize="20" Grid.Column="1"/>
+                    </Grid>
+                </Button>
+                <Button Grid.Row="6">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Image Source="{DynamicResource Ico.sensor}" Grid.Column="0" Width="20"/>
+                        <TextBlock Text="Sensor" FontSize="20" Grid.Column="1"/>
+                    </Grid>
+                </Button>
+                <Button Grid.Row="7">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Image Source="{DynamicResource ico.config}" Grid.Column="0" Width="20"/>
+                        <TextBlock Text="Diagnostics" FontSize="20" Grid.Column="1"/>
+                    </Grid>
+                </Button>
+
+                <Grid Grid.Row="8">
+                    <!--TODO Add animated status panel-->
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                       
+
+
+                        <Canvas Grid.Row="1" MinHeight="20">
+                            <Line X1="10" Y1="0" X2="10" Y2="20" Stroke="Black" StrokeThickness="1"/>
+                            <Line X1="30" Y1="0" X2="30" Y2="20" Stroke="Black" StrokeThickness="1"/>
+                            <custom:animatedDataFly x:Name="MCUPCspark" Canvas.Left="7" FillColor="Green">
+                            </custom:animatedDataFly>
+                            <custom:animatedDataFly x:Name="PCMCUspark" Canvas.Left="27" ScaleY="-1" FillColor="Green">
+                            </custom:animatedDataFly>
+                        </Canvas>
+
+                        <Canvas Grid.Row="3" MinHeight="20">
+                            <Line X1="10" Y1="0" X2="10" Y2="20" Stroke="Black" StrokeThickness="1"/>
+                            <Line X1="30" Y1="0" X2="30" Y2="20" Stroke="Black" StrokeThickness="1"/>
+                            <custom:animatedDataFly x:Name="ABMCUspark" Canvas.Left="7" FillColor="Green">
+                            </custom:animatedDataFly>
+                            <custom:animatedDataFly x:Name="MCUABspark" Canvas.Left="27" ScaleY="-1" FillColor="Green">
+                            </custom:animatedDataFly>
+                        </Canvas>
+
+                        <Border Grid.Row="0" BorderThickness="1" 
+                                BorderBrush="Red" Background="AntiqueWhite" 
+                                CornerRadius="10" HorizontalAlignment="Left" 
+                                Width="40">
+                            <TextBlock Text="PC" HorizontalAlignment="Center" FontSize="20"/>
+                        </Border>
+
+                        <Border Grid.Row="2" BorderThickness="1" 
+                                BorderBrush="Red" Background="AntiqueWhite" 
+                                CornerRadius="10" HorizontalAlignment="Left" 
+                                Width="40">
+                            <TextBlock Text="MCU" HorizontalAlignment="Center" FontSize="20"/>
+                        </Border>
+
+                        <Border Grid.Row="4" BorderThickness="1" 
+                                BorderBrush="Red" Background="AntiqueWhite" 
+                                CornerRadius="10" HorizontalAlignment="Left" 
+                                Width="40">
+                            <TextBlock Text="AB" HorizontalAlignment="Center" FontSize="20"/>
+                        </Border>
+                    </Grid>
+                </Grid>
+                
+            </Grid>
+        </Grid>
+
+        <!--Bottom panel group-->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="auto" MinWidth="20"/>
+                <ColumnDefinition Width="3"/>
+                <ColumnDefinition Width="auto" MinWidth="20"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="auto" MinWidth="20"/>
+                <ColumnDefinition Width="3"/>
+                <ColumnDefinition Width="auto" MinWidth="20"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="auto" MinWidth="20"/>
+                <ColumnDefinition Width="3"/>
+                <ColumnDefinition Width="auto" MinWidth="20"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Text="GUI:" Grid.Column="1"/>
+            <TextBlock Text="MCU:" Grid.Column="5"/>
+            <TextBlock Text="AB1xx:" Grid.Column="9"/>
+
+            <TextBlock Text="{Binding GUIVersion}" Grid.Column="3"/>
+            <TextBlock Text="{Binding MCUVersion}" Grid.Column="7"/>
+            <TextBlock Text="{Binding ABID}" Grid.Column="9"/>
+        </Grid>
     </Grid>
 </Window>
