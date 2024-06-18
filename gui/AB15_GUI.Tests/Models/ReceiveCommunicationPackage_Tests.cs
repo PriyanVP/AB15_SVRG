@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AB15_GUI.WPF.Models;
 using AB15_GUI.WPF.Models.Interfaces;
 
@@ -12,7 +9,7 @@ namespace AB15_GUI.Tests.Models
     /// Checking CRC8 algorithm. Required for communication PC <-> MCU
     /// </summary>
     /// <tc_links>
-    ///     <link ID="" Link="" />
+    ///     <link ID="ABEVBSW-84" Link="https://rb-tracker.bosch.com/tracker19/browse/ABEVBSW-84" />
     /// </tc_links>
     [TestFixture]
     [Parallelizable(scope: ParallelScope.Self)]
