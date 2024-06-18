@@ -40,7 +40,7 @@ public class ReceiveCommunicationPackage<T> : IReceiveCommunicationPackage where
     public MCUStatus Status
     {
         get { return _status; }
-        private set { _status = value; }
+        set { _status = value; }
     }
 
     /// <summary>

@@ -29,12 +29,17 @@ public class SerialWrapper : IDisposable, ISerialWrapper
     /// <summary>
     /// List of IDs for routing responses from MCU
     /// </summary>
-    private Waitlist _responseWaitlist;
+    private IWaitlist _responseWaitlist;
 
     /// <summary>
     /// Timer to periodically parse input buffer on COM port
     /// </summary>
     private Timer _serialInputDispatchTimer;
+
+    /// <summary>
+    /// Timer to periodically parse waitlist to remove outdated messages
+    /// </summary>
+    private Timer _waitlistTimeOfLifeTimer;
 
     /// <summary>
     /// Queue to store full packages from MCU
@@ -88,7 +93,7 @@ public class SerialWrapper : IDisposable, ISerialWrapper
     /// <param name="logger">logger reference</param>
     /// <param name="serialPort">reference to low level object for managing</param>
     /// <param name="responseWaitlist">waitlist that stores data for handling received packages</param>
-    public SerialWrapper(Logger logger, ISerialComm serialPort, Waitlist responseWaitlist)
+    public SerialWrapper(Logger logger, ISerialComm serialPort, IWaitlist responseWaitlist)
     {
         // Init reference to logger
         this.logger = logger;
@@ -99,11 +104,17 @@ public class SerialWrapper : IDisposable, ISerialWrapper
         // Get reference to serial input buffer
         _inputSerialBuffer = _serialPort.ReceiveBuffer;
 
-        // Configure timer
+        // Configure timer for packages handling
         _serialInputDispatchTimer = new Timer();
         _serialInputDispatchTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
         _serialInputDispatchTimer.Interval = 50; // time delay is experimentally defined for smooth operation
         _serialInputDispatchTimer.Enabled = true;
+
+        // Configure timer for outdated messages
+        _waitlistTimeOfLifeTimer = new Timer();
+        _waitlistTimeOfLifeTimer.Elapsed += new ElapsedEventHandler(OnWaitlistTimedEvent);
+        _waitlistTimeOfLifeTimer.Interval = 5000; // time delay is experimentally defined for smooth operation
+        _waitlistTimeOfLifeTimer.Enabled = true;
 
         // Initialize waitlist
         _responseWaitlist = responseWaitlist;
@@ -112,12 +123,42 @@ public class SerialWrapper : IDisposable, ISerialWrapper
     }
 
     /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="source">caller</param>
+    /// <param name="e">event arguments</param>
+    private void OnWaitlistTimedEvent(object? sender, ElapsedEventArgs e)
+    {
+        // Stop timer
+        _waitlistTimeOfLifeTimer.Stop();
+
+        // Package for delegate i
+        Type type = typeof(ReceiveCommunicationPackage<>).MakeGenericType(typeof(EmptyPayload));
+        IReceiveCommunicationPackage tmpReceivedPackage = (IReceiveCommunicationPackage)Activator.CreateInstance(type);
+        tmpReceivedPackage!.Status = MCUStatus.RESPONCE_ABSENT;
+
+        // Run removal of outdated packages
+        List<Action<IReceiveCommunicationPackage>> removedItemsDelegates = _responseWaitlist.RemoveOutdatedItems();
+
+        // Invoke delegates
+        foreach (var deleg in removedItemsDelegates)
+        {
+            Task.Run(() => deleg(tmpReceivedPackage));
+        }
+
+        // Start timer
+        _waitlistTimeOfLifeTimer.Start();
+    }
+
+    /// <summary>
     /// Serial wrapper destruction method. Required for testability and correct timer handling
     /// </summary>
     public void Dispose()
     {
         _serialInputDispatchTimer.Elapsed -= new ElapsedEventHandler(OnTimedEvent);
+        _waitlistTimeOfLifeTimer.Elapsed -= new ElapsedEventHandler(OnWaitlistTimedEvent);
         _serialInputDispatchTimer.Dispose();
+        _waitlistTimeOfLifeTimer.Dispose();
     }
 
     /// <summary>

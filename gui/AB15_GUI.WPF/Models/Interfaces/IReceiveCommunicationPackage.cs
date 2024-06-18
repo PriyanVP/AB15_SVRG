@@ -20,7 +20,7 @@ namespace AB15_GUI.WPF.Models.Interfaces
         /// <summary>
         /// Status received in package
         /// </summary>
-        MCUStatus Status { get; }
+        MCUStatus Status { get; set; }
 
         /// <summary>
         /// Flag to indicate if package is valid

@@ -14,6 +14,11 @@ namespace AB15_GUI.WPF.Services;
 public class Waitlist : IWaitlist
 {
     /// <summary>
+    /// Time span during which responce can be received
+    /// </summary>
+    private const int ItemTimeOfLife = 5;
+
+    /// <summary>
     /// Local reference to logger
     /// </summary>
     private Logger logger;
@@ -182,7 +187,52 @@ public class Waitlist : IWaitlist
 
         return msgID;
     }
+   
+    /// <summary>
+    /// Removes outdated items from waitlist and returns list of their delegates
+    /// </summary>
+    /// <returns>List with outdated commands delegates</returns>
+    public List<Action<IReceiveCommunicationPackage>> RemoveOutdatedItems()
+    {
+        DateTime timeNow = DateTime.Now;
+        List<Action<IReceiveCommunicationPackage>> outdatedItems = new List<Action<IReceiveCommunicationPackage>>();
+        List<WaitlistItem> itemsForRemove = new List<WaitlistItem>();
 
+        lock(_waitlist)
+        {
+            // Loop through waitlist to check waht items are outdated
+            foreach(WaitlistItem item in _waitlist)
+            {
+                if ((item.creationTime - timeNow).TotalSeconds > ItemTimeOfLife)
+                {
+                    // Continuous packages
+                    if (item.isContinuous)
+                    {
+                        // Refresh creation time
+                        item.creationTime = DateTime.Now;
+                    }
+                    // Regular packages
+                    else
+                    {
+                        // Add item to remove list
+                        itemsForRemove.Add(item);
+                    }
+
+                    // Add package to list
+                    outdatedItems.Add(item.deleg);
+                }
+            }
+
+            // Remove outdated items
+            foreach(WaitlistItem itm in itemsForRemove)
+            {
+                _waitlist.Remove(itm);
+            }
+        }
+
+        return outdatedItems;
+    }
+    
     /// <summary>
     /// Class representing item in MCU response waitlist
     /// </summary>
@@ -193,15 +243,14 @@ public class Waitlist : IWaitlist
         /// </summary>
         /// <param name="deleg">delegate that will be called for received msg</param>
         /// <param name="msgID">message ID of send (!) transaction. Used to define which consumer will handle response from MCU</param>
-        /// <param name="status">status from MCU transaction. Used primarly for error, status transactions</param>
         /// <param name="isContinuous">flag to define if MCU response can be received few times</param>
-        public WaitlistItem(Action<IReceiveCommunicationPackage> deleg, Type payloadType, int? msgID = null, MCUStatus status = MCUStatus._STATUS_MIN, bool isContinuous = false)
+        public WaitlistItem(Action<IReceiveCommunicationPackage> deleg, Type payloadType, int? msgID = null, bool isContinuous = false)
         {
             this.deleg = deleg;
             this.msgID = msgID;
-            this.status = status;
             this.isContinuous = isContinuous;
             this.payloadType = payloadType;
+            creationTime = DateTime.Now;
         }
 
         /// <summary>
@@ -210,15 +259,15 @@ public class Waitlist : IWaitlist
         public Type payloadType;
 
         /// <summary>
+        /// Time when item was created or updated (for continuous)
+        /// </summary>
+        public DateTime creationTime;
+
+        /// <summary>
         /// Message ID of send (!) transaction. Used to define which consumer will handle response from MCU
         /// Reserved value null is used for transactions that are always handled, even without previous transaction from GUI (ack, error, ...)
         /// </summary>
         public int? msgID;
-
-        /// <summary>
-        /// Status from MCU transaction. Used to define if transaction should be handled in special manner
-        /// </summary>
-        public MCUStatus status;
 
         /// <summary>
         /// Delegate that will be called for received msg

@@ -1,5 +1,6 @@
 ﻿using AB15_GUI.WPF.Models.Interfaces;
 using System;
+using System.Collections.Generic;
 
 namespace AB15_GUI.WPF.Services.Interfaces
 {
@@ -39,6 +40,12 @@ namespace AB15_GUI.WPF.Services.Interfaces
         /// <param name="msgID">message ID in package from MCU</param>
         /// <returns>Type of package payload or null if no waitlist item was found</returns>    
         Type? GetPayloadType(int msgID);
+
+        /// <summary>
+        /// Removes outdated items from waitlist and returns list of their delegates
+        /// </summary>
+        /// <returns>List with outdated commands delegates</returns>
+        List<Action<IReceiveCommunicationPackage>> RemoveOutdatedItems();
         
         /// <summary>
         /// Remove item from waitlist by ID. Intended for removing continuous items
