@@ -79,9 +79,9 @@ namespace AB15_GUI.WPF
                                                  .SetupExtensions(ext => ext.RegisterTarget<LogMemoryRecordTarget>("MemoryRecord"))
                                                  .GetCurrentClassLogger()); // Same logger will be used across all classes - instance always created in App
 
-                            services.AddSingleton<Waitlist>();
-                            services.AddSingleton<ISerialComm>();
-                            services.AddSingleton<SerialWrapper>();
+                            services.AddSingleton<IWaitlist, Waitlist>();
+                            services.AddSingleton<ISerialComm, SerialComm>();
+                            services.AddSingleton<ISerialWrapper, SerialWrapper>();
 
                             #endregion // Services
 
