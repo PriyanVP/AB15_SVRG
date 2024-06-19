@@ -47,7 +47,7 @@
 /*********************************************************************************************************************/
 
 //extern void ServiceInterruptRoutine(void);
-//extern void WatchdogInterruptRoutine(void);
+extern void WatchdogInterruptRoutine(void);
 //extern void ErrorCheckInterruptRoutine(void);
 //extern void ContinuousReadInterruptRoutine(void);
 //extern void GPIOInterruptRoutine(void);
@@ -57,7 +57,7 @@
 // *
 // * \return Returns nothing
 // */
-//void UpdateTimersRoutine(void);
+void UpdateTimersRoutine(void);
 //
 ///** \brief Service timer interrupt routine wrapper - calls service interrupt routine function
 // * Required for correct interrupt handling
@@ -269,5 +269,6 @@ void UpdateTimersRoutine(void)
 void ServiceTimerRoutineWrapper(void)
 {
     // Call interrupt routine function from other file
+    //TODO. Inhibited
     //ServiceInterruptRoutine();
 }

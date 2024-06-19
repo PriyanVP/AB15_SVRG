@@ -128,12 +128,10 @@ void core0_main(void)
     InitGpt12Timer();
 
     // Start service irq
-    // JS: 19.4.2024 inhibit timers for not interrupt debugging
-    //StartServiceTimer();
+    StartServiceTimer();
 
     // Start general timer
-    //JS: 19.4.2024 inhibit for better debugging
-    //StartGeneralTimer();
+    StartGeneralTimer();
 
     // Local temporary variable for receiving data
     USBReceiveData receivedPackage;
@@ -216,7 +214,6 @@ void core0_main(void)
             case USB_CMD_START_WATCHDOG:
                 CmdStartWatchdog(&cmdPackage);
                 break;
-
 
            case USB_CMD_STOP_WATCHDOG:
                 CmdStopWatchdog(&cmdPackage);
