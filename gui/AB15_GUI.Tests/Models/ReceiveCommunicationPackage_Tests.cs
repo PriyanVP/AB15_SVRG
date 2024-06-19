@@ -6,7 +6,7 @@ using AB15_GUI.WPF.Models.Interfaces;
 namespace AB15_GUI.Tests.Models
 {
     /// <summary>
-    /// Checking CRC8 algorithm. Required for communication PC <-> MCU
+    /// Checking ReceiveCommunicationPackage class
     /// </summary>
     /// <tc_links>
     ///     <link ID="ABEVBSW-84" Link="https://rb-tracker.bosch.com/tracker19/browse/ABEVBSW-84" />
@@ -97,7 +97,7 @@ namespace AB15_GUI.Tests.Models
         /// <summary>
         /// List of test cases data for invalid ReceiveCommunicationPackage scenarios
         /// </summary>
-        public static IEnumerable<List<byte>> InValidTestCases() // TODO: CRC not correct
+        public static IEnumerable<List<byte>> InValidTestCases()
         {
             yield return new List<byte>() { 0xAB, 0x01, 0x00, 0x82, 0x00, 0xB9 };                           // size incorrect
             yield return new List<byte>() { 0xAB, 0xAB, 0x01, 0x83, 0x01, 0xBA, 0x88, 0xBA };               // CRC incorrect

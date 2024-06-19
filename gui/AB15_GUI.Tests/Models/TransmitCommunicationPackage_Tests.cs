@@ -34,7 +34,6 @@ namespace AB15_GUI.Tests.Models
         [TestCaseSource(nameof(ValidTestCases)), Description("Checking that valid data is packed correctly")]
         public void WhenDataIsValid_ThenDataIsPackedCorrectly(List<byte> expectedPackage)
         {
-            //var crc = expectedPackage.GetCRC8(SerialPackageConstants.MsgIDPosition, expectedPackage[SerialPackageConstants.PayloadLengthPosition]+4).ToString("X");
             // Arrange
             TransmitCommunicationPackage<ByteListSeializableMock> tstPackage = new TransmitCommunicationPackage<ByteListSeializableMock>();
             tstPackage.MsgID = expectedPackage[SerialPackageConstants.MsgIDPosition];
@@ -90,13 +89,12 @@ namespace AB15_GUI.Tests.Models
         /// <summary>
         /// List of test cases data for invalid TransmitCommunicationPackage scenarios
         /// </summary>
-        public static IEnumerable<(int?, int?, int?)> InValidTestCases() // TODO: recalculate CRC
+        public static IEnumerable<(int, int, int)> InValidTestCases() // TODO: recalculate CRC
         {
             yield return (0, 0, (int) MCUCommand._EXT_CMD_MAX);
             yield return (0, 0, (int) MCUCommand._CMD_MIN);
             yield return (0, -1, 0);
             yield return (0, 500, 0);
-            yield return (0, null, 0);
         }
 
         /// <summary>
