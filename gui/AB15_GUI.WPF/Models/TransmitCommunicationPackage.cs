@@ -113,9 +113,7 @@ public class TransmitCommunicationPackage<T> : ITransmitCommunicationPackage whe
         packageBytes.AddRange(payload);                     // Payload
 
         // Fill CRC
-        // Start from 1 to skip strat byte
-        // -1 accounts on start byte which is not used for CRC
-        byte crcVal = packageBytes.GetCRC8(1, (packageBytes.Count - 1)); 
+        byte crcVal = packageBytes.GetCRC8(SerialPackageConstants.MsgIDPosition, (packageBytes.Count - SerialPackageConstants.StartByteLength)); 
         packageBytes.Add(crcVal);                           // CRC
 
         // Add end byte
