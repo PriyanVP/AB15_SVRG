@@ -10,9 +10,21 @@
     <Compile Update="Views\Components\animatedDataFly.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\Components\TestAnimation.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Components\testAnimationRev2.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\Components\animatedDataFly.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Components\TestAnimation.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Components\testAnimationRev2.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\Themes\Common.xaml">

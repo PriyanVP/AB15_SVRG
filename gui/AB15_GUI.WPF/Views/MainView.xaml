@@ -9,46 +9,66 @@
         Title="Bosch AB15" Height="650" Width="1000"
         Icon="Resources/bosch.ico">
     <Window.Resources>
-        <Storyboard  x:Key="TestAnimation" RepeatBehavior="Forever">
-            <DoubleAnimation
-                Storyboard.TargetName="MCUPCspark"
-                Storyboard.TargetProperty="(Canvas.Top)"
-                From="30" To="-15"
-                Duration="0:0:1"
-                AutoReverse="False"/>
-        </Storyboard>
+
         <Storyboard  x:Key="TestAnimation1" RepeatBehavior="Forever">
             <DoubleAnimation
-                Storyboard.TargetName="PCMCUspark"
+                Storyboard.TargetName="spark11"
                 Storyboard.TargetProperty="(Canvas.Top)"
-                From="-15" To="30"
+                From="30" To="20"
                 Duration="0:0:1"
                 AutoReverse="False"/>
-        </Storyboard>
+            <DoubleAnimation
+                Storyboard.TargetName="spark12"
+                Storyboard.TargetProperty="(Canvas.Top)"
+                From="20" To="10"
+                Duration="0:0:1"
+                AutoReverse="False"/>
+            <DoubleAnimation
+                Storyboard.TargetName="spark13"
+                Storyboard.TargetProperty="(Canvas.Top)"
+                From="10" To="0"
+                Duration="0:0:1"
+                AutoReverse="False"/>
+            <DoubleAnimation
+                Storyboard.TargetName="spark14"
+                Storyboard.TargetProperty="(Canvas.Top)"
+                From="0" To="-10"
+                Duration="0:0:1"
+                AutoReverse="False"/>
 
-        <Storyboard  x:Key="TestAnimation2" RepeatBehavior="Forever">
+
             <DoubleAnimation
-                Storyboard.TargetName="ABMCUspark"
+                Storyboard.TargetName="spark21"
                 Storyboard.TargetProperty="(Canvas.Top)"
-                From="30" To="-15"
+                To="30" From="20"
                 Duration="0:0:1"
                 AutoReverse="False"/>
-        </Storyboard>
-        <Storyboard  x:Key="TestAnimation3" RepeatBehavior="Forever">
             <DoubleAnimation
-                Storyboard.TargetName="MCUABspark"
+                Storyboard.TargetName="spark22"
                 Storyboard.TargetProperty="(Canvas.Top)"
-                From="-15" To="30"
+                To="20" From="10"
+                Duration="0:0:1"
+                AutoReverse="False"/>
+            <DoubleAnimation
+                Storyboard.TargetName="spark23"
+                Storyboard.TargetProperty="(Canvas.Top)"
+                To="10" From="0"
+                Duration="0:0:1"
+                AutoReverse="False"/>
+            <DoubleAnimation
+                Storyboard.TargetName="spark24"
+                Storyboard.TargetProperty="(Canvas.Top)"
+                To="0" From="-10"
                 Duration="0:0:1"
                 AutoReverse="False"/>
         </Storyboard>
     </Window.Resources>
     <Window.Triggers>
         <EventTrigger RoutedEvent="Window.Loaded">
-            <BeginStoryboard Storyboard="{StaticResource TestAnimation}"/>
             <BeginStoryboard Storyboard="{StaticResource TestAnimation1}"/>
+            <!--<BeginStoryboard Storyboard="{StaticResource TestAnimation}"/>
             <BeginStoryboard Storyboard="{StaticResource TestAnimation2}"/>
-            <BeginStoryboard Storyboard="{StaticResource TestAnimation3}"/>
+            <BeginStoryboard Storyboard="{StaticResource TestAnimation3}"/>-->
         </EventTrigger>
     </Window.Triggers>
     <Grid>
@@ -276,46 +296,73 @@
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="auto"/>
                         </Grid.RowDefinitions>
-                       
 
-
-                        <Canvas Grid.Row="1" MinHeight="20">
-                            <Line X1="10" Y1="0" X2="10" Y2="20" Stroke="Black" StrokeThickness="1"/>
-                            <Line X1="30" Y1="0" X2="30" Y2="20" Stroke="Black" StrokeThickness="1"/>
+                        <!--<Canvas Grid.Row="1" MinHeight="20">
+                            <Line X1="7"  Y1="0" X2="7"  Y2="20" Stroke="Black" StrokeThickness="1"/>
+                            <Line X1="27" Y1="0" X2="27" Y2="20" Stroke="Black" StrokeThickness="1"/>
+                            <Line X1="13" Y1="0" X2="13" Y2="20" Stroke="Black" StrokeThickness="1"/>
+                            <Line X1="33" Y1="0" X2="33" Y2="20" Stroke="Black" StrokeThickness="1"/>
                             <custom:animatedDataFly x:Name="MCUPCspark" Canvas.Left="7" FillColor="Green">
                             </custom:animatedDataFly>
                             <custom:animatedDataFly x:Name="PCMCUspark" Canvas.Left="27" ScaleY="-1" FillColor="Green">
                             </custom:animatedDataFly>
-                        </Canvas>
+                        </Canvas>-->
+                        <Grid Grid.Row="1" MinHeight="20" HorizontalAlignment="Left" Width="40">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*" MinWidth="5"/>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition Width="1*" MinWidth="5"/>
+                            </Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" BorderThickness="0,0,1,0" BorderBrush="Black"/>
+                            <Border Grid.Column="2" BorderThickness="1,0,1,0" BorderBrush="Black"/>
+                            <Border Grid.Column="5" BorderThickness="1,0,0,0" BorderBrush="Black"/>
 
-                        <Canvas Grid.Row="3" MinHeight="20">
+                            <Canvas Grid.Column="1" Grid.ColumnSpan="3">
+                                <custom:animatedDataFly x:Name="spark11" Canvas.Left="0" FillColor="Green" HorizontalAlignment="Center"/>
+                                <custom:animatedDataFly x:Name="spark12" Canvas.Left="0" FillColor="Green" HorizontalAlignment="Center"/>
+                                <custom:animatedDataFly x:Name="spark13" Canvas.Left="0" FillColor="Green" HorizontalAlignment="Center"/>
+                                <custom:animatedDataFly x:Name="spark14" Canvas.Left="0" FillColor="Green" HorizontalAlignment="Center"/>
+
+                                <custom:animatedDataFly x:Name="spark21" Canvas.Right="0" FillColor="Red" HorizontalAlignment="Center" ScaleY="-1"/>
+                                <custom:animatedDataFly x:Name="spark22" Canvas.Right="0" FillColor="Red" HorizontalAlignment="Center" ScaleY="-1"/>
+                                <custom:animatedDataFly x:Name="spark23" Canvas.Right="0" FillColor="Red" HorizontalAlignment="Center" ScaleY="-1"/>
+                                <custom:animatedDataFly x:Name="spark24" Canvas.Right="0" FillColor="Red" HorizontalAlignment="Center" ScaleY="-1"/>
+
+                            </Canvas>
+                        </Grid>
+
+                        <custom:testAnimationRev2 Grid.Row="3" Height="20" HorizontalAlignment="Left" SparkColor="Red" BorderColor="Black"/>
+
+                        <!--<Canvas Grid.Row="3" MinHeight="20">
                             <Line X1="10" Y1="0" X2="10" Y2="20" Stroke="Black" StrokeThickness="1"/>
                             <Line X1="30" Y1="0" X2="30" Y2="20" Stroke="Black" StrokeThickness="1"/>
                             <custom:animatedDataFly x:Name="ABMCUspark" Canvas.Left="7" FillColor="Green">
                             </custom:animatedDataFly>
                             <custom:animatedDataFly x:Name="MCUABspark" Canvas.Left="27" ScaleY="-1" FillColor="Green">
                             </custom:animatedDataFly>
-                        </Canvas>
+                        </Canvas>-->
 
                         <Border Grid.Row="0" BorderThickness="1" 
-                                BorderBrush="Red" Background="AntiqueWhite" 
-                                CornerRadius="10" HorizontalAlignment="Left" 
+                                BorderBrush="Black" Background="AntiqueWhite" 
+                                CornerRadius="5" HorizontalAlignment="Left" 
                                 Width="40">
-                            <TextBlock Text="PC" HorizontalAlignment="Center" FontSize="20"/>
+                            <TextBlock Text="PC" HorizontalAlignment="Center" FontSize="16"/>
                         </Border>
 
                         <Border Grid.Row="2" BorderThickness="1" 
-                                BorderBrush="Red" Background="AntiqueWhite" 
-                                CornerRadius="10" HorizontalAlignment="Left" 
+                                BorderBrush="Black" Background="AntiqueWhite" 
+                                CornerRadius="5" HorizontalAlignment="Left" 
                                 Width="40">
-                            <TextBlock Text="MCU" HorizontalAlignment="Center" FontSize="20"/>
+                            <TextBlock Text="MCU" HorizontalAlignment="Center" FontSize="16"/>
                         </Border>
 
                         <Border Grid.Row="4" BorderThickness="1" 
-                                BorderBrush="Red" Background="AntiqueWhite" 
-                                CornerRadius="10" HorizontalAlignment="Left" 
+                                BorderBrush="Black" Background="AntiqueWhite" 
+                                CornerRadius="5" HorizontalAlignment="Left" 
                                 Width="40">
-                            <TextBlock Text="AB" HorizontalAlignment="Center" FontSize="20"/>
+                            <TextBlock Text="AB" HorizontalAlignment="Center" FontSize="16"/>
                         </Border>
                     </Grid>
                 </Grid>

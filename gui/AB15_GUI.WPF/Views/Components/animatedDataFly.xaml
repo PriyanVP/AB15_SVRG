@@ -5,30 +5,22 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:AB15_GUI.WPF.Views.Components"
              mc:Ignorable="d" 
-             d:DesignHeight="10" d:DesignWidth="6"
+             MinHeight="8" MinWidth="10"
              x:Name="ControlRoot">
     <UserControl.Resources>
         <ScaleTransform x:Key="ScaleTransform" ScaleX="{Binding ScaleX, ElementName=ControlRoot}" ScaleY="{Binding ScaleY, ElementName=ControlRoot}" />
-        <Storyboard x:Key="SparkleStoryboard" RepeatBehavior="Forever" AutoReverse="True">
-            <DoubleAnimation Storyboard.TargetName="SparkleEllipseBig" Storyboard.TargetProperty="Opacity" From="1.0" To="0.3" Duration="0:0:0.3"/>
-            <DoubleAnimation Storyboard.TargetName="SparkleEllipseSmall" Storyboard.TargetProperty="Opacity" From="1.0" To="0.3" Duration="0:0:0.3"/>
-            <DoubleAnimation Storyboard.TargetName="SparklePolygon" Storyboard.TargetProperty="Opacity" From="1.0" To="0.3" Duration="0:0:0.3"/>
-        </Storyboard>
     </UserControl.Resources>
     <Grid RenderTransform="{StaticResource ScaleTransform}" RenderTransformOrigin="0.5,0.5">
         <Canvas>
-            <!-- Circle -->
-            <Ellipse x:Name="SparkleEllipseBig" Width="6" Height="6" Fill="{Binding FillColor, ElementName=ControlRoot}"/>
 
-            <Ellipse x:Name="SparkleEllipseSmall" Width="2" Height="2" Canvas.Left="2" Canvas.Top="8" Fill="{Binding FillColor, ElementName=ControlRoot}"/>
+            <Polygon Points="5,0 0,5 5,3 10,5" Fill="{Binding FillColor, ElementName=ControlRoot}"/>
 
-            <!-- Pointed End -->
-            <Polygon x:Name="SparklePolygon" Points="0.14,3.9 5.86,3.9 3.87,9.5 2.13,9.5" Fill="{Binding FillColor, ElementName=ControlRoot}"/>
+            <Polygon Points="2,4 5,1 8,4 5,10" Fill="{Binding FillColor, ElementName=ControlRoot}" Opacity="0.5"/>
+
         </Canvas>
     </Grid>
     <UserControl.Triggers>
         <EventTrigger RoutedEvent="Loaded">
-            <!--<BeginStoryboard Storyboard="{StaticResource SparkleStoryboard}"/>-->
         </EventTrigger>
     </UserControl.Triggers>
 </UserControl>
