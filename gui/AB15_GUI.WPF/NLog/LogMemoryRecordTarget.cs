@@ -1,17 +1,7 @@
-﻿using NLog.Config;
-using NLog.Targets;
+﻿using NLog.Targets;
 using NLog;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Collections;
 using AB15_GUI.WPF.Models;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Collections.Specialized;
 
 namespace AB15_GUI.WPF.NLog
 {
@@ -58,6 +48,7 @@ namespace AB15_GUI.WPF.NLog
             logRecord.Level = logEvent.Level.ToString().ToUpper();
             logRecord.Message = logEvent.Message;
 
+            // Invoking operations on logs list on GUI thread
             App.Current.Dispatcher.Invoke(() =>
             {
                 _logs.Add(logRecord);
