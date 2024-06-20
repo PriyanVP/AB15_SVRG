@@ -6,6 +6,9 @@ using AB15_GUI.WPF.Models;
 using AB15_GUI.WPF.Models.Interfaces;
 using System.Collections.Concurrent;
 using System.Linq;
+using AB15_GUI.WPF.NLog;
+using NLog;
+using System.Windows.Controls;
 
 namespace AB15_GUI.Tests.Services
 {
@@ -20,11 +23,20 @@ namespace AB15_GUI.Tests.Services
     public class SerialWrapper_Tests
     {
         /// <summary>
+        /// Logger reference with custom configuration
+        /// </summary>
+        private Logger logger;
+
+        /// <summary>
         /// Set up test environment
         /// </summary>
         [OneTimeSetUp]
         public void SetUp()
         {
+            logger = LogManager.Setup()
+                    .SetupExtensions(ext => ext.RegisterLayoutRenderer<BuildConfigurationLayoutRenderer>("build-configuration"))
+                    .SetupExtensions(ext => ext.RegisterTarget<LogMemoryRecordTarget>("MemoryRecord"))
+                    .GetCurrentClassLogger(); // Same logger will be used across all tests
         }
 
         /// <summary>
@@ -35,67 +47,71 @@ namespace AB15_GUI.Tests.Services
         {
         }
 
-        // TODO: test SerialWrite
-        // TODO: test read
         [TestCaseSource(nameof(ValidTestCases)), Description("Checking that valid data is send to COM port correctly")]
-        public void WhenValidPackageIsWritten_ThenDataSendToCOMPortIsCorrect(List<byte> expectedPackage) // TODO: not ready
+        [NonParallelizable]
+        public void WhenValidPackageIsWritten_ThenDataSendToCOMPortIsCorrect((List<byte> expectedPackage, bool isContinuous) tcParams) // TODO: not ready
         {
-           // Arrange
-           TransmitCommunicationPackage<ByteListSeializableMock> tstPackage = new TransmitCommunicationPackage<ByteListSeializableMock>();
-           tstPackage.MsgID = expectedPackage[SerialPackageConstants.MsgIDPosition];
-           tstPackage.ASICID = expectedPackage[SerialPackageConstants.ASICIDPosition];
-           tstPackage.Cmd = (MCUCommand) expectedPackage[SerialPackageConstants.CmdStatusPosition];
-           tstPackage.Payload.TransmitData = expectedPackage.Slice(SerialPackageConstants.PayloadPosition, expectedPackage[SerialPackageConstants.PayloadLengthPosition]);
+            // Arrange
+            TransmitPackageMock package = new TransmitPackageMock();
+            WaitlistMock waitlist = new WaitlistMock();
+            SerialCommMock serialCommMock = new SerialCommMock();
+            SerialWrapper serialWrapper = new SerialWrapper(logger, serialCommMock, waitlist);
+            Action<IReceiveCommunicationPackage>? deleg = (package) => {};
+          
+            // Act
+            package.Package = tcParams.expectedPackage; // mock to pass data
+            package.IsPackageValid = true;
+            package.PayloadType = typeof(IReceiveCommunicationPackage);
+            serialWrapper.SerialWrite(package, deleg, tcParams.isContinuous);
 
-           // Act
-           List<byte> constructedPackage = tstPackage.GetPackage();
+            // Assert
+            // Package was passed to low level object for communicating with COM port successfully
+            Assert.That(serialCommMock.WrittenPackages.First(), Is.EqualTo(tcParams.expectedPackage));
 
-           // Assert
-           // Paclage content is expected
-           Assert.That(constructedPackage, Is.EqualTo(expectedPackage));
-
-           // Validation passed
-           Assert.That(tstPackage.IsPackageValid, Is.True);
-
-           // Payload type is correct
-           Assert.That(tstPackage.PayloadType, Is.EqualTo(typeof(ByteListSeializableMock)));
+            // Verify waitlist content
+            Assert.That(waitlist.WaitlistItems.First().deleg, Is.EqualTo(deleg));
+            Assert.That(waitlist.WaitlistItems.First().isContinuous, Is.EqualTo(tcParams.isContinuous));
+            Assert.That(waitlist.WaitlistItems.First().payloadType, Is.EqualTo(typeof(IReceiveCommunicationPackage)));
         }
 
-        [TestCaseSource(nameof(InValidTestCases)), Description("Checking that invalid data is not packed and error is reported")]
-        public void WhenDataIsNotValid_ThenDataHandledExpectedly(List<byte> fullPackage) // TODO: not ready
-        {
-           // Arrange
-           TransmitCommunicationPackage<ByteListSeializableMock> tstPackage = new TransmitCommunicationPackage<ByteListSeializableMock>();
 
-           // Act
-           tstPackage.UnpackPackage(receivedPackage);
+        //// TODO: test read
+        //[TestCaseSource(nameof(InValidTestCases)), Description("Checking that invalid data is not packed and error is reported")]
+        //public void WhenDataIsNotValid_ThenDataHandledExpectedly(List<byte> fullPackage) // TODO: not ready
+        //{
+        //   // Arrange
+        //   TransmitCommunicationPackage<ByteListSeializableMock> tstPackage = new TransmitCommunicationPackage<ByteListSeializableMock>();
 
-           // Assert
-           // Validation hasn't passed
-           Assert.That(tstPackage.IsPackageValid, Is.False);
+        //   // Act
+        //   tstPackage.UnpackPackage(receivedPackage);
 
-           // Message ID is empty
-           Assert.That(tstPackage.MsgID, Is.EqualTo(default(int)));
+        //   // Assert
+        //   // Validation hasn't passed
+        //   Assert.That(tstPackage.IsPackageValid, Is.False);
 
-           // ASIC ID is empty
-           Assert.That(tstPackage.ASICID, Is.EqualTo(default(int)));
+        //   // Message ID is empty
+        //   Assert.That(tstPackage.MsgID, Is.EqualTo(default(int)));
 
-           // Status is empty
-           Assert.That(tstPackage.Status, Is.EqualTo(MCUStatus._STATUS_MIN));
+        //   // ASIC ID is empty
+        //   Assert.That(tstPackage.ASICID, Is.EqualTo(default(int)));
 
-           // Payload is empty
-           Assert.That(tstPackage.Payload.ReceivedData.Count, Is.EqualTo(0));
-        }
+        //   // Status is empty
+        //   Assert.That(tstPackage.Status, Is.EqualTo(MCUStatus._STATUS_MIN));
+
+        //   // Payload is empty
+        //   Assert.That(tstPackage.Payload.ReceivedData.Count, Is.EqualTo(0));
+        //}
+
 
         /// <summary>
-        /// List of test cases data for valid ReceiveCommunicationPackage scenarios
+        /// List of test cases data (valid TransmitCommunicationPackage scenarios)
         /// </summary>
-        public static IEnumerable<List<byte>> ValidTestCases() // TODO: recalculate CRC
+        public static IEnumerable<(List<byte>, bool)> ValidTestCases()
         {
-           yield return new List<byte>() { 0xAB, 0x01, 0x00, 0x02, 0x00, 0xDF, 0xBA };
-           yield return new List<byte>() { 0xAB, 0xAB, 0x01, 0x03, 0x01, 0xBA, 0x83, 0xBA };
-           yield return new List<byte>() { 0xAB, 0xBA, 0x02, 0x07, 0x03, 0xAA, 0xBB, 0xCC, 0x55, 0xBA };
-           yield return new List<byte>() { 0xAB, 0x00, 0x03, 0x08, 0x00, 0xF6, 0xBA };
+            yield return (new List<byte>() { 0xAB, 0x01, 0x00, 0x02, 0x00, 0x69, 0xBA }, true);
+            yield return (new List<byte>() { 0xAB, 0xAB, 0x01, 0x03, 0x01, 0xBA, 0x88, 0xBA }, false);
+            yield return (new List<byte>() { 0xAB, 0xBA, 0x02, 0x07, 0x03, 0xAA, 0xBB, 0xCC, 0xC2, 0xBA }, true);
+            yield return (new List<byte>() { 0xAB, 0x00, 0x03, 0x08, 0x00, 0x40, 0xBA }, false);
         }
 
         #region Mocks
@@ -120,14 +136,14 @@ namespace AB15_GUI.Tests.Services
 
             public void Write(byte[] sendData, int length)
             {
-                WrittenPackages.Add(new List<byte>(sendData.Take(length)) )
+                WrittenPackages.Add(new List<byte>(sendData.Take(length)) );
             }
         }
 
         public class WaitlistMock : IWaitlist
         {
             // For observation
-            public List<(Action<IReceiveCommunicationPackage> deleg, Type payloadType, bool isContinuous)> WaitlistItems => 
+            public List<(Action<IReceiveCommunicationPackage> deleg, Type payloadType, bool isContinuous)> WaitlistItems = 
                                 new List<(Action<IReceiveCommunicationPackage> deleg, Type payloadType, bool isContinuous)>();
 
             public (int msgID, bool isAddedSuccessfully) AddItemToWaitlist(Action<IReceiveCommunicationPackage> deleg, Type payloadType, bool isContinuous = false)
@@ -158,7 +174,7 @@ namespace AB15_GUI.Tests.Services
 
             public List<Action<IReceiveCommunicationPackage>> RemoveOutdatedItems()
             {
-                throw new NotImplementedException();
+                return new List<Action<IReceiveCommunicationPackage>>();
             }
         }
 
