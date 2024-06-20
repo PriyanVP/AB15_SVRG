@@ -49,6 +49,7 @@ namespace AB15_GUI.WPF.NLog
             logRecord.Message = logEvent.Message;
 
             // Invoking operations on logs list on GUI thread
+            // TODO: refactor thread synchronization approach. Current one is closely coupled to WPF
             App.Current.Dispatcher.Invoke(() =>
             {
                 _logs.Add(logRecord);

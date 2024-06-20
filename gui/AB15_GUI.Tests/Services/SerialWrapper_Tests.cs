@@ -62,7 +62,9 @@ namespace AB15_GUI.Tests.Services
             package.Package = tcParams.expectedPackage; // mock to pass data
             package.IsPackageValid = true;
             package.PayloadType = typeof(IReceiveCommunicationPackage);
-            serialWrapper.SerialWrite(package, deleg, tcParams.isContinuous);
+            package.Deleg = deleg;
+            package.IsContinuous = tcParams.isContinuous;
+            serialWrapper.SerialWrite(package);
 
             // Assert
             // Package was passed to low level object for communicating with COM port successfully
@@ -199,6 +201,7 @@ namespace AB15_GUI.Tests.Services
         public class TransmitPackageMock : ITransmitCommunicationPackage
         {
             public int MsgID { get; set; }
+            
 
             public int ASICID { get; set; }
             public MCUCommand Cmd { get; set; }
@@ -208,6 +211,8 @@ namespace AB15_GUI.Tests.Services
             public bool IsPackageValid { get; set; }
 
             public List<byte> Package { get; set; } = new List<byte>();
+            public bool IsContinuous { get; set; }
+            public Action<IReceiveCommunicationPackage>? Deleg { get; set; }
 
             public List<byte> GetPackage()
             {

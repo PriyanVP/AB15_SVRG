@@ -40,6 +40,7 @@ namespace AB15_GUI.Tests.Models
             tstPackage.ASICID = expectedPackage[SerialPackageConstants.ASICIDPosition];
             tstPackage.Cmd = (MCUCommand)expectedPackage[SerialPackageConstants.CmdStatusPosition];
             tstPackage.Payload.TransmitData = expectedPackage.Slice(SerialPackageConstants.PayloadPosition, expectedPackage[SerialPackageConstants.PayloadLengthPosition]);
+            tstPackage.PayloadType = typeof(ByteListSeializableMock);
 
             // Act
             List<byte> constructedPackage = tstPackage.GetPackage();
