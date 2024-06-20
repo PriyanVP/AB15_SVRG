@@ -58,7 +58,10 @@ namespace AB15_GUI.WPF.NLog
             logRecord.Level = logEvent.Level.ToString().ToUpper();
             logRecord.Message = logEvent.Message;
 
-            _logs.Add(logRecord);
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                _logs.Add(logRecord);
+            });
         }
     }
 }
