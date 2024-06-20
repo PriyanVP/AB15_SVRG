@@ -9,48 +9,27 @@ namespace AB15_GUI.WPF.Models;
 /// </summary>
 public class ReceiveCommunicationPackage<T> : IReceiveCommunicationPackage where T : IByteListSerializable 
 {
-    private bool _packageValid = false;
     private bool _isCRCCorrect = false;
-    private int _msgID;
-    private int _ASICID;
-    private T _payload;
-    private MCUStatus _status = MCUStatus._STATUS_MIN;
 
     /// <summary>
     /// Message ID
     /// </summary>
-    public int MsgID
-    {
-        get { return _msgID; }
-        private set { _msgID = value; }
-    }
+    public int MsgID { get; set; }
 
     /// <summary>
     /// ASIC ID
     /// </summary>
-    public int ASICID
-    {
-        get { return _ASICID; }
-        private set { _ASICID = value; }
-    }
+    public int ASICID { get; set; }
 
     /// <summary>
     /// Status received in package
     /// </summary>
-    public MCUStatus Status
-    {
-        get { return _status; }
-        set { _status = value; }
-    }
+    public MCUStatus Status { get; set; } = MCUStatus._STATUS_MIN;
 
     /// <summary>
     /// Package payload
     /// </summary>
-    public T Payload
-    {
-        get { return _payload; }
-        set { _payload = value; }
-    }
+    public T Payload { get; set; }
 
     /// <summary>
     /// Flag to check if package has valid value
@@ -60,8 +39,7 @@ public class ReceiveCommunicationPackage<T> : IReceiveCommunicationPackage where
         get
         {
             // Return flag that package is valid only if required fields are set correctly
-            _packageValid = (_isCRCCorrect) && (_status > MCUStatus._STATUS_MIN) && (_status < MCUStatus._STATUS_MAX);
-            return _packageValid;
+            return (_isCRCCorrect) && (Status > MCUStatus._STATUS_MIN) && (Status < MCUStatus._STATUS_MAX);
         }
     }
 
