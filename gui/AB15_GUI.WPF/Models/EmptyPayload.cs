@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NLog;
+using System.ComponentModel;
 
 namespace AB15_GUI.WPF.Models
 {
@@ -12,14 +13,9 @@ namespace AB15_GUI.WPF.Models
     public class EmptyPayload : IByteListSerializable
     {
         /// <summary>
-        /// Logger reference with custom configuration
+        /// Property to report errors
         /// </summary>
-        private readonly Logger logger;
-
-        public EmptyPayload(Logger logger)
-        {
-            this.logger = logger;
-        }
+        public string? Error { get; set; } = null;
 
         /// <summary>
         /// Convert byte list to field values
@@ -28,14 +24,21 @@ namespace AB15_GUI.WPF.Models
         /// <param name="rawData">Data that should be converted to parameters values</param>
         public void Deserialize(MCUStatus status, List<byte> rawData)
         {
+            byte asicID;
+            List<byte> payload;
+
             // Apply different handling based on status
             switch (status)
             {
                 case MCUStatus.ERROR:
-                    // Error handling -> report via logger
-                    byte asicID = rawData.ElementAt(SerialPackageConstants.ASICIDPosition);
-                    List<byte> payload = rawData.Slice(SerialPackageConstants.PayloadPosition, rawData.ElementAt(SerialPackageConstants.PayloadLengthPosition));
-                    logger.Warn($"Message with error status received: ASIC ID {asicID} Payload {string.Join(" ", payload)}");
+                    // Error handling -> store data to property
+                    asicID = rawData.ElementAt(SerialPackageConstants.ASICIDPosition);
+                    payload = rawData.Slice(SerialPackageConstants.PayloadPosition, rawData.ElementAt(SerialPackageConstants.PayloadLengthPosition));
+                    Error = $"Message with error status received: ASIC ID {asicID} Payload {string.Join(" ", payload)}";
+                    break;
+                case MCUStatus.RESPONCE_ABSENT:
+                    // Error handling -> store data to property
+                    Error = $"Message with responce from MCU wasn't received in expected timeframe.";
                     break;
                 case MCUStatus.ACK:
                     // empty
