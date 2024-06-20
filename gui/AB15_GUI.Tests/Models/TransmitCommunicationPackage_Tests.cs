@@ -76,7 +76,7 @@ namespace AB15_GUI.Tests.Models
         }
 
         /// <summary>
-        /// List of test cases data for valid ReceiveCommunicationPackage scenarios
+        /// List of test cases data for valid TransmitCommunicationPackage scenarios
         /// </summary>
         public static IEnumerable<List<byte>> ValidTestCases()
         {
