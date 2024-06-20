@@ -24,9 +24,19 @@ namespace AB15_GUI.WPF.Models.Interfaces
         MCUCommand Cmd { get; set; }
 
         /// <summary>
-        /// Package payload type
+        /// Flag to indicate if few responses can be received for this package
         /// </summary>
-        Type PayloadType { get; }
+        public bool IsContinuous { get; set; }
+
+        /// <summary>
+        /// Receive package payload type
+        /// </summary>
+        public Type? PayloadType { get; set; }
+
+        /// <summary>
+        /// Delegate that will be called for received msg
+        /// </summary>
+        public Action<IReceiveCommunicationPackage>? Deleg { get; set; }
 
         /// <summary> 
         /// Flag to indicate if package is valid

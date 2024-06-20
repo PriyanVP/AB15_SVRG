@@ -10,7 +10,7 @@ namespace AB15_GUI.WPF.Services.Interfaces
     public interface ISerialWrapper
     {
         /// <summary>
-        /// List of COM ports with Shieldbuddy connected to them
+        /// List of COM ports with ShieldBuddy connected to them
         /// </summary>
         List<string> AvailableCOMPorts { get; }
         
@@ -47,9 +47,7 @@ namespace AB15_GUI.WPF.Services.Interfaces
         /// Looks for delegates that will handle package and removes relevant items from waitlist
         /// </summary>
         /// <param name="packageToSend">package that will be send via serial port</param>
-        /// <param name="deleg">delegate that will be called after receiving response from MCU</param>
-        /// <param name="isContinuous">flag to define if MCU response can be received few time</param>
-        /// <returns>true if all operations were performed succesfully, false - otherwise (message wasn't send)</returns>
-        bool SerialWrite(ITransmitCommunicationPackage packageToSend, Action<IReceiveCommunicationPackage>? deleg = null, bool isContinuous = false);
+        /// <returns>true if all operations were performed successfully, false - otherwise (message wasn't send)</returns>
+        bool SerialWrite(ITransmitCommunicationPackage packageToSend);
     }
 }

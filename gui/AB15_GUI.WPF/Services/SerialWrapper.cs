@@ -300,10 +300,8 @@ public class SerialWrapper : IDisposable, ISerialWrapper
     /// Looks for delegates that will handle package and removes relevant items from waitlist
     /// </summary>
     /// <param name="packageToSend">package that will be send via serial port</param>
-    /// <param name="deleg">delegate that will be called after receiving response from MCU</param>
-    /// <param name="isContinuous">flag to define if MCU response can be received few time</param>
-    /// <returns>true if all operations were performed succesfully, false - otherwise (message wasn't send)</returns>
-    public bool SerialWrite(ITransmitCommunicationPackage packageToSend, Action<IReceiveCommunicationPackage>? deleg = null, bool isContinuous = false)
+    /// <returns>true if all operations were performed successfully, false - otherwise (message wasn't send)</returns>
+    public bool SerialWrite(ITransmitCommunicationPackage packageToSend)
     {
         // Stop processing if package is not valid
         if (packageToSend.IsPackageValid == false)
@@ -316,11 +314,11 @@ public class SerialWrapper : IDisposable, ISerialWrapper
         lock (_lock)
         {
             // Create item in waitlist waiting for response if delegate is present
-            if (deleg != null)
+            if (packageToSend.Deleg != null)
             {
-                (packageToSend.MsgID, bool addingStatus) = _responseWaitlist.AddItemToWaitlist(deleg, packageToSend.PayloadType, isContinuous);
+                (packageToSend.MsgID, bool addingStatus) = _responseWaitlist.AddItemToWaitlist(packageToSend.Deleg, packageToSend.PayloadType, packageToSend.IsContinuous);
 
-                // If adding item to list wasn't successfull, stop processing and return
+                // If adding item to list wasn't successful, stop processing and return
                 if (addingStatus == false)
                 {
                     logger.Error("Adding item to waitlist failed!");

@@ -9,55 +9,40 @@ namespace AB15_GUI.WPF.Models;
 /// </summary>
 public class TransmitCommunicationPackage<T> : ITransmitCommunicationPackage where T : IByteListSerializable 
 {
-    private bool _packageValid = false;
-    private int _msgID;
-    private int _ASICID;
-    private T _payload;
-    private MCUCommand _cmd = MCUCommand._CMD_MIN;
-
     /// <summary>
     /// Message ID
     /// </summary>
-    public int MsgID
-    {
-        get { return _msgID; }
-        set { _msgID = value; }
-    }
+    public int MsgID { get; set; }
 
     /// <summary>
     /// ASIC ID
     /// </summary>
-    public int ASICID
-    {
-        get { return _ASICID; }
-        set { _ASICID = value; }
-    }
+    public int ASICID { get; set; }
 
     /// <summary>
     /// Command to send in package
     /// </summary>
-    public MCUCommand Cmd
-    {
-        get { return _cmd; }
-        set { _cmd = value; }
-    }
+    public MCUCommand Cmd { get; set; } = MCUCommand._CMD_MIN;
+
+    /// <summary>
+    /// Flag to indicate if few responses can be received for this package
+    /// </summary>
+    public bool IsContinuous { get; set; } = false;
 
     /// <summary>
     /// Package payload
     /// </summary>
-    public T Payload
-    {
-        get { return _payload; }
-        set { _payload = value; }
-    }
+    public T Payload { get; set; }
 
     /// <summary>
-    /// Package payload type
+    /// Receive package payload type
     /// </summary>
-    public Type PayloadType
-    {
-        get { return typeof(T); }
-    }
+    public Type? PayloadType { get; set; } = null;
+
+    /// <summary>
+    /// Delegate that will be called for received msg
+    /// </summary>
+    public Action<IReceiveCommunicationPackage>? Deleg { get; set; } = null;
 
     /// <summary>
     /// Flag to check if package has valid value
@@ -67,9 +52,9 @@ public class TransmitCommunicationPackage<T> : ITransmitCommunicationPackage whe
         get
         {
             // Return flag that package is valid only if required fields are set correctly
-            _packageValid = (_cmd > MCUCommand._CMD_MIN) && (_cmd < MCUCommand._EXT_CMD_MAX)
-                            && (_ASICID >= 0) && (_ASICID < 256);
-            return _packageValid;
+            return (Cmd > MCUCommand._CMD_MIN) && (Cmd < MCUCommand._EXT_CMD_MAX)
+                            && (ASICID >= 0) && (ASICID < 256)
+                            && ((PayloadType is not null) || (Deleg is null));
         }
     }
 
@@ -103,12 +88,12 @@ public class TransmitCommunicationPackage<T> : ITransmitCommunicationPackage whe
 
         // Fill first elements
         packageBytes.Add(0xAB);                             // Start byte
-        packageBytes.Add((byte)(_msgID & 0x00FF));          // Message ID
-        packageBytes.Add((byte)(_ASICID & 0x00FF));         // ASIC ID
-        packageBytes.Add((byte)((int)_cmd & 0x00FF));       // Command position
+        packageBytes.Add((byte)(MsgID & 0x00FF));          // Message ID
+        packageBytes.Add((byte)(ASICID & 0x00FF));         // ASIC ID
+        packageBytes.Add((byte)((int)Cmd & 0x00FF));       // Command position
 
         // Fill payload
-        List<byte> payload = _payload.Serialize();
+        List<byte> payload = Payload.Serialize();
         packageBytes.Add((byte)(payload.Count & 0x00FF));   // Payload length
         packageBytes.AddRange(payload);                     // Payload
 
