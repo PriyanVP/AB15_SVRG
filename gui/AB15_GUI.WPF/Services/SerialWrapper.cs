@@ -264,6 +264,7 @@ public class SerialWrapper : IDisposable, ISerialWrapper
 
             // Check that last byte is expected
             packageLength = SerialPackageConstants.StartByteLength + SerialPackageConstants.MsgIDLength + SerialPackageConstants.ASICIDLength
+                            + SerialPackageConstants.CmdStatusLength + SerialPackageConstants.PayloadLengthLength 
                             + _inputSerialBuffer.ElementAt(SerialPackageConstants.PayloadLengthPosition) + SerialPackageConstants.CRCLength
                             + SerialPackageConstants.EndByteLength;
             lastBytePosition = packageLength - 1;
