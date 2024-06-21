@@ -50,13 +50,14 @@ public class Waitlist : IWaitlist
     public (int msgID, bool isAddedSuccessfully) AddItemToWaitlist(Action<IReceiveCommunicationPackage> deleg, Type payloadType, bool isContinuous = false)
     {
         // Check that payloadType is implementing expected interface
+        // TODO: check why Contract usage breaks application if not in debug mode
         // Contract.Requires<ArgumentException>(payloadType.GetInterface(nameof(IByteListSerializable)) != null, "Incorrect payloadType. Should implement IByteListSerializable.");
 
         // Generate unique message ID
         int msgID = GenerateUniqueMsgID();
 
-        // Check if item with same msgID already exist
-        if (_waitlist.Exists(itm => itm.msgID == msgID))
+        // Check if item with same msgID already exist or if payload type is not correct
+        if (_waitlist.Exists(itm => itm.msgID == msgID) || (payloadType.GetInterface(nameof(IByteListSerializable)) is null))
         {
             return (msgID: msgID, isAddedSuccessfully: false);
         }
