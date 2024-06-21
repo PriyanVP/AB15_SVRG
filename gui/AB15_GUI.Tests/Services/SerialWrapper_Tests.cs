@@ -10,6 +10,7 @@ using AB15_GUI.WPF.NLog;
 using NLog;
 using System.Threading;
 using System.Windows;
+using System.Threading.Tasks;
 
 namespace AB15_GUI.Tests.Services
 {
@@ -125,34 +126,36 @@ namespace AB15_GUI.Tests.Services
             Assert.That(packageGlobal.Payload.ReceivedData, Is.EqualTo(expectedPackage.Slice(SerialPackageConstants.PayloadPosition, expectedPackage[SerialPackageConstants.PayloadLengthPosition])));
         }
 
+        [TestCaseSource(nameof(InvalidReceiveTestCases)), Description("Checking that invalid responces are not invoked")]
+        [NonParallelizable]
+        public async Task WhenInvalidPackageIsReceived_ThenItNotPassesValidation(List<byte> inPackage)
+        {
+            // Arrange
+            ManualResetEvent timerEventFinished = new ManualResetEvent(false);
+            ReceiveCommunicationPackage<ByteListSeializableMock> packageGlobal = null;
+            WaitlistMock waitlist = new WaitlistMock();
+            SerialCommMock serialCommMock = new SerialCommMock();
+            SerialWrapper serialWrapper = new SerialWrapper(logger, serialCommMock, waitlist);           
+            Action<IReceiveCommunicationPackage>? deleg = (package) => 
+                {
+                    packageGlobal = (ReceiveCommunicationPackage<ByteListSeializableMock>) package;
+                };
+          
+            // Act
+            waitlist.AddItemToWaitlist(deleg, typeof(ByteListSeializableMock));
+            foreach(byte itm in inPackage)
+            {
+                serialCommMock.ReceiveBuffer.Enqueue(itm);
+            }
+            await Task.Delay(1000);
 
-        //// TODO: test read
-        //[TestCaseSource(nameof(InValidTestCases)), Description("Checking that invalid data is not packed and error is reported")]
-        //public void WhenDataIsNotValid_ThenDataHandledExpectedly(List<byte> fullPackage) // TODO: not ready
-        //{
-        //   // Arrange
-        //   TransmitCommunicationPackage<ByteListSeializableMock> tstPackage = new TransmitCommunicationPackage<ByteListSeializableMock>();
+            // Assert
+            // Package was removed from SerialComm
+            Assert.That(serialCommMock.ReceiveBuffer.Count, Is.LessThan(SerialPackageConstants.MinPackageLength));
 
-        //   // Act
-        //   tstPackage.UnpackPackage(receivedPackage);
-
-        //   // Assert
-        //   // Validation hasn't passed
-        //   Assert.That(tstPackage.IsPackageValid, Is.False);
-
-        //   // Message ID is empty
-        //   Assert.That(tstPackage.MsgID, Is.EqualTo(default(int)));
-
-        //   // ASIC ID is empty
-        //   Assert.That(tstPackage.ASICID, Is.EqualTo(default(int)));
-
-        //   // Status is empty
-        //   Assert.That(tstPackage.Status, Is.EqualTo(MCUStatus._STATUS_MIN));
-
-        //   // Payload is empty
-        //   Assert.That(tstPackage.Payload.ReceivedData.Count, Is.EqualTo(0));
-        //}
-
+            // No delegate was called
+            Assert.That(packageGlobal, Is.Null);
+        }
 
         /// <summary>
         /// List of test cases data (valid TransmitCommunicationPackage scenarios)
@@ -174,6 +177,17 @@ namespace AB15_GUI.Tests.Services
             yield return new List<byte>() { 0xAB, 0xAB, 0x01, 0x83, 0x01, 0xBA, 0x83, 0xBA };
             yield return new List<byte>() { 0xAB, 0xBA, 0x02, 0x87, 0x03, 0xAA, 0xBB, 0xCC, 0x55, 0xBA };
             yield return new List<byte>() { 0xAB, 0x00, 0x03, 0x88, 0x00, 0xF6, 0xBA };
+        }
+
+        /// <summary>
+        /// List of test cases data (invalid ReceiveCommunicationPackage scenarios)
+        /// </summary>
+        public static IEnumerable<List<byte>> InvalidReceiveTestCases()
+        {
+            yield return new List<byte>() { 0xAB, 0x01, 0x00, 0x82, 0x00, 0xDF };                   // No end byte
+            yield return new List<byte>() { 0xAB, 0xAB, 0x01, 0x83, 0x01, 0xBA, 0x82, 0xBA };       // Invalid CRC
+            yield return new List<byte>() { 0xBA, 0x02, 0x87, 0x03, 0xAA, 0xBB, 0xCC, 0x55, 0xBA }; // No start byte
+            yield return new List<byte>() { 0xAB, 0x01, 0x00, 0x02, 0x00, 0x69, 0xBA };             // Valid transmit package
         }
 
         #region Mocks
