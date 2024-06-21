@@ -174,8 +174,9 @@ public class SerialComm : ISerialComm
     /// <param name="length">length of valid bytes in array</param>
     public void Write(byte[] dataToSend, int length)
     {
-        // Sanity checks
-        Contract.Requires<ArgumentOutOfRangeException>(length <= 0, "Length of buffer must be positive integer");
+        // Sanity checks 
+        // TODO: check why Contract usage breaks application if not in debug mode
+        // Contract.Requires<ArgumentOutOfRangeException>(length <= 0, "Length of buffer must be positive integer");
 
         // Stop execution if port is closed TODO: add error reporting
         if (_port.IsOpen == false)
