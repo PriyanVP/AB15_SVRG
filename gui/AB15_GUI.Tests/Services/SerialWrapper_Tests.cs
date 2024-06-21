@@ -81,7 +81,7 @@ namespace AB15_GUI.Tests.Services
             // Verify waitlist content
             Assert.That(waitlist.WaitlistItems.First().deleg, Is.EqualTo(deleg));
             Assert.That(waitlist.WaitlistItems.First().isContinuous, Is.EqualTo(tcParams.isContinuous));
-            Assert.That(waitlist.WaitlistItems.First().payloadType, Is.EqualTo(typeof(IReceiveCommunicationPackage)));
+            Assert.That(waitlist.WaitlistItems.First().payloadType, Is.EqualTo(typeof(ByteListSeializableMock)));
         }
 
         [TestCaseSource(nameof(ValidReceiveTestCases)), Description("Checking that valid responces are invoked by delegates")]
