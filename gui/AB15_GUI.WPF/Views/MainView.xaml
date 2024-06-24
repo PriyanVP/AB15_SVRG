@@ -59,7 +59,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Border Grid.Column="0" BorderThickness="0,1,1,1" BorderBrush="{DynamicResource Menu.SeparateLine}"/>
+            <!--<Border Grid.Column="0" BorderThickness="0,1,1,1" BorderBrush="{DynamicResource Menu.SeparateLine}"/>-->
 
             <!--Subsection-->
             <Grid Grid.Column="0" x:Name="MenuPanel" Margin="3,3" Background="{DynamicResource Menu.Background}">
@@ -80,24 +80,6 @@
                     <RowDefinition Height="auto" MinHeight="20"/>
                 </Grid.RowDefinitions>
 
-                <!--<Grid.Resources>
-                    <Style TargetType="{x:Type Button}">
-                        <Setter Property="Background" Value="{DynamicResource Button.Background.StandBy}"/>
-                        <Setter Property="BorderThickness" Value="0"/>
-                        <Setter Property="Margin" Value="0,1"/>
-                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                        <Setter Property="HorizontalContentAlignment" Value="Left"/>
-                        <Style.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="{DynamicResource Button.Background.IsMouseOver}"/>
-                            </Trigger>
-                            <Trigger Property="IsPressed" Value="True">
-                                <Setter Property="Background" Value="{DynamicResource Button.Background.IsPressed}"/>
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </Grid.Resources>-->
-
                 <ToggleButton Style="{DynamicResource MenuToggleButtonTemplate}" x:Name="MenuSizeToggle" IsChecked="True"
                         Grid.Row="0">
                     <Grid>
@@ -106,12 +88,15 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Image Grid.Column="0" Source="{DynamicResource Ico.menu}" Width="30" Margin="3,0,0,0" RenderTransformOrigin="0.5,0.5">
+                        <Image Grid.Column="0" Source="{DynamicResource Ico.menu}" 
+                               Width="30" 
+                               RenderTransformOrigin="0.5,0.5" 
+                               HorizontalAlignment="Stretch" VerticalAlignment="Center">
                             <Image.RenderTransform>
                                 <RotateTransform x:Name="MenuImage" CenterX="0.5" CenterY="0.5"/>
                             </Image.RenderTransform>
                         </Image>
-                        <TextBlock Text="Menu" FontSize="20" Grid.Column="1"/>
+                        <TextBlock Text="Menu" FontSize="20" Grid.Column="1" Style="{DynamicResource TextBlockStyle}"/>
                         
                     </Grid>
                     <ToggleButton.Triggers>
@@ -161,7 +146,7 @@
                         </Grid.ColumnDefinitions>
 
                         <Image Source="{DynamicResource Ico.home}" Grid.Column="0" Width="30"/>
-                        <TextBlock Text="Home" FontSize="20" Grid.Column="1"/>
+                        <TextBlock Text="Home" FontSize="20" Grid.Column="1" Style="{DynamicResource TextBlockStyle}"/>
 
                     </Grid>
                 </Button>
@@ -174,7 +159,7 @@
                         </Grid.ColumnDefinitions>
 
                         <Image Source="{DynamicResource Ico.zoom}" Grid.Column="0" Width="30"/>
-                        <TextBlock Text="SPI Learning" FontSize="20" Grid.Column="1"/>
+                        <TextBlock Text="SPI Learning" FontSize="20" Grid.Column="1" Style="{DynamicResource TextBlockStyle}"/>
                     </Grid>
                 </Button>
 
@@ -186,7 +171,7 @@
                         </Grid.ColumnDefinitions>
 
                         <Image Source="{DynamicResource Ico.whatchdog}" Grid.Column="0" Width="30"/>
-                        <TextBlock Text="Watchdog" FontSize="20" Grid.Column="1"/>
+                        <TextBlock Text="Watchdog" FontSize="20" Grid.Column="1" Style="{DynamicResource TextBlockStyle}"/>
                     </Grid>
                 </Button>
 
@@ -198,7 +183,7 @@
                         </Grid.ColumnDefinitions>
 
                         <Image Source="{DynamicResource Ico.airbag}" Grid.Column="0" Width="30"/>
-                        <TextBlock Text="Firing" FontSize="20" Grid.Column="1"/>
+                        <TextBlock Text="Firing" FontSize="20" Grid.Column="1" Style="{DynamicResource TextBlockStyle}"/>
                     </Grid>
                 </Button>
 
@@ -210,7 +195,7 @@
                         </Grid.ColumnDefinitions>
 
                         <Image Source="{DynamicResource Ico.chip}" Grid.Column="0" Width="30"/>
-                        <TextBlock Text="RA1xx Data" FontSize="20" Grid.Column="1"/>
+                        <TextBlock Text="RA1xx Data" FontSize="20" Grid.Column="1" Style="{DynamicResource TextBlockStyle}"/>
                     </Grid>
                 </Button>
 
@@ -222,7 +207,7 @@
                         </Grid.ColumnDefinitions>
 
                         <Image Source="{DynamicResource Ico.sensor}" Grid.Column="0" Width="30"/>
-                        <TextBlock Text="Sensor" FontSize="20" Grid.Column="1"/>
+                        <TextBlock Text="Sensor" FontSize="20" Grid.Column="1" Style="{DynamicResource TextBlockStyle}"/>
                     </Grid>
                 </Button>
 
@@ -234,7 +219,7 @@
                         </Grid.ColumnDefinitions>
 
                         <Image Source="{DynamicResource ico.config}" Grid.Column="0" Width="30"/>
-                        <TextBlock Text="Diagnostics" FontSize="20" Grid.Column="1"/>
+                        <TextBlock Text="Diagnostics" FontSize="20" Grid.Column="1" Style="{DynamicResource TextBlockStyle}"/>
                     </Grid>
                 </Button>
 
@@ -262,24 +247,27 @@
                                                   IsAnimationEnabled="{Binding ABConnectionStatus}"/>
 
                         <Border Grid.Row="0" BorderThickness="1" 
-                                BorderBrush="Black" Background="{DynamicResource BackGroung}" 
+                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                Background="{DynamicResource Menu.Background}" 
                                 CornerRadius="5" HorizontalAlignment="Left" 
                                 Width="40">
-                            <TextBlock Text="PC" HorizontalAlignment="Center" FontSize="18"/>
+                            <TextBlock Text="PC" HorizontalAlignment="Center" FontSize="16" Style="{DynamicResource TextBlockStyle}"/>
                         </Border>
 
                         <Border Grid.Row="2" BorderThickness="1" 
-                                BorderBrush="Black" Background="{DynamicResource BackGroung}" 
+                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                Background="{DynamicResource Menu.Background}" 
                                 CornerRadius="5" HorizontalAlignment="Left" 
                                 Width="40">
-                            <TextBlock Text="MCU" HorizontalAlignment="Center" FontSize="18"/>
+                            <TextBlock Text="MCU" HorizontalAlignment="Center" FontSize="16" Style="{DynamicResource TextBlockStyle}"/>
                         </Border>
 
                         <Border Grid.Row="4" BorderThickness="1" 
-                                BorderBrush="Black" Background="{DynamicResource BackGroung}" 
+                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                Background="{DynamicResource Menu.Background}" 
                                 CornerRadius="5" HorizontalAlignment="Left" 
                                 Width="40">
-                            <TextBlock Text="AB" HorizontalAlignment="Center" FontSize="18"/>
+                            <TextBlock Text="AB" HorizontalAlignment="Center" FontSize="16" Style="{DynamicResource TextBlockStyle}"/>
                         </Border>
                     </Grid>
                 </Grid>
@@ -306,13 +294,13 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <TextBlock Text="GUI:" Grid.Column="1"/>
-            <TextBlock Text="MCU:" Grid.Column="5"/>
-            <TextBlock Text="AB1xx:" Grid.Column="9"/>
+            <TextBlock Style="{DynamicResource TextBlockStyle}" Text="GUI:" Grid.Column="1"/>
+            <TextBlock Style="{DynamicResource TextBlockStyle}" Text="MCU:" Grid.Column="5"/>
+            <TextBlock Style="{DynamicResource TextBlockStyle}" Text="AB1xx:" Grid.Column="9"/>
 
-            <TextBlock Text="{Binding GUIVersion}" Grid.Column="3"/>
-            <TextBlock Text="{Binding MCUVersion}" Grid.Column="7"/>
-            <TextBlock Text="{Binding ABID}" Grid.Column="9"/>
+            <TextBlock Style="{DynamicResource TextBlockStyle}" Text="{Binding GUIVersion}" Grid.Column="3"/>
+            <TextBlock Style="{DynamicResource TextBlockStyle}" Text="{Binding MCUVersion}" Grid.Column="7"/>
+            <TextBlock Style="{DynamicResource TextBlockStyle}" Text="{Binding ABID}" Grid.Column="9"/>
         </Grid>
     </Grid>
 </Window>

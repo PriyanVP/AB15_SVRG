@@ -65,29 +65,6 @@
 
     <SolidColorBrush x:Key="ListViewItem.Background" Color="Transparent" />
 
-    <!--<Style TargetType="{x:Type Menu}">
-        <Setter Property="Background" Value="{DynamicResource Button.Background.StandBy}"/>
-
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{DynamicResource Button.Background.IsMouseOver}"/>
-            </Trigger>
-        </Style.Triggers>
-    </Style>
-
-    <Style TargetType="{x:Type MenuItem}">
-        <Setter Property="Background" Value="{DynamicResource Button.Background.StandBy}"/>
-
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{DynamicResource Button.Background.IsMouseOver}"/>
-            </Trigger>
-            <Trigger Property="IsPressed" Value="True">
-                <Setter Property="Background" Value="{DynamicResource Button.Background.IsPressed}"/>
-            </Trigger>
-        </Style.Triggers>
-    </Style>-->
-
     <BooleanToVisibilityConverter x:Key="btv" />
 
     <!-- style a top level menu item -->

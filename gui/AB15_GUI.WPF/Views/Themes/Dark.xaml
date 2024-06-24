@@ -7,8 +7,24 @@
     <Image x:Key="AscendingSortIco" Source="../Resources/sort_ascending_dark.png"/>
     <Image x:Key="DescendingSortIco" Source="../Resources/sort_descending_dark.png"/>
 
+    <BitmapImage x:Key="Ico.home" UriSource="../Resources/home_dark.png"/>
+    <BitmapImage x:Key="ico.config" UriSource="../Resources/config_dark.png"/>
+    <BitmapImage x:Key="Ico.sensor" UriSource="../Resources/sensor_dark.png"/>
+    <BitmapImage x:Key="Ico.whatchdog" UriSource="../Resources/watchdog_dark.png"/>
+    <BitmapImage x:Key="Ico.airbag" UriSource="../Resources/airbag_dark.png"/>
+    <BitmapImage x:Key="Ico.chip" UriSource="../Resources/chip_dark.png"/>
+    <BitmapImage x:Key="Ico.menu" UriSource="../Resources/menu_dark.png"/>
+    <BitmapImage x:Key="Ico.zoom" UriSource="../Resources/zoom_dark.png"/>
+    
     <!--All colors defines-->
     <SolidColorBrush x:Key="BackGroung" Color="#e4000000"/>
+
+    <SolidColorBrush x:Key="TopPanel.Background" Color="#141414"/>
+
+    <SolidColorBrush x:Key="BottonPanel.Background" Color="#141414"/>
+
+    <SolidColorBrush x:Key="Menu.Background" Color="#141414"/>
+    <SolidColorBrush x:Key="Menu.SeparateLine" Color="#282828"/>
 
     <SolidColorBrush x:Key="SeparateLine" Color="#f8ffffff"/>
 
@@ -39,10 +55,118 @@
     <SolidColorBrush x:Key="TextBox.MouseOver.Border" Color="#f8ffffff" />
     <SolidColorBrush x:Key="TextBox.Focus.Border" Color="#edeced" />
 
+    <SolidColorBrush x:Key="StatusBox.OK" Color="#50d050"/>
+    <SolidColorBrush x:Key="StatusBox.Error" Color="Red"/>
+    <SolidColorBrush x:Key="StatusBox.Warning" Color="Yellow"/>
+
+    <SolidColorBrush x:Key="Animation.Arrow" Color="#50d050"/>
+    <SolidColorBrush x:Key="Animation.Lines" Color="#f8ffffff"/>
+    
     <SolidColorBrush x:Key="ListView.Background" Color="Transparent" />
 
     <SolidColorBrush x:Key="ListViewItem.Background" Color="Transparent" />
 
+    <BooleanToVisibilityConverter x:Key="btv" />
+
+    <!-- style a top level menu item -->
+    <ControlTemplate x:Key="VsMenuTop" TargetType="MenuItem">
+        <StackPanel TextBlock.FontSize="20" Height="40">
+            <!-- label, icons, etc. -->
+            <Label Content="{TemplateBinding Header}" Foreground="{DynamicResource Foreground.Default}" />
+
+            <!-- sub items -->
+            <Popup IsOpen="{TemplateBinding IsSubmenuOpen}" AllowsTransparency="True" Focusable="False">
+                <Border BorderThickness="1" BorderBrush="{DynamicResource SeparateLine}" Background="{DynamicResource BackGroung}">
+                    <StackPanel IsItemsHost="True" />
+                </Border>
+            </Popup>
+
+            <StackPanel.Style>
+                <Style TargetType="StackPanel">
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver"  Value="True">
+                            <Setter Property="Background" Value="{DynamicResource Button.Background.IsMouseOver}" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </StackPanel.Style>
+        </StackPanel>
+    </ControlTemplate>
+
+    <!-- style a non-top level menu item -->
+    <ControlTemplate x:Key="VsMenuSub" TargetType="MenuItem">
+        <DockPanel TextBlock.FontSize="15px" x:Name="panel">
+            <!-- label, icons, etc. -->
+            <Label Content="{TemplateBinding Header}" Foreground="{DynamicResource Foreground.Default}"/>
+        </DockPanel>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsHighlighted" Value="True">
+                <Setter Property="Background" TargetName="panel" Value="{DynamicResource Button.Background.IsMouseOver}"/>
+
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <!-- some base stuff -->
+    <Style TargetType="{x:Type Menu}">
+        <Setter Property="Background" Value="{DynamicResource Button.Background.StandBy}" />
+    </Style>
+
+    <Style x:Key="MenuToggleButtonTemplate" TargetType="ToggleButton">
+
+        <Setter Property="Background" Value="{DynamicResource Button.Background.StandBy}"/>
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Border Background="{TemplateBinding Background}" 
+                            BorderThickness="0"
+                            BorderBrush="{DynamicResource TopPanel.Background}">
+                        <ContentPresenter HorizontalAlignment="Left"                  
+                                              VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource Button.Background.IsMouseOver}"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="{DynamicResource Button.Background.IsPressed}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="MenuButtons" TargetType="Button">
+        <Setter Property="Background" Value="{DynamicResource Button.Background.StandBy}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Margin" Value="0,1"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border Background="{TemplateBinding Background}">
+                        <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource Button.Background.IsMouseOver}"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="{DynamicResource Button.Background.IsPressed}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    
     <!--Default TextBox style define -->
     <Style TargetType="{x:Type TextBox}">
         <Setter Property="FontSize" Value="20"/>
