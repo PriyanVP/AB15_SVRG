@@ -92,7 +92,7 @@ typedef enum
 
     USB_CMD_IS_ALIVE                    = 1,                  /** \brief transaction to check if USB communication works */
     USB_CMD_SPI_INSTRUCTION             = 2,                  /** \brief execute SPI instruction with 16bit input data (send via payload) */
-//   USB_CMD_READ_DEV_ID                 = 3,                  /** \brief reads ASIC Device ID, reports error if unsuccessful */
+    USB_CMD_READ_DEV_ID                 = 3,                  /** \brief reads ASIC Device ID, reports error if unsuccessful */
 //    USB_CMD_READ_REG_RAW                = 4,                  /** \brief read single register, otput data in raw format, reports error if unsuccessful */
 //    USB_CMD_WRITE_REG_RAW               = 5,                  /** \brief write single register, otput data in raw format, reports error if unsuccessful */
 //    USB_CMD_ABORT                       = 6,                  /** \brief stops current operation TODO: clear definition of behavior */

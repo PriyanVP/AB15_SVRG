@@ -218,11 +218,12 @@ void core0_main(void)
                 CmdIsAlive(&cmdPackage);
                 break;
             case USB_CMD_SPI_INSTRUCTION:
-                CmdSpiInstuction(&cmdPackage);
+                //CmdSpiInstuction(&cmdPackage);
+                handleCmdInstr(&cmdPackage);
                 break;
-            //case USB_CMD_READ_DEV_ID:
-            // CmdReadReg(&cmdPackage);
-            //    break;
+            case USB_CMD_READ_DEV_ID:
+                getAsicDeviceId(&cmdPackage);
+                break;
             // case :
             //     break;
             // case :
