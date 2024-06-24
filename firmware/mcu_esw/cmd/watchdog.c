@@ -94,7 +94,7 @@ void CmdConfigureWatchdog(USBReceiveData const * const commandPackage)
 
     //TODO: JS: 17.6. bruteforce set to true to allow enable watchdog for test purpose +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     isSuccessfulFlag = TRUE;
-    //isSuccessfulFlag = QSPIWriteSequence(&(address), &(data), &length);
+    //isSuccessfulFlag = QSPIWriteSequence(&(address), &(data), &length); // TODO: configuration, not yet implemented; not available for AB12
 
     // Prepare report for GUI
     USBTransmitData packageToSend;
@@ -258,7 +258,7 @@ void CmdStartWatchdog(USBReceiveData const * const commandPackage)
         address = WD_RESP_ADDRESS;
         length = 1;
         data = GetResponseWord(0, 0);
-        //QSPIWriteSequence(&address, &data, &length);
+        //QSPIWriteSequence(&address, &data, &length);  // TODO: handling ASIC communication for watchdog, not implemented
         //QSPIWriteSequence(&address, &data, &length);
 
         // Configure periodicity of Watchdog serving MCU interrupt

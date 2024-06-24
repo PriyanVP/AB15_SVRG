@@ -67,7 +67,7 @@ IFX_ALIGN(4) IfxCpu_syncEvent g_cpuSyncEvent = 0;
 #define WAIT_TIME 2   /*mseconds */
 
 /** \brief Watchdog interrupt routine
- * Arms single acknowledgement of CS600 watchdog
+ * Arms single acknowledgement of ASIC watchdog
  */
 void WatchdogInterruptRoutine(void)
 {
@@ -76,7 +76,7 @@ void WatchdogInterruptRoutine(void)
     serveWatchdogCommand.command = INT_CMD_ACK_WATCHDOG;
     serveWatchdogCommand.dataLength = 0;
     // Add WD serving internal command to command queue
-    //QueueWriteTail(&serveWatchdogCommand);
+    //QueueWriteTail(&serveWatchdogCommand);    // TODO: commented out to have MCU contained WD routine. Uncomment for actual communication with ASIC
     ToggleLED2();
 }
 

@@ -53,7 +53,7 @@ extern void WatchdogInterruptRoutine(void);
 //extern void GPIOInterruptRoutine(void);
 //
 ///** \brief General timer interrupt routine
-// * Implements timers for CS600 watchdog, error check and continuous read
+// * Implements timers for ASIC watchdog, error check and continuous read
 // *
 // * \return Returns nothing
 // */
@@ -246,7 +246,7 @@ void UpdateTimersRoutine(void)
 
     if ((g_errorCheckEnable == TRUE) && (errorCheckCounter >= g_errorCheckReload))
     {
-        // Continuous CS600 error check
+        // Continuous ASIC error check
         errorCheckCounter = 0;
         //ErrorCheckInterruptRoutine();
     }

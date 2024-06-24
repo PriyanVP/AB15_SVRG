@@ -37,6 +37,7 @@
 #include "top/usb_wrapper.h"
 #include "top/version.h"
 #include "periphery/led.h"
+#include "general_cmd.h"
 /*********************************************************************************************************************/
 /*------------------------------------------------------Macros-------------------------------------------------------*/
 /*********************************************************************************************************************/
@@ -142,7 +143,7 @@ void CmdWriteReg(USBReceiveData const * const commandPackage)
         // Check if SPI response frame was received
         if (length > 0)
         {
-            // Fill data in error frame with invalid response from CS600
+            // Fill data in error frame with invalid response from ASIC
             packageToSend.dataLength = 4;
             packageToSend.data[0] = GetByteByIdx(0, data);
             packageToSend.data[1] = GetByteByIdx(1, data);
@@ -197,7 +198,7 @@ void CmdSpiInstuction(USBReceiveData const * const commandPackage)
         // Check if SPI response frame was received
         if (length > 0)
         {
-            // Fill data in error frame with invalid response from CS600
+            // Fill data in error frame with invalid response from ASIC
             packageToSend.dataLength = 4;
             packageToSend.data[0] = GetByteByIdx(0, data);
             packageToSend.data[1] = GetByteByIdx(1, data);
@@ -254,7 +255,7 @@ void CmdWriteRegRaw(USBReceiveData const * const commandPackage)
         // Check if SPI response frame was received
         if (length > 0)
         {
-            // Fill data in error frame with invalid response from CS600
+            // Fill data in error frame with invalid response from ASIC
             packageToSend.dataLength = 4;
             packageToSend.data[0] = GetByteByIdx(0, data);
             packageToSend.data[1] = GetByteByIdx(1, data);
@@ -306,7 +307,7 @@ void CmdReadRegRaw(USBReceiveData const * const commandPackage)
         // Check if SPI response frame was received
         if (length > 0)
         {
-            // Fill data in error frame with invalid response from CS600
+            // Fill data in error frame with invalid response from ASIC
             packageToSend.dataLength = 4;
             packageToSend.data[0] = GetByteByIdx(0, data);
             packageToSend.data[1] = GetByteByIdx(1, data);
