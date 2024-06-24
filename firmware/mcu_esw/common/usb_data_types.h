@@ -42,9 +42,9 @@
 #define USB_MSG_ID_LENGTH               (1)                          /** \brief msg id length in bytes                  */
 #define USB_ASIC_ID_LENGTH              (1)                          /** \brief ASIC id length in bytes                 */
 #define USB_CMD_LENGTH                  (1)                          /** \brief USB command length in bytes             */
-#define USB_PAYLOADLEN_LENGTH           (1)                             /** \brief lenghth of the "payload lenght" information itself in bytes          */
+#define USB_PAYLOADLEN_LENGTH           (1)                          /** \brief lenghth of the "payload lenght" information itself in bytes          */
 #define USB_CRC_LENGTH                  (1)                          /** \brief USB crc length in bytes                 */
-#define USB_STOPBYTE_LENGTH              (1)                          /** \brief USB Endbyte length in bytes             */
+#define USB_STOPBYTE_LENGTH             (1)                          /** \brief USB Endbyte length in bytes             */
 
 #define MAX_USB_RECIEVE_PAYLOAD_LENGTH  (64)                         /** \brief Max USB payload length in bytes          */
 #define MAX_USB_TRANSMIT_PAYLOAD_LENGTH (128)                        /** \brief Max USB payload length in bytes          */
@@ -57,7 +57,7 @@
                                          USB_PAYLOADLEN_LENGTH + \
                                          MAX_USB_TRANSMIT_PAYLOAD_LENGTH + \
                                          USB_CRC_LENGTH + \
-                                         USB_STOPBYTE_LENGTH)         /** \brief Max USB package length in bytes */
+                                         USB_STOPBYTE_LENGTH)        /** \brief Max USB package length in bytes */
 
 
 #define MIN_USB_MSG_LENGTH              (USB_STARTBYTE_LENGTH + \
@@ -67,7 +67,7 @@
                                          USB_PAYLOADLEN_LENGTH + \
                                          MIN_USB_TRANSMIT_PAYLOAD_LENGTH + \
                                          USB_CRC_LENGTH + \
-                                         USB_STOPBYTE_LENGTH)         /** \brief Min USB message length in bytes          */
+                                         USB_STOPBYTE_LENGTH)        /** \brief Min USB message length in bytes          */
 
 #define USB_STARTBYTE_POS               (0)                          /** \brief USB Start Byte field position in package     */
 #define USB_MSG_ID_POS                  (1)                          /** \brief USB MSG_ID field position in package     */
@@ -83,7 +83,7 @@
 /*--------------------------------------------------Enumerations---------------------------------------------------------*/
 /*************************************************************************************************************************/
 
-/** \brief Defines applicable commands for received USB data
+/** \brief Defines applicable commands for received USB data TODO: needs clean up, removel of unused commands, updating comments
  * Includes min and max command
  */
 typedef enum

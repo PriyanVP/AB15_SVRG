@@ -282,6 +282,7 @@ boolean QSPIReadWriteSequence(const uint16 * const addressBuffer, uint32 * const
 
     // Execute series of SPI transactions
 
+    // TODO: code for removal
 #ifdef CS600
     /* CS 600 needs two write/read sequence, first seq initiaztes request, second collects data*/
     for (uint16 i = 0; i < numberOfFrames + 1; i++)
@@ -315,7 +316,7 @@ boolean QSPIReadWriteSequence(const uint16 * const addressBuffer, uint32 * const
         // Execute SPI transaction exchange
         QSPIExchangeData(&dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
 
-
+   // TODO: code for removal
 #ifdef CS600
         // CS600: Ignore response for first transaction
         /*TCD 6.12.1.The SPI protocol supported by the CS600 uses an out-of-frame transfer. Register read data is provided

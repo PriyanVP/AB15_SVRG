@@ -125,6 +125,8 @@ length = start_bit_crc - end_bit_crc + 1 + leading_zeros // we iterate trough nu
 
 
  * */
+// TODO: should be refactored to generic CRC3 algorithm (for arbitrary bit width of input)
+// TODO: different wrappers for in and out communication to be provided on top level (crc_wrapper)
 uint8 CRC3MO(const uint32 buffer)
 {
     volatile uint32 mod_buffer = 0;// prvent optimizing out
@@ -160,7 +162,7 @@ uint8 CRC3MO(const uint32 buffer)
     crc = 0x07;
 
     // calculate CRC as in specification
-    // CRC polynomial: x^3 + x + 1 --> 1*x^3 + 0* x^2 + 1*x^1 1*x^0 --> poly = 1011
+    // CRC polynomial: x^3 + x + 1 --> 1*x^3 + 0* x^2 + 1*x^1 + 1*x^0 --> poly = 1011
     // - process bits from start_bit_crc  to end_bit_crc, MSb first
     // - XOR bits according to polynomial
     for (sint8 i = start_bit_crc; i >= loop_end ; i--)
@@ -181,6 +183,8 @@ uint8 CRC3MO(const uint32 buffer)
     return crc;
 }
 
+// TODO: should be refactored to generic CRC3 algorithm (for arbitrary bit width of input)
+// TODO: different wrappers for in and out communication to be provided on top level (crc_wrapper)
 uint8 CRC3MI(const uint32 buffer)
 {
     volatile uint32 mod_buffer = 0;// prvent optimizing out
