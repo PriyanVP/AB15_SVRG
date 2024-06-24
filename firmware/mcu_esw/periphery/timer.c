@@ -47,17 +47,17 @@
 /*********************************************************************************************************************/
 
 //extern void ServiceInterruptRoutine(void);
-//extern void WatchdogInterruptRoutine(void);
+extern void WatchdogInterruptRoutine(void);
 //extern void ErrorCheckInterruptRoutine(void);
 //extern void ContinuousReadInterruptRoutine(void);
 //extern void GPIOInterruptRoutine(void);
 //
 ///** \brief General timer interrupt routine
-// * Implements timers for CS600 watchdog, error check and continuous read
+// * Implements timers for ASIC watchdog, error check and continuous read
 // *
 // * \return Returns nothing
 // */
-//void UpdateTimersRoutine(void);
+void UpdateTimersRoutine(void);
 //
 ///** \brief Service timer interrupt routine wrapper - calls service interrupt routine function
 // * Required for correct interrupt handling
@@ -241,12 +241,12 @@ void UpdateTimersRoutine(void)
     {
         // Watchdog acknowledge
         watchdogCounter = 0;
-        //WatchdogInterruptRoutine();
+        WatchdogInterruptRoutine();
     }
 
     if ((g_errorCheckEnable == TRUE) && (errorCheckCounter >= g_errorCheckReload))
     {
-        // Continuous CS600 error check
+        // Continuous ASIC error check
         errorCheckCounter = 0;
         //ErrorCheckInterruptRoutine();
     }
@@ -269,5 +269,6 @@ void UpdateTimersRoutine(void)
 void ServiceTimerRoutineWrapper(void)
 {
     // Call interrupt routine function from other file
+    //TODO. Inhibited
     //ServiceInterruptRoutine();
 }
