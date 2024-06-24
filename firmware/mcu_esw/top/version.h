@@ -1,69 +1,44 @@
-/*
- * version.h
+/**********************************************************************************************************************
+ * \file version.h
+ * \copyright Copyright (C) RobertBosch GmbH
  *
- *  Created on: 10.6.2024
- *  Author: Jan
- */
+ * License Info: build time and date Macros out of
+ * https://stackoverflow.com/questions/11697820/how-to-use-date-and-time-predefined-macros-in-as-two-integers-then-stri
+ *
+ *
+ *
+ *
+ *
+ *********************************************************************************************************************/
 
 #ifndef VERSION_H_
 #define VERSION_H_
 
+/*********************************************************************************************************************/
+/*------------------------------------------------------Macros-------------------------------------------------------*/
+/*********************************************************************************************************************/
+
+// Example of usage:
+// printf("Version %s.%s.%s\n",VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH);
 
 #define VERSION_MAJOR '0'
 #define VERSION_MINOR '1'
 #define VERSION_PATCH '5'
 
-/*
 
- version
- 0.0.0
-    initial version derived from CS 600
-
-0.0.1
-    hacked some stuff to understand code
-
-0.0.2
-    created initial version to reply to PC
-
-
-
-
-0.1.2
-    - added 1hz blinking for LED1
-    - added USB_CMD_GET_MCU_VERSION             = 26,                  returns MCU SW version and build date
-
-0.1.3
-    - cleaned up main
-    - renamed some USB commands
-    - renamed CmdReadReg to more saying command
-
-0.1.4
-    - implemented
-        - USB_CMD_GET_MCU_VERSION              = 26,   //brief returns MCU SW version "V0.1.2"
-        - USB_CMD_GET_MCU_BUILD_DATE           = 27,  //brief returns MCU SW build date "mm.dd.jjj"
-        - USB_CMD_GET_MCU_BUILD_TIME           = 28,  //brief returns MCU SW build time like "hh:mm"
-    created interface Excel:
-    https://bosch.sharepoint.com/:x:/r/sites/msteams_7875996-PAC-IC-Airbag15DemoSWDevTeam/_layouts/15/Doc.aspx?sourcedoc=%7B9BB641AD-E116-4EC4-803F-113BAD0952D8%7D&file=AB_protocol_description.xlsx&action=default&mobileredirect=true
-
-0.1.5
-  - added ASIC ID in pos
-  -  change USB_CMD_GET_MCU_BUILD_DATE according  https://rb-tracker.bosch.com/tracker19/browse/ABEVBSW-77 Hoefflinger Jens (ME/PJ-SW3) added a comment - 2024-06-13 08:42 to yyyy-mm-dd
-
-
- */
-
-
-
-
-
+// full string macros, Example of usage:
+//    printf("build: %s ", BUILD_DATE);
+//    printf("at %s \n", BUILD_TIME);
 #define BUILD_DATE (__DATE__)
 #define BUILD_TIME (__TIME__)
 
+// creating single chargs for year
 #define BUILD_YEAR_CH0 (__DATE__[ 7])
 #define BUILD_YEAR_CH1 (__DATE__[ 8])
 #define BUILD_YEAR_CH2 (__DATE__[ 9])
 #define BUILD_YEAR_CH3 (__DATE__[10])
 
+// compiler month handling due to mixed upper / lowercase
 #define BUILD_MONTH_IS_JAN (__DATE__[0] == 'J' && __DATE__[1] == 'a' && __DATE__[2] == 'n')
 #define BUILD_MONTH_IS_FEB (__DATE__[0] == 'F')
 #define BUILD_MONTH_IS_MAR (__DATE__[0] == 'M' && __DATE__[1] == 'a' && __DATE__[2] == 'r')
@@ -77,6 +52,7 @@
 #define BUILD_MONTH_IS_NOV (__DATE__[0] == 'N')
 #define BUILD_MONTH_IS_DEC (__DATE__[0] == 'D')
 
+//building decimals from month
 #define BUILD_MONTH_CH0 \
       ((BUILD_MONTH_IS_OCT || BUILD_MONTH_IS_NOV || BUILD_MONTH_IS_DEC) ? '1' : '0')
 
@@ -100,8 +76,12 @@
 #define BUILD_DAY_CH0 ((__DATE__[4] >= '0') ? (__DATE__[4]) : '0')
 #define BUILD_DAY_CH1 (__DATE__[ 5])
 
-// Example of __TIME__ string: "21:06:19"
-//                              01234567
+// Example of usage:
+//  const char shortDate[] = {BUILD_DAY_CH0, BUILD_DAY_CH1,'.',BUILD_MONTH_CH0, BUILD_MONTH_CH1,'.',BUILD_YEAR_CH2, BUILD_YEAR_CH3,'\0'};
+//  can return something like: "24.06.24"
+//
+//  const char shortTime[] = {BUILD_HOUR_CH0, BUILD_HOUR_CH1,':',BUILD_MIN_CH0, BUILD_MIN_CH1,'\0'};
+//  can give  "21:06"
 
 #define BUILD_HOUR_CH0 (__TIME__[0])
 #define BUILD_HOUR_CH1 (__TIME__[1])
