@@ -89,7 +89,7 @@ public class SerialComm : ISerialComm
         if (detectedPortNumber is null)
         {
             // Automatic connection was unsuccesfull, report in StatusPanel and log window
-            logger.Warn($"Automatic port detect doesn't found MCU");
+            logger.Warn($"Automatic port detect hasn't found MCU");
             return false;
         }
 

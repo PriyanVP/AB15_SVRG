@@ -93,7 +93,7 @@ void StopServiceTimer(void);
  */
 void StopGeneralTimer(void);
 
-/** \brief Configure CS600 watchdog acknowledge periodicity
+/** \brief Configure ASIC watchdog acknowledge periodicity
  * Periodicity is defined in number of General timer interrupts
  *
  * \param watchdogPeriodicity periodicity of reading chunks of data
@@ -104,7 +104,7 @@ void ConfigureWatchdogPeriodicity(uint16 watchdogPeriodicity);
 /** \brief Configure error check periodicity
  * Periodicity is defined in number of General timer interrupts
  *
- * \param errorCheckPeriodicity periodicity of reading error registers in CS600
+ * \param errorCheckPeriodicity periodicity of reading error registers in ASIC
  * \return Returns nothing
  */
 void ConfigureErrorCheckPeriodicity(uint16 errorCheckPeriodicity);

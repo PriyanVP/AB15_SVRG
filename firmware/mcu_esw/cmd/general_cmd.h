@@ -49,24 +49,24 @@
  */
 void CmdIsAlive(USBReceiveData const * const commandPackage);
 
-/** \brief Handling GET MCU VESRION  command from PC
+/** \brief Handling GET MCU VERSION  command from PC
  *
  * \param commandPackage package with command, command not used
- * \return Version and build date
+ * \returns 3 bytes for current Version VERSION_MAJOR VERSION_MINOR VERSION_PATCH
  */
 void CmdGetMcuVersion(USBReceiveData const * const commandPackage);
 
 /** \brief Handling GET MCU DATE  command from PC
  *
  * \param commandPackage package with command, command not used
- * \return Version and build date
+ * \return 8 byte build date yyyymmdd
  */
 void CmdGetMcuBuildDate(USBReceiveData const * const commandPackage);
 
 /** \brief Handling GET MCU TIME  command from PC
  *
  * \param commandPackage package with command, command not used
- * \return Version and build date
+ * \return 4 byte build time hhmm
  */
 void CmdGetMcuBuildTime(USBReceiveData const * const commandPackage);
 
@@ -77,10 +77,10 @@ void CmdGetMcuBuildTime(USBReceiveData const * const commandPackage);
  */
 void CmdWriteReg(USBReceiveData const * const commandPackage);
 
-/** \brief Handling READ_REG command from PC
+/** \brief Handling USB_CMD_SPI_INSTRUCTION command from PC
  *
- * \param commandPackage package with command
- * \return Nothing
+ * \param commandPackage package with spi_instruction and 16bit input data
+ * \returns status flags and 16 bit output data
  */
 void CmdSpiInstuction(USBReceiveData const * const commandPackage);
 

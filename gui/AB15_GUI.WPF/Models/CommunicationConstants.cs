@@ -79,7 +79,7 @@ public enum MCUStatus
     BUSY                    = 132,             /** \brief MCU is busy processing previous command TODO: check if required */
     DATA                    = 133,             /** \brief response to read or read/write transaction (also works for transactions including such behaviour) */
 
-    RESPONCE_ABSENT         = 134,             /** \brief response from MCU hasn't been received in expected timeframe */
+    RESPONSE_ABSENT         = 134,             /** \brief response from MCU hasn't been received in expected timeframe */
 
     _STATUS_MAX             = 255              /** \brief maximal value of command (not included) */
 }

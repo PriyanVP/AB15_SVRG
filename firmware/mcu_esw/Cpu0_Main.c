@@ -66,6 +66,19 @@ IFX_ALIGN(4) IfxCpu_syncEvent g_cpuSyncEvent = 0;
 
 #define WAIT_TIME 2   /*mseconds */
 
+/** \brief Watchdog interrupt routine
+ * Arms single acknowledgement of ASIC watchdog
+ */
+void WatchdogInterruptRoutine(void)
+{
+    // Watchdog serving is an internal command
+    USBReceiveData serveWatchdogCommand;
+    serveWatchdogCommand.command = INT_CMD_ACK_WATCHDOG;
+    serveWatchdogCommand.dataLength = 0;
+    // Add WD serving internal command to command queue
+    //QueueWriteTail(&serveWatchdogCommand);    // TODO: commented out to have MCU contained WD routine. Uncomment for actual communication with ASIC
+    ToggleLED2();
+}
 
 
 
@@ -115,12 +128,10 @@ void core0_main(void)
     InitGpt12Timer();
 
     // Start service irq
-    // JS: 19.4.2024 inhibit timers for not interrupt debugging
-    //StartServiceTimer();
+    StartServiceTimer();
 
     // Start general timer
-    //JS: 19.4.2024 inhibit for better debugging
-    //StartGeneralTimer();
+    StartGeneralTimer();
 
     // Local temporary variable for receiving data
     USBReceiveData receivedPackage;
@@ -138,50 +149,13 @@ void core0_main(void)
 
        if(GetButtonState())
        {
-           OnLED2();
+           //OnLED2();
 
-//           buffer_new = 0xF8000007;// shall produce same as 000000
-//
-//           debug_ret =  CRC3MI(buffer_new);
-//
-//           QSPIWriteFast(WD_CONFIG0_ADDRESS , debug_ret);
-//
-//           buffer_new = 0x00000000; // shall produce 7
-//
-//           debug_ret =  CRC3MI(buffer_new);
-//
-//           buffer_new = 0x00AABB00; // shall produce 5
-//
-//           debug_ret =  CRC3MI(buffer_new);
 
-//            QSPIWriteFast(WD_CONFIG0_ADDRESS , debug_counter);
-//
-//               /*Initialize temporary variables*/
-//               uint8 buffer[10];
-//               Ifx_SizeT itemCounter = 0;
-//
-//               // Fill buffer with package
-//               buffer[itemCounter] = 0x40;             /* Start package byte  */
-//               itemCounter++;
-//               buffer[itemCounter] = 0x41;             /* Start package byte  */
-//               itemCounter++;
-//               buffer[itemCounter] = 0x31;             /* Start package byte  */
-//               itemCounter++;
-//               buffer[itemCounter] = 0x35;             /* Start package byte  */
-//               itemCounter++;
-//               buffer[itemCounter] = 0x20;             /* Start package byte  */
-//               itemCounter++;
-//               buffer[itemCounter] = (uint8)debug_counter;             /* Start package byte  */
-//               itemCounter++;
-//               buffer[itemCounter] = 0x20;             /* Start package byte  */
-//               itemCounter++;
-//
-//           SendUSBData(buffer, &itemCounter);
-//           debug_counter++;
        }
        else
        {
-           OffLED2();
+          // OffLED2();
        }
 
         // wait for 2ms for next polling
@@ -232,18 +206,35 @@ void core0_main(void)
             //     break;
             // case :
             //     break;
-            case USB_CMD_GET_MCU_VERSION:
+            case USB_CMD_GET_CONFIG_WATCHDOG:
+                CmdGetConfigWatchdog(&cmdPackage);
+                break;
+            case USB_CMD_CONFIGURE_WATCHDOG:
+                CmdConfigureWatchdog(&cmdPackage);
+                break;
+            case USB_CMD_START_WATCHDOG:
+                CmdStartWatchdog(&cmdPackage);
+                break;
+
+           case USB_CMD_STOP_WATCHDOG:
+                CmdStopWatchdog(&cmdPackage);
+                break;
+
+           case USB_CMD_GET_MCU_VERSION:
                 CmdGetMcuVersion(&cmdPackage);
                 break;
-            case USB_CMD_GET_MCU_BUILD_DATE:
+
+           case USB_CMD_GET_MCU_BUILD_DATE:
                 CmdGetMcuBuildDate(&cmdPackage);
                 break;
-            case USB_CMD_GET_MCU_BUILD_TIME:
+
+           case USB_CMD_GET_MCU_BUILD_TIME:
                 CmdGetMcuBuildTime(&cmdPackage);
                 break;
 
 
-            case _USB_CMD_MAX:
+
+           case _USB_CMD_MAX:
                 break;
             default :
                 break;

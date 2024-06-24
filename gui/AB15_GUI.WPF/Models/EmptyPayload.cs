@@ -36,9 +36,9 @@ namespace AB15_GUI.WPF.Models
                     payload = rawData.Slice(SerialPackageConstants.PayloadPosition, rawData.ElementAt(SerialPackageConstants.PayloadLengthPosition));
                     Error = $"Message with error status received: ASIC ID {asicID} Payload {string.Join(" ", payload)}";
                     break;
-                case MCUStatus.RESPONCE_ABSENT:
+                case MCUStatus.RESPONSE_ABSENT:
                     // Error handling -> store data to property
-                    Error = $"Message with responce from MCU wasn't received in expected timeframe.";
+                    Error = $"Message with response from MCU wasn't received in expected timeframe.";
                     break;
                 case MCUStatus.ACK:
                     // empty
