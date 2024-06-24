@@ -14,7 +14,7 @@ namespace AB15_GUI.WPF.Services;
 public class Waitlist : IWaitlist
 {
     /// <summary>
-    /// Time span during which responce can be received
+    /// Time span during which response can be received
     /// </summary>
     private const int ItemTimeOfLife = 5;
 

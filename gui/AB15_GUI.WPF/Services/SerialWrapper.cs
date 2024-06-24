@@ -135,7 +135,7 @@ public class SerialWrapper : IDisposable, ISerialWrapper
         // Package for delegate i
         Type type = typeof(ReceiveCommunicationPackage<>).MakeGenericType(typeof(EmptyPayload));
         IReceiveCommunicationPackage tmpReceivedPackage = (IReceiveCommunicationPackage)Activator.CreateInstance(type);
-        tmpReceivedPackage!.Status = MCUStatus.RESPONCE_ABSENT;
+        tmpReceivedPackage!.Status = MCUStatus.RESPONSE_ABSENT;
 
         // Run removal of outdated packages
         List<Action<IReceiveCommunicationPackage>> removedItemsDelegates = _responseWaitlist.RemoveOutdatedItems();

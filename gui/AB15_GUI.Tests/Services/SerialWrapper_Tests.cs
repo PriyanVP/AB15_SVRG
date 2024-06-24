@@ -84,7 +84,7 @@ namespace AB15_GUI.Tests.Services
             Assert.That(waitlist.WaitlistItems.First().payloadType, Is.EqualTo(typeof(ByteListSeializableMock)));
         }
 
-        [TestCaseSource(nameof(ValidReceiveTestCases)), Description("Checking that valid responces are invoked by delegates")]
+        [TestCaseSource(nameof(ValidReceiveTestCases)), Description("Checking that valid responses are invoked by delegates")]
         [NonParallelizable]
         public void WhenValidPackageIsReceived_ThenCorrectDelegateIsInvoked(List<byte> expectedPackage)
         {
@@ -127,7 +127,7 @@ namespace AB15_GUI.Tests.Services
         }
 
         // // TODO: investigate. Current test is failing if logger is invoked. Issue seems to be in App.Current.Dispatcher usage. Manual tests work fine
-        // [TestCaseSource(nameof(InvalidReceiveTestCases)), Description("Checking that invalid responces are not invoked")]
+        // [TestCaseSource(nameof(InvalidReceiveTestCases)), Description("Checking that invalid responses are not invoked")]
         // [NonParallelizable]
         // public async Task WhenInvalidPackageIsReceived_ThenItNotPassesValidation(List<byte> inPackage)
         // {
