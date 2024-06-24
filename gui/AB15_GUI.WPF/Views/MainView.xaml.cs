@@ -22,5 +22,18 @@ namespace AB15_GUI.WPF.Views
         {
             InitializeComponent();
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            if (animationTest1.IsAnimationEnabled == true)
+            {
+                animationTest1.IsAnimationEnabled = false;
+            }
+            else
+            {
+                animationTest1.IsAnimationEnabled = true;
+            }
+
+        }
     }
 }

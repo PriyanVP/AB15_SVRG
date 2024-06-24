@@ -9,76 +9,101 @@
              d:DesignHeight="40" d:DesignWidth="40"
              x:Name="TestAnimationRev2">
     <UserControl.Resources>
+        <!--Animation set-up-->
         <Storyboard  x:Key="TestAnimation1" RepeatBehavior="Forever">
             <DoubleAnimation
-                Storyboard.TargetName="spark1"
+                Storyboard.TargetName="Fly11"
                 Storyboard.TargetProperty="(Canvas.Top)"
                 From="30" To="20"
                 Duration="0:0:1"
                 AutoReverse="False"/>
             <DoubleAnimation
-                Storyboard.TargetName="spark3"
+                Storyboard.TargetName="Fly12"
                 Storyboard.TargetProperty="(Canvas.Top)"
                 From="20" To="10"
                 Duration="0:0:1"
                 AutoReverse="False"/>
             <DoubleAnimation
-                Storyboard.TargetName="spark5"
+                Storyboard.TargetName="Fly13"
                 Storyboard.TargetProperty="(Canvas.Top)"
                 From="10" To="0"
                 Duration="0:0:1"
                 AutoReverse="False"/>
             <DoubleAnimation
-                Storyboard.TargetName="spark7"
+                Storyboard.TargetName="Fly14"
                 Storyboard.TargetProperty="(Canvas.Top)"
                 From="0" To="-10"
                 Duration="0:0:1"
                 AutoReverse="False"/>
-            
-            <DoubleAnimation
-                Storyboard.TargetName="spark2"
-                Storyboard.TargetProperty="(Canvas.Top)"
-                From="-15" To="30"
-                Duration="0:0:1"
-                AutoReverse="False"/>
+
 
             <DoubleAnimation
-                Storyboard.TargetName="spark4"
+                Storyboard.TargetName="Fly21"
                 Storyboard.TargetProperty="(Canvas.Top)"
-                From="-15" To="30"
+                To="30" From="20"
                 Duration="0:0:1"
                 AutoReverse="False"/>
-
+            <DoubleAnimation
+                Storyboard.TargetName="Fly22"
+                Storyboard.TargetProperty="(Canvas.Top)"
+                To="20" From="10"
+                Duration="0:0:1"
+                AutoReverse="False"/>
+            <DoubleAnimation
+                Storyboard.TargetName="Fly23"
+                Storyboard.TargetProperty="(Canvas.Top)"
+                To="10" From="0"
+                Duration="0:0:1"
+                AutoReverse="False"/>
+            <DoubleAnimation
+                Storyboard.TargetName="Fly24"
+                Storyboard.TargetProperty="(Canvas.Top)"
+                To="0" From="-10"
+                Duration="0:0:1"
+                AutoReverse="False"/>
         </Storyboard>
     </UserControl.Resources>
-    <UserControl.Triggers>
-        <EventTrigger RoutedEvent="Window.Loaded">
-            <BeginStoryboard Storyboard="{StaticResource TestAnimation1}"/>
-        </EventTrigger>
-    </UserControl.Triggers>
+
     <Grid>
+        
+        <!--Define zones for data flow-->
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" MinWidth="5"/>
-            <ColumnDefinition Width="8"/>
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="8"/>
+            <ColumnDefinition Width="10"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="10"/>
             <ColumnDefinition Width="1*" MinWidth="5"/>
         </Grid.ColumnDefinitions>
+        
+        <!--Borders for data flow-->
         <Border Grid.Column="0" BorderThickness="0,0,1,0" BorderBrush="{Binding BorderColor, ElementName=TestAnimationRev2}"/>
         <Border Grid.Column="2" BorderThickness="1,0,1,0" BorderBrush="{Binding BorderColor, ElementName=TestAnimationRev2}"/>
         <Border Grid.Column="5" BorderThickness="1,0,0,0" BorderBrush="{Binding BorderColor, ElementName=TestAnimationRev2}"/>
         
-        <Canvas Grid.Column="1" Grid.ColumnSpan="3">
-            <local:animatedDataFly x:Name="spark1" Canvas.Left="0" FillColor="{Binding SparkColor}" HorizontalAlignment="Center"/>
-            <local:animatedDataFly x:Name="spark2" Canvas.Right="0" FillColor="{Binding SparkColor}" HorizontalAlignment="Center" ScaleY="-1"/>
-
-            <local:animatedDataFly x:Name="spark3" Canvas.Left="0" FillColor="{Binding SparkColor}" HorizontalAlignment="Center"/>
-
-            <local:animatedDataFly x:Name="spark5" Canvas.Left="0" FillColor="{Binding SparkColor}" HorizontalAlignment="Center"/>
-
-            <local:animatedDataFly x:Name="spark7" Canvas.Left="0" FillColor="{Binding SparkColor}" HorizontalAlignment="Center"/>
-            
-            <local:animatedDataFly x:Name="spark4" Canvas.Right="0" Canvas.Bottom="0" FillColor="{Binding SparkColor}" HorizontalAlignment="Center" ScaleY="-1"/>
+        <!--Arrows that represent data-->
+        <Canvas Grid.Column="1" x:Name="AnimationCanvas1">
+            <local:DataArrow x:Name="Fly11" Canvas.Left="0" Canvas.Top="-10"
+                                    FillColor="{Binding FlyColor, ElementName=TestAnimationRev2}" HorizontalAlignment="Center"/>
+            <local:DataArrow x:Name="Fly12" Canvas.Left="0" Canvas.Top="-10"
+                                    FillColor="{Binding FlyColor, ElementName=TestAnimationRev2}" HorizontalAlignment="Center"/>
+            <local:DataArrow x:Name="Fly13" Canvas.Left="0" Canvas.Top="-10"
+                                    FillColor="{Binding FlyColor, ElementName=TestAnimationRev2}" HorizontalAlignment="Center"/>
+            <local:DataArrow x:Name="Fly14" Canvas.Left="0" Canvas.Top="-10"
+                                    FillColor="{Binding FlyColor, ElementName=TestAnimationRev2}" HorizontalAlignment="Center"/>
         </Canvas>
+        
+        <!--Arrows that represent data-->
+        <Canvas Grid.Column="3" x:Name="AnimationCanvas2">
+
+            <local:DataArrow x:Name="Fly21" Canvas.Right="0" Canvas.Top="-10"
+                                    FillColor="{Binding FlyColor, ElementName=TestAnimationRev2}" HorizontalAlignment="Center" ScaleY="-1"/>
+            <local:DataArrow x:Name="Fly22" Canvas.Right="0" Canvas.Top="-10"
+                                    FillColor="{Binding FlyColor, ElementName=TestAnimationRev2}" HorizontalAlignment="Center" ScaleY="-1"/>
+            <local:DataArrow x:Name="Fly23" Canvas.Right="0" Canvas.Top="-10"
+                                    FillColor="{Binding FlyColor, ElementName=TestAnimationRev2}" HorizontalAlignment="Center" ScaleY="-1"/>
+            <local:DataArrow x:Name="Fly24" Canvas.Right="0" Canvas.Top="-10"
+                                    FillColor="{Binding FlyColor, ElementName=TestAnimationRev2}" HorizontalAlignment="Center" ScaleY="-1"/>
+        </Canvas>
+
     </Grid>
 </UserControl>

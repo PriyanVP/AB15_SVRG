@@ -8,70 +8,7 @@
         mc:Ignorable="d"
         Title="Bosch AB15" Height="650" Width="1000"
         Icon="Resources/bosch.ico">
-    <Window.Resources>
-
-        <Storyboard  x:Key="TestAnimation1" RepeatBehavior="Forever">
-            <DoubleAnimation
-                Storyboard.TargetName="spark11"
-                Storyboard.TargetProperty="(Canvas.Top)"
-                From="30" To="20"
-                Duration="0:0:1"
-                AutoReverse="False"/>
-            <DoubleAnimation
-                Storyboard.TargetName="spark12"
-                Storyboard.TargetProperty="(Canvas.Top)"
-                From="20" To="10"
-                Duration="0:0:1"
-                AutoReverse="False"/>
-            <DoubleAnimation
-                Storyboard.TargetName="spark13"
-                Storyboard.TargetProperty="(Canvas.Top)"
-                From="10" To="0"
-                Duration="0:0:1"
-                AutoReverse="False"/>
-            <DoubleAnimation
-                Storyboard.TargetName="spark14"
-                Storyboard.TargetProperty="(Canvas.Top)"
-                From="0" To="-10"
-                Duration="0:0:1"
-                AutoReverse="False"/>
-
-
-            <DoubleAnimation
-                Storyboard.TargetName="spark21"
-                Storyboard.TargetProperty="(Canvas.Top)"
-                To="30" From="20"
-                Duration="0:0:1"
-                AutoReverse="False"/>
-            <DoubleAnimation
-                Storyboard.TargetName="spark22"
-                Storyboard.TargetProperty="(Canvas.Top)"
-                To="20" From="10"
-                Duration="0:0:1"
-                AutoReverse="False"/>
-            <DoubleAnimation
-                Storyboard.TargetName="spark23"
-                Storyboard.TargetProperty="(Canvas.Top)"
-                To="10" From="0"
-                Duration="0:0:1"
-                AutoReverse="False"/>
-            <DoubleAnimation
-                Storyboard.TargetName="spark24"
-                Storyboard.TargetProperty="(Canvas.Top)"
-                To="0" From="-10"
-                Duration="0:0:1"
-                AutoReverse="False"/>
-        </Storyboard>
-    </Window.Resources>
-    <Window.Triggers>
-        <EventTrigger RoutedEvent="Window.Loaded">
-            <BeginStoryboard Storyboard="{StaticResource TestAnimation1}"/>
-            <!--<BeginStoryboard Storyboard="{StaticResource TestAnimation}"/>
-            <BeginStoryboard Storyboard="{StaticResource TestAnimation2}"/>
-            <BeginStoryboard Storyboard="{StaticResource TestAnimation3}"/>-->
-        </EventTrigger>
-    </Window.Triggers>
-    <Grid>
+    <Grid Background="{DynamicResource BackGroung}">
         <!--Separate control group-->
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" MinHeight="20"/>
@@ -80,7 +17,7 @@
         </Grid.RowDefinitions>
 
         <!--Top panel group-->
-        <Grid Grid.Row="0">
+        <Grid Grid.Row="0" Background="{DynamicResource TopPanel.Background}">
             <!--User menu control group-->
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="5"/>
@@ -93,32 +30,26 @@
                 <ColumnDefinition Width="auto" MinWidth="20"/>
                 <ColumnDefinition Width="5"/>
             </Grid.ColumnDefinitions>
-
+            
+            <!--Save/Load menu-->
             <Menu Grid.Column="1" FontSize="20">
-                <MenuItem Header="File">
-                    <MenuItem Header="Load Register settings"/>
-                    <MenuItem Header="Save Register settings"/>
+                <MenuItem Template="{StaticResource VsMenuTop}" Header="File">
+                    <MenuItem Template="{StaticResource VsMenuSub}" Header="Load Register settings"/>
+                    <MenuItem Template="{StaticResource VsMenuSub}" Header="Save Register settings"/>
                 </MenuItem>
             </Menu>
-
+            
+            <!--Links menu-->
             <Menu Grid.Column="3" FontSize="20">
-                <MenuItem Header="TODO"/>
-            </Menu>
-            <!--<Button Content="View" Grid.Column="3"/>-->
-
-            <Menu Grid.Column="5" FontSize="20">
-                <MenuItem Header="More">
-                    <MenuItem Header="RA1xx Documantation"/>
-                    <MenuItem Header="RA1xx GUI User Manual"/>
-                    <MenuItem Header="RA1xx TCD"/>
-                    <MenuItem Header="RA1xx Application Note"/>
-                    <MenuItem Header="RA1xx Register Maps"/>
-                    <MenuItem Header="Sensor details"/>
+                <MenuItem Template="{StaticResource VsMenuTop}" Header="More" >
+                    <MenuItem Template="{StaticResource VsMenuSub}" Header="RA1xx Documantation"/>
+                    <MenuItem Template="{StaticResource VsMenuSub}" Header="RA1xx GUI User Manual"/>
+                    <MenuItem Template="{StaticResource VsMenuSub}" Header="RA1xx TCD"/>
+                    <MenuItem Template="{StaticResource VsMenuSub}" Header="RA1xx Application Note"/>
+                    <MenuItem Template="{StaticResource VsMenuSub}" Header="RA1xx Register Maps"/>
+                    <MenuItem Template="{StaticResource VsMenuSub}" Header="Sensor details"/>
                 </MenuItem>
             </Menu>
-            <!--<Button Content="More" Grid.Column="5"/>-->
-
-            <Button Content="TODO" Grid.Column="7"/>
         </Grid>
 
         <!--Middle panel group-->
@@ -128,18 +59,10 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <!--<Grid.Style>
-                <Style TargetType="{x:Type Grid}">
-                    <Style.Triggers>
-                        <Trigger Property="{Binding ElementName=MenuSiuzeToggle, Path=IsChecked}" Value="True">
-                            
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </Grid.Style>-->
+            <Border Grid.Column="0" BorderThickness="0,1,1,1" BorderBrush="{DynamicResource Menu.SeparateLine}"/>
 
             <!--Subsection-->
-            <Grid Grid.Column="0" x:Name="MenuPanel" Margin="3,3">
+            <Grid Grid.Column="0" x:Name="MenuPanel" Margin="3,3" Background="{DynamicResource Menu.Background}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto" MinWidth="160"/>
                 </Grid.ColumnDefinitions>
@@ -157,7 +80,7 @@
                     <RowDefinition Height="auto" MinHeight="20"/>
                 </Grid.RowDefinitions>
 
-                <Grid.Resources>
+                <!--<Grid.Resources>
                     <Style TargetType="{x:Type Button}">
                         <Setter Property="Background" Value="{DynamicResource Button.Background.StandBy}"/>
                         <Setter Property="BorderThickness" Value="0"/>
@@ -173,32 +96,55 @@
                             </Trigger>
                         </Style.Triggers>
                     </Style>
-                </Grid.Resources>
+                </Grid.Resources>-->
 
-                <ToggleButton x:Name="MenuSizeToggle" HorizontalAlignment="Left" IsChecked="True"
-                        Grid.Row="0" Background="Transparent" BorderThickness="0">
-                    <Image Source="{DynamicResource Ico.menu}" Width="30" Margin="3,0,0,0"/>
+                <ToggleButton Style="{DynamicResource MenuToggleButtonTemplate}" x:Name="MenuSizeToggle" IsChecked="True"
+                        Grid.Row="0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Image Grid.Column="0" Source="{DynamicResource Ico.menu}" Width="30" Margin="3,0,0,0" RenderTransformOrigin="0.5,0.5">
+                            <Image.RenderTransform>
+                                <RotateTransform x:Name="MenuImage" CenterX="0.5" CenterY="0.5"/>
+                            </Image.RenderTransform>
+                        </Image>
+                        <TextBlock Text="Menu" FontSize="20" Grid.Column="1"/>
+                        
+                    </Grid>
                     <ToggleButton.Triggers>
                         <EventTrigger RoutedEvent="ToggleButton.Unchecked">
                             <BeginStoryboard>
-                                <Storyboard x:Name="HideMenuPanel">
+                                <Storyboard>
                                     <DoubleAnimation 
                                         Storyboard.TargetName="MenuPanel"
                                         Storyboard.TargetProperty="Width"
                                         BeginTime="0:0:0"
                                         From="160" To="40"
                                         Duration="0:0:0.2"/>
+                                    <DoubleAnimation
+                                        Storyboard.TargetName="MenuImage"
+                                        Storyboard.TargetProperty="Angle"
+                                        To="90"
+                                        Duration="0:0:0.2"/>
                                 </Storyboard>
                             </BeginStoryboard>
                         </EventTrigger>
                         <EventTrigger RoutedEvent="ToggleButton.Checked">
                             <BeginStoryboard>
-                                <Storyboard x:Name="ShowMenuPanel">
+                                <Storyboard>
                                     <DoubleAnimation 
                                         Storyboard.TargetName="MenuPanel"
                                         Storyboard.TargetProperty="Width"
                                         BeginTime="0:0:0"
                                         To="166" From="46"
+                                        Duration="0:0:0.2"/>
+                                    <DoubleAnimation
+                                        Storyboard.TargetName="MenuImage"
+                                        Storyboard.TargetProperty="Angle"
+                                        To="0"
                                         Duration="0:0:0.2"/>
                                 </Storyboard>
                             </BeginStoryboard>
@@ -207,86 +153,92 @@
                 </ToggleButton>
 
                 <!--Subsection Definition-->
-                <Button Grid.Row="1">
+                <Button Grid.Row="1" Style="{DynamicResource MenuButtons}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="40"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Image Source="{DynamicResource Ico.home}" Grid.Column="0" Width="20"/>
+                        <Image Source="{DynamicResource Ico.home}" Grid.Column="0" Width="30"/>
                         <TextBlock Text="Home" FontSize="20" Grid.Column="1"/>
 
                     </Grid>
                 </Button>
-                <Button Grid.Row="2">
+
+                <Button Grid.Row="2" Style="{DynamicResource MenuButtons}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="40"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Image Source="{DynamicResource Ico.zoom}" Grid.Column="0" Width="20"/>
+                        <Image Source="{DynamicResource Ico.zoom}" Grid.Column="0" Width="30"/>
                         <TextBlock Text="SPI Learning" FontSize="20" Grid.Column="1"/>
                     </Grid>
                 </Button>
-                <Button Grid.Row="3">
+
+                <Button Grid.Row="3" Style="{DynamicResource MenuButtons}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="40"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Image Source="{DynamicResource Ico.whatchdog}" Grid.Column="0" Width="20"/>
+                        <Image Source="{DynamicResource Ico.whatchdog}" Grid.Column="0" Width="30"/>
                         <TextBlock Text="Watchdog" FontSize="20" Grid.Column="1"/>
                     </Grid>
                 </Button>
-                <Button Grid.Row="4">
+
+                <Button Grid.Row="4" Style="{DynamicResource MenuButtons}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="40"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Image Source="{DynamicResource Ico.airbag}" Grid.Column="0" Width="20"/>
+                        <Image Source="{DynamicResource Ico.airbag}" Grid.Column="0" Width="30"/>
                         <TextBlock Text="Firing" FontSize="20" Grid.Column="1"/>
                     </Grid>
                 </Button>
-                <Button Grid.Row="5">
+
+                <Button Grid.Row="5" Style="{DynamicResource MenuButtons}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="40"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Image Source="{DynamicResource Ico.chip}" Grid.Column="0" Width="20"/>
+                        <Image Source="{DynamicResource Ico.chip}" Grid.Column="0" Width="30"/>
                         <TextBlock Text="RA1xx Data" FontSize="20" Grid.Column="1"/>
                     </Grid>
                 </Button>
-                <Button Grid.Row="6">
+
+                <Button Grid.Row="6" Style="{DynamicResource MenuButtons}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="40"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Image Source="{DynamicResource Ico.sensor}" Grid.Column="0" Width="20"/>
+                        <Image Source="{DynamicResource Ico.sensor}" Grid.Column="0" Width="30"/>
                         <TextBlock Text="Sensor" FontSize="20" Grid.Column="1"/>
                     </Grid>
                 </Button>
-                <Button Grid.Row="7">
+
+                <Button Grid.Row="7" Click="Button_Click" Style="{DynamicResource MenuButtons}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="40"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Image Source="{DynamicResource ico.config}" Grid.Column="0" Width="20"/>
+                        <Image Source="{DynamicResource ico.config}" Grid.Column="0" Width="30"/>
                         <TextBlock Text="Diagnostics" FontSize="20" Grid.Column="1"/>
                     </Grid>
                 </Button>
 
-                <Grid Grid.Row="8">
+                <Grid Grid.Row="8" VerticalAlignment="Bottom">
                     <!--TODO Add animated status panel-->
                     <Grid>
                         <Grid.RowDefinitions>
@@ -297,72 +249,37 @@
                             <RowDefinition Height="auto"/>
                         </Grid.RowDefinitions>
 
-                        <!--<Canvas Grid.Row="1" MinHeight="20">
-                            <Line X1="7"  Y1="0" X2="7"  Y2="20" Stroke="Black" StrokeThickness="1"/>
-                            <Line X1="27" Y1="0" X2="27" Y2="20" Stroke="Black" StrokeThickness="1"/>
-                            <Line X1="13" Y1="0" X2="13" Y2="20" Stroke="Black" StrokeThickness="1"/>
-                            <Line X1="33" Y1="0" X2="33" Y2="20" Stroke="Black" StrokeThickness="1"/>
-                            <custom:animatedDataFly x:Name="MCUPCspark" Canvas.Left="7" FillColor="Green">
-                            </custom:animatedDataFly>
-                            <custom:animatedDataFly x:Name="PCMCUspark" Canvas.Left="27" ScaleY="-1" FillColor="Green">
-                            </custom:animatedDataFly>
-                        </Canvas>-->
-                        <Grid Grid.Row="1" MinHeight="20" HorizontalAlignment="Left" Width="40">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="1*" MinWidth="5"/>
-                                <ColumnDefinition Width="10"/>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="10"/>
-                                <ColumnDefinition Width="1*" MinWidth="5"/>
-                            </Grid.ColumnDefinitions>
-                            <Border Grid.Column="0" BorderThickness="0,0,1,0" BorderBrush="Black"/>
-                            <Border Grid.Column="2" BorderThickness="1,0,1,0" BorderBrush="Black"/>
-                            <Border Grid.Column="5" BorderThickness="1,0,0,0" BorderBrush="Black"/>
+                        <custom:testAnimationRev2 x:Name="animationTest1" Grid.Row="1" Height="20" 
+                                                  HorizontalAlignment="Left" 
+                                                  FlyColor="{DynamicResource Animation.Arrow}" 
+                                                  BorderColor="{DynamicResource Animation.Lines}" 
+                                                  IsAnimationEnabled="{Binding MCUConnectionStatus}"/>
 
-                            <Canvas Grid.Column="1" Grid.ColumnSpan="3">
-                                <custom:animatedDataFly x:Name="spark11" Canvas.Left="0" FillColor="Green" HorizontalAlignment="Center"/>
-                                <custom:animatedDataFly x:Name="spark12" Canvas.Left="0" FillColor="Green" HorizontalAlignment="Center"/>
-                                <custom:animatedDataFly x:Name="spark13" Canvas.Left="0" FillColor="Green" HorizontalAlignment="Center"/>
-                                <custom:animatedDataFly x:Name="spark14" Canvas.Left="0" FillColor="Green" HorizontalAlignment="Center"/>
-
-                                <custom:animatedDataFly x:Name="spark21" Canvas.Right="0" FillColor="Red" HorizontalAlignment="Center" ScaleY="-1"/>
-                                <custom:animatedDataFly x:Name="spark22" Canvas.Right="0" FillColor="Red" HorizontalAlignment="Center" ScaleY="-1"/>
-                                <custom:animatedDataFly x:Name="spark23" Canvas.Right="0" FillColor="Red" HorizontalAlignment="Center" ScaleY="-1"/>
-                                <custom:animatedDataFly x:Name="spark24" Canvas.Right="0" FillColor="Red" HorizontalAlignment="Center" ScaleY="-1"/>
-
-                            </Canvas>
-                        </Grid>
-
-                        <custom:testAnimationRev2 Grid.Row="3" Height="20" HorizontalAlignment="Left" SparkColor="Red" BorderColor="Black"/>
-
-                        <!--<Canvas Grid.Row="3" MinHeight="20">
-                            <Line X1="10" Y1="0" X2="10" Y2="20" Stroke="Black" StrokeThickness="1"/>
-                            <Line X1="30" Y1="0" X2="30" Y2="20" Stroke="Black" StrokeThickness="1"/>
-                            <custom:animatedDataFly x:Name="ABMCUspark" Canvas.Left="7" FillColor="Green">
-                            </custom:animatedDataFly>
-                            <custom:animatedDataFly x:Name="MCUABspark" Canvas.Left="27" ScaleY="-1" FillColor="Green">
-                            </custom:animatedDataFly>
-                        </Canvas>-->
+                        <custom:testAnimationRev2 x:Name="animationTest2" Grid.Row="3" Height="20" 
+                                                  HorizontalAlignment="Left" 
+                                                  FlyColor="{DynamicResource Animation.Arrow}" 
+                                                  BorderColor="{DynamicResource Animation.Lines}" 
+                                                  IsAnimationEnabled="{Binding ABConnectionStatus}"/>
 
                         <Border Grid.Row="0" BorderThickness="1" 
-                                BorderBrush="Black" Background="AntiqueWhite" 
+                                BorderBrush="Black" Background="{DynamicResource BackGroung}" 
                                 CornerRadius="5" HorizontalAlignment="Left" 
                                 Width="40">
-                            <TextBlock Text="PC" HorizontalAlignment="Center" FontSize="16"/>
+                            <TextBlock Text="PC" HorizontalAlignment="Center" FontSize="18"/>
                         </Border>
 
                         <Border Grid.Row="2" BorderThickness="1" 
-                                BorderBrush="Black" Background="AntiqueWhite" 
+                                BorderBrush="Black" Background="{DynamicResource BackGroung}" 
                                 CornerRadius="5" HorizontalAlignment="Left" 
                                 Width="40">
-                            <TextBlock Text="MCU" HorizontalAlignment="Center" FontSize="16"/>
+                            <TextBlock Text="MCU" HorizontalAlignment="Center" FontSize="18"/>
                         </Border>
 
                         <Border Grid.Row="4" BorderThickness="1" 
-                                BorderBrush="Black" Background="AntiqueWhite" 
+                                BorderBrush="Black" Background="{DynamicResource BackGroung}" 
                                 CornerRadius="5" HorizontalAlignment="Left" 
                                 Width="40">
-                            <TextBlock Text="AB" HorizontalAlignment="Center" FontSize="16"/>
+                            <TextBlock Text="AB" HorizontalAlignment="Center" FontSize="18"/>
                         </Border>
                     </Grid>
                 </Grid>
@@ -371,7 +288,7 @@
         </Grid>
 
         <!--Bottom panel group-->
-        <Grid Grid.Row="2">
+        <Grid Grid.Row="2" Background="{DynamicResource BottonPanel.Background}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="5"/>
                 <ColumnDefinition Width="auto" MinWidth="20"/>
