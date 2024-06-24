@@ -9,28 +9,43 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Views\Resources\airbag_dark.png" />
     <None Remove="Views\Resources\airbag_light.png" />
     <None Remove="Views\Resources\bosch.ico" />
+    <None Remove="Views\Resources\chip_dark.png" />
     <None Remove="Views\Resources\chip_light.png" />
+    <None Remove="Views\Resources\config_dark.png" />
     <None Remove="Views\Resources\config_light.png" />
     <None Remove="Views\Resources\font_decrease_light.png" />
     <None Remove="Views\Resources\font_decrease_dark.png" />
     <None Remove="Views\Resources\font_increase_light.png" />
     <None Remove="Views\Resources\font_increase_dark.png" />
+    <None Remove="Views\Resources\home_dark.png" />
     <None Remove="Views\Resources\home_light.png" />
+    <None Remove="Views\Resources\menu_dark.png" />
     <None Remove="Views\Resources\menu_light.png" />
+    <None Remove="Views\Resources\sensor_dark.png" />
     <None Remove="Views\Resources\sensor_light.png" />
     <None Remove="Views\Resources\sort_ascending_light.png" />
     <None Remove="Views\Resources\sort_ascending_dark.png" />
     <None Remove="Views\Resources\sort_descending_light.png" />
     <None Remove="Views\Resources\sort_descending_dark.png" />
+    <None Remove="Views\Resources\watchdog_dark.png" />
     <None Remove="Views\Resources\watchdog_light.png" />
     <None Remove="Views\Resources\whatchdog_light.png" />
+    <None Remove="Views\Resources\zoom_dark.png" />
     <None Remove="Views\Resources\zoom_light.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Views\Resources\airbag_dark.png" />
     <Resource Include="Views\Resources\airbag_light.png" />
+    <Resource Include="Views\Resources\chip_dark.png" />
+    <Resource Include="Views\Resources\config_dark.png" />
+    <Resource Include="Views\Resources\home_dark.png" />
+    <Resource Include="Views\Resources\menu_dark.png" />
+    <Resource Include="Views\Resources\sensor_dark.png" />
+    <Resource Include="Views\Resources\watchdog_dark.png" />
     <Resource Include="Views\Resources\watchdog_light.png" />
     <Resource Include="Views\Resources\bosch.ico" />
     <Resource Include="Views\Resources\chip_light.png" />
@@ -47,6 +62,7 @@
     <Resource Include="Views\Resources\sort_descending_light.png" />
     <Resource Include="Views\Resources\sort_descending_dark.png" />
     <Resource Include="Views\Resources\whatchdog_light.png" />
+    <Resource Include="Views\Resources\zoom_dark.png" />
     <Resource Include="Views\Resources\zoom_light.png" />
   </ItemGroup>
 
