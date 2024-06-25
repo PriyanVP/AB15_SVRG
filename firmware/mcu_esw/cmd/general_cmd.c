@@ -170,6 +170,7 @@ void CmdSpiInstuction(USBReceiveData const * const commandPackage)
     // Send data back to MCU
     SendUSBPackage(&packageToSend);
 }
+
 void getAsicDeviceId(USBReceiveData * commandPackage)
 {
     USBTransmitData packageToSend;
