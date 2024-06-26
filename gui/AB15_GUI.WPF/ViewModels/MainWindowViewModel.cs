@@ -1,4 +1,7 @@
-﻿using AB15_GUI.WPF.Views;
+﻿using AB15_GUI.WPF.Models;
+using AB15_GUI.WPF.Models.Interfaces;
+using AB15_GUI.WPF.Services.Interfaces;
+using AB15_GUI.WPF.Views;
 using NLog;
 using System;
 using System.Collections.Generic;

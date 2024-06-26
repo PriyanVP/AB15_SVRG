@@ -1,6 +1,7 @@
 ﻿using AB15_GUI.WPF.NLog;
 using AB15_GUI.WPF.ViewModels;
 using NLog;
+using System.Windows;
 
 namespace AB15_GUI.Tests.ViewModels
 {
@@ -28,6 +29,12 @@ namespace AB15_GUI.Tests.ViewModels
                                 .SetupExtensions(ext => ext.RegisterTarget<LogMemoryRecordTarget>("MemoryRecord"))
                                 .GetCurrentClassLogger(); // Same logger will be used across all tests
             target = (LogMemoryRecordTarget)LogManager.Configuration.FindTargetByName("memory");
+
+            // Workaround for thread sync to work correctly TODO: refactor approach to remove close coupling
+            if (Application.Current == null)
+            { 
+                new Application { ShutdownMode = ShutdownMode.OnExplicitShutdown }; 
+            }
         }
 
         /// <summary>
