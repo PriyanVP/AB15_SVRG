@@ -84,7 +84,8 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="auto" MinHeight="20"/>
                 </Grid.RowDefinitions>
-
+                
+                <!--Menu size toggle button-->
                 <ToggleButton Style="{DynamicResource MenuToggleButtonTemplate}" x:Name="MenuSizeToggle" IsChecked="True"
                         Grid.Row="0">
                     <Grid>
@@ -142,8 +143,8 @@
                     </ToggleButton.Triggers>
                 </ToggleButton>
 
-                <!--Subsection Definition-->
-                <Button Grid.Row="1" Style="{DynamicResource MenuButtons}">
+                <!--Home button-->
+                <Button Grid.Row="1" Style="{DynamicResource MenuButtons}" Command="{Binding GoToHomePage}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="40"/>
@@ -156,7 +157,8 @@
                     </Grid>
                 </Button>
 
-                <Button Grid.Row="2" Style="{DynamicResource MenuButtons}">
+                <!--SPI Learning button-->
+                <Button Grid.Row="2" Style="{DynamicResource MenuButtons}" Command="{Binding GoToSPILearningPage}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="40"/>
@@ -168,19 +170,21 @@
                     </Grid>
                 </Button>
 
-                <Button Grid.Row="3" Style="{DynamicResource MenuButtons}">
+                <!--Watchdog button-->
+                <Button Grid.Row="3" Style="{DynamicResource MenuButtons}" Command="{Binding GoToWhatchdogPage}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="40"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Image Source="{DynamicResource Ico.whatchdog}" Grid.Column="0" Width="30"/>
+                        <Image Source="{DynamicResource Ico.watchdog}" Grid.Column="0" Width="30"/>
                         <TextBlock Text="Watchdog" FontSize="20" Grid.Column="1" Style="{DynamicResource TextBlockStyle}"/>
                     </Grid>
                 </Button>
 
-                <Button Grid.Row="4" Style="{DynamicResource MenuButtons}">
+                <!--Firing button-->
+                <Button Grid.Row="4" Style="{DynamicResource MenuButtons}" Command="{Binding GoToFiringPage}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="40"/>
@@ -192,7 +196,8 @@
                     </Grid>
                 </Button>
 
-                <Button Grid.Row="5" Style="{DynamicResource MenuButtons}">
+                <!--AB12 Data button-->
+                <Button Grid.Row="5" Style="{DynamicResource MenuButtons}" Command="{Binding GoToAbDataPage}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="40"/>
@@ -204,7 +209,8 @@
                     </Grid>
                 </Button>
 
-                <Button Grid.Row="6" Style="{DynamicResource MenuButtons}">
+                <!--Sensors button-->
+                <Button Grid.Row="6" Style="{DynamicResource MenuButtons}" Command="{Binding GoToSensorPage}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="40"/>
@@ -216,7 +222,9 @@
                     </Grid>
                 </Button>
 
-                <Button Grid.Row="7" Click="Button_Click" Style="{DynamicResource MenuButtons}">
+                <!--Diagnostics button-->
+                <!--TODO: delete debug code-->
+                <Button Grid.Row="7" Click="Button_Click" Style="{DynamicResource MenuButtons}" Command="{Binding GoToDiagnosticsPage}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="40"/>
@@ -228,6 +236,7 @@
                     </Grid>
                 </Button>
 
+                <!--Status section-->
                 <Grid Grid.Row="8" VerticalAlignment="Bottom">
                     <!--TODO Add animated status panel-->
                     <Grid>
@@ -239,25 +248,26 @@
                             <RowDefinition Height="auto"/>
                         </Grid.RowDefinitions>
 
-
+                        <!--Animation connection for PC - MCU-->
                         <custom:ConnectionAnimation x:Name="animationTest1" Grid.Row="1" Height="20" 
                                                   HorizontalAlignment="Left" 
                                                   FlyColor="{DynamicResource Animation.Arrow}" 
                                                   BorderColor="{DynamicResource Animation.Lines}" 
                                                   IsAnimationEnabled="{Binding MCUConnectionStatus}"/>
 
+                        <!--Animation connection for MCU - AB-->
                         <custom:ConnectionAnimation x:Name="animationTest2" Grid.Row="3" Height="20" 
                                                   HorizontalAlignment="Left" 
                                                   FlyColor="{DynamicResource Animation.Arrow}" 
                                                   BorderColor="{DynamicResource Animation.Lines}" 
                                                   IsAnimationEnabled="{Binding ABConnectionStatus}"/>
 
+                        <!--Background for Status boxes-->
                         <Canvas Grid.Row="0" Background="{DynamicResource Menu.Background}"/>
-
                         <Canvas Grid.Row="2" Background="{DynamicResource Menu.Background}"/>
-
                         <Canvas Grid.Row="4" Background="{DynamicResource Menu.Background}"/>
 
+                        <!--Status box for PC-->
                         <Border Grid.Row="0" BorderThickness="1" 
                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                 Background="{Binding PCCurrentStatus, Converter={StaticResource StatusToColorConverter}}" 
@@ -266,6 +276,7 @@
                             <TextBlock Text="PC" HorizontalAlignment="Center" FontSize="16" Style="{DynamicResource TextBlockStyle}"/>
                         </Border>
 
+                        <!--Status box for MCU-->
                         <Border Grid.Row="2" BorderThickness="1" 
                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                 Background="{Binding MCUCurrentStatus, Converter={StaticResource StatusToColorConverter}}" 
@@ -274,6 +285,7 @@
                             <TextBlock Text="MCU" HorizontalAlignment="Center" FontSize="16" Style="{DynamicResource TextBlockStyle}"/>
                         </Border>
 
+                        <!--Status box for AB-->
                         <Border Grid.Row="4" BorderThickness="1" 
                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                 Background="{Binding ABCurrentStatus, Converter={StaticResource StatusToColorConverter}}" 
@@ -283,7 +295,6 @@
                         </Border>
                     </Grid>
                 </Grid>
-                
             </Grid>
         </Grid>
 

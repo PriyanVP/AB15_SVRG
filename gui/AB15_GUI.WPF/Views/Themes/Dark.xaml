@@ -10,7 +10,7 @@
     <BitmapImage x:Key="Ico.home" UriSource="../Resources/home_dark.png"/>
     <BitmapImage x:Key="ico.config" UriSource="../Resources/config_dark.png"/>
     <BitmapImage x:Key="Ico.sensor" UriSource="../Resources/sensor_dark.png"/>
-    <BitmapImage x:Key="Ico.whatchdog" UriSource="../Resources/watchdog_dark.png"/>
+    <BitmapImage x:Key="Ico.watchdog" UriSource="../Resources/watchdog_dark.png"/>
     <BitmapImage x:Key="Ico.airbag" UriSource="../Resources/airbag_dark.png"/>
     <BitmapImage x:Key="Ico.chip" UriSource="../Resources/chip_dark.png"/>
     <BitmapImage x:Key="Ico.menu" UriSource="../Resources/menu_dark.png"/>
