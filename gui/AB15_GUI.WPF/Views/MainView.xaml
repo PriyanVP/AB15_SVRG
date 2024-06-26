@@ -39,20 +39,26 @@
             <!--Save/Load menu-->
             <Menu Grid.Column="1" FontSize="20">
                 <MenuItem Template="{StaticResource VsMenuTop}" Header="File">
-                    <MenuItem Template="{StaticResource VsMenuSub}" Header="Load Register settings"/>
-                    <MenuItem Template="{StaticResource VsMenuSub}" Header="Save Register settings"/>
+                    <MenuItem Command="{Binding RunLoadRegisterSetting}" Template="{StaticResource VsMenuSub}" Header="Load Register settings"/>
+                    <MenuItem Command="{Binding RunSaveRegisterSetting}" Template="{StaticResource VsMenuSub}" Header="Save Register settings"/>
                 </MenuItem>
             </Menu>
             
             <!--Links menu-->
             <Menu Grid.Column="3" FontSize="20">
                 <MenuItem Template="{StaticResource VsMenuTop}" Header="More" >
-                    <MenuItem Template="{StaticResource VsMenuSub}" Header="RA1xx Documantation"/>
-                    <MenuItem Template="{StaticResource VsMenuSub}" Header="RA1xx GUI User Manual"/>
-                    <MenuItem Template="{StaticResource VsMenuSub}" Header="RA1xx TCD"/>
-                    <MenuItem Template="{StaticResource VsMenuSub}" Header="RA1xx Application Note"/>
-                    <MenuItem Template="{StaticResource VsMenuSub}" Header="RA1xx Register Maps"/>
-                    <MenuItem Template="{StaticResource VsMenuSub}" Header="Sensor details"/>
+                    <MenuItem Command="{Binding OpenDocumantation}" 
+                              Template="{StaticResource VsMenuSub}" Header="AB15 Documantation"/>
+                    <MenuItem Command="{Binding OpenUserManual}" 
+                              Template="{StaticResource VsMenuSub}" Header="AB15 GUI User Manual"/>
+                    <MenuItem Command="{Binding OpenTCD}" 
+                              Template="{StaticResource VsMenuSub}" Header="AB15 TCD"/>
+                    <MenuItem Command="{Binding OpenApplicationNote}" 
+                              Template="{StaticResource VsMenuSub}" Header="AB15 Application Note"/>
+                    <MenuItem Command="{Binding OpenRegisterMaps}" 
+                              Template="{StaticResource VsMenuSub}" Header="AB15 Register Maps"/>
+                    <MenuItem Command="{Binding OpenSensorDetails}" 
+                              Template="{StaticResource VsMenuSub}" Header="Sensor details"/>
                 </MenuItem>
             </Menu>
         </Grid>

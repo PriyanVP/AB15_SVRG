@@ -25,23 +25,15 @@ namespace AB15_GUI.WPF.ViewModels
         Error
     }
 
+    /// <summary>
+    /// View Model for Main Window
+    /// </summary>
     public class MainViewModel : ViewModelBase
     {
-
-        private bool _isLightTheme = true;
-
-        public bool IsLightTheme
-        {
-            get => _isLightTheme;
-            set
-            {
-                _isLightTheme = value;
-                OnPropertyChanged();
-            }
-        }
-
+        /// <summary>
+        /// PC status for view
+        /// </summary>
         private UIConnectionStatus _PCconnectionStatus;
-
         public UIConnectionStatus PCCurrentStatus
         {
             get => _PCconnectionStatus;
@@ -55,8 +47,10 @@ namespace AB15_GUI.WPF.ViewModels
             }
         }
 
+        /// <summary>
+        /// MCU status for view
+        /// </summary>
         private UIConnectionStatus _MCUconnectionStatus;
-
         public UIConnectionStatus MCUCurrentStatus
         {
             get => _MCUconnectionStatus;
@@ -69,8 +63,11 @@ namespace AB15_GUI.WPF.ViewModels
                 }
             }
         }
-        private UIConnectionStatus _ABconnectionStatus;
 
+        /// <summary>
+        /// AB status for view
+        /// </summary>
+        private UIConnectionStatus _ABconnectionStatus;
         public UIConnectionStatus ABCurrentStatus
         {
             get => _ABconnectionStatus;
@@ -84,18 +81,29 @@ namespace AB15_GUI.WPF.ViewModels
             }
         }
 
+        /// <summary>
+        /// Local logger instance
+        /// </summary>
         private readonly Logger logger;
 
+        /// <summary>
+        /// Logger window instance
+        /// </summary>
         public readonly LoggerViewModel LoggerViewModel;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public MainViewModel(Logger logger, LoggerViewModel loggerViewModel, LoggerView loggerWindowView)
         {
+            // Init Logger and logger view model
             this.logger = logger;
             LoggerViewModel = loggerViewModel;
 
             logger.Trace("In MainViewModel");
             loggerWindowView.Show();
 
+            // TODO: delete debug code
             PCCurrentStatus = UIConnectionStatus.Warning;
             ABCurrentStatus = UIConnectionStatus.Error;
             MCUCurrentStatus = UIConnectionStatus.Connected;

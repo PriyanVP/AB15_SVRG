@@ -18,11 +18,15 @@ namespace AB15_GUI.WPF.Views
     /// 
     public partial class MainView : Window
     {
+        /// <summary>
+        /// Constructor for main window
+        /// </summary>
         public MainView()
         {
             InitializeComponent();
         }
 
+        // TODO: delete debug code
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             if (animationTest1.IsAnimationEnabled == true)
