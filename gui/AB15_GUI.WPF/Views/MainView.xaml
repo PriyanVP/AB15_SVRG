@@ -240,13 +240,13 @@
                         </Grid.RowDefinitions>
 
 
-                        <custom:testAnimationRev2 x:Name="animationTest1" Grid.Row="1" Height="20" 
+                        <custom:ConnectionAnimation x:Name="animationTest1" Grid.Row="1" Height="20" 
                                                   HorizontalAlignment="Left" 
                                                   FlyColor="{DynamicResource Animation.Arrow}" 
                                                   BorderColor="{DynamicResource Animation.Lines}" 
                                                   IsAnimationEnabled="{Binding MCUConnectionStatus}"/>
 
-                        <custom:testAnimationRev2 x:Name="animationTest2" Grid.Row="3" Height="20" 
+                        <custom:ConnectionAnimation x:Name="animationTest2" Grid.Row="3" Height="20" 
                                                   HorizontalAlignment="Left" 
                                                   FlyColor="{DynamicResource Animation.Arrow}" 
                                                   BorderColor="{DynamicResource Animation.Lines}" 

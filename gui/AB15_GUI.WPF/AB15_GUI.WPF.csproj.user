@@ -10,7 +10,7 @@
     <Compile Update="Views\Components\DataArrow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\Components\testAnimationRev2.xaml.cs">
+    <Compile Update="Views\Components\ConnectionAnimation.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
@@ -18,7 +18,7 @@
     <Page Update="Views\Components\DataArrow.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\Components\testAnimationRev2.xaml">
+    <Page Update="Views\Components\ConnectionAnimation.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\Themes\Common.xaml">

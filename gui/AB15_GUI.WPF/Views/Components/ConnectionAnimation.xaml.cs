@@ -19,7 +19,7 @@ namespace AB15_GUI.WPF.Views.Components
     /// <summary>
     /// Animation control for data flow
     /// </summary>
-    public partial class testAnimationRev2 : UserControl
+    public partial class ConnectionAnimation : UserControl
     {
         /// <summary>
         /// Brush for data flow path borders 
@@ -42,7 +42,7 @@ namespace AB15_GUI.WPF.Views.Components
         /// <summary>
         /// Builder
         /// </summary>
-        public testAnimationRev2()
+        public ConnectionAnimation()
         {
             InitializeComponent();
         }
@@ -51,19 +51,19 @@ namespace AB15_GUI.WPF.Views.Components
         /// Add border color brush to control metadata
         /// </summary>
         public static readonly DependencyProperty BorderColorProperty = 
-            DependencyProperty.Register("BorderColor", typeof(Brush), typeof(testAnimationRev2), new PropertyMetadata(Brushes.Black));
+            DependencyProperty.Register("BorderColor", typeof(Brush), typeof(ConnectionAnimation), new PropertyMetadata(Brushes.Black));
 
         /// <summary>
         /// Add backgroud color brush to control metadata
         /// </summary>
         public static readonly DependencyProperty FlyColorProperty = 
-            DependencyProperty.Register("FlyColor", typeof(Brush), typeof(testAnimationRev2), new PropertyMetadata(Brushes.Red));
+            DependencyProperty.Register("FlyColor", typeof(Brush), typeof(ConnectionAnimation), new PropertyMetadata(Brushes.Red));
 
         /// <summary>
         /// Add flag for toggle animation
         /// </summary>
         public static readonly DependencyProperty IsAnimationEnabledProperty =
-            DependencyProperty.Register("IsAnimationEnabled", typeof(bool), typeof(testAnimationRev2), new PropertyMetadata(default(bool), OnIsAnimationEnabledChanged));
+            DependencyProperty.Register("IsAnimationEnabled", typeof(bool), typeof(ConnectionAnimation), new PropertyMetadata(default(bool), OnIsAnimationEnabledChanged));
 
         /// <summary>
         /// Get/set animation flag
@@ -82,7 +82,7 @@ namespace AB15_GUI.WPF.Views.Components
         /// </summary>
         private static void OnIsAnimationEnabledChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is testAnimationRev2 control)
+            if (d is ConnectionAnimation control)
             {
                 if ((bool)e.NewValue)
                 {
@@ -102,7 +102,7 @@ namespace AB15_GUI.WPF.Views.Components
         {
             AnimationCanvas1.Visibility = Visibility.Visible;
             AnimationCanvas2.Visibility = Visibility.Visible;
-            var storyboard = (Storyboard)Resources["TestAnimation1"];
+            var storyboard = (Storyboard)Resources["Animation"];
             storyboard.Begin();
         }
 
@@ -113,7 +113,7 @@ namespace AB15_GUI.WPF.Views.Components
         {
             AnimationCanvas1.Visibility = Visibility.Hidden;
             AnimationCanvas2.Visibility = Visibility.Hidden;
-            var storyboard = (Storyboard)Resources["TestAnimation1"];
+            var storyboard = (Storyboard)Resources["Animation"];
             storyboard.Stop();
         }
     }
