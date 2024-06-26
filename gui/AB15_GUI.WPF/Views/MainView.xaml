@@ -3,11 +3,16 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:AB15_GUI.WPF.ViewModels"
         xmlns:custom="clr-namespace:AB15_GUI.WPF.Views.Components"
+        xmlns:cnvrt="clr-namespace:AB15_GUI.WPF.Views.Converters"
         xmlns:local="clr-namespace:AB15_GUI.WPF.Views"
         mc:Ignorable="d"
         Title="Bosch AB15" Height="650" Width="1000"
         Icon="Resources/bosch.ico">
+    <Window.Resources>
+        <cnvrt:StatusColorConverter x:Key="StatusToColorConverter"/>
+    </Window.Resources>
     <Grid Background="{DynamicResource BackGroung}">
         <!--Separate control group-->
         <Grid.RowDefinitions>
@@ -59,7 +64,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <!--<Border Grid.Column="0" BorderThickness="0,1,1,1" BorderBrush="{DynamicResource Menu.SeparateLine}"/>-->
+            <Border Grid.Column="0" BorderThickness="0,1,1,1" BorderBrush="{DynamicResource Menu.SeparateLine}"/>
 
             <!--Subsection-->
             <Grid Grid.Column="0" x:Name="MenuPanel" Margin="3,3" Background="{DynamicResource Menu.Background}">
@@ -195,7 +200,7 @@
                         </Grid.ColumnDefinitions>
 
                         <Image Source="{DynamicResource Ico.chip}" Grid.Column="0" Width="30"/>
-                        <TextBlock Text="RA1xx Data" FontSize="20" Grid.Column="1" Style="{DynamicResource TextBlockStyle}"/>
+                        <TextBlock Text="AB12 Data" FontSize="20" Grid.Column="1" Style="{DynamicResource TextBlockStyle}"/>
                     </Grid>
                 </Button>
 
@@ -234,6 +239,7 @@
                             <RowDefinition Height="auto"/>
                         </Grid.RowDefinitions>
 
+
                         <custom:testAnimationRev2 x:Name="animationTest1" Grid.Row="1" Height="20" 
                                                   HorizontalAlignment="Left" 
                                                   FlyColor="{DynamicResource Animation.Arrow}" 
@@ -246,9 +252,15 @@
                                                   BorderColor="{DynamicResource Animation.Lines}" 
                                                   IsAnimationEnabled="{Binding ABConnectionStatus}"/>
 
+                        <Canvas Grid.Row="0" Background="{DynamicResource Menu.Background}"/>
+
+                        <Canvas Grid.Row="2" Background="{DynamicResource Menu.Background}"/>
+
+                        <Canvas Grid.Row="4" Background="{DynamicResource Menu.Background}"/>
+
                         <Border Grid.Row="0" BorderThickness="1" 
                                 BorderBrush="{DynamicResource Animation.Lines}" 
-                                Background="{DynamicResource Menu.Background}" 
+                                Background="{Binding PCCurrentStatus, Converter={StaticResource StatusToColorConverter}}" 
                                 CornerRadius="5" HorizontalAlignment="Left" 
                                 Width="40">
                             <TextBlock Text="PC" HorizontalAlignment="Center" FontSize="16" Style="{DynamicResource TextBlockStyle}"/>
@@ -256,7 +268,7 @@
 
                         <Border Grid.Row="2" BorderThickness="1" 
                                 BorderBrush="{DynamicResource Animation.Lines}" 
-                                Background="{DynamicResource Menu.Background}" 
+                                Background="{Binding MCUCurrentStatus, Converter={StaticResource StatusToColorConverter}}" 
                                 CornerRadius="5" HorizontalAlignment="Left" 
                                 Width="40">
                             <TextBlock Text="MCU" HorizontalAlignment="Center" FontSize="16" Style="{DynamicResource TextBlockStyle}"/>
@@ -264,7 +276,7 @@
 
                         <Border Grid.Row="4" BorderThickness="1" 
                                 BorderBrush="{DynamicResource Animation.Lines}" 
-                                Background="{DynamicResource Menu.Background}" 
+                                Background="{Binding ABCurrentStatus, Converter={StaticResource StatusToColorConverter}}" 
                                 CornerRadius="5" HorizontalAlignment="Left" 
                                 Width="40">
                             <TextBlock Text="AB" HorizontalAlignment="Center" FontSize="16" Style="{DynamicResource TextBlockStyle}"/>
@@ -296,11 +308,11 @@
 
             <TextBlock Style="{DynamicResource TextBlockStyle}" Text="GUI:" Grid.Column="1"/>
             <TextBlock Style="{DynamicResource TextBlockStyle}" Text="MCU:" Grid.Column="5"/>
-            <TextBlock Style="{DynamicResource TextBlockStyle}" Text="AB1xx:" Grid.Column="9"/>
+            <TextBlock Style="{DynamicResource TextBlockStyle}" Text="AB12:" Grid.Column="9"/>
 
             <TextBlock Style="{DynamicResource TextBlockStyle}" Text="{Binding GUIVersion}" Grid.Column="3"/>
             <TextBlock Style="{DynamicResource TextBlockStyle}" Text="{Binding MCUVersion}" Grid.Column="7"/>
-            <TextBlock Style="{DynamicResource TextBlockStyle}" Text="{Binding ABID}" Grid.Column="9"/>
+            <TextBlock Style="{DynamicResource TextBlockStyle}" Text="{Binding ASICID}" Grid.Column="9"/>
         </Grid>
     </Grid>
 </Window>

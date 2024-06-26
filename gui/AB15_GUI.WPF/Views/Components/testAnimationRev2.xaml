@@ -79,9 +79,9 @@
         <Border Grid.Column="0" BorderThickness="0,0,1,0" BorderBrush="{Binding BorderColor, ElementName=TestAnimationRev2}"/>
         <Border Grid.Column="2" BorderThickness="1,0,1,0" BorderBrush="{Binding BorderColor, ElementName=TestAnimationRev2}"/>
         <Border Grid.Column="5" BorderThickness="1,0,0,0" BorderBrush="{Binding BorderColor, ElementName=TestAnimationRev2}"/>
-        
+
         <!--Arrows that represent data-->
-        <Canvas Grid.Column="1" x:Name="AnimationCanvas1">
+        <Canvas Grid.Column="1" x:Name="AnimationCanvas1" Visibility="Hidden">
             <local:DataArrow x:Name="Fly11" Canvas.Left="0" Canvas.Top="-10"
                                     FillColor="{Binding FlyColor, ElementName=TestAnimationRev2}" HorizontalAlignment="Center"/>
             <local:DataArrow x:Name="Fly12" Canvas.Left="0" Canvas.Top="-10"
@@ -93,7 +93,7 @@
         </Canvas>
         
         <!--Arrows that represent data-->
-        <Canvas Grid.Column="3" x:Name="AnimationCanvas2">
+        <Canvas Grid.Column="3" x:Name="AnimationCanvas2" Visibility="Hidden">
 
             <local:DataArrow x:Name="Fly21" Canvas.Right="0" Canvas.Top="-10"
                                     FillColor="{Binding FlyColor, ElementName=TestAnimationRev2}" HorizontalAlignment="Center" ScaleY="-1"/>

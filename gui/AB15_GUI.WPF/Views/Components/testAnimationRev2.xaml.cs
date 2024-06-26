@@ -100,6 +100,8 @@ namespace AB15_GUI.WPF.Views.Components
         /// </summary>
         private void StartAnimation()
         {
+            AnimationCanvas1.Visibility = Visibility.Visible;
+            AnimationCanvas2.Visibility = Visibility.Visible;
             var storyboard = (Storyboard)Resources["TestAnimation1"];
             storyboard.Begin();
         }
@@ -109,6 +111,8 @@ namespace AB15_GUI.WPF.Views.Components
         /// </summary>
         private void StopAnimation()
         {
+            AnimationCanvas1.Visibility = Visibility.Hidden;
+            AnimationCanvas2.Visibility = Visibility.Hidden;
             var storyboard = (Storyboard)Resources["TestAnimation1"];
             storyboard.Stop();
         }

@@ -53,10 +53,10 @@
     <SolidColorBrush x:Key="TextBox.Static.Border" Color="#7F7A7A7A" />
     <SolidColorBrush x:Key="TextBox.MouseOver.Border" Color="#FF005FB8" />
     <SolidColorBrush x:Key="TextBox.Focus.Border" Color="#FF005FB8" />
-    
-    <SolidColorBrush x:Key="StatusBox.OK" Color="Green"/>
-    <SolidColorBrush x:Key="StatusBox.Error" Color="Red"/>
-    <SolidColorBrush x:Key="StatusBox.Warning" Color="Yellow"/>
+
+    <SolidColorBrush x:Key="StatusBox.Connected" Color="#28A828"/>
+    <SolidColorBrush x:Key="StatusBox.Error" Color="#f50000"/>
+    <SolidColorBrush x:Key="StatusBox.Warning" Color="#FFA500"/>
 
     <SolidColorBrush x:Key="Animation.Arrow" Color="Green"/>
     <SolidColorBrush x:Key="Animation.Lines" Color="Black"/>
