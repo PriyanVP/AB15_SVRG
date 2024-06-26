@@ -40,7 +40,8 @@ namespace AB15_GUI.WPF.ViewModels
         /// <returns></returns>
         public virtual IEnumerable GetErrors([CallerMemberName] string? propertyName = null)
         {
-            Contract.Requires<ArgumentNullException>((propertyName is not null), "Argument can't be null!");
+            // TODO fix issue when propertyName not null but exeption still going
+            //Contract.Requires<ArgumentNullException>((propertyName is not null), "Argument can't be null!");
 
             return _propertyNameToErrorsDictionary.GetValueOrDefault(propertyName, new List<string>());
         }
@@ -52,7 +53,8 @@ namespace AB15_GUI.WPF.ViewModels
         /// <param name="propertyName">name of property</param>
         protected void AddError(string errorMessage, [CallerMemberName] string? propertyName = null)
         {
-            Contract.Requires<ArgumentNullException>((propertyName is not null), "Argument can't be null!");
+            // TODO fix issue when propertyName not null but exeption still going
+            //Contract.Requires<ArgumentNullException>((propertyName is not null), "Argument can't be null!");
 
             // Create key and empty list for property if not yet present
             if (!_propertyNameToErrorsDictionary.ContainsKey(propertyName))
@@ -73,7 +75,8 @@ namespace AB15_GUI.WPF.ViewModels
         /// <param name="propertyName">name of property</param>
         protected virtual void ClearErrors([CallerMemberName] string? propertyName = null)
         {
-            Contract.Requires<ArgumentNullException>((propertyName is not null), "Argument can't be null!");
+            // TODO fix issue when propertyName not null but exeption still going
+            //Contract.Requires<ArgumentNullException>((propertyName is not null), "Argument can't be null!");
 
             // Remove list with errors for property
             _propertyNameToErrorsDictionary.Remove(propertyName);
@@ -88,7 +91,8 @@ namespace AB15_GUI.WPF.ViewModels
         /// <param name="propertyName">name of property</param>
         protected virtual void OnErrorsChanged([CallerMemberName] string? propertyName = null)
         {
-            Contract.Requires<ArgumentNullException>((propertyName is not null), "Argument can't be null!");
+            // TODO fix issue when propertyName not null but exeption still going
+            //Contract.Requires<ArgumentNullException>((propertyName is not null), "Argument can't be null!");
 
             ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
         }
@@ -99,7 +103,8 @@ namespace AB15_GUI.WPF.ViewModels
         /// <param name="propertyName">name of property</param>
         protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
-            Contract.Requires<ArgumentNullException>((propertyName is not null), "Argument can't be null!");
+            // TODO fix issue when propertyName not null but exeption still going
+            //Contract.Requires<ArgumentNullException>((propertyName is not null), "Argument can't be null!");
 
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
