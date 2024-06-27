@@ -89,7 +89,7 @@ void CmdSpiInstuction(USBReceiveData const * const commandPackage);
  * \param commandPackage package with command
  * \return Nothing
  */
-void getAsicDeviceId(USBReceiveData * commandPackage);
+void CmdGetDeviceId(USBReceiveData * commandPackage);
 
 /** \brief Handling several types of command instructons
  *

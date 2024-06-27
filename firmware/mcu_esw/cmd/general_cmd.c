@@ -171,9 +171,13 @@ void CmdSpiInstuction(USBReceiveData const * const commandPackage)
     SendUSBPackage(&packageToSend);
 }
 
-void getAsicDeviceId(USBReceiveData * commandPackage)
+void CmdGetDeviceId(USBReceiveData * commandPackage)
 {
     USBTransmitData packageToSend;
+
+    // SPI instruction for get device ID
+    commandPackage->data[0] = 0;
+    commandPackage->data[1] = 0;
 
     handleSpiInstr(&packageToSend, commandPackage);
 
@@ -192,6 +196,7 @@ void getAsicDeviceId(USBReceiveData * commandPackage)
 
 void handleCmdInstr(USBReceiveData const * const commandPackage)
 {
+    // TODO: tmp solution, refactoring pending
     USBTransmitData packageToSend;
     handleSpiInstr(&packageToSend, commandPackage);
 
@@ -202,6 +207,8 @@ void handleCmdInstr(USBReceiveData const * const commandPackage)
 
 void handleSpiInstr(USBTransmitData * packageToSend, USBReceiveData const * const commandPackage)
 {
+    // TODO: tmp solution, refactoring pending
+    // TODO: approach for passing data should be clarified
     // Parameters for SPI packages and variable to store output data
 
     uint16 instruction;

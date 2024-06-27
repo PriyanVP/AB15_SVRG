@@ -196,7 +196,7 @@ void core0_main(void)
                 handleCmdInstr(&cmdPackage);
                 break;
             case USB_CMD_READ_DEV_ID:
-                getAsicDeviceId(&cmdPackage);
+                CmdGetDeviceId(&cmdPackage);
                 break;
             // case :
             //     break;
