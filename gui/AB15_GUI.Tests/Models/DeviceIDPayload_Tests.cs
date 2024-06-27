@@ -7,7 +7,7 @@ namespace AB15_GUI.Tests.Models
     /// Checking DeviceID Payload
     /// </summary>
     /// <tc_links>
-    ///     <link ID="" Link="" />
+    ///     <link ID="ABEVBSW-99" Link="https://rb-tracker.bosch.com/tracker19/browse/ABEVBSW-99" />
     /// </tc_links>
     [TestFixture]
     [Parallelizable(scope: ParallelScope.Self)]
