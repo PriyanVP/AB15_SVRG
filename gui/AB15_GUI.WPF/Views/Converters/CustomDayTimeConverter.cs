@@ -1,20 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
 
 namespace AB15_GUI.WPF.Views.Converters
 {
     /// <summary>
-    /// Convert date+time to short or long fromat
+    /// Convert date+time to short or long format
     /// </summary>
     public class CustomDayTimeConverter : IMultiValueConverter
     {
         /// <summary>
-        /// Based on input values conver data+time to long/short string
+        /// Based on input values convert data+time to long/short string
         /// </summary>
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {

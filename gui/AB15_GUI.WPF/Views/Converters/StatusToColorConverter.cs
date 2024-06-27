@@ -1,35 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+using AB15_GUI.WPF.ViewModels;
+using System;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Media;
-using AB15_GUI.WPF.ViewModels;
 
 namespace AB15_GUI.WPF.Views.Converters
 {
     /// <summary>
-    /// Convert enum status to color representation
+    /// Convert status of connection to color
     /// </summary>
-    class StatusColorConverter : IValueConverter
+    public class StatusToColorConverter : IMultiValueConverter
     {
         /// <summary>
-        /// Based on input values conver enum value to color
+        /// Based on input values convert status to color.
+        /// Multivalue converter is used to also update colors in case theme changed (resources will change underneath)
         /// </summary>
-        /// <returns></returns>
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            //getting status
-            UIConnectionStatus status = (UIConnectionStatus)value;
 
-            // returning color based on status
+            UIConnectionStatus status = (UIConnectionStatus)values[0];
+
             switch (status)
             {
                 case UIConnectionStatus.NotConnected:
-                    return Brushes.Transparent;
+                    return Brushes.Transparent; // TODO: replace for best usage, remove unused canvas in XAML (?)
                 case UIConnectionStatus.Connected:
                     return (Brush)App.Current.Resources["StatusBox.Connected"];
                 case UIConnectionStatus.Warning:
@@ -41,11 +35,10 @@ namespace AB15_GUI.WPF.Views.Converters
             }
         }
 
-
         /// <summary>
         /// Unused method
         /// </summary>
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }

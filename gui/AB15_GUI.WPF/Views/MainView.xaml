@@ -11,7 +11,7 @@
         Title="Bosch AB15" Height="650" Width="1000"
         Icon="Resources/bosch.ico">
     <Window.Resources>
-        <cnvrt:StatusColorConverter x:Key="StatusToColorConverter"/>
+        <cnvrt:StatusToColorConverter x:Key="StatusToColorConverter"/>
     </Window.Resources>
     <Grid Background="{DynamicResource BackGroung}">
         <!--Separate control group-->
@@ -276,27 +276,42 @@
                         <!--Status box for PC-->
                         <Border Grid.Row="0" BorderThickness="1" 
                                 BorderBrush="{DynamicResource Animation.Lines}" 
-                                Background="{Binding PCCurrentStatus, Converter={StaticResource StatusToColorConverter}}" 
                                 CornerRadius="5" HorizontalAlignment="Left" 
                                 Width="40">
+                            <Border.Background>
+                                <MultiBinding Converter = "{StaticResource StatusToColorConverter}">
+                                    <Binding Path = "PCCurrentStatus"/>
+                                    <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                                </MultiBinding>
+                            </Border.Background>
                             <TextBlock Text="PC" HorizontalAlignment="Center" FontSize="16" Style="{DynamicResource TextBlockStyle}"/>
                         </Border>
 
                         <!--Status box for MCU-->
                         <Border Grid.Row="2" BorderThickness="1" 
                                 BorderBrush="{DynamicResource Animation.Lines}" 
-                                Background="{Binding MCUCurrentStatus, Converter={StaticResource StatusToColorConverter}}" 
                                 CornerRadius="5" HorizontalAlignment="Left" 
                                 Width="40">
+                            <Border.Background>
+                                <MultiBinding Converter = "{StaticResource StatusToColorConverter}">
+                                    <Binding Path = "MCUCurrentStatus"/>
+                                    <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                                </MultiBinding>
+                            </Border.Background>
                             <TextBlock Text="MCU" HorizontalAlignment="Center" FontSize="16" Style="{DynamicResource TextBlockStyle}"/>
                         </Border>
 
                         <!--Status box for AB-->
                         <Border Grid.Row="4" BorderThickness="1" 
                                 BorderBrush="{DynamicResource Animation.Lines}" 
-                                Background="{Binding ABCurrentStatus, Converter={StaticResource StatusToColorConverter}}" 
                                 CornerRadius="5" HorizontalAlignment="Left" 
                                 Width="40">
+                            <Border.Background>
+                                <MultiBinding Converter = "{StaticResource StatusToColorConverter}">
+                                    <Binding Path = "ABCurrentStatus"/>
+                                    <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                                </MultiBinding>
+                            </Border.Background>
                             <TextBlock Text="AB" HorizontalAlignment="Center" FontSize="16" Style="{DynamicResource TextBlockStyle}"/>
                         </Border>
                     </Grid>

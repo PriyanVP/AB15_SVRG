@@ -108,7 +108,18 @@ public partial class LoggerView : Window, INotifyPropertyChanged
     /// <param name="e">parameters</param>
     private void ThemeChangeToggle_Click(object sender, RoutedEventArgs e)
     {
-        App.Current.Resources.Clear();
+
+        foreach (var dict in App.Current.Resources.MergedDictionaries) 
+        {
+            // Remove theme dictionary
+            if ((dict.Source.OriginalString == "Views/Themes/Light.xaml") || (dict.Source.OriginalString == "Views/Themes/Dark.xaml"))
+            {
+                App.Current.Resources.MergedDictionaries.Remove(dict);
+                break;
+            }
+        }
+
+
         if (ThemeChangeToggle.IsChecked == false)
         {
             // Light theme

@@ -68,7 +68,9 @@
                 </TextBox.Text>
             </TextBox>
 
-            <CheckBox Name="ThemeChangeToggle" Style="{DynamicResource ToggleSwitchStyle}" Grid.Column="7" Margin="2,0" IsChecked="False" Click="ThemeChangeToggle_Click"/>
+            <CheckBox Name="ThemeChangeToggle" Style="{DynamicResource ToggleSwitchStyle}" 
+                      Grid.Column="7" Margin="2,0" IsChecked="{Binding IsDarkTheme, Source={StaticResource SharedThemeState}}" 
+                      Click="ThemeChangeToggle_Click"/>
             <TextBlock Grid.Column="8" FontSize="20" Margin="2,0" VerticalAlignment="Center" HorizontalAlignment="Left"
                        Foreground="{DynamicResource Foreground.Default}">
                 <TextBlock.Style>
