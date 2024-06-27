@@ -112,6 +112,158 @@ void CmdGetMcuBuildTime(USBReceiveData const * const commandPackage)
     SendUSBPackage(&packageToSend);
 }
 
+void CmdSpiInstuction(USBReceiveData const * const commandPackage)
+{
+    // Parameters for SPI packages and variable to store output data
+    USBTransmitData packageToSend;
+    uint16 instruction;
+    uint32 data;
+    SPIReceiveData dataRecived;
+    //TODO: rename RWFlag rwOption, is rudiment from CS 600
+    enum RWFlag rwOption = READ;
+    // for AB12 length will always be 1?
+    uint16 length = 1;
+    boolean isSuccessfulFlag = FALSE;
+
+    // Unpack received data to variables
+    instruction = ConstructWordFromBytes(commandPackage->data[1], commandPackage->data[0]);
+
+    // Send data to SPI with waiting for response
+    isSuccessfulFlag = QSPIReadWriteSequence(&instruction, &data, &rwOption, &length);
+
+    // Construct package to PC
+    packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
+
+    // Construct packages based on error status
+    if (isSuccessfulFlag == FALSE)
+    {
+        // Common error frame setup
+        packageToSend.status = USB_STATUS_ERROR;
+        packageToSend.dataLength = 0;
+
+        // Check if SPI response frame was received
+        if (length > 0)
+        {
+            // Fill data in error frame with invalid response from ASIC
+            packageToSend.dataLength = 4;
+            packageToSend.data[0] = GetByteByIdx(0, data);
+            packageToSend.data[1] = GetByteByIdx(1, data);
+            packageToSend.data[2] = GetByteByIdx(2, data);
+            packageToSend.data[3] = GetByteByIdx(3, data);
+        }
+    }
+    else
+    {
+        // Store SPI response frame to temporary variable for extracting data
+        dataRecived.dw = data;
+
+        packageToSend.status = USB_STATUS_DATA;
+        packageToSend.dataLength = 5;
+        packageToSend.data[0] = dataRecived.bf.gen_status;
+        packageToSend.data[1] = dataRecived.bf.s_bit;
+        packageToSend.data[2] = dataRecived.bf.sid_add_status;
+        packageToSend.data[3] = GetLSB(dataRecived.bf.output_data);
+        packageToSend.data[4] = GetMSB(dataRecived.bf.output_data);
+
+    }
+
+    // Send data back to MCU
+    SendUSBPackage(&packageToSend);
+}
+
+void CmdGetDeviceId(USBReceiveData * commandPackage)
+{
+    USBTransmitData packageToSend;
+
+    // SPI instruction for get device ID
+    commandPackage->data[0] = 0;
+    commandPackage->data[1] = 0;
+
+    handleSpiInstr(&packageToSend, commandPackage);
+
+    if (packageToSend.status != USB_STATUS_ERROR)
+    {
+        /*handleSpiInstr was successful, we change content of receive package*/
+        packageToSend.status = USB_STATUS_ACK;
+        // only return device Id which is in LSb of output data
+        packageToSend.dataLength = 1;
+        packageToSend.data[0] =  packageToSend.data[3];
+    }
+    // Send data back to MCU
+    SendUSBPackage(&packageToSend);
+
+}
+
+void handleCmdInstr(USBReceiveData const * const commandPackage)
+{
+    // TODO: tmp solution, refactoring pending
+    USBTransmitData packageToSend;
+    handleSpiInstr(&packageToSend, commandPackage);
+
+    // Send data back to MCU
+    SendUSBPackage(&packageToSend);
+
+}
+
+void handleSpiInstr(USBTransmitData * packageToSend, USBReceiveData const * const commandPackage)
+{
+    // TODO: tmp solution, refactoring pending
+    // TODO: approach for passing data should be clarified
+    // Parameters for SPI packages and variable to store output data
+
+    uint16 instruction;
+    uint32 data;
+    SPIReceiveData dataRecived;
+    //TODO: rename RWFlag rwOption, is rudiment from CS 600
+    enum RWFlag rwOption = READ;
+    uint16 length = 1;
+    boolean isSuccessfulFlag = FALSE;
+
+    // Unpack received data to variables
+    instruction = ConstructWordFromBytes(commandPackage->data[1], commandPackage->data[0]);
+
+    // Send data to SPI with waiting for response
+    isSuccessfulFlag = QSPIReadWriteSequence(&instruction, &data, &rwOption, &length);
+
+    // Construct package to PC
+    packageToSend->msg_id = SetResponseBit(commandPackage->msg_id);
+
+    // Construct packages based on error status
+    if (isSuccessfulFlag == FALSE)
+    {
+        // Common error frame setup
+        packageToSend->status = USB_STATUS_ERROR;
+        packageToSend->dataLength = 0;
+
+        /* Check if SPI response frame was received used in CS600
+        if (length > 0)
+        {
+            // Fill data in error frame with invalid response from CS600
+            packageToSend->dataLength = 4;
+            packageToSend->data[0] = GetByteByIdx(0, data);
+            packageToSend->data[1] = GetByteByIdx(1, data);
+            packageToSend->data[2] = GetByteByIdx(2, data);
+            packageToSend->data[3] = GetByteByIdx(3, data);
+        }*/
+    }
+    else
+    {
+        // Store SPI response frame to temporary variable for extracting data
+        dataRecived.dw = data;
+
+        packageToSend->status = USB_STATUS_DATA;
+        packageToSend->dataLength = 5;
+        packageToSend->data[0] = dataRecived.bf.gen_status;
+        packageToSend->data[1] = dataRecived.bf.s_bit;
+        packageToSend->data[2] = dataRecived.bf.sid_add_status;
+        packageToSend->data[3] = GetLSB(dataRecived.bf.output_data);
+        packageToSend->data[4] = GetMSB(dataRecived.bf.output_data);
+
+    }
+    // Sendig data back is performed by calling function
+}
+
+#ifdef CS600
 void CmdWriteReg(USBReceiveData const * const commandPackage)
 {
     // Parameters for SPI packages and variable to store output data
@@ -160,65 +312,6 @@ void CmdWriteReg(USBReceiveData const * const commandPackage)
         packageToSend.dataLength = 2;
         packageToSend.data[0] = GetLSB(dataRecived.bf.output_data);
         packageToSend.data[1] = GetMSB(dataRecived.bf.output_data);
-    }
-
-    // Send data back to MCU
-    SendUSBPackage(&packageToSend);
-    ToggleLED4();
-}
-
-void CmdSpiInstuction(USBReceiveData const * const commandPackage)
-{
-    // Parameters for SPI packages and variable to store output data
-    USBTransmitData packageToSend;
-    uint16 instruction;
-    uint32 data;
-    SPIReceiveData dataRecived;
-    //TODO: remove RWFlag rwOption, is rudiment from CS 600
-    enum RWFlag rwOption = READ;
-    uint16 length = 1;
-    boolean isSuccessfulFlag = FALSE;
-
-    // Unpack received data to variables
-    instruction = ConstructWordFromBytes(commandPackage->data[1], commandPackage->data[0]);
-
-    // Send data to SPI with waiting for response
-    isSuccessfulFlag = QSPIReadWriteSequence(&instruction, &data, &rwOption, &length);
-
-    // Construct package to PC
-    packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
-
-    // Construct packages based on error status
-    if (isSuccessfulFlag == FALSE)
-    {
-        // Common error frame setup
-        packageToSend.status = USB_STATUS_ERROR;
-        packageToSend.dataLength = 0;
-
-        // Check if SPI response frame was received
-        if (length > 0)
-        {
-            // Fill data in error frame with invalid response from ASIC
-            packageToSend.dataLength = 4;
-            packageToSend.data[0] = GetByteByIdx(0, data);
-            packageToSend.data[1] = GetByteByIdx(1, data);
-            packageToSend.data[2] = GetByteByIdx(2, data);
-            packageToSend.data[3] = GetByteByIdx(3, data);
-        }
-    }
-    else
-    {
-        // Store SPI response frame to temporary variable for extracting data
-        dataRecived.dw = data;
-
-        packageToSend.status = USB_STATUS_DATA;
-        packageToSend.dataLength = 5;
-        packageToSend.data[0] = dataRecived.bf.gen_status;
-        packageToSend.data[1] = dataRecived.bf.s_bit;
-        packageToSend.data[2] = dataRecived.bf.sid_add_status;
-        packageToSend.data[3] = GetLSB(dataRecived.bf.output_data);
-        packageToSend.data[4] = GetMSB(dataRecived.bf.output_data);
-
     }
 
     // Send data back to MCU
@@ -331,3 +424,4 @@ void CmdReadRegRaw(USBReceiveData const * const commandPackage)
     // Send data back to MCU
     SendUSBPackage(&packageToSend);
 }
+#endif // CS600
