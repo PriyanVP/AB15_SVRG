@@ -32,7 +32,6 @@
     <None Remove="Views\Resources\sort_descending_dark.png" />
     <None Remove="Views\Resources\watchdog_dark.png" />
     <None Remove="Views\Resources\watchdog_light.png" />
-    <None Remove="Views\Resources\whatchdog_light.png" />
     <None Remove="Views\Resources\zoom_dark.png" />
     <None Remove="Views\Resources\zoom_light.png" />
   </ItemGroup>
@@ -46,7 +45,6 @@
     <Resource Include="Views\Resources\menu_dark.png" />
     <Resource Include="Views\Resources\sensor_dark.png" />
     <Resource Include="Views\Resources\watchdog_dark.png" />
-    <Resource Include="Views\Resources\watchdog_light.png" />
     <Resource Include="Views\Resources\bosch.ico" />
     <Resource Include="Views\Resources\chip_light.png" />
     <Resource Include="Views\Resources\config_light.png" />
@@ -61,7 +59,7 @@
     <Resource Include="Views\Resources\sort_ascending_dark.png" />
     <Resource Include="Views\Resources\sort_descending_light.png" />
     <Resource Include="Views\Resources\sort_descending_dark.png" />
-    <Resource Include="Views\Resources\whatchdog_light.png" />
+    <Resource Include="Views\Resources\watchdog_light.png" />
     <Resource Include="Views\Resources\zoom_dark.png" />
     <Resource Include="Views\Resources\zoom_light.png" />
   </ItemGroup>
