@@ -230,7 +230,7 @@
 
                 <!--Diagnostics button-->
                 <!--TODO: delete debug code-->
-                <Button Grid.Row="7" Click="Button_Click" Style="{DynamicResource MenuButtons}" Command="{Binding GoToDiagnosticsPage}">
+                <Button Grid.Row="7" Style="{DynamicResource MenuButtons}" Command="{Binding GoToDiagnosticsPage}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="40"/>
