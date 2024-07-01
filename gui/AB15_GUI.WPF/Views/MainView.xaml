@@ -8,13 +8,17 @@
         xmlns:cnvrt="clr-namespace:AB15_GUI.WPF.Views.Converters"
         xmlns:local="clr-namespace:AB15_GUI.WPF.Views"
         mc:Ignorable="d"
-        Title="Bosch AB15" Height="650" Width="1000"
+        Title="Bosch AB15" 
+        MinHeight="550" MinWidth="800"
+        Height="650" Width="1000"
         Icon="Resources/bosch.ico">
     <Window.Resources>
         <cnvrt:StatusToColorConverter x:Key="StatusToColorConverter"/>
     </Window.Resources>
-    <Grid Background="{DynamicResource BackGroung}">
-        <!--Separate control group-->
+    
+    <Grid Background="{DynamicResource UI.BackGroung}">
+        
+        <!--Main panels setup-->
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" MinHeight="20"/>
             <RowDefinition Height="*"/>
@@ -23,7 +27,7 @@
 
         <!--Top panel group-->
         <Grid Grid.Row="0" Background="{DynamicResource TopPanel.Background}">
-            <!--User menu control group-->
+            <!--Quick action menu control group-->
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="5"/>
                 <ColumnDefinition Width="auto" MinWidth="20"/>
@@ -39,8 +43,8 @@
             <!--Save/Load menu-->
             <Menu Grid.Column="1" FontSize="20">
                 <MenuItem Template="{StaticResource VsMenuTop}" Header="File">
-                    <MenuItem Command="{Binding RunLoadRegisterSetting}" Template="{StaticResource VsMenuSub}" Header="Load Register settings"/>
-                    <MenuItem Command="{Binding RunSaveRegisterSetting}" Template="{StaticResource VsMenuSub}" Header="Save Register settings"/>
+                    <MenuItem Command="{Binding RunLoadRegisterSetting}" Template="{StaticResource MenuSubItem}" Header="Load Register settings"/>
+                    <MenuItem Command="{Binding RunSaveRegisterSetting}" Template="{StaticResource MenuSubItem}" Header="Save Register settings"/>
                 </MenuItem>
             </Menu>
             
@@ -48,17 +52,17 @@
             <Menu Grid.Column="3" FontSize="20">
                 <MenuItem Template="{StaticResource VsMenuTop}" Header="More" >
                     <MenuItem Command="{Binding OpenDocumantation}" 
-                              Template="{StaticResource VsMenuSub}" Header="AB15 Documantation"/>
+                              Template="{StaticResource MenuSubItem}" Header="AB15 Documantation"/>
                     <MenuItem Command="{Binding OpenUserManual}" 
-                              Template="{StaticResource VsMenuSub}" Header="AB15 GUI User Manual"/>
+                              Template="{StaticResource MenuSubItem}" Header="AB15 GUI User Manual"/>
                     <MenuItem Command="{Binding OpenTCD}" 
-                              Template="{StaticResource VsMenuSub}" Header="AB15 TCD"/>
+                              Template="{StaticResource MenuSubItem}" Header="AB15 TCD"/>
                     <MenuItem Command="{Binding OpenApplicationNote}" 
-                              Template="{StaticResource VsMenuSub}" Header="AB15 Application Note"/>
+                              Template="{StaticResource MenuSubItem}" Header="AB15 Application Note"/>
                     <MenuItem Command="{Binding OpenRegisterMaps}" 
-                              Template="{StaticResource VsMenuSub}" Header="AB15 Register Maps"/>
+                              Template="{StaticResource MenuSubItem}" Header="AB15 Register Maps"/>
                     <MenuItem Command="{Binding OpenSensorDetails}" 
-                              Template="{StaticResource VsMenuSub}" Header="Sensor details"/>
+                              Template="{StaticResource MenuSubItem}" Header="Sensor details"/>
                 </MenuItem>
             </Menu>
         </Grid>
@@ -92,7 +96,7 @@
                 </Grid.RowDefinitions>
                 
                 <!--Menu size toggle button-->
-                <ToggleButton Style="{DynamicResource MenuToggleButtonTemplate}" x:Name="MenuSizeToggle" IsChecked="True"
+                <ToggleButton Style="{DynamicResource MenuToggleButtonTemplate}" IsChecked="True"
                         Grid.Row="0">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -100,7 +104,7 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Image Grid.Column="0" Source="{DynamicResource Ico.menu}" 
+                        <Image Grid.Column="0" Source="{DynamicResource Ico.Menu}" 
                                Width="30" 
                                RenderTransformOrigin="0.5,0.5" 
                                HorizontalAlignment="Stretch" VerticalAlignment="Center">
@@ -157,7 +161,7 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Image Source="{DynamicResource Ico.home}" Grid.Column="0" Width="30"/>
+                        <Image Source="{DynamicResource Ico.Home}" Grid.Column="0" Width="30"/>
                         <TextBlock Text="Home" FontSize="20" Grid.Column="1" Style="{DynamicResource TextBlockStyle}"/>
 
                     </Grid>
@@ -171,7 +175,7 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Image Source="{DynamicResource Ico.zoom}" Grid.Column="0" Width="30"/>
+                        <Image Source="{DynamicResource Ico.Zoom}" Grid.Column="0" Width="30"/>
                         <TextBlock Text="SPI Learning" FontSize="20" Grid.Column="1" Style="{DynamicResource TextBlockStyle}"/>
                     </Grid>
                 </Button>
@@ -184,7 +188,7 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Image Source="{DynamicResource Ico.watchdog}" Grid.Column="0" Width="30"/>
+                        <Image Source="{DynamicResource Ico.Watchdog}" Grid.Column="0" Width="30"/>
                         <TextBlock Text="Watchdog" FontSize="20" Grid.Column="1" Style="{DynamicResource TextBlockStyle}"/>
                     </Grid>
                 </Button>
@@ -197,7 +201,7 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Image Source="{DynamicResource Ico.airbag}" Grid.Column="0" Width="30"/>
+                        <Image Source="{DynamicResource Ico.Airbag}" Grid.Column="0" Width="30"/>
                         <TextBlock Text="Firing" FontSize="20" Grid.Column="1" Style="{DynamicResource TextBlockStyle}"/>
                     </Grid>
                 </Button>
@@ -210,8 +214,8 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Image Source="{DynamicResource Ico.chip}" Grid.Column="0" Width="30"/>
-                        <TextBlock Text="AB12 Data" FontSize="20" Grid.Column="1" Style="{DynamicResource TextBlockStyle}"/>
+                        <Image Source="{DynamicResource Ico.Chip}" Grid.Column="0" Width="30"/>
+                        <TextBlock Text="AB15 Data" FontSize="20" Grid.Column="1" Style="{DynamicResource TextBlockStyle}"/>
                     </Grid>
                 </Button>
 
@@ -223,13 +227,12 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Image Source="{DynamicResource Ico.sensor}" Grid.Column="0" Width="30"/>
+                        <Image Source="{DynamicResource Ico.Sensor}" Grid.Column="0" Width="30"/>
                         <TextBlock Text="Sensor" FontSize="20" Grid.Column="1" Style="{DynamicResource TextBlockStyle}"/>
                     </Grid>
                 </Button>
 
                 <!--Diagnostics button-->
-                <!--TODO: delete debug code-->
                 <Button Grid.Row="7" Style="{DynamicResource MenuButtons}" Command="{Binding GoToDiagnosticsPage}">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -237,14 +240,13 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Image Source="{DynamicResource ico.config}" Grid.Column="0" Width="30"/>
+                        <Image Source="{DynamicResource Ico.Config}" Grid.Column="0" Width="30"/>
                         <TextBlock Text="Diagnostics" FontSize="20" Grid.Column="1" Style="{DynamicResource TextBlockStyle}"/>
                     </Grid>
                 </Button>
 
                 <!--Status section-->
                 <Grid Grid.Row="8" VerticalAlignment="Bottom">
-                    <!--TODO Add animated status panel-->
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto"/>
@@ -258,14 +260,14 @@
                         <!--Animation connection for PC - MCU-->
                         <custom:ConnectionAnimation x:Name="animationTest1" Grid.Row="1" Height="20" 
                                                   HorizontalAlignment="Left" 
-                                                  FlyColor="{DynamicResource Animation.Arrow}" 
+                                                  ArrowColor="{DynamicResource Animation.Arrow}" 
                                                   BorderColor="{DynamicResource Animation.Lines}" 
                                                   IsAnimationEnabled="{Binding MCUConnectionStatus}"/>
 
                         <!--Animation connection for MCU - AB-->
                         <custom:ConnectionAnimation x:Name="animationTest2" Grid.Row="3" Height="20" 
                                                   HorizontalAlignment="Left" 
-                                                  FlyColor="{DynamicResource Animation.Arrow}" 
+                                                  ArrowColor="{DynamicResource Animation.Arrow}" 
                                                   BorderColor="{DynamicResource Animation.Lines}" 
                                                   IsAnimationEnabled="{Binding ABConnectionStatus}"/>
 
@@ -276,7 +278,7 @@
                                 Width="40">
                             <Border.Background>
                                 <MultiBinding Converter = "{StaticResource StatusToColorConverter}">
-                                    <Binding Path = "PCCurrentStatus"/>
+                                    <Binding Path = "pcStatus"/>
                                     <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
                                 </MultiBinding>
                             </Border.Background>
@@ -290,7 +292,7 @@
                                 Width="40">
                             <Border.Background>
                                 <MultiBinding Converter = "{StaticResource StatusToColorConverter}">
-                                    <Binding Path = "MCUCurrentStatus"/>
+                                    <Binding Path = "mcuStatus"/>
                                     <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
                                 </MultiBinding>
                             </Border.Background>
@@ -304,7 +306,7 @@
                                 Width="40">
                             <Border.Background>
                                 <MultiBinding Converter = "{StaticResource StatusToColorConverter}">
-                                    <Binding Path = "ABCurrentStatus"/>
+                                    <Binding Path = "abStatus"/>
                                     <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
                                 </MultiBinding>
                             </Border.Background>
@@ -336,7 +338,7 @@
 
             <TextBlock Style="{DynamicResource TextBlockStyle}" Text="GUI:" Grid.Column="1"/>
             <TextBlock Style="{DynamicResource TextBlockStyle}" Text="MCU:" Grid.Column="5"/>
-            <TextBlock Style="{DynamicResource TextBlockStyle}" Text="AB12:" Grid.Column="9"/>
+            <TextBlock Style="{DynamicResource TextBlockStyle}" Text="AB15:" Grid.Column="9"/>
 
             <TextBlock Style="{DynamicResource TextBlockStyle}" Text="{Binding GUIVersion}" Grid.Column="3"/>
             <TextBlock Style="{DynamicResource TextBlockStyle}" Text="{Binding MCUVersion}" Grid.Column="7"/>

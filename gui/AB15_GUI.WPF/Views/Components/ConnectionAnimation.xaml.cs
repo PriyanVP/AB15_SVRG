@@ -1,18 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace AB15_GUI.WPF.Views.Components
 {
@@ -33,10 +22,10 @@ namespace AB15_GUI.WPF.Views.Components
         /// <summary>
         /// Background color for arrows
         /// </summary>
-        public Brush FlyColor
+        public Brush ArrowColor
         {
-            get { return (Brush)GetValue(FlyColorProperty); }
-            set { SetValue(FlyColorProperty, value); }
+            get { return (Brush)GetValue(ArrowColorProperty); }
+            set { SetValue(ArrowColorProperty, value); }
         }
 
         /// <summary>
@@ -56,8 +45,8 @@ namespace AB15_GUI.WPF.Views.Components
         /// <summary>
         /// Add backgroud color brush to control metadata
         /// </summary>
-        public static readonly DependencyProperty FlyColorProperty = 
-            DependencyProperty.Register("FlyColor", typeof(Brush), typeof(ConnectionAnimation), new PropertyMetadata(Brushes.Red));
+        public static readonly DependencyProperty ArrowColorProperty = 
+            DependencyProperty.Register("ArrowColor", typeof(Brush), typeof(ConnectionAnimation), new PropertyMetadata(Brushes.Red));
 
         /// <summary>
         /// Add flag for toggle animation
@@ -76,7 +65,6 @@ namespace AB15_GUI.WPF.Views.Components
 
         /// <summary>
         /// Event that occure when flag change it state
-        /// TODO: maybe move to XAML
         /// NOTE: Start and Stop functions cannot be moved 
         /// inside THIS function in corrent form
         /// </summary>

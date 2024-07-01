@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 namespace AB15_GUI.WPF.ViewModels
 {
     /// <summary>
-    /// TODO define proper place
+    /// Connection status value definition 
     /// </summary>
     public enum UIConnectionStatus
     {
@@ -33,15 +33,15 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// PC status for view
         /// </summary>
-        private UIConnectionStatus _PCconnectionStatus;
-        public UIConnectionStatus PCCurrentStatus
+        private UIConnectionStatus pcConnectionStatus;
+        public UIConnectionStatus pcStatus
         {
-            get => _PCconnectionStatus;
+            get => pcConnectionStatus;
             set
             {
-                if (_PCconnectionStatus != value)
+                if (pcConnectionStatus != value)
                 {
-                    _PCconnectionStatus = value;
+                    pcConnectionStatus = value;
                     OnPropertyChanged();
                 }
             }
@@ -50,15 +50,15 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// MCU status for view
         /// </summary>
-        private UIConnectionStatus _MCUconnectionStatus;
-        public UIConnectionStatus MCUCurrentStatus
+        private UIConnectionStatus mcuCnnectionStatus;
+        public UIConnectionStatus mcuStatus
         {
-            get => _MCUconnectionStatus;
+            get => mcuCnnectionStatus;
             set
             {
-                if (_MCUconnectionStatus != value)
+                if (mcuCnnectionStatus != value)
                 {
-                    _MCUconnectionStatus = value;
+                    mcuCnnectionStatus = value;
                     OnPropertyChanged();
                 }
             }
@@ -67,15 +67,15 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// AB status for view
         /// </summary>
-        private UIConnectionStatus _ABconnectionStatus;
-        public UIConnectionStatus ABCurrentStatus
+        private UIConnectionStatus abConnectionStatus;
+        public UIConnectionStatus abStatus
         {
-            get => _ABconnectionStatus;
+            get => abConnectionStatus;
             set
             {
-                if (_ABconnectionStatus != value)
+                if (abConnectionStatus != value)
                 {
-                    _ABconnectionStatus = value;
+                    abConnectionStatus = value;
                     OnPropertyChanged();
                 }
             }

@@ -7,30 +7,34 @@
              mc:Ignorable="d" 
              MinHeight="20" MinWidth="40"
              d:DesignHeight="40" d:DesignWidth="40"
-             x:Name="connectionAnimation">
+             x:Name="AnimationControl">
     <UserControl.Resources>
         <!--Animation set-up-->
+        <!--This animation move every arrow by 10 points in one diraction
+        arrow 1 move to start point of arrow 2 and then restart
+        with this approach we have continuous moving animation without long move distance
+        Arrows 1x move up and 2x move down--> 
         <Storyboard  x:Key="Animation" RepeatBehavior="Forever">
             <DoubleAnimation
-                Storyboard.TargetName="Fly11"
+                Storyboard.TargetName="Arrow11"
                 Storyboard.TargetProperty="(Canvas.Top)"
                 From="30" To="20"
                 Duration="0:0:1"
                 AutoReverse="False"/>
             <DoubleAnimation
-                Storyboard.TargetName="Fly12"
+                Storyboard.TargetName="Arrow12"
                 Storyboard.TargetProperty="(Canvas.Top)"
                 From="20" To="10"
                 Duration="0:0:1"
                 AutoReverse="False"/>
             <DoubleAnimation
-                Storyboard.TargetName="Fly13"
+                Storyboard.TargetName="Arrow13"
                 Storyboard.TargetProperty="(Canvas.Top)"
                 From="10" To="0"
                 Duration="0:0:1"
                 AutoReverse="False"/>
             <DoubleAnimation
-                Storyboard.TargetName="Fly14"
+                Storyboard.TargetName="Arrow14"
                 Storyboard.TargetProperty="(Canvas.Top)"
                 From="0" To="-10"
                 Duration="0:0:1"
@@ -38,25 +42,25 @@
 
 
             <DoubleAnimation
-                Storyboard.TargetName="Fly21"
+                Storyboard.TargetName="Arrow21"
                 Storyboard.TargetProperty="(Canvas.Top)"
                 To="30" From="20"
                 Duration="0:0:1"
                 AutoReverse="False"/>
             <DoubleAnimation
-                Storyboard.TargetName="Fly22"
+                Storyboard.TargetName="Arrow22"
                 Storyboard.TargetProperty="(Canvas.Top)"
                 To="20" From="10"
                 Duration="0:0:1"
                 AutoReverse="False"/>
             <DoubleAnimation
-                Storyboard.TargetName="Fly23"
+                Storyboard.TargetName="Arrow23"
                 Storyboard.TargetProperty="(Canvas.Top)"
                 To="10" From="0"
                 Duration="0:0:1"
                 AutoReverse="False"/>
             <DoubleAnimation
-                Storyboard.TargetName="Fly24"
+                Storyboard.TargetName="Arrow24"
                 Storyboard.TargetProperty="(Canvas.Top)"
                 To="0" From="-10"
                 Duration="0:0:1"
@@ -76,33 +80,33 @@
         </Grid.ColumnDefinitions>
         
         <!--Borders for data flow-->
-        <Border Grid.Column="0" BorderThickness="0,0,1,0" BorderBrush="{Binding BorderColor, ElementName=connectionAnimation}"/>
-        <Border Grid.Column="2" BorderThickness="1,0,1,0" BorderBrush="{Binding BorderColor, ElementName=connectionAnimation}"/>
-        <Border Grid.Column="5" BorderThickness="1,0,0,0" BorderBrush="{Binding BorderColor, ElementName=connectionAnimation}"/>
+        <Border Grid.Column="0" BorderThickness="0,0,1,0" BorderBrush="{Binding BorderColor, ElementName=AnimationControl}"/>
+        <Border Grid.Column="2" BorderThickness="1,0,1,0" BorderBrush="{Binding BorderColor, ElementName=AnimationControl}"/>
+        <Border Grid.Column="5" BorderThickness="1,0,0,0" BorderBrush="{Binding BorderColor, ElementName=AnimationControl}"/>
 
-        <!--Arrows that represent data-->
+        <!--Arrows that represent data movind upwards, ex. from mcu to pc-->
         <Canvas Grid.Column="1" x:Name="AnimationCanvas1" Visibility="Hidden">
-            <local:DataArrow x:Name="Fly11" Canvas.Left="0" Canvas.Top="-10"
-                                    FillColor="{Binding FlyColor, ElementName=connectionAnimation}" HorizontalAlignment="Center"/>
-            <local:DataArrow x:Name="Fly12" Canvas.Left="0" Canvas.Top="-10"
-                                    FillColor="{Binding FlyColor, ElementName=connectionAnimation}" HorizontalAlignment="Center"/>
-            <local:DataArrow x:Name="Fly13" Canvas.Left="0" Canvas.Top="-10"
-                                    FillColor="{Binding FlyColor, ElementName=connectionAnimation}" HorizontalAlignment="Center"/>
-            <local:DataArrow x:Name="Fly14" Canvas.Left="0" Canvas.Top="-10"
-                                    FillColor="{Binding FlyColor, ElementName=connectionAnimation}" HorizontalAlignment="Center"/>
+            <local:DataArrow x:Name="Arrow11" Canvas.Left="0" Canvas.Top="-10"
+                                    FillColor="{Binding ArrowColor, ElementName=AnimationControl}" HorizontalAlignment="Center"/>
+            <local:DataArrow x:Name="Arrow12" Canvas.Left="0" Canvas.Top="-10"
+                                    FillColor="{Binding ArrowColor, ElementName=AnimationControl}" HorizontalAlignment="Center"/>
+            <local:DataArrow x:Name="Arrow13" Canvas.Left="0" Canvas.Top="-10"
+                                    FillColor="{Binding ArrowColor, ElementName=AnimationControl}" HorizontalAlignment="Center"/>
+            <local:DataArrow x:Name="Arrow14" Canvas.Left="0" Canvas.Top="-10"
+                                    FillColor="{Binding ArrowColor, ElementName=AnimationControl}" HorizontalAlignment="Center"/>
         </Canvas>
-        
-        <!--Arrows that represent data-->
+
+        <!--Arrows that represent data downwards, ex. from pc to mcu-->
         <Canvas Grid.Column="3" x:Name="AnimationCanvas2" Visibility="Hidden">
 
-            <local:DataArrow x:Name="Fly21" Canvas.Right="0" Canvas.Top="-10"
-                                    FillColor="{Binding FlyColor, ElementName=connectionAnimation}" HorizontalAlignment="Center" ScaleY="-1"/>
-            <local:DataArrow x:Name="Fly22" Canvas.Right="0" Canvas.Top="-10"
-                                    FillColor="{Binding FlyColor, ElementName=connectionAnimation}" HorizontalAlignment="Center" ScaleY="-1"/>
-            <local:DataArrow x:Name="Fly23" Canvas.Right="0" Canvas.Top="-10"
-                                    FillColor="{Binding FlyColor, ElementName=connectionAnimation}" HorizontalAlignment="Center" ScaleY="-1"/>
-            <local:DataArrow x:Name="Fly24" Canvas.Right="0" Canvas.Top="-10"
-                                    FillColor="{Binding FlyColor, ElementName=connectionAnimation}" HorizontalAlignment="Center" ScaleY="-1"/>
+            <local:DataArrow x:Name="Arrow21" Canvas.Right="0" Canvas.Top="-10"
+                                    FillColor="{Binding ArrowColor, ElementName=AnimationControl}" HorizontalAlignment="Center" ScaleY="-1"/>
+            <local:DataArrow x:Name="Arrow22" Canvas.Right="0" Canvas.Top="-10"
+                                    FillColor="{Binding ArrowColor, ElementName=AnimationControl}" HorizontalAlignment="Center" ScaleY="-1"/>
+            <local:DataArrow x:Name="Arrow23" Canvas.Right="0" Canvas.Top="-10"
+                                    FillColor="{Binding ArrowColor, ElementName=AnimationControl}" HorizontalAlignment="Center" ScaleY="-1"/>
+            <local:DataArrow x:Name="Arrow24" Canvas.Right="0" Canvas.Top="-10"
+                                    FillColor="{Binding ArrowColor, ElementName=AnimationControl}" HorizontalAlignment="Center" ScaleY="-1"/>
         </Canvas>
 
     </Grid>

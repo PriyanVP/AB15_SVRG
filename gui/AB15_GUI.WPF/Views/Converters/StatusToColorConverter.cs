@@ -24,7 +24,7 @@ namespace AB15_GUI.WPF.Views.Converters
             switch (status)
             {
                 case UIConnectionStatus.NotConnected:
-                    return (Brush)App.Current.Resources["Menu.Background"];
+                    return (Brush)App.Current.Resources["StatusBox.NotConnected"];
                 case UIConnectionStatus.Connected:
                     return (Brush)App.Current.Resources["StatusBox.Connected"];
                 case UIConnectionStatus.Warning:
