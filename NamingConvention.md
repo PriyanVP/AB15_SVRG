@@ -1,15 +1,15 @@
 ## Naming convention C
 
-**Local Variables**: camelCase
-**Const Variables**: g_camelCase
+**Local Variables**: camelCase  
+**Const Variables**: g_camelCase  
 **Global variables**: same as variables with prefix ==g_==  
 **Pointers**: same as variables with prefix ==p_==  
 **Structs**: ModulePascalCase (Module = full module name, or a 2-3 letter abbreviation, but still in PascalCase.)  
 **Struct Member Variables**: camelCase  
 **Enums**: ModulePascalCase  
 **Enum Values**: ALL_CAPS  
-**Typedefs**: ModulePascalCase
-**Functions**: PascalCase
+**Typedefs**: ModulePascalCase  
+**Functions**: PascalCase  
 **Macros**: ALL_CAPS()  
 **Define**: ALL_CAPS  
 **Trivial Variables**: i,n,c,etc...  
@@ -82,9 +82,9 @@ Avoid names that differ only in case, like foo and Foo. Similarly, avoid foobar 
 **Structs**: PascalCase  
 **Classes**: PascalCase  
 **Interfaces**: IPascalCase (use I as prefix)  
-**Properties**: PascalCase
-**Private attributes**: camelCase
-**Methods**: PascalCase
+**Properties**: PascalCase  
+**Private attributes**: camelCase  
+**Methods**: PascalCase  
 **Method parameters**: camelCase  
 **Public members**: camelCase (class fields, record fields, ...)  
 **Private members**: _camelCase (class fields, record fields, ...)  

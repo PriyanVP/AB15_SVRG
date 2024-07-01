@@ -28,6 +28,21 @@ firmware/.metadata/
 # Ignore folder with binaries for firmware
 firmware/mcu_esw/TriCoreDebug*/
 
+# ignore language.settings due to env-hash regeneration without changing of sources 
+# see: https://www.eclipse.org/forums/index.php/t/1074031/
+# possible solution: 
+#1. add a .gitattributes file to your repository containing
+#
+#.settings/language.settings.xml filter=eclipse_env_hash
+#
+#2. add the following to .git/config
+#
+#[filter "eclipse_env_hash"]
+#clean = sed 's/env-hash=\"[-,0-9]*\"/env-hash=\"-000000000000000000\"/g'
+#smudge = cat
+firmware/mcu_esw/.settings/language.settings.xml
+
+
 # .. except certain files
 #!firmware/mcu_esw/TriCoreDebug\(TASKING\)/*.hex
 #!firmware/mcu_esw/TriCoreDebug\(TASKING\)/*.elf
