@@ -252,6 +252,7 @@
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="auto"/>
+                            <RowDefinition Height="5"/>
                         </Grid.RowDefinitions>
 
                         <!--Animation connection for PC - MCU-->
@@ -267,11 +268,6 @@
                                                   FlyColor="{DynamicResource Animation.Arrow}" 
                                                   BorderColor="{DynamicResource Animation.Lines}" 
                                                   IsAnimationEnabled="{Binding ABConnectionStatus}"/>
-
-                        <!--Background for Status boxes-->
-                        <Canvas Grid.Row="0" Background="{DynamicResource Menu.Background}"/>
-                        <Canvas Grid.Row="2" Background="{DynamicResource Menu.Background}"/>
-                        <Canvas Grid.Row="4" Background="{DynamicResource Menu.Background}"/>
 
                         <!--Status box for PC-->
                         <Border Grid.Row="0" BorderThickness="1" 

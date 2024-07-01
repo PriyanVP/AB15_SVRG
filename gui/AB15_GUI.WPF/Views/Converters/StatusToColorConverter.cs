@@ -1,6 +1,7 @@
 using AB15_GUI.WPF.ViewModels;
 using System;
 using System.Globalization;
+using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 
@@ -23,7 +24,7 @@ namespace AB15_GUI.WPF.Views.Converters
             switch (status)
             {
                 case UIConnectionStatus.NotConnected:
-                    return Brushes.Transparent; // TODO: replace for best usage, remove unused canvas in XAML (?)
+                    return (Brush)App.Current.Resources["Menu.Background"];
                 case UIConnectionStatus.Connected:
                     return (Brush)App.Current.Resources["StatusBox.Connected"];
                 case UIConnectionStatus.Warning:
