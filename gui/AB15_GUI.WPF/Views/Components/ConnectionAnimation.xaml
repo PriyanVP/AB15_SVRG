@@ -10,7 +10,7 @@
              x:Name="AnimationControl">
     <UserControl.Resources>
         <!--Animation set-up-->
-        <!--This animation move every arrow by 10 points in one diraction
+        <!--This animation move every arrow by 10 points in one direction
         arrow 1 move to start point of arrow 2 and then restart
         with this approach we have continuous moving animation without long move distance
         Arrows 1x move up and 2x move down--> 

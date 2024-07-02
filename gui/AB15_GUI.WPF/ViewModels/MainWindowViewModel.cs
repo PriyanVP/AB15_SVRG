@@ -33,15 +33,15 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// PC status for view
         /// </summary>
-        private UIConnectionStatus pcConnectionStatus;
-        public UIConnectionStatus pcStatus
+        private UIConnectionStatus connectionStatusPC;
+        public UIConnectionStatus ConnectionStatusPC
         {
-            get => pcConnectionStatus;
+            get => connectionStatusPC;
             set
             {
-                if (pcConnectionStatus != value)
+                if (connectionStatusPC != value)
                 {
-                    pcConnectionStatus = value;
+                    connectionStatusPC = value;
                     OnPropertyChanged();
                 }
             }
@@ -50,15 +50,15 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// MCU status for view
         /// </summary>
-        private UIConnectionStatus mcuCnnectionStatus;
-        public UIConnectionStatus mcuStatus
+        private UIConnectionStatus connectionStatusMCU;
+        public UIConnectionStatus ConnectionStatusMCU
         {
-            get => mcuCnnectionStatus;
+            get => connectionStatusMCU;
             set
             {
-                if (mcuCnnectionStatus != value)
+                if (connectionStatusMCU != value)
                 {
-                    mcuCnnectionStatus = value;
+                    connectionStatusMCU = value;
                     OnPropertyChanged();
                 }
             }
@@ -67,15 +67,15 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// AB status for view
         /// </summary>
-        private UIConnectionStatus abConnectionStatus;
-        public UIConnectionStatus abStatus
+        private UIConnectionStatus connectionStatusAB;
+        public UIConnectionStatus ConnectionStatusAB
         {
-            get => abConnectionStatus;
+            get => connectionStatusAB;
             set
             {
-                if (abConnectionStatus != value)
+                if (connectionStatusAB != value)
                 {
-                    abConnectionStatus = value;
+                    connectionStatusAB = value;
                     OnPropertyChanged();
                 }
             }
@@ -102,6 +102,8 @@ namespace AB15_GUI.WPF.ViewModels
 
             logger.Trace("In MainViewModel");
             loggerWindowView.Show();
+
+            connectionStatusMCU = UIConnectionStatus.Connected;
         }
     }
 }

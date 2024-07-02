@@ -278,7 +278,7 @@
                                 Width="40">
                             <Border.Background>
                                 <MultiBinding Converter = "{StaticResource StatusToColorConverter}">
-                                    <Binding Path = "pcStatus"/>
+                                    <Binding Path = "ConnectionStatusPC"/>
                                     <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
                                 </MultiBinding>
                             </Border.Background>
@@ -292,7 +292,7 @@
                                 Width="40">
                             <Border.Background>
                                 <MultiBinding Converter = "{StaticResource StatusToColorConverter}">
-                                    <Binding Path = "mcuStatus"/>
+                                    <Binding Path = "ConnectionStatusMCU"/>
                                     <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
                                 </MultiBinding>
                             </Border.Background>
@@ -306,7 +306,7 @@
                                 Width="40">
                             <Border.Background>
                                 <MultiBinding Converter = "{StaticResource StatusToColorConverter}">
-                                    <Binding Path = "abStatus"/>
+                                    <Binding Path = "ConnectionStatusAB"/>
                                     <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
                                 </MultiBinding>
                             </Border.Background>
