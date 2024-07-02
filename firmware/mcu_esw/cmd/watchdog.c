@@ -54,7 +54,7 @@ typedef struct
 
 WatchdogManagementFlagsStruct WatchdogManagementFlags =
 {
-    .isEnabledAckWatchdog = 1, // MCU serves Watchdog requests from CS600 by default
+    .isEnabledAckWatchdog = 1, // MCU serves Watchdog requests from ASIC by default
     .isEnabledMonitoringWatchdog = 0, // No monitoring by default
     .isConfigured = 0 // Watchdog presumed to be unconfigured until GUI explicitly performs configuration
 };
@@ -76,10 +76,10 @@ void CmdConfigureWatchdog(USBReceiveData const * const commandPackage)
 {
     boolean isSuccessfulFlag = FALSE;
 
-    // Prepare package for writing into CS600
+    // Prepare package for writing into ASIC
     uint16 address[WD_CFG_PACKAGE_LEN] = {WD_CONFIG0_ADDRESS, WD_CONFIG1_ADDRESS, WD_TIME_WIN_ADDRESS, WD_RESPTIME_ADDRESS}; // Addresses of registers to write
     uint16 data[WD_CFG_PACKAGE_LEN] = {0, 0, 0, 0};  // Values to write
-    uint16 length = WD_CFG_PACKAGE_LEN; // Number of 32bit SPI words to write into CS600
+    uint16 length = WD_CFG_PACKAGE_LEN; // Number of 32bit SPI words to write into ASIC
 
     // Unpack received message from GUI to obtain register values
     data[0] = ConstructWordFromBytes(0, commandPackage->data[0]); // WD_CONFIG0 register value (WDG_ENABLE field)
@@ -90,7 +90,7 @@ void CmdConfigureWatchdog(USBReceiveData const * const commandPackage)
     // Store RESPTIME value for configuration of Watchdog serving periodicity
     respTimeValue = (uint16)data[3];
 
-    // Write to CS600
+    // Write to ASIC
 
     //TODO: JS: 17.6. bruteforce set to true to allow enable watchdog for test purpose +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     isSuccessfulFlag = TRUE;
@@ -123,7 +123,7 @@ void CmdGetConfigWatchdog(USBReceiveData const * const commandPackage)
     uint16 address[WD_CFG_PACKAGE_LEN] = {WD_CONFIG0_ADDRESS, WD_CONFIG1_ADDRESS, WD_TIME_WIN_ADDRESS, WD_RESPTIME_ADDRESS}; // Addresses of registers to read
     SPIReceiveData data[WD_CFG_PACKAGE_LEN];  // Values of registers
     uint16 length = WD_CFG_PACKAGE_LEN;
-    // Read from CS600
+    // Read from ASIC
     boolean isSuccessfulFlag = FALSE;
     isSuccessfulFlag = QSPIReadSequence(&address, &data, &length);
     SPIReceiveData dataRecived;
@@ -183,15 +183,15 @@ void IntCmdServeWatchdog(void)
     uint16 responseWord0, responseWord1 = 0;
     uint16 address, length = 0;
 
-    // Get request from CS600's Watchdog
+    // Get request from ASIC's Watchdog
     // No checks to not serve same Watchdog request more than once (expected behavior in case of failed previous serving)
     requValue = GetREQUValue();
 
     // Obtain response word from look-up table
-    responseWord1 = GetResponseWord(requValue, 1);
-    responseWord0 = GetResponseWord(requValue, 0);
+    responseWord1 = GetResponseWordAb12(requValue, 1);
+    responseWord0 = GetResponseWordAb12(requValue, 0);
 
-    // Send response words to CS600
+    // Send response words to ASIC
     address = WD_RESP_ADDRESS;
     length = 1;
     QSPIWriteSequence(&address, &responseWord1, &length);
@@ -257,7 +257,7 @@ void CmdStartWatchdog(USBReceiveData const * const commandPackage)
         // Write Response Word 0 twice to cause start of new monitoring cycle
         address = WD_RESP_ADDRESS;
         length = 1;
-        data = GetResponseWord(0, 0);
+        data = GetResponseWordAb12(0, 0);
         //QSPIWriteSequence(&address, &data, &length);  // TODO: handling ASIC communication for watchdog, not implemented
         //QSPIWriteSequence(&address, &data, &length);
 
@@ -295,36 +295,28 @@ void CmdStopWatchdog(USBReceiveData const * const commandPackage)
     SendUSBPackage(&packageToSend);
 }
 
-uint16 GetResponseWord(uint8 requValue, boolean respWrdNumber)
+uint16 GetResponseWordAb12(uint8 requValue, boolean respWrdNumber)
 {
-    // Table of RESP_WRD values (according to datasheet)
-    uint16 responseWordArray[16][2] = {{0xF000, 0x0FFF},
-                                       {0xBF4F, 0x40B0},
-                                       {0xE616, 0x19E9},
-                                       {0xA959, 0x56A6},
-                                       {0x7A8A, 0x8575},
-                                       {0x35C5, 0xCA3A},
-                                       {0x6C9C, 0x9363},
-                                       {0x23D3, 0xDC2C},
-                                       {0xDD2D, 0x22D2},
-                                       {0x9262, 0x6D9D},
-                                       {0xCB3B, 0x34C4},
-                                       {0x8474, 0x7B8B},
-                                       {0x57A7, 0xA858},
-                                       {0x18E8, 0xE717},
-                                       {0x41B1, 0xBE4E},
-                                       {0x0EFE, 0xF101}};
+    // Table of RESP_WRD values (according to datasheet AB12)
+    uint16 responseWordArray[8][2] = {{0x2020, 0xE106},
+                                       {0xFDFD, 0x9671},
+                                       {0x8A8A, 0x4BAC},
+                                       {0x5757, 0x3CDB},
+                                       {0xECEC, 0xD235},
+                                       {0x3131, 0xA542},
+                                       {0x4646, 0x789F},
+                                       {0x9B9B, 0x0FE8}};
     // Provide value of requested RESP_WRD
     return (responseWordArray[requValue][respWrdNumber]);
 }
 
 uint8 GetRespCnt(void)
 {
-    // Read CS600's WD_REQU register
+    // Read ASIC's WD_REQU register
     uint16 address = WD_REQU_ADDRESS;
     SPIReceiveData data;
     uint16 length = 1;
-    // Read from CS600
+    // Read from ASIC
     QSPIReadSequence(&address, &(data.dw), &length);
     // Obtain RESP_CNT field value from register's content
     uint8 respCntValue = (data.bf.output_data & RESP_CNT_READMASK) >> RESP_CNT_OFFSET;
@@ -333,11 +325,11 @@ uint8 GetRespCnt(void)
 
 uint8 GetREQUValue(void)
 {
-    // Read CS600's WD_REQU register
+    // Read ASIC's WD_REQU register
     uint16 address = WD_REQU_ADDRESS;
     SPIReceiveData data;
     uint16 length = 1;
-    // Read from CS600
+    // Read from ASIC
     QSPIReadSequence(&address, &(data.dw), &length);
     // Obtain REQU field value from register's content
     uint8 requValue = (data.bf.output_data & REQU_READMASK) >> REQU_OFFSET;
@@ -353,7 +345,7 @@ uint16 CalculateWatchdogAckPeriodicity(void)
     // TODO: find a vay to use defines for Gpt1BlockPrescaler and TimerInputPrescaler (enum values of those constants aren't suited for straightforward translation, find a solution)
     durationOfTimerInterruptUs = (GENERAL_TIMER_PERIODICITY * 16 * 2) / (100); // Configured duration of General Timer interrupt, microseconds; 1/100 = (s->us constant)/(FREQ_GPT12_HZ)
 
-    // Configured duration of CS600's Watchdog Response Time, microseconds (datasheet translation: Response Time = RESPTIME_CFG * 0.1, ms)
+    // Configured duration of ASIC's Watchdog Response Time, microseconds (datasheet translation: Response Time = RESPTIME_CFG * 0.1, ms)
     volatile uint32 respTimeValueUs = respTimeValue*100;
     volatile uint16 watchdogAckPeriodicity = respTimeValueUs/durationOfTimerInterruptUs;
     return watchdogAckPeriodicity;

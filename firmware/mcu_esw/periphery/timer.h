@@ -50,6 +50,13 @@
 // TimerInputPrescaler - timer prescaler
 // Reload Value should fit in 16 bit unsigned int!
 
+
+/*from users manual:
+ * Timer Block GPT1 contains three timers/counters: The core timer T3 and the two auxiliary timers T2 and T4. The
+    maximum resolution is fGPT/4.
+*/
+
+
 #define FREQ_GPT12_HZ 100000000                             /* GPT12 module base frequency                           */
 
 /*********************************************************************************************************************/
