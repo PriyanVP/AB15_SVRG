@@ -79,7 +79,8 @@
             <!--Subsection-->
             <Grid Grid.Column="0" x:Name="MenuPanel" Margin="3,3" Background="{DynamicResource Menu.Background}">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto" MinWidth="160"/>
+                    <ColumnDefinition Width="auto" MinWidth="40"/>
+                    <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
 
                 <Grid.RowDefinitions>
@@ -97,24 +98,21 @@
                 
                 <!--Menu size toggle button-->
                 <ToggleButton Style="{DynamicResource MenuToggleButtonTemplate}" IsChecked="True"
-                        Grid.Row="0">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="40"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-
-                        <Image Grid.Column="0" Source="{DynamicResource Ico.Menu}" 
+                        Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+                    
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{DynamicResource Ico.Menu}" 
                                Width="30" 
                                RenderTransformOrigin="0.5,0.5" 
-                               HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                               HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                               Margin="5,0">
                             <Image.RenderTransform>
                                 <RotateTransform x:Name="MenuImage" CenterX="0.5" CenterY="0.5"/>
                             </Image.RenderTransform>
                         </Image>
                         <TextBlock Text="Menu" FontSize="20" Grid.Column="1" Style="{DynamicResource TextBlockStyle}"/>
-                        
-                    </Grid>
+                    </StackPanel>
+                    
                     <ToggleButton.Triggers>
                         <EventTrigger RoutedEvent="ToggleButton.Unchecked">
                             <BeginStoryboard>
@@ -140,7 +138,7 @@
                                         Storyboard.TargetName="MenuPanel"
                                         Storyboard.TargetProperty="Width"
                                         BeginTime="0:0:0"
-                                        To="166" From="46"
+                                        To="160" From="40"
                                         Duration="0:0:0.2"/>
                                     <DoubleAnimation
                                         Storyboard.TargetName="MenuImage"
@@ -154,95 +152,80 @@
                 </ToggleButton>
 
                 <!--Home button-->
-                <Button Grid.Row="1" Style="{DynamicResource MenuButtons}" Command="{Binding GoToHomePage}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="40"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
+                <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                        Style="{DynamicResource MenuButtons}" Command="{Binding GoToHomePage}">
+                    <StackPanel Orientation="Horizontal">
 
-                        <Image Source="{DynamicResource Ico.Home}" Grid.Column="0" Width="30"/>
-                        <TextBlock Text="Home" FontSize="20" Grid.Column="1" Style="{DynamicResource TextBlockStyle}"/>
+                        <Image Source="{DynamicResource Ico.Home}" Margin="5,0" Width="30"/>
+                        <TextBlock Text="Home" FontSize="20" Style="{DynamicResource TextBlockStyle}"/>
 
-                    </Grid>
+                    </StackPanel>
                 </Button>
 
                 <!--SPI Learning button-->
-                <Button Grid.Row="2" Style="{DynamicResource MenuButtons}" Command="{Binding GoToSPILearningPage}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="40"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
+                <Button Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                        Style="{DynamicResource MenuButtons}" Command="{Binding GoToSPILearningPage}">
+                    <StackPanel Orientation="Horizontal">
 
-                        <Image Source="{DynamicResource Ico.Zoom}" Grid.Column="0" Width="30"/>
-                        <TextBlock Text="SPI Learning" FontSize="20" Grid.Column="1" Style="{DynamicResource TextBlockStyle}"/>
-                    </Grid>
+                        <Image Source="{DynamicResource Ico.Zoom}" Margin="5,0" Width="30"/>
+                        <TextBlock Text="SPI Learning" FontSize="20" Style="{DynamicResource TextBlockStyle}"/>
+                        
+                    </StackPanel>
                 </Button>
 
                 <!--Watchdog button-->
-                <Button Grid.Row="3" Style="{DynamicResource MenuButtons}" Command="{Binding GoToWhatchdogPage}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="40"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
+                <Button Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
+                        Style="{DynamicResource MenuButtons}" Command="{Binding GoToWhatchdogPage}">
+                    <StackPanel Orientation="Horizontal">
 
-                        <Image Source="{DynamicResource Ico.Watchdog}" Grid.Column="0" Width="30"/>
-                        <TextBlock Text="Watchdog" FontSize="20" Grid.Column="1" Style="{DynamicResource TextBlockStyle}"/>
-                    </Grid>
+                        <Image Source="{DynamicResource Ico.Watchdog}" Margin="5,0" Width="30"/>
+                        <TextBlock Text="Watchdog" FontSize="20" Style="{DynamicResource TextBlockStyle}"/>
+                        
+                    </StackPanel>
                 </Button>
 
                 <!--Firing button-->
-                <Button Grid.Row="4" Style="{DynamicResource MenuButtons}" Command="{Binding GoToFiringPage}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="40"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
+                <Button Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"
+                        Style="{DynamicResource MenuButtons}" Command="{Binding GoToFiringPage}">
+                    <StackPanel Orientation="Horizontal">
 
-                        <Image Source="{DynamicResource Ico.Airbag}" Grid.Column="0" Width="30"/>
-                        <TextBlock Text="Firing" FontSize="20" Grid.Column="1" Style="{DynamicResource TextBlockStyle}"/>
-                    </Grid>
+                        <Image Source="{DynamicResource Ico.Airbag}" Margin="5,0" Width="30"/>
+                        <TextBlock Text="Firing" FontSize="20" Style="{DynamicResource TextBlockStyle}"/>
+                        
+                    </StackPanel>
                 </Button>
 
                 <!--AB12 Data button-->
-                <Button Grid.Row="5" Style="{DynamicResource MenuButtons}" Command="{Binding GoToAbDataPage}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="40"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
+                <Button Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"
+                        Style="{DynamicResource MenuButtons}" Command="{Binding GoToAbDataPage}">
+                    <StackPanel Orientation="Horizontal">
 
-                        <Image Source="{DynamicResource Ico.Chip}" Grid.Column="0" Width="30"/>
-                        <TextBlock Text="AB15 Data" FontSize="20" Grid.Column="1" Style="{DynamicResource TextBlockStyle}"/>
-                    </Grid>
+                        <Image Source="{DynamicResource Ico.Chip}" Margin="5,0" Width="30"/>
+                        <TextBlock Text="AB15 Data" FontSize="20" Style="{DynamicResource TextBlockStyle}"/>
+                        
+                    </StackPanel>
                 </Button>
 
                 <!--Sensors button-->
-                <Button Grid.Row="6" Style="{DynamicResource MenuButtons}" Command="{Binding GoToSensorPage}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="40"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
+                <Button Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2"
+                        Style="{DynamicResource MenuButtons}" Command="{Binding GoToSensorPage}">
+                    <StackPanel Orientation="Horizontal">
 
-                        <Image Source="{DynamicResource Ico.Sensor}" Grid.Column="0" Width="30"/>
-                        <TextBlock Text="Sensor" FontSize="20" Grid.Column="1" Style="{DynamicResource TextBlockStyle}"/>
-                    </Grid>
+                        <Image Source="{DynamicResource Ico.Sensor}" Margin="5,0" Width="30"/>
+                        <TextBlock Text="Sensor" FontSize="20" Style="{DynamicResource TextBlockStyle}"/>
+                        
+                    </StackPanel>
                 </Button>
 
                 <!--Diagnostics button-->
-                <Button Grid.Row="7" Style="{DynamicResource MenuButtons}" Command="{Binding GoToDiagnosticsPage}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="40"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
+                <Button Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2"
+                        Style="{DynamicResource MenuButtons}" Command="{Binding GoToDiagnosticsPage}">
+                    <StackPanel Orientation="Horizontal">
 
-                        <Image Source="{DynamicResource Ico.Config}" Grid.Column="0" Width="30"/>
-                        <TextBlock Text="Diagnostics" FontSize="20" Grid.Column="1" Style="{DynamicResource TextBlockStyle}"/>
-                    </Grid>
+                        <Image Source="{DynamicResource Ico.Config}" Margin="5,0" Width="30"/>
+                        <TextBlock Text="Diagnostics" FontSize="20" Style="{DynamicResource TextBlockStyle}"/>
+                        
+                    </StackPanel>
                 </Button>
 
                 <!--Status section-->
