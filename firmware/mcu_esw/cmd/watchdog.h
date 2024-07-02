@@ -129,7 +129,7 @@ void IntCmdServeWatchdog(void);
  * \param respWrdNumber Requested Response word (WORD_1 or WORD_0)
  * \return Response word value
  */
-uint16 GetResponseWord(uint8 requValue, boolean respWrdNumber);
+uint16 GetResponseWordAb12(uint8 requValue, boolean respWrdNumber);
 
 /** \brief Function that reads value of RESP_CNT field from CS600 WD_REQU register by SPI
  * \return Value of RESP_CNT field
