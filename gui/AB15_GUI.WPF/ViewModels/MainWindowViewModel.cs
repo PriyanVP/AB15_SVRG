@@ -102,8 +102,6 @@ namespace AB15_GUI.WPF.ViewModels
 
             logger.Trace("In MainViewModel");
             loggerWindowView.Show();
-
-            connectionStatusMCU = UIConnectionStatus.Connected;
         }
     }
 }
