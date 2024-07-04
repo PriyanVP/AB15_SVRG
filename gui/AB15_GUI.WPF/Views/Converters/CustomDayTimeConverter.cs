@@ -10,7 +10,7 @@ namespace AB15_GUI.WPF.Views.Converters
     public class CustomDayTimeConverter : IMultiValueConverter
     {
         /// <summary>
-        /// Based on input values convert data+time to long/short string
+        /// Based on input values convert date+time to long/short string
         /// </summary>
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
@@ -20,7 +20,7 @@ namespace AB15_GUI.WPF.Views.Converters
             // Raw DateTime value
             dateTime = (DateTime)values[0];
 
-            // Flag to chnage format
+            // Flag to change format
             IsChecked = (bool)values[1];
 
             // If flag true - format not changed

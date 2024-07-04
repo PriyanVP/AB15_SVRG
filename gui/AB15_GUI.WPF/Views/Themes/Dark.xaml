@@ -17,7 +17,7 @@
     <BitmapImage x:Key="Ico.Zoom" UriSource="../Resources/zoom_dark.png"/>
     
     <!--All colors defines-->
-    <SolidColorBrush x:Key="UI.BackGroung" Color="#e4000000"/>
+    <SolidColorBrush x:Key="UI.BackGround" Color="#e4000000"/>
 
     <SolidColorBrush x:Key="TopPanel.Background" Color="#141414"/>
 
@@ -77,7 +77,7 @@
 
             <!-- sub items -->
             <Popup IsOpen="{TemplateBinding IsSubmenuOpen}" AllowsTransparency="True" Focusable="False">
-                <Border BorderThickness="1" BorderBrush="{DynamicResource UI.SeparateLine}" Background="{DynamicResource UI.BackGroung}">
+                <Border BorderThickness="1" BorderBrush="{DynamicResource UI.SeparateLine}" Background="{DynamicResource UI.BackGround}">
                     <StackPanel IsItemsHost="True" />
                 </Border>
             </Popup>

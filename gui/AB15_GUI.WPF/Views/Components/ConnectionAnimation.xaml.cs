@@ -64,9 +64,9 @@ namespace AB15_GUI.WPF.Views.Components
         }
 
         /// <summary>
-        /// Event that occure when flag change it state
+        /// Event that occurs when flag changes its state
         /// NOTE: Start and Stop functions cannot be moved 
-        /// inside THIS function in corrent form
+        /// inside THIS function in current form
         /// </summary>
         private static void OnIsAnimationEnabledChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {

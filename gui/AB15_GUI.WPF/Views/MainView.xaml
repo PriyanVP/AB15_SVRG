@@ -16,7 +16,7 @@
         <cnvrt:StatusToColorConverter x:Key="StatusToColorConverter"/>
     </Window.Resources>
     
-    <Grid Background="{DynamicResource UI.BackGroung}">
+    <Grid Background="{DynamicResource UI.BackGround}">
         
         <!--Main panels setup-->
         <Grid.RowDefinitions>

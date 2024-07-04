@@ -14,7 +14,7 @@
         <cnvrt:CustomDayTimeConverter x:Key="CustomDayTimeConverter"/>
     </Window.Resources>
     
-    <Grid Background="{DynamicResource UI.BackGroung}">
+    <Grid Background="{DynamicResource UI.BackGround}">
         <!--Window main layout-->
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" MinHeight="10"/>
