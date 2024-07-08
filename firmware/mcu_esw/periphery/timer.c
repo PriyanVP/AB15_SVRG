@@ -47,6 +47,7 @@
 /*********************************************************************************************************************/
 
 //extern void ServiceInterruptRoutine(void);
+extern void FastInterruptRoutine(void);
 extern void WatchdogInterruptRoutine(void);
 //extern void ErrorCheckInterruptRoutine(void);
 //extern void ContinuousReadInterruptRoutine(void);
@@ -70,11 +71,13 @@ void UpdateTimersRoutine(void);
 /*-------------------------------------------------Global variables--------------------------------------------------*/
 /*********************************************************************************************************************/
 
+static uint16 g_fastTimerReload;                  /** \brief fast Timer periodicity in T4 timer interrupts */
 static uint16 g_watchdogReload;                   /** \brief Watchdog acknowledge periodicity in T2 timer interrupts */
 static uint16 g_errorCheckReload;                 /** \brief Error check periodicity in T2 timer interrupts          */
 static uint16 g_continuousReadReload;             /** \brief Continuous read periodicity in T2 timer interrupts      */
 static uint16 g_GPIOReload;                       /** \brief GPIO handling periodicity in T2 timer interrupts        */
 
+static boolean g_fastIrqEnable        = FALSE;    /** \brief Watchdog acknowledge interrupts enable                  */
 static boolean g_watchdogEnable       = FALSE;    /** \brief Watchdog acknowledge interrupts enable                  */
 static boolean g_errorCheckEnable     = FALSE;    /** \brief Error check interrupts enable                           */
 static boolean g_continuousReadEnable = FALSE;    /** \brief Continuous read interrupts enable                       */
@@ -85,19 +88,25 @@ static boolean g_GPIOEnable           = FALSE;    /** \brief GPIO interrupts ena
 /*********************************************************************************************************************/
 /* Macro defining the Interrupt Service Routines */
 IFX_INTERRUPT(UpdateTimersRoutine, 0, ISR_PRIORITY_GPT1_T2_TIMER);
-
 IFX_INTERRUPT(ServiceTimerRoutineWrapper, 0, ISR_PRIORITY_GPT1_T3_TIMER);
+IFX_INTERRUPT(UpdateFastTimer, 0, ISR_PRIORITY_GPT1_T4_TIMER);
 
 void InitGpt12Timer(void)
 {
     /* Initialize the GPT12 module */
     IfxGpt12_enableModule(&MODULE_GPT120);                                          /* Enable the GPT12 module      */
-    IfxGpt12_setGpt1BlockPrescaler(&MODULE_GPT120, IfxGpt12_Gpt1BlockPrescaler_16); /* Set GPT1 block prescaler     */
+    IfxGpt12_setGpt1BlockPrescaler(&MODULE_GPT120, IfxGpt12_Gpt1BlockPrescaler_8); /* Set GPT1 block prescaler     */
+
+    /* Initialize the Timer T4 - Fast timer*/
+    IfxGpt12_T4_setMode(&MODULE_GPT120, IfxGpt12_Mode_timer);                       /* Set T4 to timer mode         */
+    IfxGpt12_T4_setTimerDirection(&MODULE_GPT120, IfxGpt12_TimerDirection_down);    /* Set T4 count direction       */
+    IfxGpt12_T4_setTimerPrescaler(&MODULE_GPT120, IfxGpt12_TimerInputPrescaler_1);  /* Set T4 input prescaler to 0  */
+    IfxGpt12_T4_setTimerValue(&MODULE_GPT120, FAST_TIMER_PERIODICITY);              /* Set T4 start value           */
 
     /* Initialize the Timer T3 - Service timer*/
     IfxGpt12_T3_setMode(&MODULE_GPT120, IfxGpt12_Mode_timer);                       /* Set T3 to timer mode         */
     IfxGpt12_T3_setTimerDirection(&MODULE_GPT120, IfxGpt12_TimerDirection_down);    /* Set T3 count direction       */
-    IfxGpt12_T3_setTimerPrescaler(&MODULE_GPT120, IfxGpt12_TimerInputPrescaler_32); /* Set T3 input prescaler       */
+    IfxGpt12_T3_setTimerPrescaler(&MODULE_GPT120, IfxGpt12_TimerInputPrescaler_64); /* Set T3 input prescaler       */
     IfxGpt12_T3_setTimerValue(&MODULE_GPT120, SERVICE_TIMER_PERIODICITY);           /* Set T3 start value           */
 
     /* Initialize the Timer T2 - General timer */
@@ -105,6 +114,11 @@ void InitGpt12Timer(void)
     IfxGpt12_T2_setTimerDirection(&MODULE_GPT120, IfxGpt12_TimerDirection_down);    /* Set T2 count direction       */
     IfxGpt12_T2_setTimerPrescaler(&MODULE_GPT120, IfxGpt12_TimerInputPrescaler_2);  /* Set T2 input prescaler       */
     IfxGpt12_T2_setTimerValue(&MODULE_GPT120, GENERAL_TIMER_PERIODICITY);           /* Set T2 start value           */
+
+    /* Initialize the fast interrupt */
+    volatile Ifx_SRC_SRCR *src4 = IfxGpt12_T4_getSrc(&MODULE_GPT120);                /* Get the interrupt address    */
+    IfxSrc_init(src4, ISR_PROVIDER_GPT12_TIMER, ISR_PRIORITY_GPT1_T4_TIMER);         /* Initialize service request   */
+    IfxSrc_enable(src4);                                                             /* Enable GPT12 interrupt       */
 
     /* Initialize the Service interrupt */
     volatile Ifx_SRC_SRCR *src3 = IfxGpt12_T3_getSrc(&MODULE_GPT120);                /* Get the interrupt address    */
@@ -117,6 +131,11 @@ void InitGpt12Timer(void)
     IfxSrc_enable(src2);
 }
 
+void StartFastTimer(void)
+{
+    IfxGpt12_T4_run(&MODULE_GPT120, IfxGpt12_TimerRun_start);
+}
+
 void StartServiceTimer(void)
 {
     IfxGpt12_T3_run(&MODULE_GPT120, IfxGpt12_TimerRun_start);
@@ -125,6 +144,11 @@ void StartServiceTimer(void)
 void StartGeneralTimer(void)
 {
     IfxGpt12_T2_run(&MODULE_GPT120, IfxGpt12_TimerRun_start);
+}
+
+void StopFastTimer(void)
+{
+    IfxGpt12_T4_run(&MODULE_GPT120, IfxGpt12_TimerRun_stop);
 }
 
 void StopServiceTimer(void)
@@ -157,6 +181,10 @@ void ConfigureGPIOPeriodicity(uint16 gpioPeriodicity)
     g_GPIOReload = gpioPeriodicity;
 }
 
+void EnableFastInterrupt(void)
+{
+    g_fastIrqEnable = TRUE;
+}
 void EnableWatchdogInterrupt(void)
 {
     g_watchdogEnable = TRUE;
@@ -180,6 +208,11 @@ void EnableGPIOInterrupt(void)
 void DisableWatchdogInterrupt(void)
 {
     g_watchdogEnable = FALSE;
+}
+
+void DisableFastInterrupt(void)
+{
+    g_fastIrqEnable = FALSE;
 }
 
 void DisableErrorCheckInterrupt(void)
@@ -231,6 +264,8 @@ void UpdateTimersRoutine(void)
     static uint16 GPIOCounter               = 0;
 
     // Increment variables if entered interrupt routine
+    // TODO:  Prescale changed from 2 to 1, so all couters need to be doulbed! --> IfxGpt12_TimerInputPrescaler_1
+
     watchdogCounter++;
     errorCheckCounter++;
     continuousReadCounter++;
@@ -265,6 +300,26 @@ void UpdateTimersRoutine(void)
         //GPIOInterruptRoutine();
     }
 }
+
+void UpdateFastTimer(void){
+    // Static variables to control different timers
+    static uint16 fastCounter           = 0;
+
+    // time is called
+
+    // Increment variables if entered interrupt routine
+    fastCounter++;
+
+    // Call corresponding functions if enabled and counter reached reload value
+    if ((g_fastIrqEnable == TRUE) && (fastCounter >= g_fastTimerReload))
+    {
+        // Watchdog acknowledge
+        fastCounter = 0;
+        FastInterruptRoutine();
+    }
+
+}
+
 
 void ServiceTimerRoutineWrapper(void)
 {

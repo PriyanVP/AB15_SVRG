@@ -37,6 +37,7 @@
 /*********************************************************************************************************************/
 
 /* Interrupt Service Routine priorities for general purpose timers */
+#define ISR_PRIORITY_GPT1_T4_TIMER    (5)             /** \brief Priority for GPT12 Timer T4 interrupt               */
 #define ISR_PRIORITY_GPT1_T3_TIMER    (6)             /** \brief Priority for GPT12 Timer T3 interrupt               */
 #define ISR_PRIORITY_GPT1_T2_TIMER    (7)             /** \brief Priority for GPT12 Timer T2 interrupt               */
 

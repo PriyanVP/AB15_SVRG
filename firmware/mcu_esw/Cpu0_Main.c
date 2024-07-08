@@ -80,7 +80,11 @@ void WatchdogInterruptRoutine(void)
     ToggleLED2();
 }
 
-
+void FastInterruptRoutine(void)
+{
+    // fast timer
+    ToggleLED4();
+}
 
 /** \brief Main function
  */
@@ -132,6 +136,10 @@ void core0_main(void)
 
     // Start general timer
     StartGeneralTimer();
+
+    // Start service irq
+    StartFastTimer();
+
 
     // Local temporary variable for receiving data
     USBReceiveData receivedPackage;
