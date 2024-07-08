@@ -39,7 +39,7 @@
 
 #define ISR_PROVIDER_GPT12_TIMER    IfxSrc_Tos_cpu0          /* Interrupt provider                                   */
 
-#define FAST_TIMER_PERIODICITY      50000u  // Test : 4ms             /* Reload value to have an interrupt each  20us*/
+#define FAST_TIMER_PERIODICITY      50000u  // Test : 2ms             /* Reload value to have an interrupt each  20us*/
                                                               /* fGPT = 100 Mhz
                                                                  (a) IfxGpt12_Gpt1BlockPrescaler_8
                                                                  (b) IfxGpt12_TimerInputPrescaler_1

@@ -46,7 +46,7 @@
 /*------------------------------------------------Function Prototypes------------------------------------------------*/
 /*********************************************************************************************************************/
 
-//extern void ServiceInterruptRoutine(void);
+extern void ServiceInterruptRoutine(void);
 extern void FastInterruptRoutine(void);
 extern void WatchdogInterruptRoutine(void);
 //extern void ErrorCheckInterruptRoutine(void);
@@ -65,7 +65,7 @@ void UpdateTimersRoutine(void);
 // *
 // * \return Returns nothing
 // */
-//void ServiceTimerRoutineWrapper(void);
+void ServiceTimerRoutineWrapper(void);
 
 /*********************************************************************************************************************/
 /*-------------------------------------------------Global variables--------------------------------------------------*/
