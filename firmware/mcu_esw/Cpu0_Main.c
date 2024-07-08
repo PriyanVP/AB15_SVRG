@@ -135,10 +135,10 @@ void core0_main(void)
     StartServiceTimer();
 
     // Start general timer
-    StartGeneralTimer();
+    //StartGeneralTimer();
 
     // Start service irq
-    StartFastTimer();
+    //StartFastTimer();
 
 
     // Local temporary variable for receiving data
