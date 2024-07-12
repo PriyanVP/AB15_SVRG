@@ -7,12 +7,28 @@
     <Image x:Key="AscendingSortIco" Source="../Resources/sort_ascending_dark.png"/>
     <Image x:Key="DescendingSortIco" Source="../Resources/sort_descending_dark.png"/>
 
+    <BitmapImage x:Key="Ico.Home" UriSource="../Resources/home_dark.png"/>
+    <BitmapImage x:Key="Ico.Config" UriSource="../Resources/config_dark.png"/>
+    <BitmapImage x:Key="Ico.Sensor" UriSource="../Resources/sensor_dark.png"/>
+    <BitmapImage x:Key="Ico.Watchdog" UriSource="../Resources/watchdog_dark.png"/>
+    <BitmapImage x:Key="Ico.Airbag" UriSource="../Resources/airbag_dark.png"/>
+    <BitmapImage x:Key="Ico.Chip" UriSource="../Resources/chip_dark.png"/>
+    <BitmapImage x:Key="Ico.Menu" UriSource="../Resources/menu_dark.png"/>
+    <BitmapImage x:Key="Ico.Zoom" UriSource="../Resources/zoom_dark.png"/>
+    
     <!--All colors defines-->
-    <SolidColorBrush x:Key="BackGroung" Color="#e4000000"/>
+    <SolidColorBrush x:Key="UI.BackGround" Color="#e4000000"/>
 
-    <SolidColorBrush x:Key="SeparateLine" Color="#f8ffffff"/>
+    <SolidColorBrush x:Key="TopPanel.Background" Color="#141414"/>
 
-    <SolidColorBrush x:Key="TextBoxBackground" Color="#ff404040"/>
+    <SolidColorBrush x:Key="BottonPanel.Background" Color="#141414"/>
+
+    <SolidColorBrush x:Key="Menu.Background" Color="#141414"/>
+    <SolidColorBrush x:Key="Menu.SeparateLine" Color="#282828"/>
+
+    <SolidColorBrush x:Key="UI.SeparateLine" Color="#f8ffffff"/>
+
+    <SolidColorBrush x:Key="UI.TextBoxBackground" Color="#ff404040"/>
 
     <SolidColorBrush x:Key="Button.Background.StandBy" Color="Transparent"/>
     <SolidColorBrush x:Key="Button.Background.IsMouseOver" Color="#ff353535"/>
@@ -30,19 +46,128 @@
     <SolidColorBrush x:Key="CheckBox.Checked.Background" Color="#ff404040" />
     <SolidColorBrush x:Key="CheckBox.Checked.BorderBrush" Color="#edeced" />
     <SolidColorBrush x:Key="CheckBox.Checked.Fill" Color="#f8ffffff" />
-    <SolidColorBrush x:Key="CheckBox.UnChecked.Background" Color="#f8ffffff" />
-    <SolidColorBrush x:Key="CheckBox.UnChecked.BorderBrush" Color="#ff404040" />
-    <SolidColorBrush x:Key="CheckBox.UnChecked.Fill" Color="#e4000000" />
+    <SolidColorBrush x:Key="CheckBox.Unchecked.Background" Color="#f8ffffff" />
+    <SolidColorBrush x:Key="CheckBox.Unchecked.BorderBrush" Color="#ff404040" />
+    <SolidColorBrush x:Key="CheckBox.Unchecked.Fill" Color="#e4000000" />
 
     <SolidColorBrush x:Key="TextBox.Static.Backgroung" Color="#ff404040" />
     <SolidColorBrush x:Key="TextBox.Static.Border" Color="#7F7A7A7A" />
     <SolidColorBrush x:Key="TextBox.MouseOver.Border" Color="#f8ffffff" />
     <SolidColorBrush x:Key="TextBox.Focus.Border" Color="#edeced" />
 
+    <SolidColorBrush x:Key="StatusBox.NotConnected" Color="#e4000000"/>
+    <SolidColorBrush x:Key="StatusBox.Connected" Color="#006c00"/>
+    <SolidColorBrush x:Key="StatusBox.Error" Color="#af0000"/>
+    <SolidColorBrush x:Key="StatusBox.Warning" Color="#cd7300"/>
+
+    <SolidColorBrush x:Key="Animation.Arrow" Color="#50d050"/>
+    <SolidColorBrush x:Key="Animation.Lines" Color="#f8ffffff"/>
+    
     <SolidColorBrush x:Key="ListView.Background" Color="Transparent" />
 
     <SolidColorBrush x:Key="ListViewItem.Background" Color="Transparent" />
 
+    <BooleanToVisibilityConverter x:Key="btv" />
+
+    <!-- style a top level menu item -->
+    <ControlTemplate x:Key="VsMenuTop" TargetType="MenuItem">
+        <StackPanel TextBlock.FontSize="20" Height="40">
+            <!-- label, icons, etc. -->
+            <Label Content="{TemplateBinding Header}" Foreground="{DynamicResource Foreground.Default}" />
+
+            <!-- sub items -->
+            <Popup IsOpen="{TemplateBinding IsSubmenuOpen}" AllowsTransparency="True" Focusable="False">
+                <Border BorderThickness="1" BorderBrush="{DynamicResource UI.SeparateLine}" Background="{DynamicResource UI.BackGround}">
+                    <StackPanel IsItemsHost="True" />
+                </Border>
+            </Popup>
+
+            <StackPanel.Style>
+                <Style TargetType="StackPanel">
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver"  Value="True">
+                            <Setter Property="Background" Value="{DynamicResource Button.Background.IsMouseOver}" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </StackPanel.Style>
+        </StackPanel>
+    </ControlTemplate>
+
+    <!-- style a non-top level menu item -->
+    <ControlTemplate x:Key="MenuSubItem" TargetType="MenuItem">
+        <DockPanel TextBlock.FontSize="15px" x:Name="panel">
+            <!-- label, icons, etc. -->
+            <Label Content="{TemplateBinding Header}" Foreground="{DynamicResource Foreground.Default}"/>
+        </DockPanel>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsHighlighted" Value="True">
+                <Setter Property="Background" TargetName="panel" Value="{DynamicResource Button.Background.IsMouseOver}"/>
+
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <!-- some base stuff -->
+    <Style TargetType="{x:Type Menu}">
+        <Setter Property="Background" Value="{DynamicResource Button.Background.StandBy}" />
+    </Style>
+
+    <Style x:Key="MenuToggleButtonTemplate" TargetType="ToggleButton">
+
+        <Setter Property="Background" Value="{DynamicResource Button.Background.StandBy}"/>
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Border Background="{TemplateBinding Background}" 
+                            BorderThickness="0"
+                            BorderBrush="{DynamicResource TopPanel.Background}">
+                        <ContentPresenter HorizontalAlignment="Left"                  
+                                              VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource Button.Background.IsMouseOver}"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="{DynamicResource Button.Background.IsPressed}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="MenuButtons" TargetType="Button">
+        <Setter Property="Background" Value="{DynamicResource Button.Background.StandBy}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Margin" Value="0,1"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border Background="{TemplateBinding Background}">
+                        <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource Button.Background.IsMouseOver}"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="{DynamicResource Button.Background.IsPressed}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    
     <!--Default TextBox style define -->
     <Style TargetType="{x:Type TextBox}">
         <Setter Property="FontSize" Value="20"/>
@@ -50,7 +175,7 @@
         <Setter Property="Text" Value="20"/>
         <Setter Property="TextAlignment" Value="Center"/>
         <Setter Property="Margin" Value="1, 2, 1, 2"/>
-        <Setter Property="Background" Value="{DynamicResource TextBoxBackground}"/>
+        <Setter Property="Background" Value="{DynamicResource UI.TextBoxBackground}"/>
     </Style>
 
     <!-- Default Button style define -->
@@ -179,10 +304,10 @@
                         </Grid.ColumnDefinitions>
                         <Viewbox Grid.Column="0" Stretch="Uniform" Height="{TemplateBinding Height}">
                             <Border x:Name="bk" 
-                                    Background="{DynamicResource CheckBox.UnChecked.Background}"
-                                    BorderBrush="{DynamicResource CheckBox.UnChecked.BorderBrush}"
+                                    Background="{DynamicResource CheckBox.Unchecked.Background}"
+                                    BorderBrush="{DynamicResource CheckBox.Unchecked.BorderBrush}"
                                     BorderThickness="1" CornerRadius="10" Width="35" Height="20">
-                                <Ellipse x:Name="ep" Fill="{DynamicResource CheckBox.UnChecked.Fill}" 
+                                <Ellipse x:Name="ep" Fill="{DynamicResource CheckBox.Unchecked.Fill}" 
                                                 Margin="0,2,14,2" Width="14" Height="14" />
                             </Border>
                         </Viewbox>

@@ -18,6 +18,9 @@ namespace AB15_GUI.WPF.Views
     /// 
     public partial class MainView : Window
     {
+        /// <summary>
+        /// Constructor for main window
+        /// </summary>
         public MainView()
         {
             InitializeComponent();

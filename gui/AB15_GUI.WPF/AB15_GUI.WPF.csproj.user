@@ -6,8 +6,21 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
+    <Compile Update="Views\Components\DataArrow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Components\ConnectionAnimation.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Components\DataArrow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Components\ConnectionAnimation.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Views\Themes\Common.xaml">
       <SubType>Designer</SubType>
     </Page>
