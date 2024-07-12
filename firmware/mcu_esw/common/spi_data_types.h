@@ -34,9 +34,9 @@ typedef union
     {
         uint32 stuff        : 2;   /** \brief unused bit*/
         uint32 crc          : 3;   /** \brief crc3 */
-        uint32 inputdata    : 16;    /** \brief input data  */
+        uint32 inputdata    : 16;  /** \brief input data  */
         uint32 pe           : 1;   /** \brief pe */
-        uint32 instruction  : 10;    /** \brief instruction */
+        uint32 instruction  : 10;  /** \brief instruction */
     } bf;
     uint32 dw;
 } SPITransmitData;
