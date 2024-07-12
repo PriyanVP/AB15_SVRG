@@ -98,22 +98,26 @@ void InitGpt12Timer(void)
     IfxGpt12_setGpt1BlockPrescaler(&MODULE_GPT120, IfxGpt12_Gpt1BlockPrescaler_4); /* Set GPT1 block prescaler     */
 
     /* Initialize the Timer T4 - Fast timer*/
-//    IfxGpt12_T4_setMode(&MODULE_GPT120, IfxGpt12_Mode_timer);                       /* Set T4 to timer mode         */
-//    IfxGpt12_T4_setTimerDirection(&MODULE_GPT120, IfxGpt12_TimerDirection_down);    /* Set T4 count direction       */
-//    IfxGpt12_T4_setTimerPrescaler(&MODULE_GPT120, IfxGpt12_TimerInputPrescaler_1);  /* Set T4 input prescaler to 0  */
-//    IfxGpt12_T4_setTimerValue(&MODULE_GPT120, FAST_TIMER_PERIODICITY);              /* Set T4 start value           */
+    //IfxGpt12_T4_setMode(&MODULE_GPT120, IfxGpt12_Mode_reload);                       /* Set T4 to timer mode         */
+    //IfxGpt12_T2_setReloadInputMode(&MODULE_GPT120, IfxGpt12_ReloadInputMode_fallingEdgeTxOTL);
+    //    IfxGpt12_T4_setTimerDirection(&MODULE_GPT120, IfxGpt12_TimerDirection_down);    /* Set T4 count direction       */
+    //    IfxGpt12_T4_setTimerPrescaler(&MODULE_GPT120, IfxGpt12_TimerInputPrescaler_1);  /* Set T4 input prescaler to 0  */
+    //IfxGpt12_T4_setTimerValue(&MODULE_GPT120, 100);              /* Set T4 start value           */
 
     /* Initialize the Timer T3 - Service timer*/
+    IfxGpt12_T3_setTimerPrescaler(&MODULE_GPT120, IfxGpt12_TimerInputPrescaler_1); /* Set T3 input prescaler       */
     IfxGpt12_T3_setMode(&MODULE_GPT120, IfxGpt12_Mode_timer);                       /* Set T3 to timer mode         */
     IfxGpt12_T3_setTimerDirection(&MODULE_GPT120, IfxGpt12_TimerDirection_down);    /* Set T3 count direction       */
-    IfxGpt12_T3_setTimerPrescaler(&MODULE_GPT120, IfxGpt12_TimerInputPrescaler_1); /* Set T3 input prescaler       */
-    IfxGpt12_T3_setTimerValue(&MODULE_GPT120, SERVICE_TIMER_PERIODICITY);           /* Set T3 start value           */
+    IfxGpt12_T3_setTimerValue(&MODULE_GPT120, 0x0001);           /* Set T3 start value           */
+    // for debugging
+    //IfxGpt12_T3_enableOutput(&MODULE_GPT120, TRUE);
 
     /* Initialize the Timer T2 - General timer */
-    //IfxGpt12_T2_setMode(&MODULE_GPT120, IfxGpt12_Mode_timer);                       /* Set T2 to timer mode         */
+    IfxGpt12_T2_setMode(&MODULE_GPT120, IfxGpt12_Mode_reload);                       /* Set T2 to timer mode         */
+    IfxGpt12_T2_setReloadInputMode(&MODULE_GPT120, IfxGpt12_ReloadInputMode_bothEdgesTxOTL);
     //IfxGpt12_T2_setTimerDirection(&MODULE_GPT120, IfxGpt12_TimerDirection_down);    /* Set T2 count direction       */
     //IfxGpt12_T2_setTimerPrescaler(&MODULE_GPT120, IfxGpt12_TimerInputPrescaler_2);  /* Set T2 input prescaler       */
-    //IfxGpt12_T2_setTimerValue(&MODULE_GPT120, GENERAL_TIMER_PERIODICITY);           /* Set T2 start value           */
+    IfxGpt12_T2_setTimerValue(&MODULE_GPT120, 500);           /* Set T2 reload value           */
 
 //    /* Initialize the fast interrupt */
 //    volatile Ifx_SRC_SRCR *src4 = IfxGpt12_T4_getSrc(&MODULE_GPT120);                /* Get the interrupt address    */
