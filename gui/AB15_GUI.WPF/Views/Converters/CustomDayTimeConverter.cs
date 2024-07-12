@@ -7,7 +7,7 @@ namespace AB15_GUI.WPF.Views.Converters
     /// <summary>
     /// Convert date+time to short or long format
     /// </summary>
-    public class CustomDayTimeConverter : IMultiValueConverter
+    public class CustomDateTimeConverter : IMultiValueConverter
     {
         /// <summary>
         /// Based on input values convert date+time to long/short string
