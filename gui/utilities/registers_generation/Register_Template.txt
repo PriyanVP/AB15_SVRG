@@ -13,6 +13,26 @@ namespace AB15_GUI.WPF.Models.Genereted.Registers
         /// </summary>
         public readonly UInt16 ResetValue { get; private_set; } = {{ reset_value }};
 
+        /// <summary>
+        /// Name of the register
+        /// </summary>
+        public readonly string Name { get; private set; } = {{ register_name }};
+
+        /// <summary>
+        /// Absolute address of the register
+        /// </summary>
+        public readonly string Address { get; private set; } = {{ register_address }};
+
+        /// <summary>
+        /// Description
+        /// </summary>
+        public readonly string Description { get; private set; } = {{ register_description }};
+
+        /// <summary>
+        /// Access level of this register
+        /// </summary>
+        public readonly string Access { get; private set; } = {{ register_access }};
+
         #region Fields instances
 
         {%  for field in fields %}
@@ -24,7 +44,6 @@ namespace AB15_GUI.WPF.Models.Genereted.Registers
 
         #endregion // Fields instances
 
-
         /// <summary>
         /// Data property. Constructs register value from fields on get. Deconstruct register value by fields on set
         /// </summary>
@@ -32,22 +51,19 @@ namespace AB15_GUI.WPF.Models.Genereted.Registers
         {
             get
             {
-                data = 0x0;
-                foreach (KeyValuePair<string, Field> field in fields)
-                {
-                    // Reconstruct register value from field values
-                    data += (UInt16)(field.Value.Data << field.Value.bitOffset);
-                }
+                UInt16 data = 0x0;
+
+                {%  for field in fields %}
+                data |= {{ field.name }}.GetPositionalValue();
+                {% endfor %}
+
                 return data;
             }
             set
             {
-                data = value;
-                foreach (KeyValuePair<string, Field> field in fields)
-                {
-                    // Update fields with new data
-                    field.Value.UpdateValue(data);
-                }
+                {%  for field in fields %}
+                {{ field.name }}.UpdateValue(value);
+                {% endfor %}
             }
         }
 
@@ -74,7 +90,7 @@ namespace AB15_GUI.WPF.Models.Genereted.Registers
             private readonly UInt16 _readMask = (UInt16) (((1 << BitWidth) - 1) << BitOffset);
 
             /// <summary>
-            /// Read mask for field in register
+            /// Data stored in register
             /// </summary>
             private UInt16 data;
 
