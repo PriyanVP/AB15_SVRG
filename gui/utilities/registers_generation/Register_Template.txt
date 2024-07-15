@@ -11,27 +11,27 @@ namespace AB15_GUI.WPF.Models.Genereted.Registers
         /// <summary>
         /// Reset value for register
         /// </summary>
-        public readonly UInt16 ResetValue { get; private_set; } = {{ reset_value }};
+        public UInt16 ResetValue { get; private set; } = {{ reset_value }};
 
         /// <summary>
         /// Name of the register
         /// </summary>
-        public readonly string Name { get; private set; } = {{ register_name }};
+        public string Name { get; private set; } = "{{ register_name }}";
 
         /// <summary>
         /// Absolute address of the register
         /// </summary>
-        public readonly string Address { get; private set; } = {{ register_address }};
+        public UInt16 Address { get; private set; } = {{ register_address }};
 
         /// <summary>
         /// Description
         /// </summary>
-        public readonly string Description { get; private set; } = {{ register_description }};
+        public string Description { get; private set; } = "{{ register_description }}";
 
         /// <summary>
         /// Access level of this register
         /// </summary>
-        public readonly string Access { get; private set; } = {{ register_access }};
+        public string Access { get; private set; } = "{{ register_access }}";
 
         #region Fields instances
 
@@ -67,27 +67,35 @@ namespace AB15_GUI.WPF.Models.Genereted.Registers
             }
         }
 
-
         #region Field classes declarations
 
         {# Loop for generating classes for fields in this register #}
         {%  for field in fields %}
-
         /// <summary>
-        /// Class for working with {{field_name}} field
+        /// Class for working with {{field.name}} field
         /// WARNING: this class is generated, do not modify manually!
         /// </summary>
-        internal class Field_{{ field.name }}
+        public sealed class Field_{{ field.name }}
         {
             /// <summary>
             /// Max value that can be stored in field
             /// </summary>
-            private readonly UInt16 _maxValue = ((1 << BitWidth) - 1);
+            private readonly UInt16 _maxValue = ((1 << bitWidth) - 1);
 
             /// <summary>
             /// Read mask for field in register
             /// </summary>
-            private readonly UInt16 _readMask = (UInt16) (((1 << BitWidth) - 1) << BitOffset);
+            private readonly UInt16 _readMask = (UInt16) (((1 << bitWidth) - 1) << bitOffset);
+
+            /// <summary>
+            /// Bit offset of the field in register
+            /// </summary>
+            private const UInt16 bitOffset = {{ field.bit_offset }};
+
+            /// <summary>
+            /// Bit width of the field in register
+            /// </summary>
+            private const UInt16 bitWidth = {{ field.bit_width }};
 
             /// <summary>
             /// Data stored in register
@@ -97,38 +105,50 @@ namespace AB15_GUI.WPF.Models.Genereted.Registers
             /// <summary>
             /// Name of the field
             /// </summary>
-            public readonly string Name { get; private set; } = {{ field.name }};
+            public string Name { get; private set; } = "{{ field.name }}";
 
             /// <summary>
             /// Description
             /// </summary>
-            public readonly string Description { get; private set; } = {{ field.description }};
+            public string Description { get; private set; } = "{{ field.description }}";
 
             /// <summary>
             /// Access level of this field
             /// </summary>
-            public readonly string Access { get; private set; } = {{ field.access }};
+            public string Access { get; private set; } = "{{ field.access }}";
 
             /// <summary>
             /// Bit offset of the field in register
             /// </summary>
-            public readonly string BitOffset { get; private set; } = {{ field.bit_offset }};
+            public UInt16 BitOffset 
+            { 
+                get
+                {
+                    return bitOffset;
+                }
+            }
 
             /// <summary>
-            /// Bit owidth of the field in register
+            /// Bit width of the field in register
             /// </summary>
-            public readonly string BitWidth { get; private set; } = {{ field.bit_width }};
+            public UInt16 BitWidth 
+            { 
+                get
+                {
+                    return bitWidth;
+                }
+            }
 
             {# Add EnumeratedValues property only if field contains enumerated values definitions #}
             {% if field.enumerated_values %}
             /// <summary>
             /// Enumerated values for this field
             /// </summary>
-            public readonly Dictionary<string, UInt16> EnumeratedValues { get; private set; } = new Dictionary<string, UInt16>
+            public Dictionary<string, UInt16> EnumeratedValues { get; private set; } = new Dictionary<string, UInt16>
             {
                 // TODO: last item without comma; check if {} work fine
                 {% for itm in field.enumerated_values %}
-                { "{{ itm.key }}", {{ itm.value }}} {{ if loop.last is false }},{{ endif }}
+                { "{{ itm.key }}", {{ itm.value }}} {% if loop.last is false %},{% endif %}
                 {% endfor %}
             }
             {% endif %}
@@ -156,7 +176,7 @@ namespace AB15_GUI.WPF.Models.Genereted.Registers
             /// <param name="registerValue">value of register</param>
             public void UpdateValue(UInt16 registerValue)
             {
-                Data = (UInt16) ((UInt16)(registerValue & readMask) >> bitOffset);
+                Data = (UInt16) ((UInt16)(registerValue & _readMask) >> bitOffset);
             }
 
             /// <summary>
@@ -165,10 +185,9 @@ namespace AB15_GUI.WPF.Models.Genereted.Registers
             /// <returns>field value in correct bit position in register</returns>
             public UInt16 GetPositionalValue()
             {
-                return Data << BitOffset;
+                return (UInt16) (Data << BitOffset);
             }
         }
-
         {% endfor %}
 
         #endregion // Field classes declarations

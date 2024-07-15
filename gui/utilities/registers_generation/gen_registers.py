@@ -19,13 +19,6 @@ class ColorSequences:
     UNDERLINE = '\033[4m'
 
 
-# env = Environment(loader=FileSystemLoader("."))
-# templ = env.get_template("Register_Template.txt")
-
-# liverpool = {"register_name": "Liverpool"}
-# print(templ.render(liverpool))
-
-
 # Plan:
 # 1. Command line arguments parser: path to xml, path to gui root, clear output dir flag, regenerate all
 # 2. File parser - should return list with all registers used in .cs files
@@ -126,9 +119,168 @@ def list_used_registers(sorce_files: list) -> list:
 
     return registers
 
+def generate_register_files(path_to_regmap: str, register_list: list, path_to_output_dir: str):
+    '''Generate files for register handling in GUI based on XML regmap'''
 
+    # Load XML regmap
+    regmap_tree = etree.parse(path_to_regmap)
+    regmap_root = regmap_tree.getroot()
 
+    # Load namespaces
+    xml_spirit_namespaces = regmap_root.nsmap
 
+    # Get reference to memory map tag
+    memory_map_root = regmap_root.find(".//spirit:memoryMap", namespaces=xml_spirit_namespaces)
+
+    # # Reference dictionary
+    # ref_dict = {
+    #     "registers" : [
+    #         {
+    #             "register_name" : "string",
+    #             "reset_value" : 0,
+    #             "register_address" : 0,
+    #             "register_description" : "string",
+    #             "register_access" : "string",
+    #             "fields" : [
+    #                 {
+    #                     "name" : "string",
+    #                     "description" : "string",
+    #                     "access" : "string",
+    #                     "bit_offset" : 0,
+    #                     "bit_width" : 0,
+    #                     "enumerated_values" : [
+    #                         {
+    #                             "key" : "string",
+    #                             "value" : 0
+    #                         },
+    #                         {
+    #                             # ...
+    #                         }
+    #                     ]
+    #                 },
+    #                 {
+    #                     # ...
+    #                 }
+    #             ]
+    #         },
+    #         {
+    #             # ...
+    #         }
+    #     ]
+    # }
+
+    # Dictionary with configuration for template for code generation
+    template_parameters_list = {"registers" : []}
+
+    # Loop through all registers in memory map
+    for register in memory_map_root.iter(f"{{{xml_spirit_namespaces['spirit']}}}register"):
+
+        # Get register name
+        reg_name = register.find(".//spirit:name", namespaces=xml_spirit_namespaces).text
+    
+        # Stop processing if generation for this register is not requested
+        if (reg_name not in register_list):
+            continue
+
+        # Get address offset of address block (base address)
+        base_address = int(register.getparent().find(".//spirit:baseAddress", namespaces=xml_spirit_namespaces).text, 16)
+
+        # Get register offset in address block
+        reg_offset = int(register.find(".//spirit:addressOffset", namespaces=xml_spirit_namespaces).text, 16)
+
+        # Calculate absolute address and store as a hex string
+        abs_address = f"0x{(base_address+reg_offset):04x}"
+
+        # Get reset value
+        reset_value = register.find(".//spirit:reset", namespaces=xml_spirit_namespaces) \
+                              .find(".//spirit:value", namespaces=xml_spirit_namespaces).text
+        
+        # Get description
+        reg_rescription = register.find(".//spirit:description", namespaces=xml_spirit_namespaces).text
+
+        # Handle description
+        reg_rescription = reg_rescription.replace('"', "'")     # " -> '
+        reg_rescription = reg_rescription.replace('\n', " ")    # \n -> spavce
+        reg_rescription = reg_rescription.replace('\t', " ")    # \t -> spavce
+
+        # Get fields data
+        fields_parameters = []
+        for field in register.iter(f"{{{xml_spirit_namespaces['spirit']}}}field"):
+            # Get field data
+            name = field.find(".//spirit:name", namespaces=xml_spirit_namespaces).text
+            description = field.find(".//spirit:description", namespaces=xml_spirit_namespaces).text
+            access = field.find(".//spirit:access", namespaces=xml_spirit_namespaces).text
+            bit_offset = field.find(".//spirit:bitOffset", namespaces=xml_spirit_namespaces).text
+            bit_width = field.find(".//spirit:bitWidth", namespaces=xml_spirit_namespaces).text
+
+            # Handle description
+            description = description.replace('"', "'")     # " -> '
+            description = description.replace('\n', " ")    # \n -> spavce
+            description = description.replace('\t', " ")    # \t -> spavce
+
+            # Get enumerated values
+            enumerated_values_tag = field.find(".//spirit:enumeratedValues", namespaces=xml_spirit_namespaces)
+
+            enumerated_values = []
+            if (enumerated_values_tag is not None):
+                # Loop through enum values and store them to dictionary
+                for enum_value in enumerated_values_tag.iter(f"{{{xml_spirit_namespaces['spirit']}}}enumeratedValue"):
+                    key = enum_value.find(".//spirit:name", namespaces=xml_spirit_namespaces)
+                    value = enum_value.find(".//spirit:value", namespaces=xml_spirit_namespaces)
+                    enumerated_values.append({"key" : key, "value" : value})
+
+            # Store data to dictionary
+            field_dict = {
+                "name" : name,
+                "description" : description,
+                "access" : access,
+                "bit_offset" : bit_offset,
+                "bit_width" : bit_width,
+            }
+
+            # If enumerated values exist, add them to dictionary
+            if enumerated_values:
+                field_dict["enumerated_values"] = enumerated_values
+
+            # Store data to list
+            fields_parameters.append(field_dict)
+
+        # Get access for register
+        # Priority: read-write > read-only
+        access = "read-only"
+        for field in fields_parameters:
+            if (field["access"] == "read-write"):
+                access = "read-write"
+                break
+
+        # Store data to dictionary
+        register_parameters = {
+            "register_name" : reg_name,
+            "reset_value" : reset_value,
+            "register_address" : abs_address,
+            "register_description" : reg_rescription,
+            "register_access" : access,
+            "fields" : fields_parameters
+        }
+
+        # Append to output list
+        template_parameters_list["registers"].append(register_parameters)
+
+    # Generate files
+    environment = Environment(loader=FileSystemLoader("."))
+    templ = environment.get_template("Register_Template.txt")
+
+    for register_parameters in template_parameters_list["registers"]:
+        # Content of the file
+        file_content = templ.render(register_parameters)
+
+        # Path to file that will be generated
+        generated_file_path = os.path.join(path_to_output_dir, f"Reg_{register_parameters['register_name']}.cs")
+
+        # Write content to file
+        with open(generated_file_path, 'w') as file:
+            file.write(file_content)
+            
 def main():
     '''Main function of script. All code execution starts from here'''
 
@@ -160,14 +312,18 @@ def main():
     source_files = list_source_files(path_gui_dir)
 
     # Generate list of register types used in GUI project
-    register_list = list_used_registers(source_files)
+    full_register_list = list_used_registers(source_files)
 
     # List of already generated registers
     generated_registers = []
     if (not args.regenerate_all):
         generated_registers = list_generated_registers(path_output_dir)
 
-    #
+    # Construct list for generation. Filter out already generated registers
+    register_list = [itm for itm in full_register_list if itm not in generated_registers]
+
+    # Generate files
+    generate_register_files(path_xml_regmap, register_list, path_output_dir)
 
     #
     print()
