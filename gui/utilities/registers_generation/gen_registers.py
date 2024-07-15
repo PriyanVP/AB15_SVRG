@@ -35,7 +35,7 @@ class ColorSequences:
 # 7. Template render
 # 8. Sava data to file: new class for register access is created
 
-def command_line_parser():
+def command_line_parser() -> argparse.Namespace:
     '''Configure command line options and return parsed data'''
 
     # Configure parser for command line arguments
@@ -51,6 +51,40 @@ def command_line_parser():
 
     # Parse command line arguments
     return parser.parse_args()
+
+def list_source_files(path_gui_dir: str) -> list:
+    '''Create list of source files in GUI project that may contain register usage'''
+
+    # Variable to store result
+    output_list = []
+
+    # List of ignored directories
+    ignored_dirs = ["bin", "obj", "Registers"]
+
+    # Walk through all directories in GUI project and store list of source files that may contain register usage
+    for root, dirs, files in os.walk(path_gui_dir):
+        for file in files:
+            if file.endswith(".cs") and not any(ignored_dir in root for ignored_dir in ignored_dirs) :
+                output_list.append(os.path.join(root, file))
+
+    return output_list
+
+def list_generated_registers(path_output_dir: str) -> list:
+    '''Create list of already generated registers in GUI project'''
+
+    # Prefix of generated register files
+    prefix = "Reg_"
+
+    # Variable to store result
+    output_list = []
+
+    # Walk through generated files directory
+    for root, dirs, files in os.walk(path_output_dir):
+        for file in files:
+            if file.endswith(".cs"):
+                output_list.append(file.removeprefix(prefix))
+
+    return output_list
 
 
 
@@ -77,7 +111,17 @@ def main():
     # Construct path to output directory
     path_output_dir = os.path.join(path_gui_dir, "Models\\Generated\\Registers")
 
+    # Generate list of source files in GUI project (only .cs)
+    source_files = list_source_files(path_gui_dir)
+
+    # List of already generated registers
+    generated_files = []
+    if (not args.regenerate_all):
+        generated_files = list_generated_registers(path_output_dir)
+
     #
+    print()
+
 
 
 
