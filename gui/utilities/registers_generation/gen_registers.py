@@ -86,6 +86,18 @@ def list_generated_registers(path_output_dir: str) -> list:
 
     return output_list
 
+def clear_output_directory(path_output_dir: str):
+    '''Removes all files from output directory'''
+
+    # Get list of files in output directory
+    filelist = [ f for f in os.listdir(path_output_dir) ]
+
+    # Delete files
+    for file in filelist:
+        os.remove(os.path.join(path_output_dir, file))
+
+
+
 
 
 def main():
@@ -111,6 +123,10 @@ def main():
     # Construct path to output directory
     path_output_dir = os.path.join(path_gui_dir, "Models\\Generated\\Registers")
 
+    # Clear directory with generated register files if requested
+    if (args.clear):
+        clear_output_directory(path_output_dir)
+
     # Generate list of source files in GUI project (only .cs)
     source_files = list_source_files(path_gui_dir)
 
@@ -118,6 +134,8 @@ def main():
     generated_files = []
     if (not args.regenerate_all):
         generated_files = list_generated_registers(path_output_dir)
+
+    #
 
     #
     print()
