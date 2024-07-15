@@ -3,6 +3,7 @@ from jinja2 import Environment, FileSystemLoader
 import xml.etree.ElementTree as et
 import argparse
 from lxml import etree
+import re
 
 # Color sequences for colored output
 class ColorSequences:
@@ -96,6 +97,34 @@ def clear_output_directory(path_output_dir: str):
     for file in filelist:
         os.remove(os.path.join(path_output_dir, file))
 
+def list_used_registers(sorce_files: list) -> list:
+    '''Gets list of registers used in GUI project.
+    Used registers are determined by pattern matching. No dublicates in output'''
+
+    # Output list
+    registers = []
+
+    # Pattern for register
+    pattern = r'Reg_(\w+?)(?=\s|\()'
+
+    # Delete files
+    for file_path in sorce_files:
+        # Variable to store file content
+        file_content = ""
+        # Open file and read its content line by line
+        with open(file_path, 'r') as file:
+            # Read file content to variable
+            file_content = file.read()
+
+        # Check if registers were found in file  
+        matches = re.findall(pattern, file_content)
+
+        # Append only new registers to list
+        for match in matches:
+            if match not in registers:
+                registers.append(match)
+
+    return registers
 
 
 
@@ -130,10 +159,13 @@ def main():
     # Generate list of source files in GUI project (only .cs)
     source_files = list_source_files(path_gui_dir)
 
+    # Generate list of register types used in GUI project
+    register_list = list_used_registers(source_files)
+
     # List of already generated registers
-    generated_files = []
+    generated_registers = []
     if (not args.regenerate_all):
-        generated_files = list_generated_registers(path_output_dir)
+        generated_registers = list_generated_registers(path_output_dir)
 
     #
 
