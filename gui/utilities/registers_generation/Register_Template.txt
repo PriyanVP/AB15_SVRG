@@ -35,12 +35,12 @@ namespace AB15_GUI.WPF.Models.Genereted.Registers
 
         #region Fields instances
 
-        {%  for field in fields %}
+        {%-  for field in fields +%}
         /// <summary>
         /// {{ field.description }}
         /// </summary>
         public Field_{{ field.name }} {{ field.name }} { get; set; } = new Field_{{ field.name }}();
-        {% endfor %}
+        {% endfor -%}
 
         #endregion // Fields instances
 
@@ -53,23 +53,21 @@ namespace AB15_GUI.WPF.Models.Genereted.Registers
             {
                 UInt16 data = 0x0;
 
-                {%  for field in fields %}
+                {%+  for field in fields -%}
                 data |= {{ field.name }}.GetPositionalValue();
-                {% endfor %}
-
+                {%+ endfor %}
                 return data;
             }
             set
             {
-                {%  for field in fields %}
+                {%+  for field in fields -%}
                 {{ field.name }}.UpdateValue(value);
-                {% endfor %}
+                {%+ endfor %}
             }
         }
 
         #region Field classes declarations
-
-        {# Loop for generating classes for fields in this register #}
+        {#- Loop for generating classes for fields in this register -#}
         {%  for field in fields %}
         /// <summary>
         /// Class for working with {{field.name}} field
@@ -139,8 +137,8 @@ namespace AB15_GUI.WPF.Models.Genereted.Registers
                 }
             }
 
-            {# Add EnumeratedValues property only if field contains enumerated values definitions #}
-            {% if field.enumerated_values %}
+            {#- Add EnumeratedValues property only if field contains enumerated values definitions -#}
+            {%- if field.enumerated_values -%}
             /// <summary>
             /// Enumerated values for this field
             /// </summary>
@@ -189,7 +187,6 @@ namespace AB15_GUI.WPF.Models.Genereted.Registers
             }
         }
         {% endfor %}
-
         #endregion // Field classes declarations
     }
 }
