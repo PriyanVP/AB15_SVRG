@@ -49,15 +49,18 @@ def command_line_parser():
     parser.add_argument("-xp", "--xml_path", type=str, help="Path to xml file with regmap")
     parser.add_argument("-dp", "--dir_path", type=str, help="Path to GUI project root")
 
-    # Parse the command line arguments
+    # Parse command line arguments
     return parser.parse_args()
 
 
 
 def main():
     '''Main function of script. All code execution starts from here'''
+
+    # Change working directory to script directory
+    os.chdir(os.path.dirname(__file__))
     
-    # Constants initialization
+    # Pathes initialization (default options)
     path_gui_dir = "..\\..\\AB15_GUI.WPF"
     path_xml_regmap = "..\\..\\..\\resources\\AB15\\tap_AddrMap_10.2.xml"
 
@@ -75,6 +78,7 @@ def main():
     path_output_dir = os.path.join(path_gui_dir, "Models\\Generated\\Registers")
 
     #
+
 
 
 
