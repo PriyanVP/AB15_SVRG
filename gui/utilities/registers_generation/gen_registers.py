@@ -1,33 +1,8 @@
 import sys, os
 from jinja2 import Environment, FileSystemLoader
-import xml.etree.ElementTree as et
 import argparse
 from lxml import etree
 import re
-
-# Color sequences for colored output
-class ColorSequences:
-    '''Class to hold code sequences for formatting and coloring output'''
-    HEADER = '\033[95m'
-    OKBLUE = '\033[94m'
-    OKCYAN = '\033[96m'
-    OKGREEN = '\033[92m'
-    WARNING = '\033[93m'
-    FAIL = '\033[91m'
-    ENDC = '\033[0m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
-
-
-# Plan:
-# 1. Command line arguments parser: path to xml, path to gui root, clear output dir flag, regenerate all
-# 2. File parser - should return list with all registers used in .cs files
-# 3. Genereted items - function to return list of available registers in output directory
-# 4. List for genereation: returns list with register names that should be generated
-# 5. XML loader: load xml content to variable (maybe remove unused portion)
-# 6. Template configuration generator: create config in suitable fot template format by register name
-# 7. Template render
-# 8. Sava data to file: new class for register access is created
 
 def command_line_parser() -> argparse.Namespace:
     '''Configure command line options and return parsed data'''
@@ -132,7 +107,7 @@ def generate_register_files(path_to_regmap: str, register_list: list, path_to_ou
     # Get reference to memory map tag
     memory_map_root = regmap_root.find(".//spirit:memoryMap", namespaces=xml_spirit_namespaces)
 
-    # # Reference dictionary
+    # # Dictionary format
     # ref_dict = {
     #     "registers" : [
     #         {
@@ -325,12 +300,8 @@ def main():
     # Generate files
     generate_register_files(path_xml_regmap, register_list, path_output_dir)
 
-    #
-    print()
-
-
-
-
+    # Report finish
+    print("Generation was finished.")
 
 
 
