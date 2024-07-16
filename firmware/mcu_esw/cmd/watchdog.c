@@ -7,17 +7,17 @@
 /*-----------------------------------------------------Includes------------------------------------------------------*/
 /*********************************************************************************************************************/
 
+#include "common/global_defines.h"
+#include "common/tap_addrMap_ExportedMemMap_memoryMap.h"
 #include "watchdog.h"
 
 /*********************************************************************************************************************/
 /*------------------------------------------------------Macros-------------------------------------------------------*/
 /*********************************************************************************************************************/
 
-#define WD_STATUS_REGS_COUNT    (3)             /** \brief Number of WD status registers for periodic reading */
+#define WD_CFG_PACKAGE_LEN      (1)             /** \brief Number of addr+data items (4 bytes) in package  */
 
-#define SPI_READ_WDSTATUS1      (0x03E)         /** \brief Watchdog status register 1 */
-#define SPI_READ_WDSTATUS2      (0x03F)         /** \brief Watchdog status register 2 */
-#define SPI_READ_ENX            (0x040)         /** \brief 	Status of the enx_read_in feedback signals */
+#define WD_STATUS_REGS_COUNT    (3)             /** \brief Number of WD status registers for periodic reading */
 
 /*********************************************************************************************************************/
 /*--------------------------------------------------Enumerations-----------------------------------------------------*/
@@ -120,8 +120,8 @@ static WatchdogParametersStruct g_wd2Parameters =
  */
 static WatchdogStatusMonitoringStruct g_wdStatusMonitoringConfig =
 {
-    .enStatusReading = FALSE,                                                           // at startup WD is not configured
-    .wdStatusRegsAddresses = {SPI_READ_WDSTATUS1, SPI_READ_WDSTATUS2, SPI_READ_ENX},    // addresses for WD status registers are constant TODO: replace by defines from regmap
+    .enStatusReading = FALSE,                                                                                                  // at startup WD is not configured
+    .wdStatusRegsAddresses = {SAFETY_LOGIC_SPI_READ_WDSTATUS1, SAFETY_LOGIC_SPI_READ_WDSTATUS2, SAFETY_LOGIC_SPI_READ_ENX},    // addresses for WD status registers are constant
 };
 
 /*********************************************************************************************************************/
@@ -130,48 +130,89 @@ static WatchdogStatusMonitoringStruct g_wdStatusMonitoringConfig =
 
 void CmdConfigureWatchdog(USBReceiveData const * const commandPackage)
 {
-    // TODO: implement
+    // Temporary variables
     boolean isSuccessfulFlag = FALSE;
+    uint8 indexerForPayload = 0;
+ 
+    WatchdogTypeEnum selectedWD = NOT_SET;      // Selected WD
+    uint16 address[WD_CFG_PACKAGE_LEN] = {0};   // Addresses of registers to write
+    uint16 data[WD_CFG_PACKAGE_LEN] = {0};      // Values to write
+    uint16 length = WD_CFG_PACKAGE_LEN;         // Number of 32bit SPI words to write into ASIC
 
-    // // Prepare package for writing into ASIC
-    // uint16 address[WD_CFG_PACKAGE_LEN] = {WD_CONFIG0_ADDRESS, WD_CONFIG1_ADDRESS, WD_TIME_WIN_ADDRESS, WD_RESPTIME_ADDRESS}; // Addresses of registers to write
-    // uint16 data[WD_CFG_PACKAGE_LEN] = {0, 0, 0, 0};  // Values to write
-    // uint16 length = WD_CFG_PACKAGE_LEN; // Number of 32bit SPI words to write into ASIC
+    // Parse input
+    // Layout: selectedWD - (addr_MSB - addr_LSB - data_MSB - data_LSB) - (...)
+    selectedWD = commandPackage->data[0];
 
-    // // Unpack received message from GUI to obtain register values
-    // data[0] = ConstructWordFromBytes(0, commandPackage->data[0]); // WD_CONFIG0 register value (WDG_ENABLE field)
-    // data[1] = ConstructWordFromBytes(0, commandPackage->data[1]); // WD_CONFIG1 register value (WDG_EC_TH1, WDG_EN_LOCK, T_WIN_INITIAL fields)
-    // data[2] = ConstructWordFromBytes(commandPackage->data[3], commandPackage->data[2]); // WD_TIME_WIN register value (T_WIN field)
-    // data[3] = ConstructWordFromBytes(commandPackage->data[5], commandPackage->data[4]); // WD_RESPTIME register value (RESPTIME field)
+    for (uint8 i = 0; i < length; i++)
+    {
+        indexerForPayload = 1 + (i << 2); // One item is 4 bytes
 
-    // // Store RESPTIME value for configuration of Watchdog serving periodicity
-    // respTimeValue = (uint16)data[3];
+        address[i] = ConstructWordFromBytes(commandPackage->data[indexerForPayload], commandPackage->data[indexerForPayload+1]); // TODO: incorrect, start from 1, not 0
+        data[i] = ConstructWordFromBytes(commandPackage->data[indexerForPayload+2], commandPackage->data[indexerForPayload+3]);
+    }
 
-    // // Write to ASIC
+    // Retrieve values for WD timer configuration
+    if (selectedWD == WD1)
+    {
+        safety_logic_spi_config_wd1_ut tmpConfigRegister;
+        tmpConfigRegister.as_uint16 = data[0];
+        g_wd1Parameters.wdConfig.ackPeriod = 10; // TODO: implement actual calculation based on spi_set_responsetime_wd1 and spi_set_locktime_wd1
+        g_wd1Parameters.wdConfig.wdType = selectedWD;
+        g_wd1Parameters.isWDConfigured = TRUE;
+        g_wd1Parameters.state = WD_STATE_CONFIGURED;
+    }
+    else
+    {
+        safety_logic_spi_config_wd2_ut tmpConfigRegister;
+        tmpConfigRegister.as_uint16 = data[0];
+        g_wd1Parameters.wdConfig.ackPeriod = 10; // TODO: implement actual calculation based on spi_set_responsetime_wd2 and spi_set_locktime_wd2
+        g_wd1Parameters.wdConfig.wdType = selectedWD;
+        g_wd1Parameters.isWDConfigured = TRUE;
+        g_wd1Parameters.state = WD_STATE_CONFIGURED;
+    }
+     
 
-    // //TODO: JS: 17.6. bruteforce set to true to allow enable watchdog for test purpose +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    // isSuccessfulFlag = TRUE;
-    // //isSuccessfulFlag = QSPIWriteSequence(&(address), &(data), &length); // TODO: configuration, not yet implemented; not available for AB12
+    #ifdef AB12_PLATFORM
 
-    // // Prepare report for GUI
-    // USBTransmitData packageToSend;
-    // packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
+    // Code for AB12 implementation
+    if (selectedWD == WD1)
+    {
+        g_wd1Parameters.wdConfig.ackPeriod = 10; // TODO: hardcode value for AB12 implementation
+    }
+    else
+    {
+        g_wd1Parameters.wdConfig.ackPeriod = 10; // TODO: hardcode value for AB12 implementation
+    }
 
-    // if (isSuccessfulFlag == FALSE)
-    // {
-    //     // Common error frame setup
-    //     packageToSend.status = USB_STATUS_ERROR;
-    //     packageToSend.dataLength = 0;
-    // }
-    // else
-    // {
-    //     WatchdogManagementFlags.isConfigured = 1;
-    //     packageToSend.status = USB_STATUS_ACK;
-    //     packageToSend.dataLength = 0;
-    // }
+    isSuccessfulFlag = TRUE; // no configuration exists fro WD in AB12
 
-    // // Send report to GUI
-    // SendUSBPackage(&packageToSend);
+    #else
+
+    // Code for AB15 implementation
+
+    // Write to ASIC
+    isSuccessfulFlag = QSPIWriteSequence(&(address), &(data), &length); // TODO: configuration, not yet implemented; not available for AB12
+
+    #endif
+
+    // Prepare report for GUI
+    USBTransmitData packageToSend;
+    packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
+
+    if (isSuccessfulFlag == FALSE)
+    {
+        // Common error frame setup
+        packageToSend.status = USB_STATUS_ERROR;
+        packageToSend.dataLength = 0;
+    }
+    else
+    {
+        packageToSend.status = USB_STATUS_ACK;
+        packageToSend.dataLength = 0;
+    }
+
+    // Send report to GUI
+    SendUSBPackage(&packageToSend);
 }
 
 void CmdStartMonitoringWatchdog(USBReceiveData const * const commandPackage)
