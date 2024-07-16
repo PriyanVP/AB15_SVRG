@@ -17,23 +17,28 @@
 
 #define ISR_PROVIDER_GPT12_TIMER    IfxSrc_Tos_cpu0          /* Interrupt provider                                   */
 
-#define SERVICE_TIMER_PERIODICITY   39062u                   /* Reload value to have an interrupt each 200ms         */
-#define GENERAL_TIMER_PERIODICITY   31250u                   /* Reload value to have an interrupt each 10ms          */
+#define GENERAL_TIMER_PERIODICITY      250u                  /* Reload value to have an interrupt each  20us*/
+                                                             /* fGPT = 100 Mhz
+                                                                (a) IfxGpt12_Gpt1BlockPrescaler_8
+                                                                (b) IfxGpt12_TimerInputPrescaler_1
+                                                                Reload_Value = fGPT / (block Prescaler * input prescaler * irQfreq)
+                                                                Reload_Value = (fGPT  * IRQ_duration) *  / (block Prescaler * input prescaler)
+                                                                Reload_Value = (100000000*0,00002)/(8*1)=250  */
 
 // Calculation formula:
+// T = desired IRQ period in seconds
 // Reload Value = f_GPT * T / (Gpt1BlockPrescaler ∗ TimerInputPrescaler)
-// where f_GPT = 100 MHz - GPT12 module base frequency,
+// where f_GPT = 100 MHz --> GPT12 module base frequency,
 // T, s - interrupt periodicity
-// Gpt1BlockPrescaler - GPT1 block prescaler
-// TimerInputPrescaler - timer prescaler
+// Gpt1BlockPrescaler - GPT1 block prescaler = 8
+// TimerInputPrescaler - timer prescaler = 2
 // Reload Value should fit in 16 bit unsigned int!
 
+// T desired = 0,01 --> 10ms
+// reload value = (100000000*0,01)/(16*2) = 31250
 
-/*from users manual:
- * Timer Block GPT1 contains three timers/counters: The core timer T3 and the two auxiliary timers T2 and T4. The
-    maximum resolution is fGPT/4.
-*/
-
+// T desired = 0,0001 --> 100us
+// reload value = (100000000*0,0001)/(16*1) = 625
 
 #define FREQ_GPT12_HZ 100000000                             /* GPT12 module base frequency                           */
 
@@ -65,7 +70,7 @@ void StartServiceTimer(void);
  * \return Returns nothing
  */
 void StartGeneralTimer(void);
-
+void StartFastTimer(void);
 /** \brief Stop service timer interrupts
  *
  * \return Returns nothing
@@ -117,6 +122,7 @@ void ConfigureGPIOPeriodicity(uint16 gpioPeriodicity);
  */
 void EnableWatchdogInterrupt(void);
 
+
 /** \brief Enable error check interrupt
  * Periodicity has to be configured first!
  *
@@ -143,6 +149,12 @@ void EnableGPIOInterrupt(void);
  * \return Returns nothing
  */
 void DisableWatchdogInterrupt(void);
+
+/** \brief Disable Fast interrupt
+ *
+ * \return Returns nothing
+ */
+void DisableFastInterrupt(void);
 
 /** \brief Disable error check interrupt
  *
