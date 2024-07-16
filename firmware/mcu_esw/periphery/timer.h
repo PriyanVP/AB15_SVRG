@@ -10,6 +10,7 @@
 /*-----------------------------------------------------Includes------------------------------------------------------*/
 /*********************************************************************************************************************/
 #include "Ifx_Types.h"
+#include "cmd/watchdog.h"
 
 /*********************************************************************************************************************/
 /*------------------------------------------------------Macros-------------------------------------------------------*/
@@ -70,7 +71,9 @@ void StartServiceTimer(void);
  * \return Returns nothing
  */
 void StartGeneralTimer(void);
-void StartFastTimer(void);
+
+void StartFastTimer(void); // TODO: for removal?
+
 /** \brief Stop service timer interrupts
  *
  * \return Returns nothing
@@ -86,10 +89,11 @@ void StopGeneralTimer(void);
 /** \brief Configure ASIC watchdog acknowledge periodicity
  * Periodicity is defined in number of General timer interrupts
  *
+ * \param wdType type of WD (valid options WD1 and WD2)
  * \param watchdogPeriodicity periodicity of reading chunks of data
  * \return Returns nothing
  */
-void ConfigureWatchdogPeriodicity(uint16 watchdogPeriodicity);
+void ConfigureWatchdogPeriodicity(WatchdogTypeEnum wdType, uint16 watchdogPeriodicity);
 
 /** \brief Configure error check periodicity
  * Periodicity is defined in number of General timer interrupts
@@ -118,10 +122,10 @@ void ConfigureGPIOPeriodicity(uint16 gpioPeriodicity);
 /** \brief Enable Watchdog interrupt
  * Periodicity has to be configured first!
  *
+ * \param wdType type of WD (valid options WD1 and WD2)
  * \return Returns nothing
  */
-void EnableWatchdogInterrupt(void);
-
+void EnableWatchdogInterrupt(WatchdogTypeEnum wdType);
 
 /** \brief Enable error check interrupt
  * Periodicity has to be configured first!
@@ -146,15 +150,16 @@ void EnableGPIOInterrupt(void);
 
 /** \brief Disable Watchdog interrupt
  *
+ * \param wdType type of WD (valid options WD1 and WD2)
  * \return Returns nothing
  */
-void DisableWatchdogInterrupt(void);
+void DisableWatchdogInterrupt(WatchdogTypeEnum wdType);
 
 /** \brief Disable Fast interrupt
  *
  * \return Returns nothing
  */
-void DisableFastInterrupt(void);
+void DisableFastInterrupt(void); // TODO: for removal
 
 /** \brief Disable error check interrupt
  *
@@ -176,9 +181,10 @@ void DisableGPIOInterrupt(void);
 
 /** \brief Get error check interrupt state
  *
+ * \param wdType type of WD (valid options WD1 and WD2)
  * \return Returns true if irq enabled, false - otherwise
  */
-boolean GetStateWatchdogInterrupt(void);
+boolean GetStateWatchdogInterrupt(WatchdogTypeEnum wdType);
 
 /** \brief Get error check interrupt state
  *
@@ -200,8 +206,9 @@ boolean GetStateGPIOInterrupt(void);
 
 /** \brief Gets duration of Watchdog interrupt period
  *
+ * \param wdType type of WD (valid options WD1 and WD2)
  * \return Returns value of g_watchdogReload variable
  */
-uint16 GetWatchdogPeriodicity(void);
+uint16 GetWatchdogPeriodicity(WatchdogTypeEnum wdType);
 
 #endif /* TIMER_H_ */
