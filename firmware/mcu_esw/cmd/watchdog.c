@@ -43,16 +43,6 @@ typedef enum
     WD_FAIL_ACK_TIMING_HIGH     = 3         /** \brief break answer timing: provide answer too late */
 } WatchdogFailEnum;
 
-/** \brief Defines available WD
- */
-typedef enum
-{
-    NOT_SET                     = 0,        /** \brief WD type was not yet defined */
-    WD1                         = 1,        /** \brief Watchdog 1 */
-    WD2                         = 2,        /** \brief Watchdog 2 */
-    WD3                         = 3         /** \brief Watchdog 3 */
-} WatchdogTypeEnum;
-
 /*********************************************************************************************************************/
 /*-------------------------------------------------Data Structures---------------------------------------------------*/
 /*********************************************************************************************************************/
@@ -170,10 +160,10 @@ void CmdConfigureWatchdog(USBReceiveData const * const commandPackage)
     {
         safety_logic_spi_config_wd2_ut tmpConfigRegister;
         tmpConfigRegister.as_uint16 = data[0];
-        g_wd1Parameters.wdConfig.ackPeriod = 10; // TODO: implement actual calculation based on spi_set_responsetime_wd2 and spi_set_locktime_wd2
-        g_wd1Parameters.wdConfig.wdType = selectedWD;
-        g_wd1Parameters.isWDConfigured = TRUE;
-        g_wd1Parameters.state = WD_STATE_CONFIGURED;
+        g_wd2Parameters.wdConfig.ackPeriod = 10; // TODO: implement actual calculation based on spi_set_responsetime_wd2 and spi_set_locktime_wd2
+        g_wd2Parameters.wdConfig.wdType = selectedWD;
+        g_wd2Parameters.isWDConfigured = TRUE;
+        g_wd2Parameters.state = WD_STATE_CONFIGURED;
     }
      
 
@@ -247,46 +237,52 @@ void CmdStopMonitoringWatchdog(USBReceiveData const * const commandPackage)
 
 void IntCmdAcknowledgeWatchdog1(void)
 {
-    // TODO: implement
-    // uint8 requValue = 0;
-    // uint16 responseWord0, responseWord1 = 0;
-    // uint16 address, length = 0;
+    uint8 requValue = 0;
+    uint16 responseWord = 0;
+    uint16 addressQuestion = SAFETY_LOGIC_SPI_READ_WDQA;
+    uint16 addressAnswer = SAFETY_LOGIC_SPI_TRIG_WDQA1;
+    SPIReceiveData data;
+    uint16 length = 1;
 
-    // // Get request from ASIC's Watchdog
-    // // No checks to not serve same Watchdog request more than once (expected behavior in case of failed previous serving)
-    // requValue = GetREQUValue();
+    // Read question from ASIC
+    QSPIReadSequence(&addressQuestion, &(data.dw), &length);
+    requValue = (data.bf.output_data & SAFETY_LOGIC_SPI_READ_WDQA_QA1_CNT_SPI_MASK) >> SAFETY_LOGIC_SPI_READ_WDQA_QA1_CNT_SPI_SHIFT;
 
-    // // Obtain response word from look-up table
-    // responseWord1 = GetResponseWordAB12(requValue, 1);
-    // responseWord0 = GetResponseWordAB12(requValue, 0);
+    // Obtain response word from look-up table
+    #ifdef AB12_PLATFORM
+    responseWord = GetResponseWordAB12(requValue, 0);   // TODO: use corresponding table
+    #else
+    responseWord = GetResponseWordAB15(requValue, 0);
+    #endif
 
-    // // Send response words to ASIC
-    // address = WD_RESP_ADDRESS;
-    // length = 1;
-    // QSPIWriteSequence(&address, &responseWord1, &length);
-    // QSPIWriteSequence(&address, &responseWord0, &length);
+    // Send response word to ASIC
+    length = 1;
+    QSPIWriteSequence(&addressAnswer, &responseWord, &length);
 }
 
 void IntCmdAcknowledgeWatchdog2(void)
 {
-    // TODO: implement
-    // uint8 requValue = 0;
-    // uint16 responseWord0, responseWord1 = 0;
-    // uint16 address, length = 0;
+    uint8 requValue = 0;
+    uint16 responseWord = 0;
+    uint16 addressQuestion = SAFETY_LOGIC_SPI_READ_WDQA;
+    uint16 addressAnswer = SAFETY_LOGIC_SPI_TRIG_WDQA2;
+    SPIReceiveData data;
+    uint16 length = 1;
 
-    // // Get request from ASIC's Watchdog
-    // // No checks to not serve same Watchdog request more than once (expected behavior in case of failed previous serving)
-    // requValue = GetREQUValue();
+    // Read question from ASIC
+    QSPIReadSequence(&addressQuestion, &(data.dw), &length);
+    requValue = (data.bf.output_data & SAFETY_LOGIC_SPI_READ_WDQA_QA2_CNT_SPI_MASK) >> SAFETY_LOGIC_SPI_READ_WDQA_QA2_CNT_SPI_SHIFT;
 
-    // // Obtain response word from look-up table
-    // responseWord1 = GetResponseWordAB12(requValue, 1);
-    // responseWord0 = GetResponseWordAB12(requValue, 0);
+    // Obtain response word from look-up table
+    #ifdef AB12_PLATFORM
+    responseWord = GetResponseWordAB12(requValue, 0);   // TODO: use corresponding table
+    #else
+    responseWord = GetResponseWordAB15(requValue, 0);
+    #endif
 
-    // // Send response words to ASIC
-    // address = WD_RESP_ADDRESS;
-    // length = 1;
-    // QSPIWriteSequence(&address, &responseWord1, &length);
-    // QSPIWriteSequence(&address, &responseWord0, &length);
+    // Send response word to ASIC
+    length = 1;
+    QSPIWriteSequence(&addressAnswer, &responseWord, &length);
 }
 
 void CmdStartWatchdog(USBReceiveData const * const commandPackage)
@@ -297,6 +293,18 @@ void CmdStartWatchdog(USBReceiveData const * const commandPackage)
     // 2. check based on flag value if WD is configured
     // 3. start WD
     // 4. report to UI
+
+    WatchdogTypeEnum selectedWD = NOT_SET;      // Selected WD
+
+    selectedWD = commandPackage->data[0]; // TODO: how to handle WD1+WD2
+
+    WatchdogParametersStruct *currentWDConfig = (selectedWD == WD1) ? (&g_wd1Parameters) : (&g_wd2Parameters);
+
+    // If watchdog is not configured do not start
+    if (currentWDConfig->isWDConfigured == FALSE) return;
+
+
+
 
 
     //     // Configure periodicity of Watchdog serving MCU interrupt
