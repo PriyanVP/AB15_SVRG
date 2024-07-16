@@ -1,0 +1,175 @@
+﻿<UserControl x:Class="AB15_GUI.WPF.Views.Components.WatchdogSlider"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:AB15_GUI.WPF.Views.Components"
+             mc:Ignorable="d" 
+             MinHeight="50" MinWidth="200"
+             d:DesignHeight="50" d:DesignWidth="200">
+    <UserControl.Resources>
+        <Style x:Key="SliderRepeatButton" TargetType="RepeatButton">
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="IsTabStop" Value="false" />
+            <Setter Property="Focusable" Value="false" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RepeatButton">
+                        <Border Background="Transparent"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SliderRepeatButton1" TargetType="RepeatButton">
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RepeatButton">
+                        <Border SnapsToDevicePixels="True" Background="YellowGreen"  BorderThickness="1" BorderBrush="YellowGreen" Height="3"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SliderThumb" TargetType="Thumb">
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Thumb">
+                        <StackPanel Orientation="Vertical">
+                            <Path Data="M 0 0 L 8 0 L 4 6 Z"  Stroke="YellowGreen" Margin="-2,0,0,0" StrokeThickness="2" Fill="YellowGreen"></Path>
+                            <Line X1="0" Y1="0" X2="0" Y2="7" Stroke="Gray" StrokeThickness="1" Margin="2,0,0,0" StrokeDashArray="1.5,1.5"></Line>
+                            <TextBlock Foreground="Black" Margin="-2,30,0,0"  Text="{Binding Value, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Slider}}}"/>
+                        </StackPanel>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SliderRepeatButtonStyle" TargetType="{x:Type RepeatButton}">
+            <Setter Property="OverridesDefaultStyle" Value="true"/>
+            <Setter Property="IsTabStop" Value="false"/>
+            <Setter Property="Focusable" Value="false"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RepeatButton}">
+                        <Rectangle Fill="Transparent"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <Style x:Key="LampadaThumbStyle" TargetType="{x:Type Thumb}">
+            <Setter Property="Focusable" Value="false"/>
+            <Setter Property="OverridesDefaultStyle" Value="true"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="Width" Value="20"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Thumb}">
+                        <Canvas SnapsToDevicePixels="true">
+                            <Path Data="M1.1965079,-17.994989 L28.196667,-28.213333 28.196333,-8.213772 z" 
+                          Fill="Black" 
+                          Height="20" 
+                          Canvas.Left="23.197" 
+                          Stretch="Fill" 
+                          Canvas.Top="9.768" 
+                          Width="20"/>
+                        </Canvas>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="LampadaSliderStyle" TargetType="{x:Type Slider}">
+            <Setter Property="Stylus.IsPressAndHoldEnabled" Value="false"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Slider}">
+                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition MinWidth="{TemplateBinding MinWidth}" Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <UniformGrid x:Name="TrackBackground" 
+                                     Rows="0" 
+                                     Columns="6">
+                                    <Rectangle Fill="Red" />
+                                    <Rectangle Fill="Orange" />
+                                    <Rectangle Fill="Yellow" />
+                                    <Rectangle Fill="LightGreen" />
+                                    <Rectangle Fill="Green" />
+                                    <Rectangle Fill="DarkGreen" />
+                                </UniformGrid>
+                                <Canvas Margin="-1,-6">
+                                    <Rectangle x:Name="PART_SelectionRange" 
+                                               Fill="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" 
+                                               Stroke="{DynamicResource {x:Static SystemColors.ControlDarkDarkBrushKey}}" 
+                                               StrokeThickness="1.0" 
+                                               Visibility="Hidden" 
+                                               Width="4.0"/>
+                                </Canvas>
+                                <Track x:Name="PART_Track">
+                                    <Track.DecreaseRepeatButton>
+                                        <RepeatButton Command="{x:Static Slider.DecreaseLarge}" Style="{StaticResource SliderRepeatButtonStyle}"/>
+                                    </Track.DecreaseRepeatButton>
+                                    <Track.IncreaseRepeatButton>
+                                        <RepeatButton Command="{x:Static Slider.IncreaseLarge}" Style="{StaticResource SliderRepeatButtonStyle}"/>
+                                    </Track.IncreaseRepeatButton>
+                                    <Track.Thumb>
+                                        <Thumb x:Name="Thumb" Style="{DynamicResource LampadaThumbStyle}"/>
+                                    </Track.Thumb>
+                                </Track>
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+    </UserControl.Resources>
+    
+    <Grid Background="{DynamicResource UI.BackGround}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="5"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="5"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="4*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="4*"/>
+            <RowDefinition Height="5"/>
+        </Grid.RowDefinitions>
+
+        <Slider Grid.Row="1" Grid.Column="1" Grid.RowSpan="2"
+                Name="TopSlider"
+                Orientation="Horizontal"
+                Minimum="0"
+                Maximum="100"
+                Value="50"/>
+
+        <Slider Grid.Row="3" Grid.Column="1" Grid.RowSpan="2"
+                Name="BotSlider"
+                Orientation="Horizontal"
+                Minimum="0"
+                Maximum="100"
+                Value="50"/>
+
+        <!--<TickBar Fill="LightGray" VerticalAlignment="Bottom"   SnapsToDevicePixels="True" Grid.Row="2" Grid.Column="1" Placement="Top" Height="5" Visibility="Visible"/>
+        <TickBar Fill="LightGray" VerticalAlignment="Top"   SnapsToDevicePixels="True" Grid.Row="3" Grid.Column="1" Placement="Bottom" Height="5" Visibility="Visible"/>
+
+        <Border Grid.Column="1" Grid.Row="2" BorderBrush="Black" BorderThickness="1,0,1,1"/>
+        <Border Grid.Column="1" Grid.Row="3" BorderBrush="Black" BorderThickness="1,1,1,0"/>-->
+        
+        
+        
+    </Grid>
+</UserControl>

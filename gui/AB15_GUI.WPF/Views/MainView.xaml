@@ -74,6 +74,30 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
+            <TabControl Grid.Column="1" >
+                <TabItem>
+                    <Frame Source="HomePage.xaml"/>
+                </TabItem>
+                <TabItem>
+                    <Frame Source="SPILearningPage.xaml"/>
+                </TabItem>
+                <TabItem>
+                    <Frame Source="WatchdogPage.xaml"/>
+                </TabItem>
+                <TabItem>
+                    <Frame Source="FiringPage.xaml"/>
+                </TabItem>
+                <TabItem>
+                    <Frame Source="AB15DataPage.xaml"/>
+                </TabItem>
+                <TabItem>
+                    <Frame Source="SensorPage.xaml"/>
+                </TabItem>
+                <TabItem>
+                    <Frame Source="DiagnosticsPaga.xaml"/>
+                </TabItem>
+            </TabControl>
+
             <Border Grid.Column="0" BorderThickness="0,1,1,1" BorderBrush="{DynamicResource Menu.SeparateLine}"/>
 
             <!--Subsection-->
