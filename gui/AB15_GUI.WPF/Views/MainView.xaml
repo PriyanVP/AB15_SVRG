@@ -9,7 +9,7 @@
         xmlns:local="clr-namespace:AB15_GUI.WPF.Views"
         mc:Ignorable="d"
         Title="Bosch AB15" 
-        MinHeight="550" MinWidth="800"
+        MinHeight="550" MinWidth="1000"
         Height="650" Width="1000"
         Icon="Resources/bosch.ico">
     <Window.Resources>
