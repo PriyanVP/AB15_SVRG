@@ -80,22 +80,16 @@ void WatchdogInterruptRoutine(void)
     ToggleLED2();
 }
 
-void FastInterruptRoutine(void)
-{
-    // fast timer
-    ToggleLED4();
-}
+//void FastInterruptRoutine(void)
+//{
+//    // fast timer
+//    ToggleLED4();
+//}
 
 /** \brief Main function
  */
 void core0_main(void)
 {
-    /* add some globals for debugging*/
-    //static uint16 debug_counter;
-    //uint8 debug_ret;
-    //uint32 buffer_new;
-
-
     IfxCpu_enableInterrupts();
     
     /* !!WATCHDOG0 AND SAFETY WATCHDOG ARE DISABLED HERE!!
@@ -131,14 +125,8 @@ void core0_main(void)
     // Init timer module
     InitGpt12Timer();
 
-    // Start service irq
-    StartServiceTimer();
-
     // Start general timer
-    //StartGeneralTimer();
-
-    // Start service irq
-    //StartFastTimer();
+    StartGeneralTimer();
 
 
     // Local temporary variable for receiving data
