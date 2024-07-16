@@ -33,14 +33,28 @@ IFX_ALIGN(4) IfxCpu_syncEvent g_cpuSyncEvent = 0;
 
 #define WAIT_TIME 2   /*mseconds */
 
-/** \brief Watchdog interrupt routine
+/** \brief Watchdog 1 interrupt routine
  * Arms single acknowledgement of ASIC watchdog
  */
-void WatchdogInterruptRoutine(void)
+void Watchdog1InterruptRoutine(void)
 {
     // Watchdog serving is an internal command
     USBReceiveData serveWatchdogCommand;
-    serveWatchdogCommand.command = INT_CMD_ACK_WATCHDOG;
+    serveWatchdogCommand.command = INT_CMD_ACK_WATCHDOG1;
+    serveWatchdogCommand.dataLength = 0;
+    // Add WD serving internal command to command queue
+    //QueueWriteTail(&serveWatchdogCommand);    // TODO: commented out to have MCU contained WD routine. Uncomment for actual communication with ASIC
+    ToggleLED2();
+}
+
+/** \brief Watchdog 2 interrupt routine
+ * Arms single acknowledgement of ASIC watchdog
+ */
+void Watchdog2InterruptRoutine(void)
+{
+    // Watchdog serving is an internal command
+    USBReceiveData serveWatchdogCommand;
+    serveWatchdogCommand.command = INT_CMD_ACK_WATCHDOG2;
     serveWatchdogCommand.dataLength = 0;
     // Add WD serving internal command to command queue
     //QueueWriteTail(&serveWatchdogCommand);    // TODO: commented out to have MCU contained WD routine. Uncomment for actual communication with ASIC
@@ -193,6 +207,12 @@ void core0_main(void)
 
            case USB_CMD_GET_MCU_BUILD_TIME:
                 CmdGetMcuBuildTime(&cmdPackage);
+                break;
+            case INT_CMD_ACK_WATCHDOG1:
+                IntCmdAcknowledgeWatchdog1();
+                break;
+            case INT_CMD_ACK_WATCHDOG2:
+                IntCmdAcknowledgeWatchdog2();
                 break;
 
 
