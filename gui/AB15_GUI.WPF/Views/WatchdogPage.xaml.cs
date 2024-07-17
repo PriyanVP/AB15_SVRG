@@ -24,5 +24,19 @@ namespace AB15_GUI.WPF.Views
         {
             InitializeComponent();
         }
+
+        private void WD1LockTimeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+
+        }
+
+        private void WD1ResponseTimeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (WD1ResponseTimeSlider == null || WD1LockTimeSlider == null) { return; }
+            if (WD1ResponseTimeSlider.Value < WD1LockTimeSlider.Value ) 
+            {
+                WD1ResponseTimeSlider.Value = WD1LockTimeSlider.Value;
+            }
+        }
     }
 }
