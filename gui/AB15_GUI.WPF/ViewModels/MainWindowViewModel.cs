@@ -80,10 +80,12 @@ namespace AB15_GUI.WPF.ViewModels
         /// </summary>
         public readonly LoggerViewModel LoggerViewModel;
 
+        public readonly WatchdogPageViewModel WatchdogPageViewModel;
+
         /// <summary>
         /// Constructor
         /// </summary>
-        public MainViewModel(Logger logger, LoggerViewModel loggerViewModel, LoggerView loggerWindowView)
+        public MainViewModel(Logger logger, LoggerViewModel loggerViewModel, LoggerView loggerWindowView, WatchdogPageViewModel watchdogPageViewModel)
         {
             // Init Logger and logger view model
             this.logger = logger;
@@ -91,6 +93,8 @@ namespace AB15_GUI.WPF.ViewModels
 
             logger.Trace("In MainViewModel");
             loggerWindowView.Show();
+
+            WatchdogPageViewModel = watchdogPageViewModel;
         }
     }
 }

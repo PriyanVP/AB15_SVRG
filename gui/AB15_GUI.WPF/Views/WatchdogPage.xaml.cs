@@ -27,15 +27,64 @@ namespace AB15_GUI.WPF.Views
 
         private void WD1LockTimeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
+            if (WD1ResponseTimeSlider == null || WD1LockTimeSlider == null) { return; }
 
+
+            if ((WD1ResponseTimeSlider.Value + WD1LockTimeSlider.Value) > 63)
+            {
+                WD1ResponseTimeSlider.Value = 63 - WD1LockTimeSlider.Value;
+            }
+
+            WD1ResponseTimeSlider.Minimum = -1 * WD1LockTimeSlider.Value;
+            WD1ResponseTimeSlider.Maximum = 63 - WD1LockTimeSlider.Value;
         }
 
         private void WD1ResponseTimeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (WD1ResponseTimeSlider == null || WD1LockTimeSlider == null) { return; }
-            if (WD1ResponseTimeSlider.Value < WD1LockTimeSlider.Value ) 
+            
+            if (WD1ResponseTimeSlider.Value < 0 ) 
             {
-                WD1ResponseTimeSlider.Value = WD1LockTimeSlider.Value;
+                WD1ResponseTimeSlider.Value = 0;
+            }
+
+            if ((WD1ResponseTimeSlider.Value + WD1LockTimeSlider.Value) > 63)
+            {
+                WD1ResponseTimeSlider.Value = 63 - WD1LockTimeSlider.Value;
+            }
+        }
+
+
+
+
+
+
+        private void WD2LockTimeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (WD2ResponseTimeSlider == null || WD2LockTimeSlider == null) { return; }
+
+
+            if ((WD2ResponseTimeSlider.Value + WD2LockTimeSlider.Value) > 63)
+            {
+                WD2ResponseTimeSlider.Value = 63 - WD2LockTimeSlider.Value;
+            }
+
+            WD2ResponseTimeSlider.Minimum = -1 * WD2LockTimeSlider.Value;
+            WD2ResponseTimeSlider.Maximum = 63 - WD2LockTimeSlider.Value;
+        }
+
+        private void WD2ResponseTimeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (WD2ResponseTimeSlider == null || WD2LockTimeSlider == null) { return; }
+
+            if (WD2ResponseTimeSlider.Value < 0)
+            {
+                WD2ResponseTimeSlider.Value = 0;
+            }
+
+            if ((WD2ResponseTimeSlider.Value + WD2LockTimeSlider.Value) > 63)
+            {
+                WD2ResponseTimeSlider.Value = 63 - WD2LockTimeSlider.Value;
             }
         }
     }
