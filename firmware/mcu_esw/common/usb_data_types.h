@@ -102,6 +102,7 @@ typedef enum
     INT_CMD_SYS_TIMER_UPD               = 64,                 /** \brief execute system timer sequence */
     INT_CMD_ACK_WATCHDOG1               = 65,                 /** \brief acknowlege watchdog 1 */
     INT_CMD_ACK_WATCHDOG2               = 66,                 /** \brief acknowlege watchdog 2 */
+    INT_CMD_READ_WD_STATUS              = 67,                 /** \brief read watchdogs status registers */
 
     _USB_CMD_MAX                        = 127                 /** \brief maximal value of command (not included) */
 } USBCommandsEnum;

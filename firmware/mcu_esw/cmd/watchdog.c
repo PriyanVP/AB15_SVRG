@@ -26,6 +26,8 @@
 #define AB12_WD3_ACK_PERIOD     (200)           /** \brief Periodicity of acknowledging WD3 on AB12 platform: 10 ms/ 50 us
                                                     where 50 us - timer interrupt periodicity on MCU */
 
+#define WD_STATUS_CHECK_PERIOD  (4000)          /** \brief Periodicity of reading status of WD: 200 ms/ 50 us */
+
 /*********************************************************************************************************************/
 /*--------------------------------------------------Enumerations-----------------------------------------------------*/
 /*********************************************************************************************************************/
@@ -58,9 +60,10 @@ typedef enum
  */
 typedef struct
 {
-    boolean enStatusReading;            /** \brief enable periodic WD status reading flag */
-    uint16 wdStatusRegsAddresses[3];    /** \brief array with adresses of WD status registers */
-    uint16 monitoringMessageID;         /** \brief message ID for sending back WD status data */
+    boolean enStatusReading;                               /** \brief enable periodic WD status reading flag */
+    uint16 wdStatusRegsAddresses[WD_STATUS_REGS_COUNT];    /** \brief array with adresses of WD status registers */
+    uint16 lengthOfRegsToRead;                             /** \brief number of registers to read */
+    uint16 monitoringMessageID;                            /** \brief message ID for sending back WD status data */
 } WatchdogStatusMonitoringStruct;
 
 /** \brief Structure for Watchdog configuration
@@ -119,6 +122,7 @@ static WatchdogStatusMonitoringStruct g_wdStatusMonitoringConfig =
 {
     .enStatusReading = FALSE,                                                                                                  // at startup WD is not configured
     .wdStatusRegsAddresses = {SAFETY_LOGIC_SPI_READ_WDSTATUS1, SAFETY_LOGIC_SPI_READ_WDSTATUS2, SAFETY_LOGIC_SPI_READ_ENX},    // addresses for WD status registers are constant
+    .lengthOfRegsToRead = WD_STATUS_REGS_COUNT                                                                                 // number of addresses to read
 };
 
 // Variable to store WD periodicity [n*20us] TODO: check usage, may not be required
@@ -231,7 +235,9 @@ void CmdStartMonitoringWatchdog(USBReceiveData const * const commandPackage)
     // Enable monitoring procedure
     g_wdStatusMonitoringConfig.enStatusReading = TRUE;
 
-    // TODO: arm timer routine
+    // Arm timer routine
+    ConfigureWatchdogStatusCheckPeriodicity(WD_STATUS_CHECK_PERIOD);
+    EnableWatchdogStatusCheckInterrupt();
 }
 
 void CmdStopMonitoringWatchdog(USBReceiveData const * const commandPackage)
@@ -239,7 +245,8 @@ void CmdStopMonitoringWatchdog(USBReceiveData const * const commandPackage)
     // Disable monitoring procedure
     g_wdStatusMonitoringConfig.enStatusReading = FALSE;
 
-    // TODO: unarm timer routine
+    // Unarm timer routine
+    DisableWatchdogStatusCheckInterrupt();
 
     // Prepare acknowledge message
     USBTransmitData packageToSend;
@@ -367,6 +374,43 @@ void CmdStopWatchdog(USBReceiveData const * const commandPackage)
     packageToSend.dataLength = 0;
 
     // Send acknowledge message to GUI
+    SendUSBPackage(&packageToSend);
+}
+
+void IntCmdMonitorWatchdog(void)
+{
+    // Local variables
+    USBTransmitData packageToSend;
+    SPIReceiveData data;
+    uint16 length = g_wdStatusMonitoringConfig.lengthOfRegsToRead;
+
+    // Read WD status from ASIC
+    #ifdef AB12_PLATFORM
+    // AB12 platform
+    // responseWord = GetResponseWordAB12(requValue, 0);   // TODO: use corresponding table
+    #else
+    // AB15 platform
+    // Read WD related registers from ASIC
+    QSPIReadSequence(g_wdStatusMonitoringConfig.wdStatusRegsAddresses, &data, &length);
+
+    packageToSend.dataLength = length << 1; // each data item is send as 2 bytes
+
+    for (uint8 i = 0; i < length; i++)
+    {
+        // Store SPI response frame to temporary variable for extracting data
+        dataRecived.dw = data[i];
+
+        packageToSend.data[i*2]     = GetLSB(dataRecived.bf.output_data);
+        packageToSend.data[(i*2)+1] = GetMSB(dataRecived.bf.output_data);
+    }
+    #endif
+
+    // Akcnowledge success of start WD
+    packageToSend.status = USB_STATUS_DATA;
+    packageToSend.asic_id = 1;
+    packageToSend.msg_id = g_wdStatusMonitoringConfig.monitoringMessageID;
+
+    // Send message to GUI
     SendUSBPackage(&packageToSend);
 }
 
