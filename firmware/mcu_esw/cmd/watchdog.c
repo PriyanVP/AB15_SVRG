@@ -8,6 +8,7 @@
 /*********************************************************************************************************************/
 
 #include "common/global_defines.h"
+#include "common/watchdog_types.h"
 #include "common/tap_addrMap_ExportedMemMap_memoryMap.h"
 #include "watchdog.h"
 

@@ -53,6 +53,8 @@
 #ifndef __TAP_ADDRMAP_EXPORTEDMEMMAP_MEMORY_MAP_H__
 #define __TAP_ADDRMAP_EXPORTEDMEMMAP_MEMORY_MAP_H__
 
+#include "Ifx_Types.h"
+
 
 /*-----------------------------------------------------------------------------
  * constants: MemoryMap ExportedMemMap of Component tap_addrMap

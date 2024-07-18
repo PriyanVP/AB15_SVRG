@@ -26,7 +26,8 @@
 
 
 //extern void FastInterruptRoutine(void);
-extern void WatchdogInterruptRoutine(void);
+extern void Watchdog1InterruptRoutine(void);
+extern void Watchdog2InterruptRoutine(void);
 //extern void ErrorCheckInterruptRoutine(void);
 //extern void ContinuousReadInterruptRoutine(void);
 //extern void GPIOInterruptRoutine(void);
