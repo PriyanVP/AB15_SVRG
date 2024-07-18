@@ -90,10 +90,18 @@ void StopGeneralTimer(void);
  * Periodicity is defined in number of General timer interrupts
  *
  * \param wdType type of WD (valid options WD1 and WD2)
- * \param watchdogPeriodicity periodicity of reading chunks of data
+ * \param watchdogPeriodicity periodicity of acknowledging WD
  * \return Returns nothing
  */
 void ConfigureWatchdogPeriodicity(WatchdogTypeEnum wdType, uint16 watchdogPeriodicity);
+
+/** \brief Configure ASIC watchdog status check periodicity
+ * Periodicity is defined in number of General timer interrupts
+ *
+ * \param watchdogStatusCheckPeriodicity periodicity of reading chunks of data
+ * \return Returns nothing
+ */
+void ConfigureWatchdogStatusCheckPeriodicity(uint16 watchdogStatusCheckPeriodicity);
 
 /** \brief Configure error check periodicity
  * Periodicity is defined in number of General timer interrupts
@@ -127,6 +135,13 @@ void ConfigureGPIOPeriodicity(uint16 gpioPeriodicity);
  */
 void EnableWatchdogInterrupt(WatchdogTypeEnum wdType);
 
+/** \brief Enable Watchdog status check interrupt
+ * Periodicity has to be configured first!
+ *
+ * \return Returns nothing
+ */
+void EnableWatchdogStatusCheckInterrupt(void);
+
 /** \brief Enable error check interrupt
  * Periodicity has to be configured first!
  *
@@ -155,6 +170,12 @@ void EnableGPIOInterrupt(void);
  */
 void DisableWatchdogInterrupt(WatchdogTypeEnum wdType);
 
+/** \brief Disable Watchdog status check interrupt
+ *
+ * \return Returns nothing
+ */
+void DisableWatchdogStatusCheckInterrupt(void);
+
 /** \brief Disable Fast interrupt
  *
  * \return Returns nothing
@@ -179,12 +200,18 @@ void DisableContinuousReadInterrupt(void);
  */
 void DisableGPIOInterrupt(void);
 
-/** \brief Get error check interrupt state
+/** \brief Get watchdog acknowledgement interrupt state
  *
  * \param wdType type of WD (valid options WD1 and WD2)
  * \return Returns true if irq enabled, false - otherwise
  */
 boolean GetStateWatchdogInterrupt(WatchdogTypeEnum wdType);
+
+/** \brief Get watchdog status check interrupt state
+ *
+ * \return Returns true if irq enabled, false - otherwise
+ */
+boolean GetStateWatchdogStatusCheckInterrupt(void);
 
 /** \brief Get error check interrupt state
  *
@@ -192,7 +219,7 @@ boolean GetStateWatchdogInterrupt(WatchdogTypeEnum wdType);
  */
 boolean GetStateErrorCheckInterrupt(void);
 
-/** \brief Get error check interrupt state
+/** \brief Get continuous reading interrupt state
  *
  * \return Returns true if irq enabled, false - otherwise
  */

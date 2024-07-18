@@ -28,6 +28,7 @@
 //extern void FastInterruptRoutine(void);
 extern void Watchdog1InterruptRoutine(void);
 extern void Watchdog2InterruptRoutine(void);
+extern void WatchdogStatusRearingInterruptRoutine(void);
 //extern void ErrorCheckInterruptRoutine(void);
 //extern void ContinuousReadInterruptRoutine(void);
 //extern void GPIOInterruptRoutine(void);
@@ -46,15 +47,17 @@ void UpdateTimersRoutine(void);
 
 static uint16 g_watchdog1Reload;                  /** \brief Watchdog acknowledge periodicity in T3 timer interrupts */
 static uint16 g_watchdog2Reload;                  /** \brief Watchdog acknowledge periodicity in T3 timer interrupts */
+static uint16 g_watchdogStatusCheckReload;        /** \brief Watchdog status check periodicity in T3 timer interrupts*/
 static uint16 g_errorCheckReload;                 /** \brief Error check periodicity in T2 timer interrupts          */
 static uint16 g_continuousReadReload;             /** \brief Continuous read periodicity in T2 timer interrupts      */
 static uint16 g_GPIOReload;                       /** \brief GPIO handling periodicity in T2 timer interrupts        */
 
-static boolean g_watchdog1Enable      = FALSE;    /** \brief Watchdog 1 acknowledge interrupts enable                */
-static boolean g_watchdog2Enable      = FALSE;    /** \brief Watchdog 2 acknowledge interrupts enable                */
-static boolean g_errorCheckEnable     = FALSE;    /** \brief Error check interrupts enable                           */
-static boolean g_continuousReadEnable = FALSE;    /** \brief Continuous read interrupts enable                       */
-static boolean g_GPIOEnable           = FALSE;    /** \brief GPIO interrupts enable                                  */
+static boolean g_watchdog1Enable            = FALSE;    /** \brief Watchdog 1 acknowledge interrupts enable          */
+static boolean g_watchdog2Enable            = FALSE;    /** \brief Watchdog 2 acknowledge interrupts enable          */
+static boolean g_watchdogStatusCheckEnable  = FALSE;    /** \brief Watchdog status reading interrupts enable         */
+static boolean g_errorCheckEnable           = FALSE;    /** \brief Error check interrupts enable                     */
+static boolean g_continuousReadEnable       = FALSE;    /** \brief Continuous read interrupts enable                 */
+static boolean g_GPIOEnable                 = FALSE;    /** \brief GPIO interrupts enable                            */
 
 /*********************************************************************************************************************/
 /*--------------------------------------------Function Implementations-----------------------------------------------*/
@@ -111,6 +114,11 @@ void ConfigureWatchdogPeriodicity(WatchdogTypeEnum wdType, uint16 watchdogPeriod
     } 
 }
 
+void ConfigureWatchdogStatusCheckPeriodicity(uint16 watchdogStatusCheckPeriodicity)
+{
+    g_watchdogStatusCheckReload = watchdogStatusCheckPeriodicity;
+}
+
 void ConfigureErrorCheckPeriodicity(uint16 errorCheckPeriodicity)
 {
     g_errorCheckReload = errorCheckPeriodicity;
@@ -126,7 +134,6 @@ void ConfigureGPIOPeriodicity(uint16 gpioPeriodicity)
     g_GPIOReload = gpioPeriodicity;
 }
 
-
 void EnableWatchdogInterrupt(WatchdogTypeEnum wdType)
 {  
     if (wdType == WD1)
@@ -137,6 +144,11 @@ void EnableWatchdogInterrupt(WatchdogTypeEnum wdType)
     {
         g_watchdog2Enable = TRUE;
     } 
+}
+
+void EnableWatchdogStatusCheckInterrupt(void)
+{
+    g_watchdogStatusCheckEnable = TRUE;
 }
 
 void EnableErrorCheckInterrupt(void)
@@ -156,14 +168,20 @@ void EnableGPIOInterrupt(void)
 
 void DisableWatchdogInterrupt(WatchdogTypeEnum wdType)
 {  
-    if (wdType == WD1)
+    if ((wdType == WD1) || (wdType == WD12))
     {
         g_watchdog1Enable = FALSE;
     }
-    else if (wdType == WD2)
+    
+    if ((wdType == WD2) || (wdType == WD12))
     {
         g_watchdog2Enable = FALSE;
     } 
+}
+
+void DisableWatchdogStatusCheckInterrupt(void)
+{
+    g_watchdogStatusCheckEnable = FALSE;
 }
 
 void DisableErrorCheckInterrupt(void)
@@ -195,6 +213,11 @@ boolean GetStateWatchdogInterrupt(WatchdogTypeEnum wdType)
     } 
 
     return isEnabled;
+}
+
+boolean GetStateWatchdogStatusCheckInterrupt(void)
+{
+    return g_errorCheckEnable;
 }
 
 boolean GetStateErrorCheckInterrupt(void)
@@ -231,17 +254,17 @@ uint16 GetWatchdogPeriodicity(WatchdogTypeEnum wdType)
 void UpdateTimersRoutine(void)
 {
     // Static variables to simulate separate timers
-    static uint16 watchdog1Counter          = 0;
-    static uint16 watchdog2Counter          = 0;
-    static uint16 errorCheckCounter         = 0;
-    static uint16 continuousReadCounter     = 0;
-    static uint16 GPIOCounter               = 0;
+    static uint16 watchdog1Counter              = 0;
+    static uint16 watchdog2Counter              = 0;
+    static uint16 watchdogStatusCheckCounter    = 0;
+    static uint16 errorCheckCounter             = 0;
+    static uint16 continuousReadCounter         = 0;
+    static uint16 GPIOCounter                   = 0;
 
     // Increment variables if entered interrupt routine
-    // TODO:  Prescale changed from 2 to 1, so all couters need to be doulbed! --> IfxGpt12_TimerInputPrescaler_1
-
     watchdog1Counter++;
     watchdog2Counter++;
+    watchdogStatusCheckCounter++;
     errorCheckCounter++;
     continuousReadCounter++;
     GPIOCounter++;
@@ -260,6 +283,14 @@ void UpdateTimersRoutine(void)
         // Watchdog acknowledge
         watchdog2Counter = 0;
         Watchdog2InterruptRoutine();
+    }
+
+    // Call corresponding functions if enabled and counter reached reload value
+    if ((g_watchdogStatusCheckEnable == TRUE) && (watchdogStatusCheckCounter >= g_watchdogStatusCheckReload))
+    {
+        // Watchdog acknowledge
+        watchdogStatusCheckCounter = 0;
+        WatchdogStatusRearingInterruptRoutine();
     }
 
 //    if ((g_errorCheckEnable == TRUE) && (errorCheckCounter >= g_errorCheckReload))
