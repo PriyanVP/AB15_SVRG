@@ -9,6 +9,7 @@
 #include "Ifx_Types.h"
 #include "common/usb_data_types.h"
 #include "common/spi_data_types.h"
+#include "common/spi_instructions.h"
 #include "common/command_queue.h"
 #include "common/bit_manipulation.h"
 #include "top/spi_wrapper.h"
@@ -16,6 +17,7 @@
 #include "top/version.h"
 #include "periphery/led.h"
 #include "general_cmd.h"
+
 /*********************************************************************************************************************/
 /*------------------------------------------------------Macros-------------------------------------------------------*/
 /*********************************************************************************************************************/
@@ -154,8 +156,8 @@ void CmdGetDeviceId(USBReceiveData * commandPackage)
     USBTransmitData packageToSend;
 
     // SPI instruction for get device ID
-    commandPackage->data[0] = 0;
-    commandPackage->data[1] = 0;
+    commandPackage->data[0] = GetLSB(READ_DEV_ID);
+    commandPackage->data[1] = GetMSB(READ_DEV_ID);
 
     handleSpiInstr(&packageToSend, commandPackage);
 
