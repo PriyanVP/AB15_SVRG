@@ -34,7 +34,9 @@ extern void WatchdogStatusRearingInterruptRoutine(void);
 //extern void GPIOInterruptRoutine(void);
 //
 ///** \brief General timer interrupt routine
-// * Implements timers for ASIC watchdog, error check and continuous read
+// * Implements timers for ASIC watchdogs, watchdog status, error check and other virtual timers
+// * with GENERAL_TIMER_PERIODICITY = 625u MCU will trigger an interrupt each  50us*/
+// * Response time in factor of 50us ( value 2 = 100us) max val of 65535 will result of timer of ~3,27s */
 // *
 // * \return Returns nothing
 // */
@@ -64,7 +66,7 @@ static boolean g_GPIOEnable                 = FALSE;    /** \brief GPIO interrup
 /*********************************************************************************************************************/
 /* Macro defining the Interrupt Service Routines */
 IFX_INTERRUPT(UpdateTimersRoutine, 0, ISR_PRIORITY_GPT1_T3_TIMER);
-//IFX_INTERRUPT(ServiceTimerRoutineWrapper, 0, ISR_PRIORITY_GPT1_T3_TIMER);
+
 
 
 void InitGpt12Timer(void)

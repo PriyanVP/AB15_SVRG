@@ -125,12 +125,6 @@ static WatchdogStatusMonitoringStruct g_wdStatusMonitoringConfig =
     .lengthOfRegsToRead = WD_STATUS_REGS_COUNT                                                                                 // number of addresses to read
 };
 
-// Variable to store WD periodicity [n*20us] TODO: check usage, may not be required
-static uint16 g_wdPeriodicity20UsTicks;
-
-// Variable to store General Timer's interrupt duration calculated in microseconds TODO: check usage, may not be required
-static uint32 durationOfTimerInterruptUs;
-
 /*********************************************************************************************************************/
 /*---------------------------------------------Function Implementations----------------------------------------------*/
 /*********************************************************************************************************************/
@@ -456,18 +450,4 @@ uint16 GetResponseWordAB12(uint8 requValue, boolean respWrdNumber)
 //     // Obtain REQU field value from register's content
 //     uint8 requValue = (data.bf.output_data & REQU_READMASK) >> REQU_OFFSET;
 //     return requValue;
-// }
-
-// uint16 CalculateWatchdogAckPeriodicity(void)
-// {
-//     //TODO: can be optimized using IfxGpt12_T3_getFrequency (base freq of GPT12 + prescaler). Check
-//     // TODO: find a vay to use defines for Gpt1BlockPrescaler and TimerInputPrescaler
-//     //(enum values of those constants aren't suited for straightforward translation, find a solution)
-//     // maybe  something like    uint16 GetGpt1BlockPrescaler(void) {  prescaler = &MODULE_GPT120.T3CON.B.BPS1;}
-
-//     durationOfTimerInterruptUs = (GENERAL_TIMER_PERIODICITY * 8 * 1) / (100); // Configured duration of General Timer interrupt, microseconds; 1/100 = (s->us constant)/(FREQ_GPT12_HZ)
-
-//     // Response time in factor of 20us ( value 5 = 100us) max val of 65535 will result of timer of ~1.3s
-//     volatile uint16 watchdogAckPeriodicity = g_wdPeriodicity20UsTicks;
-//     return watchdogAckPeriodicity;
 // }

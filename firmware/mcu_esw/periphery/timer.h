@@ -18,13 +18,14 @@
 
 #define ISR_PROVIDER_GPT12_TIMER    IfxSrc_Tos_cpu0          /* Interrupt provider                                   */
 
-#define GENERAL_TIMER_PERIODICITY      250u                  /* Reload value to have an interrupt each  20us*/
+#define GENERAL_TIMER_PERIODICITY      625u                  /* Reload value to have an interrupt each  50us*/
                                                              /* fGPT = 100 Mhz
                                                                 (a) IfxGpt12_Gpt1BlockPrescaler_8
                                                                 (b) IfxGpt12_TimerInputPrescaler_1
                                                                 Reload_Value = fGPT / (block Prescaler * input prescaler * irQfreq)
                                                                 Reload_Value = (fGPT  * IRQ_duration) *  / (block Prescaler * input prescaler)
-                                                                Reload_Value = (100000000*0,00002)/(8*1)=250  */
+                                                                Reload_Value = (100000000*0,00005)/(8*1)=625
+                                                                Response time in factor of 50us ( value 2 = 100us) max val of 65535 will result of timer of ~3,27s */
 
 // Calculation formula:
 // T = desired IRQ period in seconds
@@ -38,8 +39,8 @@
 // T desired = 0,01 --> 10ms
 // reload value = (100000000*0,01)/(16*2) = 31250
 
-// T desired = 0,0001 --> 100us
-// reload value = (100000000*0,0001)/(16*1) = 625
+// T desired = 0,0001 --> 50us
+// reload value = (100000000*0,00005)/(8*1) = 625
 
 #define FREQ_GPT12_HZ 100000000                             /* GPT12 module base frequency                           */
 
