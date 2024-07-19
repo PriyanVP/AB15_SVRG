@@ -253,7 +253,7 @@ void IntCmdAcknowledgeWatchdog1(void)
     #ifdef AB12_PLATFORM
     responseWord = GetResponseWordAB12(requValue, 0);   // TODO: use corresponding table
     #else
-    responseWord = GetResponseWordAB15(requValue, 0);
+    responseWord = GetResponseWordWD1AB15(requValue, 0);
     #endif
 
     // Send response word to ASIC
@@ -278,7 +278,7 @@ void IntCmdAcknowledgeWatchdog2(void)
     #ifdef AB12_PLATFORM
     responseWord = GetResponseWordAB12(requValue, 0);   // TODO: use corresponding table
     #else
-    responseWord = GetResponseWordAB15(requValue, 0);
+    responseWord = GetResponseWordWD2AB15(requValue, 0);
     #endif
 
     // Send response word to ASIC
@@ -395,6 +395,56 @@ uint16 GetResponseWordAB12(uint8 requValue, boolean respWrdNumber)
                                        {0x9B9B, 0x0FE8}};
     // Provide value of requested RESP_WRD
     return (responseWordArray[requValue][respWrdNumber]);
+}
+
+uint16 GetResponseWordWD1AB15(uint8 requValue)
+{
+    uint16t responseWordArrayWD1[32] = {0x2027,
+                                        0xE463,
+                                        0x2893,
+                                        0xECD7,
+                                        0x4307,
+                                        0x8743,
+                                        0x4BB3,
+                                        0x8FF7,
+                                        0x32EF,
+                                        0xF6AB,
+                                        0x3A5B,
+                                        0xFE1F,
+                                        0x51CF,
+                                        0x958B,
+                                        0x597B,
+                                        0x9D3F,
+                                        0x0C2D,
+                                        0xC869,
+                                        0x0499,
+                                        0xC0DD,
+                                        0x6F0D,
+                                        0xAB49,
+                                        0x67B9,
+                                        0xA3FD,
+                                        0x1EE5,
+                                        0xDAA1,
+                                        0x1651,
+                                        0xD215,
+                                        0x7DC5,
+                                        0xB981,
+                                        0x7571,
+                                        0xB135};
+    return (responseWordArrayWD1[requValue]);
+}
+
+uint16 GetResponseWordWD2AB15(uint8 requValue)
+{
+    uint16t responseWordArrayWD2[8] = {0x35CF,
+                                        0x9867,
+                                        0x68B3,
+                                        0xC51B,
+                                        0x5789,
+                                        0xFA21,
+                                        0x0AF5,
+                                        0xA75D};
+    return (responseWordArrayWD2[requValue]);
 }
 
 
