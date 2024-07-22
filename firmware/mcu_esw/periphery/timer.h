@@ -18,13 +18,14 @@
 
 #define ISR_PROVIDER_GPT12_TIMER    IfxSrc_Tos_cpu0          /* Interrupt provider                                   */
 
-#define GENERAL_TIMER_PERIODICITY      250u                  /* Reload value to have an interrupt each  20us*/
+#define GENERAL_TIMER_PERIODICITY      625u                  /* Reload value to have an interrupt each  50us*/
                                                              /* fGPT = 100 Mhz
                                                                 (a) IfxGpt12_Gpt1BlockPrescaler_8
                                                                 (b) IfxGpt12_TimerInputPrescaler_1
                                                                 Reload_Value = fGPT / (block Prescaler * input prescaler * irQfreq)
                                                                 Reload_Value = (fGPT  * IRQ_duration) *  / (block Prescaler * input prescaler)
-                                                                Reload_Value = (100000000*0,00002)/(8*1)=250  */
+                                                                Reload_Value = (100000000*0,00005)/(8*1)=625
+                                                                Response time in factor of 50us ( value 2 = 100us) max val of 65535 will result of timer of ~3,27s */
 
 // Calculation formula:
 // T = desired IRQ period in seconds
@@ -38,8 +39,8 @@
 // T desired = 0,01 --> 10ms
 // reload value = (100000000*0,01)/(16*2) = 31250
 
-// T desired = 0,0001 --> 100us
-// reload value = (100000000*0,0001)/(16*1) = 625
+// T desired = 0,0001 --> 50us
+// reload value = (100000000*0,00005)/(8*1) = 625
 
 #define FREQ_GPT12_HZ 100000000                             /* GPT12 module base frequency                           */
 
@@ -90,10 +91,18 @@ void StopGeneralTimer(void);
  * Periodicity is defined in number of General timer interrupts
  *
  * \param wdType type of WD (valid options WD1 and WD2)
- * \param watchdogPeriodicity periodicity of reading chunks of data
+ * \param watchdogPeriodicity periodicity of acknowledging WD
  * \return Returns nothing
  */
 void ConfigureWatchdogPeriodicity(WatchdogTypeEnum wdType, uint16 watchdogPeriodicity);
+
+/** \brief Configure ASIC watchdog status check periodicity
+ * Periodicity is defined in number of General timer interrupts
+ *
+ * \param watchdogStatusCheckPeriodicity periodicity of reading chunks of data
+ * \return Returns nothing
+ */
+void ConfigureWatchdogStatusCheckPeriodicity(uint16 watchdogStatusCheckPeriodicity);
 
 /** \brief Configure error check periodicity
  * Periodicity is defined in number of General timer interrupts
@@ -127,6 +136,13 @@ void ConfigureGPIOPeriodicity(uint16 gpioPeriodicity);
  */
 void EnableWatchdogInterrupt(WatchdogTypeEnum wdType);
 
+/** \brief Enable Watchdog status check interrupt
+ * Periodicity has to be configured first!
+ *
+ * \return Returns nothing
+ */
+void EnableWatchdogStatusCheckInterrupt(void);
+
 /** \brief Enable error check interrupt
  * Periodicity has to be configured first!
  *
@@ -155,6 +171,12 @@ void EnableGPIOInterrupt(void);
  */
 void DisableWatchdogInterrupt(WatchdogTypeEnum wdType);
 
+/** \brief Disable Watchdog status check interrupt
+ *
+ * \return Returns nothing
+ */
+void DisableWatchdogStatusCheckInterrupt(void);
+
 /** \brief Disable Fast interrupt
  *
  * \return Returns nothing
@@ -179,12 +201,18 @@ void DisableContinuousReadInterrupt(void);
  */
 void DisableGPIOInterrupt(void);
 
-/** \brief Get error check interrupt state
+/** \brief Get watchdog acknowledgement interrupt state
  *
  * \param wdType type of WD (valid options WD1 and WD2)
  * \return Returns true if irq enabled, false - otherwise
  */
 boolean GetStateWatchdogInterrupt(WatchdogTypeEnum wdType);
+
+/** \brief Get watchdog status check interrupt state
+ *
+ * \return Returns true if irq enabled, false - otherwise
+ */
+boolean GetStateWatchdogStatusCheckInterrupt(void);
 
 /** \brief Get error check interrupt state
  *
@@ -192,7 +220,7 @@ boolean GetStateWatchdogInterrupt(WatchdogTypeEnum wdType);
  */
 boolean GetStateErrorCheckInterrupt(void);
 
-/** \brief Get error check interrupt state
+/** \brief Get continuous reading interrupt state
  *
  * \return Returns true if irq enabled, false - otherwise
  */

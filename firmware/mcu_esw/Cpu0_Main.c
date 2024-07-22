@@ -39,12 +39,16 @@ IFX_ALIGN(4) IfxCpu_syncEvent g_cpuSyncEvent = 0;
 void Watchdog1InterruptRoutine(void)
 {
     // Watchdog serving is an internal command
-    USBReceiveData serveWatchdogCommand;
-    serveWatchdogCommand.command = INT_CMD_ACK_WATCHDOG1;
-    serveWatchdogCommand.dataLength = 0;
+    static USBReceiveData serveWatchdogCommand = 
+    {
+        .asic_id = 1,
+        .dataLength = 0,
+        .command = INT_CMD_ACK_WATCHDOG1
+    };
+
     // Add WD serving internal command to command queue
-    //QueueWriteTail(&serveWatchdogCommand);    // TODO: commented out to have MCU contained WD routine. Uncomment for actual communication with ASIC
-    ToggleLED2();
+    // QueueWriteTail(&serveWatchdogCommand);    // TODO: commented out to have MCU contained WD routine. Uncomment for actual communication with ASIC
+    ToggleLED2(); // TODO: remove after testing WD
 }
 
 /** \brief Watchdog 2 interrupt routine
@@ -53,19 +57,36 @@ void Watchdog1InterruptRoutine(void)
 void Watchdog2InterruptRoutine(void)
 {
     // Watchdog serving is an internal command
-    USBReceiveData serveWatchdogCommand;
-    serveWatchdogCommand.command = INT_CMD_ACK_WATCHDOG2;
-    serveWatchdogCommand.dataLength = 0;
+    static USBReceiveData serveWatchdogCommand = 
+    {
+        .asic_id = 1,
+        .dataLength = 0,
+        .command = INT_CMD_ACK_WATCHDOG2
+    };
+
     // Add WD serving internal command to command queue
-    //QueueWriteTail(&serveWatchdogCommand);    // TODO: commented out to have MCU contained WD routine. Uncomment for actual communication with ASIC
-    ToggleLED2();
+    // QueueWriteTail(&serveWatchdogCommand);    // TODO: commented out to have MCU contained WD routine. Uncomment for actual communication with ASIC
+    ToggleLED2(); // TODO: remove after testing WD
 }
 
-//void FastInterruptRoutine(void)
-//{
-//    // fast timer
-//    ToggleLED4();
-//}
+/** \brief Watchdogs status reading interrupt routine
+ * Arms single reading of watchdogs satus registers
+ */
+void WatchdogStatusRearingInterruptRoutine(void)
+{
+    // Watchdog status reading is an internal command
+    static USBReceiveData serveWatchdogStatusCommand = 
+    {
+        .asic_id = 1,
+        .dataLength = 0,
+        .command = INT_CMD_READ_WD_STATUS
+    };
+
+    // Add WD serving internal command to command queue
+    // QueueWriteTail(&serveWatchdogStatusCommand);    // TODO: commented out to have MCU contained WD routine. Uncomment for actual communication with ASIC
+
+   ToggleLED4();
+}
 
 /** \brief Main function
  */
@@ -108,7 +129,6 @@ void core0_main(void)
 
     // Start general timer
     StartGeneralTimer();
-
 
     // Local temporary variable for receiving data
     USBReceiveData receivedPackage;
@@ -168,10 +188,12 @@ void core0_main(void)
             case USB_CMD_IS_ALIVE:
                 CmdIsAlive(&cmdPackage);
                 break;
+
             case USB_CMD_SPI_INSTRUCTION:
                 //CmdSpiInstuction(&cmdPackage);
                 handleCmdInstr(&cmdPackage);
                 break;
+
             case USB_CMD_READ_DEV_ID:
                 CmdGetDeviceId(&cmdPackage);
                 break;
@@ -183,12 +205,10 @@ void core0_main(void)
             //     break;
             // case :
             //     break;
-            case USB_CMD_GET_CONFIG_WATCHDOG:
-                CmdGetConfigWatchdog(&cmdPackage);
-                break;
             case USB_CMD_CONFIGURE_WATCHDOG:
                 CmdConfigureWatchdog(&cmdPackage);
                 break;
+
             case USB_CMD_START_WATCHDOG:
                 CmdStartWatchdog(&cmdPackage);
                 break;
@@ -208,17 +228,31 @@ void core0_main(void)
            case USB_CMD_GET_MCU_BUILD_TIME:
                 CmdGetMcuBuildTime(&cmdPackage);
                 break;
+
             case INT_CMD_ACK_WATCHDOG1:
                 IntCmdAcknowledgeWatchdog1();
                 break;
+
             case INT_CMD_ACK_WATCHDOG2:
                 IntCmdAcknowledgeWatchdog2();
                 break;
 
+            case USB_CMD_START_MONITORING_WD:
+                CmdStartMonitoringWatchdog(&cmdPackage);
+                break;
+
+            case USB_CMD_STOP_MONITORING_WD:
+                CmdStopMonitoringWatchdog(&cmdPackage);
+                break;
+
+            case INT_CMD_READ_WD_STATUS:
+                IntCmdMonitorWatchdog();
+                break;
 
 
            case _USB_CMD_MAX:
                 break;
+
             default :
                 break;
         }
