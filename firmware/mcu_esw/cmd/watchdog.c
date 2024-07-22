@@ -275,7 +275,6 @@ void IntCmdAcknowledgeWatchdog1(void)
     QSPIWriteSequence(&addressAnswer, &responseWord, &length);  // Use corresponding SPI instruction
     #else
     responseWord = GetResponseWordWD1AB15(requValue, 0);
-    #endif
 
     // Send response word to ASIC
     length = 1;
@@ -306,7 +305,6 @@ void IntCmdAcknowledgeWatchdog2(void)
     QSPIWriteSequence(&addressAnswer, &responseWord, &length);  // Use corresponding SPI instruction
     #else
     responseWord = GetResponseWordWD2AB15(requValue, 0);
-    #endif
 
     // Send response word to ASIC
     length = 1;
