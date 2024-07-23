@@ -33,7 +33,12 @@
     <SolidColorBrush x:Key="Button.Background.StandBy" Color="Transparent"/>
     <SolidColorBrush x:Key="Button.Background.IsMouseOver" Color="#C0C0C0"/>
     <SolidColorBrush x:Key="Button.Background.IsPressed" Color="#979197"/>
-    <SolidColorBrush x:Key="Button.Background.Disable" Color="#979197"/>
+
+    <SolidColorBrush x:Key="SimpleButton.Background.StandBy" Color="Red"/>
+    <SolidColorBrush x:Key="SimpleButton.Background.IsMouseOver" Color="#C0C0C0"/>
+    <SolidColorBrush x:Key="SimpleButton.Background.IsPressed" Color="#979197"/>
+    <SolidColorBrush x:Key="SimpleButton.Background.Disable" Color="#c0c0c0c0"/>
+    <SolidColorBrush x:Key="SimpleButton.Background.BorderColor" Color="Black"/>
 
     <SolidColorBrush x:Key="Foreground.Helper" Color="#c0c0c0c0"/>
     <SolidColorBrush x:Key="Foreground.Default" Color="Black"/>
@@ -90,6 +95,38 @@
     <!-- Background -->
     <Style TargetType="{x:Type Menu}">
         <Setter Property="Background" Value="{DynamicResource Button.Background.StandBy}" />
+    </Style>
+
+    <Style TargetType="Button" x:Key="SimpleButton">
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="Background" Value="{DynamicResource Button.Background.StandBy}"/>
+        <Setter Property="Foreground" Value="{DynamicResource Foreground.Default}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource SimpleButton.Background.BorderColor}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Margin" Value="1,2,1,2"/>
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource Button.Background.IsMouseOver}"/>
+                <Setter Property="Cursor" Value="Hand"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="{DynamicResource Button.Background.IsPressed}"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Background" Value="{DynamicResource SimpleButton.Background.Disable}"/>
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
     <!--#region Top responce time slider-->

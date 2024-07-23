@@ -55,7 +55,7 @@
 
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
-                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition/>
                             <ColumnDefinition/>
                             <ColumnDefinition/>
                             <ColumnDefinition/>
@@ -79,7 +79,7 @@
                                 </MultiBinding>
                             </Border.Background>-->
                             <Viewbox>
-                                <TextBlock Text="WDFaultStatus" HorizontalAlignment="Center" FontSize="16" Style="{DynamicResource TextBlockStyle}"/>
+                                <TextBlock Text="WD Fault Status" HorizontalAlignment="Center" FontSize="16" Style="{DynamicResource TextBlockStyle}"/>
                             </Viewbox>
                         </Border>
 
@@ -94,7 +94,7 @@
                                 </MultiBinding>
                             </Border.Background>-->
                             <Viewbox>
-                                <TextBlock Text="WD1 Fault" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                                <TextBlock Text="   WD1 Fault   " HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                             </Viewbox>
                         </Border>
 
@@ -108,7 +108,7 @@
                                 </MultiBinding>
                             </Border.Background>-->
                             <Viewbox>
-                                <TextBlock Text="WD2 Fault" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                                <TextBlock Text="   WD2 Fault   " HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                             </Viewbox>
                         </Border>
 
@@ -122,7 +122,7 @@
                                 </MultiBinding>
                             </Border.Background>-->
                             <Viewbox>
-                                <TextBlock Text="Error Pin" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                                <TextBlock Text="   Error Pin   " HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                             </Viewbox>
                         </Border>
 
@@ -166,7 +166,7 @@
                                 </MultiBinding>
                             </Border.Background>-->
                             <Viewbox>
-                                <TextBlock Text="OSCMON" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                                <TextBlock Text="    OSCMON     " HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                             </Viewbox>
                         </Border>
 
@@ -182,7 +182,7 @@
                                 </MultiBinding>
                             </Border.Background>-->
                             <Viewbox>
-                                <TextBlock Text="WD1 QA" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                                <TextBlock Text="     WD1 QA    " HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                             </Viewbox>
                         </Border>
 
@@ -196,7 +196,7 @@
                                 </MultiBinding>
                             </Border.Background>-->
                             <Viewbox>
-                                <TextBlock Text="WD2 QA" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                                <TextBlock Text="     WD2 QA    " HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                             </Viewbox>
                         </Border>
 
@@ -230,7 +230,7 @@
                                 </MultiBinding>
                             </Border.Background>-->
                             <Viewbox>
-                                <TextBlock Text="WD Reset" HorizontalAlignment="Center" FontSize="16" Style="{DynamicResource TextBlockStyle}"/>
+                                <TextBlock Text="    WD Reset    " HorizontalAlignment="Center" FontSize="16" Style="{DynamicResource TextBlockStyle}"/>
                             </Viewbox>
                         </Border>
 
@@ -244,7 +244,7 @@
                                 </MultiBinding>
                             </Border.Background>-->
                             <Viewbox>
-                                <TextBlock Text="WD1 counter" HorizontalAlignment="Center" FontSize="16" Style="{DynamicResource TextBlockStyle}"/>
+                                <TextBlock Text="  WD1 counter   " HorizontalAlignment="Center" FontSize="16" Style="{DynamicResource TextBlockStyle}"/>
                             </Viewbox>
                         </Border>
 
@@ -258,7 +258,7 @@
                                 </MultiBinding>
                             </Border.Background>-->
                             <Viewbox>
-                                <TextBlock Text="QA1 fault" HorizontalAlignment="Center" FontSize="16" Style="{DynamicResource TextBlockStyle}"/>
+                                <TextBlock Text="   QA1 fault    " HorizontalAlignment="Center" FontSize="16" Style="{DynamicResource TextBlockStyle}"/>
                             </Viewbox>
                         </Border>
 
@@ -272,7 +272,7 @@
                                 </MultiBinding>
                             </Border.Background>-->
                             <Viewbox>
-                                <TextBlock Text="WD2 counter" HorizontalAlignment="Center" FontSize="16" Style="{DynamicResource TextBlockStyle}"/>
+                                <TextBlock Text="   WD2 counter  " HorizontalAlignment="Center" FontSize="16" Style="{DynamicResource TextBlockStyle}"/>
                             </Viewbox>
                         </Border>
 
@@ -286,7 +286,7 @@
                                 </MultiBinding>
                             </Border.Background>-->
                             <Viewbox>
-                                <TextBlock Text="QA2 fault" HorizontalAlignment="Center" FontSize="16" Style="{DynamicResource TextBlockStyle}"/>
+                                <TextBlock Text="   QA2 fault    " HorizontalAlignment="Center" FontSize="16" Style="{DynamicResource TextBlockStyle}"/>
                             </Viewbox>
                         </Border>
 
@@ -298,7 +298,7 @@
                         Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
 
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="Menu" FontSize="20" Grid.Column="1" Style="{DynamicResource TextBlockStyle}"/>
+                            <TextBlock Text="Additional Info" FontSize="20" Grid.Column="1" Style="{DynamicResource TextBlockStyle}"/>
                         </StackPanel>
 
                         <ToggleButton.Triggers>
@@ -359,7 +359,7 @@
                                        Text="Fault counter"/>
                             <TextBlock Grid.Row="2" Grid.Column="0" FontSize="15" Margin="2"
                                        VerticalAlignment="Center" HorizontalAlignment="Center"
-                                       Text="timing monitor results"/>
+                                       Text="Timing monitor results"/>
                             <TextBlock Grid.Row="3" Grid.Column="0" FontSize="15" Margin="2"
                                        VerticalAlignment="Center" HorizontalAlignment="Center"
                                        Text="Number of counted error events"/>
@@ -394,7 +394,7 @@
                                        Text="Fault counter"/>
                             <TextBlock Grid.Row="2" Grid.Column="0" FontSize="15" Margin="2"
                                        VerticalAlignment="Center" HorizontalAlignment="Center"
-                                       Text="timing monitor results"/>
+                                       Text="Timing monitor results"/>
                             <TextBlock Grid.Row="3" Grid.Column="0" FontSize="15" Margin="2"
                                        VerticalAlignment="Center" HorizontalAlignment="Center"
                                        Text="QA2 failure counter value"/>
@@ -412,8 +412,9 @@
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
 
-                            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="WD3" VerticalAlignment="Top" TextAlignment="Center" Margin="2"/>
+                            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="EN" VerticalAlignment="Top" TextAlignment="Center" Margin="2"/>
 
+                            <!--TODO add converter for text Hight - Low-->
                             <Border Grid.Row="1" BorderThickness="1" 
                             BorderBrush="{DynamicResource Animation.Lines}" 
                             CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
@@ -423,19 +424,7 @@
                                     <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
                                 </MultiBinding>
                             </Border.Background>-->
-                                <TextBlock Text="Read back value" HorizontalAlignment="Center" FontSize="15" Style="{DynamicResource TextBlockStyle}"/>
-                            </Border>
-
-                            <Border Grid.Row="2" BorderThickness="1" 
-                            BorderBrush="{DynamicResource Animation.Lines}" 
-                            CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                <!--<Border.Background>
-                                <MultiBinding Converter = "{StaticResource StatusToColorConverter}">
-                                    <Binding Path = "QA2FaultStatus"/>
-                                    <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
-                                </MultiBinding>
-                            </Border.Background>-->
-                                <TextBlock Text="Sampled read back value" HorizontalAlignment="Center" FontSize="15" Style="{DynamicResource TextBlockStyle}"/>
+                                <TextBlock Text="EN0 Hight" HorizontalAlignment="Center" FontSize="15" Style="{DynamicResource TextBlockStyle}"/>
                             </Border>
 
                         </Grid>
@@ -466,16 +455,21 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
 
-                        <TextBlock Text="Read/Write config from watchdog" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0"
-                                   HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                        <!--<TextBlock Text="Read/Write config from watchdog" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0"
+                                   HorizontalAlignment="Center" VerticalAlignment="Bottom"/>-->
 
-                        <Button Content="Write config to ASIC"
-                                Grid.Column="0" Grid.Row="1"
-                                Margin="2" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                        <StackPanel Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" HorizontalAlignment="Left">
+                            <Button Content="Write config to ASIC"
+                                    Style="{DynamicResource SimpleButton}"
+                                    Grid.Column="0" Grid.Row="1"
+                                    Margin="2" HorizontalAlignment="Center" VerticalAlignment="Top"/>
 
-                        <Button Content="Read config from ASIC"
-                                Grid.Column="1" Grid.Row="1"
-                                Margin="2" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                            <Button Content="Read config from ASIC"
+                                    Style="{DynamicResource SimpleButton}"
+                                    Grid.Column="1" Grid.Row="1"
+                                    Margin="2" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                        </StackPanel>
+
                     </Grid>
 
 
@@ -605,7 +599,8 @@
                         <TextBlock Text="Disable threshold EN0"
                                    Grid.Column="0" Grid.ColumnSpan="5"
                                    Grid.Row="3" HorizontalAlignment="Center"
-                                   VerticalAlignment="Bottom"/>
+                                   VerticalAlignment="Bottom"
+                                   Margin="0,0,0,5"/>
 
                         <StackPanel Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2" Orientation="Horizontal" VerticalAlignment="Center">
                             <CheckBox x:Name="EN0DisableThresholdEnableCheckBox" Style="{DynamicResource ToggleSwitchStyle}" 
@@ -626,25 +621,27 @@
                             <TextBox Text="{Binding ElementName=WD2EN0DisableTreshholdSlider,Path=Value}"/>
                         </StackPanel>
 
-                        <Slider Name="WD1EN0DisableTreshholdSlider" 
+                        <StackPanel Grid.Column="3" Grid.Row="4" VerticalAlignment="Center">
+                            <Slider Name="WD1EN0DisableTreshholdSlider" 
                                 ValueChanged="WD1EN0DisableTreshholdSlider_ValueChanged"
                                 TickFrequency="1" IsSnapToTickEnabled="True"
-                                Grid.Column="3" Grid.Row="4"
-                                Style="{DynamicResource WatchdogTop_SliderThresholdTop}" VerticalAlignment="Center" 
+                                Style="{DynamicResource WatchdogTop_SliderThresholdTop}" 
+                                VerticalAlignment="Top" 
                                 HorizontalAlignment="Left"
                                 Value="0" Width="200"
                                 Minimum="0" Maximum="63"
                                 Margin="20,0,20,5"/>
 
-                        <Slider Name="WD2EN0DisableTreshholdSlider"
+                            <Slider Name="WD2EN0DisableTreshholdSlider"
                                 ValueChanged="WD2EN0DisableTreshholdSlider_ValueChanged"
                                 TickFrequency="1" IsSnapToTickEnabled="True"
-                                Grid.Column="3" Grid.Row="4"
-                                Style="{DynamicResource Watchdog_SliderThresholdBot}" VerticalAlignment="Center" 
+                                Style="{DynamicResource WatchdogTop_SliderThresholdTop}" 
+                                VerticalAlignment="Bottom" 
                                 HorizontalAlignment="Left"
                                 Value="0" Width="200"
                                 Minimum="0" Maximum="63"
                                 Margin="20,5,20,0"/>
+                        </StackPanel>
 
                         <!--#endregion-->
 
@@ -659,14 +656,14 @@
                         </Grid.ColumnDefinitions>
 
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="37*"/>
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="auto"/>
-                            <RowDefinition Height="auto"/>
-                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="112*"/>
                         </Grid.RowDefinitions>
 
 
@@ -694,10 +691,12 @@
                                    VerticalAlignment="Bottom"
                                    Margin="5"/>
 
+                        <!--TODO-->
                         <TextBlock Grid.Column="1" Grid.Row="1"
                                    Text="ASIC initialization reset" Foreground="Red"
                                    VerticalAlignment="Center" HorizontalAlignment="Left"/>
 
+                        <!--TODO-->
                         <TextBlock Grid.Column="1" Grid.Row="2"
                                    Text="Watchdog reset" Foreground="Red"
                                    VerticalAlignment="Center" HorizontalAlignment="Left"/>
@@ -715,7 +714,7 @@
                                    VerticalAlignment="Center" HorizontalAlignment="Left"/>
 
                         <TextBlock Grid.Column="1" Grid.Row="6"
-                                   Text="Safty logic" 
+                                   Text="Safety logic" 
                                    VerticalAlignment="Center" HorizontalAlignment="Left"/>
                     </Grid>
 
