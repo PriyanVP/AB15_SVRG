@@ -268,7 +268,7 @@ void IntCmdAcknowledgeWatchdog1(void)
     // Obtain response word from look-up table
     #ifdef AB12_PLATFORM
     // AB12 platform
-    responseWord = GetResponseWordAB12(requValue, 0);   // TODO: use corresponding table
+    responseWord = GetResponseWordAB12(requValue);
 
     // Send response word to ASIC
     length = 1;
@@ -298,8 +298,7 @@ void IntCmdAcknowledgeWatchdog2(void)
     // Obtain response word from look-up table
     #ifdef AB12_PLATFORM
     // AB12 platform
-    responseWord = GetResponseWordAB12(requValue, 0);   // TODO: use corresponding table
-
+    responseWord = GetResponseWordAB12(requValue);
     // Send response word to ASIC
     length = 1;
     QSPIWriteSequence(&addressAnswer, &responseWord, &length);  // Use corresponding SPI instruction
@@ -379,7 +378,7 @@ void IntCmdMonitorWatchdog(void)
     // Read WD status from ASIC
     #ifdef AB12_PLATFORM
     // AB12 platform
-    // responseWord = GetResponseWordAB12(requValue, 0);   // TODO: use corresponding table
+    // responseWord = GetResponseWordAB12(requValue);   // TODO: use corresponding table
     #else
     // AB15 platform
     // Read WD related registers from ASIC
