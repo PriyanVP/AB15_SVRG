@@ -33,6 +33,7 @@
     <SolidColorBrush x:Key="Button.Background.StandBy" Color="Transparent"/>
     <SolidColorBrush x:Key="Button.Background.IsMouseOver" Color="#C0C0C0"/>
     <SolidColorBrush x:Key="Button.Background.IsPressed" Color="#979197"/>
+    <SolidColorBrush x:Key="Button.Background.Disable" Color="#979197"/>
 
     <SolidColorBrush x:Key="Foreground.Helper" Color="#c0c0c0c0"/>
     <SolidColorBrush x:Key="Foreground.Default" Color="Black"/>
@@ -62,11 +63,36 @@
     <SolidColorBrush x:Key="Animation.Arrow" Color="Green"/>
     <SolidColorBrush x:Key="Animation.Lines" Color="Black"/>
 
+    <SolidColorBrush x:Key="Slider.ResponseTime.Line" Color="Gray"/>
+    <SolidColorBrush x:Key="Slider.ResponseTime.FillColor" Color="#28A828"/>
+    <SolidColorBrush x:Key="Slider.ResponseTime.Arrow" Color="Black"/>
+
+    <SolidColorBrush x:Key="Slider.LockTime.Line" Color="Transparent"/>
+    <SolidColorBrush x:Key="Slider.LockTime.FillColor" Color="#f50000"/>
+    <SolidColorBrush x:Key="Slider.LockTime.Arrow" Color="Black"/>
+
+    <SolidColorBrush x:Key="Slider.DisableThreshold.Top.Line" Color="Gray"/>
+    <SolidColorBrush x:Key="Slider.DisableThreshold.Top.FillColor" Color="#28A828"/>
+    <SolidColorBrush x:Key="Slider.DisableThreshold.Top.Arrow" Color="Black"/>
+
+    <SolidColorBrush x:Key="Slider.DisableThreshold.Bot.Line" Color="Gray"/>
+    <SolidColorBrush x:Key="Slider.DisableThreshold.Bot.FillColor" Color="#FFA500"/>
+    <SolidColorBrush x:Key="Slider.DisableThreshold.Bot.Arrow" Color="Black"/>
+
     <SolidColorBrush x:Key="ListView.Background" Color="Transparent" />
 
     <SolidColorBrush x:Key="ListViewItem.Background" Color="Transparent" />
+    
+    
 
     <BooleanToVisibilityConverter x:Key="btv" />
+
+    <!-- Background -->
+    <Style TargetType="{x:Type Menu}">
+        <Setter Property="Background" Value="{DynamicResource Button.Background.StandBy}" />
+    </Style>
+
+    <!--#region Top responce time slider-->
 
     <Style x:Key="SliderRepeatButton" TargetType="RepeatButton">
         <Setter Property="SnapsToDevicePixels" Value="true" />
@@ -76,7 +102,8 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="RepeatButton">
-                    <Border  Background="Gray" Height="5" BorderBrush="Transparent" BorderThickness="0,2,0,2"/>
+                    <Border  Background="{DynamicResource Slider.ResponseTime.Line}" 
+                             Height="5" BorderBrush="Transparent" BorderThickness="0,2,0,2"/>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -88,7 +115,8 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="RepeatButton">
-                    <Border SnapsToDevicePixels="True" Background="Gray"  BorderThickness="0,2,0,2" BorderBrush="YellowGreen" Height="5"/>
+                    <Border SnapsToDevicePixels="True" Background="Gray"  BorderThickness="0,2,0,2" 
+                            BorderBrush="{DynamicResource Slider.ResponseTime.FillColor}" Height="5"/>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -102,7 +130,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Thumb">
                     <Canvas Background="Transparent">
-                        <Polygon Points="0,5 10,-10 -10,-10" Fill="Black"></Polygon>
+                        <Polygon Points="0,5 10,-10 -10,-10" Fill="{DynamicResource Slider.ResponseTime.Arrow}"></Polygon>
                     </Canvas>
                 </ControlTemplate>
             </Setter.Value>
@@ -143,8 +171,9 @@
         </Style.Triggers>
     </Style>
 
-    <!--**************************-->
+    <!--#endregion-->
 
+    <!--#region Bot lock time slider-->
 
     <Style x:Key="SliderRepeatButtonBot" TargetType="RepeatButton">
         <Setter Property="SnapsToDevicePixels" Value="true" />
@@ -154,7 +183,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="RepeatButton">
-                    <Border  Background="Transparent" Height="5" BorderBrush="Transparent" BorderThickness="0,2,0,2"/>
+                    <Border  Background="{DynamicResource Slider.LockTime.Line}" Height="5" BorderBrush="Transparent" BorderThickness="0,2,0,2"/>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -166,7 +195,8 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="RepeatButton">
-                    <Border SnapsToDevicePixels="True" Background="Gray"  BorderThickness="0,2,0,2" BorderBrush="Red" Height="5"/>
+                    <Border SnapsToDevicePixels="True" Background="Gray"  BorderThickness="0,2,0,2" 
+                            BorderBrush="{DynamicResource Slider.LockTime.FillColor}" Height="5"/>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -180,7 +210,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Thumb">
                     <Canvas Background="Transparent">
-                        <Polygon Points="0,20 -10,35 10,35" Fill="Black"></Polygon>
+                        <Polygon Points="0,15 -10,30 10,30" Fill="{DynamicResource Slider.LockTime.Arrow}"></Polygon>
                     </Canvas>
                 </ControlTemplate>
             </Setter.Value>
@@ -221,8 +251,173 @@
         </Style.Triggers>
     </Style>
 
+    <!--#endregion-->
 
-    <!-- style a top level menu item -->
+    <!--#region Top Threshold slider-->
+
+    <Style x:Key="SliderRepeatButtonThresholdTop" TargetType="RepeatButton">
+        <Setter Property="SnapsToDevicePixels" Value="true" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="IsTabStop" Value="false" />
+        <Setter Property="Focusable" Value="false" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RepeatButton">
+                    <Border  Background="{DynamicResource Slider.DisableThreshold.Top.Line}" 
+                             Height="5" BorderBrush="Transparent" BorderThickness="0,2,0,2"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="SliderRepeatButton1ThresholdTop" TargetType="RepeatButton">
+        <Setter Property="SnapsToDevicePixels" Value="true" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RepeatButton">
+                    <Border SnapsToDevicePixels="True" Background="Gray"  BorderThickness="0,2,0,2" 
+                            BorderBrush="{DynamicResource Slider.DisableThreshold.Top.FillColor}" Height="5"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="SliderThumbThresholdTop" TargetType="Thumb">
+        <Setter Property="SnapsToDevicePixels" Value="true" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Thumb">
+                    <Canvas Background="Transparent">
+                        <Polygon Points="0,5 10,-10 -10,-10" 
+                                 Fill="{DynamicResource Slider.DisableThreshold.Bot.Arrow}"></Polygon>
+                    </Canvas>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <ControlTemplate x:Key="WatchdogSliderThresholdTop"  TargetType="Slider">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" MinHeight="{TemplateBinding MinHeight}" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Track Grid.Row="1" x:Name="PART_Track"   >
+                <Track.DecreaseRepeatButton>
+                    <RepeatButton Style="{StaticResource SliderRepeatButton1ThresholdTop}"  Command="Slider.DecreaseLarge" />
+                </Track.DecreaseRepeatButton>
+                <Track.Thumb>
+                    <Thumb Style="{StaticResource SliderThumbThresholdTop}"  />
+                </Track.Thumb>
+                <Track.IncreaseRepeatButton>
+                    <RepeatButton Style="{StaticResource SliderRepeatButtonThresholdTop}" Command="Slider.IncreaseLarge" />
+                </Track.IncreaseRepeatButton>
+            </Track>
+        </Grid>
+    </ControlTemplate>
+
+    <Style x:Key="WatchdogTop_SliderThresholdTop" TargetType="Slider">
+        <Setter Property="Focusable" Value="False"/>
+        <Setter Property="SnapsToDevicePixels" Value="true" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Style.Triggers>
+            <Trigger Property="Orientation" Value="Horizontal">
+                <Setter Property="MinHeight" Value="21" />
+                <Setter Property="MinWidth" Value="104" />
+                <Setter Property="Template" Value="{StaticResource WatchdogSliderThresholdTop}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!--#endregion-->
+
+    <!--#region Bot lock time slider-->
+
+    <Style x:Key="SliderRepeatButtonThresholdBot" TargetType="RepeatButton">
+        <Setter Property="SnapsToDevicePixels" Value="true" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="IsTabStop" Value="false" />
+        <Setter Property="Focusable" Value="false" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RepeatButton">
+                    <Border  Background="{DynamicResource Slider.DisableThreshold.Bot.Line}" 
+                             Height="5" BorderBrush="Transparent" BorderThickness="0,2,0,2"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="SliderRepeatButton1ThresholdBot" TargetType="RepeatButton">
+        <Setter Property="SnapsToDevicePixels" Value="true" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RepeatButton">
+                    <Border SnapsToDevicePixels="True" Background="Gray"  BorderThickness="0,2,0,2" 
+                            BorderBrush="{DynamicResource Slider.DisableThreshold.Bot.FillColor}" Height="5"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="SliderThumbThresholdBot" TargetType="Thumb">
+        <Setter Property="SnapsToDevicePixels" Value="true" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Thumb">
+                    <Canvas Background="Transparent">
+                        <Polygon Points="0,15 -10,30 10,30" 
+                                 Fill="{DynamicResource Slider.DisableThreshold.Bot.Arrow}"></Polygon>
+                    </Canvas>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <ControlTemplate x:Key="WatchdogSliderThresholdBot"  TargetType="Slider">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" MinHeight="{TemplateBinding MinHeight}" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Track Grid.Row="1" x:Name="PART_Track"   >
+                <Track.DecreaseRepeatButton>
+                    <RepeatButton Style="{StaticResource SliderRepeatButton1ThresholdBot}"  Command="Slider.DecreaseLarge" />
+                </Track.DecreaseRepeatButton>
+                <Track.Thumb>
+                    <Thumb Style="{StaticResource SliderThumbThresholdBot}"  />
+                </Track.Thumb>
+                <Track.IncreaseRepeatButton>
+                    <RepeatButton Style="{StaticResource SliderRepeatButtonThresholdBot}" Command="Slider.IncreaseLarge" />
+                </Track.IncreaseRepeatButton>
+            </Track>
+        </Grid>
+    </ControlTemplate>
+
+    <Style x:Key="Watchdog_SliderThresholdBot" TargetType="Slider">
+        <Setter Property="Focusable" Value="False"/>
+        <Setter Property="SnapsToDevicePixels" Value="true" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Style.Triggers>
+            <Trigger Property="Orientation" Value="Horizontal">
+                <Setter Property="MinHeight" Value="21" />
+                <Setter Property="MinWidth" Value="104" />
+                <Setter Property="Template" Value="{StaticResource WatchdogSliderThresholdBot}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!--#endregion-->
+
+    <!--#region style a top level menu item -->
     <ControlTemplate x:Key="VsMenuTop" TargetType="MenuItem">
         <StackPanel TextBlock.FontSize="20" Height="40">
             <!-- label, icons, etc. -->
@@ -246,8 +441,9 @@
             </StackPanel.Style>
         </StackPanel>
     </ControlTemplate>
+    <!--#endregion-->
 
-    <!-- style a non-top level menu item -->
+    <!--#region style a non-top level menu item -->
     <ControlTemplate x:Key="MenuSubItem" TargetType="MenuItem">
         <DockPanel TextBlock.FontSize="15px" x:Name="panel">
             <!-- label, icons, etc. -->
@@ -260,16 +456,13 @@
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
+    <!--#endregion-->
 
-    <!-- some base stuff -->
-    <Style TargetType="{x:Type Menu}">
-        <Setter Property="Background" Value="{DynamicResource Button.Background.StandBy}" />
-    </Style>
-
+    <!--#region Menu -->
     <Style x:Key="MenuToggleButtonTemplate" TargetType="ToggleButton">
 
         <Setter Property="Background" Value="{DynamicResource Button.Background.StandBy}"/>
-        
+
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ToggleButton}">
@@ -280,7 +473,7 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        
+
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Background" Value="{DynamicResource Button.Background.IsMouseOver}"/>
@@ -308,7 +501,7 @@
             </Setter.Value>
         </Setter>
 
-        
+
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Background" Value="{DynamicResource Button.Background.IsMouseOver}"/>
@@ -318,8 +511,9 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    
-    <!--Default TextBox style define -->
+    <!--#endregion-->
+
+    <!--#region Default TextBox style define -->
     <Style TargetType="{x:Type TextBox}">
         <Setter Property="FontSize" Value="20"/>
         <Setter Property="Foreground" Value="{DynamicResource Foreground.Default}"/>
@@ -328,8 +522,9 @@
         <Setter Property="Margin" Value="1, 2, 1, 2"/>
         <Setter Property="Background" Value="{DynamicResource UI.TextBoxBackground}"/>
     </Style>
+    <!--#endregion-->
 
-    <!-- Default Button style define -->
+    <!--#region Default Button style define -->
     <Style TargetType="{x:Type Button}">
         <Setter Property="FontSize" Value="20"/>
         <Setter Property="Background" Value="{DynamicResource Button.Background.StandBy}"/>
@@ -357,8 +552,9 @@
             </Trigger>
         </Style.Triggers>
     </Style>
+    <!--#endregion-->
 
-    <!-- Default ToggleButton style define -->
+    <!--#region Default ToggleButton style define -->
     <Style x:Key="SortingToggleButtonStyle" TargetType="{x:Type ToggleButton}">
         <Setter Property="Background" Value="{DynamicResource Button.Background.StandBy}"/>
         <Setter Property="Foreground" Value="{DynamicResource Foreground.Default}"/>
@@ -390,8 +586,9 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    
-    <!-- TextBlock style define -->
+    <!--#endregion-->
+
+    <!--#region TextBlock style define -->
     <Style x:Key="TextBlockStyle" TargetType="TextBlock">
         <Setter Property="FontSize" Value="20"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
@@ -399,8 +596,9 @@
         <Setter Property="Margin" Value="2,2"/>
         <Setter Property="Foreground" Value="{DynamicResource Foreground.Default}"/>
     </Style>
+    <!--#endregion-->
 
-    <!-- Default ListView style define -->
+    <!--#region Default ListView style define -->
     <Style TargetType="{x:Type ListView}">
         <Setter Property="Padding" Value="2,4,2,2"/>
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
@@ -413,8 +611,9 @@
         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
     </Style>
+    <!--#endregion-->
 
-    <!-- Default ListViewItem style define -->
+    <!--#region Default ListViewItem style define -->
     <Style x:Key="ListViewItemStyle" TargetType="{x:Type ListViewItem}">
         <Setter Property="Template">
             <Setter.Value>
@@ -441,8 +640,9 @@
             </Setter.Value>
         </Setter>
     </Style>
+    <!--#endregion-->
 
-    <!-- Sliding toggle switch -->
+    <!--#region Sliding toggle switch -->
     <Style x:Key="ToggleSwitchStyle" TargetType="CheckBox">
         <Setter Property="Height" Value="20" />
         <Setter Property="Template">
@@ -567,8 +767,9 @@
             </Setter.Value>
         </Setter>
     </Style>
+    <!--#endregion-->
 
-    <!-- TextBox -->
+    <!--#region TextBox -->
     <Style x:Key="TextBoxStyle" TargetType="{x:Type TextBox}">
         <Setter Property="Background"
                     Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" />
@@ -628,4 +829,5 @@
             </MultiTrigger>
         </Style.Triggers>
     </Style>
+    <!--#endregion-->
 </ResourceDictionary>

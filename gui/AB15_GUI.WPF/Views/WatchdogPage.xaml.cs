@@ -87,5 +87,36 @@ namespace AB15_GUI.WPF.Views
                 WD2ResponseTimeSlider.Value = 63 - WD2LockTimeSlider.Value;
             }
         }
+
+        private void WD1EN0DisableTreshholdSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (WD2ResponseTimeSlider == null || WD2LockTimeSlider == null) { return; }
+
+
+            if ((WD2ResponseTimeSlider.Value + WD2LockTimeSlider.Value) > 63)
+            {
+                WD2ResponseTimeSlider.Value = 63 - WD2LockTimeSlider.Value;
+            }
+
+            WD2ResponseTimeSlider.Minimum = -1 * WD2LockTimeSlider.Value;
+            WD2ResponseTimeSlider.Maximum = 63 - WD2LockTimeSlider.Value;
+        }
+
+
+
+        private void WD2EN0DisableTreshholdSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (WD2ResponseTimeSlider == null || WD2LockTimeSlider == null) { return; }
+
+            if (WD2ResponseTimeSlider.Value < 0)
+            {
+                WD2ResponseTimeSlider.Value = 0;
+            }
+
+            if ((WD2ResponseTimeSlider.Value + WD2LockTimeSlider.Value) > 63)
+            {
+                WD2ResponseTimeSlider.Value = 63 - WD2LockTimeSlider.Value;
+            }
+        }
     }
 }
