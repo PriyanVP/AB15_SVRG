@@ -405,6 +405,10 @@ void IntCmdMonitorWatchdog(void)
     SendUSBPackage(&packageToSend);
 }
 
+/** \brief Function to provide a Response word for Challenge of AB12's Watchdog 1 and 2 
+ * \param questionValue value of AB12's Watchdog 1 and 2 Challenge word
+ * \return Returns Response word
+ */
 uint16 GetResponseWordAB12(uint8 challengeValue)
 {
     // Table of Challenge-Response values (according to datasheet AB12)
@@ -437,6 +441,10 @@ uint16 GetResponseWordAB12(uint8 challengeValue)
     }
 }
 
+/** \brief Function to provide an Answer word for Question of AB15's Watchdog 1 
+ * \param questionValue value of AB15's Watchdog 1 Question word
+ * \return Returns Answer word
+ */
 uint16 GetAnswerWordWD1AB15(uint8 questionValue)
 {
     static const uint16 answerWordArrayWD1[32] = {0x2027,
@@ -474,6 +482,10 @@ uint16 GetAnswerWordWD1AB15(uint8 questionValue)
     return (answerWordArrayWD1[questionValue]);
 }
 
+/** \brief Function to provide an Answer word for Question of AB15's Watchdog 2 
+ * \param questionValue value of AB15's Watchdog 2 Question word
+ * \return Returns Answer word
+ */
 uint16 GetAnswerWordWD2AB15(uint8 questionValue)
 {
     static const uint16 answerWordArrayWD2[8] = {0x35CF,
