@@ -268,14 +268,13 @@ void IntCmdAcknowledgeWatchdog1(void)
     // Obtain response word from look-up table
     #ifdef AB12_PLATFORM
     // AB12 platform
-    responseWord = GetResponseWordAB12(requValue, 0);   // TODO: use corresponding table
+    responseWord = GetResponseWordAB12(requValue);
 
     // Send response word to ASIC
     length = 1;
     QSPIWriteSequence(&addressAnswer, &responseWord, &length);  // Use corresponding SPI instruction
     #else
-    // AB15 platform
-    responseWord = GetResponseWordAB15(requValue, 0); // TODO: use corresponding table
+    responseWord = GetAnswerWordWD1AB15(requValue);
 
     // Send response word to ASIC
     length = 1;
@@ -299,14 +298,12 @@ void IntCmdAcknowledgeWatchdog2(void)
     // Obtain response word from look-up table
     #ifdef AB12_PLATFORM
     // AB12 platform
-    responseWord = GetResponseWordAB12(requValue, 0);   // TODO: use corresponding table
-
+    responseWord = GetResponseWordAB12(requValue);
     // Send response word to ASIC
     length = 1;
     QSPIWriteSequence(&addressAnswer, &responseWord, &length);  // Use corresponding SPI instruction
     #else
-    // AB15 platform
-    responseWord = GetResponseWordAB15(requValue, 0); // TODO: use corresponding table
+    responseWord = GetAnswerWordWD2AB15(requValue);
 
     // Send response word to ASIC
     length = 1;
@@ -381,7 +378,7 @@ void IntCmdMonitorWatchdog(void)
     // Read WD status from ASIC
     #ifdef AB12_PLATFORM
     // AB12 platform
-    // responseWord = GetResponseWordAB12(requValue, 0);   // TODO: use corresponding table
+    // responseWord = GetResponseWordAB12(requValue);   // TODO: use corresponding table
     #else
     // AB15 platform
     // Read WD related registers from ASIC
@@ -408,20 +405,98 @@ void IntCmdMonitorWatchdog(void)
     SendUSBPackage(&packageToSend);
 }
 
-uint16 GetResponseWordAB12(uint8 requValue, boolean respWrdNumber)
+/** \brief Function to provide a Response word for Challenge of AB12's Watchdog 1 and 2 
+ * \param questionValue value of AB12's Watchdog 1 and 2 Challenge word
+ * \return Returns Response word
+ */
+uint16 GetResponseWordAB12(uint8 challengeValue)
 {
-    // TODO: same tables for AB15 for WD1/2
-    // Table of RESP_WRD values (according to datasheet AB12)
-    uint16 responseWordArray[8][2] = {{0x2020, 0xE106},
-                                       {0xFDFD, 0x9671},
-                                       {0x8A8A, 0x4BAC},
-                                       {0x5757, 0x3CDB},
-                                       {0xECEC, 0xD235},
-                                       {0x3131, 0xA542},
-                                       {0x4646, 0x789F},
-                                       {0x9B9B, 0x0FE8}};
-    // Provide value of requested RESP_WRD
-    return (responseWordArray[requValue][respWrdNumber]);
+    // Table of Challenge-Response values (according to datasheet AB12)
+    static const uint16 responseWordArray[8] =  {0xE106,
+                                                    0x9671,
+                                                    0x4BAC,
+                                                    0x3CDB,
+                                                    0xD235,
+                                                    0xA542,
+                                                    0x789F,
+                                                    0x0FE8};
+    static const uint16 challengeWordArray[8] =  {0x2020,
+                                                    0xFDFD,
+                                                    0x8A8A,
+                                                    0x5757,
+                                                    0xECEC,
+                                                    0x3131,
+                                                    0x4646,
+                                                    0x9B9B};
+    // Using if condition instead of simple array indexing
+    // because it's unclear if order of coming Challenge words
+    // will always be numerical
+    for (uint8 i = 0; i<8; i++)
+    {
+        if (challengeValue == challengeWordArray[i])
+        {
+            // Provide value of requested Response word
+            return (responseWordArray[i]);
+        }
+    }
+}
+
+/** \brief Function to provide an Answer word for Question of AB15's Watchdog 1 
+ * \param questionValue value of AB15's Watchdog 1 Question word
+ * \return Returns Answer word
+ */
+uint16 GetAnswerWordWD1AB15(uint8 questionValue)
+{
+    static const uint16 answerWordArrayWD1[32] = {0x2027,
+                                        0xE463,
+                                        0x2893,
+                                        0xECD7,
+                                        0x4307,
+                                        0x8743,
+                                        0x4BB3,
+                                        0x8FF7,
+                                        0x32EF,
+                                        0xF6AB,
+                                        0x3A5B,
+                                        0xFE1F,
+                                        0x51CF,
+                                        0x958B,
+                                        0x597B,
+                                        0x9D3F,
+                                        0x0C2D,
+                                        0xC869,
+                                        0x0499,
+                                        0xC0DD,
+                                        0x6F0D,
+                                        0xAB49,
+                                        0x67B9,
+                                        0xA3FD,
+                                        0x1EE5,
+                                        0xDAA1,
+                                        0x1651,
+                                        0xD215,
+                                        0x7DC5,
+                                        0xB981,
+                                        0x7571,
+                                        0xB135};
+    return (answerWordArrayWD1[questionValue]);
+}
+
+/** \brief Function to provide an Answer word for Question of AB15's Watchdog 2 
+ * \param questionValue value of AB15's Watchdog 2 Question word
+ * \return Returns Answer word
+ */
+uint16 GetAnswerWordWD2AB15(uint8 questionValue)
+{
+    static const uint16 answerWordArrayWD2[8] = {0x35CF,
+                                        0x9867,
+                                        0x68B3,
+                                        0xC51B,
+                                        0x5789,
+                                        0xFA21,
+                                        0x0AF5,
+                                        0xA75D};
+    return (answerWordArrayWD2[questionValue]);
 }
 
 
