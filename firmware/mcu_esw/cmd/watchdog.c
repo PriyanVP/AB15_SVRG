@@ -408,22 +408,22 @@ void IntCmdMonitorWatchdog(void)
 uint16 GetResponseWordAB12(uint8 challengeValue)
 {
     // Table of Challenge-Response values (according to datasheet AB12)
-    static uint16 responseWordArray[8] =  {0xE106,
-                                            0x9671,
-                                            0x4BAC,
-                                            0x3CDB,
-                                            0xD235,
-                                            0xA542,
-                                            0x789F,
-                                            0x0FE8};
-    static uint16 challengeWordArray[8] =  {0x2020,
-                                            0xFDFD,
-                                            0x8A8A,
-                                            0x5757,
-                                            0xECEC,
-                                            0x3131,
-                                            0x4646,
-                                            0x9B9B};
+    static const uint16 responseWordArray[8] =  {0xE106,
+                                                    0x9671,
+                                                    0x4BAC,
+                                                    0x3CDB,
+                                                    0xD235,
+                                                    0xA542,
+                                                    0x789F,
+                                                    0x0FE8};
+    static const uint16 challengeWordArray[8] =  {0x2020,
+                                                    0xFDFD,
+                                                    0x8A8A,
+                                                    0x5757,
+                                                    0xECEC,
+                                                    0x3131,
+                                                    0x4646,
+                                                    0x9B9B};
     // Using if condition instead of simple array indexing
     // because it's unclear if order of coming Challenge words
     // will always be numerical
