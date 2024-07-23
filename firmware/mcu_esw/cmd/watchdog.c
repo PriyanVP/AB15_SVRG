@@ -406,20 +406,36 @@ void IntCmdMonitorWatchdog(void)
     SendUSBPackage(&packageToSend);
 }
 
-uint16 GetResponseWordAB12(uint8 requValue, boolean respWrdNumber)
+uint16 GetResponseWordAB12(uint8 challengeValue)
 {
-    // TODO: same tables for AB15 for WD1/2
-    // Table of RESP_WRD values (according to datasheet AB12)
-    uint16 responseWordArray[8][2] = {{0x2020, 0xE106},
-                                       {0xFDFD, 0x9671},
-                                       {0x8A8A, 0x4BAC},
-                                       {0x5757, 0x3CDB},
-                                       {0xECEC, 0xD235},
-                                       {0x3131, 0xA542},
-                                       {0x4646, 0x789F},
-                                       {0x9B9B, 0x0FE8}};
-    // Provide value of requested RESP_WRD
-    return (responseWordArray[requValue][respWrdNumber]);
+    // Table of Challenge-Response values (according to datasheet AB12)
+    static uint16 responseWordArray[8] =  {0xE106,
+                                            0x9671,
+                                            0x4BAC,
+                                            0x3CDB,
+                                            0xD235,
+                                            0xA542,
+                                            0x789F,
+                                            0x0FE8};
+    static uint16 challengeWordArray[8] =  {0x2020,
+                                            0xFDFD,
+                                            0x8A8A,
+                                            0x5757,
+                                            0xECEC,
+                                            0x3131,
+                                            0x4646,
+                                            0x9B9B};
+    // Using if condition instead of simple array indexing
+    // because it's unclear if order of coming Challenge words
+    // will always be numerical
+    for (uint8 i = 0; i<8; i++)
+    {
+        if (challengeValue == challengeWordArray[i])
+        {
+            // Provide value of requested Response word
+            return (responseWordArray[i]);
+        }
+    }
 }
 
 uint16 GetResponseWordWD1AB15(uint8 requValue)
