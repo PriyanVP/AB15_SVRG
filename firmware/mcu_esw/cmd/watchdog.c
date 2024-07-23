@@ -437,9 +437,9 @@ uint16 GetResponseWordAB12(uint8 challengeValue)
     }
 }
 
-uint16 GetResponseWordWD1AB15(uint8 requValue)
+uint16 GetAnswerWordWD1AB15(uint8 questionValue)
 {
-    uint16 responseWordArrayWD1[32] = {0x2027,
+    static const uint16 answerWordArrayWD1[32] = {0x2027,
                                         0xE463,
                                         0x2893,
                                         0xECD7,
@@ -471,12 +471,12 @@ uint16 GetResponseWordWD1AB15(uint8 requValue)
                                         0xB981,
                                         0x7571,
                                         0xB135};
-    return (responseWordArrayWD1[requValue]);
+    return (answerWordArrayWD1[questionValue]);
 }
 
-uint16 GetResponseWordWD2AB15(uint8 requValue)
+uint16 GetAnswerWordWD2AB15(uint8 questionValue)
 {
-    uint16 responseWordArrayWD2[8] = {0x35CF,
+    static const uint16 answerWordArrayWD2[8] = {0x35CF,
                                         0x9867,
                                         0x68B3,
                                         0xC51B,
@@ -484,7 +484,7 @@ uint16 GetResponseWordWD2AB15(uint8 requValue)
                                         0xFA21,
                                         0x0AF5,
                                         0xA75D};
-    return (responseWordArrayWD2[requValue]);
+    return (answerWordArrayWD2[questionValue]);
 }
 
 
