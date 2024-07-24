@@ -34,11 +34,10 @@
     <SolidColorBrush x:Key="Button.Background.IsMouseOver" Color="#C0C0C0"/>
     <SolidColorBrush x:Key="Button.Background.IsPressed" Color="#979197"/>
 
-    <SolidColorBrush x:Key="SimpleButton.Background.StandBy" Color="Red"/>
+    <SolidColorBrush x:Key="SimpleButton.Background.StandBy" Color="#C0C0C0"/>
     <SolidColorBrush x:Key="SimpleButton.Background.IsMouseOver" Color="#C0C0C0"/>
     <SolidColorBrush x:Key="SimpleButton.Background.IsPressed" Color="#979197"/>
     <SolidColorBrush x:Key="SimpleButton.Background.Disable" Color="#c0c0c0c0"/>
-    <SolidColorBrush x:Key="SimpleButton.Background.BorderColor" Color="Black"/>
 
     <SolidColorBrush x:Key="Foreground.Helper" Color="#c0c0c0c0"/>
     <SolidColorBrush x:Key="Foreground.Default" Color="Black"/>
@@ -97,12 +96,10 @@
         <Setter Property="Background" Value="{DynamicResource Button.Background.StandBy}" />
     </Style>
 
-    <Style TargetType="Button" x:Key="SimpleButton">
+    <Style TargetType="{x:Type Button}" x:Key="SimpleButton">
         <Setter Property="FontSize" Value="20"/>
-        <Setter Property="Background" Value="{DynamicResource Button.Background.StandBy}"/>
+        <Setter Property="Background" Value="{DynamicResource SimpleButton.Background.StandBy}"/>
         <Setter Property="Foreground" Value="{DynamicResource Foreground.Default}"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource SimpleButton.Background.BorderColor}"/>
-        <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Margin" Value="1,2,1,2"/>
 
         <Setter Property="Template">
@@ -562,7 +559,7 @@
     <!--#endregion-->
 
     <!--#region Default Button style define -->
-    <Style TargetType="{x:Type Button}">
+    <Style TargetType="{x:Type Button}" x:Key="DefaultButton">
         <Setter Property="FontSize" Value="20"/>
         <Setter Property="Background" Value="{DynamicResource Button.Background.StandBy}"/>
         <Setter Property="Foreground" Value="{DynamicResource Foreground.Default}"/>

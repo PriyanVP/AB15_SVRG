@@ -459,15 +459,13 @@
                                    HorizontalAlignment="Center" VerticalAlignment="Bottom"/>-->
 
                         <StackPanel Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" HorizontalAlignment="Left">
-                            <Button Content="Write config to ASIC"
-                                    Style="{DynamicResource SimpleButton}"
-                                    Grid.Column="0" Grid.Row="1"
-                                    Margin="2" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                            <Button Style="{DynamicResource SimpleButton}" 
+                                    Content="Write config to ASIC"
+                                    Grid.Column="0" Grid.Row="1"/>
 
                             <Button Content="Read config from ASIC"
                                     Style="{DynamicResource SimpleButton}"
-                                    Grid.Column="1" Grid.Row="1"
-                                    Margin="2" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                                    Grid.Column="1" Grid.Row="1"/>
                         </StackPanel>
 
                     </Grid>
@@ -490,12 +488,14 @@
                         <StackPanel Orientation="Vertical"
                                     Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
                             <Button Content="Start Watchdog"
-                            Grid.Column="0" Grid.Row="1"
-                            Margin="2" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                                    Style="{DynamicResource DefaultButton}"
+                                    Grid.Column="0" Grid.Row="1"
+                                    Margin="2" HorizontalAlignment="Center" VerticalAlignment="Top"/>
 
                             <Button Content="Stop Watchdog"
-                            Grid.Column="1" Grid.Row="1"
-                            Margin="2" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                                    Grid.Column="1" Grid.Row="1"
+                                    Style="{DynamicResource DefaultButton}"
+                                    Margin="2" HorizontalAlignment="Center" VerticalAlignment="Top"/>
                         </StackPanel>
 
                     </Grid>
