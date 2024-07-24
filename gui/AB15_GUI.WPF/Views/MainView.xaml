@@ -9,7 +9,7 @@
         xmlns:local="clr-namespace:AB15_GUI.WPF.Views"
         mc:Ignorable="d"
         Title="Bosch AB15" 
-        MinHeight="550" MinWidth="800"
+        MinHeight="550" MinWidth="1000"
         Height="650" Width="1000"
         Icon="Resources/bosch.ico">
     <Window.Resources>
@@ -73,6 +73,35 @@
                 <ColumnDefinition Width="auto" MinWidth="20"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
+
+            <TabControl Grid.Column="1" x:Name="PagesControl" BorderThickness="0">
+                <TabControl.Resources>
+                    <Style TargetType="TabItem">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                    </Style>
+                </TabControl.Resources>
+                <TabItem>
+                    <Frame Source="HomePage.xaml"/>
+                </TabItem>
+                <TabItem>
+                    <Frame Source="SPILearningPage.xaml"/>
+                </TabItem>
+                <TabItem>
+                    <Frame Source="WatchdogPage.xaml"/>
+                </TabItem>
+                <TabItem>
+                    <Frame Source="FiringPage.xaml"/>
+                </TabItem>
+                <TabItem>
+                    <Frame Source="AB15DataPage.xaml"/>
+                </TabItem>
+                <TabItem>
+                    <Frame Source="SensorPage.xaml"/>
+                </TabItem>
+                <TabItem>
+                    <Frame Source="DiagnosticsPaga.xaml"/>
+                </TabItem>
+            </TabControl>
 
             <Border Grid.Column="0" BorderThickness="0,1,1,1" BorderBrush="{DynamicResource Menu.SeparateLine}"/>
 
@@ -152,8 +181,9 @@
                 </ToggleButton>
 
                 <!--Home button-->
-                <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
-                        Style="{DynamicResource MenuButtons}" Command="{Binding GoToHomePage}">
+                <Button Name="HomeButton" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                        Style="{DynamicResource MenuButtons}" Command="{Binding GoToHomePage}"
+                        Click="Button_Click">
                     <StackPanel Orientation="Horizontal">
 
                         <Image Source="{DynamicResource Ico.Home}" Margin="5,0" Width="30"/>
@@ -163,8 +193,9 @@
                 </Button>
 
                 <!--SPI Learning button-->
-                <Button Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
-                        Style="{DynamicResource MenuButtons}" Command="{Binding GoToSPILearningPage}">
+                <Button Name="LearningButton" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                        Style="{DynamicResource MenuButtons}" Command="{Binding GoToSPILearningPage}"
+                        Click="Button_Click">
                     <StackPanel Orientation="Horizontal">
 
                         <Image Source="{DynamicResource Ico.Zoom}" Margin="5,0" Width="30"/>
@@ -174,8 +205,9 @@
                 </Button>
 
                 <!--Watchdog button-->
-                <Button Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
-                        Style="{DynamicResource MenuButtons}" Command="{Binding GoToWhatchdogPage}">
+                <Button Name="WatchdogButton" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
+                        Style="{DynamicResource MenuButtons}" Command="{Binding GoToWhatchdogPage}"
+                        Click="Button_Click">
                     <StackPanel Orientation="Horizontal">
 
                         <Image Source="{DynamicResource Ico.Watchdog}" Margin="5,0" Width="30"/>
@@ -185,8 +217,9 @@
                 </Button>
 
                 <!--Firing button-->
-                <Button Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"
-                        Style="{DynamicResource MenuButtons}" Command="{Binding GoToFiringPage}">
+                <Button Name="FiringButton" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"
+                        Style="{DynamicResource MenuButtons}" Command="{Binding GoToFiringPage}"
+                        Click="Button_Click">
                     <StackPanel Orientation="Horizontal">
 
                         <Image Source="{DynamicResource Ico.Airbag}" Margin="5,0" Width="30"/>
@@ -195,9 +228,10 @@
                     </StackPanel>
                 </Button>
 
-                <!--AB12 Data button-->
-                <Button Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"
-                        Style="{DynamicResource MenuButtons}" Command="{Binding GoToAbDataPage}">
+                <!--AB15 Data button-->
+                <Button Name="AB15DataButton" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"
+                        Style="{DynamicResource MenuButtons}" Command="{Binding GoToAbDataPage}"
+                        Click="Button_Click">
                     <StackPanel Orientation="Horizontal">
 
                         <Image Source="{DynamicResource Ico.Chip}" Margin="5,0" Width="30"/>
@@ -207,8 +241,9 @@
                 </Button>
 
                 <!--Sensors button-->
-                <Button Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2"
-                        Style="{DynamicResource MenuButtons}" Command="{Binding GoToSensorPage}">
+                <Button Name="SensorsButton" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2"
+                        Style="{DynamicResource MenuButtons}" Command="{Binding GoToSensorPage}"
+                        Click="Button_Click">
                     <StackPanel Orientation="Horizontal">
 
                         <Image Source="{DynamicResource Ico.Sensor}" Margin="5,0" Width="30"/>
@@ -218,8 +253,9 @@
                 </Button>
 
                 <!--Diagnostics button-->
-                <Button Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2"
-                        Style="{DynamicResource MenuButtons}" Command="{Binding GoToDiagnosticsPage}">
+                <Button Name="DiagnosticsButton" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2"
+                        Style="{DynamicResource MenuButtons}" Command="{Binding GoToDiagnosticsPage}"
+                        Click="Button_Click">
                     <StackPanel Orientation="Horizontal">
 
                         <Image Source="{DynamicResource Ico.Config}" Margin="5,0" Width="30"/>

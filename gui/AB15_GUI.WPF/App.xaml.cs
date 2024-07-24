@@ -51,6 +51,7 @@ namespace AB15_GUI.WPF
 
                             services.AddSingleton<MainViewModel>();
                             services.AddSingleton<LoggerViewModel>();
+                            services.AddSingleton<WatchdogPageViewModel>();
 
                             #endregion // ViewModels
 
@@ -67,6 +68,13 @@ namespace AB15_GUI.WPF
                             {
                                 LoggerView tmpWindow = new LoggerView();
                                 tmpWindow.DataContext = sp.GetRequiredService<LoggerViewModel>();
+                                return tmpWindow;
+                            });
+
+                            services.AddSingleton<WatchDog>(sp =>
+                            {
+                                WatchDog tmpWindow = new WatchDog();
+                                tmpWindow.DataContext = sp.GetRequiredService<WatchdogPageViewModel>();
                                 return tmpWindow;
                             });
 
