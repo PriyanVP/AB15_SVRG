@@ -11,12 +11,16 @@
 /*********************************************************************************************************************/
 
 #include "Ifx_Types.h"
+#include "common/global_defines.h"
 
 /*********************************************************************************************************************/
 /*------------------------------------------------------Macros-------------------------------------------------------*/
 /*********************************************************************************************************************/
 
 #define CRC5_LENGTH     (3)                                                         /** \brief CRC 5 length in bits  */
+
+#define CRC3_LENGTH     (3)                                                         /** \brief CRC 3 length in bits  */
+#define CRC3_OFFSET     (2)                                                         /** \brief CRC 3 offset          */
 
 /*********************************************************************************************************************/
 /*--------------------------------------------------Enumerations-----------------------------------------------------*/
@@ -26,36 +30,122 @@
 /*-------------------------------------------------Data Structures---------------------------------------------------*/
 /*********************************************************************************************************************/
 
-/** \brief Structure for transmit SPI data TODO: needs refactoring, adding more descriptive comments
+#ifndef AB12_PLATFORM
+// AB15 SPI data types
+
+/** \brief Structure for transmit SPI data (normal data frame)
  */
 typedef union
 {
     struct
     {
-        uint32 stuff        : 2;   /** \brief unused bit*/
+        uint32 unused     : 2;    /** \brief unused bits */
+        uint32 crc        : 3;    /** \brief package checksum */
+        uint32 data       : 16;   /** \brief data being written into register */
+        uint32 rw         : 1;    /** \brief transfer direction: 0 - read, 1 - write */
+        uint32 address    : 9;    /** \brief register address */
+        uint32 sensor_data: 1;    /** \brief flag indicating if sensor data is send (0 for normal frame) */
+    } bf;
+    uint32 dw;
+} SPITransmitDataNormal;
+
+/** \brief Structure for received SPI data (normal data frame)
+ */
+typedef union
+{
+    struct
+    {
+        uint32 crc              : 3;  /** \brief package checksum */
+        uint32 asic_error_flag  : 1;  /** \brief ASIC error flag (oscillator or APB read access time error) */
+        uint32 output_data      : 16; /** \brief data read from register (0s for write) */
+        uint32 as_flags         : 5;  /** \brief additional status flags */
+        uint32 sensor_data      : 1;  /** \brief flag indicating if sensor data is send (0 for normal frame) */
+        uint32 gs0              : 1;  /** \brief APB Access Time Error */
+        uint32 gs1              : 1;  /** \brief ADC error */
+        uint32 gs2              : 1;  /** \brief APB Bus Transaction Error */
+        uint32 gs3              : 1;  /** \brief End Of Programming */
+        uint32 gs4              : 1;  /** \brief Test Active Flag */
+        uint32 gs5              : 1;  /** \brief Transfer Failure Flag */
+    } bf;
+    uint32 dw;
+} SPIReceiveDataNormal;
+
+/** \brief Structure for transmit SPI data (sensor data frame)
+ */
+typedef union
+{
+    struct
+    {
+        uint32 unused     : 2;    /** \brief unused bits */
+        uint32 crc        : 3;    /** \brief package checksum */
+        uint32 dont_care  : 21;   /** \brief don't care bits */
+        uint32 address    : 5;    /** \brief sensor address (A8...A4) */
+        uint32 sensor_data: 1;    /** \brief flag indicating if sensor data is send (1 for sensor frame) */
+    } bf;
+    uint32 dw;
+} SPITransmitDataSensor;
+
+/** \brief Structure for received SPI data (sensor data frame)
+ */
+typedef union
+{
+    struct
+    {
+        uint32 crc              : 3;  /** \brief package checksum */
+        uint32 asic_error_flag  : 1;  /** \brief ASIC or sensor error flag (oscillator or APB read access time error) */
+        uint32 output_data      : 16; /** \brief data read from register (0s for write) */
+        uint32 sid              : 5;  /** \brief PSI Sensor ID */
+        uint32 sensor_data      : 1;  /** \brief flag indicating if sensor data is send (0 for normal frame) */
+        uint32 gs0              : 1;  /** \brief APB Access Time Error */
+        uint32 gs1              : 1;  /** \brief ADC error */
+        uint32 gs2              : 1;  /** \brief APB Bus Transaction Error */
+        uint32 gs3              : 1;  /** \brief End Of Programming */
+        uint32 gs4              : 1;  /** \brief Test Active Flag */
+        uint32 gs5              : 1;  /** \brief Transfer Failure Flag */
+    } bf;
+    uint32 dw;
+} SPIReceiveDataSensor;
+
+#else
+// AB12 SPI data types
+
+/** \brief Structure for transmit SPI data
+ */
+typedef union
+{
+    struct
+    {
+        uint32 unused       : 2;   /** \brief unused bit*/
         uint32 crc          : 3;   /** \brief crc3 */
-        uint32 inputdata    : 16;  /** \brief input data  */
-        uint32 pe           : 1;   /** \brief pe */
-        uint32 instruction  : 10;  /** \brief instruction */
+        uint32 data         : 16;  /** \brief input data  */
+        uint32 pe           : 1;   /** \brief programming enable flag */
+        uint32 instruction  : 10;  /** \brief spi instruction */
     } bf;
     uint32 dw;
 } SPITransmitData;
 
-/** \brief Structure for received SPI data TODO: needs refactoring, adding more descriptive comments
+/** \brief Structure for received SPI data
  */
 typedef union
 {
     struct
     {
-        uint32 crc              : 3;  /** \brief  */
-        uint32 gs_flag          : 1;  /** \brief  */
-        uint32 output_data      : 16; /** \brief  */
-        uint32 sid_add_status   : 5;  /** \brief  */
-        uint32 s_bit            : 1;  /** \brief  */
-        uint32 gen_status       : 6;  /** \brief  */
+        uint32 crc              : 3;  /** \brief package checksum */
+        uint32 gs_flag          : 1;  /** \brief global status flag */
+        uint32 output_data      : 16; /** \brief receive data */
+        uint32 sid_add_status   : 5;  /** \brief safety ID */
+        uint32 s_bit            : 1;  /** \brief sebsor data flag */
+        uint32 dis1             : 1;  /** \brief Disposal flag 1 */
+        uint32 dis2             : 1;  /** \brief Disposal flag 2 */
+        uint32 wdf              : 1;  /** \brief Watchdog fault */
+        uint32 eop              : 1;  /** \brief End Of Programming */
+        uint32 tst              : 1;  /** \brief Test Active Flag */
+        uint32 tff              : 1;  /** \brief Transfer Failure Flag */
     } bf;
     uint32 dw;
 } SPIReceiveData;
+
+#endif
 
 /*********************************************************************************************************************/
 /*------------------------------------------------Function Prototypes------------------------------------------------*/
