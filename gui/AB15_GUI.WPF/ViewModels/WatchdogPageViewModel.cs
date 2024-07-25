@@ -8,7 +8,7 @@ using NLog;
 
 namespace AB15_GUI.WPF.ViewModels
 {
-    public class WatchdogPageViewModel : ViewModelBase
+    public class WatchdogViewModel : ViewModelBase
     {
         private int wd1ResponseTime;
         public int WD1ResponseTime
@@ -32,18 +32,30 @@ namespace AB15_GUI.WPF.ViewModels
             }
         }
 
+        private bool isConfigEnable;
+        public bool IsConfigEnable
+        {
+            get => isConfigEnable;
+            set
+            {
+                isConfigEnable = value;
+                OnPropertyChanged();
+            }
+        }
+
         /// <summary>
         /// Local logger instance
         /// </summary>
         private readonly Logger logger;
 
-        public WatchdogPageViewModel(Logger logger)
+        public WatchdogViewModel(Logger logger)
         {
+            WD1ResponseTime = 10;
+
             this.logger = logger;
             logger.Trace("In WatchdogPageViewModel");
 
-            WD1LockTime = 0;
-            WD1ResponseTime = 0;
+            IsConfigEnable = false;
         }
     }
 }

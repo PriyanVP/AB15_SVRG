@@ -18,9 +18,9 @@ namespace AB15_GUI.WPF.Views
     /// <summary>
     /// Interaction logic for WatchDog.xaml
     /// </summary>
-    public partial class WatchDog : Page
+    public partial class WatchDogView : Page
     {
-        public WatchDog()
+        public WatchDogView()
         {
             InitializeComponent();
         }
@@ -117,6 +117,18 @@ namespace AB15_GUI.WPF.Views
             {
                 WD2ResponseTimeSlider.Value = 63 - WD2LockTimeSlider.Value;
             }
+        }
+
+        private void Grid_KeyDown(object sender, KeyEventArgs e)
+        {
+            Grid grid = sender as Grid;
+            grid.Focus();
+            Keyboard.ClearFocus();
+        }
+
+        private void Grid_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Keyboard.ClearFocus();
         }
     }
 }

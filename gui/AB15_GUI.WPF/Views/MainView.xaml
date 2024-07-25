@@ -87,7 +87,10 @@
                     <Frame Source="SPILearningPage.xaml"/>
                 </TabItem>
                 <TabItem>
-                    <Frame Source="WatchdogPage.xaml"/>
+                    <Frame x:Name="WatchdogFrame"
+                           Source="WatchdogView.xaml"
+                           DataContextChanged="Frame_DataContextChanged"
+                           DataContext="{Binding WatchdogPageViewModel}"/>
                 </TabItem>
                 <TabItem>
                     <Frame Source="FiringPage.xaml"/>

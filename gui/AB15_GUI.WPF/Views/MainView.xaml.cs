@@ -57,5 +57,9 @@ namespace AB15_GUI.WPF.Views
             }
 
         }
+
+        private void Frame_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿<Page x:Class="AB15_GUI.WPF.Views.WatchDog"
+﻿<Page x:Class="AB15_GUI.WPF.Views.WatchDogView"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -8,14 +8,14 @@
       xmlns:custom="clr-namespace:AB15_GUI.WPF.Views.Components"
       xmlns:cnvrt="clr-namespace:AB15_GUI.WPF.Views.Converters"
       mc:Ignorable="d" 
-      
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="WatchDog">
+      Title="WatchDogView">
+    
     <Page.Resources>
         <cnvrt:StatusToColorConverter x:Key="StatusToColorConverter"/>
     </Page.Resources>
 
-    <Grid Background="{DynamicResource UI.BackGround}">
+    <Grid Background="{DynamicResource UI.BackGround}" KeyDown="Grid_KeyDown" MouseDown="Grid_MouseDown">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" MinHeight="20"/>
@@ -367,7 +367,7 @@
                                        VerticalAlignment="Center" HorizontalAlignment="Center"
                                        Text="QA1 failure counter value"/>
 
-                            <TextBox Grid.Row="1" Grid.Column="1"/>
+                            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding WD1ResponseTime}"/>
                             <TextBox Grid.Row="2" Grid.Column="1"/>
                             <TextBox Grid.Row="3" Grid.Column="1"/>
                             <TextBox Grid.Row="4" Grid.Column="1"/>
@@ -461,6 +461,7 @@
                         <StackPanel Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" HorizontalAlignment="Left">
                             <Button Style="{DynamicResource SimpleButton}" 
                                     Content="Write config to ASIC"
+                                    IsEnabled="{Binding IsConfigEnable, UpdateSourceTrigger=PropertyChanged}"
                                     Grid.Column="0" Grid.Row="1"/>
 
                             <Button Content="Read config from ASIC"
@@ -488,13 +489,15 @@
                         <StackPanel Orientation="Vertical"
                                     Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
                             <Button Content="Start Watchdog"
-                                    Style="{DynamicResource DefaultButton}"
+                                    Style="{DynamicResource SimpleButton}"
+                                    IsEnabled="False"
                                     Grid.Column="0" Grid.Row="1"
                                     Margin="2" HorizontalAlignment="Center" VerticalAlignment="Top"/>
 
                             <Button Content="Stop Watchdog"
                                     Grid.Column="1" Grid.Row="1"
-                                    Style="{DynamicResource DefaultButton}"
+                                    IsEnabled="False"
+                                    Style="{DynamicResource SimpleButton}"
                                     Margin="2" HorizontalAlignment="Center" VerticalAlignment="Top"/>
                         </StackPanel>
 
@@ -529,14 +532,18 @@
 
                         <StackPanel Grid.Column="1" Grid.Row="1" Margin="0,0,5,0" VerticalAlignment="Center">
                             <TextBlock Text="Response time"
+                                       IsEnabled="{Binding IsConfigEnable}"
                                        HorizontalAlignment="Right"/>
                             <TextBlock Text="Lock time"
+                                IsEnabled="{Binding IsConfigEnable}"
                                        HorizontalAlignment="Right"/>
                         </StackPanel>
 
                         <StackPanel Grid.Column="2" Grid.Row="1" VerticalAlignment="Center">
-                            <TextBox Text="{Binding ElementName=WD1ResponseTimeSlider,Path=Value}"/>
-                            <TextBox Text="{Binding ElementName=WD1LockTimeSlider,Path=Value}"/>
+                            <TextBox Text="{Binding ElementName=WD1ResponseTimeSlider,Path=Value}" Focusable="False"
+                                       IsEnabled="{Binding IsConfigEnable}"/>
+                            <TextBox Text="{Binding ElementName=WD1LockTimeSlider,Path=Value}" Focusable="False"
+                                       IsEnabled="{Binding IsConfigEnable}"/>
                         </StackPanel>
 
                         <Slider Name="WD1ResponseTimeSlider" ValueChanged="WD1ResponseTimeSlider_ValueChanged"
@@ -546,7 +553,8 @@
                                 HorizontalAlignment="Left"
                                 Value="0" Width="200"
                                 Minimum="0" Maximum="63"
-                                Margin="20,0,20,0"/>
+                                Margin="20,0,20,0"
+                                IsEnabled="{Binding IsConfigEnable}"/>
 
                         <Slider Name="WD1LockTimeSlider" ValueChanged="WD1LockTimeSlider_ValueChanged"
                                 TickFrequency="1" IsSnapToTickEnabled="True"
@@ -555,7 +563,8 @@
                                 HorizontalAlignment="Left"
                                 Value="0" Width="200"
                                 Minimum="0" Maximum="63"
-                                Margin="20,0,20,0"/>
+                                Margin="20,0,20,0"
+                                IsEnabled="{Binding IsConfigEnable}"/>
 
                         <!--#endregion-->
 
@@ -565,14 +574,18 @@
 
                         <StackPanel Grid.Column="1" Grid.Row="2" Margin="0,0,5,0" VerticalAlignment="Center">
                             <TextBlock Text="Response time" 
+                                       IsEnabled="{Binding IsConfigEnable}"
                                        HorizontalAlignment="Right"/>
                             <TextBlock Text="Lock time" 
+                                       IsEnabled="{Binding IsConfigEnable}"
                                        HorizontalAlignment="Right"/>
                         </StackPanel>
 
                         <StackPanel Grid.Column="2" Grid.Row="2" VerticalAlignment="Center">
-                            <TextBox Text="{Binding ElementName=WD2ResponseTimeSlider,Path=Value}"/>
-                            <TextBox Text="{Binding ElementName=WD2LockTimeSlider,Path=Value}"/>
+                            <TextBox Text="{Binding ElementName=WD2ResponseTimeSlider,Path=Value}"
+                                       IsEnabled="{Binding IsConfigEnable}"/>
+                            <TextBox Text="{Binding ElementName=WD2LockTimeSlider,Path=Value}"
+                                       IsEnabled="{Binding IsConfigEnable}"/>
                         </StackPanel>
 
                         <Slider Name="WD2ResponseTimeSlider" ValueChanged="WD2ResponseTimeSlider_ValueChanged"
@@ -582,7 +595,8 @@
                                 HorizontalAlignment="Left"
                                 Value="0" Width="200"
                                 Minimum="0" Maximum="63"
-                                Margin="20,0,20,0"/>
+                                Margin="20,0,20,0"
+                                       IsEnabled="{Binding IsConfigEnable}"/>
 
                         <Slider Name="WD2LockTimeSlider" ValueChanged="WD2LockTimeSlider_ValueChanged"
                                 TickFrequency="1" IsSnapToTickEnabled="True"
@@ -591,7 +605,8 @@
                                 HorizontalAlignment="Left"
                                 Value="0" Width="200"
                                 Minimum="0" Maximum="63"
-                                Margin="20,0,20,0"/>
+                                Margin="20,0,20,0"
+                                       IsEnabled="{Binding IsConfigEnable}"/>
                         <!--#endregion-->
 
                         <!--#region EN0 Disable Treshhold slider-->
@@ -604,21 +619,27 @@
 
                         <StackPanel Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2" Orientation="Horizontal" VerticalAlignment="Center">
                             <CheckBox x:Name="EN0DisableThresholdEnableCheckBox" Style="{DynamicResource ToggleSwitchStyle}" 
-                                HorizontalAlignment="Right" Margin="5,0"/>
-                            <TextBlock Text="Enable EN0" Grid.Column="0" Grid.Row="4" VerticalAlignment="Center"/>
+                                HorizontalAlignment="Right" Margin="5,0"
+                                       IsEnabled="{Binding IsConfigEnable}"/>
+                            <TextBlock Text="Enable EN0" Grid.Column="0" Grid.Row="4" VerticalAlignment="Center"
+                                       IsEnabled="{Binding IsConfigEnable}"/>
                         </StackPanel>
 
 
                         <StackPanel Grid.Column="1" Grid.Row="4" VerticalAlignment="Center">
                             <TextBlock Text="WD1" Margin="0,0,5,0"
-                                       HorizontalAlignment="Right"/>
+                                       HorizontalAlignment="Right"
+                                       IsEnabled="{Binding IsConfigEnable}"/>
                             <TextBlock Text="WD2" Margin="0,0,5,0"
-                                       HorizontalAlignment="Right"/>
+                                       HorizontalAlignment="Right"
+                                       IsEnabled="{Binding IsConfigEnable}"/>
                         </StackPanel>
 
                         <StackPanel Grid.Column="2" Grid.Row="4" VerticalAlignment="Center">
-                            <TextBox Text="{Binding ElementName=WD1EN0DisableTreshholdSlider,Path=Value}"/>
-                            <TextBox Text="{Binding ElementName=WD2EN0DisableTreshholdSlider,Path=Value}"/>
+                            <TextBox Text="{Binding ElementName=WD1EN0DisableTreshholdSlider,Path=Value}"
+                                       IsEnabled="{Binding IsConfigEnable}"/>
+                            <TextBox Text="{Binding ElementName=WD2EN0DisableTreshholdSlider,Path=Value}"
+                                       IsEnabled="{Binding IsConfigEnable}"/>
                         </StackPanel>
 
                         <StackPanel Grid.Column="3" Grid.Row="4" VerticalAlignment="Center">
@@ -630,7 +651,8 @@
                                 HorizontalAlignment="Left"
                                 Value="0" Width="200"
                                 Minimum="0" Maximum="63"
-                                Margin="20,0,20,5"/>
+                                Margin="20,0,20,5"
+                                       IsEnabled="{Binding IsConfigEnable}"/>
 
                             <Slider Name="WD2EN0DisableTreshholdSlider"
                                 ValueChanged="WD2EN0DisableTreshholdSlider_ValueChanged"
@@ -640,7 +662,8 @@
                                 HorizontalAlignment="Left"
                                 Value="0" Width="200"
                                 Minimum="0" Maximum="63"
-                                Margin="20,5,20,0"/>
+                                Margin="20,5,20,0"
+                                       IsEnabled="{Binding IsConfigEnable}"/>
                         </StackPanel>
 
                         <!--#endregion-->

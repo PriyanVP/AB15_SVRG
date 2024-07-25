@@ -34,7 +34,7 @@
     <SolidColorBrush x:Key="Button.Background.IsMouseOver" Color="#C0C0C0"/>
     <SolidColorBrush x:Key="Button.Background.IsPressed" Color="#979197"/>
 
-    <SolidColorBrush x:Key="SimpleButton.Background.StandBy" Color="#C0C0C0"/>
+    <SolidColorBrush x:Key="SimpleButton.Background.StandBy" Color="#e8e8e8e8"/>
     <SolidColorBrush x:Key="SimpleButton.Background.IsMouseOver" Color="#C0C0C0"/>
     <SolidColorBrush x:Key="SimpleButton.Background.IsPressed" Color="#979197"/>
     <SolidColorBrush x:Key="SimpleButton.Background.Disable" Color="#c0c0c0c0"/>
@@ -96,11 +96,13 @@
         <Setter Property="Background" Value="{DynamicResource Button.Background.StandBy}" />
     </Style>
 
+    <!--#region Simple button -->
     <Style TargetType="{x:Type Button}" x:Key="SimpleButton">
         <Setter Property="FontSize" Value="20"/>
         <Setter Property="Background" Value="{DynamicResource SimpleButton.Background.StandBy}"/>
         <Setter Property="Foreground" Value="{DynamicResource Foreground.Default}"/>
         <Setter Property="Margin" Value="1,2,1,2"/>
+        <Setter Property="Padding" Value="2"/>
 
         <Setter Property="Template">
             <Setter.Value>
@@ -121,10 +123,11 @@
                 <Setter Property="Background" Value="{DynamicResource Button.Background.IsPressed}"/>
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Background" Value="{DynamicResource SimpleButton.Background.Disable}"/>
+                <Setter Property="Foreground" Value="{DynamicResource SimpleButton.Background.Disable}"/>
             </Trigger>
         </Style.Triggers>
     </Style>
+    <!--#endregion-->
 
     <!--#region Top responce time slider-->
 
@@ -193,7 +196,7 @@
     </ControlTemplate>
 
     <Style x:Key="WatchdogTop_Slider" TargetType="Slider">
-        <Setter Property="Focusable" Value="False"/>
+        <Setter Property="Focusable" Value="True"/>
         <Setter Property="SnapsToDevicePixels" Value="true" />
         <Setter Property="OverridesDefaultStyle" Value="true" />
         <Style.Triggers>
@@ -273,7 +276,7 @@
     </ControlTemplate>
 
     <Style x:Key="WatchdogBot_Slider" TargetType="Slider">
-        <Setter Property="Focusable" Value="False"/>
+        <Setter Property="Focusable" Value="True"/>
         <Setter Property="SnapsToDevicePixels" Value="true" />
         <Setter Property="OverridesDefaultStyle" Value="true" />
         <Style.Triggers>
@@ -355,7 +358,7 @@
     </ControlTemplate>
 
     <Style x:Key="WatchdogTop_SliderThresholdTop" TargetType="Slider">
-        <Setter Property="Focusable" Value="False"/>
+        <Setter Property="Focusable" Value="True"/>
         <Setter Property="SnapsToDevicePixels" Value="true" />
         <Setter Property="OverridesDefaultStyle" Value="true" />
         <Style.Triggers>
