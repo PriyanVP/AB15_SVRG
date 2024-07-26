@@ -89,7 +89,7 @@
                 <TabItem>
                     <Frame x:Name="WatchdogFrame"
                            Source="WatchdogView.xaml"
-                           DataContextChanged="Frame_DataContextChanged"
+                           LoadCompleted="WatchdogFrame_LoadCompleted"
                            DataContext="{Binding WatchdogPageViewModel}"/>
                 </TabItem>
                 <TabItem>

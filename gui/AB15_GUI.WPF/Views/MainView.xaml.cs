@@ -61,5 +61,13 @@ namespace AB15_GUI.WPF.Views
         private void Frame_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
         }
+
+        private void WatchdogFrame_LoadCompleted(object sender, NavigationEventArgs e)
+        {
+            if (WatchdogFrame.Content is FrameworkElement content)
+            {
+                content.DataContext = WatchdogFrame.DataContext;
+            }
+        }
     }
 }

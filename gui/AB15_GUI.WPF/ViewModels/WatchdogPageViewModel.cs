@@ -5,6 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NLog;
+using System.Windows.Input;
+using System.Windows;
+using AB15_GUI.WPF.ViewModels.Commands;
 
 namespace AB15_GUI.WPF.ViewModels
 {
@@ -43,6 +46,17 @@ namespace AB15_GUI.WPF.ViewModels
             }
         }
 
+        private ICommand readConfigFromASIC;
+        public ICommand ReadConfigFromASIC
+        {
+            get => readConfigFromASIC;
+            set
+            {
+                readConfigFromASIC = value;
+                OnPropertyChanged();
+            }
+        }
+
         /// <summary>
         /// Local logger instance
         /// </summary>
@@ -56,6 +70,20 @@ namespace AB15_GUI.WPF.ViewModels
             logger.Trace("In WatchdogPageViewModel");
 
             IsConfigEnable = false;
+
+            ReadConfigFromASIC = new RelayCommand(ReadConfigFromASICExecute, ReadConfigFromASICCanExecute);
+        }
+
+        private bool ReadConfigFromASICCanExecute(object obj)
+        {
+            return true;
+        }
+
+        private void ReadConfigFromASICExecute(object obj)
+        {
+            // TODO remove debug code 
+            IsConfigEnable = true;
+            logger.Trace("In ReadConfigFromASICExecute");
         }
     }
 }

@@ -68,7 +68,7 @@
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
 
-                        <!--*********-->
+                        <!--#region Main fault flag -->
                         <Border Grid.Row="1" Grid.Column="5" Grid.ColumnSpan="2" BorderThickness="1" 
                             BorderBrush="{DynamicResource Animation.Lines}" 
                             CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
@@ -199,9 +199,9 @@
                                 <TextBlock Text="     WD2 QA    " HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                             </Viewbox>
                         </Border>
+                        <!--#endregion-->
 
-                        <!--*********-->
-
+                        <!--#region Reset couses -->
                         <Border Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="7" BorderBrush="{DynamicResource UI.SeparateLine}" BorderThickness="0,1,0,0" VerticalAlignment="Bottom">
                             <TextBlock Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="6" Text="Reset cause" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20"/>
                         </Border>
@@ -289,6 +289,7 @@
                                 <TextBlock Text="   QA2 fault    " HorizontalAlignment="Center" FontSize="16" Style="{DynamicResource TextBlockStyle}"/>
                             </Viewbox>
                         </Border>
+                        <!--#endregion-->
 
                     </Grid>
 
@@ -306,11 +307,11 @@
                                 <BeginStoryboard>
                                     <Storyboard>
                                         <DoubleAnimation 
-                        Storyboard.TargetName="MorePanel"
-                        Storyboard.TargetProperty="Height"
-                        BeginTime="0:0:0"
-                        From="0" To="180"
-                        Duration="0:0:0.2"/>
+                                            Storyboard.TargetName="MorePanel"
+                                            Storyboard.TargetProperty="Height"
+                                            BeginTime="0:0:0"
+                                            From="0" To="180"
+                                            Duration="0:0:0.2"/>
                                     </Storyboard>
                                 </BeginStoryboard>
                             </EventTrigger>
@@ -318,11 +319,11 @@
                                 <BeginStoryboard>
                                     <Storyboard>
                                         <DoubleAnimation 
-                        Storyboard.TargetName="MorePanel"
-                        Storyboard.TargetProperty="Height"
-                        BeginTime="0:0:0"
-                        To="0" From="180"
-                        Duration="0:0:0.2"/>
+                                            Storyboard.TargetName="MorePanel"
+                                            Storyboard.TargetProperty="Height"
+                                            BeginTime="0:0:0"
+                                            To="0" From="180"
+                                            Duration="0:0:0.2"/>
                                     </Storyboard>
                                 </BeginStoryboard>
                             </EventTrigger>
@@ -367,10 +368,10 @@
                                        VerticalAlignment="Center" HorizontalAlignment="Center"
                                        Text="QA1 failure counter value"/>
 
-                            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding WD1ResponseTime}"/>
-                            <TextBox Grid.Row="2" Grid.Column="1"/>
-                            <TextBox Grid.Row="3" Grid.Column="1"/>
-                            <TextBox Grid.Row="4" Grid.Column="1"/>
+                            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding WD1FaultCounter}"/>
+                            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding WD1TimeingMonitorCounter}"/>
+                            <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding WD1ErrorEventsCounter}"/>
+                            <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding WD1QAFailureCounter}"/>
                         </Grid>
 
                         <Grid Grid.Column="1" Margin="2">
@@ -399,9 +400,9 @@
                                        VerticalAlignment="Center" HorizontalAlignment="Center"
                                        Text="QA2 failure counter value"/>
 
-                            <TextBox Grid.Row="1" Grid.Column="1"/>
-                            <TextBox Grid.Row="2" Grid.Column="1"/>
-                            <TextBox Grid.Row="3" Grid.Column="1"/>
+                            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding WD2FaultCounter}"/>
+                            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding WD2TimingMonitorCounter}"/>
+                            <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding WD2QAFailureCounter}"/>
                         </Grid>
 
                         <Grid Grid.Column="2" Margin="2">
@@ -462,10 +463,12 @@
                             <Button Style="{DynamicResource SimpleButton}" 
                                     Content="Write config to ASIC"
                                     IsEnabled="{Binding IsConfigEnable, UpdateSourceTrigger=PropertyChanged}"
+                                    Command="{Binding WriteConfigToASIC}"
                                     Grid.Column="0" Grid.Row="1"/>
 
                             <Button Content="Read config from ASIC"
                                     Style="{DynamicResource SimpleButton}"
+                                    Command="{Binding ReadConfigFromASIC}"
                                     Grid.Column="1" Grid.Row="1"/>
                         </StackPanel>
 
