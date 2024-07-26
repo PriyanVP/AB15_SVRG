@@ -92,16 +92,12 @@
     <SolidColorBrush x:Key="ListView.Background" Color="Transparent" />
 
     <SolidColorBrush x:Key="ListViewItem.Background" Color="Transparent" />
-    
-    
+
+
 
     <BooleanToVisibilityConverter x:Key="btv" />
-
-    <!-- Background -->
-    <Style TargetType="{x:Type Menu}">
-        <Setter Property="Background" Value="{DynamicResource Button.Background.StandBy}" />
-    </Style>
-
+    
+    <!--#region TextBlock -->
     <Style TargetType="TextBlock" x:Key="CustomeTextBlock">
         <Setter Property="FontSize" Value="20"/>
         <Setter Property="Foreground" Value="{DynamicResource Foreground.Default}"/>
@@ -121,6 +117,7 @@
             </Trigger>
         </Style.Triggers>
     </Style>
+    <!--#endregion-->
 
     <!--#region Simple button -->
     <Style TargetType="{x:Type Button}" x:Key="SimpleButton">
@@ -522,6 +519,10 @@
     <!--#endregion-->
 
     <!--#region Menu -->
+    <Style TargetType="{x:Type Menu}">
+        <Setter Property="Background" Value="{DynamicResource Button.Background.StandBy}" />
+    </Style>
+    
     <Style x:Key="MenuToggleButtonTemplate" TargetType="ToggleButton">
 
         <Setter Property="Background" Value="{DynamicResource Button.Background.StandBy}"/>
@@ -893,4 +894,35 @@
         </Style.Triggers>
     </Style>
     <!--#endregion-->
+
+    <Style TargetType="TabItem" x:Key="CustomTabItem">
+        <Setter Property="Width" Value="Auto"/>
+        <Setter Property="Background" Value="{DynamicResource UI.BackGround}" />
+        <Setter Property="Height" Value="Auto"/>
+        <Setter Property="Foreground" Value="{DynamicResource Foreground.Default}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TabItem">
+                    <Border Name="Border" Background="Transparent">
+
+                        <ContentPresenter x:Name="ContentSite"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Left"
+                                        ContentSource="Header"
+                                        Margin="10,3">
+                        </ContentPresenter>
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True" SourceName="Border">
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource Button.Background.IsMouseOver}" />
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource Button.Background.IsPressed}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

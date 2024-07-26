@@ -30,9 +30,9 @@
 
 
         <TabControl Name="WatchdogPageControl" 
-                    Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2">
-
-            <TabItem Header="Status" FontSize="20">
+                    Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2"
+                    Background="{DynamicResource UI.BackGround}" BorderThickness="0">
+            <TabItem Header="Status" FontSize="20" Style="{DynamicResource CustomTabItem}">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
@@ -443,7 +443,7 @@
 
                 </Grid>
             </TabItem>
-            <TabItem Header="Settings" FontSize="20">
+            <TabItem Header="Settings" FontSize="20" Style="{DynamicResource CustomTabItem}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="2*"/>
@@ -546,8 +546,10 @@
 
                         <StackPanel Grid.Column="2" Grid.Row="1" VerticalAlignment="Center">
                             <TextBox Text="{Binding ElementName=WD1ResponseTimeSlider,Path=Value}" Focusable="False"
+                                     IsReadOnly="True"
                                        IsEnabled="{Binding IsConfigEnable}"/>
                             <TextBox Text="{Binding ElementName=WD1LockTimeSlider,Path=Value}" Focusable="False"
+                                     IsReadOnly="True"
                                        IsEnabled="{Binding IsConfigEnable}"/>
                         </StackPanel>
 
@@ -592,8 +594,10 @@
 
                         <StackPanel Grid.Column="2" Grid.Row="2" VerticalAlignment="Center">
                             <TextBox Text="{Binding ElementName=WD2ResponseTimeSlider,Path=Value}"
+                                     IsReadOnly="True"
                                        IsEnabled="{Binding IsConfigEnable}"/>
                             <TextBox Text="{Binding ElementName=WD2LockTimeSlider,Path=Value}"
+                                     IsReadOnly="True"
                                        IsEnabled="{Binding IsConfigEnable}"/>
                         </StackPanel>
 
@@ -776,7 +780,7 @@
 
                 </Grid>
             </TabItem>
-            <TabItem Header="Testing" FontSize="20">
+            <TabItem Header="Testing" FontSize="20" Style="{DynamicResource CustomTabItem}">
             </TabItem>
         </TabControl>
 

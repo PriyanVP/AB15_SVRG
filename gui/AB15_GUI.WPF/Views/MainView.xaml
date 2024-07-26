@@ -74,7 +74,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <TabControl Grid.Column="1" x:Name="PagesControl" BorderThickness="0">
+            <TabControl Grid.Column="1" x:Name="PagesControl" BorderThickness="0" Background="{DynamicResource UI.BackGround}">
                 <TabControl.Resources>
                     <Style TargetType="TabItem">
                         <Setter Property="Visibility" Value="Collapsed"/>
