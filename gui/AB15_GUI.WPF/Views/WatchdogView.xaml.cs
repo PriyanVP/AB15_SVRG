@@ -23,6 +23,7 @@ namespace AB15_GUI.WPF.Views
         public WatchDogView()
         {
             InitializeComponent();
+            MoreInfoButton.IsChecked = true;
         }
 
         private void WD1LockTimeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -53,11 +54,6 @@ namespace AB15_GUI.WPF.Views
                 WD1ResponseTimeSlider.Value = 63 - WD1LockTimeSlider.Value;
             }
         }
-
-
-
-
-
 
         private void WD2LockTimeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {

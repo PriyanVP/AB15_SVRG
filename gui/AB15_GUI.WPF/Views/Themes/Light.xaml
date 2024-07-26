@@ -40,6 +40,7 @@
     <SolidColorBrush x:Key="SimpleButton.Background.Disable" Color="#c0c0c0c0"/>
 
     <SolidColorBrush x:Key="Foreground.Helper" Color="#c0c0c0c0"/>
+    <SolidColorBrush x:Key="Foreground.Disable" Color="#8a8886"/>
     <SolidColorBrush x:Key="Foreground.Default" Color="Black"/>
     <SolidColorBrush x:Key="Foreground.Trace" Color="#8a8886"/>
     <SolidColorBrush x:Key="Foreground.Debug" Color="#32B232"/>
@@ -47,6 +48,8 @@
     <SolidColorBrush x:Key="Foreground.Warn" Color="#FFC31E"/>
     <SolidColorBrush x:Key="Foreground.Error" Color="#f50000"/>
     <SolidColorBrush x:Key="Foreground.Fatal" Color="#800000"/>
+    <SolidColorBrush x:Key="Foreground.Red.Default" Color="#eb0000"/>
+    <SolidColorBrush x:Key="Foreground.Red.Disable" Color="#ff5050"/>
 
     <SolidColorBrush x:Key="CheckBox.Checked.Background" Color="#554d56" />
     <SolidColorBrush x:Key="CheckBox.Checked.BorderBrush" Color="#edeced" />
@@ -63,6 +66,9 @@
     <SolidColorBrush x:Key="StatusBox.Connected" Color="#28A828"/>
     <SolidColorBrush x:Key="StatusBox.Error" Color="#f50000"/>
     <SolidColorBrush x:Key="StatusBox.Warning" Color="#FFA500"/>
+    <SolidColorBrush x:Key="StatusBox.NoStatus" Color="#fbfbfb"/>
+    <SolidColorBrush x:Key="StatusBox.Good" Color="#28A828"/>
+    <SolidColorBrush x:Key="StatusBox.Fault" Color="#f50000"/>
 
     <SolidColorBrush x:Key="Animation.Arrow" Color="Green"/>
     <SolidColorBrush x:Key="Animation.Lines" Color="Black"/>
@@ -94,6 +100,26 @@
     <!-- Background -->
     <Style TargetType="{x:Type Menu}">
         <Setter Property="Background" Value="{DynamicResource Button.Background.StandBy}" />
+    </Style>
+
+    <Style TargetType="TextBlock" x:Key="CustomeTextBlock">
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="Foreground" Value="{DynamicResource Foreground.Default}"/>
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="{DynamicResource Foreground.Disable}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style TargetType="TextBlock" x:Key="CustomeRedTextBlock">
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="Foreground" Value="{DynamicResource Foreground.Red.Default}"/>
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="{DynamicResource Foreground.Red.Disable}"/>
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
     <!--#region Simple button -->

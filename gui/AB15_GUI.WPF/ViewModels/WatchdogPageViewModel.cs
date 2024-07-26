@@ -11,8 +11,35 @@ using AB15_GUI.WPF.ViewModels.Commands;
 
 namespace AB15_GUI.WPF.ViewModels
 {
+    /// <summary>
+    /// Faults status value definition
+    /// </summary>
+    public enum UIFaultStatus
+    {
+        NoStatus,
+        Good,
+        Fault
+    }
+
     public class WatchdogViewModel : ViewModelBase
     {
+        /// <summary>
+        /// toggle enable to configure EN0 thresholds 
+        /// </summary>
+        private bool isEN0Enabled;
+        public bool IsEN0Enabled
+        {
+            get => isEN0Enabled;
+            set 
+            { 
+                isEN0Enabled = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// WD1 Response time value
+        /// </summary>
         private int wd1ResponseTime;
         public int WD1ResponseTime
         {
@@ -24,6 +51,9 @@ namespace AB15_GUI.WPF.ViewModels
             }
         }
 
+        /// <summary>
+        /// WD1 Lock time value
+        /// </summary>
         private int wd1LockTime;
         public int WD1LockTime
         {
@@ -35,6 +65,37 @@ namespace AB15_GUI.WPF.ViewModels
             }
         }
 
+        /// <summary>
+        /// WD2 Response time value
+        /// </summary>
+        private int wd2ResponseTime;
+        public int WD2ResponseTime
+        {
+            get => wd2ResponseTime;
+            set
+            {
+                wd2ResponseTime = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// WD2 Lock time value
+        /// </summary>
+        private int wd2LockTime;
+        public int WD2LockTime
+        {
+            get => wd2LockTime;
+            set
+            {
+                wd2LockTime = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// toggle enable for configuration fields 
+        /// </summary>
         private bool isConfigEnable;
         public bool IsConfigEnable
         {
@@ -46,6 +107,9 @@ namespace AB15_GUI.WPF.ViewModels
             }
         }
 
+        /// <summary>
+        /// Event from Read config from ASIC button
+        /// </summary>
         private ICommand readConfigFromASIC;
         public ICommand ReadConfigFromASIC
         {
@@ -58,20 +122,212 @@ namespace AB15_GUI.WPF.ViewModels
         }
 
         /// <summary>
+        /// Event from Write config to ASIC button
+        /// </summary>
+        private ICommand writeConfigToASIC;
+        public ICommand WriteConfigToASIC
+        {
+            get => writeConfigToASIC;
+            set
+            {
+                writeConfigToASIC = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private UIFaultStatus wdFaultStatus;
+        public UIFaultStatus WDFaultStatus
+        {
+            get => wdFaultStatus;
+            set
+            {
+                wdFaultStatus = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private UIFaultStatus wd1FaultStatus;
+        public UIFaultStatus WD1FaultStatus
+        {
+            get => wd1FaultStatus;
+            set
+            {
+                wd1FaultStatus = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private UIFaultStatus wd2FaultStatus;
+        public UIFaultStatus WD2FaultStatus
+        {
+            get => wd2FaultStatus;
+            set
+            {
+                wd2FaultStatus = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private UIFaultStatus errorPinFaultStatus;
+        public UIFaultStatus ErrorPinFaultStatus
+        {
+            get => errorPinFaultStatus;
+            set
+            {
+                errorPinFaultStatus = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private UIFaultStatus wd1TimerFaultStatus;
+        public UIFaultStatus WD1TimerFaultStatus
+        {
+            get => wd1TimerFaultStatus;
+            set
+            {
+                wd1TimerFaultStatus = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private UIFaultStatus wd2TimerFaultStatus;
+        public UIFaultStatus WD2TimerFaultStatus
+        {
+            get => wd2TimerFaultStatus;
+            set
+            {
+                wd2TimerFaultStatus = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private UIFaultStatus oscmonFaultStatus;
+        public UIFaultStatus OSCMONFaultStatus
+        {
+            get => oscmonFaultStatus;
+            set
+            {
+                oscmonFaultStatus = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private UIFaultStatus wd1QAFaultStatus;
+        public UIFaultStatus WD1QAFaultStatus
+        {
+            get => wd1QAFaultStatus;
+            set
+            {
+                wd1QAFaultStatus = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private UIFaultStatus wd2QAFaultStatus;
+        public UIFaultStatus WD2QAFaultStatus
+        {
+            get => wd2QAFaultStatus;
+            set
+            {
+                wd2QAFaultStatus = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private UIFaultStatus oscillatorFaultStatus;
+        public UIFaultStatus OscillatorFaultStatus
+        {
+            get => oscillatorFaultStatus;
+            set
+            {
+                oscillatorFaultStatus = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private UIFaultStatus wdResetFaultStatus;
+        public UIFaultStatus WDResetFaultStatus
+        {
+            get => wdResetFaultStatus;
+            set
+            {
+                wdResetFaultStatus = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private UIFaultStatus wd1CounterFaultStatus;
+        public UIFaultStatus WD1CounterFaultStatus
+        {
+            get => wd1CounterFaultStatus;
+            set
+            {
+                wd1CounterFaultStatus = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private UIFaultStatus qa1FaultStatus;
+        public UIFaultStatus QA1FaultStatus
+        {
+            get => qa1FaultStatus;
+            set
+            {
+                qa1FaultStatus = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private UIFaultStatus wd2CounterFaultStatus;
+        public UIFaultStatus WD2CounterFaultStatus
+        {
+            get => wd2CounterFaultStatus;
+            set
+            {
+                wd2CounterFaultStatus = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private UIFaultStatus qa2FaultStatus;
+        public UIFaultStatus QA2FaultStatus
+        {
+            get => qa2FaultStatus;
+            set
+            {
+                qa2FaultStatus = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private UIFaultStatus en0HightStatus;
+        public UIFaultStatus EN0HightStatus
+        {
+            get => en0HightStatus;
+            set
+            {
+                en0HightStatus = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
         /// Local logger instance
         /// </summary>
         private readonly Logger logger;
 
         public WatchdogViewModel(Logger logger)
         {
-            WD1ResponseTime = 10;
-
             this.logger = logger;
             logger.Trace("In WatchdogPageViewModel");
 
+            // set defoult value
             IsConfigEnable = false;
 
+            // Init commands for buttons
             ReadConfigFromASIC = new RelayCommand(ReadConfigFromASICExecute, ReadConfigFromASICCanExecute);
+            WriteConfigToASIC = new RelayCommand(WriteConfigToASICExecute, WriteConfigToASICCanExecute);
+
         }
 
         private bool ReadConfigFromASICCanExecute(object obj)
@@ -84,6 +340,18 @@ namespace AB15_GUI.WPF.ViewModels
             // TODO remove debug code 
             IsConfigEnable = true;
             logger.Trace("In ReadConfigFromASICExecute");
+        }
+
+        private bool WriteConfigToASICCanExecute(object obj)
+        {
+            return true;
+        }
+
+        private void WriteConfigToASICExecute(object obj)
+        {
+            // TODO remove debug code 
+            IsConfigEnable = false;
+            logger.Trace("In WriteConfigToASICExecute");
         }
     }
 }
