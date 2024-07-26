@@ -663,7 +663,6 @@
 
                         <StackPanel Grid.Column="3" Grid.Row="4" VerticalAlignment="Center">
                             <Slider Name="WD1EN0DisableTreshholdSlider" 
-                                ValueChanged="WD1EN0DisableTreshholdSlider_ValueChanged"
                                 TickFrequency="1" IsSnapToTickEnabled="True"
                                 Style="{DynamicResource WatchdogTop_SliderThresholdTop}" 
                                 VerticalAlignment="Top" 
@@ -674,7 +673,6 @@
                                 IsEnabled="{Binding IsConfigEnable}"/>
 
                             <Slider Name="WD2EN0DisableTreshholdSlider"
-                                ValueChanged="WD2EN0DisableTreshholdSlider_ValueChanged"
                                 TickFrequency="1" IsSnapToTickEnabled="True"
                                 Style="{DynamicResource WatchdogTop_SliderThresholdTop}" 
                                 VerticalAlignment="Bottom" 

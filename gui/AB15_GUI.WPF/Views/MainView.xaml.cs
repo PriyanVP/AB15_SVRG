@@ -26,6 +26,10 @@ namespace AB15_GUI.WPF.Views
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Sitch betwen tabs from menu buttons
+        /// </summary>
+        /// <param name="sender">Button name</param>
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             switch (((Button)sender).Name) 
@@ -58,10 +62,10 @@ namespace AB15_GUI.WPF.Views
 
         }
 
-        private void Frame_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-        }
-
+        // TODO find better way
+        /// <summary>
+        /// Set data context for watchdog page
+        /// </summary>
         private void WatchdogFrame_LoadCompleted(object sender, NavigationEventArgs e)
         {
             if (WatchdogFrame.Content is FrameworkElement content)

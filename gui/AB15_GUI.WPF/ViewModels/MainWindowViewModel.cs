@@ -103,6 +103,7 @@ namespace AB15_GUI.WPF.ViewModels
             logger.Trace("In MainViewModel");
             loggerWindowView.Show();
 
+            // TODO find better way
             WatchdogPageViewModel = watchdogViewModel;
             
         }

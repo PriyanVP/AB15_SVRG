@@ -87,6 +87,7 @@
                     <Frame Source="SPILearningPage.xaml"/>
                 </TabItem>
                 <TabItem>
+                    <!--TODO find better way-->
                     <Frame x:Name="WatchdogFrame"
                            Source="WatchdogView.xaml"
                            LoadCompleted="WatchdogFrame_LoadCompleted"
