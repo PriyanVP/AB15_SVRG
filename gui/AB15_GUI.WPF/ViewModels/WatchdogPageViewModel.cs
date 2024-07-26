@@ -135,6 +135,9 @@ namespace AB15_GUI.WPF.ViewModels
             }
         }
 
+        /// <summary>
+        /// Global wd fault flag
+        /// </summary>
         private UIFaultStatus wdFaultStatus;
         public UIFaultStatus WDFaultStatus
         {
@@ -146,6 +149,9 @@ namespace AB15_GUI.WPF.ViewModels
             }
         }
 
+        /// <summary>
+        /// WD1 fault flag
+        /// </summary>
         private UIFaultStatus wd1FaultStatus;
         public UIFaultStatus WD1FaultStatus
         {
@@ -157,6 +163,9 @@ namespace AB15_GUI.WPF.ViewModels
             }
         }
 
+        /// <summary>
+        /// WD2 fault flag
+        /// </summary>
         private UIFaultStatus wd2FaultStatus;
         public UIFaultStatus WD2FaultStatus
         {
@@ -168,6 +177,9 @@ namespace AB15_GUI.WPF.ViewModels
             }
         }
 
+        /// <summary>
+        /// Error pin fault flag
+        /// </summary>
         private UIFaultStatus errorPinFaultStatus;
         public UIFaultStatus ErrorPinFaultStatus
         {
@@ -179,6 +191,9 @@ namespace AB15_GUI.WPF.ViewModels
             }
         }
 
+        /// <summary>
+        /// WD1 timer fault flag
+        /// </summary>
         private UIFaultStatus wd1TimerFaultStatus;
         public UIFaultStatus WD1TimerFaultStatus
         {
@@ -190,6 +205,9 @@ namespace AB15_GUI.WPF.ViewModels
             }
         }
 
+        /// <summary>
+        /// WD2 timer fault flag
+        /// </summary>
         private UIFaultStatus wd2TimerFaultStatus;
         public UIFaultStatus WD2TimerFaultStatus
         {
@@ -201,6 +219,9 @@ namespace AB15_GUI.WPF.ViewModels
             }
         }
 
+        /// <summary>
+        /// OSCMON fault flag
+        /// </summary>
         private UIFaultStatus oscmonFaultStatus;
         public UIFaultStatus OSCMONFaultStatus
         {
@@ -212,6 +233,9 @@ namespace AB15_GUI.WPF.ViewModels
             }
         }
 
+        /// <summary>
+        /// WD1 QA fault flag
+        /// </summary>
         private UIFaultStatus wd1QAFaultStatus;
         public UIFaultStatus WD1QAFaultStatus
         {
@@ -223,6 +247,9 @@ namespace AB15_GUI.WPF.ViewModels
             }
         }
 
+        /// <summary>
+        /// WD2 QA Fault flag
+        /// </summary>
         private UIFaultStatus wd2QAFaultStatus;
         public UIFaultStatus WD2QAFaultStatus
         {
@@ -234,6 +261,9 @@ namespace AB15_GUI.WPF.ViewModels
             }
         }
 
+        /// <summary>
+        /// Oscillator fault flag
+        /// </summary>
         private UIFaultStatus oscillatorFaultStatus;
         public UIFaultStatus OscillatorFaultStatus
         {
@@ -245,6 +275,9 @@ namespace AB15_GUI.WPF.ViewModels
             }
         }
 
+        /// <summary>
+        /// WD reset flag
+        /// </summary>
         private UIFaultStatus wdResetFaultStatus;
         public UIFaultStatus WDResetFaultStatus
         {
@@ -256,6 +289,9 @@ namespace AB15_GUI.WPF.ViewModels
             }
         }
 
+        /// <summary>
+        /// WD1 counter fault flag
+        /// </summary>
         private UIFaultStatus wd1CounterFaultStatus;
         public UIFaultStatus WD1CounterFaultStatus
         {
@@ -267,6 +303,9 @@ namespace AB15_GUI.WPF.ViewModels
             }
         }
 
+        /// <summary>
+        /// QA1 fault flag
+        /// </summary>
         private UIFaultStatus qa1FaultStatus;
         public UIFaultStatus QA1FaultStatus
         {
@@ -278,6 +317,9 @@ namespace AB15_GUI.WPF.ViewModels
             }
         }
 
+        /// <summary>
+        /// WD2 counter fault flag
+        /// </summary>
         private UIFaultStatus wd2CounterFaultStatus;
         public UIFaultStatus WD2CounterFaultStatus
         {
@@ -289,6 +331,9 @@ namespace AB15_GUI.WPF.ViewModels
             }
         }
 
+        /// <summary>
+        /// QA2 fault flag
+        /// </summary>
         private UIFaultStatus qa2FaultStatus;
         public UIFaultStatus QA2FaultStatus
         {
@@ -300,6 +345,9 @@ namespace AB15_GUI.WPF.ViewModels
             }
         }
 
+        /// <summary>
+        /// EN0 Hight status flag
+        /// </summary>
         private UIFaultStatus en0HightStatus;
         public UIFaultStatus EN0HightStatus
         {
