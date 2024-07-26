@@ -38,6 +38,7 @@
     <SolidColorBrush x:Key="SimpleButton.Background.IsMouseOver" Color="#ff353535"/>
     <SolidColorBrush x:Key="SimpleButton.Background.IsPressed" Color="#5effffff"/>
     <SolidColorBrush x:Key="SimpleButton.Background.Disable" Color="#c0c0c0c0"/>
+    <SolidColorBrush x:Key="SimpleButton.BorderBrush" Color="#ff404040"/>
     
     <SolidColorBrush x:Key="Foreground.Helper" Color="#c0c0c0c0"/>
     <SolidColorBrush x:Key="Foreground.Disable" Color="#8a8886"/>
@@ -129,8 +130,9 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Border Background="{TemplateBinding Background}">
-                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <Border Background="{TemplateBinding Background}"
+                            BorderThickness="1" BorderBrush="{DynamicResource SimpleButton.BorderBrush}">
+                        <ContentPresenter Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
@@ -736,8 +738,9 @@
                     <ControlTemplate.Triggers>
                         <Trigger  Property="IsEnabled" Value="false">
                             <Setter TargetName="contentPresenter" Property="IsEnabled" Value="False" />
-                            <Setter TargetName="bk" Property="BorderBrush" Value="#FFD5D5D5" />
+                            <Setter TargetName="bk" Property="BorderBrush" Value="#554d56" />
                             <Setter TargetName="ep" Property="Fill" Value="#FFD5D5D5" />
+                            <Setter Property="Background" TargetName="bk" Value="{DynamicResource CheckBox.Checked.Background}" />
                         </Trigger>
 
                         <Trigger Property="IsChecked" Value="true">

@@ -38,6 +38,7 @@
     <SolidColorBrush x:Key="SimpleButton.Background.IsMouseOver" Color="#C0C0C0"/>
     <SolidColorBrush x:Key="SimpleButton.Background.IsPressed" Color="#979197"/>
     <SolidColorBrush x:Key="SimpleButton.Background.Disable" Color="#c0c0c0c0"/>
+    <SolidColorBrush x:Key="SimpleButton.BorderBrush" Color="#C0C0C0"/>
 
     <SolidColorBrush x:Key="Foreground.Helper" Color="#c0c0c0c0"/>
     <SolidColorBrush x:Key="Foreground.Disable" Color="#8a8886"/>
@@ -130,8 +131,9 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Border Background="{TemplateBinding Background}">
-                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <Border Background="{TemplateBinding Background}" 
+                            BorderThickness="1" BorderBrush="{DynamicResource SimpleButton.BorderBrush}">
+                        <ContentPresenter Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
