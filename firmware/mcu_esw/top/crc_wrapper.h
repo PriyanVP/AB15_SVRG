@@ -36,6 +36,14 @@ boolean IsCRC8Correct(uint8 * const data, uint16 length, uint8 expectedCrc);
  */
 boolean IsCRC5Correct(SPIReceiveData * const data);
 
+/** \brief Checkes if CRC3 of SPI receive (MISO) data matches expected value
+ *
+ * \param data pointer to received SPI package
+ * \param expectedCrc expected CRC value
+ * \return Returns TRUE if CRC matches expected, otherwise FALSE
+ */
+boolean IsCRC3Correct(uint8 * const data, uint8 expectedCrc);
+
 /** \brief Calculates CRC8 of input data
  *
  * \param data pointer to buffer with data to calculate CRC
@@ -50,6 +58,13 @@ uint8 GetCRC8(uint8 * const data, uint16 length);
  * \return Returns CRC for input data; if Null pointer used as input returns 0
  */
 uint8 GetCRC5(SPITransmitData * const data);
+
+/** \brief Calculates CRC3 of SPI transmit frame
+ *
+ * \param data pointer to package that will be transmitted via SPI
+ * \return Returns CRC for input data; if Null pointer used as input returns 0
+ */
+uint8 GetCRC3(uint32 * const data);
 
 /*********************************************************************************************************************/
 /*-------------------------------------------------Global variables--------------------------------------------------*/

@@ -10,9 +10,10 @@
 #include "Ifx_Types.h"
 #include "IfxAsclin_Asc.h"
 
-#include "../common/spi_data_types.h"
-#include "../periphery/spi.h"
-#include "../common/crc.h"
+#include "common/global_defines.h"
+#include "common/spi_data_types.h"
+#include "periphery/spi.h"
+#include "common/crc.h"
 #include "top/crc_wrapper.h"
 #include "top/spi_wrapper.h"
 #include "top/usb_wrapper.h"
@@ -61,18 +62,13 @@ boolean QSPIReadFast(uint16 address, uint32 * const data)
     dataToTransmit.dw = 0;
     dataToTransmit.bf.instruction = address;
     dataToTransmit.bf.pe = 0x0;
-    dataToTransmit.bf.inputdata = READ;
-    dataToTransmit.bf.crc = CRC3MI(dataToTransmit.dw);
-    QSPIExchangeData(&dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
-
-    // Configure and execute dummy SPi transaction to receive data from previous read
-    dataToTransmit.dw = SPI_DUMMY_TRANSACTION;
+    dataToTransmit.bf.data = READ;
+    dataToTransmit.bf.crc = GetCRC3(&(dataToTransmit.dw));
     QSPIExchangeData(&dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
 
     // Validating input
-    // TODO:
-    // isReceivedDataValid = IsCRC5Correct(&dataToReceive);
-    // isReceivedDataValid &= !(dataToReceive.bf.errBus || dataToReceive.bf.errAt || dataToReceive.bf.errCRC || dataToReceive.bf.errSck);
+    isReceivedDataValid = IsCRC5Correct(&dataToReceive);
+    isReceivedDataValid &= !(dataToReceive.bf.errBus || dataToReceive.bf.errAt || dataToReceive.bf.errCRC || dataToReceive.bf.errSck);
     isReceivedDataValid = TRUE;
 
     // Return data
@@ -91,9 +87,9 @@ void QSPIWriteFast(uint16 address, uint16 data)
 
     dataToTransmit.dw = 0;
     dataToTransmit.bf.instruction = address;
-    dataToTransmit.bf.inputdata = data;
+    dataToTransmit.bf.data = data;
     dataToTransmit.bf.pe = WRITE;
-    dataToTransmit.bf.crc = CRC3MO(dataToTransmit.dw);
+    dataToTransmit.bf.crc = GetCRC3(&(dataToTransmit.dw));
 
     QSPIExchangeData(&dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
 
@@ -122,7 +118,7 @@ boolean QSPIReadSequence(const uint16 * const addressBuffer, uint32 * const data
 
     // Configure common parameters of SPI read frame
     dataToTransmit.dw = 0;
-    dataToTransmit.bf.inputdata = 0x0;
+    dataToTransmit.bf.data = 0x0;
     dataToTransmit.bf.pe = READ;
 
     // Execute series of SPI transactions
@@ -133,7 +129,7 @@ boolean QSPIReadSequence(const uint16 * const addressBuffer, uint32 * const data
         {
             // Reading data from addresses in address buffer
             dataToTransmit.bf.instruction = addressBuffer[i];
-            dataToTransmit.bf.crc = CRC3MO(dataToTransmit.dw);
+            dataToTransmit.bf.crc = GetCRC3(&(dataToTransmit.dw));
         }
         else
         {
@@ -199,8 +195,8 @@ boolean QSPIWriteSequence(const uint16 * const addressBuffer, const uint16 * con
         {
             // Reading data from addresses in address buffer
             dataToTransmit.bf.instruction = addressBuffer[i];
-            dataToTransmit.bf.inputdata = dataBuffer[i];
-            dataToTransmit.bf.crc = CRC3MO(dataToTransmit.dw);
+            dataToTransmit.bf.data = dataBuffer[i];
+            dataToTransmit.bf.crc = GetCRC3(&(dataToTransmit.dw));
         }
         else
         {
@@ -272,8 +268,8 @@ boolean QSPIReadWriteSequence(const uint16 * const addressBuffer, uint32 * const
             // Reading/writing data from addresses in address buffer
             dataToTransmit.bf.instruction = addressBuffer[i];
             dataToTransmit.bf.pe = rwBuffer[i];
-            dataToTransmit.bf.inputdata = dataBuffer[i];
-            dataToTransmit.bf.crc = CRC3MO(&dataToTransmit);
+            dataToTransmit.bf.data = dataBuffer[i];
+            dataToTransmit.bf.crc = GetCRC3(&(dataToTransmit.dw));
         }
         else
         {
@@ -287,8 +283,8 @@ boolean QSPIReadWriteSequence(const uint16 * const addressBuffer, uint32 * const
         // Reading/writing data from addresses in address buffer
         dataToTransmit.bf.instruction = addressBuffer[i];
         dataToTransmit.bf.pe = rwBuffer[i];
-        dataToTransmit.bf.inputdata = dataBuffer[i];
-        dataToTransmit.bf.crc = CRC3MO(dataToTransmit.dw);
+        dataToTransmit.bf.data = dataBuffer[i];
+        dataToTransmit.bf.crc = GetCRC3(&(dataToTransmit.dw));
 #endif
 
         // Execute SPI transaction exchange
