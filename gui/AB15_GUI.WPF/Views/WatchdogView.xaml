@@ -10,7 +10,7 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="900"
       Title="WatchDogView">
-    
+
     <Page.Resources>
         <cnvrt:FaultFlagToColorConverter x:Key="FaultFlagToColorConverter"/>
     </Page.Resources>
@@ -485,17 +485,18 @@
 
                         <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" 
                                     VerticalAlignment="Center" HorizontalAlignment="Center">
+
                             <Button Content="Start Watchdog"
                                     Style="{DynamicResource SimpleButton}"
                                     Command="{Binding StartWatchdog}"
-                                    IsEnabled="{Binding IsStartStopWatchdogEnabled}"
+                                    IsEnabled="{Binding IsStartWDButtonEnabled}"
                                     Grid.Column="0" Grid.Row="1"
                                     Margin="2" HorizontalAlignment="Center" VerticalAlignment="Top"/>
 
                             <Button Content="Stop Watchdog"
                                     Style="{DynamicResource SimpleButton}"
                                     Command="{Binding StopWatchdog}"
-                                    IsEnabled="{Binding IsStartStopWatchdogEnabled}"
+                                    IsEnabled="{Binding IsStopWDButtonEnabled}"
                                     Grid.Column="1" Grid.Row="1"
                                     Margin="2" HorizontalAlignment="Center" VerticalAlignment="Top"/>
                         </StackPanel>
@@ -555,7 +556,7 @@
                                 Grid.Column="3" Grid.Row="1"
                                 Style="{DynamicResource WatchdogTop_Slider}" VerticalAlignment="Center" 
                                 HorizontalAlignment="Left"
-                                Value="0" Width="200"
+                                Value="{Binding WD1ResponseTime}" Width="200"
                                 Minimum="0" Maximum="63"
                                 Margin="20,0,20,0"
                                 IsEnabled="{Binding IsConfigEnable}"/>
@@ -565,7 +566,7 @@
                                 Grid.Column="3" Grid.Row="1"
                                 Style="{DynamicResource WatchdogBot_Slider}" VerticalAlignment="Center" 
                                 HorizontalAlignment="Left"
-                                Value="0" Width="200"
+                                Value="{Binding WD1LockTime}" Width="200"
                                 Minimum="0" Maximum="63"
                                 Margin="20,0,20,0"
                                 IsEnabled="{Binding IsConfigEnable}"/>
@@ -601,7 +602,7 @@
                                 Grid.Column="3" Grid.Row="2"
                                 Style="{DynamicResource WatchdogTop_Slider}" VerticalAlignment="Center" 
                                 HorizontalAlignment="Left"
-                                Value="0" Width="200"
+                                Value="{Binding WD2ResponseTime}" Width="200"
                                 Minimum="0" Maximum="63"
                                 Margin="20,0,20,0"
                                        IsEnabled="{Binding IsConfigEnable}"/>
@@ -611,7 +612,7 @@
                                 Grid.Column="3" Grid.Row="2"
                                 Style="{DynamicResource WatchdogBot_Slider}" VerticalAlignment="Center" 
                                 HorizontalAlignment="Left"
-                                Value="0" Width="200"
+                                Value="{Binding WD2LockTime}" Width="200"
                                 Minimum="0" Maximum="63"
                                 Margin="20,0,20,0"
                                        IsEnabled="{Binding IsConfigEnable}"/>
@@ -663,10 +664,10 @@
                                 Style="{DynamicResource WatchdogTop_SliderThresholdTop}" 
                                 VerticalAlignment="Top" 
                                 HorizontalAlignment="Left"
-                                Value="0" Width="200"
+                                Value="{Binding WD1EN0DisableTreshhold}" Width="200"
                                 Minimum="0" Maximum="63"
                                 Margin="20,0,20,5"
-                                       IsEnabled="{Binding IsConfigEnable}"/>
+                                IsEnabled="{Binding IsConfigEnable}"/>
 
                             <Slider Name="WD2EN0DisableTreshholdSlider"
                                 ValueChanged="WD2EN0DisableTreshholdSlider_ValueChanged"
@@ -674,10 +675,10 @@
                                 Style="{DynamicResource WatchdogTop_SliderThresholdTop}" 
                                 VerticalAlignment="Bottom" 
                                 HorizontalAlignment="Left"
-                                Value="0" Width="200"
+                                Value="{Binding WD2EN0DisableTreshhold}" Width="200"
                                 Minimum="0" Maximum="63"
                                 Margin="20,5,20,0"
-                                       IsEnabled="{Binding IsConfigEnable}"/>
+                                IsEnabled="{Binding IsConfigEnable}"/>
                         </StackPanel>
 
                         <!--#endregion-->

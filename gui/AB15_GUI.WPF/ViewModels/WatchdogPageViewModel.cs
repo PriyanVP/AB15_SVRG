@@ -38,6 +38,34 @@ namespace AB15_GUI.WPF.ViewModels
         }
 
         /// <summary>
+        /// toggle enable to stop watchdog button
+        /// </summary>
+        private bool isStopWDButtonEnabled;
+        public bool IsStopWDButtonEnabled
+        {
+            get => isStopWDButtonEnabled;
+            set
+            {
+                isStopWDButtonEnabled = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// toggle enable to start watchdog button
+        /// </summary>
+        private bool isStartWDButtonEnabled;
+        public bool IsStartWDButtonEnabled
+        {
+            get => isStartWDButtonEnabled;
+            set
+            {
+                isStartWDButtonEnabled = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
         /// WD1 Response time value
         /// </summary>
         private int wd1ResponseTime;
@@ -75,6 +103,34 @@ namespace AB15_GUI.WPF.ViewModels
             set
             {
                 wd2ResponseTime = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// WD1 Lock time value
+        /// </summary>
+        private int wd1EN0DisableTreshhold;
+        public int WD1EN0DisableTreshhold
+        {
+            get => wd1EN0DisableTreshhold;
+            set
+            {
+                wd1EN0DisableTreshhold = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// WD2 Response time value
+        /// </summary>
+        private int wd2EN0DisableTreshhold;
+        public int WD2EN0DisableTreshhold
+        {
+            get => wd2EN0DisableTreshhold;
+            set
+            {
+                wd2EN0DisableTreshhold = value;
                 OnPropertyChanged();
             }
         }
@@ -371,6 +427,8 @@ namespace AB15_GUI.WPF.ViewModels
 
             // set defoult value
             IsConfigEnable = false;
+            IsStartWDButtonEnabled = false;
+            IsStopWDButtonEnabled = false;
 
             // Init commands for buttons
             ReadConfigFromASIC = new RelayCommand(ReadConfigFromASICExecute, ReadConfigFromASICCanExecute);
@@ -380,6 +438,7 @@ namespace AB15_GUI.WPF.ViewModels
 
         private bool ReadConfigFromASICCanExecute(object obj)
         {
+            // TODO remove debug code 
             return true;
         }
 
@@ -392,6 +451,7 @@ namespace AB15_GUI.WPF.ViewModels
 
         private bool WriteConfigToASICCanExecute(object obj)
         {
+            // TODO remove debug code 
             return true;
         }
 
