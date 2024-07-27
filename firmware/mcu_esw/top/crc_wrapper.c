@@ -53,50 +53,50 @@
 /*---------------------------------------------Function Implementations----------------------------------------------*/
 /*********************************************************************************************************************/
 
-boolean IsCRC8Correct(uint8 * const data, uint16 length, uint8 expectedCrc)
+boolean IsCRC8Correct(uint8 * const p_data, uint16 length, uint8 expectedCrc)
 {
     uint8 calculatedCRC = 0;
     boolean result = FALSE;
-    if (data != NULL_PTR)
+    if (p_data != NULL_PTR)
     {
-        calculatedCRC = CRC8(data, length);
+        calculatedCRC = CRC8(p_data, length);
         result = (expectedCrc == calculatedCRC) ? (TRUE) : (FALSE);
     }
 
     return result;
 }
 
-boolean IsCRC3Correct(uint8 * const data, uint8 expectedCrc)
+boolean IsCRC3Correct(uint8 * const p_data, uint8 expectedCrc)
 {
     uint8 calculatedCRC;
     boolean result;
 
     // Error check
-    if (data == NULL_PTR) return FALSE;
+    if (p_data == NULL_PTR) return FALSE;
 
-    calculatedCRC = CRC3(*data, CRC3_MI_START_IDX, CRC3_MI_END_IDX);
+    calculatedCRC = CRC3(*p_data, CRC3_MI_START_IDX, CRC3_MI_END_IDX);
     result = (expectedCrc == calculatedCRC) ? (TRUE) : (FALSE);
 
     return result;
 }
 
-uint8 GetCRC8(uint8 * const data, uint16 length)
+uint8 GetCRC8(uint8 * const p_data, uint16 length)
 {
     uint8 calculatedCRC = 0;
-    if (data != NULL_PTR)
+    if (p_data != NULL_PTR)
     {
-        calculatedCRC = CRC8(data, length);
+        calculatedCRC = CRC8(p_data, length);
     }
     return calculatedCRC;
 }
 
-uint8 GetCRC3(uint32 * const data)
+uint8 GetCRC3(uint32 * const p_data)
 {
     uint8 calculatedCRC;
 
     // Error check
-    if (data == NULL_PTR) return 0;
+    if (p_data == NULL_PTR) return 0;
 
-    calculatedCRC = CRC3(*data, CRC3_MO_START_IDX, CRC3_MO_END_IDX);
+    calculatedCRC = CRC3(*p_data, CRC3_MO_START_IDX, CRC3_MO_END_IDX);
     return calculatedCRC;
 }
