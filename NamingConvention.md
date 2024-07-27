@@ -1,7 +1,7 @@
 ## Naming convention C
 
 **Local Variables**: camelCase  
-**Const Variables**: g_camelCase  
+**Const Variables**: ALL_CAPS  
 **Global variables**: same as variables with prefix ==g_==  
 **Pointers**: same as variables with prefix ==p_==  
 **Structs**: ModulePascalCase (Module = full module name, or a 2-3 letter abbreviation, but still in PascalCase.)  

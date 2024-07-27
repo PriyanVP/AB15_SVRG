@@ -48,15 +48,15 @@ uint8 CRC8(uint8 * const buffer, uint16 length)
 
 uint8 CRC3(const uint32 buffer, const uint8 startBitPosition, const uint8 endBitPosition)
 {
-    const uint8 num_trailing_zeros = 3;
+    const uint8 NUM_TRAILING_ZEROS = 3;
     uint32 extended_buffer;
     uint8 bit0, bit1, bit2;
     uint8 tmp_bit0, tmp_bit1, tmp_bit2;
-    uint8 input_data_msb_index = endBitPosition - startBitPosition + num_trailing_zeros; // index of first MSB relevant for CRC
+    uint8 input_data_msb_index = endBitPosition - startBitPosition + NUM_TRAILING_ZEROS; // index of first MSB relevant for CRC
 
     // Get variable with only relevant data for CRC calculation (starting from index 0)
     // Clear MSB higher than endBitPosition -> clear LSB lower than startBitPosition -> shift relevant for CRC bits to 0 index -> add trailing 0
-    extended_buffer = ((buffer << (31 - endBitPosition)) >> (31 - endBitPosition + startBitPosition)) << num_trailing_zeros;
+    extended_buffer = ((buffer << (31 - endBitPosition)) >> (31 - endBitPosition + startBitPosition)) << NUM_TRAILING_ZEROS;
 
     // Store binary start value "111" into CRC register according to spec
     bit0 = 0x1;
