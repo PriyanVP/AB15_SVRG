@@ -21,6 +21,36 @@
 /*--------------------------------------------------Enumerations-----------------------------------------------------*/
 /*********************************************************************************************************************/
 
+/** \brief Enum for read/write bit in SPI package
+ */
+enum RWFlag {
+    READ = 0,
+    WRITE = 1
+};
+
+/** \brief Defines applicable instructions for SPI communication with AB12
+ */
+typedef enum
+{
+    /* Module SPI */
+    READ_DEV_ID             = 0b0000000000,             /** \brief read device ID */
+    READ_REV_ID             = 0b0000000001,             /** \brief read revision ID */
+    READ_MASK_ID            = 0b0000000010,             /** \brief read mask ID */
+    EOP                     = 0b0000000110,             /** \brief end of programming */
+
+    /* Module WD */
+    WD2_TRIGGER             = 0b0000000100,             /** \brief SPI instruction WD2_TRIGGER              */
+    WD3_TRIGGER             = 0b0000000101,             /** \brief SPI instruction WD3_TRIGGER              */
+    WD_STATUS               = 0b0000000111,             /** \brief SPI instruction WD_STATUS                */
+
+    /* Module ... */
+
+
+
+    /* Module TEST */
+    TEST_FLM                = 0b0101101100              /** \brief Test FLM                                 */
+} AB12SPIInstructionsEnum;
+
 /*********************************************************************************************************************/
 /*-------------------------------------------------Data Structures---------------------------------------------------*/
 /*********************************************************************************************************************/
