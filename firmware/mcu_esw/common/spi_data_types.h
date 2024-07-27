@@ -23,10 +23,11 @@
 
 /** \brief Enum for read/write bit in SPI package
  */
-enum RWFlag {
+typedef enum 
+{
     READ = 0,
     WRITE = 1
-};
+} RWFlagEnumEnum;
 
 /** \brief Defines applicable instructions for SPI communication with AB12
  */
