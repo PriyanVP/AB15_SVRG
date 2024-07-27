@@ -46,44 +46,17 @@ uint8 CRC8(uint8 * const buffer, uint16 length)
     return crc;
 }
 
-uint8 CRC5(const uint32 buffer)
-{
-    uint8 crc;
-    uint8 invertIt;
-    uint8 length = 27; // length of data in bits, fixed value for SPI protocol
-
-    // store initialization value into register
-    crc = 0x1F;
-
-    // calculate CRC as in specification
-    // CRC polynomial: x^5 + x^2 + 1
-    // - process bits from MSB to LSB
-    // - XOR bits according to polynomial
-    for (sint8 i = (length - 1); i >= 0; i--)
-    {
-        // process actual bit - save result of XOR of buffer bit and crc's 5th bit in a variable
-        invertIt = ((buffer >> i) & 1) ^ ((crc & 0x10) >> 4);
-
-        crc <<= 1;              // shift bits left
-        crc &= 0x1E;            // clear 1st bit and bits > 5th
-        crc |= invertIt;        // set 1st bit to value of processed bit from buffer
-        crc ^= (invertIt << 2); // perform XOR operation on 2nd bit with value of processed bit from buffer
-    }
-
-    return crc;
-}
-
 uint8 CRC3(const uint32 buffer, const uint8 startBitPosition, const uint8 endBitPosition)
 {
-    const uint8 numrailing_zeros = 3;
+    const uint8 num_trailing_zeros = 3;
     uint32 extended_buffer;
     uint8 bit0, bit1, bit2;
     uint8 tmp_bit0, tmp_bit1, tmp_bit2;
-    uint8 input_data_msb_index = endBitPosition - startBitPosition + numrailing_zeros; // index of first MSB relevant for CRC
+    uint8 input_data_msb_index = endBitPosition - startBitPosition + num_trailing_zeros; // index of first MSB relevant for CRC
 
     // Get variable with only relevant data for CRC calculation (starting from index 0)
     // Clear MSB higher than endBitPosition -> clear LSB lower than startBitPosition -> shift relevant for CRC bits to 0 index -> add trailing 0
-    extended_buffer = ((buffer << (31 - endBitPosition)) >> (31 - endBitPosition + startBitPosition)) << numrailing_zeros;
+    extended_buffer = ((buffer << (31 - endBitPosition)) >> (31 - endBitPosition + startBitPosition)) << num_trailing_zeros;
 
     // Store binary start value "111" into CRC register according to spec
     bit0 = 0x1;

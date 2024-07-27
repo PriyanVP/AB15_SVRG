@@ -66,19 +66,6 @@ boolean IsCRC8Correct(uint8 * const data, uint16 length, uint8 expectedCrc)
     return result;
 }
 
-boolean IsCRC5Correct(SPIReceiveData * const data)
-{
-    uint8 calculatedCRC = 0;
-    boolean result = FALSE;
-    uint8 expectedCrc = data->bf.crc;
-    uint32 twentySevenBitData = (data->dw) >> CRC5_LENGTH; // get only data from package without CRC
-
-    calculatedCRC = CRC5(twentySevenBitData);
-    result = (expectedCrc == calculatedCRC) ? (TRUE) : (FALSE);
-
-    return result;
-}
-
 boolean IsCRC3Correct(uint8 * const data, uint8 expectedCrc)
 {
     uint8 calculatedCRC;
@@ -99,18 +86,6 @@ uint8 GetCRC8(uint8 * const data, uint16 length)
     if (data != NULL_PTR)
     {
         calculatedCRC = CRC8(data, length);
-    }
-    return calculatedCRC;
-}
-
-uint8 GetCRC5(SPITransmitData * const data)
-{
-    uint8 calculatedCRC = 0;
-    uint32 twentySevenBitData;
-    if (data != NULL_PTR)
-    {
-        twentySevenBitData = (data->dw) >> CRC5_LENGTH;
-        calculatedCRC = CRC5(twentySevenBitData);
     }
     return calculatedCRC;
 }

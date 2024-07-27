@@ -28,15 +28,6 @@
  */
 uint8 CRC8(uint8 * const buffer, uint16 length);
 
-/** \brief Calculate CRC (CRC-5-USB)
- * Polynom: x^5+x^2+x+1
- *
- * \param buffer buffer with data to calculate CRC
- * \param length number of bits to use for calculation
- * \return Returns CRC
- */
-uint8 CRC5(const uint32 buffer);
-
 /** \brief Calculate CRC for SPI (CRC3)
  * Polynom: x^3 + x + 1 
  *
