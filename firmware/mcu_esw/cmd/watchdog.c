@@ -8,6 +8,7 @@
 /*********************************************************************************************************************/
 
 #include "common/global_defines.h"
+#include "common/spi_data_types.h"
 #include "common/watchdog_types.h"
 #include "common/tap_addrMap_ExportedMemMap_memoryMap.h"
 #include "watchdog.h"
@@ -80,6 +81,7 @@ typedef struct
 {
     boolean isWDConfigured;             /** \brief flag indicating if WD was configured */
     WatchdogConfigStruct wdConfig;      /** \brief struct with WD configuration */
+    uint16 wdQuestion;                  /** \brief current question to WD acknowledgement */
     WatchdogStateEnum state;            /** \brief state of WD (in state machine) */
     WatchdogFailEnum failMode;          /** \brief option for intentional breaking WD ack procedure */
 } WatchdogParametersStruct;
@@ -126,11 +128,34 @@ static WatchdogStatusMonitoringStruct g_wdStatusMonitoringConfig =
 };
 
 /*********************************************************************************************************************/
+/*------------------------------------------------Function Prototypes------------------------------------------------*/
+/*********************************************************************************************************************/
+
+/** \brief Function to provide a Response word for Challenge of AB12's Watchdog 1 and 2 
+ * \param challengeValue value of AB12's Watchdog 1 and 2 Challenge word
+ * \return Returns Response word
+ */
+uint16 GetResponseWordAB12(uint8 challengeValue);
+
+/** \brief Function to provide an Answer word for Question of AB15's Watchdog 1 
+ * \param questionValue value of AB15's Watchdog 1 Question word
+ * \return Returns Answer word
+ */
+uint16 GetAnswerWordWD1AB15(uint8 questionValue);
+
+/** \brief Function to provide an Answer word for Question of AB15's Watchdog 2 
+ * \param questionValue value of AB15's Watchdog 2 Question word
+ * \return Returns Answer word
+ */
+uint16 GetAnswerWordWD2AB15(uint8 questionValue);
+
+/*********************************************************************************************************************/
 /*---------------------------------------------Function Implementations----------------------------------------------*/
 /*********************************************************************************************************************/
 
 void CmdConfigureWatchdog(USBReceiveData const * const commandPackage)
 {
+    // TODO: refactor to handle configuration of all WD at once
     // Temporary variables
     boolean isSuccessfulFlag = TRUE;            //Default true is used to handle write of series of data (AND logic on flags)
     uint8 indexerForPayload = 0;
@@ -156,8 +181,9 @@ void CmdConfigureWatchdog(USBReceiveData const * const commandPackage)
     {
         safety_logic_spi_config_wd1_ut tmpConfigRegister;
         tmpConfigRegister.as_uint16 = data[0];
-        g_wd1Parameters.wdConfig.ackPeriod = tmpConfigRegister.as_s.SpiSetResponsetimeWd1_u6 + (tmpConfigRegister.as_s.SpiSetResponsetimeWd1_u6 >> 1); // ACK WD at the middle of responce time interval
+        g_wd1Parameters.wdConfig.ackPeriod = tmpConfigRegister.as_s.SpiSetLocktimeWd1_u6 + (tmpConfigRegister.as_s.SpiSetResponsetimeWd1_u6 >> 1); // ACK WD at the middle of responce time interval
         g_wd1Parameters.wdConfig.wdType = selectedWD;
+        g_wd1Parameters.wdQuestion = 0;
         g_wd1Parameters.isWDConfigured = TRUE;
         g_wd1Parameters.state = WD_STATE_CONFIGURED;
     }
@@ -165,8 +191,9 @@ void CmdConfigureWatchdog(USBReceiveData const * const commandPackage)
     {
         safety_logic_spi_config_wd2_ut tmpConfigRegister;
         tmpConfigRegister.as_uint16 = data[0];
-        g_wd2Parameters.wdConfig.ackPeriod = tmpConfigRegister.as_s.SpiSetResponsetimeWd2_u6 + (tmpConfigRegister.as_s.SpiSetResponsetimeWd2_u6 >> 1); // ACK WD at the middle of responce time interval
+        g_wd2Parameters.wdConfig.ackPeriod = tmpConfigRegister.as_s.SpiSetLocktimeWd2_u6+ (tmpConfigRegister.as_s.SpiSetResponsetimeWd2_u6 >> 1); // ACK WD at the middle of responce time interval
         g_wd2Parameters.wdConfig.wdType = selectedWD;
+        g_wd2Parameters.wdQuestion = 0;
         g_wd2Parameters.isWDConfigured = TRUE;
         g_wd2Parameters.state = WD_STATE_CONFIGURED;
     }
@@ -175,16 +202,17 @@ void CmdConfigureWatchdog(USBReceiveData const * const commandPackage)
     #ifdef AB12_PLATFORM
 
     // Code for AB12 implementation
-    
     if (selectedWD == WD1)
     {
         // WD3 in AB12
         g_wd1Parameters.wdConfig.ackPeriod = AB12_WD3_ACK_PERIOD; // Period: 10 ms
+        g_wd1Parameters.wdQuestion = 0x9B9B;
     }
     else
     {
-        // Actual WD2 of Ab12
+        // Actual WD2 of AB12
         g_wd2Parameters.wdConfig.ackPeriod = AB12_WD2_ACK_PERIOD; // Period: 600 us
+        g_wd2Parameters.wdQuestion = 0x9B9B;
     }
 
     isSuccessfulFlag = TRUE; // no configuration exists fro WD in AB12
@@ -224,7 +252,7 @@ void CmdConfigureWatchdog(USBReceiveData const * const commandPackage)
 void CmdStartMonitoringWatchdog(USBReceiveData const * const commandPackage)
 {
     // Save message ID
-    g_wdStatusMonitoringConfig.monitoringMessageID = commandPackage->msg_id;
+    g_wdStatusMonitoringConfig.monitoringMessageID = SetResponseBit(commandPackage->msg_id);
 
     // Enable monitoring procedure
     g_wdStatusMonitoringConfig.enStatusReading = TRUE;
@@ -254,60 +282,63 @@ void CmdStopMonitoringWatchdog(USBReceiveData const * const commandPackage)
 
 void IntCmdAcknowledgeWatchdog1(void)
 {
-    uint8 requValue = 0;
-    uint16 responseWord = 0;
-    uint16 addressQuestion = SAFETY_LOGIC_SPI_READ_WDQA;
-    uint16 addressAnswer = SAFETY_LOGIC_SPI_TRIG_WDQA1;
-    SPIReceiveData data;
-    uint16 length = 1;
-
-    // Read question from ASIC
-    QSPIReadSequence(&addressQuestion, &(data.dw), &length);
-    requValue = (data.bf.output_data & SAFETY_LOGIC_SPI_READ_WDQA_QA1_CNT_SPI_MASK) >> SAFETY_LOGIC_SPI_READ_WDQA_QA1_CNT_SPI_SHIFT;
+    uint16 question;
+    uint16 answer = 0;
+    SPIReceiveData data; // TODO: will need type change for AB15
 
     // Obtain response word from look-up table
     #ifdef AB12_PLATFORM
     // AB12 platform
-    responseWord = GetResponseWordAB12(requValue);
+    // Get answer from the table (question is stored from previous WD triggering)
+    answer = GetResponseWordAB12(g_wd1Parameters.wdQuestion);
 
-    // Send response word to ASIC
-    length = 1;
-    QSPIWriteSequence(&addressAnswer, &responseWord, &length);  // Use corresponding SPI instruction
+    // Send answer word to ASIC
+    QSPIExecuteInstruction(WD3_TRIGGER, FALSE, answer, &data.dw);
+
+    // Store new question
+    g_wd1Parameters.wdQuestion = data.bf.output_data; 
     #else
-    responseWord = GetAnswerWordWD1AB15(requValue);
+    // AB15 platform
+    // Read question from ASIC
+    QSPIReadNormal(SAFETY_LOGIC_SPI_READ_WDQA, &(data.dw));
+    question = (data.bf.output_data & SAFETY_LOGIC_SPI_READ_WDQA_QA1_CNT_SPI_MASK) >> SAFETY_LOGIC_SPI_READ_WDQA_QA1_CNT_SPI_SHIFT;
 
-    // Send response word to ASIC
-    length = 1;
-    QSPIWriteSequence(&addressAnswer, &responseWord, &length);
+    // Get answer from the table
+    answer = GetAnswerWordWD1AB15(question);
+    
+    // Send answer word to ASIC
+    QSPIWriteNormal(SAFETY_LOGIC_SPI_TRIG_WDQA1, answer);
     #endif
 }
 
 void IntCmdAcknowledgeWatchdog2(void)
 {
-    uint8 requValue = 0;
-    uint16 responseWord = 0;
-    uint16 addressQuestion = SAFETY_LOGIC_SPI_READ_WDQA;
-    uint16 addressAnswer = SAFETY_LOGIC_SPI_TRIG_WDQA2;
-    SPIReceiveData data;
-    uint16 length = 1;
-
-    // Read question from ASIC
-    QSPIReadSequence(&addressQuestion, &(data.dw), &length);
-    requValue = (data.bf.output_data & SAFETY_LOGIC_SPI_READ_WDQA_QA2_CNT_SPI_MASK) >> SAFETY_LOGIC_SPI_READ_WDQA_QA2_CNT_SPI_SHIFT;
+    uint16 question;
+    uint16 answer = 0;
+    SPIReceiveData data; // TODO: will need type change for AB15
 
     // Obtain response word from look-up table
     #ifdef AB12_PLATFORM
     // AB12 platform
-    responseWord = GetResponseWordAB12(requValue);
-    // Send response word to ASIC
-    length = 1;
-    QSPIWriteSequence(&addressAnswer, &responseWord, &length);  // Use corresponding SPI instruction
-    #else
-    responseWord = GetAnswerWordWD2AB15(requValue);
+    // Get answer from the table (question is stored from previous WD triggering)
+    answer = GetResponseWordAB12(g_wd2Parameters.wdQuestion);
 
-    // Send response word to ASIC
-    length = 1;
-    QSPIWriteSequence(&addressAnswer, &responseWord, &length);
+    // Send answer word to ASIC
+    QSPIExecuteInstruction(WD2_TRIGGER, FALSE, answer, &data.dw);
+
+    // Store new question
+    g_wd1Parameters.wdQuestion = data.bf.output_data; 
+    #else
+    // AB15 platform
+    // Read question from ASIC
+    QSPIReadNormal(SAFETY_LOGIC_SPI_READ_WDQA, &(data.dw));
+    question = (data.bf.output_data & SAFETY_LOGIC_SPI_READ_WDQA_QA2_CNT_SPI_MASK) >> SAFETY_LOGIC_SPI_READ_WDQA_QA2_CNT_SPI_SHIFT;
+
+    // Get answer from the table
+    answer = GetAnswerWordWD2AB15(question);
+    
+    // Send answer word to ASIC
+    QSPIWriteNormal(SAFETY_LOGIC_SPI_TRIG_WDQA2, answer);
     #endif
 }
 
@@ -372,17 +403,29 @@ void IntCmdMonitorWatchdog(void)
 {
     // Local variables
     USBTransmitData packageToSend;
-    SPIReceiveData data;
     uint16 length = g_wdStatusMonitoringConfig.lengthOfRegsToRead;
+    boolean isSuccessfulFlag = FALSE;
+    
 
     // Read WD status from ASIC
     #ifdef AB12_PLATFORM
     // AB12 platform
-    // responseWord = GetResponseWordAB12(requValue);   // TODO: use corresponding table
+    SPIReceiveData data;
+
+    // Read WD status from ASIC
+    isSuccessfulFlag = QSPIExecuteInstruction(WD_STATUS, FALSE, 0x0, &data.dw);
+
+    // Pack data for sending to PC
+    packageToSend.dataLength = 3;
+    packageToSend.data[0] = GetLSB(data.bf.output_data);
+    packageToSend.data[1] = GetMSB(data.bf.output_data);
+    packageToSend.data[2] = data.bf.wdf;
     #else
     // AB15 platform
+    SPIReceiveData data[WD_STATUS_REGS_COUNT] = {0};
+
     // Read WD related registers from ASIC
-    QSPIReadSequence(g_wdStatusMonitoringConfig.wdStatusRegsAddresses, &data, &length);
+    isSuccessfulFlag = QSPIReadSequenceNormal(g_wdStatusMonitoringConfig.wdStatusRegsAddresses, &data.dw, &length);
 
     packageToSend.dataLength = length << 1; // each data item is send as 2 bytes
 
@@ -396,8 +439,8 @@ void IntCmdMonitorWatchdog(void)
     }
     #endif
 
-    // Akcnowledge success of start WD
-    packageToSend.status = USB_STATUS_DATA;
+    // Send data
+    packageToSend.status = (isSuccessfulFlag) ? USB_STATUS_DATA : USB_STATUS_ERROR;
     packageToSend.asic_id = 1;
     packageToSend.msg_id = g_wdStatusMonitoringConfig.monitoringMessageID;
 
@@ -405,29 +448,25 @@ void IntCmdMonitorWatchdog(void)
     SendUSBPackage(&packageToSend);
 }
 
-/** \brief Function to provide a Response word for Challenge of AB12's Watchdog 1 and 2 
- * \param questionValue value of AB12's Watchdog 1 and 2 Challenge word
- * \return Returns Response word
- */
 uint16 GetResponseWordAB12(uint8 challengeValue)
 {
     // Table of Challenge-Response values (according to datasheet AB12)
     static const uint16 responseWordArray[8] =  {0xE106,
-                                                    0x9671,
-                                                    0x4BAC,
-                                                    0x3CDB,
-                                                    0xD235,
-                                                    0xA542,
-                                                    0x789F,
-                                                    0x0FE8};
+                                                 0x9671,
+                                                 0x4BAC,
+                                                 0x3CDB,
+                                                 0xD235,
+                                                 0xA542,
+                                                 0x789F,
+                                                 0x0FE8};
     static const uint16 challengeWordArray[8] =  {0x2020,
-                                                    0xFDFD,
-                                                    0x8A8A,
-                                                    0x5757,
-                                                    0xECEC,
-                                                    0x3131,
-                                                    0x4646,
-                                                    0x9B9B};
+                                                 0xFDFD,
+                                                 0x8A8A,
+                                                 0x5757,
+                                                 0xECEC,
+                                                 0x3131,
+                                                 0x4646,
+                                                 0x9B9B};
     // Using if condition instead of simple array indexing
     // because it's unclear if order of coming Challenge words
     // will always be numerical
@@ -441,51 +480,43 @@ uint16 GetResponseWordAB12(uint8 challengeValue)
     }
 }
 
-/** \brief Function to provide an Answer word for Question of AB15's Watchdog 1 
- * \param questionValue value of AB15's Watchdog 1 Question word
- * \return Returns Answer word
- */
 uint16 GetAnswerWordWD1AB15(uint8 questionValue)
 {
     static const uint16 answerWordArrayWD1[32] = {0x2027,
-                                        0xE463,
-                                        0x2893,
-                                        0xECD7,
-                                        0x4307,
-                                        0x8743,
-                                        0x4BB3,
-                                        0x8FF7,
-                                        0x32EF,
-                                        0xF6AB,
-                                        0x3A5B,
-                                        0xFE1F,
-                                        0x51CF,
-                                        0x958B,
-                                        0x597B,
-                                        0x9D3F,
-                                        0x0C2D,
-                                        0xC869,
-                                        0x0499,
-                                        0xC0DD,
-                                        0x6F0D,
-                                        0xAB49,
-                                        0x67B9,
-                                        0xA3FD,
-                                        0x1EE5,
-                                        0xDAA1,
-                                        0x1651,
-                                        0xD215,
-                                        0x7DC5,
-                                        0xB981,
-                                        0x7571,
-                                        0xB135};
+                                                  0xE463,
+                                                  0x2893,
+                                                  0xECD7,
+                                                  0x4307,
+                                                  0x8743,
+                                                  0x4BB3,
+                                                  0x8FF7,
+                                                  0x32EF,
+                                                  0xF6AB,
+                                                  0x3A5B,
+                                                  0xFE1F,
+                                                  0x51CF,
+                                                  0x958B,
+                                                  0x597B,
+                                                  0x9D3F,
+                                                  0x0C2D,
+                                                  0xC869,
+                                                  0x0499,
+                                                  0xC0DD,
+                                                  0x6F0D,
+                                                  0xAB49,
+                                                  0x67B9,
+                                                  0xA3FD,
+                                                  0x1EE5,
+                                                  0xDAA1,
+                                                  0x1651,
+                                                  0xD215,
+                                                  0x7DC5,
+                                                  0xB981,
+                                                  0x7571,
+                                                  0xB135};
     return (answerWordArrayWD1[questionValue]);
 }
 
-/** \brief Function to provide an Answer word for Question of AB15's Watchdog 2 
- * \param questionValue value of AB15's Watchdog 2 Question word
- * \return Returns Answer word
- */
 uint16 GetAnswerWordWD2AB15(uint8 questionValue)
 {
     static const uint16 answerWordArrayWD2[8] = {0x35CF,
@@ -498,31 +529,3 @@ uint16 GetAnswerWordWD2AB15(uint8 questionValue)
                                         0xA75D};
     return (answerWordArrayWD2[questionValue]);
 }
-
-
-// // TODO: check approach for implementation
-// uint8 GetRespCnt(void)
-// {
-//     // Read ASIC's WD_REQU register
-//     uint16 address = WD_REQU_ADDRESS;
-//     SPIReceiveData data;
-//     uint16 length = 1;
-//     // Read from ASIC
-//     QSPIReadSequence(&address, &(data.dw), &length);
-//     // Obtain RESP_CNT field value from register's content
-//     uint8 respCntValue = (data.bf.output_data & RESP_CNT_READMASK) >> RESP_CNT_OFFSET;
-//     return respCntValue;
-// }
-
-// uint8 GetREQUValue(void)
-// {
-//     // Read ASIC's WD_REQU register
-//     uint16 address = WD_REQU_ADDRESS;
-//     SPIReceiveData data;
-//     uint16 length = 1;
-//     // Read from ASIC
-//     QSPIReadSequence(&address, &(data.dw), &length);
-//     // Obtain REQU field value from register's content
-//     uint8 requValue = (data.bf.output_data & REQU_READMASK) >> REQU_OFFSET;
-//     return requValue;
-// }
