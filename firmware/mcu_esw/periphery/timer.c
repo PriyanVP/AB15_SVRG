@@ -28,7 +28,7 @@
 //extern void FastInterruptRoutine(void);
 extern void Watchdog1InterruptRoutine(void);
 extern void Watchdog2InterruptRoutine(void);
-extern void WatchdogStatusRearingInterruptRoutine(void);
+extern void WatchdogStatusReadingInterruptRoutine(void);
 //extern void ErrorCheckInterruptRoutine(void);
 //extern void ContinuousReadInterruptRoutine(void);
 //extern void GPIOInterruptRoutine(void);
@@ -292,7 +292,7 @@ void UpdateTimersRoutine(void)
     {
         // Watchdog acknowledge
         watchdogStatusCheckCounter = 0;
-        WatchdogStatusRearingInterruptRoutine();
+        WatchdogStatusReadingInterruptRoutine(); // TODO: fix naming
     }
 
 //    if ((g_errorCheckEnable == TRUE) && (errorCheckCounter >= g_errorCheckReload))

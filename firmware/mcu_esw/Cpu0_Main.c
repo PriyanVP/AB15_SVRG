@@ -72,7 +72,7 @@ void Watchdog2InterruptRoutine(void)
 /** \brief Watchdogs status reading interrupt routine
  * Arms single reading of watchdogs satus registers
  */
-void WatchdogStatusRearingInterruptRoutine(void)
+void WatchdogStatusReadingInterruptRoutine(void)
 {
     // Watchdog status reading is an internal command
     static USBReceiveData serveWatchdogStatusCommand = 
@@ -155,7 +155,7 @@ void core0_main(void)
           // OffLED2();
        }
 
-        // wait for 2ms for next polling
+        // wait for 2ms for next polling // TODO: remove and check
         waitTime(IfxStm_getTicksFromMilliseconds(BSP_DEFAULT_TIMER, WAIT_TIME));
 
         // Receive package (assumes it already in in buffer of UART
