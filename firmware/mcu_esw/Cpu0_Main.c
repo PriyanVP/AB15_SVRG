@@ -22,7 +22,6 @@
 #include "top/status.h"
 #include "top/spi_wrapper.h"
 #include "top/usb_wrapper.h"
-#include "led.h"
 #include "Bsp.h"
 
 // for debug messages on button press JS 4/2024
@@ -82,9 +81,7 @@ void WatchdogStatusReadingInterruptRoutine(void)
     };
 
     // Add WD serving internal command to command queue
-    // QueueWriteTail(&serveWatchdogStatusCommand);    // TODO: commented out to have MCU contained WD routine. Uncomment for actual communication with ASIC
-
-   ToggleLED4();
+    QueueWrite(&serveWatchdogStatusCommand);
 }
 
 /** \brief Main function
