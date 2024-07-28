@@ -167,7 +167,7 @@ void CmdWriteReg(USBReceiveData const * const commandPackage)
     uint16 address;
     uint32 data;
     SPIReceiveData dataRecived;
-    enum RWFlagEnum rwOption = WRITE;
+    RWFlagEnum rwOption = WRITE;
     uint16 length = 1;
     boolean isSuccessfulFlag = FALSE;
 
@@ -220,7 +220,7 @@ void CmdWriteRegRaw(USBReceiveData const * const commandPackage)
     USBTransmitData packageToSend;
     uint16 address;
     uint32 data;
-    enum RWFlagEnum rwOption = WRITE;
+    RWFlagEnum rwOption = WRITE;
     uint16 length = 1;
     boolean isSuccessfulFlag = FALSE;
 
@@ -273,7 +273,7 @@ void CmdReadRegRaw(USBReceiveData const * const commandPackage)
     uint16 address;
     uint32 data;
     SPIReceiveData dataRecived;
-    enum RWFlagEnum rwOption = READ;
+    RWFlagEnum rwOption = READ;
     uint16 length = 1;
     boolean isSuccessfulFlag = FALSE;
 

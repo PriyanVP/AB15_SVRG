@@ -58,7 +58,7 @@ static boolean enSPICommunication = FALSE;                 /** \brief Flag indic
  * \return Returns TRUE is there were no errors during operation, FALSE otherwise
  */
 IFX_INLINE boolean QSPIReadWriteSequenceNormalInline(const uint16 * const p_addressBuffer, uint32 * const p_dataBuffer, 
-                                                     const enum RWFlagEnum * const p_rwBuffer, const SequenceTypeEnum SEQ_TYPE, 
+                                                     const RWFlagEnum * const p_rwBuffer, const SequenceTypeEnum SEQ_TYPE, 
                                                      uint16 * const p_length);
 
 /*********************************************************************************************************************/
@@ -172,12 +172,12 @@ boolean QSPIWriteSequenceNormal(const uint16 * const addressBuffer, const uint16
     return QSPIReadWriteSequenceNormalInline(p_addressBuffer, p_dataBuffer, NULL_PTR, WRITE_ONLY, p_length);
 }
 
-boolean QSPIReadWriteSequenceNormal(const uint16 * const addressBuffer, const uint16 * const dataBuffer, const enum RWFlagEnum * const p_rwBuffer, uint16 * const length)
+boolean QSPIReadWriteSequenceNormal(const uint16 * const addressBuffer, const uint16 * const dataBuffer, const RWFlagEnum * const p_rwBuffer, uint16 * const length)
 {
     return QSPIReadWriteSequenceNormalInline(p_addressBuffer, p_dataBuffer, p_rwBuffer, COMBINATION, p_length);
 }
 
-IFX_INLINE boolean QSPIReadWriteSequenceNormalInline(const uint16 * const p_addressBuffer, uint32 * const p_dataBuffer, const enum RWFlagEnum * const p_rwBuffer, const SequenceTypeEnum SEQ_TYPE, uint16 * const p_length)
+IFX_INLINE boolean QSPIReadWriteSequenceNormalInline(const uint16 * const p_addressBuffer, uint32 * const p_dataBuffer, const RWFlagEnum * const p_rwBuffer, const SequenceTypeEnum SEQ_TYPE, uint16 * const p_length)
 {
     // Execute only if enabled
     if (enSPICommunication == FALSE) return FALSE;

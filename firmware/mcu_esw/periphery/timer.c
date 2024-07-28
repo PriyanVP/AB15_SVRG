@@ -12,6 +12,7 @@
 #include "periphery/usb.h"
 #include "periphery/led.h"
 #include "common/Ifx_IntPrioDef.h"
+#include "common/watchdog_types.h"
 #include "Bsp.h"
 
 #include "timer.h"

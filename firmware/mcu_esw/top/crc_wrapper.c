@@ -66,7 +66,7 @@ boolean IsCRC8Correct(uint8 * const p_data, uint16 length, uint8 expectedCrc)
     return result;
 }
 
-boolean IsCRC3Correct(uint8 * const p_data, uint8 expectedCrc)
+boolean IsCRC3Correct(uint32 * const p_data, uint8 expectedCrc)
 {
     uint8 calculatedCRC;
     boolean result;

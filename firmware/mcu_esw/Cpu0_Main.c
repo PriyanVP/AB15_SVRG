@@ -8,7 +8,6 @@
 #include "common/usb_data_types.h"
 #include "common/spi_data_types.h"
 #include "common/command_queue.h"
-#include "command_queue.h"
 #include "cmd/general_cmd.h"
 #include "cmd/seq_cmd.h"
 #include "cmd/bypass_cmd.h"
@@ -236,11 +235,11 @@ void core0_main(void)
                 IntCmdAcknowledgeWatchdog2();
                 break;
 
-            case USB_CMD_START_MONITORING_WD:
+            case USB_CMD_START_MONITORING_WATCHDOG:
                 CmdStartMonitoringWatchdog(&cmdPackage);
                 break;
 
-            case USB_CMD_STOP_MONITORING_WD:
+            case USB_CMD_STOP_MONITORING_WATCHDOG:
                 CmdStopMonitoringWatchdog(&cmdPackage);
                 break;
 

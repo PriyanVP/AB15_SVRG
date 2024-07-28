@@ -12,13 +12,16 @@
 #include "common/watchdog_types.h"
 #include "common/bit_manipulation.h"
 #include "common/tap_addrMap_ExportedMemMap_memoryMap.h"
+#include "periphery/timer.h"
+#include "top/spi_wrapper.h"
+#include "top/usb_wrapper.h"
 #include "watchdog.h"
 
 /*********************************************************************************************************************/
 /*------------------------------------------------------Macros-------------------------------------------------------*/
 /*********************************************************************************************************************/
 
-#define WD_CFG_PACKAGE_LEN      (1)             /** \brief Number of addr+data items (4 bytes) in package  */
+#define WD_CFG_PACKAGE_MAX_LEN  (6)             /** \brief Max number of addr+data items (4 bytes) in package  */
 
 #define WD_STATUS_REGS_COUNT    (3)             /** \brief Number of WD status registers for periodic reading */
 
@@ -157,12 +160,12 @@ uint16 GetAnswerWordWD2AB15(uint8 questionValue);
 void CmdConfigureWatchdog(USBReceiveData const * const commandPackage)
 {
     // Temporary variables
-    boolean isSuccessfulFlag = TRUE;            //Default true is used to handle write of series of data (AND logic on flags)
+    boolean isSuccessfulFlag = TRUE;                    //Default true is used to handle write of series of data (AND logic on flags)
     uint8 indexerForPayload = 0;
  
-    uint16 address[WD_CFG_PACKAGE_LEN] = {0};   // Addresses of registers to write
-    uint16 data[WD_CFG_PACKAGE_LEN] = {0};      // Values to write
-    uint16 length = WD_CFG_PACKAGE_LEN;         // Number of 32bit SPI words to write into ASIC
+    uint16 address[WD_CFG_PACKAGE_MAX_LEN] = {0};       // Addresses of registers to write
+    uint16 data[WD_CFG_PACKAGE_MAX_LEN] = {0};          // Values to write
+    uint16 length = (commandPackage->dataLength) >> 2;  // Number of 32bit SPI words to write into ASIC
 
     // Parse input
     // Layout: (addr_MSB - addr_LSB - data_MSB - data_LSB) - (...)
@@ -318,8 +321,8 @@ void CmdStartWatchdog(USBReceiveData const * const commandPackage)
     ConfigureWatchdogPeriodicity(WD2, g_wd2Parameters.wdConfig.ackPeriod);
 
     // Turn on Watchdog serving interrupt of MCU
-    EnableWatchdog1Interrupt();
-    EnableWatchdog2Interrupt();
+    EnableWatchdogInterrupt(WD1);
+    EnableWatchdogInterrupt(WD2);
 
     // Modify state
     g_wd1Parameters.state = WD_STATE_RUNNING_NORMAL;
@@ -335,8 +338,8 @@ void CmdStartWatchdog(USBReceiveData const * const commandPackage)
 void CmdStopWatchdog(USBReceiveData const * const commandPackage)
 {
     // Turn off Watchdog serving interrupt of MCU
-    DisableWatchdog1Interrupt();
-    DisableWatchdog2Interrupt();
+    DisableWatchdogInterrupt(WD1);
+    DisableWatchdogInterrupt(WD2);
 
     // Modify state and flags for WD
     g_wd1Parameters.isWDConfigured = FALSE;
@@ -471,6 +474,9 @@ uint16 GetResponseWordAB12(uint8 challengeValue)
             return (responseWordArray[i]);
         }
     }
+
+    // This return should never be reached
+    return responseWordArray[0];
 }
 
 uint16 GetAnswerWordWD1AB15(uint8 questionValue)

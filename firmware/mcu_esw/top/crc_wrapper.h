@@ -35,7 +35,7 @@ boolean IsCRC8Correct(uint8 * const p_data, uint16 length, uint8 expectedCrc);
  * \param expectedCrc expected CRC value
  * \return Returns TRUE if CRC matches expected, otherwise FALSE
  */
-boolean IsCRC3Correct(uint8 * const p_data, uint8 expectedCrc);
+boolean IsCRC3Correct(uint32 * const p_data, uint8 expectedCrc);
 
 /** \brief Calculates CRC8 of input data
  *

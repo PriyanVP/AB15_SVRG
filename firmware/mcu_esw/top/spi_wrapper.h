@@ -118,7 +118,7 @@ boolean QSPIWriteSequenceNormal(const uint16 * const p_addressBuffer, uint32 * c
  * \return Returns TRUE is there were no errors during operation, FALSE otherwise
  */
 boolean QSPIReadWriteSequenceNormal(const uint16 * const p_addressBuffer, uint32 * const p_dataBuffer, 
-                                    const enum RWFlagEnum * const p_rwBuffer, uint16 * const p_length);
+                                    const RWFlagEnum * const p_rwBuffer, uint16 * const p_length);
 
 /*********************************************************************************************************************/
 /*-------------------------------------------------Global variables--------------------------------------------------*/
