@@ -71,6 +71,11 @@ Regression testing GUI SW:
 * Build AB15_GUI.Regression project via context menu
 * Run tests in Test explorer (group AB15_GUI.Regression)
 
+Generating register classes for GUI:
+* This step is optional and should be done if xml regmap is changed or if new register is started to be used in SW
+* Launch Python 3.11.9 or higher environment (should contain jinja2, argparse, re, lxlm packages)
+* Run gui\utilities\registers_generation\gen_registers.py (provide -h for help)
+
 ## Contribution Guidelines <a name="contribution-guidelines"></a>
 
 Use this section to describe or link to documentation which explaining how users can make contributions to the contents of this repository. Consider adopting the [BIOS way of facilitating contributions](http://bos.ch/ygF).
