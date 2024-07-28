@@ -10,6 +10,7 @@
 #include "common/global_defines.h"
 #include "common/spi_data_types.h"
 #include "common/watchdog_types.h"
+#include "common/bit_manipulation.h"
 #include "common/tap_addrMap_ExportedMemMap_memoryMap.h"
 #include "watchdog.h"
 
@@ -155,65 +156,51 @@ uint16 GetAnswerWordWD2AB15(uint8 questionValue);
 
 void CmdConfigureWatchdog(USBReceiveData const * const commandPackage)
 {
-    // TODO: refactor to handle configuration of all WD at once
     // Temporary variables
     boolean isSuccessfulFlag = TRUE;            //Default true is used to handle write of series of data (AND logic on flags)
     uint8 indexerForPayload = 0;
  
-    WatchdogTypeEnum selectedWD = NOT_SET;      // Selected WD
     uint16 address[WD_CFG_PACKAGE_LEN] = {0};   // Addresses of registers to write
     uint16 data[WD_CFG_PACKAGE_LEN] = {0};      // Values to write
     uint16 length = WD_CFG_PACKAGE_LEN;         // Number of 32bit SPI words to write into ASIC
 
     // Parse input
-    // Layout: selectedWD - (addr_MSB - addr_LSB - data_MSB - data_LSB) - (...)
-    selectedWD = commandPackage->data[0];
+    // Layout: (addr_MSB - addr_LSB - data_MSB - data_LSB) - (...)
     for (uint8 i = 0; i < length; i++)
     {
-        indexerForPayload = 1 + (i << 2); // One item is 4 bytes
+        indexerForPayload = (i << 2); // One item is 4 bytes
 
         address[i] = ConstructWordFromBytes(commandPackage->data[indexerForPayload], commandPackage->data[indexerForPayload+1]); // TODO: incorrect, start from 1, not 0
         data[i] = ConstructWordFromBytes(commandPackage->data[indexerForPayload+2], commandPackage->data[indexerForPayload+3]);
     }
 
     // Retrieve values for WD timer configuration
-    if (selectedWD == WD1)
-    {
-        safety_logic_spi_config_wd1_ut tmpConfigRegister;
-        tmpConfigRegister.as_uint16 = data[0];
-        g_wd1Parameters.wdConfig.ackPeriod = tmpConfigRegister.as_s.SpiSetLocktimeWd1_u6 + (tmpConfigRegister.as_s.SpiSetResponsetimeWd1_u6 >> 1); // ACK WD at the middle of responce time interval
-        g_wd1Parameters.wdConfig.wdType = selectedWD;
-        g_wd1Parameters.wdQuestion = 0;
-        g_wd1Parameters.isWDConfigured = TRUE;
-        g_wd1Parameters.state = WD_STATE_CONFIGURED;
-    }
-    else
-    {
-        safety_logic_spi_config_wd2_ut tmpConfigRegister;
-        tmpConfigRegister.as_uint16 = data[0];
-        g_wd2Parameters.wdConfig.ackPeriod = tmpConfigRegister.as_s.SpiSetLocktimeWd2_u6+ (tmpConfigRegister.as_s.SpiSetResponsetimeWd2_u6 >> 1); // ACK WD at the middle of responce time interval
-        g_wd2Parameters.wdConfig.wdType = selectedWD;
-        g_wd2Parameters.wdQuestion = 0;
-        g_wd2Parameters.isWDConfigured = TRUE;
-        g_wd2Parameters.state = WD_STATE_CONFIGURED;
-    }
-     
+    safety_logic_spi_config_wd1_ut tmpConfigRegisterWD1;
+    tmpConfigRegisterWD1.as_uint16 = data[0];
+    g_wd1Parameters.wdConfig.ackPeriod = tmpConfigRegisterWD1.as_s.SpiSetLocktimeWd1_u6 + (tmpConfigRegisterWD1.as_s.SpiSetResponsetimeWd1_u6 >> 1); // ACK WD at the middle of responce time interval
+    g_wd1Parameters.wdConfig.wdType = WD1;
+    g_wd1Parameters.wdQuestion = 0;
+    g_wd1Parameters.isWDConfigured = TRUE;
+    g_wd1Parameters.state = WD_STATE_CONFIGURED;
+
+    safety_logic_spi_config_wd2_ut tmpConfigRegisterWD2;
+    tmpConfigRegisterWD2.as_uint16 = data[1];
+    g_wd2Parameters.wdConfig.ackPeriod = tmpConfigRegisterWD2.as_s.SpiSetLocktimeWd2_u6+ (tmpConfigRegisterWD2.as_s.SpiSetResponsetimeWd2_u6 >> 1); // ACK WD at the middle of responce time interval
+    g_wd2Parameters.wdConfig.wdType = WD2;
+    g_wd2Parameters.wdQuestion = 0;
+    g_wd2Parameters.isWDConfigured = TRUE;
+    g_wd2Parameters.state = WD_STATE_CONFIGURED;
 
     #ifdef AB12_PLATFORM
 
     // Code for AB12 implementation
-    if (selectedWD == WD1)
-    {
-        // WD3 in AB12
-        g_wd1Parameters.wdConfig.ackPeriod = AB12_WD3_ACK_PERIOD; // Period: 10 ms
-        g_wd1Parameters.wdQuestion = 0x9B9B;
-    }
-    else
-    {
-        // Actual WD2 of AB12
-        g_wd2Parameters.wdConfig.ackPeriod = AB12_WD2_ACK_PERIOD; // Period: 600 us
-        g_wd2Parameters.wdQuestion = 0x9B9B;
-    }
+    // WD3 in AB12
+    g_wd1Parameters.wdConfig.ackPeriod = AB12_WD3_ACK_PERIOD; // Period: 10 ms
+    g_wd1Parameters.wdQuestion = 0x9B9B;
+
+    // Actual WD2 of AB12
+    g_wd2Parameters.wdConfig.ackPeriod = AB12_WD2_ACK_PERIOD; // Period: 600 us
+    g_wd2Parameters.wdQuestion = 0x9B9B;
 
     isSuccessfulFlag = TRUE; // no configuration exists fro WD in AB12
 
@@ -221,7 +208,7 @@ void CmdConfigureWatchdog(USBReceiveData const * const commandPackage)
 
     // Code for AB15 implementation
 
-    // Write to ASIC
+    // Write both WD configs to ASIC to ASIC
     for (uint8 i = 0; i < length; i++)
     {
         isSuccessfulFlag = QSPIWriteSequence(&(address[i]), &(data[i]), &length); // TODO: configuration, not yet implemented; not available for AB12
@@ -246,37 +233,6 @@ void CmdConfigureWatchdog(USBReceiveData const * const commandPackage)
     }
 
     // Send report to GUI
-    SendUSBPackage(&packageToSend);
-}
-
-void CmdStartMonitoringWatchdog(USBReceiveData const * const commandPackage)
-{
-    // Save message ID
-    g_wdStatusMonitoringConfig.monitoringMessageID = SetResponseBit(commandPackage->msg_id);
-
-    // Enable monitoring procedure
-    g_wdStatusMonitoringConfig.enStatusReading = TRUE;
-
-    // Arm timer routine
-    ConfigureWatchdogStatusCheckPeriodicity(WD_STATUS_CHECK_PERIOD);
-    EnableWatchdogStatusCheckInterrupt();
-}
-
-void CmdStopMonitoringWatchdog(USBReceiveData const * const commandPackage)
-{
-    // Disable monitoring procedure
-    g_wdStatusMonitoringConfig.enStatusReading = FALSE;
-
-    // Unarm timer routine
-    DisableWatchdogStatusCheckInterrupt();
-
-    // Prepare acknowledge message
-    USBTransmitData packageToSend;
-    packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
-    packageToSend.status = USB_STATUS_ACK;
-    packageToSend.dataLength = 0;
-
-    // Send acknowledge message to GUI
     SendUSBPackage(&packageToSend);
 }
 
@@ -399,13 +355,50 @@ void CmdStopWatchdog(USBReceiveData const * const commandPackage)
     SendUSBPackage(&packageToSend);
 }
 
+void CmdStartMonitoringWatchdog(USBReceiveData const * const commandPackage)
+{
+    // Save message ID
+    g_wdStatusMonitoringConfig.monitoringMessageID = SetResponseBit(commandPackage->msg_id);
+
+    // Enable monitoring procedure
+    g_wdStatusMonitoringConfig.enStatusReading = TRUE;
+
+    // Arm timer routine
+    ConfigureWatchdogStatusCheckPeriodicity(WD_STATUS_CHECK_PERIOD);
+    EnableWatchdogStatusCheckInterrupt();
+}
+
+void CmdStopMonitoringWatchdog(USBReceiveData const * const commandPackage)
+{
+    // Disable monitoring procedure
+    g_wdStatusMonitoringConfig.enStatusReading = FALSE;
+
+    // Unarm timer routine
+    DisableWatchdogStatusCheckInterrupt();
+
+    // Prepare acknowledge message
+    USBTransmitData packageToSend;
+    packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
+    packageToSend.status = USB_STATUS_ACK;
+    packageToSend.dataLength = 0;
+
+    // Send acknowledge message to GUI
+    SendUSBPackage(&packageToSend);
+}
+
 void IntCmdMonitorWatchdog(void)
 {
     // Local variables
     USBTransmitData packageToSend;
     uint16 length = g_wdStatusMonitoringConfig.lengthOfRegsToRead;
     boolean isSuccessfulFlag = FALSE;
-    
+
+    // Check if configured
+    if (g_wdStatusMonitoringConfig.enStatusReading == FALSE)
+    {
+        // Stop execution as no msgID for response to PC is present
+        return;
+    }
 
     // Read WD status from ASIC
     #ifdef AB12_PLATFORM

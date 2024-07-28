@@ -12,12 +12,6 @@
 
 #include "Platform_Types.h"
 #include "common/usb_data_types.h"
-#include "common/spi_data_types.h"
-#include "common/command_queue.h"
-#include "common/bit_manipulation.h"
-#include "top/spi_wrapper.h"
-#include "top/usb_wrapper.h"
-#include "periphery/timer.h"
 
 /*********************************************************************************************************************/
 /*------------------------------------------------------Macros-------------------------------------------------------*/
@@ -96,6 +90,14 @@ void IntCmdAcknowledgeWatchdog1(void);
  * \return Returns nothing
  */
 void IntCmdAcknowledgeWatchdog2(void);
+
+/** \brief Function to read WD status. Will be periodically called from timer interrupt
+ * 
+ * Corresponds to Internal command INT_CMD_READ_WD_STATUS
+ * 
+ * \return Returns nothing
+ */
+void IntCmdMonitorWatchdog(void);
 
 #endif /* WATCHDOG_H_ */
 
