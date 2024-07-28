@@ -10,7 +10,7 @@ namespace AB15_GUI.Tests.Models.Genereted.Registers
     ///     <link ID="ABEVBSW-118" Link="https://rb-tracker.bosch.com/tracker19/browse/ABEVBSW-118" />
     /// </tc_links>
     [TestFixture]
-    [Parallelizable(ParallelScope.All)]
+    [Parallelizable(ParallelScope.Self)]
     public class Reg_ident_high_Tests
     {
         // Arrange constants for tests
@@ -118,7 +118,7 @@ namespace AB15_GUI.Tests.Models.Genereted.Registers
         [Test, Description("Check Data property get method")]
         [TestCase((UInt16)0b00001, (UInt16)0b010010, (UInt16)0b00001, ExpectedResult = (UInt16)0b011001000001)] // R:0x12, A:0x01
         [TestCase((UInt16)0b00010, (UInt16)0b011000, (UInt16)0b00010, ExpectedResult = (UInt16)0b101100000010)] // arbitrary values
-        public UInt16 Test_Data_Get(UInt16 letter1, UInt16 letter2, UInt16 letter3)
+        public UInt16 WhenFieldsAreSet_ThenRegisterDataIsCorrect(UInt16 letter1, UInt16 letter2, UInt16 letter3)
         {
             // Arrange
             var register = new Reg_ident_high();
@@ -136,7 +136,7 @@ namespace AB15_GUI.Tests.Models.Genereted.Registers
         [Test, Description("Check Data property set method")]
         [TestCase((UInt16)0b011001000001, (UInt16)0b00001, (UInt16)0b010010, (UInt16)0b00001)] // R:0x12, A:0x01
         [TestCase((UInt16)0b101100000010, (UInt16)0b00010, (UInt16)0b011000, (UInt16)0b00010)] // arbitrary values
-        public void Test_Data_Set(UInt16 data, UInt16 expectedLetter1, UInt16 expectedLetter2, UInt16 expectedLetter3)
+        public void WhenRegisterDataIsSet_ThenFieldValuesAreExpected(UInt16 data, UInt16 expectedLetter1, UInt16 expectedLetter2, UInt16 expectedLetter3)
         {
             // Arrange
             var register = new Reg_ident_high();
@@ -152,7 +152,7 @@ namespace AB15_GUI.Tests.Models.Genereted.Registers
 
         [Test, Description("Check OutOfRange exception for field data")]
         [TestCase((UInt16)0b111111)] // Exceeding bit width for letter1
-        public void Test_Letter1_Data_OutOfRange(UInt16 invalidData)
+        public void WhenLetter1DataOutOfRange_ThenExpectedExceptionIsRaised(UInt16 invalidData)
         {
             // Arrange
             var letter1 = new Reg_ident_high.Field_letter1();
