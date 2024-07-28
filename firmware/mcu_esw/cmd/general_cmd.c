@@ -9,7 +9,6 @@
 #include "Ifx_Types.h"
 #include "common/usb_data_types.h"
 #include "common/spi_data_types.h"
-#include "common/spi_instructions.h"
 #include "common/command_queue.h"
 #include "common/bit_manipulation.h"
 #include "top/spi_wrapper.h"
@@ -96,56 +95,39 @@ void CmdSpiInstuction(USBReceiveData const * const commandPackage)
 {
     // Parameters for SPI packages and variable to store output data
     USBTransmitData packageToSend;
-    uint16 instruction;
-    uint32 data;
-    SPIReceiveData dataRecived;
-    //TODO: rename RWFlag rwOption, is rudiment from CS 600
-    enum RWFlag rwOption = READ;
-    // for AB12 length will always be 1?
-    uint16 length = 1;
-    boolean isSuccessfulFlag = FALSE;
+    SPIReceiveData dataReceived;
+    uint16 dataToSend;
+    AB12SPIInstructionsEnum instruction;
+    boolean programmingEnable;
+    boolean isSuccessfulFlag;
 
-    // Unpack received data to variables
-    instruction = ConstructWordFromBytes(commandPackage->data[1], commandPackage->data[0]);
+    // Unpack data required for SPI command
+    instruction = (AB12SPIInstructionsEnum) ConstructWordFromBytes(commandPackage->data[1], commandPackage->data[0]);
+    programmingEnable = (commandPackage->data[4] != 0);
+    dataToSend = ConstructWordFromBytes(commandPackage->data[3], commandPackage->data[2]);
 
     // Send data to SPI with waiting for response
-    isSuccessfulFlag = QSPIReadWriteSequence(&instruction, &data, &rwOption, &length);
+    isSuccessfulFlag = QSPIExecuteInstruction(instruction, programmingEnable, dataToSend, &dataReceived.dw);
 
     // Construct package to PC
     packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
 
     // Construct packages based on error status
-    if (isSuccessfulFlag == FALSE)
+    if (isSuccessfulFlag && (dataReceived.bf.gs_flag))
     {
-        // Common error frame setup
-        packageToSend.status = USB_STATUS_ERROR;
-        packageToSend.dataLength = 0;
-
-        // Check if SPI response frame was received
-        if (length > 0)
-        {
-            // Fill data in error frame with invalid response from ASIC
-            packageToSend.dataLength = 4;
-            packageToSend.data[0] = GetByteByIdx(0, data);
-            packageToSend.data[1] = GetByteByIdx(1, data);
-            packageToSend.data[2] = GetByteByIdx(2, data);
-            packageToSend.data[3] = GetByteByIdx(3, data);
-        }
+        packageToSend.status = USB_STATUS_DATA;
     }
     else
     {
-        // Store SPI response frame to temporary variable for extracting data
-        dataRecived.dw = data;
-
-        packageToSend.status = USB_STATUS_DATA;
-        packageToSend.dataLength = 5;
-        packageToSend.data[0] = dataRecived.bf.gen_status;
-        packageToSend.data[1] = dataRecived.bf.s_bit;
-        packageToSend.data[2] = dataRecived.bf.sid_add_status;
-        packageToSend.data[3] = GetLSB(dataRecived.bf.output_data);
-        packageToSend.data[4] = GetMSB(dataRecived.bf.output_data);
-
+        packageToSend.status = USB_STATUS_ERROR;
     }
+
+    // Send full SPI response frame to PC
+    packageToSend.dataLength = 4;
+    packageToSend.data[0] = GetByteByIdx(0, dataReceived.dw);
+    packageToSend.data[1] = GetByteByIdx(1, dataReceived.dw);
+    packageToSend.data[2] = GetByteByIdx(2, dataReceived.dw);
+    packageToSend.data[3] = GetByteByIdx(3, dataReceived.dw);
 
     // Send data back to MCU
     SendUSBPackage(&packageToSend);
@@ -153,94 +135,28 @@ void CmdSpiInstuction(USBReceiveData const * const commandPackage)
 
 void CmdGetDeviceId(USBReceiveData * commandPackage)
 {
+    // TODO: provide implementation for AB15
     USBTransmitData packageToSend;
+    SPIReceiveData data; // TODO: will need type change for AB15
+    boolean isSuccessfulFlag;
 
     // SPI instruction for get device ID
-    commandPackage->data[0] = GetLSB(READ_DEV_ID);
-    commandPackage->data[1] = GetMSB(READ_DEV_ID);
+    isSuccessfulFlag = QSPIExecuteInstruction(READ_DEV_ID, FALSE, 0x0, &data.dw);
 
-    handleSpiInstr(&packageToSend, commandPackage);
-
-    if (packageToSend.status != USB_STATUS_ERROR)
+    if (isSuccessfulFlag && (data.bf.gs_flag))
     {
-        /*handleSpiInstr was successful, we change content of receive package*/
-        packageToSend.status = USB_STATUS_ACK;
-        // only return device Id which is in LSb of output data
+        packageToSend.status = USB_STATUS_DATA;
         packageToSend.dataLength = 1;
-        packageToSend.data[0] =  packageToSend.data[3];
-    }
-    // Send data back to MCU
-    SendUSBPackage(&packageToSend);
-
-}
-
-void handleCmdInstr(USBReceiveData const * const commandPackage)
-{
-    // TODO: tmp solution, refactoring pending
-    USBTransmitData packageToSend;
-    handleSpiInstr(&packageToSend, commandPackage);
-
-    // Send data back to MCU
-    SendUSBPackage(&packageToSend);
-
-}
-
-void handleSpiInstr(USBTransmitData * packageToSend, USBReceiveData const * const commandPackage)
-{
-    // TODO: tmp solution, refactoring pending
-    // TODO: approach for passing data should be clarified
-    // Parameters for SPI packages and variable to store output data
-
-    uint16 instruction;
-    uint32 data;
-    SPIReceiveData dataRecived;
-    //TODO: rename RWFlag rwOption, is rudiment from CS 600
-    enum RWFlag rwOption = READ;
-    uint16 length = 1;
-    boolean isSuccessfulFlag = FALSE;
-
-    // Unpack received data to variables
-    instruction = ConstructWordFromBytes(commandPackage->data[1], commandPackage->data[0]);
-
-    // Send data to SPI with waiting for response
-    isSuccessfulFlag = QSPIReadWriteSequence(&instruction, &data, &rwOption, &length);
-
-    // Construct package to PC
-    packageToSend->msg_id = SetResponseBit(commandPackage->msg_id);
-
-    // Construct packages based on error status
-    if (isSuccessfulFlag == FALSE)
-    {
-        // Common error frame setup
-        packageToSend->status = USB_STATUS_ERROR;
-        packageToSend->dataLength = 0;
-
-        /* Check if SPI response frame was received used in CS600
-        if (length > 0)
-        {
-            // Fill data in error frame with invalid response from CS600
-            packageToSend->dataLength = 4;
-            packageToSend->data[0] = GetByteByIdx(0, data);
-            packageToSend->data[1] = GetByteByIdx(1, data);
-            packageToSend->data[2] = GetByteByIdx(2, data);
-            packageToSend->data[3] = GetByteByIdx(3, data);
-        }*/
+        packageToSend.data[0] = GetLSB(data.bf.output_data);
     }
     else
     {
-        // Store SPI response frame to temporary variable for extracting data
-        dataRecived.dw = data;
-
-        packageToSend->status = USB_STATUS_DATA;
-        packageToSend->dataLength = 5;
-        packageToSend->data[0] = dataRecived.bf.gen_status;
-        packageToSend->data[1] = dataRecived.bf.s_bit;
-        packageToSend->data[2] = dataRecived.bf.sid_add_status;
-        packageToSend->data[3] = GetLSB(dataRecived.bf.output_data);
-        packageToSend->data[4] = GetMSB(dataRecived.bf.output_data);
-
+        packageToSend.status = USB_STATUS_ERROR;
+        packageToSend.dataLength = 0;
     }
-    // Sendig data back is performed by calling function
+
+    // Send data back to MCU
+    SendUSBPackage(&packageToSend);
 }
 
 #ifdef CS600
@@ -251,7 +167,7 @@ void CmdWriteReg(USBReceiveData const * const commandPackage)
     uint16 address;
     uint32 data;
     SPIReceiveData dataRecived;
-    enum RWFlag rwOption = WRITE;
+    enum RWFlagEnum rwOption = WRITE;
     uint16 length = 1;
     boolean isSuccessfulFlag = FALSE;
 
@@ -304,7 +220,7 @@ void CmdWriteRegRaw(USBReceiveData const * const commandPackage)
     USBTransmitData packageToSend;
     uint16 address;
     uint32 data;
-    enum RWFlag rwOption = WRITE;
+    enum RWFlagEnum rwOption = WRITE;
     uint16 length = 1;
     boolean isSuccessfulFlag = FALSE;
 
@@ -357,7 +273,7 @@ void CmdReadRegRaw(USBReceiveData const * const commandPackage)
     uint16 address;
     uint32 data;
     SPIReceiveData dataRecived;
-    enum RWFlag rwOption = READ;
+    enum RWFlagEnum rwOption = READ;
     uint16 length = 1;
     boolean isSuccessfulFlag = FALSE;
 

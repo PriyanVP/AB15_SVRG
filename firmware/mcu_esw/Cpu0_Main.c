@@ -190,8 +190,7 @@ void core0_main(void)
                 break;
 
             case USB_CMD_SPI_INSTRUCTION:
-                //CmdSpiInstuction(&cmdPackage);
-                handleCmdInstr(&cmdPackage);
+                CmdSpiInstuction(&cmdPackage);
                 break;
 
             case USB_CMD_READ_DEV_ID:

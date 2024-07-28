@@ -44,7 +44,7 @@ void CmdExecuteRWSequence(USBReceiveData const * const commandPackage)
     USBTransmitData packageToSend;
     uint16 address[rwSeqLength];
     uint32 data[rwSeqLength];
-    enum RWFlag rwOption[rwSeqLength];
+    enum RWFlagEnum rwOption[rwSeqLength];
     SPIReceiveData dataRecived;
     uint16 length = (commandPackage->dataLength)/RW_ITEM_SIZE;
     boolean isSuccessfulFlag = FALSE;
@@ -111,7 +111,7 @@ void CmdExecuteReadSequence(USBReceiveData const * const commandPackage)
     USBTransmitData packageToSend;
     uint16 address[readSeqLength];
     uint32 data[readSeqLength];
-    enum RWFlag rwOption[readSeqLength];
+    enum RWFlagEnum rwOption[readSeqLength];
     SPIReceiveData dataRecived;
     uint16 length = (commandPackage->dataLength)/READ_ITEM_SIZE;
     boolean isSuccessfulFlag = FALSE;
@@ -177,7 +177,7 @@ void CmdExecuteWriteSequence(USBReceiveData const * const commandPackage)
     USBTransmitData packageToSend;
     uint16 address[writeSeqLength];
     uint32 data[writeSeqLength];
-    enum RWFlag rwOption[writeSeqLength];
+    enum RWFlagEnum rwOption[writeSeqLength];
     SPIReceiveData dataRecived;
     uint16 length = (commandPackage->dataLength)/WRITE_ITEM_SIZE;
     boolean isSuccessfulFlag = FALSE;
