@@ -38,6 +38,7 @@ namespace AB15_GUI.WPF.Models.Genereted.Registers
         {%-  for field in fields +%}
         /// <summary>
         /// {{ field.description }}
+        /// Bitwidth: {{ field.bit_width }}
         /// </summary>
         public Field_{{ field.name }} {{ field.name }} { get; set; } = new Field_{{ field.name }}();
         {% endfor -%}
