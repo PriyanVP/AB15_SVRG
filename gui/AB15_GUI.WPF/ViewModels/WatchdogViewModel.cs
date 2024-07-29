@@ -8,23 +8,140 @@ using NLog;
 using System.Windows.Input;
 using System.Windows;
 using AB15_GUI.WPF.ViewModels.Commands;
+using AB15_GUI.WPF.Models.Interfaces;
+using AB15_GUI.WPF.Models;
 
 namespace AB15_GUI.WPF.ViewModels
 {
     /// <summary>
     /// Faults status value definition
     /// </summary>
-    public enum UIFaultStatus
+    public enum FaultStatus
     {
         NoStatus,
         Good,
         Fault
     }
 
+    /// <summary>
+    /// State values for WD feature, required for centralized flags handling for UI
+    /// </summary>
+    public enum WDBackendState
+    {
+        Idle,                  /* Default state, entered after startup */
+        InConfiguration,       /* State after at least one reading of WD config in ASIC */
+        Configured,            /* State when current WD config is loaded to ASIC */
+        Running,               /* WD is running on MCU */
+        Stopped,               /* WD is stopped on MCU */
+    }
+
     public class WatchdogViewModel : ViewModelBase
     {
         /// <summary>
-        /// toggle enable to configure EN0 thresholds 
+        /// Local logger instance
+        /// </summary>
+        private readonly Logger logger;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public WatchdogViewModel(Logger logger)
+        {
+            this.logger = logger;
+            logger.Trace("In WatchdogViewModel");
+
+            // Initial state transition
+            ExecuteStateTransition(WDBackendState.Idle);
+
+            // Init commands for buttons
+            ReadConfigFromASIC  = new RelayCommand(ReadConfigFromASICExecute, ((x) => _isReadWDConfigButtonEnabled));
+            WriteConfigToASIC   = new RelayCommand(WriteConfigToASICExecute, ((x) => _isWriteWDConfigButtonEnabled));
+
+            StartWatchdog   = new RelayCommand(StartWatchdogExecute, ((x) => _isStartWDButtonEnabled));
+            StopWatchdog    = new RelayCommand(StartWatchdogExecute, ((x) => _isStopWDButtonEnabled));
+        }
+
+        #region State_Machine
+
+        /// <summary>
+        /// Variable to hold state of WD backend
+        /// </summary>
+        private WDBackendState _wdBackendState;
+
+        /// <summary>
+        /// Method to update flags in centralized way. All flags updates should be done there
+        /// </summary>
+        /// <param name="newState">new state of WD backend</param>
+        private void ExecuteStateTransition(WDBackendState newState)
+        {
+            // TODO: simple implementation, if state machines will be used widely refactor implementation to advanced state machine
+            // TODO: add check on allowed transitions? check triggers?
+            // TODO: pass trigger?
+            _wdBackendState = newState;
+
+            switch (_wdBackendState)
+            {
+                case WDBackendState.Idle:
+                    // Buttons enable handling
+                    _isReadWDConfigButtonEnabled = true;
+                    _isWriteWDConfigButtonEnabled = false;
+                    _isStartWDButtonEnabled = false;
+                    _isStopWDButtonEnabled = false;
+
+                    // Configuration enable handling
+                    IsConfigEnable = false;
+                    break;
+                case WDBackendState.InConfiguration:
+                    // Buttons enable handling
+                    _isReadWDConfigButtonEnabled = true;
+                    _isWriteWDConfigButtonEnabled = true;
+                    _isStartWDButtonEnabled = false;
+                    _isStopWDButtonEnabled = false;
+
+                    // Configuration enable handling
+                    IsConfigEnable = true;
+                    break;
+                case WDBackendState.Configured:
+                    // Buttons enable handling
+                    _isReadWDConfigButtonEnabled = true;
+                    _isWriteWDConfigButtonEnabled = true;
+                    _isStartWDButtonEnabled = true;
+                    _isStopWDButtonEnabled = true;
+
+                    // Configuration enable handling
+                    IsConfigEnable = true;
+                    break;
+                case WDBackendState.Running:
+                    // Buttons enable handling
+                    _isReadWDConfigButtonEnabled = true;
+                    _isWriteWDConfigButtonEnabled = false;
+                    _isStartWDButtonEnabled = false;
+                    _isStopWDButtonEnabled = true;
+
+                    // Configuration enable handling
+                    IsConfigEnable = false;
+                    break;
+                case WDBackendState.Stopped:
+                    // Buttons enable handling
+                    _isReadWDConfigButtonEnabled = true;
+                    _isWriteWDConfigButtonEnabled = true;
+                    _isStartWDButtonEnabled = true;
+                    _isStopWDButtonEnabled = true;
+
+                    // Configuration enable handling
+                    IsConfigEnable = true;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(newState), "Unexpected state received");
+            }
+        }
+
+        #endregion //State_Machine
+
+        #region Bindable_Properties
+
+        /// <summary>
+        /// Enable EN0 thresholds configuration
         /// </summary>
         private bool isEN0Enabled;
         public bool IsEN0Enabled
@@ -34,34 +151,7 @@ namespace AB15_GUI.WPF.ViewModels
             { 
                 isEN0Enabled = value;
                 OnPropertyChanged();
-            }
-        }
-
-        /// <summary>
-        /// toggle enable to stop watchdog button
-        /// </summary>
-        private bool isStopWDButtonEnabled;
-        public bool IsStopWDButtonEnabled
-        {
-            get => isStopWDButtonEnabled;
-            set
-            {
-                isStopWDButtonEnabled = value;
-                OnPropertyChanged();
-            }
-        }
-
-        /// <summary>
-        /// toggle enable to start watchdog button
-        /// </summary>
-        private bool isStartWDButtonEnabled;
-        public bool IsStartWDButtonEnabled
-        {
-            get => isStartWDButtonEnabled;
-            set
-            {
-                isStartWDButtonEnabled = value;
-                OnPropertyChanged();
+                ExecuteStateTransition(WDBackendState.InConfiguration);
             }
         }
 
@@ -76,6 +166,7 @@ namespace AB15_GUI.WPF.ViewModels
             {
                 wd1ResponseTime = value;
                 OnPropertyChanged();
+                ExecuteStateTransition(WDBackendState.InConfiguration);
             }
         }
 
@@ -90,6 +181,7 @@ namespace AB15_GUI.WPF.ViewModels
             {
                 wd1LockTime = value;
                 OnPropertyChanged();
+                ExecuteStateTransition(WDBackendState.InConfiguration);
             }
         }
 
@@ -104,6 +196,7 @@ namespace AB15_GUI.WPF.ViewModels
             {
                 wd2ResponseTime = value;
                 OnPropertyChanged();
+                ExecuteStateTransition(WDBackendState.InConfiguration);
             }
         }
 
@@ -118,6 +211,7 @@ namespace AB15_GUI.WPF.ViewModels
             {
                 wd1EN0DisableThreshold = value;
                 OnPropertyChanged();
+                ExecuteStateTransition(WDBackendState.InConfiguration);
             }
         }
 
@@ -132,6 +226,7 @@ namespace AB15_GUI.WPF.ViewModels
             {
                 wd2EN0DisableThreshold = value;
                 OnPropertyChanged();
+                ExecuteStateTransition(WDBackendState.InConfiguration);
             }
         }
 
@@ -146,6 +241,7 @@ namespace AB15_GUI.WPF.ViewModels
             {
                 wd2LockTime = value;
                 OnPropertyChanged();
+                ExecuteStateTransition(WDBackendState.InConfiguration);
             }
         }
 
@@ -164,38 +260,10 @@ namespace AB15_GUI.WPF.ViewModels
         }
 
         /// <summary>
-        /// Event from Read config from ASIC button
-        /// </summary>
-        private ICommand readConfigFromASIC;
-        public ICommand ReadConfigFromASIC
-        {
-            get => readConfigFromASIC;
-            set
-            {
-                readConfigFromASIC = value;
-                OnPropertyChanged();
-            }
-        }
-
-        /// <summary>
-        /// Event from Write config to ASIC button
-        /// </summary>
-        private ICommand writeConfigToASIC;
-        public ICommand WriteConfigToASIC
-        {
-            get => writeConfigToASIC;
-            set
-            {
-                writeConfigToASIC = value;
-                OnPropertyChanged();
-            }
-        }
-
-        /// <summary>
         /// Global wd fault flag
         /// </summary>
-        private UIFaultStatus wdFaultStatus;
-        public UIFaultStatus WDFaultStatus
+        private FaultStatus wdFaultStatus;
+        public FaultStatus WDFaultStatus
         {
             get => wdFaultStatus;
             set
@@ -208,8 +276,8 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// WD1 fault flag
         /// </summary>
-        private UIFaultStatus wd1FaultStatus;
-        public UIFaultStatus WD1FaultStatus
+        private FaultStatus wd1FaultStatus;
+        public FaultStatus WD1FaultStatus
         {
             get => wd1FaultStatus;
             set
@@ -222,8 +290,8 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// WD2 fault flag
         /// </summary>
-        private UIFaultStatus wd2FaultStatus;
-        public UIFaultStatus WD2FaultStatus
+        private FaultStatus wd2FaultStatus;
+        public FaultStatus WD2FaultStatus
         {
             get => wd2FaultStatus;
             set
@@ -236,8 +304,8 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// Error pin fault flag
         /// </summary>
-        private UIFaultStatus errorPinFaultStatus;
-        public UIFaultStatus ErrorPinFaultStatus
+        private FaultStatus errorPinFaultStatus;
+        public FaultStatus ErrorPinFaultStatus
         {
             get => errorPinFaultStatus;
             set
@@ -250,8 +318,8 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// WD1 timer fault flag
         /// </summary>
-        private UIFaultStatus wd1TimerFaultStatus;
-        public UIFaultStatus WD1TimerFaultStatus
+        private FaultStatus wd1TimerFaultStatus;
+        public FaultStatus WD1TimerFaultStatus
         {
             get => wd1TimerFaultStatus;
             set
@@ -264,8 +332,8 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// WD2 timer fault flag
         /// </summary>
-        private UIFaultStatus wd2TimerFaultStatus;
-        public UIFaultStatus WD2TimerFaultStatus
+        private FaultStatus wd2TimerFaultStatus;
+        public FaultStatus WD2TimerFaultStatus
         {
             get => wd2TimerFaultStatus;
             set
@@ -278,8 +346,8 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// OSCMON fault flag
         /// </summary>
-        private UIFaultStatus oscmonFaultStatus;
-        public UIFaultStatus OSCMONFaultStatus
+        private FaultStatus oscmonFaultStatus;
+        public FaultStatus OSCMONFaultStatus
         {
             get => oscmonFaultStatus;
             set
@@ -292,8 +360,8 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// WD1 QA fault flag
         /// </summary>
-        private UIFaultStatus wd1QAFaultStatus;
-        public UIFaultStatus WD1QAFaultStatus
+        private FaultStatus wd1QAFaultStatus;
+        public FaultStatus WD1QAFaultStatus
         {
             get => wd1QAFaultStatus;
             set
@@ -306,8 +374,8 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// WD2 QA Fault flag
         /// </summary>
-        private UIFaultStatus wd2QAFaultStatus;
-        public UIFaultStatus WD2QAFaultStatus
+        private FaultStatus wd2QAFaultStatus;
+        public FaultStatus WD2QAFaultStatus
         {
             get => wd2QAFaultStatus;
             set
@@ -320,8 +388,8 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// Oscillator fault flag
         /// </summary>
-        private UIFaultStatus oscillatorFaultStatus;
-        public UIFaultStatus OscillatorFaultStatus
+        private FaultStatus oscillatorFaultStatus;
+        public FaultStatus OscillatorFaultStatus
         {
             get => oscillatorFaultStatus;
             set
@@ -334,8 +402,8 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// WD reset flag
         /// </summary>
-        private UIFaultStatus wdResetFaultStatus;
-        public UIFaultStatus WDResetFaultStatus
+        private FaultStatus wdResetFaultStatus;
+        public FaultStatus WDResetFaultStatus
         {
             get => wdResetFaultStatus;
             set
@@ -348,8 +416,8 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// WD1 counter fault flag
         /// </summary>
-        private UIFaultStatus wd1CounterFaultStatus;
-        public UIFaultStatus WD1CounterFaultStatus
+        private FaultStatus wd1CounterFaultStatus;
+        public FaultStatus WD1CounterFaultStatus
         {
             get => wd1CounterFaultStatus;
             set
@@ -362,8 +430,8 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// QA1 fault flag
         /// </summary>
-        private UIFaultStatus qa1FaultStatus;
-        public UIFaultStatus QA1FaultStatus
+        private FaultStatus qa1FaultStatus;
+        public FaultStatus QA1FaultStatus
         {
             get => qa1FaultStatus;
             set
@@ -376,8 +444,8 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// WD2 counter fault flag
         /// </summary>
-        private UIFaultStatus wd2CounterFaultStatus;
-        public UIFaultStatus WD2CounterFaultStatus
+        private FaultStatus wd2CounterFaultStatus;
+        public FaultStatus WD2CounterFaultStatus
         {
             get => wd2CounterFaultStatus;
             set
@@ -390,8 +458,8 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// QA2 fault flag
         /// </summary>
-        private UIFaultStatus qa2FaultStatus;
-        public UIFaultStatus QA2FaultStatus
+        private FaultStatus qa2FaultStatus;
+        public FaultStatus QA2FaultStatus
         {
             get => qa2FaultStatus;
             set
@@ -404,8 +472,8 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// EN0 Hight status flag
         /// </summary>
-        private UIFaultStatus en0HightStatus;
-        public UIFaultStatus EN0HightStatus
+        private FaultStatus en0HightStatus;
+        public FaultStatus EN0HightStatus
         {
             get => en0HightStatus;
             set
@@ -415,62 +483,146 @@ namespace AB15_GUI.WPF.ViewModels
             }
         }
 
+        #endregion // Bindable_Properties
+
+        #region Commands
+
         /// <summary>
-        /// Local logger instance
+        /// Start WD button enable state
         /// </summary>
-        private readonly Logger logger;
+        private bool _isStartWDButtonEnabled;
 
         /// <summary>
-        /// Constructor
+        /// Stop WD button enable state
         /// </summary>
-        public WatchdogViewModel(Logger logger)
-        {
-            this.logger = logger;
-            logger.Trace("In WatchdogViewModel");
-
-            // set defoult value
-            //IsConfigEnable = false;
-            //IsStartWDButtonEnabled = false;
-            //IsStopWDButtonEnabled = false;
-
-            // Init commands for buttons
-            ReadConfigFromASIC = new RelayCommand(ReadConfigFromASICExecute, ReadConfigFromASICCanExecute);
-            WriteConfigToASIC = new RelayCommand(WriteConfigToASICExecute, WriteConfigToASICCanExecute);
-
-        }
+        private bool _isStopWDButtonEnabled;
 
         /// <summary>
-        /// Read config from ASIC check command arguments 
+        /// Read WD config button enable state
         /// </summary>
-        /// <returns>true if command can be executed</returns>
-        private bool ReadConfigFromASICCanExecute(object obj)
-        {
-            // TODO Add actual check
-            return true;
-        }
+        private bool _isReadWDConfigButtonEnabled;
 
         /// <summary>
-        /// Execute  Read config from ASIC command
+        /// Write WD config button enable state
+        /// </summary>
+        private bool _isWriteWDConfigButtonEnabled;
+
+        /// <summary>
+        /// Command handler for Read config from ASIC button
+        /// </summary>
+        public ICommand ReadConfigFromASIC { get; }
+
+        /// <summary>
+        /// Command handler for Write config to ASIC button
+        /// </summary>
+        public ICommand WriteConfigToASIC { get; }
+
+        /// <summary>
+        /// Command handler for Start watchdog button
+        /// </summary>
+        public ICommand StartWatchdog { get; }
+
+        /// <summary>
+        /// Command handler for Stop watchdog button
+        /// </summary>
+        public ICommand StopWatchdog { get; }
+
+        /// <summary>
+        /// Execute Read config from ASIC command
         /// </summary>
         private void ReadConfigFromASICExecute(object obj)
         {
         }
 
         /// <summary>
-        /// Write config to ASIC check command arguments 
-        /// </summary>
-        /// <returns>true if command can be executed</returns>
-        private bool WriteConfigToASICCanExecute(object obj)
-        {
-            // TODO Add actual check
-            return true;
-        }
-
-        /// <summary>
-        /// Execute write config to ASIC command
+        /// Execute Write config to ASIC command
         /// </summary>
         private void WriteConfigToASICExecute(object obj)
         {
         }
+
+        /// <summary>
+        /// Execute Start watchdog command
+        /// </summary>
+        private void StartWatchdogExecute(object obj)
+        {
+        }
+
+        /// <summary>
+        /// Execute Stop watchdog command
+        /// </summary>
+        private void StopWatchdogExecute(object obj)
+        {
+        }
+
+        private void ReadConfigDelegate(IReceiveCommunicationPackage response)
+        {
+            // Typecast response to actual type
+            ReceiveCommunicationPackage<WDStatusPayload> mcuResponse = (ReceiveCommunicationPackage<WDStatusPayload>) response;
+
+            // Change state if response received
+            if (mcuResponse.Payload.Error is not null)
+            {
+                AddError(mcuResponse.Payload.Error, nameof(WriteConfigToASIC));
+                logger.Error($"Error response received. Status: {mcuResponse.Status}");
+            }
+            else if (_wdBackendState == WDBackendState.Idle)
+            {
+                ExecuteStateTransition(WDBackendState.InConfiguration);
+            }
+        }
+
+        private void WriteConfigDelagate(IReceiveCommunicationPackage response)
+        {
+            // Typecast response to actual type
+            ReceiveCommunicationPackage<EmptyPayload> mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>) response;
+
+            // If error received - pass it to error provider
+            if (mcuResponse.Payload.Error is not null)
+            {
+                AddError(mcuResponse.Payload.Error, nameof(WriteConfigToASIC));
+                logger.Error($"Error response received. Status: {mcuResponse.Status}");
+            }
+            else
+            {
+                ExecuteStateTransition(WDBackendState.Configured);
+            }
+        }
+
+        private void StartConfigDelagate(IReceiveCommunicationPackage response)
+        {
+            // Typecast response to actual type
+            ReceiveCommunicationPackage<EmptyPayload> mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>) response;
+
+            // If error received - pass it to error provider
+            if (mcuResponse.Payload.Error is not null)
+            {
+                AddError(mcuResponse.Payload.Error, nameof(WriteConfigToASIC));
+                logger.Error($"Error response received. Status: {mcuResponse.Status}");
+            }
+            else
+            {
+                ExecuteStateTransition(WDBackendState.Running);
+            }
+        }
+
+        private void StopConfigDelagate(IReceiveCommunicationPackage response)
+        {
+            // Typecast response to actual type
+            ReceiveCommunicationPackage<EmptyPayload> mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>) response;
+
+            // If error received - pass it to error provider
+            if (mcuResponse.Payload.Error is not null)
+            {
+                AddError(mcuResponse.Payload.Error, nameof(WriteConfigToASIC));
+                logger.Error($"Error response received. Status: {mcuResponse.Status}");
+            }
+            else
+            {
+                ExecuteStateTransition(WDBackendState.Stopped);
+            }
+        }
+
+        #endregion // Commands
     }
 }
