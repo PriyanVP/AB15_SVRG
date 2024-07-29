@@ -110,13 +110,13 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// WD1 Lock time value
         /// </summary>
-        private int wd1EN0DisableTreshhold;
-        public int WD1EN0DisableTreshhold
+        private int wd1EN0DisableThreshold;
+        public int WD1EN0DisableThreshold
         {
-            get => wd1EN0DisableTreshhold;
+            get => wd1EN0DisableThreshold;
             set
             {
-                wd1EN0DisableTreshhold = value;
+                wd1EN0DisableThreshold = value;
                 OnPropertyChanged();
             }
         }
@@ -124,13 +124,13 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// WD2 Response time value
         /// </summary>
-        private int wd2EN0DisableTreshhold;
-        public int WD2EN0DisableTreshhold
+        private int wd2EN0DisableThreshold;
+        public int WD2EN0DisableThreshold
         {
-            get => wd2EN0DisableTreshhold;
+            get => wd2EN0DisableThreshold;
             set
             {
-                wd2EN0DisableTreshhold = value;
+                wd2EN0DisableThreshold = value;
                 OnPropertyChanged();
             }
         }
@@ -438,28 +438,22 @@ namespace AB15_GUI.WPF.ViewModels
 
         private bool ReadConfigFromASICCanExecute(object obj)
         {
-            // TODO remove debug code 
+            // TODO Add actual check
             return true;
         }
 
         private void ReadConfigFromASICExecute(object obj)
         {
-            // TODO remove debug code 
-            IsConfigEnable = true;
-            logger.Trace("In ReadConfigFromASICExecute");
         }
 
         private bool WriteConfigToASICCanExecute(object obj)
         {
-            // TODO remove debug code 
+            // TODO Add actual check
             return true;
         }
 
         private void WriteConfigToASICExecute(object obj)
         {
-            // TODO remove debug code 
-            IsConfigEnable = false;
-            logger.Trace("In WriteConfigToASICExecute");
         }
     }
 }

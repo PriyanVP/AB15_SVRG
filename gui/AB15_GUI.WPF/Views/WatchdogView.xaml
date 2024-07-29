@@ -667,7 +667,7 @@
                                 Style="{DynamicResource WatchdogTop_SliderThresholdTop}" 
                                 VerticalAlignment="Top" 
                                 HorizontalAlignment="Left"
-                                Value="{Binding WD1EN0DisableTreshhold}" Width="200"
+                                Value="{Binding WD1EN0DisableThreshold}" Width="200"
                                 Minimum="0" Maximum="63"
                                 Margin="20,0,20,5"
                                 IsEnabled="{Binding IsConfigEnable}"/>
@@ -677,7 +677,7 @@
                                 Style="{DynamicResource WatchdogTop_SliderThresholdTop}" 
                                 VerticalAlignment="Bottom" 
                                 HorizontalAlignment="Left"
-                                Value="{Binding WD2EN0DisableTreshhold}" Width="200"
+                                Value="{Binding WD2EN0DisableThreshold}" Width="200"
                                 Minimum="0" Maximum="63"
                                 Margin="20,5,20,0"
                                 IsEnabled="{Binding IsConfigEnable}"/>
