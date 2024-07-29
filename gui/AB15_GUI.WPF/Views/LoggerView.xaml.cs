@@ -15,7 +15,7 @@ namespace AB15_GUI.WPF.Views;
 public partial class LoggerView : Window, INotifyPropertyChanged
 {
     /// <summary>
-    /// Event to update binded properties in View
+    /// Event to update bind properties in View
     /// </summary>
     public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -38,7 +38,7 @@ public partial class LoggerView : Window, INotifyPropertyChanged
     }
 
     /// <summary>
-    /// Hndle to apply sorting for ListView
+    /// Handle to apply sorting for ListView
     /// </summary>
     private CollectionView _referenceForSorting;
 

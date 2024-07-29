@@ -1,17 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace AB15_GUI.WPF.Views
 {
@@ -36,7 +25,7 @@ namespace AB15_GUI.WPF.Views
         /// </summary>
         private void WD1LockTimeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            // check for null, can occure durind start up
+            // check for null, can occurs during start up
             if (WD1ResponseTimeSlider == null || WD1LockTimeSlider == null) { return; }
 
             // check if sliders sum is greater then 63
@@ -46,7 +35,7 @@ namespace AB15_GUI.WPF.Views
                 WD1ResponseTimeSlider.Value = 63 - WD1LockTimeSlider.Value;
             }
 
-            // change min and max value for responce time slider
+            // change min and max value for response time slider
             WD1ResponseTimeSlider.Minimum = -1 * WD1LockTimeSlider.Value;
             WD1ResponseTimeSlider.Maximum = 63 - WD1LockTimeSlider.Value;
         }
@@ -56,10 +45,10 @@ namespace AB15_GUI.WPF.Views
         /// </summary>
         private void WD1ResponseTimeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            // check for null, can occure durind start up
+            // check for null, can occurs during start up
             if (WD1ResponseTimeSlider == null || WD1LockTimeSlider == null) { return; }
             
-            // safty check for values less then 0
+            // safety check for values less then 0
             if (WD1ResponseTimeSlider.Value < 0 ) 
             {
                 WD1ResponseTimeSlider.Value = 0;
@@ -78,7 +67,7 @@ namespace AB15_GUI.WPF.Views
         /// </summary>
         private void WD2LockTimeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            // check for null, can occure durind start up
+            // check for null, can occurs during start up
             if (WD2ResponseTimeSlider == null || WD2LockTimeSlider == null) { return; }
 
             // check if sliders sum is greater then 63
@@ -88,7 +77,7 @@ namespace AB15_GUI.WPF.Views
                 WD2ResponseTimeSlider.Value = 63 - WD2LockTimeSlider.Value;
             }
 
-            // change min and max value for responce time slider
+            // change min and max value for response time slider
             WD2ResponseTimeSlider.Minimum = -1 * WD2LockTimeSlider.Value;
             WD2ResponseTimeSlider.Maximum = 63 - WD2LockTimeSlider.Value;
         }
@@ -98,10 +87,10 @@ namespace AB15_GUI.WPF.Views
         /// </summary>
         private void WD2ResponseTimeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            // check for null, can occure durind start up
+            // check for null, can occurs during start up
             if (WD2ResponseTimeSlider == null || WD2LockTimeSlider == null) { return; }
 
-            // safty check for values less then 0
+            // safety check for values less then 0
             if (WD2ResponseTimeSlider.Value < 0)
             {
                 WD2ResponseTimeSlider.Value = 0;
@@ -116,7 +105,7 @@ namespace AB15_GUI.WPF.Views
         }
 
         /// <summary>
-        /// clear focuse from slider
+        /// clear focuses from slider
         /// </summary>
         private void Grid_KeyDown(object sender, KeyEventArgs e)
         {
@@ -124,7 +113,7 @@ namespace AB15_GUI.WPF.Views
         }
 
         /// <summary>
-        /// clear focuse from slider
+        /// clear focuses from slider
         /// </summary>
         private void Grid_MouseDown(object sender, MouseButtonEventArgs e)
         {

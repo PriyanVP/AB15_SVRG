@@ -111,7 +111,7 @@
                                 <TextBlock Text="   WD2 Fault   " HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                             </Viewbox>
                         </Border>
-
+                        
                         <Border Grid.Row="3" Grid.Column="9" Grid.ColumnSpan="2" BorderThickness="1" 
                             BorderBrush="{DynamicResource Animation.Lines}" 
                             CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
@@ -455,55 +455,7 @@
                         <RowDefinition Height="3*"/>
                     </Grid.RowDefinitions>
 
-                    <Grid Grid.Column="0" Grid.Row="0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-
-                        <!--<TextBlock Text="Read/Write config from watchdog" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0"
-                                   HorizontalAlignment="Center" VerticalAlignment="Bottom"/>-->
-
-                        <StackPanel Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" 
-                                    HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <Button Style="{DynamicResource SimpleButton}" 
-                                    Content="Write config to ASIC"
-                                    IsEnabled="{Binding IsConfigEnable, UpdateSourceTrigger=PropertyChanged}"
-                                    Command="{Binding WriteConfigToASIC}"
-                                    Grid.Column="0" Grid.Row="1"/>
-
-                            <Button Content="Read config from ASIC"
-                                    Style="{DynamicResource SimpleButton}"
-                                    Command="{Binding ReadConfigFromASIC}"
-                                    Grid.Column="1" Grid.Row="1"/>
-                        </StackPanel>
-
-                        <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" 
-                                    VerticalAlignment="Center" HorizontalAlignment="Center">
-
-                            <Button Content="Start Watchdog"
-                                    Style="{DynamicResource SimpleButton}"
-                                    Command="{Binding StartWatchdog}"
-                                    IsEnabled="{Binding IsStartWDButtonEnabled}"
-                                    Grid.Column="0" Grid.Row="1"
-                                    Margin="2" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-
-                            <Button Content="Stop Watchdog"
-                                    Style="{DynamicResource SimpleButton}"
-                                    Command="{Binding StopWatchdog}"
-                                    IsEnabled="{Binding IsStopWDButtonEnabled}"
-                                    Grid.Column="1" Grid.Row="1"
-                                    Margin="2" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-                        </StackPanel>
-
-                    </Grid>
-
-                    <Grid Grid.Column="0" Grid.Row="1">
+                    <Grid Grid.Column="0" Grid.Row="0" Grid.RowSpan="2">
 
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -514,10 +466,10 @@
                         </Grid.ColumnDefinitions>
 
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="auto"/>
-                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
@@ -527,7 +479,7 @@
                         <TextBlock Text="Time settings for Watchdog"
                                    Grid.Column="0" Grid.ColumnSpan="5"
                                    Grid.Row="0" HorizontalAlignment="Center"
-                                   VerticalAlignment="Top"/>
+                                   VerticalAlignment="Top" Margin="5"/>
 
                         <TextBlock Text="WD1" Grid.Column="1" Grid.Row="1" VerticalAlignment="Center"
                                    Style="{DynamicResource CustomTextBlock}"
@@ -628,7 +580,7 @@
                                    Grid.Column="0" Grid.ColumnSpan="5"
                                    Grid.Row="3" HorizontalAlignment="Center"
                                    VerticalAlignment="Bottom"
-                                   Margin="0,0,0,5"/>
+                                   Margin="5"/>
 
                         <StackPanel Grid.Column="1" Grid.Row="4" Orientation="Horizontal" VerticalAlignment="Center">
                             <CheckBox x:Name="EN0DisableThresholdEnableCheckBox" 
@@ -689,96 +641,68 @@
 
                     </Grid>
 
-                    <Grid Grid.Column="1" Grid.Row="0" Grid.RowSpan="2">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Vertical"
+                                Grid.Row="0" Grid.Column="1" Grid.RowSpan="2">
+                        
+                        <TextBlock Text="Watchdog ASIC configuration" HorizontalAlignment="Center" Margin="5"/>
+                        
+                        <Button Style="{DynamicResource SimpleButton}" 
+                                    Content="Write config to ASIC"
+                                    IsEnabled="{Binding IsConfigEnable}"
+                                    Command="{Binding WriteConfigToASIC}"/>
 
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="auto"/>
-                            <RowDefinition Height="auto"/>
-                            <RowDefinition Height="auto"/>
-                            <RowDefinition Height="auto"/>
-                            <RowDefinition Height="auto"/>
-                            <RowDefinition Height="auto"/>
-                            <RowDefinition Height="auto"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
+                        <Button Content="Read config from ASIC"
+                                    Style="{DynamicResource SimpleButton}"
+                                    Command="{Binding ReadConfigFromASIC}"/>
 
+                        <TextBlock Text="Watchdog QA configuration" HorizontalAlignment="Center" Margin="5"/>
+                        
+                        <Button Content="Start Watchdog"
+                                    Style="{DynamicResource SimpleButton}"
+                                    Command="{Binding StartWatchdog}"
+                                    IsEnabled="{Binding IsStartWDButtonEnabled}"/>
 
-                        <CheckBox Style="{DynamicResource ToggleSwitchStyle}" 
-                                  IsEnabled="{Binding IsConfigEnable}"
-                                  Grid.Column="0" Grid.Row="1" HorizontalAlignment="Right" Margin="8,2"/>
-
-                        <CheckBox Style="{DynamicResource ToggleSwitchStyle}"  
-                                  IsEnabled="{Binding IsConfigEnable}"
-                                  Grid.Column="0" Grid.Row="2" HorizontalAlignment="Right" Margin="8,2"/>
-
-                        <CheckBox Style="{DynamicResource ToggleSwitchStyle}"  
-                                  IsEnabled="{Binding IsConfigEnable}"
-                                  Grid.Column="0" Grid.Row="3" HorizontalAlignment="Right" Margin="8,2"/>
-
-                        <CheckBox Style="{DynamicResource ToggleSwitchStyle}"  
-                                  IsEnabled="{Binding IsConfigEnable}"
-                                  Grid.Column="0" Grid.Row="4" HorizontalAlignment="Right" Margin="8,2"/>
-
-                        <CheckBox Style="{DynamicResource ToggleSwitchStyle}"  
-                                  IsEnabled="{Binding IsConfigEnable}"
-                                  Grid.Column="0" Grid.Row="5" HorizontalAlignment="Right" Margin="8,2"/>
-
-                        <CheckBox Style="{DynamicResource ToggleSwitchStyle}"  
-                                  IsEnabled="{Binding IsConfigEnable}"
-                                  Grid.Column="0" Grid.Row="6" HorizontalAlignment="Right" Margin="8,2"/>
-
-                        <TextBlock Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0"
-                                   Text="Main settings"
-                                   HorizontalAlignment="Center"
-                                   VerticalAlignment="Top"
-                                   Margin="5"/>
-
-                        <!--TODO-->
-                        <TextBlock Grid.Column="1" Grid.Row="1"
-                                   Style="{DynamicResource CustomeRedTextBlock}"
-                                   Text="ASIC initialization reset"
-                                   IsEnabled="{Binding IsConfigEnable}"
-                                   VerticalAlignment="Center" HorizontalAlignment="Left"/>
-
-                        <!--TODO-->
-                        <TextBlock Grid.Column="1" Grid.Row="2"
-                                   Style="{DynamicResource CustomeRedTextBlock}"
-                                   Text="Watchdog reset"
-                                   IsEnabled="{Binding IsConfigEnable}"
-                                   VerticalAlignment="Center" HorizontalAlignment="Left"/>
-
-                        <TextBlock Grid.Column="1" Grid.Row="3"
-                                   Style="{DynamicResource CustomTextBlock}"
-                                   Text="SLFF" 
-                                   IsEnabled="{Binding IsConfigEnable}"
-                                   VerticalAlignment="Center" HorizontalAlignment="Left"/>
-
-                        <TextBlock Grid.Column="1" Grid.Row="4"
-                                   Style="{DynamicResource CustomTextBlock}"
-                                   Text="WD1 to 1MHz" 
-                                   IsEnabled="{Binding IsConfigEnable}"
-                                   VerticalAlignment="Center" HorizontalAlignment="Left"/>
-
-                        <TextBlock Grid.Column="1" Grid.Row="5"
-                                   Style="{DynamicResource CustomTextBlock}"
-                                   Text="WD2 to 1MHz" 
-                                   IsEnabled="{Binding IsConfigEnable}"
-                                   VerticalAlignment="Center" HorizontalAlignment="Left"/>
-
-                        <TextBlock Grid.Column="1" Grid.Row="6"
-                                   Style="{DynamicResource CustomTextBlock}"
-                                   Text="Safety logic" 
-                                   IsEnabled="{Binding IsConfigEnable}"
-                                   VerticalAlignment="Center" HorizontalAlignment="Left"/>
-                    </Grid>
-
+                        <Button Content="Stop Watchdog"
+                                    Style="{DynamicResource SimpleButton}"
+                                    Command="{Binding StopWatchdog}"
+                                    IsEnabled="{Binding IsStopWDButtonEnabled}"/>
+                    </StackPanel>
+                                
                 </Grid>
             </TabItem>
             <TabItem Header="Testing" FontSize="20" Style="{DynamicResource CustomTabItem}">
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Orientation="Vertical"
+                                Grid.Row="0" Grid.Column="0">
+                        <Button Style="{DynamicResource SimpleButton}"
+                            Content="Reset ASIC"
+                            Foreground="{DynamicResource Foreground.Red.Default}"
+                            Command="{Binding ResetAsicCommand}"/>
+                        
+                        <Button Style="{DynamicResource SimpleButton}"
+                            Content="Reset Watchdog"
+                            Foreground="{DynamicResource Foreground.Red.Default}"
+                            Command="{Binding ResetAsicCommand}"/>
+                        
+                        <Button Style="{DynamicResource SimpleButton}"
+                            Content="Trigger safty logic fault"
+                            Foreground="{DynamicResource Foreground.Red.Default}"
+                            Command="{Binding ResetAsicCommand}"/>
+                    </StackPanel>
+                    
+                </Grid>
             </TabItem>
         </TabControl>
 
