@@ -80,13 +80,13 @@ namespace AB15_GUI.WPF.ViewModels
         /// </summary>
         public readonly LoggerViewModel LoggerViewModel;
 
-        public WatchdogViewModel watchdogPageViewModel;
-        public WatchdogViewModel WatchdogPageViewModel
+        public WatchdogViewModel watchdogViewModel;
+        public WatchdogViewModel WatchdogViewModel
         {
-            get => watchdogPageViewModel;
+            get => watchdogViewModel;
             set
             {
-                watchdogPageViewModel = value;
+                watchdogViewModel = value;
                 OnPropertyChanged();
             }
         }
@@ -104,7 +104,7 @@ namespace AB15_GUI.WPF.ViewModels
             loggerWindowView.Show();
 
             // TODO find better way
-            WatchdogPageViewModel = watchdogViewModel;
+            WatchdogViewModel = watchdogViewModel;
             
         }
     }

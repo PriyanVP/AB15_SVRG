@@ -91,7 +91,7 @@
                     <Frame x:Name="WatchdogFrame"
                            Source="WatchdogView.xaml"
                            LoadCompleted="WatchdogFrame_LoadCompleted"
-                           DataContext="{Binding WatchdogPageViewModel}"/>
+                           DataContext="{Binding WatchdogViewModel}"/>
                 </TabItem>
                 <TabItem>
                     <Frame Source="FiringView.xaml"/>

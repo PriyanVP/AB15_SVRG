@@ -426,7 +426,7 @@ namespace AB15_GUI.WPF.ViewModels
         public WatchdogViewModel(Logger logger)
         {
             this.logger = logger;
-            logger.Trace("In WatchdogPageViewModel");
+            logger.Trace("In WatchdogViewModel");
 
             // set defoult value
             //IsConfigEnable = false;
