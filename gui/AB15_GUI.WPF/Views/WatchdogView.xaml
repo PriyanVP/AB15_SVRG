@@ -32,6 +32,8 @@
         <TabControl Name="WatchdogPageControl" 
                     Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2"
                     Background="{DynamicResource UI.BackGround}" BorderThickness="0">
+            
+            <!--Status tab-->
             <TabItem Header="Status" FontSize="20" Style="{DynamicResource CustomTabItem}">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -443,6 +445,8 @@
 
                 </Grid>
             </TabItem>
+            
+            <!--Settings tab-->
             <TabItem Header="Settings" FontSize="20" Style="{DynamicResource CustomTabItem}">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -473,7 +477,6 @@
                                     HorizontalAlignment="Center" VerticalAlignment="Center">
                             <Button Style="{DynamicResource SimpleButton}" 
                                     Content="Write config to ASIC"
-                                    IsEnabled="{Binding IsConfigEnable, UpdateSourceTrigger=PropertyChanged}"
                                     Command="{Binding WriteConfigToASIC}"
                                     Grid.Column="0" Grid.Row="1"/>
 
@@ -489,14 +492,12 @@
                             <Button Content="Start Watchdog"
                                     Style="{DynamicResource SimpleButton}"
                                     Command="{Binding StartWatchdog}"
-                                    IsEnabled="{Binding IsStartWDButtonEnabled}"
                                     Grid.Column="0" Grid.Row="1"
                                     Margin="2" HorizontalAlignment="Center" VerticalAlignment="Top"/>
 
                             <Button Content="Stop Watchdog"
                                     Style="{DynamicResource SimpleButton}"
                                     Command="{Binding StopWatchdog}"
-                                    IsEnabled="{Binding IsStopWDButtonEnabled}"
                                     Grid.Column="1" Grid.Row="1"
                                     Margin="2" HorizontalAlignment="Center" VerticalAlignment="Top"/>
                         </StackPanel>
@@ -705,8 +706,7 @@
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-
-
+                        
                         <CheckBox Style="{DynamicResource ToggleSwitchStyle}" 
                                   IsEnabled="{Binding IsConfigEnable}"
                                   Grid.Column="0" Grid.Row="1" HorizontalAlignment="Right" Margin="8,2"/>
@@ -774,15 +774,18 @@
                                    Text="Safety logic" 
                                    IsEnabled="{Binding IsConfigEnable}"
                                    VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                        <Label HorizontalAlignment="Left" VerticalAlignment="Top"/>
                     </Grid>
 
                 </Grid>
             </TabItem>
+            
+            <!--Testing tab-->
             <TabItem Header="Testing" FontSize="20" Style="{DynamicResource CustomTabItem}">
             </TabItem>
         </TabControl>
 
-
+        <!--Enable help-->
         <Button Content="?" Grid.Row="0" Grid.Column="1" BorderThickness="1" Margin="2" Width="20"/>
 
     </Grid>

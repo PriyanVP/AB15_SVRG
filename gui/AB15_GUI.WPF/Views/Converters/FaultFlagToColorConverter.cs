@@ -19,15 +19,15 @@ namespace AB15_GUI.WPF.Views.Converters
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
 
-            UIFaultStatus status = (UIFaultStatus)values[0];
+            FaultStatus status = (FaultStatus)values[0];
 
             switch (status)
             {
-                case UIFaultStatus.NoStatus:
+                case FaultStatus.NoStatus:
                     return (Brush)App.Current.Resources["StatusBox.NoStatus"];
-                case UIFaultStatus.Good:
+                case FaultStatus.Good:
                     return (Brush)App.Current.Resources["StatusBox.Good"];
-                case UIFaultStatus.Fault:
+                case FaultStatus.Fault:
                     return (Brush)App.Current.Resources["StatusBox.Fault"];
                 default:
                     return Brushes.Transparent;
