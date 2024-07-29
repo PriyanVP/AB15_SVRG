@@ -1,0 +1,789 @@
+﻿<Page x:Class="AB15_GUI.WPF.Views.WatchdogView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:vm="clr-namespace:AB15_GUI.WPF.ViewModels"
+      xmlns:local="clr-namespace:AB15_GUI.WPF.Views"
+      xmlns:custom="clr-namespace:AB15_GUI.WPF.Views.Components"
+      xmlns:cnvrt="clr-namespace:AB15_GUI.WPF.Views.Converters"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="900"
+      Title="WatchdogView">
+
+    <Page.Resources>
+        <cnvrt:FaultFlagToColorConverter x:Key="FaultFlagToColorConverter"/>
+    </Page.Resources>
+
+    <Grid Background="{DynamicResource UI.BackGround}" KeyDown="Grid_KeyDown" MouseDown="Grid_MouseDown">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" MinHeight="20"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
+        </Grid.ColumnDefinitions>
+
+
+        <TabControl Name="WatchdogPageControl" 
+                    Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2"
+                    Background="{DynamicResource UI.BackGround}" BorderThickness="0">
+            <TabItem Header="Status" FontSize="20" Style="{DynamicResource CustomTabItem}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*" MinHeight="30"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <!--#region Main fault flag -->
+                        <Border Grid.Row="1" Grid.Column="5" Grid.ColumnSpan="2" BorderThickness="1" 
+                            BorderBrush="{DynamicResource Animation.Lines}" 
+                            CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                            <Border.Background>
+                                <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
+                                    <Binding Path = "WDFaultStatus"/>
+                                    <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                                </MultiBinding>
+                            </Border.Background>
+                            <Viewbox>
+                                <TextBlock Text="WD Fault Status" HorizontalAlignment="Center" FontSize="16" Style="{DynamicResource TextBlockStyle}"/>
+                            </Viewbox>
+                        </Border>
+
+                        <!--*********-->
+                        <Border Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" BorderThickness="1" 
+                            BorderBrush="{DynamicResource Animation.Lines}" 
+                            CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                            <Border.Background>
+                                <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
+                                    <Binding Path = "WD1FaultStatus"/>
+                                    <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                                </MultiBinding>
+                            </Border.Background>
+                            <Viewbox>
+                                <TextBlock Text="   WD1 Fault   " HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                            </Viewbox>
+                        </Border>
+
+                        <Border Grid.Row="3" Grid.Column="5" Grid.ColumnSpan="2" BorderThickness="1" 
+                            BorderBrush="{DynamicResource Animation.Lines}" 
+                            CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                            <Border.Background>
+                                <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
+                                    <Binding Path = "WD2FaultStatus"/>
+                                    <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                                </MultiBinding>
+                            </Border.Background>
+                            <Viewbox>
+                                <TextBlock Text="   WD2 Fault   " HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                            </Viewbox>
+                        </Border>
+
+                        <Border Grid.Row="3" Grid.Column="9" Grid.ColumnSpan="2" BorderThickness="1" 
+                            BorderBrush="{DynamicResource Animation.Lines}" 
+                            CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                            <Border.Background>
+                                <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
+                                    <Binding Path = "ErrorPinFaultStatus"/>
+                                    <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                                </MultiBinding>
+                            </Border.Background>
+                            <Viewbox>
+                                <TextBlock Text="   Error Pin   " HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                            </Viewbox>
+                        </Border>
+
+                        <!--*********-->
+
+                        <Border Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" BorderThickness="1" 
+                            BorderBrush="{DynamicResource Animation.Lines}" 
+                            CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                            <Border.Background>
+                                <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
+                                    <Binding Path = "WD1TimerFaultStatus"/>
+                                    <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                                </MultiBinding>
+                            </Border.Background>
+                            <Viewbox>
+                                <TextBlock Text="WD1 Timer Fault" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                            </Viewbox>
+                        </Border>
+
+                        <Border Grid.Row="4" Grid.Column="5" Grid.ColumnSpan="2" BorderThickness="1" 
+                            BorderBrush="{DynamicResource Animation.Lines}" 
+                            CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                            <Border.Background>
+                                <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
+                                    <Binding Path = "WD2TimerFaultStatus"/>
+                                    <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                                </MultiBinding>
+                            </Border.Background>
+                            <Viewbox>
+                                <TextBlock Text="WD2 Timer Fault" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                            </Viewbox>
+                        </Border>
+
+                        <Border Grid.Row="4" Grid.Column="9" Grid.ColumnSpan="2" BorderThickness="1" 
+                            BorderBrush="{DynamicResource Animation.Lines}" 
+                            CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                            <Border.Background>
+                                <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
+                                    <Binding Path = "OSCMONFaultStatus"/>
+                                    <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                                </MultiBinding>
+                            </Border.Background>
+                            <Viewbox>
+                                <TextBlock Text="    OSCMON     " HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                            </Viewbox>
+                        </Border>
+
+                        <!--*********-->
+
+                        <Border Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" BorderThickness="1" 
+                            BorderBrush="{DynamicResource Animation.Lines}" 
+                            CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                            <Border.Background>
+                                <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
+                                    <Binding Path = "WD1QAFaultStatus"/>
+                                    <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                                </MultiBinding>
+                            </Border.Background>
+                            <Viewbox>
+                                <TextBlock Text="     WD1 QA    " HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                            </Viewbox>
+                        </Border>
+
+                        <Border Grid.Row="5" Grid.Column="5" Grid.ColumnSpan="2" BorderThickness="1" 
+                            BorderBrush="{DynamicResource Animation.Lines}" 
+                            CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                            <Border.Background>
+                                <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
+                                    <Binding Path = "WD2QAFaultStatus"/>
+                                    <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                                </MultiBinding>
+                            </Border.Background>
+                            <Viewbox>
+                                <TextBlock Text="     WD2 QA    " HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                            </Viewbox>
+                        </Border>
+                        <!--#endregion-->
+
+                        <!--#region Reset couses -->
+                        <Border Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="7" BorderBrush="{DynamicResource UI.SeparateLine}" BorderThickness="0,1,0,0" VerticalAlignment="Bottom">
+                            <TextBlock Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="6" Text="Reset cause" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20"/>
+                        </Border>
+
+                        <Border Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="1" 
+                            BorderBrush="{DynamicResource Animation.Lines}" 
+                            CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                            <Border.Background>
+                                <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
+                                    <Binding Path = "OscillatorFaultStatus"/>
+                                    <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                                </MultiBinding>
+                            </Border.Background>
+                            <Viewbox>
+                                <TextBlock Text="Oscillator fault" HorizontalAlignment="Center" FontSize="16" Style="{DynamicResource TextBlockStyle}"/>
+                            </Viewbox>
+                        </Border>
+
+                        <Border Grid.Row="8" Grid.Column="2" Grid.ColumnSpan="2" BorderThickness="1" 
+                            BorderBrush="{DynamicResource Animation.Lines}" 
+                            CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                            <Border.Background>
+                                <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
+                                    <Binding Path = "WDResetFaultStatus"/>
+                                    <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                                </MultiBinding>
+                            </Border.Background>
+                            <Viewbox>
+                                <TextBlock Text="    WD Reset    " HorizontalAlignment="Center" FontSize="16" Style="{DynamicResource TextBlockStyle}"/>
+                            </Viewbox>
+                        </Border>
+
+                        <Border Grid.Row="8" Grid.Column="4" Grid.ColumnSpan="2" BorderThickness="1" 
+                            BorderBrush="{DynamicResource Animation.Lines}" 
+                            CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                            <Border.Background>
+                                <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
+                                    <Binding Path = "WD1CounterFaultStatus"/>
+                                    <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                                </MultiBinding>
+                            </Border.Background>
+                            <Viewbox>
+                                <TextBlock Text="  WD1 counter   " HorizontalAlignment="Center" FontSize="16" Style="{DynamicResource TextBlockStyle}"/>
+                            </Viewbox>
+                        </Border>
+
+                        <Border Grid.Row="8" Grid.Column="6" Grid.ColumnSpan="2" BorderThickness="1" 
+                            BorderBrush="{DynamicResource Animation.Lines}" 
+                            CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                            <Border.Background>
+                                <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
+                                    <Binding Path = "QA1FaultStatus"/>
+                                    <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                                </MultiBinding>
+                            </Border.Background>
+                            <Viewbox>
+                                <TextBlock Text="   QA1 fault    " HorizontalAlignment="Center" FontSize="16" Style="{DynamicResource TextBlockStyle}"/>
+                            </Viewbox>
+                        </Border>
+
+                        <Border Grid.Row="8" Grid.Column="8" Grid.ColumnSpan="2" BorderThickness="1" 
+                            BorderBrush="{DynamicResource Animation.Lines}" 
+                            CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                            <Border.Background>
+                                <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
+                                    <Binding Path = "WD2CounterFaultStatus"/>
+                                    <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                                </MultiBinding>
+                            </Border.Background>
+                            <Viewbox>
+                                <TextBlock Text="   WD2 counter  " HorizontalAlignment="Center" FontSize="16" Style="{DynamicResource TextBlockStyle}"/>
+                            </Viewbox>
+                        </Border>
+
+                        <Border Grid.Row="8" Grid.Column="10" Grid.ColumnSpan="2" BorderThickness="1" 
+                            BorderBrush="{DynamicResource Animation.Lines}" 
+                            CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                            <Border.Background>
+                                <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
+                                    <Binding Path = "QA2FaultStatus"/>
+                                    <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                                </MultiBinding>
+                            </Border.Background>
+                            <Viewbox>
+                                <TextBlock Text="   QA2 fault    " HorizontalAlignment="Center" FontSize="16" Style="{DynamicResource TextBlockStyle}"/>
+                            </Viewbox>
+                        </Border>
+                        <!--#endregion-->
+
+                    </Grid>
+
+                    <!--More size toggle button-->
+                    <ToggleButton Style="{DynamicResource MenuToggleButtonTemplate}" IsChecked="False"
+                                  x:Name="MoreInfoButton"
+                                  HorizontalAlignment="Center" VerticalAlignment="Bottom" 
+                                  Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Additional Info" FontSize="20" Grid.Column="1" Style="{DynamicResource TextBlockStyle}"/>
+                        </StackPanel>
+
+                        <ToggleButton.Triggers>
+                            <EventTrigger RoutedEvent="ToggleButton.Unchecked">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation 
+                                            Storyboard.TargetName="MorePanel"
+                                            Storyboard.TargetProperty="Height"
+                                            BeginTime="0:0:0"
+                                            From="0" To="180"
+                                            Duration="0:0:0.2"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                            <EventTrigger RoutedEvent="ToggleButton.Checked">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation 
+                                            Storyboard.TargetName="MorePanel"
+                                            Storyboard.TargetProperty="Height"
+                                            BeginTime="0:0:0"
+                                            To="0" From="180"
+                                            Duration="0:0:0.2"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </ToggleButton.Triggers>
+                    </ToggleButton>
+
+                    <Grid Name="MorePanel" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border Grid.Column="0" Grid.ColumnSpan="3" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource UI.SeparateLine}"/>
+
+                        <Grid Grid.Column="0" Margin="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="1*"/>
+                            </Grid.RowDefinitions>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" MinWidth="220"/>
+                                <ColumnDefinition Width="auto" MinWidth="60"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="WD1" 
+                                       VerticalAlignment="Top" TextAlignment="Center" Margin="2"/>
+
+                            <TextBlock Grid.Row="1" Grid.Column="0" Margin="2"
+                                       VerticalAlignment="Center" HorizontalAlignment="Center"
+                                       Style="{DynamicResource CustomTextBlock}"
+                                       Text="Fault counter"/>
+                            <TextBlock Grid.Row="2" Grid.Column="0" Margin="2"
+                                       VerticalAlignment="Center" HorizontalAlignment="Center"
+                                       Style="{DynamicResource CustomTextBlock}"
+                                       Text="Timing monitor results"/>
+                            <TextBlock Grid.Row="3" Grid.Column="0" Margin="2"
+                                       VerticalAlignment="Center" HorizontalAlignment="Center"
+                                       Style="{DynamicResource CustomTextBlock}"
+                                       Text="Number of counted error events"/>
+                            <TextBlock Grid.Row="4" Grid.Column="0" Margin="2"
+                                       VerticalAlignment="Center" HorizontalAlignment="Center"
+                                       Style="{DynamicResource CustomTextBlock}"
+                                       Text="QA1 failure counter value"/>
+
+                            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding WD1FaultCounter}"/>
+                            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding WD1TimeingMonitorCounter}"/>
+                            <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding WD1ErrorEventsCounter}"/>
+                            <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding WD1QAFailureCounter}"/>
+                        </Grid>
+
+                        <Grid Grid.Column="1" Margin="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="1*"/>
+                            </Grid.RowDefinitions>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" MinWidth="220"/>
+                                <ColumnDefinition Width="auto" MinWidth="60"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="WD2" 
+                                       VerticalAlignment="Top" TextAlignment="Center" Margin="2"/>
+
+                            <TextBlock Grid.Row="1" Grid.Column="0" Margin="2"
+                                       VerticalAlignment="Center" HorizontalAlignment="Center"
+                                       Style="{DynamicResource CustomTextBlock}"
+                                       Text="Fault counter"/>
+                            <TextBlock Grid.Row="2" Grid.Column="0" Margin="2"
+                                       VerticalAlignment="Center" HorizontalAlignment="Center"
+                                       Style="{DynamicResource CustomTextBlock}"
+                                       Text="Timing monitor results"/>
+                            <TextBlock Grid.Row="3" Grid.Column="0" Margin="2"
+                                       VerticalAlignment="Center" HorizontalAlignment="Center"
+                                       Style="{DynamicResource CustomTextBlock}"
+                                       Text="QA2 failure counter value"/>
+
+                            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding WD2FaultCounter}"/>
+                            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding WD2TimingMonitorCounter}"/>
+                            <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding WD2QAFailureCounter}"/>
+                        </Grid>
+
+                        <Grid Grid.Column="2" Margin="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="EN" VerticalAlignment="Top" TextAlignment="Center" Margin="2"/>
+
+                            <!--TODO add converter for text Hight - Low-->
+                            <Border Grid.Row="1" BorderThickness="1" 
+                            BorderBrush="{DynamicResource Animation.Lines}" 
+                            CornerRadius="5" HorizontalAlignment="Left" Margin="2">
+                                <Border.Background>
+                                    <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
+                                        <Binding Path = "EN0HightStatus"/>
+                                        <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                                    </MultiBinding>
+                                </Border.Background>
+                                <TextBlock Text="EN0 Hight" HorizontalAlignment="Center" FontSize="15" Style="{DynamicResource TextBlockStyle}"/>
+                            </Border>
+
+                        </Grid>
+                    </Grid>
+
+                </Grid>
+            </TabItem>
+            <TabItem Header="Settings" FontSize="20" Style="{DynamicResource CustomTabItem}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="3*"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Column="0" Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <!--<TextBlock Text="Read/Write config from watchdog" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0"
+                                   HorizontalAlignment="Center" VerticalAlignment="Bottom"/>-->
+
+                        <StackPanel Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" 
+                                    HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Button Style="{DynamicResource SimpleButton}" 
+                                    Content="Write config to ASIC"
+                                    IsEnabled="{Binding IsConfigEnable, UpdateSourceTrigger=PropertyChanged}"
+                                    Command="{Binding WriteConfigToASIC}"
+                                    Grid.Column="0" Grid.Row="1"/>
+
+                            <Button Content="Read config from ASIC"
+                                    Style="{DynamicResource SimpleButton}"
+                                    Command="{Binding ReadConfigFromASIC}"
+                                    Grid.Column="1" Grid.Row="1"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" 
+                                    VerticalAlignment="Center" HorizontalAlignment="Center">
+
+                            <Button Content="Start Watchdog"
+                                    Style="{DynamicResource SimpleButton}"
+                                    Command="{Binding StartWatchdog}"
+                                    IsEnabled="{Binding IsStartWDButtonEnabled}"
+                                    Grid.Column="0" Grid.Row="1"
+                                    Margin="2" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+
+                            <Button Content="Stop Watchdog"
+                                    Style="{DynamicResource SimpleButton}"
+                                    Command="{Binding StopWatchdog}"
+                                    IsEnabled="{Binding IsStopWDButtonEnabled}"
+                                    Grid.Column="1" Grid.Row="1"
+                                    Margin="2" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                        </StackPanel>
+
+                    </Grid>
+
+                    <Grid Grid.Column="0" Grid.Row="1">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto" MinWidth="40"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <!--#region WD1 slider-->
+
+                        <TextBlock Text="Time settings for Watchdog"
+                                   Grid.Column="0" Grid.ColumnSpan="5"
+                                   Grid.Row="0" HorizontalAlignment="Center"
+                                   VerticalAlignment="Top"/>
+
+                        <TextBlock Text="WD1" Grid.Column="1" Grid.Row="1" VerticalAlignment="Center"
+                                   Style="{DynamicResource CustomTextBlock}"
+                                IsEnabled="{Binding IsConfigEnable}"/>
+
+                        <StackPanel Grid.Column="1" Grid.Row="1" Margin="0,0,5,0" VerticalAlignment="Center">
+                            <TextBlock Text="Response time"
+                                   Style="{DynamicResource CustomTextBlock}"
+                                       IsEnabled="{Binding IsConfigEnable}"
+                                       HorizontalAlignment="Right"/>
+                            <TextBlock Text="Lock time"
+                                   Style="{DynamicResource CustomTextBlock}"
+                                IsEnabled="{Binding IsConfigEnable}"
+                                       HorizontalAlignment="Right"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2" Grid.Row="1" VerticalAlignment="Center">
+                            <TextBox Text="{Binding ElementName=WD1ResponseTimeSlider,Path=Value}" Focusable="False"
+                                     IsReadOnly="True"
+                                       IsEnabled="{Binding IsConfigEnable}"/>
+                            <TextBox Text="{Binding ElementName=WD1LockTimeSlider,Path=Value}" Focusable="False"
+                                     IsReadOnly="True"
+                                       IsEnabled="{Binding IsConfigEnable}"/>
+                        </StackPanel>
+
+                        <Slider Name="WD1ResponseTimeSlider" ValueChanged="WD1ResponseTimeSlider_ValueChanged"
+                                TickFrequency="1" IsSnapToTickEnabled="True"
+                                Grid.Column="3" Grid.Row="1"
+                                Style="{DynamicResource WatchdogTop_Slider}" VerticalAlignment="Center" 
+                                HorizontalAlignment="Left"
+                                Value="{Binding WD1ResponseTime}" Width="200"
+                                Minimum="0" Maximum="63"
+                                Margin="20,0,20,0"
+                                IsEnabled="{Binding IsConfigEnable}"/>
+
+                        <Slider Name="WD1LockTimeSlider" ValueChanged="WD1LockTimeSlider_ValueChanged"
+                                TickFrequency="1" IsSnapToTickEnabled="True"
+                                Grid.Column="3" Grid.Row="1"
+                                Style="{DynamicResource WatchdogBot_Slider}" VerticalAlignment="Center" 
+                                HorizontalAlignment="Left"
+                                Value="{Binding WD1LockTime}" Width="200"
+                                Minimum="0" Maximum="63"
+                                Margin="20,0,20,0"
+                                IsEnabled="{Binding IsConfigEnable}"/>
+
+                        <!--#endregion-->
+
+                        <!--#region WD2 slider-->
+
+                        <TextBlock Text="WD2" Grid.Column="1" Grid.Row="2" VerticalAlignment="Center"
+                                   Style="{DynamicResource CustomTextBlock}"
+                                IsEnabled="{Binding IsConfigEnable}"/>
+
+                        <StackPanel Grid.Column="1" Grid.Row="2" Margin="0,0,5,0" VerticalAlignment="Center">
+                            <TextBlock Text="Response time" 
+                                   Style="{DynamicResource CustomTextBlock}"
+                                       IsEnabled="{Binding IsConfigEnable}"
+                                       HorizontalAlignment="Right"/>
+                            <TextBlock Text="Lock time" 
+                                   Style="{DynamicResource CustomTextBlock}"
+                                       IsEnabled="{Binding IsConfigEnable}"
+                                       HorizontalAlignment="Right"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2" Grid.Row="2" VerticalAlignment="Center">
+                            <TextBox Text="{Binding ElementName=WD2ResponseTimeSlider,Path=Value}"
+                                     IsReadOnly="True"
+                                       IsEnabled="{Binding IsConfigEnable}"/>
+                            <TextBox Text="{Binding ElementName=WD2LockTimeSlider,Path=Value}"
+                                     IsReadOnly="True"
+                                       IsEnabled="{Binding IsConfigEnable}"/>
+                        </StackPanel>
+
+                        <Slider Name="WD2ResponseTimeSlider" ValueChanged="WD2ResponseTimeSlider_ValueChanged"
+                                TickFrequency="1" IsSnapToTickEnabled="True"
+                                Grid.Column="3" Grid.Row="2"
+                                Style="{DynamicResource WatchdogTop_Slider}" VerticalAlignment="Center" 
+                                HorizontalAlignment="Left"
+                                Value="{Binding WD2ResponseTime}" Width="200"
+                                Minimum="0" Maximum="63"
+                                Margin="20,0,20,0"
+                                       IsEnabled="{Binding IsConfigEnable}"/>
+
+                        <Slider Name="WD2LockTimeSlider" ValueChanged="WD2LockTimeSlider_ValueChanged"
+                                TickFrequency="1" IsSnapToTickEnabled="True"
+                                Grid.Column="3" Grid.Row="2"
+                                Style="{DynamicResource WatchdogBot_Slider}" VerticalAlignment="Center" 
+                                HorizontalAlignment="Left"
+                                Value="{Binding WD2LockTime}" Width="200"
+                                Minimum="0" Maximum="63"
+                                Margin="20,0,20,0"
+                                       IsEnabled="{Binding IsConfigEnable}"/>
+                        <!--#endregion-->
+
+                        <!--#region EN0 Disable Treshhold slider-->
+
+                        <TextBlock Text="Disable threshold EN0"
+                                   Grid.Column="0" Grid.ColumnSpan="5"
+                                   Grid.Row="3" HorizontalAlignment="Center"
+                                   VerticalAlignment="Bottom"
+                                   Margin="0,0,0,5"/>
+
+                        <StackPanel Grid.Column="1" Grid.Row="4" Orientation="Horizontal" VerticalAlignment="Center">
+                            <CheckBox x:Name="EN0DisableThresholdEnableCheckBox" 
+                                      IsChecked="{Binding IsEN0Enabled}"
+                                      Style="{DynamicResource ToggleSwitchStyle}" 
+                                      HorizontalAlignment="Right" Margin="5,0"
+                                      IsEnabled="{Binding IsConfigEnable}"/>
+                            <TextBlock Text="Enable EN0" Grid.Column="0" Grid.Row="4" VerticalAlignment="Center"
+                                   Style="{DynamicResource CustomTextBlock}"
+                                       IsEnabled="{Binding IsConfigEnable}"/>
+
+                            <StackPanel HorizontalAlignment="Right" Margin="5" VerticalAlignment="Center">
+                                <TextBlock Text="WD1" Margin="0,0,5,0"
+                                   Style="{DynamicResource CustomTextBlock}"
+                                       HorizontalAlignment="Right"
+                                       IsEnabled="{Binding IsConfigEnable}"/>
+                                <TextBlock Text="WD2" Margin="0,0,5,0"
+                                   Style="{DynamicResource CustomTextBlock}"
+                                       HorizontalAlignment="Right"
+                                       IsEnabled="{Binding IsConfigEnable}"/>
+                            </StackPanel>
+                        </StackPanel>
+
+
+
+                        <StackPanel Grid.Column="2" Grid.Row="4" VerticalAlignment="Center">
+                            <TextBox Text="{Binding ElementName=WD1EN0DisableTreshholdSlider,Path=Value}"
+                                       IsEnabled="{Binding IsConfigEnable}"/>
+                            <TextBox Text="{Binding ElementName=WD2EN0DisableTreshholdSlider,Path=Value}"
+                                       IsEnabled="{Binding IsConfigEnable}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="3" Grid.Row="4" VerticalAlignment="Center">
+                            <Slider Name="WD1EN0DisableTreshholdSlider" 
+                                TickFrequency="1" IsSnapToTickEnabled="True"
+                                Style="{DynamicResource WatchdogTop_SliderThresholdTop}" 
+                                VerticalAlignment="Top" 
+                                HorizontalAlignment="Left"
+                                Value="{Binding WD1EN0DisableThreshold}" Width="200"
+                                Minimum="0" Maximum="63"
+                                Margin="20,0,20,5"
+                                IsEnabled="{Binding IsConfigEnable}"/>
+
+                            <Slider Name="WD2EN0DisableTreshholdSlider"
+                                TickFrequency="1" IsSnapToTickEnabled="True"
+                                Style="{DynamicResource WatchdogTop_SliderThresholdTop}" 
+                                VerticalAlignment="Bottom" 
+                                HorizontalAlignment="Left"
+                                Value="{Binding WD2EN0DisableThreshold}" Width="200"
+                                Minimum="0" Maximum="63"
+                                Margin="20,5,20,0"
+                                IsEnabled="{Binding IsConfigEnable}"/>
+                        </StackPanel>
+
+                        <!--#endregion-->
+
+
+
+                    </Grid>
+
+                    <Grid Grid.Column="1" Grid.Row="0" Grid.RowSpan="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+
+                        <CheckBox Style="{DynamicResource ToggleSwitchStyle}" 
+                                  IsEnabled="{Binding IsConfigEnable}"
+                                  Grid.Column="0" Grid.Row="1" HorizontalAlignment="Right" Margin="8,2"/>
+
+                        <CheckBox Style="{DynamicResource ToggleSwitchStyle}"  
+                                  IsEnabled="{Binding IsConfigEnable}"
+                                  Grid.Column="0" Grid.Row="2" HorizontalAlignment="Right" Margin="8,2"/>
+
+                        <CheckBox Style="{DynamicResource ToggleSwitchStyle}"  
+                                  IsEnabled="{Binding IsConfigEnable}"
+                                  Grid.Column="0" Grid.Row="3" HorizontalAlignment="Right" Margin="8,2"/>
+
+                        <CheckBox Style="{DynamicResource ToggleSwitchStyle}"  
+                                  IsEnabled="{Binding IsConfigEnable}"
+                                  Grid.Column="0" Grid.Row="4" HorizontalAlignment="Right" Margin="8,2"/>
+
+                        <CheckBox Style="{DynamicResource ToggleSwitchStyle}"  
+                                  IsEnabled="{Binding IsConfigEnable}"
+                                  Grid.Column="0" Grid.Row="5" HorizontalAlignment="Right" Margin="8,2"/>
+
+                        <CheckBox Style="{DynamicResource ToggleSwitchStyle}"  
+                                  IsEnabled="{Binding IsConfigEnable}"
+                                  Grid.Column="0" Grid.Row="6" HorizontalAlignment="Right" Margin="8,2"/>
+
+                        <TextBlock Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0"
+                                   Text="Main settings"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Top"
+                                   Margin="5"/>
+
+                        <!--TODO-->
+                        <TextBlock Grid.Column="1" Grid.Row="1"
+                                   Style="{DynamicResource CustomeRedTextBlock}"
+                                   Text="ASIC initialization reset"
+                                   IsEnabled="{Binding IsConfigEnable}"
+                                   VerticalAlignment="Center" HorizontalAlignment="Left"/>
+
+                        <!--TODO-->
+                        <TextBlock Grid.Column="1" Grid.Row="2"
+                                   Style="{DynamicResource CustomeRedTextBlock}"
+                                   Text="Watchdog reset"
+                                   IsEnabled="{Binding IsConfigEnable}"
+                                   VerticalAlignment="Center" HorizontalAlignment="Left"/>
+
+                        <TextBlock Grid.Column="1" Grid.Row="3"
+                                   Style="{DynamicResource CustomTextBlock}"
+                                   Text="SLFF" 
+                                   IsEnabled="{Binding IsConfigEnable}"
+                                   VerticalAlignment="Center" HorizontalAlignment="Left"/>
+
+                        <TextBlock Grid.Column="1" Grid.Row="4"
+                                   Style="{DynamicResource CustomTextBlock}"
+                                   Text="WD1 to 1MHz" 
+                                   IsEnabled="{Binding IsConfigEnable}"
+                                   VerticalAlignment="Center" HorizontalAlignment="Left"/>
+
+                        <TextBlock Grid.Column="1" Grid.Row="5"
+                                   Style="{DynamicResource CustomTextBlock}"
+                                   Text="WD2 to 1MHz" 
+                                   IsEnabled="{Binding IsConfigEnable}"
+                                   VerticalAlignment="Center" HorizontalAlignment="Left"/>
+
+                        <TextBlock Grid.Column="1" Grid.Row="6"
+                                   Style="{DynamicResource CustomTextBlock}"
+                                   Text="Safety logic" 
+                                   IsEnabled="{Binding IsConfigEnable}"
+                                   VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                    </Grid>
+
+                </Grid>
+            </TabItem>
+            <TabItem Header="Testing" FontSize="20" Style="{DynamicResource CustomTabItem}">
+            </TabItem>
+        </TabControl>
+
+
+        <Button Content="?" Grid.Row="0" Grid.Column="1" BorderThickness="1" Margin="2" Width="20"/>
+
+    </Grid>
+</Page>

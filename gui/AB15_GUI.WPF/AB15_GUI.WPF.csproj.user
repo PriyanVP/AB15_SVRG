@@ -7,18 +7,63 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="Views\AB15DataView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\Components\DataArrow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\Components\ConnectionAnimation.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\Components\WatchdogSlider.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\DiagnosticsView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\FiringView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\HomeView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\SensorView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\SPILearningView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\WatchdogView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Page Update="Views\AB15DataView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Views\Components\DataArrow.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\Components\ConnectionAnimation.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Components\WatchdogSlider.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\DiagnosticsView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\FiringView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\HomeView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\SensorView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\SPILearningView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\Themes\Common.xaml">
@@ -28,6 +73,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\Themes\Light.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\WatchdogView.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
