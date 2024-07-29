@@ -1,8 +1,7 @@
 using AB15_GUI.WPF.Models.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Automation.Peers;
+using AB15_GUI.WPF.Models.Genereted.Registers;
 
 namespace AB15_GUI.WPF.Models
 {
@@ -12,53 +11,29 @@ namespace AB15_GUI.WPF.Models
     public class WDConfigurePayload : IByteListSerializable
     {
         /// <summary>
-        /// Class to hold decoded WD WatchdogStatus information
+        /// Register with WD1 main configuration
         /// </summary>
-        public class WDConfiguration
-        {
-            /// <summary>
-            /// Slow watchdog lock time (valid timing > lock time)
-            /// </summary>
-            public int SlowWatchdogLockTime { get; set; }
+        public Reg_spi_config_wd1 spi_config_wd1 = new Reg_spi_config_wd1();
 
-            /// <summary>
-            /// Slow watchdog response time (valid timing <= response time)
-            /// </summary>
-            public int SlowWatchdogResponseTime { get; set; }
+        /// <summary>
+        /// Register with WD2 main configuration
+        /// </summary>
+        public Reg_spi_config_wd2 spi_config_wd2 = new Reg_spi_config_wd2();
 
-            /// <summary>
-            /// Fast watchdog lock time (valid timing > lock time)
-            /// </summary>
-            public int FastWatchdogLockTime { get; set; }
+        /// <summary>
+        /// ENx decouple configuration
+        /// </summary>
+        public Reg_spi_config_wd_decouple spi_config_wd_decouple = new Reg_spi_config_wd_decouple();
 
-            /// <summary>
-            /// Fast watchdog response time (valid timing <= response time)
-            /// </summary>
-            public int FastWatchdogResponseTime { get; set; }
-
-            /// <summary>
-            /// EN0 disable threshold for WD1
-            /// </summary>
-            public int SlowWatchdogEn0DisThreshold { get; set; }
-
-            /// <summary>
-            /// EN0 disable threshold for WD2
-            /// </summary>
-            public int FastWatchdogEn0DisThreshold { get; set; }
-
-        }
+        /// <summary>
+        /// EN0 threshold configuration
+        /// </summary>
+        public Reg_spi_config_wd_thres0 spi_config_wd_thres0 = new Reg_spi_config_wd_thres0();
 
         /// <summary>
         /// Property to report errors
         /// </summary>
         public string? Error { get; private set; } = null;
-
-        /// <summary>
-        /// Property to send WD configuration information
-        /// Error property should be set in such case
-        /// </summary>
-        /// TODO Create WD Status struct
-        public WDConfiguration? WatchdogConfiguration{ get; set; } = null;
 
         /// <summary>
         /// Convert byte list to field values
@@ -93,7 +68,23 @@ namespace AB15_GUI.WPF.Models
         /// <returns>Byte list of PC-MCU payload data</returns>
         public List<byte> Serialize()
         {
-            List<byte> bytes = [0x00, 0x00, 0x00, 0x00, 0x00, 0x00]; // 6 bytes for now
+            List<byte> serializedPackage = new List<byte>();
+
+            // spi_config_wd1
+            serializedPackage.Add(spi_config_wd1.Data.GetMSB());
+            serializedPackage.Add(spi_config_wd1.Data.GetLSB());
+
+            // spi_config_wd2
+            serializedPackage.Add(spi_config_wd2.Data.GetMSB());
+            serializedPackage.Add(spi_config_wd2.Data.GetLSB());
+
+            // spi_config_wd_decouple
+            serializedPackage.Add(spi_config_wd_decouple.Data.GetMSB());
+            serializedPackage.Add(spi_config_wd_decouple.Data.GetLSB());
+
+            // spi_config_wd_thres0
+            serializedPackage.Add(spi_config_wd_thres0.Data.GetMSB());
+            serializedPackage.Add(spi_config_wd_thres0.Data.GetLSB());
 
             // SPI_CONFIG_WD1 - 0x21
             // 0..5  spi_set_responsetime_wd1 (6 bits)
@@ -119,8 +110,7 @@ namespace AB15_GUI.WPF.Models
             // 9     spi_set_wd2_clock (fast wd) ... 1MHz clock for testing only
             // 10    spi_lock_wd_clock ... to lock wd clock frequency
 
-            return bytes;
-
+            return serializedPackage;
         }
 
     }

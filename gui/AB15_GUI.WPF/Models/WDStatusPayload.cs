@@ -1,6 +1,7 @@
 using AB15_GUI.WPF.Models.Interfaces;
 using System;
 using System.Collections.Generic;
+using AB15_GUI.WPF.Models.Genereted.Registers;
 
 namespace AB15_GUI.WPF.Models
 {
@@ -101,6 +102,21 @@ namespace AB15_GUI.WPF.Models
             /// </summary>
             public bool FastWatchdogQAFault { get; set; }
         }
+
+        /// <summary>
+        /// WD1 status register
+        /// </summary>
+        public Reg_spi_read_wdstatus1 spi_read_wdstatus1 = new Reg_spi_read_wdstatus1();
+        
+        /// <summary>
+        /// WD2 status register
+        /// </summary>
+        public Reg_spi_read_wdstatus2 spi_read_wdstatus2 = new Reg_spi_read_wdstatus2();
+        
+        /// <summary>
+        /// ENx status register
+        /// </summary>
+        public Reg_spi_read_enx spi_read_enx = new Reg_spi_read_enx();
 
         /// <summary>
         /// Property to report errors
