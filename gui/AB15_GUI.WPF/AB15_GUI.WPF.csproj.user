@@ -7,7 +7,7 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="Views\AB15DataPage.xaml.cs">
+    <Compile Update="Views\AB15DataView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\Components\DataArrow.xaml.cs">
@@ -19,19 +19,19 @@
     <Compile Update="Views\Components\WatchdogSlider.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\DiagnosticsPaga.xaml.cs">
+    <Compile Update="Views\DiagnosticsView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\FiringPage.xaml.cs">
+    <Compile Update="Views\FiringView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\HomePage.xaml.cs">
+    <Compile Update="Views\HomeView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\SensorPage.xaml.cs">
+    <Compile Update="Views\SensorView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\SPILearningPage.xaml.cs">
+    <Compile Update="Views\SPILearningView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\WatchdogView.xaml.cs">
@@ -39,7 +39,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="Views\AB15DataPage.xaml">
+    <Page Update="Views\AB15DataView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\Components\DataArrow.xaml">
@@ -51,19 +51,19 @@
     <Page Update="Views\Components\WatchdogSlider.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\DiagnosticsPaga.xaml">
+    <Page Update="Views\DiagnosticsView.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\FiringPage.xaml">
+    <Page Update="Views\FiringView.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\HomePage.xaml">
+    <Page Update="Views\HomeView.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\SensorPage.xaml">
+    <Page Update="Views\SensorView.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\SPILearningPage.xaml">
+    <Page Update="Views\SPILearningView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\Themes\Common.xaml">

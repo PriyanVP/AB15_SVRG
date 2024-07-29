@@ -81,10 +81,10 @@
                     </Style>
                 </TabControl.Resources>
                 <TabItem>
-                    <Frame Source="HomePage.xaml"/>
+                    <Frame Source="HomeView.xaml"/>
                 </TabItem>
                 <TabItem>
-                    <Frame Source="SPILearningPage.xaml"/>
+                    <Frame Source="SPILearningView.xaml"/>
                 </TabItem>
                 <TabItem>
                     <!--TODO find better way-->
@@ -94,16 +94,16 @@
                            DataContext="{Binding WatchdogPageViewModel}"/>
                 </TabItem>
                 <TabItem>
-                    <Frame Source="FiringPage.xaml"/>
+                    <Frame Source="FiringView.xaml"/>
                 </TabItem>
                 <TabItem>
-                    <Frame Source="AB15DataPage.xaml"/>
+                    <Frame Source="AB15DataView.xaml"/>
                 </TabItem>
                 <TabItem>
-                    <Frame Source="SensorPage.xaml"/>
+                    <Frame Source="SensorView.xaml"/>
                 </TabItem>
                 <TabItem>
-                    <Frame Source="DiagnosticsPaga.xaml"/>
+                    <Frame Source="DiagnosticsView.xaml"/>
                 </TabItem>
             </TabControl>
 
