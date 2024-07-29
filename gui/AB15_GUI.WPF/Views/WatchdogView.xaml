@@ -32,6 +32,7 @@
         <TabControl Name="WatchdogPageControl" 
                     Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2"
                     Background="{DynamicResource UI.BackGround}" BorderThickness="0">
+            <!--Status tab-->
             <TabItem Header="Status" FontSize="20" Style="{DynamicResource CustomTabItem}">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -443,6 +444,8 @@
 
                 </Grid>
             </TabItem>
+
+            <!-- Settings tab -->
             <TabItem Header="Settings" FontSize="20" Style="{DynamicResource CustomTabItem}">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -637,8 +640,6 @@
 
                         <!--#endregion-->
 
-
-
                     </Grid>
 
                     <StackPanel Orientation="Vertical"
@@ -648,7 +649,6 @@
                         
                         <Button Style="{DynamicResource SimpleButton}" 
                                     Content="Write config to ASIC"
-                                    IsEnabled="{Binding IsConfigEnable}"
                                     Command="{Binding WriteConfigToASIC}"/>
 
                         <Button Content="Read config from ASIC"
@@ -659,17 +659,17 @@
                         
                         <Button Content="Start Watchdog"
                                     Style="{DynamicResource SimpleButton}"
-                                    Command="{Binding StartWatchdog}"
-                                    IsEnabled="{Binding IsStartWDButtonEnabled}"/>
+                                    Command="{Binding StartWatchdog}"/>
 
                         <Button Content="Stop Watchdog"
                                     Style="{DynamicResource SimpleButton}"
-                                    Command="{Binding StopWatchdog}"
-                                    IsEnabled="{Binding IsStopWDButtonEnabled}"/>
+                                    Command="{Binding StopWatchdog}"/>
                     </StackPanel>
                                 
                 </Grid>
             </TabItem>
+
+            <!-- Testing tab -->
             <TabItem Header="Testing" FontSize="20" Style="{DynamicResource CustomTabItem}">
 
                 <Grid>
