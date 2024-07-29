@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace AB15_GUI.WPF.Models
@@ -11,7 +12,7 @@ namespace AB15_GUI.WPF.Models
         /// <returns></returns>
         public static byte GetMSB(this UInt16 data)
         {
-            return (byte) ((data & 0xFF00) >> 8)
+            return (byte)((data & 0xFF00) >> 8);
         }
 
         /// <summary>
@@ -21,7 +22,7 @@ namespace AB15_GUI.WPF.Models
         /// <returns></returns>
         public static byte GetLSB(this UInt16 data)
         {
-            return (byte) (data & 0x00FF)
+            return (byte)(data & 0x00FF);
         }
     }
 }
