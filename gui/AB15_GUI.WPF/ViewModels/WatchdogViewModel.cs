@@ -428,7 +428,7 @@ namespace AB15_GUI.WPF.ViewModels
             this.logger = logger;
             logger.Trace("In WatchdogViewModel");
 
-            // set defoult value
+            // set default value
             //IsConfigEnable = false;
             //IsStartWDButtonEnabled = false;
             //IsStopWDButtonEnabled = false;
