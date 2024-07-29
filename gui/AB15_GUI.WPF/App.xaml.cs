@@ -71,9 +71,9 @@ namespace AB15_GUI.WPF
                                 return tmpWindow;
                             });
 
-                            services.AddSingleton<WatchDogView>(sp =>
+                            services.AddSingleton<WatchdogView>(sp =>
                             {
-                                WatchDogView tmpWindow = new WatchDogView();
+                                WatchdogView tmpWindow = new WatchdogView();
                                 tmpWindow.DataContext = sp.GetRequiredService<WatchdogViewModel>();
                                 return tmpWindow;
                             });

@@ -16,14 +16,14 @@ using System.Windows.Shapes;
 namespace AB15_GUI.WPF.Views
 {
     /// <summary>
-    /// Interaction logic for WatchDog.xaml
+    /// Interaction logic for WatchdogView.xaml
     /// </summary>
-    public partial class WatchDogView : Page
+    public partial class WatchdogView : Page
     {
         /// <summary>
         /// Constructor
         /// </summary>
-        public WatchDogView()
+        public WatchdogView()
         {
             InitializeComponent();
 

@@ -1,4 +1,4 @@
-﻿<Page x:Class="AB15_GUI.WPF.Views.WatchDogView"
+﻿<Page x:Class="AB15_GUI.WPF.Views.WatchdogView"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -9,7 +9,7 @@
       xmlns:cnvrt="clr-namespace:AB15_GUI.WPF.Views.Converters"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="900"
-      Title="WatchDogView">
+      Title="WatchdogView">
 
     <Page.Resources>
         <cnvrt:FaultFlagToColorConverter x:Key="FaultFlagToColorConverter"/>
@@ -359,19 +359,19 @@
 
                             <TextBlock Grid.Row="1" Grid.Column="0" Margin="2"
                                        VerticalAlignment="Center" HorizontalAlignment="Center"
-                                       Style="{DynamicResource CustomeTextBlock}"
+                                       Style="{DynamicResource CustomTextBlock}"
                                        Text="Fault counter"/>
                             <TextBlock Grid.Row="2" Grid.Column="0" Margin="2"
                                        VerticalAlignment="Center" HorizontalAlignment="Center"
-                                       Style="{DynamicResource CustomeTextBlock}"
+                                       Style="{DynamicResource CustomTextBlock}"
                                        Text="Timing monitor results"/>
                             <TextBlock Grid.Row="3" Grid.Column="0" Margin="2"
                                        VerticalAlignment="Center" HorizontalAlignment="Center"
-                                       Style="{DynamicResource CustomeTextBlock}"
+                                       Style="{DynamicResource CustomTextBlock}"
                                        Text="Number of counted error events"/>
                             <TextBlock Grid.Row="4" Grid.Column="0" Margin="2"
                                        VerticalAlignment="Center" HorizontalAlignment="Center"
-                                       Style="{DynamicResource CustomeTextBlock}"
+                                       Style="{DynamicResource CustomTextBlock}"
                                        Text="QA1 failure counter value"/>
 
                             <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding WD1FaultCounter}"/>
@@ -399,15 +399,15 @@
 
                             <TextBlock Grid.Row="1" Grid.Column="0" Margin="2"
                                        VerticalAlignment="Center" HorizontalAlignment="Center"
-                                       Style="{DynamicResource CustomeTextBlock}"
+                                       Style="{DynamicResource CustomTextBlock}"
                                        Text="Fault counter"/>
                             <TextBlock Grid.Row="2" Grid.Column="0" Margin="2"
                                        VerticalAlignment="Center" HorizontalAlignment="Center"
-                                       Style="{DynamicResource CustomeTextBlock}"
+                                       Style="{DynamicResource CustomTextBlock}"
                                        Text="Timing monitor results"/>
                             <TextBlock Grid.Row="3" Grid.Column="0" Margin="2"
                                        VerticalAlignment="Center" HorizontalAlignment="Center"
-                                       Style="{DynamicResource CustomeTextBlock}"
+                                       Style="{DynamicResource CustomTextBlock}"
                                        Text="QA2 failure counter value"/>
 
                             <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding WD2FaultCounter}"/>
@@ -530,16 +530,16 @@
                                    VerticalAlignment="Top"/>
 
                         <TextBlock Text="WD1" Grid.Column="1" Grid.Row="1" VerticalAlignment="Center"
-                                   Style="{DynamicResource CustomeTextBlock}"
+                                   Style="{DynamicResource CustomTextBlock}"
                                 IsEnabled="{Binding IsConfigEnable}"/>
 
                         <StackPanel Grid.Column="1" Grid.Row="1" Margin="0,0,5,0" VerticalAlignment="Center">
                             <TextBlock Text="Response time"
-                                   Style="{DynamicResource CustomeTextBlock}"
+                                   Style="{DynamicResource CustomTextBlock}"
                                        IsEnabled="{Binding IsConfigEnable}"
                                        HorizontalAlignment="Right"/>
                             <TextBlock Text="Lock time"
-                                   Style="{DynamicResource CustomeTextBlock}"
+                                   Style="{DynamicResource CustomTextBlock}"
                                 IsEnabled="{Binding IsConfigEnable}"
                                        HorizontalAlignment="Right"/>
                         </StackPanel>
@@ -578,16 +578,16 @@
                         <!--#region WD2 slider-->
 
                         <TextBlock Text="WD2" Grid.Column="1" Grid.Row="2" VerticalAlignment="Center"
-                                   Style="{DynamicResource CustomeTextBlock}"
+                                   Style="{DynamicResource CustomTextBlock}"
                                 IsEnabled="{Binding IsConfigEnable}"/>
 
                         <StackPanel Grid.Column="1" Grid.Row="2" Margin="0,0,5,0" VerticalAlignment="Center">
                             <TextBlock Text="Response time" 
-                                   Style="{DynamicResource CustomeTextBlock}"
+                                   Style="{DynamicResource CustomTextBlock}"
                                        IsEnabled="{Binding IsConfigEnable}"
                                        HorizontalAlignment="Right"/>
                             <TextBlock Text="Lock time" 
-                                   Style="{DynamicResource CustomeTextBlock}"
+                                   Style="{DynamicResource CustomTextBlock}"
                                        IsEnabled="{Binding IsConfigEnable}"
                                        HorizontalAlignment="Right"/>
                         </StackPanel>
@@ -637,16 +637,16 @@
                                       HorizontalAlignment="Right" Margin="5,0"
                                       IsEnabled="{Binding IsConfigEnable}"/>
                             <TextBlock Text="Enable EN0" Grid.Column="0" Grid.Row="4" VerticalAlignment="Center"
-                                   Style="{DynamicResource CustomeTextBlock}"
+                                   Style="{DynamicResource CustomTextBlock}"
                                        IsEnabled="{Binding IsConfigEnable}"/>
 
                             <StackPanel HorizontalAlignment="Right" Margin="5" VerticalAlignment="Center">
                                 <TextBlock Text="WD1" Margin="0,0,5,0"
-                                   Style="{DynamicResource CustomeTextBlock}"
+                                   Style="{DynamicResource CustomTextBlock}"
                                        HorizontalAlignment="Right"
                                        IsEnabled="{Binding IsConfigEnable}"/>
                                 <TextBlock Text="WD2" Margin="0,0,5,0"
-                                   Style="{DynamicResource CustomeTextBlock}"
+                                   Style="{DynamicResource CustomTextBlock}"
                                        HorizontalAlignment="Right"
                                        IsEnabled="{Binding IsConfigEnable}"/>
                             </StackPanel>
@@ -752,25 +752,25 @@
                                    VerticalAlignment="Center" HorizontalAlignment="Left"/>
 
                         <TextBlock Grid.Column="1" Grid.Row="3"
-                                   Style="{DynamicResource CustomeTextBlock}"
+                                   Style="{DynamicResource CustomTextBlock}"
                                    Text="SLFF" 
                                    IsEnabled="{Binding IsConfigEnable}"
                                    VerticalAlignment="Center" HorizontalAlignment="Left"/>
 
                         <TextBlock Grid.Column="1" Grid.Row="4"
-                                   Style="{DynamicResource CustomeTextBlock}"
+                                   Style="{DynamicResource CustomTextBlock}"
                                    Text="WD1 to 1MHz" 
                                    IsEnabled="{Binding IsConfigEnable}"
                                    VerticalAlignment="Center" HorizontalAlignment="Left"/>
 
                         <TextBlock Grid.Column="1" Grid.Row="5"
-                                   Style="{DynamicResource CustomeTextBlock}"
+                                   Style="{DynamicResource CustomTextBlock}"
                                    Text="WD2 to 1MHz" 
                                    IsEnabled="{Binding IsConfigEnable}"
                                    VerticalAlignment="Center" HorizontalAlignment="Left"/>
 
                         <TextBlock Grid.Column="1" Grid.Row="6"
-                                   Style="{DynamicResource CustomeTextBlock}"
+                                   Style="{DynamicResource CustomTextBlock}"
                                    Text="Safety logic" 
                                    IsEnabled="{Binding IsConfigEnable}"
                                    VerticalAlignment="Center" HorizontalAlignment="Left"/>

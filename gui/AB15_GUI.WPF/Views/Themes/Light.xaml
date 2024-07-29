@@ -99,7 +99,7 @@
     <BooleanToVisibilityConverter x:Key="btv" />
     
     <!--#region TextBlock -->
-    <Style TargetType="TextBlock" x:Key="CustomeTextBlock">
+    <Style TargetType="TextBlock" x:Key="CustomTextBlock">
         <Setter Property="FontSize" Value="20"/>
         <Setter Property="Foreground" Value="{DynamicResource Foreground.Default}"/>
         <Style.Triggers>

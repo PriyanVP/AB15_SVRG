@@ -420,15 +420,18 @@ namespace AB15_GUI.WPF.ViewModels
         /// </summary>
         private readonly Logger logger;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public WatchdogViewModel(Logger logger)
         {
             this.logger = logger;
             logger.Trace("In WatchdogPageViewModel");
 
             // set defoult value
-            IsConfigEnable = false;
-            IsStartWDButtonEnabled = false;
-            IsStopWDButtonEnabled = false;
+            //IsConfigEnable = false;
+            //IsStartWDButtonEnabled = false;
+            //IsStopWDButtonEnabled = false;
 
             // Init commands for buttons
             ReadConfigFromASIC = new RelayCommand(ReadConfigFromASICExecute, ReadConfigFromASICCanExecute);
@@ -436,22 +439,36 @@ namespace AB15_GUI.WPF.ViewModels
 
         }
 
+        /// <summary>
+        /// Read config from ASIC check command arguments 
+        /// </summary>
+        /// <returns>true if command can be executed</returns>
         private bool ReadConfigFromASICCanExecute(object obj)
         {
             // TODO Add actual check
             return true;
         }
 
+        /// <summary>
+        /// Execute  Read config from ASIC command
+        /// </summary>
         private void ReadConfigFromASICExecute(object obj)
         {
         }
 
+        /// <summary>
+        /// Write config to ASIC check command arguments 
+        /// </summary>
+        /// <returns>true if command can be executed</returns>
         private bool WriteConfigToASICCanExecute(object obj)
         {
             // TODO Add actual check
             return true;
         }
 
+        /// <summary>
+        /// Execute write config to ASIC command
+        /// </summary>
         private void WriteConfigToASICExecute(object obj)
         {
         }
