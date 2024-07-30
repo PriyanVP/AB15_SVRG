@@ -113,7 +113,7 @@ void CmdSpiInstuction(USBReceiveData const * const commandPackage)
     packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
 
     // Construct packages based on error status
-    if (isSuccessfulFlag && (dataReceived.bf.gs_flag))
+    if (isSuccessfulFlag && (!dataReceived.bf.gs_flag))
     {
         packageToSend.status = USB_STATUS_DATA;
     }
@@ -143,7 +143,7 @@ void CmdGetDeviceId(USBReceiveData * commandPackage)
     // SPI instruction for get device ID
     isSuccessfulFlag = QSPIExecuteInstruction(READ_DEV_ID, FALSE, 0x0, &data.dw);
 
-    if (isSuccessfulFlag && (data.bf.gs_flag))
+    if (isSuccessfulFlag && (!data.bf.gs_flag))
     {
         packageToSend.status = USB_STATUS_DATA;
         packageToSend.dataLength = 1;
