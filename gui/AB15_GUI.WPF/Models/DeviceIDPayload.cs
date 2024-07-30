@@ -12,7 +12,7 @@ namespace AB15_GUI.WPF.Models
         /// <summary>
         /// Property to report errors
         /// </summary>
-        public string? Error { get; private set; } = null;
+        public string? Error { get; set; } = null;
 
         /// <summary>
         /// Property to report device ID
