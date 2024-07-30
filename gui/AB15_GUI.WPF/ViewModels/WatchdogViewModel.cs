@@ -1,16 +1,10 @@
-﻿using AB15_GUI.WPF.Views;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NLog;
 using System.Windows.Input;
-using System.Windows;
 using AB15_GUI.WPF.ViewModels.Commands;
 using AB15_GUI.WPF.Models.Interfaces;
 using AB15_GUI.WPF.Models;
-using AB15_GUI.WPF.Services;
 using AB15_GUI.WPF.Services.Interfaces;
 
 namespace AB15_GUI.WPF.ViewModels
@@ -66,7 +60,7 @@ namespace AB15_GUI.WPF.ViewModels
             WriteConfigToASIC   = new RelayCommand(WriteConfigToASICExecute, ((x) => _isWriteWDConfigButtonEnabled));
 
             StartWatchdog   = new RelayCommand(StartWatchdogExecute, ((x) => _isStartWDButtonEnabled));
-            StopWatchdog    = new RelayCommand(StartWatchdogExecute, ((x) => _isStopWDButtonEnabled));
+            StopWatchdog    = new RelayCommand(StopWatchdogExecute, ((x) => _isStopWDButtonEnabled));
         }
 
         #region State_Machine
@@ -540,9 +534,16 @@ namespace AB15_GUI.WPF.ViewModels
         /// </summary>
         private void ReadConfigFromASICExecute(object obj)
         {
-            TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
-            packageToSend.ASICID = 1;
-            packageToSend.Cmd = MCUCommand.READ_REG
+            // TODO: provide implementation for AB15
+            // TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
+            // packageToSend.ASICID = 1;
+            // packageToSend.Cmd = MCUCommand.
+
+            // TODO: temporary implementation for AB12, replace by actual on AB15
+            ReceiveCommunicationPackage<AddressDataPayload> placeholderPackage = new ReceiveCommunicationPackage<AddressDataPayload>();
+            placeholderPackage.ASICID = 1;
+            placeholderPackage.Status = MCUStatus.DATA;
+            ReadConfigDelegate(placeholderPackage);
         }
 
         /// <summary>
@@ -550,6 +551,28 @@ namespace AB15_GUI.WPF.ViewModels
         /// </summary>
         private void WriteConfigToASICExecute(object obj)
         {
+            TransmitCommunicationPackage<WDConfigurePayload> packageToSend = new TransmitCommunicationPackage<WDConfigurePayload>();
+
+            packageToSend.ASICID = 1;
+            packageToSend.Cmd = MCUCommand.CONFIGURE_WATCHDOG;
+            packageToSend.Deleg = WriteConfigDelagate;
+            packageToSend.PayloadType = typeof(EmptyPayload);
+
+            // Unpack data from UI to fields of registers
+            // TODO: how to handle configs that are not available in UI but read during ReadConfig?
+            packageToSend.Payload.spi_config_wd1.spi_set_locktime_wd1.Data = (UInt16) WD1LockTime;
+            packageToSend.Payload.spi_config_wd1.spi_set_responsetime_wd1.Data = (UInt16) WD1ResponseTime;
+
+            packageToSend.Payload.spi_config_wd2.spi_set_locktime_wd2.Data = (UInt16) WD2LockTime;
+            packageToSend.Payload.spi_config_wd2.spi_set_responsetime_wd2.Data = (UInt16) WD2ResponseTime;
+
+            packageToSend.Payload.spi_config_wd_decouple.spi_decouple_wd_en0.Data = (UInt16) ((IsEN0Enabled) ? (1) : (0));
+
+            packageToSend.Payload.spi_config_wd_thres0.spi_set_en0_thre_wd1.Data = (UInt16) WD1EN0DisableThreshold;
+            packageToSend.Payload.spi_config_wd_thres0.spi_set_en0_thre_wd2.Data = (UInt16) WD2EN0DisableThreshold;
+
+            // Send command to MCU
+            serialWrapper.SerialWrite(packageToSend);
         }
 
         /// <summary>
@@ -557,6 +580,26 @@ namespace AB15_GUI.WPF.ViewModels
         /// </summary>
         private void StartWatchdogExecute(object obj)
         {
+            TransmitCommunicationPackage<EmptyPayload> packageToSendStartWD = new TransmitCommunicationPackage<EmptyPayload>();
+            TransmitCommunicationPackage<EmptyPayload> packageToSendStartMonitoringWD = new TransmitCommunicationPackage<EmptyPayload>();
+
+            // Configure start watchdog command
+            packageToSendStartWD.ASICID = 1;
+            packageToSendStartWD.Cmd = MCUCommand.START_WATCHDOG;
+            packageToSendStartWD.Deleg = StartConfigDelagate;
+            packageToSendStartWD.PayloadType = typeof(EmptyPayload);
+       
+            // Send start command to MCU
+            serialWrapper.SerialWrite(packageToSendStartWD);
+
+            // Configure start watchdog status reading command
+            packageToSendStartMonitoringWD.ASICID = 1;
+            packageToSendStartMonitoringWD.Cmd = MCUCommand.START_MONITORING_WATCHDOG;
+            packageToSendStartMonitoringWD.Deleg = StatusMonitoringDelagate;
+            packageToSendStartMonitoringWD.PayloadType = typeof(WDStatusPayload);
+       
+            // Send start status reading command to MCU
+            serialWrapper.SerialWrite(packageToSendStartMonitoringWD);
         }
 
         /// <summary>
@@ -564,12 +607,32 @@ namespace AB15_GUI.WPF.ViewModels
         /// </summary>
         private void StopWatchdogExecute(object obj)
         {
+            TransmitCommunicationPackage<EmptyPayload> packageToSendStopWD = new TransmitCommunicationPackage<EmptyPayload>();
+            TransmitCommunicationPackage<EmptyPayload> packageToSendStopMonitoringWD = new TransmitCommunicationPackage<EmptyPayload>();
+
+            // Configure start watchdog command
+            packageToSendStopWD.ASICID = 1;
+            packageToSendStopWD.Cmd = MCUCommand.START_WATCHDOG;
+            packageToSendStopWD.Deleg = StartConfigDelagate;
+            packageToSendStopWD.PayloadType = typeof(EmptyPayload);
+       
+            // Send start command to MCU
+            serialWrapper.SerialWrite(packageToSendStopWD);
+
+            // Configure start watchdog status reading command
+            packageToSendStopMonitoringWD.ASICID = 1;
+            packageToSendStopMonitoringWD.Cmd = MCUCommand.START_MONITORING_WATCHDOG;
+            packageToSendStopMonitoringWD.Deleg = (package) => { return; }; // Empty delegate
+            packageToSendStopMonitoringWD.PayloadType = typeof(EmptyPayload);
+       
+            // Send start status reading command to MCU
+            serialWrapper.SerialWrite(packageToSendStopMonitoringWD);
         }
 
         private void ReadConfigDelegate(IReceiveCommunicationPackage response)
         {
             // Typecast response to actual type
-            ReceiveCommunicationPackage<WDStatusPayload> mcuResponse = (ReceiveCommunicationPackage<WDStatusPayload>) response;
+            ReceiveCommunicationPackage<AddressDataPayload> mcuResponse = (ReceiveCommunicationPackage<AddressDataPayload>) response;
 
             // Change state if response received
             if (mcuResponse.Payload.Error is not null)
@@ -581,6 +644,15 @@ namespace AB15_GUI.WPF.ViewModels
             {
                 ExecuteStateTransition(WDBackendState.InConfiguration);
             }
+
+            // TODO: add actual unpacking of data for AB15
+
+            // Values share same step as AB15 scale
+            WD1ResponseTime = 63; 
+            WD2ResponseTime = 16;
+
+            WD1LockTime = 0;
+            WD2LockTime = 10; // Underflow limit
         }
 
         private void WriteConfigDelagate(IReceiveCommunicationPackage response)
@@ -632,6 +704,33 @@ namespace AB15_GUI.WPF.ViewModels
             {
                 ExecuteStateTransition(WDBackendState.Stopped);
             }
+        }
+
+        private void StatusMonitoringDelagate(IReceiveCommunicationPackage response)
+        {
+            // Typecast response to actual type
+            ReceiveCommunicationPackage<WDStatusPayload> mcuResponse = (ReceiveCommunicationPackage<WDStatusPayload>) response;
+
+            // If error received - pass it to error provider
+            if (mcuResponse.Payload.Error is not null)
+            {
+                AddError(mcuResponse.Payload.Error, nameof(WriteConfigToASIC));
+                logger.Error($"Error response received. Status: {mcuResponse.Status}");
+                return;
+            }
+
+            // Update statuses
+            // TODO: add implementation for AB15
+            // Implementation for AB12
+            WDFaultStatus = (mcuResponse.Payload.WatchdogStatus.WatchdogFault) ? (FaultStatus.Fault) : (FaultStatus.Good);
+
+            WD1FaultStatus = (mcuResponse.Payload.WatchdogStatus.SlowWatchdogFault) ? (FaultStatus.Fault) : (FaultStatus.Good);
+            WD2FaultStatus = (mcuResponse.Payload.WatchdogStatus.FastWatchdogFault) ? (FaultStatus.Fault) : (FaultStatus.Good);
+
+            OSCMONFaultStatus = (mcuResponse.Payload.WatchdogStatus.OscillatorFault) ? (FaultStatus.Fault) : (FaultStatus.Good);
+
+            WD1QAFaultStatus = (mcuResponse.Payload.WatchdogStatus.SlowWatchdogQAFault) ? (FaultStatus.Fault) : (FaultStatus.Good);
+            WD2QAFaultStatus = (mcuResponse.Payload.WatchdogStatus.FastWatchdogQAFault) ? (FaultStatus.Fault) : (FaultStatus.Good);
         }
 
         #endregion // Commands
