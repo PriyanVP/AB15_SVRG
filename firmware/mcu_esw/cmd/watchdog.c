@@ -413,8 +413,8 @@ void IntCmdMonitorWatchdog(void)
 
     // Pack data for sending to PC
     packageToSend.dataLength = 3;
-    packageToSend.data[0] = GetLSB(data.bf.output_data);
-    packageToSend.data[1] = GetMSB(data.bf.output_data);
+    packageToSend.data[0] = GetMSB(data.bf.output_data);
+    packageToSend.data[1] = GetLSB(data.bf.output_data);
     packageToSend.data[2] = data.bf.wdf;
     #else
     // AB15 platform
