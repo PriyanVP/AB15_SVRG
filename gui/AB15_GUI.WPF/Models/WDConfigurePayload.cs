@@ -71,18 +71,26 @@ namespace AB15_GUI.WPF.Models
             List<byte> serializedPackage = new List<byte>();
 
             // spi_config_wd1
+            serializedPackage.Add(spi_config_wd1.Address.GetMSB());
+            serializedPackage.Add(spi_config_wd1.Address.GetLSB());
             serializedPackage.Add(spi_config_wd1.Data.GetMSB());
             serializedPackage.Add(spi_config_wd1.Data.GetLSB());
 
             // spi_config_wd2
+            serializedPackage.Add(spi_config_wd2.Address.GetMSB());
+            serializedPackage.Add(spi_config_wd2.Address.GetLSB());
             serializedPackage.Add(spi_config_wd2.Data.GetMSB());
             serializedPackage.Add(spi_config_wd2.Data.GetLSB());
 
             // spi_config_wd_decouple
+            serializedPackage.Add(spi_config_wd_decouple.Address.GetMSB());
+            serializedPackage.Add(spi_config_wd_decouple.Address.GetLSB());
             serializedPackage.Add(spi_config_wd_decouple.Data.GetMSB());
             serializedPackage.Add(spi_config_wd_decouple.Data.GetLSB());
 
             // spi_config_wd_thres0
+            serializedPackage.Add(spi_config_wd_thres0.Address.GetMSB());
+            serializedPackage.Add(spi_config_wd_thres0.Address.GetLSB());
             serializedPackage.Add(spi_config_wd_thres0.Data.GetMSB());
             serializedPackage.Add(spi_config_wd_thres0.Data.GetLSB());
 

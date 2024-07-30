@@ -10,6 +10,8 @@ using System.Windows;
 using AB15_GUI.WPF.ViewModels.Commands;
 using AB15_GUI.WPF.Models.Interfaces;
 using AB15_GUI.WPF.Models;
+using AB15_GUI.WPF.Services;
+using AB15_GUI.WPF.Services.Interfaces;
 
 namespace AB15_GUI.WPF.ViewModels
 {
@@ -43,11 +45,17 @@ namespace AB15_GUI.WPF.ViewModels
         private readonly Logger logger;
 
         /// <summary>
+        /// SerialWrapper reference to perform communication with MCU
+        /// </summary>
+        private readonly ISerialWrapper serialWrapper;
+
+        /// <summary>
         /// Constructor
         /// </summary>
-        public WatchdogViewModel(Logger logger)
+        public WatchdogViewModel(Logger logger, ISerialWrapper serialWrapper)
         {
             this.logger = logger;
+            this.serialWrapper = serialWrapper;
             logger.Trace("In WatchdogViewModel");
 
             // Initial state transition
@@ -532,6 +540,9 @@ namespace AB15_GUI.WPF.ViewModels
         /// </summary>
         private void ReadConfigFromASICExecute(object obj)
         {
+            TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
+            packageToSend.ASICID = 1;
+            packageToSend.Cmd = MCUCommand.READ_REG
         }
 
         /// <summary>
