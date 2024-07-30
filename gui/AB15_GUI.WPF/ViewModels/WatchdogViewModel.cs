@@ -542,7 +542,7 @@ namespace AB15_GUI.WPF.ViewModels
         {
             TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
             packageToSend.ASICID = 1;
-            packageToSend.Cmd = MCUCommand.READ_REG
+            packageToSend.Cmd = MCUCommand.READ_REG;
         }
 
         /// <summary>

@@ -51,7 +51,7 @@
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="*"/>
-                            <RowDefinition Height="*" MinHeight="30"/>
+                            <RowDefinition Height="*" MinHeight="40"/>
                         </Grid.RowDefinitions>
 
                         <Grid.ColumnDefinitions>
@@ -79,9 +79,8 @@
                                     <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
                                 </MultiBinding>
                             </Border.Background>
-                            <Viewbox>
-                                <TextBlock Text="WD Fault Status" HorizontalAlignment="Center" FontSize="16" Style="{DynamicResource TextBlockStyle}"/>
-                            </Viewbox>
+                            <TextBlock Text="WD Fault Status" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                                           FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
                         </Border>
 
                         <!--*********-->
@@ -94,9 +93,9 @@
                                     <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
                                 </MultiBinding>
                             </Border.Background>
-                            <Viewbox>
-                                <TextBlock Text="   WD1 Fault   " HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
-                            </Viewbox>
+                            <TextBlock Text="   WD1 Fault   " HorizontalAlignment="Center" VerticalAlignment="Center"
+                                           FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"
+                                           Style="{DynamicResource TextBlockStyle}"/>
                         </Border>
 
                         <Border Grid.Row="3" Grid.Column="5" Grid.ColumnSpan="2" BorderThickness="1" 
@@ -108,9 +107,8 @@
                                     <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
                                 </MultiBinding>
                             </Border.Background>
-                            <Viewbox>
-                                <TextBlock Text="   WD2 Fault   " HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
-                            </Viewbox>
+                            <TextBlock Text="   WD2 Fault   " HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                                           FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
                         </Border>
                         
                         <Border Grid.Row="3" Grid.Column="9" Grid.ColumnSpan="2" BorderThickness="1" 
@@ -122,25 +120,26 @@
                                     <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
                                 </MultiBinding>
                             </Border.Background>
-                            <Viewbox>
-                                <TextBlock Text="   Error Pin   " HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
-                            </Viewbox>
+                            <TextBlock Text="   Error Pin   " HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                                           FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
                         </Border>
 
                         <!--*********-->
 
                         <Border Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" BorderThickness="1" 
+                                x:Name="TextScaleBorder"
                             BorderBrush="{DynamicResource Animation.Lines}" 
-                            CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                            CornerRadius="5" HorizontalAlignment="Stretch" Margin="2"
+                            SizeChanged="TextScale_SizeChanged">
                             <Border.Background>
                                 <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
                                     <Binding Path = "WD1TimerFaultStatus"/>
                                     <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
                                 </MultiBinding>
                             </Border.Background>
-                            <Viewbox>
-                                <TextBlock Text="WD1 Timer Fault" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
-                            </Viewbox>
+                            <TextBlock x:Name="TextScale" Text="WD1 Timer Fault" 
+                                       HorizontalAlignment="Center" FontSize="16"
+                                           Style="{DynamicResource TextBlockStyle}"/>
                         </Border>
 
                         <Border Grid.Row="4" Grid.Column="5" Grid.ColumnSpan="2" BorderThickness="1" 
@@ -152,9 +151,8 @@
                                     <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
                                 </MultiBinding>
                             </Border.Background>
-                            <Viewbox>
-                                <TextBlock Text="WD2 Timer Fault" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
-                            </Viewbox>
+                            <TextBlock Text="WD2 Timer Fault" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                                           FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
                         </Border>
 
                         <Border Grid.Row="4" Grid.Column="9" Grid.ColumnSpan="2" BorderThickness="1" 
@@ -166,9 +164,8 @@
                                     <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
                                 </MultiBinding>
                             </Border.Background>
-                            <Viewbox>
-                                <TextBlock Text="    OSCMON     " HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
-                            </Viewbox>
+                            <TextBlock Text="    OSCMON     " HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                                           FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
                         </Border>
 
                         <!--*********-->
@@ -182,9 +179,8 @@
                                     <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
                                 </MultiBinding>
                             </Border.Background>
-                            <Viewbox>
-                                <TextBlock Text="     WD1 QA    " HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
-                            </Viewbox>
+                            <TextBlock Text="     WD1 QA    " HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                                           FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
                         </Border>
 
                         <Border Grid.Row="5" Grid.Column="5" Grid.ColumnSpan="2" BorderThickness="1" 
@@ -196,9 +192,8 @@
                                     <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
                                 </MultiBinding>
                             </Border.Background>
-                            <Viewbox>
-                                <TextBlock Text="     WD2 QA    " HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
-                            </Viewbox>
+                            <TextBlock Text="     WD2 QA    " HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                                           FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
                         </Border>
                         <!--#endregion-->
 
@@ -216,9 +211,8 @@
                                     <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
                                 </MultiBinding>
                             </Border.Background>
-                            <Viewbox>
-                                <TextBlock Text="Oscillator fault" HorizontalAlignment="Center" FontSize="16" Style="{DynamicResource TextBlockStyle}"/>
-                            </Viewbox>
+                            <TextBlock Text="Oscillator fault" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                                           FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
                         </Border>
 
                         <Border Grid.Row="8" Grid.Column="2" Grid.ColumnSpan="2" BorderThickness="1" 
@@ -230,9 +224,9 @@
                                     <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
                                 </MultiBinding>
                             </Border.Background>
-                            <Viewbox>
-                                <TextBlock Text="    WD Reset    " HorizontalAlignment="Center" FontSize="16" Style="{DynamicResource TextBlockStyle}"/>
-                            </Viewbox>
+                            <TextBlock Text="    WD Reset    " HorizontalAlignment="Center" 
+                                           FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"
+                                           Style="{DynamicResource TextBlockStyle}"/>
                         </Border>
 
                         <Border Grid.Row="8" Grid.Column="4" Grid.ColumnSpan="2" BorderThickness="1" 
@@ -244,9 +238,8 @@
                                     <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
                                 </MultiBinding>
                             </Border.Background>
-                            <Viewbox>
-                                <TextBlock Text="  WD1 counter   " HorizontalAlignment="Center" FontSize="16" Style="{DynamicResource TextBlockStyle}"/>
-                            </Viewbox>
+                            <TextBlock Text="  WD1 counter   " HorizontalAlignment="Center" 
+                                           FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}" Style="{DynamicResource TextBlockStyle}"/>
                         </Border>
 
                         <Border Grid.Row="8" Grid.Column="6" Grid.ColumnSpan="2" BorderThickness="1" 
@@ -258,9 +251,8 @@
                                     <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
                                 </MultiBinding>
                             </Border.Background>
-                            <Viewbox>
-                                <TextBlock Text="   QA1 fault    " HorizontalAlignment="Center" FontSize="16" Style="{DynamicResource TextBlockStyle}"/>
-                            </Viewbox>
+                            <TextBlock Text="   QA1 fault    " HorizontalAlignment="Center" 
+                                           FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}" Style="{DynamicResource TextBlockStyle}"/>
                         </Border>
 
                         <Border Grid.Row="8" Grid.Column="8" Grid.ColumnSpan="2" BorderThickness="1" 
@@ -272,9 +264,8 @@
                                     <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
                                 </MultiBinding>
                             </Border.Background>
-                            <Viewbox>
-                                <TextBlock Text="   WD2 counter  " HorizontalAlignment="Center" FontSize="16" Style="{DynamicResource TextBlockStyle}"/>
-                            </Viewbox>
+                            <TextBlock Text="   WD2 counter  " HorizontalAlignment="Center" 
+                                           FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}" Style="{DynamicResource TextBlockStyle}"/>
                         </Border>
 
                         <Border Grid.Row="8" Grid.Column="10" Grid.ColumnSpan="2" BorderThickness="1" 
@@ -286,19 +277,21 @@
                                     <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
                                 </MultiBinding>
                             </Border.Background>
-                            <Viewbox>
-                                <TextBlock Text="   QA2 fault    " HorizontalAlignment="Center" FontSize="16" Style="{DynamicResource TextBlockStyle}"/>
-                            </Viewbox>
+                            <TextBlock Text="   QA2 fault    " HorizontalAlignment="Center" 
+                                           FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}" Style="{DynamicResource TextBlockStyle}"/>
                         </Border>
                         <!--#endregion-->
-
                     </Grid>
+
+
+                    <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Height="auto" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
+                        <Border BorderThickness="0,1,0,0" BorderBrush="{DynamicResource UI.SeparateLine}"
+                            Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"/>
 
                     <!--More size toggle button-->
                     <ToggleButton Style="{DynamicResource MenuToggleButtonTemplate}" IsChecked="False"
                                   x:Name="MoreInfoButton"
-                                  HorizontalAlignment="Center" VerticalAlignment="Bottom" 
-                                  Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+                                  HorizontalAlignment="Center" VerticalAlignment="Bottom" >
 
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="Additional Info" FontSize="20" Grid.Column="1" Style="{DynamicResource TextBlockStyle}"/>
@@ -330,7 +323,8 @@
                                 </BeginStoryboard>
                             </EventTrigger>
                         </ToggleButton.Triggers>
-                    </ToggleButton>
+                        </ToggleButton>
+                    </StackPanel>
 
                     <Grid Name="MorePanel" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2">
                         <Grid.ColumnDefinitions>
@@ -339,7 +333,7 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Border Grid.Column="0" Grid.ColumnSpan="3" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource UI.SeparateLine}"/>
+                        <!--<Border Grid.Column="0" Grid.ColumnSpan="3" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource UI.SeparateLine}"/>-->
 
                         <Grid Grid.Column="0" Margin="2">
                             <Grid.RowDefinitions>
@@ -395,6 +389,9 @@
                                 <ColumnDefinition Width="auto" MinWidth="60"/>
                             </Grid.ColumnDefinitions>
 
+                            <Border BorderThickness="1,0,1,0" BorderBrush="{DynamicResource UI.SeparateLine}" 
+                                    Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Grid.RowSpan="5"/>
+
                             <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="WD2" 
                                        VerticalAlignment="Top" TextAlignment="Center" Margin="2"/>
 
@@ -411,15 +408,15 @@
                                        Style="{DynamicResource CustomTextBlock}"
                                        Text="QA2 failure counter value"/>
 
-                            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding WD2FaultCounter}"/>
-                            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding WD2TimingMonitorCounter}"/>
-                            <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding WD2QAFailureCounter}"/>
+                            <TextBox Margin="1,2,5,2" Grid.Row="1" Grid.Column="1" Text="{Binding WD2FaultCounter}"/>
+                            <TextBox Margin="1,2,5,2" Grid.Row="2" Grid.Column="1" Text="{Binding WD2TimingMonitorCounter}"/>
+                            <TextBox Margin="1,2,5,2" Grid.Row="3" Grid.Column="1" Text="{Binding WD2QAFailureCounter}"/>
                         </Grid>
 
                         <Grid Grid.Column="2" Margin="2">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="1*"/>
                                 <RowDefinition Height="*"/>
+                                <RowDefinition Height="auto"/>
                                 <RowDefinition Height="*"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
@@ -436,7 +433,8 @@
                                         <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
                                     </MultiBinding>
                                 </Border.Background>
-                                <TextBlock Text="EN0 Hight" HorizontalAlignment="Center" FontSize="15" Style="{DynamicResource TextBlockStyle}"/>
+                                <TextBlock Text="EN0 Hight" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                                           FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
                             </Border>
 
                         </Grid>
@@ -449,8 +447,8 @@
             <TabItem Header="Settings" FontSize="20" Style="{DynamicResource CustomTabItem}">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="2*"/>
-                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
                     </Grid.ColumnDefinitions>
 
                     <Grid.RowDefinitions>
@@ -642,7 +640,10 @@
 
                     </Grid>
 
-                    <StackPanel Orientation="Vertical"
+                    <Border BorderBrush="{DynamicResource UI.SeparateLine}" BorderThickness="1,0,0,0"
+                            Grid.Row="0" Grid.Column="1" Grid.RowSpan="2"/>
+
+                    <StackPanel Orientation="Vertical" Margin="5"
                                 Grid.Row="0" Grid.Column="1" Grid.RowSpan="2">
                         
                         <TextBlock Text="Watchdog ASIC configuration" HorizontalAlignment="Center" Margin="5"/>
@@ -655,7 +656,7 @@
                                     Style="{DynamicResource SimpleButton}"
                                     Command="{Binding ReadConfigFromASIC}"/>
 
-                        <TextBlock Text="Watchdog QA configuration" HorizontalAlignment="Center" Margin="5"/>
+                        <TextBlock Text="Watchdog Control" HorizontalAlignment="Center" Margin="5"/>
                         
                         <Button Content="Start Watchdog"
                                     Style="{DynamicResource SimpleButton}"

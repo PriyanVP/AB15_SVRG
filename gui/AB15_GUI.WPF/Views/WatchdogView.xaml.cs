@@ -9,6 +9,11 @@ namespace AB15_GUI.WPF.Views
     /// </summary>
     public partial class WatchdogView : Page
     {
+
+        private double initialSize = 0;
+        private double fontsizeCoefficient = 0;
+        private double fontsizeOld = 0;
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -118,6 +123,29 @@ namespace AB15_GUI.WPF.Views
         private void Grid_MouseDown(object sender, MouseButtonEventArgs e)
         {
             Keyboard.ClearFocus();
+        }
+
+        private void TextScale_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (initialSize == 0)
+            {
+                initialSize = TextScaleBorder.ActualWidth;
+                fontsizeOld = TextScale.FontSize;
+                return;
+            }
+            fontsizeCoefficient = initialSize / TextScaleBorder.ActualWidth;
+
+            double newFontSize = (fontsizeOld * TextScaleBorder.ActualWidth) / initialSize;
+
+            if (newFontSize >= 30)
+            {
+                TextScale.FontSize = 30;
+            }
+            else
+            {
+                TextScale.FontSize = newFontSize;
+            }
+
         }
     }
 }
