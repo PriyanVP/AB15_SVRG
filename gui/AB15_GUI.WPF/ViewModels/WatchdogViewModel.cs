@@ -490,6 +490,11 @@ namespace AB15_GUI.WPF.ViewModels
         #region Commands
 
         /// <summary>
+        /// Monitoring message ID
+        /// </summary>
+        private int? _msgIdForMonitoring = null;
+
+        /// <summary>
         /// Start WD button enable state
         /// </summary>
         private bool _isStartWDButtonEnabled;
@@ -586,7 +591,7 @@ namespace AB15_GUI.WPF.ViewModels
             // Configure start watchdog command
             packageToSendStartWD.ASICID = 1;
             packageToSendStartWD.Cmd = MCUCommand.START_WATCHDOG;
-            packageToSendStartWD.Deleg = StartConfigDelagate;
+            packageToSendStartWD.Deleg = StartWatchdogDelegate;
             packageToSendStartWD.PayloadType = typeof(EmptyPayload);
        
             // Send start command to MCU
@@ -597,9 +602,13 @@ namespace AB15_GUI.WPF.ViewModels
             packageToSendStartMonitoringWD.Cmd = MCUCommand.START_MONITORING_WATCHDOG;
             packageToSendStartMonitoringWD.Deleg = StatusMonitoringDelagate;
             packageToSendStartMonitoringWD.PayloadType = typeof(WDStatusPayload);
+            packageToSendStartMonitoringWD.IsContinuous = true;
        
             // Send start status reading command to MCU
             serialWrapper.SerialWrite(packageToSendStartMonitoringWD);
+
+            // Store message ID for stopping monitoring
+            _msgIdForMonitoring = packageToSendStartMonitoringWD.MsgID;
         }
 
         /// <summary>
@@ -613,7 +622,7 @@ namespace AB15_GUI.WPF.ViewModels
             // Configure start watchdog command
             packageToSendStopWD.ASICID = 1;
             packageToSendStopWD.Cmd = MCUCommand.START_WATCHDOG;
-            packageToSendStopWD.Deleg = StartConfigDelagate;
+            packageToSendStopWD.Deleg = StopWatchdogDelegate;
             packageToSendStopWD.PayloadType = typeof(EmptyPayload);
        
             // Send start command to MCU
@@ -621,8 +630,17 @@ namespace AB15_GUI.WPF.ViewModels
 
             // Configure start watchdog status reading command
             packageToSendStopMonitoringWD.ASICID = 1;
-            packageToSendStopMonitoringWD.Cmd = MCUCommand.START_MONITORING_WATCHDOG;
-            packageToSendStopMonitoringWD.Deleg = (package) => { return; }; // Empty delegate
+            packageToSendStopMonitoringWD.Cmd = MCUCommand.STOP_MONITORING_WATCHDOG;
+            packageToSendStopMonitoringWD.Deleg = (package) => 
+                { 
+                    // Remove item for monitoring
+                    if (_msgIdForMonitoring != null)
+                    {
+                        serialWrapper.RemoveWaitlistItem(_msgIdForMonitoring);
+                        _msgIdForMonitoring = null;
+                    }  
+                    return; 
+                };
             packageToSendStopMonitoringWD.PayloadType = typeof(EmptyPayload);
        
             // Send start status reading command to MCU
@@ -688,7 +706,7 @@ namespace AB15_GUI.WPF.ViewModels
             }
         }
 
-        private void StartConfigDelagate(IReceiveCommunicationPackage response)
+        private void StartWatchdogDelegate(IReceiveCommunicationPackage response)
         {
             // Handle response absent scenario
             if (response.Status == MCUStatus.RESPONSE_ABSENT)
@@ -713,7 +731,7 @@ namespace AB15_GUI.WPF.ViewModels
             }
         }
 
-        private void StopConfigDelagate(IReceiveCommunicationPackage response)
+        private void StopWatchdogDelegate(IReceiveCommunicationPackage response)
         {
             // Handle response absent scenario
             if (response.Status == MCUStatus.RESPONSE_ABSENT)
