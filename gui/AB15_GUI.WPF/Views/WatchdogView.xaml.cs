@@ -9,9 +9,14 @@ namespace AB15_GUI.WPF.Views
     /// </summary>
     public partial class WatchdogView : Page
     {
-
+        /// <summary>
+        /// initial size of status box
+        /// </summary>
         private double initialSize = 0;
-        private double fontsizeCoefficient = 0;
+
+        /// <summary>
+        /// initial fontsize of status box
+        /// </summary>
         private double fontsizeOld = 0;
 
         /// <summary>
@@ -21,7 +26,7 @@ namespace AB15_GUI.WPF.Views
         {
             InitializeComponent();
 
-            // TODO debug code
+            // inital value
             MoreInfoButton.IsChecked = true;
         }
 
@@ -125,18 +130,24 @@ namespace AB15_GUI.WPF.Views
             Keyboard.ClearFocus();
         }
 
+        /// <summary>
+        /// Calculate new font size for status box
+        /// </summary>
         private void TextScale_SizeChanged(object sender, SizeChangedEventArgs e)
         {
+            // check for first time function call
             if (initialSize == 0)
             {
+                // set initial values
                 initialSize = TextScaleBorder.ActualWidth;
                 fontsizeOld = TextScale.FontSize;
                 return;
             }
-            fontsizeCoefficient = initialSize / TextScaleBorder.ActualWidth;
 
+            // calculate fontsize
             double newFontSize = (fontsizeOld * TextScaleBorder.ActualWidth) / initialSize;
 
+            // check for max fontsize, if fontsize too big it will look funny
             if (newFontSize >= 30)
             {
                 TextScale.FontSize = 30;
