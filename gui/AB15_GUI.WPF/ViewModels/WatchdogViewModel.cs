@@ -634,10 +634,16 @@ namespace AB15_GUI.WPF.ViewModels
             // Typecast response to actual type
             ReceiveCommunicationPackage<AddressDataPayload> mcuResponse = (ReceiveCommunicationPackage<AddressDataPayload>) response;
 
+            // Handle case with response absent
+            if (mcuResponse.Status == MCUStatus.RESPONSE_ABSENT)
+            {
+                mcuResponse.Payload.Error = "Doesn't received data from MCU in expected timeframe";
+            }
+
             // Change state if response received
             if (mcuResponse.Payload.Error is not null)
             {
-                AddError(mcuResponse.Payload.Error, nameof(WriteConfigToASIC));
+                AddError(mcuResponse.Payload.Error, nameof(ReadConfigFromASIC));
                 logger.Error($"Error response received. Status: {mcuResponse.Status}");
             }
             else if (_wdBackendState == WDBackendState.Idle)
@@ -661,7 +667,12 @@ namespace AB15_GUI.WPF.ViewModels
             ReceiveCommunicationPackage<EmptyPayload> mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>) response;
 
             // If error received - pass it to error provider
-            if (mcuResponse.Payload.Error is not null)
+            if (mcuResponse.Status == MCUStatus.RESPONSE_ABSENT)
+            {
+                AddError("Doesn't receive data from MCU in expected timeframe", nameof(WriteConfigToASIC));
+                logger.Error($"Error response received. Status: {mcuResponse.Status}");
+            }
+            else if (mcuResponse.Payload.Error is not null)
             {
                 AddError(mcuResponse.Payload.Error, nameof(WriteConfigToASIC));
                 logger.Error($"Error response received. Status: {mcuResponse.Status}");
@@ -678,9 +689,14 @@ namespace AB15_GUI.WPF.ViewModels
             ReceiveCommunicationPackage<EmptyPayload> mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>) response;
 
             // If error received - pass it to error provider
-            if (mcuResponse.Payload.Error is not null)
+            if (mcuResponse.Status == MCUStatus.RESPONSE_ABSENT)
             {
-                AddError(mcuResponse.Payload.Error, nameof(WriteConfigToASIC));
+                AddError("Doesn't receive data from MCU in expected timeframe", nameof(StartWatchdog));
+                logger.Error($"Error response received. Status: {mcuResponse.Status}");
+            }
+            else if (mcuResponse.Payload.Error is not null)
+            {
+                AddError(mcuResponse.Payload.Error, nameof(StartWatchdog));
                 logger.Error($"Error response received. Status: {mcuResponse.Status}");
             }
             else
@@ -695,9 +711,14 @@ namespace AB15_GUI.WPF.ViewModels
             ReceiveCommunicationPackage<EmptyPayload> mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>) response;
 
             // If error received - pass it to error provider
-            if (mcuResponse.Payload.Error is not null)
+            if (mcuResponse.Status == MCUStatus.RESPONSE_ABSENT)
             {
-                AddError(mcuResponse.Payload.Error, nameof(WriteConfigToASIC));
+                AddError("Doesn't receive data from MCU in expected timeframe", nameof(StopWatchdog));
+                logger.Error($"Error response received. Status: {mcuResponse.Status}");
+            }
+            else if (mcuResponse.Payload.Error is not null)
+            {
+                AddError(mcuResponse.Payload.Error, nameof(StopWatchdog));
                 logger.Error($"Error response received. Status: {mcuResponse.Status}");
             }
             else
@@ -712,9 +733,14 @@ namespace AB15_GUI.WPF.ViewModels
             ReceiveCommunicationPackage<WDStatusPayload> mcuResponse = (ReceiveCommunicationPackage<WDStatusPayload>) response;
 
             // If error received - pass it to error provider
-            if (mcuResponse.Payload.Error is not null)
+            if (mcuResponse.Status == MCUStatus.RESPONSE_ABSENT)
             {
-                AddError(mcuResponse.Payload.Error, nameof(WriteConfigToASIC));
+                AddError("Doesn't receive data from MCU in expected timeframe", nameof(StartWatchdog));
+                logger.Error($"Error response received. Status: {mcuResponse.Status}");
+            }
+            else if (mcuResponse.Payload.Error is not null)
+            {
+                AddError(mcuResponse.Payload.Error, nameof(StartWatchdog));
                 logger.Error($"Error response received. Status: {mcuResponse.Status}");
                 return;
             }
