@@ -121,9 +121,10 @@ typedef enum
     USB_STATUS_STATUS                  = 131,             /** \brief status of MCU, data holds status info/log */
     USB_STATUS_BUSY                    = 132,             /** \brief MCU is busy processing previous command TODO: check if required */
     USB_STATUS_DATA                    = 133,             /** \brief response to read or read/write transaction (also works for transactions including such behaviour) */
+    USB_STATUS_RESPONSE_ABSENT         = 134,             /** \brief response from MCU hasn't been received in expected timeframe */
     //TODO: Implement
-    USB_STATUS_CMD_NO_SUPPORTED        = 134,             /** \brief response if cmd is not supported*/
-    USB_STATUS_CMD_WRONG_PAYLOAD_LEN   = 135,             /** \brief response if cmd has wrong payload len*/
+    USB_STATUS_CMD_NO_SUPPORTED        = 135,             /** \brief response if cmd is not supported*/
+    USB_STATUS_CMD_WRONG_PAYLOAD_LEN   = 136,             /** \brief response if cmd has wrong payload len*/
     // TODO: end
     _USB_STATUS_MAX                    = 255              /** \brief maximal value of command (not included) */
 } USBStatusesEnum;
