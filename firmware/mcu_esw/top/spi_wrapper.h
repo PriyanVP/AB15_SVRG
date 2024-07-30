@@ -11,7 +11,8 @@
 /*********************************************************************************************************************/
 
 #include "Ifx_Types.h"
-#include "../common/spi_data_types.h"
+#include "common/global_defines.h"
+#include "common/spi_data_types.h"
 
 /*********************************************************************************************************************/
 /*------------------------------------------------------Macros-------------------------------------------------------*/
@@ -24,13 +25,6 @@
 /*********************************************************************************************************************/
 /*-------------------------------------------------Data Structures---------------------------------------------------*/
 /*********************************************************************************************************************/
-
-/** \brief Enum for read/write bit in SPI package
- */
-enum RWFlag {
-    READ = 0,
-    WRITE = 1
-};
 
 /*********************************************************************************************************************/
 /*------------------------------------------------Function Prototypes------------------------------------------------*/
@@ -48,53 +42,83 @@ void QSPIInit(void);
  */
 void QSPIDeinit(void);
 
-/** \brief Reads data via QSPI. Two SPI transaction (read request + dummy read to get response for request)
- * Created for single reading from specific address
+// AB12 prototypes
+
+/** \brief Execute SPI instruction for AB12 via QSPI
  *
- * \param address absolute address to read from
- * \param data empty variable to store readout data
+ * \param instruction absolute address to read from
+ * \param programmingEnable boolean flag to enable ASIC programming
+ * \param dataToSend data that should be send as SPI input data (look for correct format for each instruction individually)
+ * \param p_data empty variable (as pointer) to store readout data
  * \return Returns TRUE if no errors in received data, FALSE - otherwise
  */
-boolean QSPIReadFast(uint16 address, uint32 * const data);
+boolean QSPIExecuteInstruction(AB12SPIInstructionsEnum instruction, boolean programmingEnable, uint16 dataToSend, uint32 * const p_data);
 
-/** \brief Writes data via QSPI without checking response. One SPI transaction
+// AB15 prototypes
+
+/** \brief Reads sensor data via QSPI
+ * 
+ * \param address absolute address of sensor
+ * \param p_data pointer to empty variable to store readout data
+ * \return Returns TRUE if no errors in received data, FALSE - otherwise
+ */
+boolean QSPIReadSensor(uint16 address, uint32 * const p_data);
+
+/** \brief Read sequentially sensors data via QSPI
+ * 
+ * \param p_addressBuffer pointer to array with register addresses
+ * \param p_dataBuffer pointer to empty (0s) array, after execution contains responses from sensor (full SPI frames)
+ * \param p_length pointer to variable storing length of input buffers, after execution stores length of p_dataBuffer
+ * \return Returns TRUE is there were no errors during operation, FALSE otherwise
+ */
+boolean QSPIReadSequenceSensor(const uint16 * const p_addressBuffer, uint32 * const p_dataBuffer, uint16 * const p_length);
+
+/** \brief Reads data from ASIC via QSPI
+ * 
+ * \param address absolute address to read from
+ * \param p_data pointer to empty variable to store readout data
+ * \return Returns TRUE if no errors in received data, FALSE - otherwise
+ */
+boolean QSPIReadNormal(uint16 address, uint32 * const p_data);
+
+/** \brief Writes data via QSPI to ASIC
  * Created for fast command sending. Not safe, no guarantee of receiving package from slave or error handling
  *
  * \param address absolute address to write
  * \param data data to write
- * \return Returns nothing
+ * \return Returns TRUE if no errors in received data, FALSE - otherwise
  */
-void QSPIWriteFast(uint16 address, uint16 data);
+boolean QSPIWriteNormal(uint16 address, uint16 data);
 
-/** \brief Reads data via QSPI in sequence by specified addresses. Executes n + 1 transactions
- * Created for reading big chunks of data with minimum overhead and with communication error checking
- *
- * \param addressBuffer pointer array with absolute address to read from
- * \param dataBuffer empty buffer to store readout data from SPI (order matches order of addresses, no offset present)
- * \param length pointer variable storing number of SPI frames, after returning from function stores number of read frames
- * \return Returns TRUE if no errors occured, FALSE otherwise
+/** \brief Read sequentially data from ASIC via QSPI
+ * 
+ * \param p_addressBuffer pointer to array with register addresses
+ * \param p_dataBuffer pointer to empty (0s) array, after execution contains responses from ASIC (full SPI frames)
+ * \param p_length pointer to variable storing length of input buffers, after execution stores length of p_dataBuffer
+ * \return Returns TRUE is there were no errors during operation, FALSE otherwise
  */
-boolean QSPIReadSequence(const uint16 * const addressBuffer, uint32 * const dataBuffer, uint16 * const length);
+boolean QSPIReadSequenceNormal(const uint16 * const p_addressBuffer, uint32 * const p_dataBuffer, uint16 * const p_length);
 
-/** \brief Writes data via QSPI in sequence by specified addresses. Executes n + 1 transactions
- * Created for writing big chunks of data with minimum overhead and with communication error checking
- *
- * \param addressBuffer pointer array with absolute address to write to
- * \param dataBuffer buffer with data to write (order matches order of addresses, no offset present)
- * \param length pointer variable storing number of SPI frames, after returning from function stores number of written frames
- * \return Returns TRUE if no errors occured, FALSE otherwise
+/** \brief Write sequentially data to ASIC via QSPI
+ * 
+ * \param p_addressBuffer pointer to array with register addresses
+ * \param p_dataBuffer pointer to array with register content (aligned by LSB), after execution contains responses from ASIC (full SPI frames)
+ * \param p_length pointer to variable storing length of input buffers, after execution stores length of p_dataBuffer
+ * \return Returns TRUE is there were no errors during operation, FALSE otherwise
  */
-boolean QSPIWriteSequence(const uint16 * const addressBuffer, const uint16 * const dataBuffer, uint16 * const length);
+boolean QSPIWriteSequenceNormal(const uint16 * const p_addressBuffer, uint32 * const p_dataBuffer, uint16 * const p_length);
 
-/** \brief Reads/writes data via QSPI in sequence by specified addresses. Executes n + 1 transactions
+/** \brief Reads/writes data via QSPI to ASIC in sequence by specified addresses 
  * Created for executing read+write sequences with minimum overhead and with communication error checking
- *
- * \param addressBuffer pointer array with absolute address to read from/write to
- * \param dataBuffer buffer with data to write (order matches order of addresses, no offset present); will contain output of read transactions after execution
- * \param length pointer variable storing number of SPI frames, after returning from function stores number of transmitted frames
- * \return Returns TRUE if no errors occured, FALSE otherwise
+ * 
+ * \param p_addressBuffer pointer to array with register addresses
+ * \param p_dataBuffer pointer to array with data that should be written to registers (0s for read commands), after execution contains responses from ASIC
+ * \param p_rwBuffer pointer to array with flags indicating if read or write operation should be executed
+ * \param p_length pointer to variable storing length of input buffers, after execution stores length of p_dataBuffer
+ * \return Returns TRUE is there were no errors during operation, FALSE otherwise
  */
-boolean QSPIReadWriteSequence(const uint16 * const addressBuffer, uint32 * const dataBuffer, const enum RWFlag * const rwBuffer, uint16 * const length);
+boolean QSPIReadWriteSequenceNormal(const uint16 * const p_addressBuffer, uint32 * const p_dataBuffer, 
+                                    const RWFlagEnum * const p_rwBuffer, uint16 * const p_length);
 
 /*********************************************************************************************************************/
 /*-------------------------------------------------Global variables--------------------------------------------------*/

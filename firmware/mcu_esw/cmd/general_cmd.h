@@ -57,7 +57,7 @@ void CmdWriteReg(USBReceiveData const * const commandPackage);
 
 /** \brief Handling USB_CMD_SPI_INSTRUCTION command from PC
  *
- * \param commandPackage package with spi_instruction and 16bit input data
+ * \param commandPackage package with required data to frorm spi_instruction (CRC3 not included)
  * \returns status flags and 16 bit output data
  */
 void CmdSpiInstuction(USBReceiveData const * const commandPackage);
@@ -68,20 +68,6 @@ void CmdSpiInstuction(USBReceiveData const * const commandPackage);
  * \return Nothing
  */
 void CmdGetDeviceId(USBReceiveData * commandPackage);
-
-/** \brief Handling several types of command instructons
- *
- * \param commandPackage package with command
- * \return Nothing
- */
-void handleCmdInstr(USBReceiveData const * const commandPackage);
-
-/** \brief Handling READ_REG command from PC
- *
- * \param commandPackage package with command
- * \return Nothing
- */
-void handleSpiInstr(USBTransmitData * packageToSend, USBReceiveData const * const commandPackage);
 
 /** \brief Handling WRITE_REG_RAW command from PC
  *

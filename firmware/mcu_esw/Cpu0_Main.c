@@ -8,7 +8,6 @@
 #include "common/usb_data_types.h"
 #include "common/spi_data_types.h"
 #include "common/command_queue.h"
-#include "command_queue.h"
 #include "cmd/general_cmd.h"
 #include "cmd/seq_cmd.h"
 #include "cmd/bypass_cmd.h"
@@ -23,7 +22,6 @@
 #include "top/status.h"
 #include "top/spi_wrapper.h"
 #include "top/usb_wrapper.h"
-#include "led.h"
 #include "Bsp.h"
 
 // for debug messages on button press JS 4/2024
@@ -33,25 +31,58 @@ IFX_ALIGN(4) IfxCpu_syncEvent g_cpuSyncEvent = 0;
 
 #define WAIT_TIME 2   /*mseconds */
 
-/** \brief Watchdog interrupt routine
+/** \brief Watchdog 1 interrupt routine
  * Arms single acknowledgement of ASIC watchdog
  */
-void WatchdogInterruptRoutine(void)
+void Watchdog1InterruptRoutine(void)
 {
     // Watchdog serving is an internal command
-    USBReceiveData serveWatchdogCommand;
-    serveWatchdogCommand.command = INT_CMD_ACK_WATCHDOG;
-    serveWatchdogCommand.dataLength = 0;
+    static USBReceiveData serveWatchdogCommand = 
+    {
+        .asic_id = 1,
+        .dataLength = 0,
+        .command = INT_CMD_ACK_WATCHDOG1
+    };
+
     // Add WD serving internal command to command queue
-    //QueueWriteTail(&serveWatchdogCommand);    // TODO: commented out to have MCU contained WD routine. Uncomment for actual communication with ASIC
-    ToggleLED2();
+    // QueueWriteTail(&serveWatchdogCommand);    // TODO: commented out to have MCU contained WD routine. Uncomment for actual communication with ASIC
+    ToggleLED2(); // TODO: remove after testing WD
 }
 
-//void FastInterruptRoutine(void)
-//{
-//    // fast timer
-//    ToggleLED4();
-//}
+/** \brief Watchdog 2 interrupt routine
+ * Arms single acknowledgement of ASIC watchdog
+ */
+void Watchdog2InterruptRoutine(void)
+{
+    // Watchdog serving is an internal command
+    static USBReceiveData serveWatchdogCommand = 
+    {
+        .asic_id = 1,
+        .dataLength = 0,
+        .command = INT_CMD_ACK_WATCHDOG2
+    };
+
+    // Add WD serving internal command to command queue
+    // QueueWriteTail(&serveWatchdogCommand);    // TODO: commented out to have MCU contained WD routine. Uncomment for actual communication with ASIC
+    ToggleLED2(); // TODO: remove after testing WD
+}
+
+/** \brief Watchdogs status reading interrupt routine
+ * Arms single reading of watchdogs satus registers
+ */
+void WatchdogStatusReadingInterruptRoutine(void)
+{
+    // Watchdog status reading is an internal command
+    static USBReceiveData serveWatchdogStatusCommand = 
+    {
+        .asic_id = 1,
+        .dataLength = 0,
+        .command = INT_CMD_READ_WD_STATUS
+    };
+
+    // Add WD serving internal command to command queue
+    QueueWrite(&serveWatchdogStatusCommand);
+}
 
 /** \brief Main function
  */
@@ -95,7 +126,6 @@ void core0_main(void)
     // Start general timer
     StartGeneralTimer();
 
-
     // Local temporary variable for receiving data
     USBReceiveData receivedPackage;
 
@@ -121,7 +151,7 @@ void core0_main(void)
           // OffLED2();
        }
 
-        // wait for 2ms for next polling
+        // wait for 2ms for next polling // TODO: remove and check
         waitTime(IfxStm_getTicksFromMilliseconds(BSP_DEFAULT_TIMER, WAIT_TIME));
 
         // Receive package (assumes it already in in buffer of UART
@@ -154,10 +184,11 @@ void core0_main(void)
             case USB_CMD_IS_ALIVE:
                 CmdIsAlive(&cmdPackage);
                 break;
+
             case USB_CMD_SPI_INSTRUCTION:
-                //CmdSpiInstuction(&cmdPackage);
-                handleCmdInstr(&cmdPackage);
+                CmdSpiInstuction(&cmdPackage);
                 break;
+
             case USB_CMD_READ_DEV_ID:
                 CmdGetDeviceId(&cmdPackage);
                 break;
@@ -169,12 +200,10 @@ void core0_main(void)
             //     break;
             // case :
             //     break;
-            case USB_CMD_GET_CONFIG_WATCHDOG:
-                CmdGetConfigWatchdog(&cmdPackage);
-                break;
             case USB_CMD_CONFIGURE_WATCHDOG:
                 CmdConfigureWatchdog(&cmdPackage);
                 break;
+
             case USB_CMD_START_WATCHDOG:
                 CmdStartWatchdog(&cmdPackage);
                 break;
@@ -195,10 +224,30 @@ void core0_main(void)
                 CmdGetMcuBuildTime(&cmdPackage);
                 break;
 
+            case INT_CMD_ACK_WATCHDOG1:
+                IntCmdAcknowledgeWatchdog1();
+                break;
+
+            case INT_CMD_ACK_WATCHDOG2:
+                IntCmdAcknowledgeWatchdog2();
+                break;
+
+            case USB_CMD_START_MONITORING_WATCHDOG:
+                CmdStartMonitoringWatchdog(&cmdPackage);
+                break;
+
+            case USB_CMD_STOP_MONITORING_WATCHDOG:
+                CmdStopMonitoringWatchdog(&cmdPackage);
+                break;
+
+            case INT_CMD_READ_WD_STATUS:
+                IntCmdMonitorWatchdog();
+                break;
 
 
            case _USB_CMD_MAX:
                 break;
+
             default :
                 break;
         }

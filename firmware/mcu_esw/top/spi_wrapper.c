@@ -8,11 +8,13 @@
 /*********************************************************************************************************************/
 
 #include "Ifx_Types.h"
+#include "Ifx_Ssw_Compilers.h"
 #include "IfxAsclin_Asc.h"
 
-#include "../common/spi_data_types.h"
-#include "../periphery/spi.h"
-#include "../common/crc.h"
+#include "common/global_defines.h"
+#include "common/spi_data_types.h"
+#include "periphery/spi.h"
+#include "common/crc.h"
 #include "top/crc_wrapper.h"
 #include "top/spi_wrapper.h"
 #include "top/usb_wrapper.h"
@@ -23,13 +25,41 @@
 /*********************************************************************************************************************/
 
 #define SPI_TRANSACTION_LENGTH          (4)                /** \brief Length of one SPI transaction in bytes         */
-#define SPI_DUMMY_TRANSACTION           (0x00000004)       /** \brief Dummy SPI read transaction incl CRC3 checksum  */
+
+/*********************************************************************************************************************/
+/*--------------------------------------------------Enumerations-----------------------------------------------------*/
+/*********************************************************************************************************************/
+
+/** \brief Defines applicable types of sequences for SPI sequence operations
+ */
+typedef enum
+{
+    READ_ONLY   = 0,             /** \brief sequence contains only read commands      */
+    WRITE_ONLY  = 1,             /** \brief sequence contains only write commands     */
+    COMBINATION = 2              /** \brief sequence contains read and write commands */
+} SequenceTypeEnum;
 
 /*********************************************************************************************************************/
 /*-------------------------------------------------Global variables--------------------------------------------------*/
 /*********************************************************************************************************************/
 
 static boolean enSPICommunication = FALSE;                 /** \brief Flag indicating if SPI communication enabled   */
+
+/*********************************************************************************************************************/
+/*------------------------------------------------Function Prototypes------------------------------------------------*/
+/*********************************************************************************************************************/
+
+/** \brief Common implementation of sequence operation on SPI 
+ * \param p_addressBuffer pointer to array with register addresses
+ * \param p_dataBuffer pointer to array with data that should be written to registers, after execution contains responses from ASIC
+ * \param p_rwBuffer pointer to array with flags indicating if read or write operation should be executed
+ * \param SEQ_TYPE type of SPI sequence
+ * \param p_length pointer to variable storing length of input buffers, after execution stores length of p_dataBuffer
+ * \return Returns TRUE is there were no errors during operation, FALSE otherwise
+ */
+IFX_INLINE boolean QSPIReadWriteSequenceNormalInline(const uint16 * const p_addressBuffer, uint32 * const p_dataBuffer, 
+                                                     const RWFlagEnum * const p_rwBuffer, const SequenceTypeEnum SEQ_TYPE, 
+                                                     uint16 * const p_length);
 
 /*********************************************************************************************************************/
 /*---------------------------------------------Function Implementations----------------------------------------------*/
@@ -47,7 +77,10 @@ void QSPIDeinit(void)
     QSPIDeinitPeriphery();
 }
 
-boolean QSPIReadFast(uint16 address, uint32 * const data)
+#ifdef AB12_PLATFORM
+// AB12 implementations
+
+boolean QSPIExecuteInstruction(AB12SPIInstructionsEnum instruction, boolean programmingEnable, uint16 dataToSend, uint32 * const p_data)
 {
     // Execute only if enabled
     if (enSPICommunication == FALSE) return FALSE;
@@ -59,271 +92,234 @@ boolean QSPIReadFast(uint16 address, uint32 * const data)
 
     // Configure and execute read request
     dataToTransmit.dw = 0;
-    dataToTransmit.bf.instruction = address;
-    dataToTransmit.bf.pe = 0x0;
-    dataToTransmit.bf.inputdata = READ;
-    dataToTransmit.bf.crc = CRC3MI(dataToTransmit.dw);
-    QSPIExchangeData(&dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
-
-    // Configure and execute dummy SPi transaction to receive data from previous read
-    dataToTransmit.dw = SPI_DUMMY_TRANSACTION;
+    dataToTransmit.bf.instruction = instruction;
+    dataToTransmit.bf.pe = programmingEnable;
+    dataToTransmit.bf.data = dataToSend;
+    dataToTransmit.bf.crc = GetCRC3(&(dataToTransmit.dw));
     QSPIExchangeData(&dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
 
     // Validating input
-    // TODO:
-    // isReceivedDataValid = IsCRC5Correct(&dataToReceive);
-    // isReceivedDataValid &= !(dataToReceive.bf.errBus || dataToReceive.bf.errAt || dataToReceive.bf.errCRC || dataToReceive.bf.errSck);
-    isReceivedDataValid = TRUE;
+    isReceivedDataValid = IsCRC3Correct(&(dataToReceive.dw), dataToReceive.bf.crc);
 
     // Return data
-    *data = dataToReceive.dw;
+    *p_data = dataToReceive.dw;
 
     return (isReceivedDataValid);
 }
 
-void QSPIWriteFast(uint16 address, uint16 data)
+#else
+// AB15 implementations
+
+boolean QSPIReadNormal(uint16 address, uint32 * const p_data)
+{
+    // Execute only if enabled
+    if (enSPICommunication == FALSE) return FALSE;
+
+    // Initialize variables
+    boolean isReceivedDataValid = FALSE;
+    SPITransmitDataNormal dataToTransmit;
+    SPIReceiveDataNormal dataToReceive;
+
+    // Configure and execute read request
+    dataToTransmit.dw = 0;
+    dataToTransmit.bf.sensor_data = FALSE;
+    dataToTransmit.bf.address = address;
+    dataToTransmit.bf.rw = READ;
+    dataToTransmit.bf.crc = GetCRC3(&(dataToTransmit.dw));
+    QSPIExchangeData(&dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
+
+    // Validating input
+    isReceivedDataValid = IsCRC3Correct(&(dataToReceive.dw), dataToReceive.bf.crc);
+    isReceivedDataValid &= (dataToReceive.bf.asic_error_flag == FALSE);
+
+    // Return data
+    *p_data = dataToReceive.dw;
+
+    return (isReceivedDataValid);
+}
+
+boolean QSPIWriteNormal(uint16 address, uint16 data)
 {
     // Execute only if enabled
     if (enSPICommunication == FALSE) return;
 
-    SPITransmitData dataToTransmit;
-    SPIReceiveData dataToReceive; // data in this variable unused, provides place to store incoming data
+    // Initialize variables
+    boolean isReceivedDataValid = FALSE;
+    SPITransmitDataNormal dataToTransmit;
+    SPIReceiveDataNormal dataToReceive; // data in this variable unused, provides place to store incoming data
 
-    dataToTransmit.dw = 0;
-    dataToTransmit.bf.instruction = address;
-    dataToTransmit.bf.inputdata = data;
-    dataToTransmit.bf.pe = WRITE;
-    dataToTransmit.bf.crc = CRC3MO(dataToTransmit.dw);
-
+    // Configure and execute write request
+    dataToTransmit.bf.sensor_data = FALSE;
+    dataToTransmit.bf.address = address;
+    dataToTransmit.bf.rw = WRITE;
+    dataToTransmit.bf.crc = GetCRC3(&(dataToTransmit.dw));
     QSPIExchangeData(&dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
 
-    return;
+    // Validating input
+    isReceivedDataValid = IsCRC3Correct(&(dataToReceive.dw), dataToReceive.bf.crc);
+    isReceivedDataValid &= (dataToReceive.bf.asic_error_flag == FALSE);
+
+    return isReceivedDataValid;
 }
 
-boolean QSPIReadSequence(const uint16 * const addressBuffer, uint32 * const dataBuffer, uint16 * const length)
+boolean QSPIReadSequenceNormal(const uint16 * const p_addressBuffer, uint32 * const p_dataBuffer, uint16 * const p_length)
+{
+    return QSPIReadWriteSequenceNormalInline(p_addressBuffer, p_dataBuffer, NULL_PTR, READ_ONLY, p_length);
+}
+
+boolean QSPIWriteSequenceNormal(const uint16 * const addressBuffer, const uint16 * const dataBuffer, uint16 * const length)
+{
+    return QSPIReadWriteSequenceNormalInline(p_addressBuffer, p_dataBuffer, NULL_PTR, WRITE_ONLY, p_length);
+}
+
+boolean QSPIReadWriteSequenceNormal(const uint16 * const addressBuffer, const uint16 * const dataBuffer, const RWFlagEnum * const p_rwBuffer, uint16 * const length)
+{
+    return QSPIReadWriteSequenceNormalInline(p_addressBuffer, p_dataBuffer, p_rwBuffer, COMBINATION, p_length);
+}
+
+IFX_INLINE boolean QSPIReadWriteSequenceNormalInline(const uint16 * const p_addressBuffer, uint32 * const p_dataBuffer, const RWFlagEnum * const p_rwBuffer, const SequenceTypeEnum SEQ_TYPE, uint16 * const p_length)
 {
     // Execute only if enabled
     if (enSPICommunication == FALSE) return FALSE;
 
     // Initialize variables
     boolean isReceivedDataValid = FALSE;
-    uint16 numberOfFrames = (*length);
-    SPITransmitData dataToTransmit;
-    SPIReceiveData dataToReceive;
+    uint16 numberOfFrames = (*p_length);
+    SPITransmitDataNormal dataToTransmit;
+    SPIReceiveDataNormal dataToReceive;
 
     // Reset length variable to store number of received frames there
-    *length = 0;
+    *p_length = 0;
 
     // Null pointer check
-    if ((addressBuffer == NULL_PTR) || (dataBuffer == NULL_PTR) || (length == NULL_PTR))
+    if ((p_addressBuffer == NULL_PTR) || (p_dataBuffer == NULL_PTR) || 
+        (p_length == NULL_PTR) || ((SEQ_TYPE == COMBINATION) && (p_rwBuffer == NULL_PTR)))
     {
         return FALSE;
     }
 
-    // Configure common parameters of SPI read frame
+    // Configure common parameters of SPI normal frame
     dataToTransmit.dw = 0;
-    dataToTransmit.bf.inputdata = 0x0;
-    dataToTransmit.bf.pe = READ;
+    dataToTransmit.bf.sensor_data = FALSE;
+    dataToTransmit.bf.rw = (SEQ_TYPE == READ_ONLY) ? (READ) : (WRITE);
 
     // Execute series of SPI transactions
-    for (uint16 i = 0; i < numberOfFrames + 1; i++)
-    {
-        // Configure read transaction
-        if (i < numberOfFrames)
-        {
-            // Reading data from addresses in address buffer
-            dataToTransmit.bf.instruction = addressBuffer[i];
-            dataToTransmit.bf.crc = CRC3MO(dataToTransmit.dw);
-        }
-        else
-        {
-            // Injecting one extra transaction to receive data from last address
-            dataToTransmit.dw = SPI_DUMMY_TRANSACTION;
-        }
-
-        // Execute SPI transaction exchange
-        QSPIExchangeData(&dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
-
-        // Ignore response for first transaction
-        if (i == 0) continue;
-
-        // Validating input
-        // TODO:
-        //isReceivedDataValid = IsCRC5Correct(&dataToReceive);
-        //isReceivedDataValid &= !(dataToReceive.bf.errBus || dataToReceive.bf.errAt || dataToReceive.bf.errCRC || dataToReceive.bf.errSck);
-        isReceivedDataValid = TRUE;
-        // Store received data
-        *length = i; // store number of received frames
-        dataBuffer[i - 1] = dataToReceive.dw; // save package to output buffer, -1 to account on first transaction response (not related)
-
-        if (isReceivedDataValid == FALSE)
-        {
-            // Stop reading sequence if one of received data is not valid
-            // Last item in output data caused validation error, all previous elements are valid
-            return FALSE;
-        }
-    }
-
-    return TRUE;
-}
-
-boolean QSPIWriteSequence(const uint16 * const addressBuffer, const uint16 * const dataBuffer, uint16 * const length)
-{
-    // Execute only if enabled
-    if (enSPICommunication == FALSE) return FALSE;
-
-    // Initialize variables
-    boolean noErrorInRespose = FALSE;
-    uint16 numberOfFrames = (*length);
-    SPITransmitData dataToTransmit;
-    SPIReceiveData dataToReceive;
-
-    // Reset length variable to store number of received frames there
-    *length = 0;
-
-    // Null pointer check
-    if ((addressBuffer == NULL_PTR) || (dataBuffer == NULL_PTR) || (length == NULL_PTR))
-    {
-        return FALSE;
-    }
-
-    // Configure common parameters of SPI read frame
-    dataToTransmit.dw = 0;
-    dataToTransmit.bf.pe = WRITE;
-
-    // Execute series of SPI transactions
-    for (uint16 i = 0; i < numberOfFrames + 1; i++)
-    {
-        // Configure read transaction
-        if (i < numberOfFrames)
-        {
-            // Reading data from addresses in address buffer
-            dataToTransmit.bf.instruction = addressBuffer[i];
-            dataToTransmit.bf.inputdata = dataBuffer[i];
-            dataToTransmit.bf.crc = CRC3MO(dataToTransmit.dw);
-        }
-        else
-        {
-            // Injecting one extra transaction to receive data from last address
-            dataToTransmit.dw = SPI_DUMMY_TRANSACTION;
-        }
-
-        // Execute SPI transaction exchange
-        QSPIExchangeData(&dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
-
-        // Ignore response for first transaction
-        if (i == 0) continue;
-
-        // Validating input
-        // TODO
-        //noErrorInRespose = IsCRC5Correct(&dataToReceive);
-        //noErrorInRespose &= !(dataToReceive.bf.errBus || dataToReceive.bf.errAt || dataToReceive.bf.errCRC || dataToReceive.bf.errSck);
-        noErrorInRespose = TRUE;
-        if (noErrorInRespose == FALSE)
-        {
-            // Stop reading sequence if one of received data is not valid
-            return FALSE;
-        }
-        else
-        {
-            *length = i; // store number of received frames
-        }
-    }
-
-    return TRUE;
-}
-
-/*
- * use QSPI command from CS600 for AB12. using adress instead of instruction*/
-boolean QSPIReadWriteSequence(const uint16 * const addressBuffer, uint32 * const dataBuffer, const enum RWFlag * const rwBuffer, uint16 * const length)
-{
-    // Execute only if enabled
-    if (enSPICommunication == FALSE) return FALSE;
-
-    // Initialize variables
-    boolean isReceivedDataValid = FALSE;
-    uint16 numberOfFrames = (*length);
-    SPITransmitData dataToTransmit;
-    SPIReceiveData dataToReceive;
-
-    // Reset length variable to store number of received frames there
-    *length = 0;
-
-    // Null pointer check
-    if ((addressBuffer == NULL_PTR) || (dataBuffer == NULL_PTR) || (length == NULL_PTR))
-    {
-        return FALSE;
-    }
-
-    // Configure common parameters of SPI read frame
-    dataToTransmit.dw = 0;
-
-    // Execute series of SPI transactions
-
-    // TODO: code for removal
-#ifdef CS600
-    /* CS 600 needs two write/read sequence, first seq initiaztes request, second collects data*/
-    for (uint16 i = 0; i < numberOfFrames + 1; i++)
-    {
-
-        // Configure read transaction
-        if (i < numberOfFrames)
-        {
-            // Reading/writing data from addresses in address buffer
-            dataToTransmit.bf.instruction = addressBuffer[i];
-            dataToTransmit.bf.pe = rwBuffer[i];
-            dataToTransmit.bf.inputdata = dataBuffer[i];
-            dataToTransmit.bf.crc = CRC3MO(&dataToTransmit);
-        }
-        else
-        {
-            // Injecting one extra transaction to receive data from last address
-            dataToTransmit.dw = SPI_DUMMY_TRANSACTION;
-        }
-#else
-    // for AB12 we data comes back in same SPI command --> no dummy read needed
-    for (uint16 i = 0; i < numberOfFrames ; i++)
+    for (uint16 i = 0; i < numberOfFrames; i++)
     {
         // Reading/writing data from addresses in address buffer
-        dataToTransmit.bf.instruction = addressBuffer[i];
-        dataToTransmit.bf.pe = rwBuffer[i];
-        dataToTransmit.bf.inputdata = dataBuffer[i];
-        dataToTransmit.bf.crc = CRC3MO(dataToTransmit.dw);
-#endif
+        dataToTransmit.bf.address = p_addressBuffer[i];
+        if (SEQ_TYPE == COMBINATION)
+        {
+            // Use rwBuffer only if mix of read and write transactions required
+            dataToTransmit.bf.rw = p_rwBuffer[i];
+        }
+        dataToTransmit.bf.data = p_dataBuffer[i];
+        dataToTransmit.bf.crc = GetCRC3(&(dataToTransmit.dw));
 
         // Execute SPI transaction exchange
         QSPIExchangeData(&dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
 
-   // TODO: code for removal
-#ifdef CS600
-        // CS600: Ignore response for first transaction
-        /*TCD 6.12.1.The SPI protocol supported by the CS600 uses an out-of-frame transfer. Register read data is provided
-        by the slave in the next MISO-frame after a read request. Register write data is directly accepted from
-        the MOSI-frame */
-        if (i == 0) continue;
-#else
-        //AB12 relevant data in first transaction, dont ignore first return
-#endif
-        // TODO: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         // Validating input
-        // isReceivedDataValid = IsCRC5Correct(&dataToReceive);
-        // isReceivedDataValid &= !(dataToReceive.bf.errBus || dataToReceive.bf.errAt || dataToReceive.bf.errCRC || dataToReceive.bf.errSck);
-        isReceivedDataValid = TRUE;
+        isReceivedDataValid = IsCRC3Correct(&(dataToReceive.dw), dataToReceive.bf.crc);
+        isReceivedDataValid &= (dataToReceive.bf.asic_error_flag == FALSE);
+
         // Store received data
         *length = i; // store number of received frames
+
         // save package to output buffer, -1 to account on first transaction response (not related)
-#ifdef CS600
-        dataBuffer[i - 1] = dataToReceive.dw;
-#else
-        dataBuffer[i] = dataToReceive.dw;
-#endif
+        p_dataBuffer[i] = dataToReceive.dw;
+
         if (isReceivedDataValid == FALSE)
         {
-            // Stop reading sequence if one of received data is not valid
+            // Stop sequence execution if any frame of the received data is not valid
             // Last item in output data caused validation error, all previous elements are valid
             return FALSE;
         }
-
     }
     return TRUE;
 }
+
+boolean QSPIReadSensor(uint16 address, uint32 * const p_data)
+{
+    // Execute only if enabled
+    if (enSPICommunication == FALSE) return FALSE;
+
+    // Initialize variables
+    boolean isReceivedDataValid = FALSE;
+    SPITransmitDataSensor dataToTransmit;
+    SPIReceiveDataSensor dataToReceive;
+
+    // Configure and execute read request
+    dataToTransmit.dw = 0;
+    dataToTransmit.bf.sensor_data = TRUE;
+    dataToTransmit.bf.address = address;
+    dataToTransmit.bf.crc = GetCRC3(&(dataToTransmit.dw));
+    QSPIExchangeData(&dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
+
+    // Validating input
+    isReceivedDataValid = IsCRC3Correct(&(dataToReceive.dw), dataToReceive.bf.crc);
+    isReceivedDataValid &= (dataToReceive.bf.asic_error_flag == FALSE);
+
+    // Return data
+    *p_data = dataToReceive.dw;
+
+    return (isReceivedDataValid);
+}
+
+boolean QSPIReadSequenceSensor(const uint16 * const p_addressBuffer, uint32 * const p_dataBuffer, uint16 * const p_length)
+{
+    // Execute only if enabled
+    if (enSPICommunication == FALSE) return FALSE;
+
+    // Initialize variables
+    boolean isReceivedDataValid = FALSE;
+    uint16 numberOfFrames = (*p_length);
+    SPITransmitDataSensor dataToTransmit;
+    SPIReceiveDataSensor dataToReceive;
+
+    // Reset length variable to store number of received frames there
+    *p_length = 0;
+
+    // Null pointer check
+    if ((p_addressBuffer == NULL_PTR) || (p_dataBuffer == NULL_PTR) || 
+        (p_length == NULL_PTR))
+    {
+        return FALSE;
+    }
+
+    // Configure common parameters of SPI normal frame
+    dataToTransmit.dw = 0;
+    dataToTransmit.bf.sensor_data = TRUE;
+    dataToTransmit.bf.rw = READ;
+
+    // Execute series of SPI transactions
+    for (uint16 i = 0; i < numberOfFrames; i++)
+    {
+        // Reading/writing data from addresses in address buffer
+        dataToTransmit.bf.address = p_addressBuffer[i];
+        dataToTransmit.bf.crc = GetCRC3(&(dataToTransmit.dw));
+
+        // Execute SPI transaction exchange
+        QSPIExchangeData(&dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
+
+        // Validating input
+        isReceivedDataValid = IsCRC3Correct(&(dataToReceive.dw), dataToReceive.bf.crc);
+        isReceivedDataValid &= (dataToReceive.bf.asic_error_flag == FALSE);
+
+        // Store received data
+        *length = i; // store number of received frames
+
+        // save package to output buffer, -1 to account on first transaction response (not related)
+        p_dataBuffer[i] = dataToReceive.dw;
+
+        if (isReceivedDataValid == FALSE)
+        {
+            // Stop sequence execution if any frame of the received data is not valid
+            // Last item in output data caused validation error, all previous elements are valid
+            return FALSE;
+        }
+    }
+    return TRUE;
+}
+
+#endif
