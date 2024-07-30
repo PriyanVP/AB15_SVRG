@@ -52,8 +52,7 @@ uint8 GetByteByIdx(uint8 byteIdx, uint32 word)
 
     mask = 0xFF << bitOffset;
 
-    //TODO possible truncation at implicit conversion to type "unsigned char"
-    return ((word & mask) >> bitOffset);
+    return (uint8)((word & mask) >> bitOffset);
 }
 
 uint8 SetResponseBit(uint8 msgID)

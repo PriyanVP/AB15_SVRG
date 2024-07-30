@@ -156,7 +156,7 @@ void QSPIDeinitPeriphery(void)
 
 void QSPIExchangeData(const uint32 * const dataToSend, uint32 * const dataOut, uint8 length)
 {
-    // Temporary variables to store data with correct endian for CS600 communication
+    // Temporary variables to store data with correct endian for communication
     uint32 dataToSendSwapped = SWAP_ENDIAN(*dataToSend);
     uint32 dataToRecive = 0;
 

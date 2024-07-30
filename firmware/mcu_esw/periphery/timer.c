@@ -12,6 +12,7 @@
 #include "periphery/usb.h"
 #include "periphery/led.h"
 #include "common/Ifx_IntPrioDef.h"
+#include "common/watchdog_types.h"
 #include "Bsp.h"
 
 #include "timer.h"
@@ -26,13 +27,17 @@
 
 
 //extern void FastInterruptRoutine(void);
-extern void WatchdogInterruptRoutine(void);
+extern void Watchdog1InterruptRoutine(void);
+extern void Watchdog2InterruptRoutine(void);
+extern void WatchdogStatusReadingInterruptRoutine(void);
 //extern void ErrorCheckInterruptRoutine(void);
 //extern void ContinuousReadInterruptRoutine(void);
 //extern void GPIOInterruptRoutine(void);
 //
 ///** \brief General timer interrupt routine
-// * Implements timers for ASIC watchdog, error check and continuous read
+// * Implements timers for ASIC watchdogs, watchdog status, error check and other virtual timers
+// * with GENERAL_TIMER_PERIODICITY = 625u MCU will trigger an interrupt each  50us*/
+// * Response time in factor of 50us ( value 2 = 100us) max val of 65535 will result of timer of ~3,27s */
 // *
 // * \return Returns nothing
 // */
@@ -43,22 +48,26 @@ void UpdateTimersRoutine(void);
 /*-------------------------------------------------Global variables--------------------------------------------------*/
 /*********************************************************************************************************************/
 
-static uint16 g_watchdogReload;                   /** \brief Watchdog acknowledge periodicity in T2 timer interrupts */
+static uint16 g_watchdog1Reload;                  /** \brief Watchdog acknowledge periodicity in T3 timer interrupts */
+static uint16 g_watchdog2Reload;                  /** \brief Watchdog acknowledge periodicity in T3 timer interrupts */
+static uint16 g_watchdogStatusCheckReload;        /** \brief Watchdog status check periodicity in T3 timer interrupts*/
 static uint16 g_errorCheckReload;                 /** \brief Error check periodicity in T2 timer interrupts          */
 static uint16 g_continuousReadReload;             /** \brief Continuous read periodicity in T2 timer interrupts      */
 static uint16 g_GPIOReload;                       /** \brief GPIO handling periodicity in T2 timer interrupts        */
 
-static boolean g_watchdogEnable       = FALSE;    /** \brief Watchdog acknowledge interrupts enable                  */
-static boolean g_errorCheckEnable     = FALSE;    /** \brief Error check interrupts enable                           */
-static boolean g_continuousReadEnable = FALSE;    /** \brief Continuous read interrupts enable                       */
-static boolean g_GPIOEnable           = FALSE;    /** \brief GPIO interrupts enable                                  */
+static boolean g_watchdog1Enable            = FALSE;    /** \brief Watchdog 1 acknowledge interrupts enable          */
+static boolean g_watchdog2Enable            = FALSE;    /** \brief Watchdog 2 acknowledge interrupts enable          */
+static boolean g_watchdogStatusCheckEnable  = FALSE;    /** \brief Watchdog status reading interrupts enable         */
+static boolean g_errorCheckEnable           = FALSE;    /** \brief Error check interrupts enable                     */
+static boolean g_continuousReadEnable       = FALSE;    /** \brief Continuous read interrupts enable                 */
+static boolean g_GPIOEnable                 = FALSE;    /** \brief GPIO interrupts enable                            */
 
 /*********************************************************************************************************************/
 /*--------------------------------------------Function Implementations-----------------------------------------------*/
 /*********************************************************************************************************************/
 /* Macro defining the Interrupt Service Routines */
 IFX_INTERRUPT(UpdateTimersRoutine, 0, ISR_PRIORITY_GPT1_T3_TIMER);
-//IFX_INTERRUPT(ServiceTimerRoutineWrapper, 0, ISR_PRIORITY_GPT1_T3_TIMER);
+
 
 
 void InitGpt12Timer(void)
@@ -86,21 +95,31 @@ void InitGpt12Timer(void)
     IfxSrc_enable(src3);                                                             /* Enable GPT12 interrupt       */
 }
 
-
 void StartGeneralTimer(void)
 {
     IfxGpt12_T3_run(&MODULE_GPT120, IfxGpt12_TimerRun_start);
 }
-
 
 void StopGeneralTimer(void)
 {
     IfxGpt12_T3_run(&MODULE_GPT120, IfxGpt12_TimerRun_stop);
 }
 
-void ConfigureWatchdogPeriodicity(uint16 watchdogPeriodicity)
+void ConfigureWatchdogPeriodicity(WatchdogTypeEnum wdType, uint16 watchdogPeriodicity)
 {
-    g_watchdogReload = watchdogPeriodicity;
+    if (wdType == WD1)
+    {
+        g_watchdog1Reload = watchdogPeriodicity;
+    }
+    else if (wdType == WD2)
+    {
+        g_watchdog2Reload = watchdogPeriodicity;
+    } 
+}
+
+void ConfigureWatchdogStatusCheckPeriodicity(uint16 watchdogStatusCheckPeriodicity)
+{
+    g_watchdogStatusCheckReload = watchdogStatusCheckPeriodicity;
 }
 
 void ConfigureErrorCheckPeriodicity(uint16 errorCheckPeriodicity)
@@ -118,10 +137,21 @@ void ConfigureGPIOPeriodicity(uint16 gpioPeriodicity)
     g_GPIOReload = gpioPeriodicity;
 }
 
+void EnableWatchdogInterrupt(WatchdogTypeEnum wdType)
+{  
+    if (wdType == WD1)
+    {
+        g_watchdog1Enable = TRUE;
+    }
+    else if (wdType == WD2)
+    {
+        g_watchdog2Enable = TRUE;
+    } 
+}
 
-void EnableWatchdogInterrupt(void)
+void EnableWatchdogStatusCheckInterrupt(void)
 {
-    g_watchdogEnable = TRUE;
+    g_watchdogStatusCheckEnable = TRUE;
 }
 
 void EnableErrorCheckInterrupt(void)
@@ -139,11 +169,23 @@ void EnableGPIOInterrupt(void)
     g_GPIOEnable = TRUE;
 }
 
-void DisableWatchdogInterrupt(void)
-{
-    g_watchdogEnable = FALSE;
+void DisableWatchdogInterrupt(WatchdogTypeEnum wdType)
+{  
+    if ((wdType == WD1) || (wdType == WD12))
+    {
+        g_watchdog1Enable = FALSE;
+    }
+    
+    if ((wdType == WD2) || (wdType == WD12))
+    {
+        g_watchdog2Enable = FALSE;
+    } 
 }
 
+void DisableWatchdogStatusCheckInterrupt(void)
+{
+    g_watchdogStatusCheckEnable = FALSE;
+}
 
 void DisableErrorCheckInterrupt(void)
 {
@@ -160,9 +202,25 @@ void DisableGPIOInterrupt(void)
     g_GPIOEnable = FALSE;
 }
 
-boolean GetStateWatchdogInterrupt(void)
+boolean GetStateWatchdogInterrupt(WatchdogTypeEnum wdType)
 {
-    return g_watchdogEnable;
+    boolean isEnabled;
+
+    if (wdType == WD1)
+    {
+        isEnabled = g_watchdog1Enable;
+    }
+    else if (wdType == WD2)
+    {
+        isEnabled = g_watchdog2Enable;
+    } 
+
+    return isEnabled;
+}
+
+boolean GetStateWatchdogStatusCheckInterrupt(void)
+{
+    return g_errorCheckEnable;
 }
 
 boolean GetStateErrorCheckInterrupt(void)
@@ -180,35 +238,62 @@ boolean GetStateGPIOInterrupt(void)
     return g_GPIOEnable;
 }
 
-uint16 GetWatchdogPeriodicity(void)
+uint16 GetWatchdogPeriodicity(WatchdogTypeEnum wdType)
 {
-    return g_watchdogReload;
+    uint16 watchdogReload = 0;
+
+    if (wdType == WD1)
+    {
+        watchdogReload = g_watchdog1Reload;
+    }
+    else if (wdType == WD2)
+    {
+        watchdogReload = g_watchdog2Reload;
+    } 
+
+    return watchdogReload;
 }
 
 void UpdateTimersRoutine(void)
 {
-
-
     // Static variables to simulate separate timers
-    static uint16 watchdogCounter           = 0;
-    static uint16 errorCheckCounter         = 0;
-    static uint16 continuousReadCounter     = 0;
-    static uint16 GPIOCounter               = 0;
+    static uint16 watchdog1Counter              = 0;
+    static uint16 watchdog2Counter              = 0;
+    static uint16 watchdogStatusCheckCounter    = 0;
+    static uint16 errorCheckCounter             = 0;
+    static uint16 continuousReadCounter         = 0;
+    static uint16 GPIOCounter                   = 0;
 
     // Increment variables if entered interrupt routine
-    // TODO:  Prescale changed from 2 to 1, so all couters need to be doulbed! --> IfxGpt12_TimerInputPrescaler_1
-
-    watchdogCounter++;
+    watchdog1Counter++;
+    watchdog2Counter++;
+    watchdogStatusCheckCounter++;
     errorCheckCounter++;
     continuousReadCounter++;
     GPIOCounter++;
 
     // Call corresponding functions if enabled and counter reached reload value
-    if ((g_watchdogEnable == TRUE) && (watchdogCounter >= g_watchdogReload))
+    if ((g_watchdog1Enable == TRUE) && (watchdog1Counter >= g_watchdog1Reload))
     {
         // Watchdog acknowledge
-        watchdogCounter = 0;
-        WatchdogInterruptRoutine();
+        watchdog1Counter = 0;
+        Watchdog1InterruptRoutine();
+    }
+
+    // Call corresponding functions if enabled and counter reached reload value
+    if ((g_watchdog2Enable == TRUE) && (watchdog2Counter >= g_watchdog2Reload))
+    {
+        // Watchdog acknowledge
+        watchdog2Counter = 0;
+        Watchdog2InterruptRoutine();
+    }
+
+    // Call corresponding functions if enabled and counter reached reload value
+    if ((g_watchdogStatusCheckEnable == TRUE) && (watchdogStatusCheckCounter >= g_watchdogStatusCheckReload))
+    {
+        // Watchdog acknowledge
+        watchdogStatusCheckCounter = 0;
+        WatchdogStatusReadingInterruptRoutine(); // TODO: fix naming
     }
 
 //    if ((g_errorCheckEnable == TRUE) && (errorCheckCounter >= g_errorCheckReload))

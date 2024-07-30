@@ -44,7 +44,7 @@ void CmdExecuteRWSequence(USBReceiveData const * const commandPackage)
     USBTransmitData packageToSend;
     uint16 address[rwSeqLength];
     uint32 data[rwSeqLength];
-    enum RWFlag rwOption[rwSeqLength];
+    RWFlagEnum rwOption[rwSeqLength];
     SPIReceiveData dataRecived;
     uint16 length = (commandPackage->dataLength)/RW_ITEM_SIZE;
     boolean isSuccessfulFlag = FALSE;
@@ -62,7 +62,7 @@ void CmdExecuteRWSequence(USBReceiveData const * const commandPackage)
     }
 
     // Send data to SPI with waiting for response
-    isSuccessfulFlag = QSPIReadWriteSequence(&address, &data, &rwOption, &length);
+    // isSuccessfulFlag = QSPIReadWriteSequence(&address, &data, &rwOption, &length); // TODO: requires update
 
     // Construct package to PC
     packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
@@ -111,7 +111,7 @@ void CmdExecuteReadSequence(USBReceiveData const * const commandPackage)
     USBTransmitData packageToSend;
     uint16 address[readSeqLength];
     uint32 data[readSeqLength];
-    enum RWFlag rwOption[readSeqLength];
+    RWFlagEnum rwOption[readSeqLength];
     SPIReceiveData dataRecived;
     uint16 length = (commandPackage->dataLength)/READ_ITEM_SIZE;
     boolean isSuccessfulFlag = FALSE;
@@ -128,7 +128,7 @@ void CmdExecuteReadSequence(USBReceiveData const * const commandPackage)
     }
 
     // Send data to SPI with waiting for response
-    isSuccessfulFlag = QSPIReadWriteSequence(&address, &data, &rwOption, &length);
+    // isSuccessfulFlag = QSPIReadWriteSequence(&address, &data, &rwOption, &length); // TODO: requires update
 
     // Construct package to PC
     packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
@@ -177,7 +177,7 @@ void CmdExecuteWriteSequence(USBReceiveData const * const commandPackage)
     USBTransmitData packageToSend;
     uint16 address[writeSeqLength];
     uint32 data[writeSeqLength];
-    enum RWFlag rwOption[writeSeqLength];
+    RWFlagEnum rwOption[writeSeqLength];
     SPIReceiveData dataRecived;
     uint16 length = (commandPackage->dataLength)/WRITE_ITEM_SIZE;
     boolean isSuccessfulFlag = FALSE;
@@ -195,7 +195,7 @@ void CmdExecuteWriteSequence(USBReceiveData const * const commandPackage)
     }
 
     // Send data to SPI with waiting for response
-    isSuccessfulFlag = QSPIReadWriteSequence(&address, &data, &rwOption, &length);
+    // isSuccessfulFlag = QSPIReadWriteSequence(&address, &data, &rwOption, &length); // TODO: requires update
 
     // Construct package to PC
     packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);

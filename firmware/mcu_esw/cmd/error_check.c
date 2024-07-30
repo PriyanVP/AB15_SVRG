@@ -65,13 +65,13 @@ void IntCmdCS600ErrorCheck(void)
     uint16 dataToWrite[ERROR_LENGTH];
     SPIReceiveData errorManagerData[ERROR_LENGTH];
     uint16 length = ERROR_LENGTH;
-    boolean isSuccessfulFlag;
+    boolean isSuccessfulFlag = TRUE;
 
     // use saved msg ID for sending message
     packageToSend.msg_id = SetResponseBit(errorCheckMessageID);
 
     // Read all error fields from CS600
-    isSuccessfulFlag = QSPIReadSequence(&errorMangerAddressRead, &errorManagerData, &length);
+    // isSuccessfulFlag = QSPIReadSequence(&errorMangerAddressRead, &errorManagerData, &length); // TODO: requires update
 
     if (isSuccessfulFlag == FALSE)
     {
@@ -94,7 +94,7 @@ void IntCmdCS600ErrorCheck(void)
         length = ERROR_LENGTH - 1;
 
         // Clear error flags
-        QSPIWriteSequence(&errorMangerAddressRead[1], dataToWrite, &length);
+        // QSPIWriteSequence(&errorMangerAddressRead[1], dataToWrite, &length); // TODO: requires update
     }
 
     // Send data back to MCU
