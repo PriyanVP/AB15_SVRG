@@ -29,7 +29,7 @@
 
 IFX_ALIGN(4) IfxCpu_syncEvent g_cpuSyncEvent = 0;
 
-#define WAIT_TIME 2   /*mseconds */
+#define WAIT_TIME 25   /*useconds */
 
 /** \brief Watchdog 1 interrupt routine
  * Arms single acknowledgement of ASIC watchdog
@@ -45,8 +45,8 @@ void Watchdog1InterruptRoutine(void)
     };
 
     // Add WD serving internal command to command queue
-    // QueueWriteTail(&serveWatchdogCommand);    // TODO: commented out to have MCU contained WD routine. Uncomment for actual communication with ASIC
-    ToggleLED2(); // TODO: remove after testing WD
+    QueueWriteTail(&serveWatchdogCommand);    // TODO: commented out to have MCU contained WD routine. Uncomment for actual communication with ASIC
+    //ToggleLED2(); // TODO: remove after testing WD
 }
 
 /** \brief Watchdog 2 interrupt routine
@@ -63,8 +63,8 @@ void Watchdog2InterruptRoutine(void)
     };
 
     // Add WD serving internal command to command queue
-    // QueueWriteTail(&serveWatchdogCommand);    // TODO: commented out to have MCU contained WD routine. Uncomment for actual communication with ASIC
-    ToggleLED2(); // TODO: remove after testing WD
+    QueueWriteTail(&serveWatchdogCommand);    // TODO: commented out to have MCU contained WD routine. Uncomment for actual communication with ASIC
+    //ToggleLED2(); // TODO: remove after testing WD
 }
 
 /** \brief Watchdogs status reading interrupt routine
@@ -152,7 +152,7 @@ void core0_main(void)
        }
 
         // wait for 2ms for next polling // TODO: remove and check
-        waitTime(IfxStm_getTicksFromMilliseconds(BSP_DEFAULT_TIMER, WAIT_TIME));
+        waitTime(IfxStm_getTicksFromMicroseconds(BSP_DEFAULT_TIMER, WAIT_TIME));
 
         // Receive package (assumes it already in in buffer of UART
         isSuccessfulFlag = ReceiveUSBPackage(&receivedPackage);
