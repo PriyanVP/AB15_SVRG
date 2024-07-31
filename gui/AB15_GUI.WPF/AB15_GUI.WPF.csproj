@@ -11,6 +11,10 @@
   <ItemGroup>
     <None Remove="Views\Resources\airbag_dark.png" />
     <None Remove="Views\Resources\airbag_light.png" />
+    <None Remove="Views\Resources\align_down_arrow_dark.png" />
+    <None Remove="Views\Resources\align_down_arrow_light.png" />
+    <None Remove="Views\Resources\align_up_arrow_dark.png" />
+    <None Remove="Views\Resources\align_up_arrow_light.png" />
     <None Remove="Views\Resources\bosch.ico" />
     <None Remove="Views\Resources\chip_dark.png" />
     <None Remove="Views\Resources\chip_light.png" />
@@ -39,6 +43,10 @@
   <ItemGroup>
     <Resource Include="Views\Resources\airbag_dark.png" />
     <Resource Include="Views\Resources\airbag_light.png" />
+    <Resource Include="Views\Resources\align_down_arrow_dark.png" />
+    <Resource Include="Views\Resources\align_down_arrow_light.png" />
+    <Resource Include="Views\Resources\align_up_arrow_dark.png" />
+    <Resource Include="Views\Resources\align_up_arrow_light.png" />
     <Resource Include="Views\Resources\bosch.ico" />
     <Resource Include="Views\Resources\chip_dark.png" />
     <Resource Include="Views\Resources\chip_light.png" />

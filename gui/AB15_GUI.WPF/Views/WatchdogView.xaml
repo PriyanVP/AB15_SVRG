@@ -293,9 +293,11 @@
                                   x:Name="MoreInfoButton"
                                   HorizontalAlignment="Center" VerticalAlignment="Bottom" >
 
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="Additional Info" FontSize="20" Grid.Column="1" Style="{DynamicResource TextBlockStyle}"/>
-                        </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <Image Style="{DynamicResource AdditionalInfoImageStyle}" IsEnabled="{Binding ElementName=MoreInfoButton, Path=IsChecked, Mode=OneWay}" Margin="5,0" Width="30"/>
+                                <TextBlock Text="Additional Info" FontSize="20" Grid.Column="1" Style="{DynamicResource TextBlockStyle}"/>
+                                <Image Style="{DynamicResource AdditionalInfoImageStyle}" IsEnabled="{Binding ElementName=MoreInfoButton, Path=IsChecked, Mode=OneWay}"  Margin="5,0" Width="30"/>
+                            </StackPanel>
 
                         <ToggleButton.Triggers>
                             <EventTrigger RoutedEvent="ToggleButton.Unchecked">
