@@ -204,7 +204,7 @@ public class Waitlist : IWaitlist
             // Loop through waitlist to check waht items are outdated
             foreach(WaitlistItem item in _waitlist)
             {
-                if ((item.creationTime - timeNow).TotalSeconds > ItemTimeOfLife)
+                if ((timeNow - item.creationTime).TotalSeconds > ItemTimeOfLife)
                 {
                     // Continuous packages
                     if (item.isContinuous)
