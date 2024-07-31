@@ -330,8 +330,8 @@
 
                     <Grid Name="MorePanel" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*" MinWidth="360"/>
+                            <ColumnDefinition Width="*" MinWidth="300"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
@@ -428,7 +428,7 @@
                             <!--TODO add converter for text Hight - Low-->
                             <Border Grid.Row="1" BorderThickness="1" 
                             BorderBrush="{DynamicResource Animation.Lines}" 
-                            CornerRadius="5" HorizontalAlignment="Left" Margin="2">
+                            CornerRadius="5" HorizontalAlignment="Center" Margin="2">
                                 <Border.Background>
                                     <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
                                         <Binding Path = "EN0HightStatus"/>
@@ -436,7 +436,8 @@
                                     </MultiBinding>
                                 </Border.Background>
                                 <TextBlock Text="EN0 Hight" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-                                           FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                           FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"
+                                           Margin="5,0"/>
                             </Border>
 
                         </Grid>
