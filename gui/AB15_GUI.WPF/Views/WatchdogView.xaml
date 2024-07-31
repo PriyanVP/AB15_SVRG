@@ -701,7 +701,7 @@
                             Command="{Binding ResetAsicCommand}"/>
                         
                         <Button Style="{DynamicResource SimpleButton}"
-                            Content="Trigger safty logic fault"
+                            Content="Trigger safety logic fault"
                             Foreground="{DynamicResource Foreground.Red.Default}"
                             Command="{Binding ResetAsicCommand}"/>
                     </StackPanel>
