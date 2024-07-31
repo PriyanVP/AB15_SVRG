@@ -217,10 +217,10 @@ public class Waitlist : IWaitlist
                     {
                         // Add item to remove list
                         itemsForRemove.Add(item);
-                    }
 
-                    // Add package to list
-                    outdatedItems.Add(item.deleg);
+                        // Add package to list
+                        outdatedItems.Add(item.deleg);
+                    }
                 }
             }
 
