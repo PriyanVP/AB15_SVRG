@@ -13,6 +13,7 @@
         Height="650" Width="1000"
         Icon="Resources/bosch.ico">
     <Window.Resources>
+        <cnvrt:WatchdogFaultFlagToBoolConverter x:Key="WatchdogFaultFlagToBoolConverter"/>
         <cnvrt:StatusToColorConverter x:Key="StatusToColorConverter"/>
     </Window.Resources>
     
@@ -210,8 +211,17 @@
 
                 <!--Watchdog button-->
                 <Button Name="WatchdogButton" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
-                        Style="{DynamicResource MenuButtons}" Command="{Binding GoToWhatchdogPage}"
+                        Command="{Binding GoToWhatchdogPage}"
                         Click="Button_Click">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Path=MenuWDFaultStatus, Converter={StaticResource WatchdogFaultFlagToBoolConverter}}" Value="False">
+                                    <Setter Property="Background" Value="Red"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
                     <StackPanel Orientation="Horizontal">
 
                         <Image Source="{DynamicResource Ico.Watchdog}" Margin="5,0" Width="30"/>
