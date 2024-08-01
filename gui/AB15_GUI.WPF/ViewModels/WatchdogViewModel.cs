@@ -150,7 +150,10 @@ namespace AB15_GUI.WPF.ViewModels
         {
             get => isEN0Enabled;
             set 
-            { 
+            {
+                // Do nothing if value is not changed
+                if (isEN0Enabled == value) return;
+
                 isEN0Enabled = value;
                 OnPropertyChanged();
                 ExecuteStateTransition(WDBackendState.InConfiguration);
@@ -166,6 +169,9 @@ namespace AB15_GUI.WPF.ViewModels
             get => wd1ResponseTime;
             set
             {
+                // Do nothing if value is not changed
+                if (wd1ResponseTime == value) return;
+
                 wd1ResponseTime = value;
                 OnPropertyChanged();
                 ExecuteStateTransition(WDBackendState.InConfiguration);
@@ -181,6 +187,9 @@ namespace AB15_GUI.WPF.ViewModels
             get => wd1LockTime;
             set
             {
+                // Do nothing if value is not changed
+                if (wd1LockTime == value) return;
+
                 wd1LockTime = value;
                 OnPropertyChanged();
                 ExecuteStateTransition(WDBackendState.InConfiguration);
@@ -196,7 +205,28 @@ namespace AB15_GUI.WPF.ViewModels
             get => wd2ResponseTime;
             set
             {
+                // Do nothing if value is not changed
+                if (wd2ResponseTime == value) return;
+
                 wd2ResponseTime = value;
+                OnPropertyChanged();
+                ExecuteStateTransition(WDBackendState.InConfiguration);
+            }
+        }
+        
+        /// <summary>
+        /// WD2 Lock time value
+        /// </summary>
+        private int wd2LockTime;
+        public int WD2LockTime
+        {
+            get => wd2LockTime;
+            set
+            {
+                // Do nothing if value is not changed
+                if (wd2LockTime == value) return;
+
+                wd2LockTime = value;
                 OnPropertyChanged();
                 ExecuteStateTransition(WDBackendState.InConfiguration);
             }
@@ -211,6 +241,9 @@ namespace AB15_GUI.WPF.ViewModels
             get => wd1EN0DisableThreshold;
             set
             {
+                // Do nothing if value is not changed
+                if (wd1EN0DisableThreshold == value) return;
+                
                 wd1EN0DisableThreshold = value;
                 OnPropertyChanged();
                 ExecuteStateTransition(WDBackendState.InConfiguration);
@@ -226,22 +259,10 @@ namespace AB15_GUI.WPF.ViewModels
             get => wd2EN0DisableThreshold;
             set
             {
-                wd2EN0DisableThreshold = value;
-                OnPropertyChanged();
-                ExecuteStateTransition(WDBackendState.InConfiguration);
-            }
-        }
+                // Do nothing if value is not changed
+                if (wd2EN0DisableThreshold == value) return;
 
-        /// <summary>
-        /// WD2 Lock time value
-        /// </summary>
-        private int wd2LockTime;
-        public int WD2LockTime
-        {
-            get => wd2LockTime;
-            set
-            {
-                wd2LockTime = value;
+                wd2EN0DisableThreshold = value;
                 OnPropertyChanged();
                 ExecuteStateTransition(WDBackendState.InConfiguration);
             }
@@ -665,6 +686,7 @@ namespace AB15_GUI.WPF.ViewModels
             {
                 AddError(mcuResponse.Payload.Error, nameof(ReadConfigFromASIC));
                 logger.Error($"Error response received. Status: {mcuResponse.Status}");
+                return;
             }
             else if (_wdBackendState == WDBackendState.Idle)
             {

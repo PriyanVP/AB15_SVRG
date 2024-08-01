@@ -139,7 +139,7 @@ static WatchdogStatusMonitoringStruct g_wdStatusMonitoringConfig =
  * \param challengeValue value of AB12's Watchdog 1 and 2 Challenge word
  * \return Returns Response word
  */
-uint16 GetResponseWordAB12(uint8 challengeValue);
+uint16 GetResponseWordAB12(uint16 challengeValue);
 
 /** \brief Function to provide an Answer word for Question of AB15's Watchdog 1 
  * \param questionValue value of AB15's Watchdog 1 Question word
@@ -286,7 +286,7 @@ void IntCmdAcknowledgeWatchdog2(void)
     QSPIExecuteInstruction(WD2_TRIGGER, FALSE, answer, &data.dw);
 
     // Store new question
-    g_wd1Parameters.wdQuestion = data.bf.output_data; 
+    g_wd2Parameters.wdQuestion = data.bf.output_data; 
     #else
     // AB15 platform
     // Read question from ASIC
@@ -444,7 +444,7 @@ void IntCmdMonitorWatchdog(void)
     SendUSBPackage(&packageToSend);
 }
 
-uint16 GetResponseWordAB12(uint8 challengeValue)
+uint16 GetResponseWordAB12(uint16 challengeValue)
 {
     // Table of Challenge-Response values (according to datasheet AB12)
     static const uint16 responseWordArray[8] =  {0xE106,
