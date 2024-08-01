@@ -61,6 +61,9 @@ namespace AB15_GUI.WPF.ViewModels
 
             StartWatchdog   = new RelayCommand(StartWatchdogExecute, ((x) => _isStartWDButtonEnabled));
             StopWatchdog    = new RelayCommand(StopWatchdogExecute, ((x) => _isStopWDButtonEnabled));
+
+            // TODO remove
+            //WDFaultStatus = FaultStatus.Fault;
         }
 
         #region State_Machine
@@ -564,6 +567,9 @@ namespace AB15_GUI.WPF.ViewModels
             // TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
             // packageToSend.ASICID = 1;
             // packageToSend.Cmd = MCUCommand.
+
+            // TODO remove
+            //WDFaultStatus = FaultStatus.Good;
 
             // TODO: temporary implementation for AB12, replace by actual on AB15
             ReceiveCommunicationPackage<AddressDataPayload> placeholderPackage = new ReceiveCommunicationPackage<AddressDataPayload>();

@@ -374,7 +374,7 @@
                                 Width="50" Margin="2">
                     <Border.Background>
                         <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
-                            <Binding Path = "MenuWDFaultStatus"/>
+                            <Binding Path = "WatchdogViewModel.WDFaultStatus"/>
                             <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
                         </MultiBinding>
                     </Border.Background>

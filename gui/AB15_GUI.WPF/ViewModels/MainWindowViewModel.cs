@@ -20,17 +20,6 @@ namespace AB15_GUI.WPF.ViewModels
     /// </summary>
     public class MainViewModel : ViewModelBase
     {
-        private FaultStatus menuWDFaultStatus;
-        public FaultStatus MenuWDFaultStatus
-        { 
-            get => menuWDFaultStatus; 
-            set
-            {
-                menuWDFaultStatus = value;
-                OnPropertyChanged();
-            }
-        }
-
         /// <summary>
         /// PC status for view
         /// </summary>
@@ -117,8 +106,6 @@ namespace AB15_GUI.WPF.ViewModels
 
             // TODO find better way
             WatchdogViewModel = watchdogViewModel;
-
-            MenuWDFaultStatus = watchdogViewModel.WDFaultStatus;
         }
     }
 }
