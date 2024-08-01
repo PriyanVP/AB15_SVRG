@@ -185,8 +185,8 @@
                 </ToggleButton>
 
                 <!--Home button-->
-                <Button Name="HomeButton" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
-                        Style="{DynamicResource MenuButtons}" Command="{Binding GoToHomePage}"
+                <ToggleButton Name="HomeButton" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                        Style="{DynamicResource MenuToggleButtons}" Command="{Binding GoToHomePage}"
                         Click="Button_Click">
                     <StackPanel Orientation="Horizontal">
 
@@ -194,11 +194,11 @@
                         <TextBlock Text="Home" FontSize="20" Style="{DynamicResource TextBlockStyle}"/>
 
                     </StackPanel>
-                </Button>
+                </ToggleButton>
 
                 <!--SPI Learning button-->
-                <Button Name="LearningButton" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
-                        Style="{DynamicResource MenuButtons}" Command="{Binding GoToSPILearningPage}"
+                <ToggleButton Name="LearningButton" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                        Style="{DynamicResource MenuToggleButtons}" Command="{Binding GoToSPILearningPage}"
                         Click="Button_Click">
                     <StackPanel Orientation="Horizontal">
 
@@ -206,11 +206,11 @@
                         <TextBlock Text="SPI Learning" FontSize="20" Style="{DynamicResource TextBlockStyle}"/>
                         
                     </StackPanel>
-                </Button>
+                </ToggleButton>
 
                 <!--Watchdog button-->
-                <Button Name="WatchdogButton" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
-                        Style="{DynamicResource MenuButtons}" Command="{Binding GoToWhatchdogPage}"
+                <ToggleButton Name="WatchdogButton" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
+                        Style="{DynamicResource MenuToggleButtons}" Command="{Binding GoToWhatchdogPage}"
                         Click="Button_Click">
                     <StackPanel Orientation="Horizontal">
 
@@ -218,11 +218,11 @@
                         <TextBlock Text="Watchdog" FontSize="20" Style="{DynamicResource TextBlockStyle}"/>
                         
                     </StackPanel>
-                </Button>
+                </ToggleButton>
 
                 <!--Firing button-->
-                <Button Name="FiringButton" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"
-                        Style="{DynamicResource MenuButtons}" Command="{Binding GoToFiringPage}"
+                <ToggleButton Name="FiringButton" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"
+                        Style="{DynamicResource MenuToggleButtons}" Command="{Binding GoToFiringPage}"
                         Click="Button_Click">
                     <StackPanel Orientation="Horizontal">
 
@@ -230,11 +230,11 @@
                         <TextBlock Text="Firing" FontSize="20" Style="{DynamicResource TextBlockStyle}"/>
                         
                     </StackPanel>
-                </Button>
+                </ToggleButton>
 
                 <!--AB15 Data button-->
-                <Button Name="AB15DataButton" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"
-                        Style="{DynamicResource MenuButtons}" Command="{Binding GoToAbDataPage}"
+                <ToggleButton Name="AB15DataButton" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"
+                        Style="{DynamicResource MenuToggleButtons}" Command="{Binding GoToAbDataPage}"
                         Click="Button_Click">
                     <StackPanel Orientation="Horizontal">
 
@@ -242,11 +242,11 @@
                         <TextBlock Text="AB15 Data" FontSize="20" Style="{DynamicResource TextBlockStyle}"/>
                         
                     </StackPanel>
-                </Button>
+                </ToggleButton>
 
                 <!--Sensors button-->
-                <Button Name="SensorsButton" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2"
-                        Style="{DynamicResource MenuButtons}" Command="{Binding GoToSensorPage}"
+                <ToggleButton Name="SensorsButton" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2"
+                        Style="{DynamicResource MenuToggleButtons}" Command="{Binding GoToSensorPage}"
                         Click="Button_Click">
                     <StackPanel Orientation="Horizontal">
 
@@ -254,11 +254,11 @@
                         <TextBlock Text="Sensor" FontSize="20" Style="{DynamicResource TextBlockStyle}"/>
                         
                     </StackPanel>
-                </Button>
+                </ToggleButton>
 
                 <!--Diagnostics button-->
-                <Button Name="DiagnosticsButton" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2"
-                        Style="{DynamicResource MenuButtons}" Command="{Binding GoToDiagnosticsPage}"
+                <ToggleButton Name="DiagnosticsButton" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2"
+                        Style="{DynamicResource MenuToggleButtons}" Command="{Binding GoToDiagnosticsPage}"
                         Click="Button_Click">
                     <StackPanel Orientation="Horizontal">
 
@@ -266,7 +266,7 @@
                         <TextBlock Text="Diagnostics" FontSize="20" Style="{DynamicResource TextBlockStyle}"/>
                         
                     </StackPanel>
-                </Button>
+                </ToggleButton>
 
                 <!--Status section-->
                 <Grid Grid.Row="8" VerticalAlignment="Bottom">
