@@ -61,6 +61,22 @@ namespace AB15_GUI.WPF.Views
                     break;
             }
 
+            for (int i = 0; i < MenuPanel.Children.Count; i++)
+            {
+                if (MenuPanel.Children[i] is ToggleButton)
+                {
+                    ToggleButton toggleButton = (ToggleButton)MenuPanel.Children[i];
+                    if (toggleButton.Name == ((ToggleButton)sender).Name)
+                    {
+                        toggleButton.IsChecked = true;
+                    }
+                    else if (toggleButton.Name != "")
+                    {
+                        toggleButton.IsChecked = false;
+                    }
+                }
+            }
+
         }
 
         // TODO find better way

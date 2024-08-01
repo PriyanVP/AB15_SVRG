@@ -113,7 +113,7 @@
             <Grid Grid.Column="0" x:Name="MenuPanel" Margin="3,3" Background="{DynamicResource Menu.Background}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto" MinWidth="40"/>
-                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
                 <Grid.RowDefinitions>
