@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using NLog;
+using Stateless;
+using Stateless.Graph;
 using System.Windows.Input;
 using AB15_GUI.WPF.ViewModels.Commands;
 using AB15_GUI.WPF.Models.Interfaces;
@@ -17,18 +19,6 @@ namespace AB15_GUI.WPF.ViewModels
         NoStatus,
         Good,
         Fault
-    }
-
-    /// <summary>
-    /// State values for WD feature, required for centralized flags handling for UI
-    /// </summary>
-    public enum WDBackendState
-    {
-        Idle,                  /* Default state, entered after startup */
-        InConfiguration,       /* State after at least one reading of WD config in ASIC */
-        Configured,            /* State when current WD config is loaded to ASIC */
-        Running,               /* WD is running on MCU */
-        Stopped,               /* WD is stopped on MCU */
     }
 
     public class WatchdogViewModel : ViewModelBase
@@ -52,38 +42,84 @@ namespace AB15_GUI.WPF.ViewModels
             this.serialWrapper = serialWrapper;
             logger.Trace("In WatchdogViewModel");
 
-            // Initial state transition
-            ExecuteStateTransition(WDBackendState.Idle);
+            // Configure state machine
+            _stateMachine = new StateMachine<State, Triggers>(State.Idle);
+
+            // Action that will be executed on every state change
+            _stateMachine.OnTransitionCompleted((transition) => ExecuteStateTransition());
+
+            // Emulate initial transition after POR
+            _stateMachine.Configure(State.InitialState)
+                         .OnActivate(() => _stateMachine.Fire(Triggers.POR))
+                         .Permit(Triggers.POR, State.Idle);
+
+            _stateMachine.Configure(State.Idle)
+                         .Permit(Triggers.GotConfiguration, State.InConfiguration);
+
+            _stateMachine.Configure(State.InConfiguration)
+                         .Permit(Triggers.ConfigurationLoaded, State.Configured)
+                         .Ignore(Triggers.GotConfiguration)
+                         .Ignore(Triggers.ConfigurationChanged);
+
+            _stateMachine.Configure(State.Configured)
+                         .Permit(Triggers.ConfigurationChanged, State.InConfiguration)
+                         .Permit(Triggers.StartedWD, State.Running)
+                         .Ignore(Triggers.GotConfiguration);
+
+            _stateMachine.Configure(State.Running)
+                         .Permit(Triggers.StoppedWD, State.InConfiguration);
 
             // Init commands for buttons
             ReadConfigFromASIC  = new RelayCommand(ReadConfigFromASICExecute, ((x) => _isReadWDConfigButtonEnabled));
             WriteConfigToASIC   = new RelayCommand(WriteConfigToASICExecute, ((x) => _isWriteWDConfigButtonEnabled));
 
-            StartWatchdog   = new RelayCommand(StartWatchdogExecute, ((x) => _isStartWDButtonEnabled));
-            StopWatchdog    = new RelayCommand(StopWatchdogExecute, ((x) => _isStopWDButtonEnabled));
+            StartWatchdog       = new RelayCommand(StartWatchdogExecute, ((x) => _isStartWDButtonEnabled));
+            StopWatchdog        = new RelayCommand(StopWatchdogExecute, ((x) => _isStopWDButtonEnabled));
+
+            // Test feature - DOT graph
+            string graph = UmlDotGraph.Format(_stateMachine.GetInfo());
         }
 
         #region State_Machine
 
         /// <summary>
-        /// Variable to hold state of WD backend
+        /// State values for WD feature, required for centralized flags handling for UI
         /// </summary>
-        private WDBackendState _wdBackendState;
+        private enum State
+        {
+            InitialState,          /* Intial dummy state, require to handle initial transition */
+            Idle,                  /* Default state, entered after startup */
+            InConfiguration,       /* State after at least one reading of WD config in ASIC */
+            Configured,            /* State when current WD config is loaded to ASIC */
+            Running                /* WD is running on MCU */
+        }
+
+        /// <summary>
+        /// State values for WD feature, required for centralized flags handling for UI
+        /// </summary>
+        private enum Triggers
+        {
+            POR,                   /* Transition after startup */
+            GotConfiguration,      /* Got configuration from ASIC */
+            ConfigurationChanged,  /* Configuration in GUI changed */
+            ConfigurationLoaded,   /* Configuration in from GUI loaded to ASIC */
+            StartedWD,             /* WD is started */
+            StoppedWD              /* WD is stopped */
+        }
+
+        /// <summary>
+        /// State machine to hold state of WD backend and handle transitions
+        /// </summary>
+        private readonly StateMachine<State, Triggers> _stateMachine;
 
         /// <summary>
         /// Method to update flags in centralized way. All flags updates should be done there
         /// </summary>
-        /// <param name="newState">new state of WD backend</param>
-        private void ExecuteStateTransition(WDBackendState newState)
+        private void ExecuteStateTransition()
         {
-            // TODO: simple implementation, if state machines will be used widely refactor implementation to advanced state machine
-            // TODO: add check on allowed transitions? check triggers?
-            // TODO: pass trigger?
-            _wdBackendState = newState;
-
-            switch (_wdBackendState)
+            switch (_stateMachine.State)
             {
-                case WDBackendState.Idle:
+                case State.Idle:
                     // Buttons enable handling
                     _isReadWDConfigButtonEnabled = true;
                     _isWriteWDConfigButtonEnabled = false;
@@ -93,7 +129,7 @@ namespace AB15_GUI.WPF.ViewModels
                     // Configuration enable handling
                     IsConfigEnable = false;
                     break;
-                case WDBackendState.InConfiguration:
+                case State.InConfiguration:
                     // Buttons enable handling
                     _isReadWDConfigButtonEnabled = true;
                     _isWriteWDConfigButtonEnabled = true;
@@ -103,7 +139,7 @@ namespace AB15_GUI.WPF.ViewModels
                     // Configuration enable handling
                     IsConfigEnable = true;
                     break;
-                case WDBackendState.Configured:
+                case State.Configured:
                     // Buttons enable handling
                     _isReadWDConfigButtonEnabled = true;
                     _isWriteWDConfigButtonEnabled = true;
@@ -113,7 +149,7 @@ namespace AB15_GUI.WPF.ViewModels
                     // Configuration enable handling
                     IsConfigEnable = true;
                     break;
-                case WDBackendState.Running:
+                case State.Running:
                     // Buttons enable handling
                     _isReadWDConfigButtonEnabled = true;
                     _isWriteWDConfigButtonEnabled = false;
@@ -122,19 +158,9 @@ namespace AB15_GUI.WPF.ViewModels
 
                     // Configuration enable handling
                     IsConfigEnable = false;
-                    break;
-                case WDBackendState.Stopped:
-                    // Buttons enable handling
-                    _isReadWDConfigButtonEnabled = true;
-                    _isWriteWDConfigButtonEnabled = true;
-                    _isStartWDButtonEnabled = true;
-                    _isStopWDButtonEnabled = true;
-
-                    // Configuration enable handling
-                    IsConfigEnable = true;
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(newState), "Unexpected state received");
+                    throw new ArgumentOutOfRangeException(nameof(_stateMachine.State), "Unexpected state received");
             }
         }
 
@@ -156,7 +182,7 @@ namespace AB15_GUI.WPF.ViewModels
 
                 isEN0Enabled = value;
                 OnPropertyChanged();
-                ExecuteStateTransition(WDBackendState.InConfiguration);
+                _stateMachine.Fire(Triggers.ConfigurationChanged);
             }
         }
 
@@ -174,7 +200,7 @@ namespace AB15_GUI.WPF.ViewModels
 
                 wd1ResponseTime = value;
                 OnPropertyChanged();
-                ExecuteStateTransition(WDBackendState.InConfiguration);
+                _stateMachine.Fire(Triggers.ConfigurationChanged);
             }
         }
 
@@ -192,7 +218,7 @@ namespace AB15_GUI.WPF.ViewModels
 
                 wd1LockTime = value;
                 OnPropertyChanged();
-                ExecuteStateTransition(WDBackendState.InConfiguration);
+                _stateMachine.Fire(Triggers.ConfigurationChanged);
             }
         }
 
@@ -210,7 +236,7 @@ namespace AB15_GUI.WPF.ViewModels
 
                 wd2ResponseTime = value;
                 OnPropertyChanged();
-                ExecuteStateTransition(WDBackendState.InConfiguration);
+                _stateMachine.Fire(Triggers.ConfigurationChanged);
             }
         }
         
@@ -228,7 +254,7 @@ namespace AB15_GUI.WPF.ViewModels
 
                 wd2LockTime = value;
                 OnPropertyChanged();
-                ExecuteStateTransition(WDBackendState.InConfiguration);
+                _stateMachine.Fire(Triggers.ConfigurationChanged);
             }
         }
 
@@ -246,7 +272,7 @@ namespace AB15_GUI.WPF.ViewModels
                 
                 wd1EN0DisableThreshold = value;
                 OnPropertyChanged();
-                ExecuteStateTransition(WDBackendState.InConfiguration);
+                _stateMachine.Fire(Triggers.ConfigurationChanged);
             }
         }
 
@@ -264,7 +290,7 @@ namespace AB15_GUI.WPF.ViewModels
 
                 wd2EN0DisableThreshold = value;
                 OnPropertyChanged();
-                ExecuteStateTransition(WDBackendState.InConfiguration);
+                _stateMachine.Fire(Triggers.ConfigurationChanged);
             }
         }
 
@@ -688,10 +714,9 @@ namespace AB15_GUI.WPF.ViewModels
                 logger.Error($"Error response received. Status: {mcuResponse.Status}");
                 return;
             }
-            else if (_wdBackendState == WDBackendState.Idle)
-            {
-                ExecuteStateTransition(WDBackendState.InConfiguration);
-            }
+
+            // Fire trigger for state machine
+            _stateMachine.Fire(Triggers.GotConfiguration);
 
             // TODO: add actual unpacking of data for AB15
 
@@ -722,10 +747,8 @@ namespace AB15_GUI.WPF.ViewModels
                 AddError(mcuResponse.Payload.Error, nameof(WriteConfigToASIC));
                 logger.Error($"Error response received. Status: {mcuResponse.Status}");
             }
-            else
-            {
-                ExecuteStateTransition(WDBackendState.Configured);
-            }
+
+            _stateMachine.Fire(Triggers.ConfigurationLoaded);
         }
 
         private void StartWatchdogDelegate(IReceiveCommunicationPackage response)
@@ -747,10 +770,8 @@ namespace AB15_GUI.WPF.ViewModels
                 AddError(mcuResponse.Payload.Error, nameof(StartWatchdog));
                 logger.Error($"Error response received. Status: {mcuResponse.Status}");
             }
-            else
-            {
-                ExecuteStateTransition(WDBackendState.Running);
-            }
+
+            _stateMachine.Fire(Triggers.StartedWD);
         }
 
         private void StopWatchdogDelegate(IReceiveCommunicationPackage response)
@@ -772,10 +793,8 @@ namespace AB15_GUI.WPF.ViewModels
                 AddError(mcuResponse.Payload.Error, nameof(StopWatchdog));
                 logger.Error($"Error response received. Status: {mcuResponse.Status}");
             }
-            else
-            {
-                ExecuteStateTransition(WDBackendState.Stopped);
-            }
+
+            _stateMachine.Fire(Triggers.StoppedWD);
         }
 
         private void StatusMonitoringDelagate(IReceiveCommunicationPackage response)
