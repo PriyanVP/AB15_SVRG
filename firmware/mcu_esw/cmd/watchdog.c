@@ -159,7 +159,18 @@ uint16 GetAnswerWordWD2AB15(uint8 questionValue);
 
 void CmdConfigureWatchdog(USBReceiveData const * const commandPackage)
 {
+    // Command should not be executed in certain WD feature states
+    if ((g_wd1Parameters.state == WD_STATE_RUNNING_NORMAL) || 
+        (g_wd2Parameters.state == WD_STATE_RUNNING_NORMAL) || 
+        (g_wd1Parameters.state == WD_STATE_RUNNING_FAILING)||
+        (g_wd2Parameters.state == WD_STATE_RUNNING_FAILING))
+    {
+        // Skip function execution - GUI will see no response
+        return;
+    }
+
     // Temporary variables
+    USBTransmitData packageToSend;
     boolean isSuccessfulFlag = TRUE;                    //Default true is used to handle write of series of data (AND logic on flags)
     uint8 indexerForPayload = 0;
  
@@ -220,7 +231,6 @@ void CmdConfigureWatchdog(USBReceiveData const * const commandPackage)
     #endif
 
     // Prepare report for GUI
-    USBTransmitData packageToSend;
     packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
 
     if (isSuccessfulFlag == FALSE)
@@ -303,6 +313,14 @@ void IntCmdAcknowledgeWatchdog2(void)
 
 void CmdStartWatchdog(USBReceiveData const * const commandPackage)
 {
+    // Command should not be executed in certain WD feature states
+    if ((g_wd1Parameters.state != WD_STATE_CONFIGURED) || 
+        (g_wd2Parameters.state == WD_STATE_CONFIGURED))
+    {
+        // Skip function execution - GUI will see no response
+        return;
+    }
+
     // Local variables
     USBTransmitData packageToSend;
 
@@ -455,7 +473,7 @@ uint16 GetResponseWordAB12(uint16 challengeValue)
                                                  0xA542,
                                                  0x789F,
                                                  0x0FE8};
-    static const uint16 challengeWordArray[8] =  {0x2020,
+    static const uint16 challengeWordArray[8] = {0x2020,
                                                  0xFDFD,
                                                  0x8A8A,
                                                  0x5757,
@@ -519,12 +537,12 @@ uint16 GetAnswerWordWD1AB15(uint8 questionValue)
 uint16 GetAnswerWordWD2AB15(uint8 questionValue)
 {
     static const uint16 answerWordArrayWD2[8] = {0x35CF,
-                                        0x9867,
-                                        0x68B3,
-                                        0xC51B,
-                                        0x5789,
-                                        0xFA21,
-                                        0x0AF5,
-                                        0xA75D};
+                                                 0x9867,
+                                                 0x68B3,
+                                                 0xC51B,
+                                                 0x5789,
+                                                 0xFA21,
+                                                 0x0AF5,
+                                                 0xA75D};
     return (answerWordArrayWD2[questionValue]);
 }
