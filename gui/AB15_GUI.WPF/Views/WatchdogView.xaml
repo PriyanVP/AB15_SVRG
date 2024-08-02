@@ -501,12 +501,12 @@
                         </StackPanel>
 
                         <StackPanel Grid.Column="2" Grid.Row="1" VerticalAlignment="Center">
-                            <TextBox Text="{Binding ElementName=WD1ResponseTimeSlider,Path=Value}" Focusable="False"
-                                     IsReadOnly="True"
-                                       IsEnabled="{Binding IsConfigEnable}"/>
-                            <TextBox Text="{Binding ElementName=WD1LockTimeSlider,Path=Value}" Focusable="False"
-                                     IsReadOnly="True"
-                                       IsEnabled="{Binding IsConfigEnable}"/>
+                            <TextBox Text="{Binding ElementName=WD1ResponseTimeSlider,Path=Value}" 
+                                     Focusable="False" IsReadOnly="True"
+                                     IsEnabled="{Binding IsConfigEnable}"/>
+                            <TextBox Text="{Binding ElementName=WD1LockTimeSlider,Path=Value}" 
+                                     Focusable="False" IsReadOnly="True"
+                                     IsEnabled="{Binding IsConfigEnable}"/>
                         </StackPanel>
 
                         <Slider Name="WD1ResponseTimeSlider" ValueChanged="WD1ResponseTimeSlider_ValueChanged"
@@ -549,12 +549,12 @@
                         </StackPanel>
 
                         <StackPanel Grid.Column="2" Grid.Row="2" VerticalAlignment="Center">
-                            <TextBox Text="{Binding ElementName=WD2ResponseTimeSlider,Path=Value}"
-                                     IsReadOnly="True"
-                                       IsEnabled="{Binding IsConfigEnable}"/>
-                            <TextBox Text="{Binding ElementName=WD2LockTimeSlider,Path=Value}"
-                                     IsReadOnly="True"
-                                       IsEnabled="{Binding IsConfigEnable}"/>
+                            <TextBox Text="{Binding ElementName=WD2ResponseTimeSlider,Path=Value}" 
+                                     Focusable="False" IsReadOnly="True"
+                                     IsEnabled="{Binding IsConfigEnable}"/>
+                            <TextBox Text="{Binding ElementName=WD2LockTimeSlider,Path=Value}" 
+                                     Focusable="False" IsReadOnly="True"
+                                     IsEnabled="{Binding IsConfigEnable}"/>
                         </StackPanel>
 
                         <Slider Name="WD2ResponseTimeSlider" ValueChanged="WD2ResponseTimeSlider_ValueChanged"
@@ -611,10 +611,12 @@
 
 
                         <StackPanel Grid.Column="2" Grid.Row="4" VerticalAlignment="Center">
-                            <TextBox Text="{Binding ElementName=WD1EN0DisableTreshholdSlider,Path=Value}"
-                                       IsEnabled="{Binding IsConfigEnable}"/>
-                            <TextBox Text="{Binding ElementName=WD2EN0DisableTreshholdSlider,Path=Value}"
-                                       IsEnabled="{Binding IsConfigEnable}"/>
+                            <TextBox Text="{Binding ElementName=WD1EN0DisableTreshholdSlider,Path=Value}" 
+                                     Focusable="False" IsReadOnly="True"
+                                     IsEnabled="{Binding IsConfigEnable}"/>
+                            <TextBox Text="{Binding ElementName=WD2EN0DisableTreshholdSlider,Path=Value}" 
+                                     Focusable="False" IsReadOnly="True"
+                                     IsEnabled="{Binding IsConfigEnable}"/>
                         </StackPanel>
 
                         <StackPanel Grid.Column="3" Grid.Row="4" VerticalAlignment="Center">
@@ -650,10 +652,25 @@
                                 Grid.Row="0" Grid.Column="1" Grid.RowSpan="2">
                         
                         <TextBlock Text="Watchdog ASIC configuration" HorizontalAlignment="Center" Margin="5"/>
-                        
+
                         <Button Style="{DynamicResource SimpleButton}" 
                                     Content="Write config to ASIC"
-                                    Command="{Binding WriteConfigToASIC}"/>
+                                    Command="{Binding WriteConfigToASIC}" Margin="0,0,00,50">
+                            <Validation.ErrorTemplate>
+                                <ControlTemplate>
+                                    <StackPanel>
+                                        <AdornedElementPlaceholder/>
+                                        <ItemsControl ItemsSource="{Binding}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding ErrorContent}" TextWrapping="Wrap" Foreground="Red" MaxHeight="50"/>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+                                </ControlTemplate>
+                            </Validation.ErrorTemplate>
+                        </Button>
 
                         <Button Content="Read config from ASIC"
                                     Style="{DynamicResource SimpleButton}"
