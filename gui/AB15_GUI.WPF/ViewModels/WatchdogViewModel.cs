@@ -43,14 +43,10 @@ namespace AB15_GUI.WPF.ViewModels
             logger.Trace("In WatchdogViewModel");
 
             // Configure state machine
-            _stateMachine = new StateMachine<State, Triggers>(State.Idle);
-
-            // Action that will be executed on every state change
-            _stateMachine.OnTransitionCompleted((transition) => ExecuteStateTransition());
+            _stateMachine = new StateMachine<State, Triggers>(State.InitialState);
 
             // Emulate initial transition after POR
             _stateMachine.Configure(State.InitialState)
-                         .OnActivate(() => _stateMachine.Fire(Triggers.POR))
                          .Permit(Triggers.POR, State.Idle);
 
             _stateMachine.Configure(State.Idle)
@@ -69,15 +65,22 @@ namespace AB15_GUI.WPF.ViewModels
             _stateMachine.Configure(State.Running)
                          .Permit(Triggers.StoppedWD, State.InConfiguration);
 
+            // Action that will be executed on every state change
+            _stateMachine.OnTransitionCompleted((transition) => ExecuteStateTransition());
+
+            // Fire transition to Idle state
+            _stateMachine.Fire(Triggers.POR);
+
+            // DOT graph of state machine
+            // Can be used with debugger to plot state machine visualization
+            string graph = UmlDotGraph.Format(_stateMachine.GetInfo());
+
             // Init commands for buttons
             ReadConfigFromASIC  = new RelayCommand(ReadConfigFromASICExecute, ((x) => _isReadWDConfigButtonEnabled));
             WriteConfigToASIC   = new RelayCommand(WriteConfigToASICExecute, ((x) => _isWriteWDConfigButtonEnabled));
 
             StartWatchdog       = new RelayCommand(StartWatchdogExecute, ((x) => _isStartWDButtonEnabled));
             StopWatchdog        = new RelayCommand(StopWatchdogExecute, ((x) => _isStopWDButtonEnabled));
-
-            // Test feature - DOT graph
-            string graph = UmlDotGraph.Format(_stateMachine.GetInfo());
         }
 
         #region State_Machine
