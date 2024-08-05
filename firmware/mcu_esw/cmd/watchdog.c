@@ -334,6 +334,14 @@ void CmdStartWatchdog(USBReceiveData const * const commandPackage)
         return;
     }
 
+    #ifndef AB12_PLATFORM
+
+    // Lock config for AB15
+    // Note: assumed that all other bites in spi_set_wdsettings can be 0
+    QSPIWriteNormal(SAFETY_LOGIC_SPI_SET_WDSETTINGS, SAFETY_LOGIC_SPI_SET_WDSETTINGS_SPI_ON_SL_MASK);
+
+    #endif
+
     // Configure periodicity of Watchdog serving MCU interrupt
     ConfigureWatchdogPeriodicity(WD1, g_wd1Parameters.wdConfig.ackPeriod);
     ConfigureWatchdogPeriodicity(WD2, g_wd2Parameters.wdConfig.ackPeriod);
