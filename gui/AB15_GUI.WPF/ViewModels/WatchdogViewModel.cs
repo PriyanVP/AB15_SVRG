@@ -7,7 +7,9 @@ using System.Windows.Input;
 using AB15_GUI.WPF.ViewModels.Commands;
 using AB15_GUI.WPF.Models.Interfaces;
 using AB15_GUI.WPF.Models;
+using AB15_GUI.WPF.Models.Genereted.Registers;
 using AB15_GUI.WPF.Services.Interfaces;
+using System.Net;
 
 namespace AB15_GUI.WPF.ViewModels
 {
@@ -114,6 +116,12 @@ namespace AB15_GUI.WPF.ViewModels
         /// State machine to hold state of WD backend and handle transitions
         /// </summary>
         private readonly StateMachine<State, Triggers> _stateMachine;
+
+        /// <summary>
+        /// Property for current state of state machine observation
+        /// Used for testing
+        /// </summary>
+        public State StateObservation => _stateMachine.State;
 
         /// <summary>
         /// Method to update flags in centralized way. All flags updates should be done there
@@ -537,6 +545,16 @@ namespace AB15_GUI.WPF.ViewModels
 
         #endregion // Bindable_Properties
 
+        #region Internal_configuration
+
+        private Reg_spi_config_wd1 _spi_config_wd1 = new Reg_spi_config_wd1();
+        private Reg_spi_config_wd2 _spi_config_wd2 = new Reg_spi_config_wd2();
+        private Reg_spi_config_wd_decouple _spi_config_wd_decouple = new Reg_spi_config_wd_decouple();
+        private Reg_spi_config_wd_thres0 _spi_config_wd_thres0 = new Reg_spi_config_wd_thres0();
+        private Reg_spi_set_wdsettings _spi_set_wdsettings = new Reg_spi_set_wdsettings();
+
+        #endregion // Internal_configuration
+        
         #region Commands
 
         /// <summary>
@@ -589,15 +607,22 @@ namespace AB15_GUI.WPF.ViewModels
         /// </summary>
         private void ReadConfigFromASICExecute(object obj)
         {
-            // TODO: provide implementation for AB15
-            // TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
-            // packageToSend.ASICID = 1;
-            // packageToSend.Cmd = MCUCommand.
+            // TODO: uncomment for AB15
+            TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
+            packageToSend.ASICID = 1;
+            // packageToSend.Cmd = MCUCommand. // TODO: add
+            packageToSend.PayloadType = typeof(AddressDataPayload);
+            packageToSend.Payload.Address.Add(_spi_config_wd1.Address);
+            packageToSend.Payload.Address.Add(_spi_config_wd2.Address);
+            packageToSend.Payload.Address.Add(_spi_config_wd_decouple.Address);
+            packageToSend.Payload.Address.Add(_spi_config_wd_thres0.Address);
+            packageToSend.Payload.Address.Add(_spi_set_wdsettings.Address);
 
             // TODO: temporary implementation for AB12, replace by actual on AB15
             ReceiveCommunicationPackage<AddressDataPayload> placeholderPackage = new ReceiveCommunicationPackage<AddressDataPayload>();
             placeholderPackage.ASICID = 1;
             placeholderPackage.Status = MCUStatus.DATA;
+            placeholderPackage.Payload.Data.AddRange(new List<UInt16>() { 0, 0, 0, 0, 0 });
             ReadConfigDelegate(placeholderPackage);
         }
 
@@ -614,7 +639,13 @@ namespace AB15_GUI.WPF.ViewModels
             packageToSend.PayloadType = typeof(EmptyPayload);
 
             // Unpack data from UI to fields of registers
-            // TODO: how to handle configs that are not available in UI but read during ReadConfig?
+            // Load configs with data from ASIC
+            packageToSend.Payload.spi_config_wd1.Data = _spi_config_wd1.Data;
+            packageToSend.Payload.spi_config_wd2.Data = _spi_config_wd2.Data;
+            packageToSend.Payload.spi_config_wd_decouple.Data = _spi_config_wd_decouple.Data;
+            packageToSend.Payload.spi_config_wd_thres0.Data = _spi_config_wd_thres0.Data;
+
+            // Modify some fields based on UI input
             packageToSend.Payload.spi_config_wd1.spi_set_locktime_wd1.Data = (UInt16) WD1LockTime;
             packageToSend.Payload.spi_config_wd1.spi_set_responsetime_wd1.Data = (UInt16) WD1ResponseTime;
 
@@ -717,18 +748,37 @@ namespace AB15_GUI.WPF.ViewModels
                 logger.Error($"Error response received. Status: {mcuResponse.Status}");
                 return;
             }
+            else if (mcuResponse.Payload.Data.Count < 5)
+            {
+                AddError($"Unexpected amount of readout data received. Expected 5, but got {mcuResponse.Payload.Data.Count}.", nameof(ReadConfigFromASIC));
+                logger.Error($"Unexpected amount of readout data received. Expected 5, but got {mcuResponse.Payload.Data.Count}.");
+                return;
+            }
 
-            // Fire trigger for state machine
-            _stateMachine.Fire(Triggers.GotConfiguration);
+            // Update configuration
+            _spi_config_wd1.Data         = mcuResponse.Payload.Data[0];
+            _spi_config_wd2.Data         = mcuResponse.Payload.Data[1];
+            _spi_config_wd_decouple.Data = mcuResponse.Payload.Data[2];
+            _spi_config_wd_thres0.Data   = mcuResponse.Payload.Data[3];
+            _spi_set_wdsettings.Data     = mcuResponse.Payload.Data[4];
 
-            // TODO: add actual unpacking of data for AB15
+            // Unpacking of data for AB15
+            WD1ResponseTime = (int) _spi_config_wd1.spi_set_responsetime_wd1.Data;
+            WD2ResponseTime = (int) _spi_config_wd2.spi_set_responsetime_wd2.Data;
 
+            WD1LockTime = (int)_spi_config_wd1.spi_set_locktime_wd1.Data;
+            WD2LockTime = (int)_spi_config_wd2.spi_set_locktime_wd2.Data;
+
+            // AB12 code, TODO: remove when AB15 available
             // Values share same step as AB15 scale
             WD1ResponseTime = 63; 
             WD2ResponseTime = 16;
 
             WD1LockTime = 0;
             WD2LockTime = 10; // Underflow limit
+
+            // Fire trigger for state machine
+            _stateMachine.Fire(Triggers.GotConfiguration);
         }
 
         private void WriteConfigDelagate(IReceiveCommunicationPackage response)
