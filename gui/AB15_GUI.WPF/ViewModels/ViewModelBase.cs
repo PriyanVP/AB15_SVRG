@@ -13,6 +13,11 @@ namespace AB15_GUI.WPF.ViewModels
     public class ViewModelBase : INotifyPropertyChanged, INotifyDataErrorInfo
     {
         /// <summary>
+        /// Lock object for multithreading
+        /// </summary>
+        private readonly object _baseLock = new object();
+
+        /// <summary>
         /// Dictionary that stores list of errors for each property
         /// </summary>
         private readonly Dictionary<string, List<string>> _propertyNameToErrorsDictionary = new Dictionary<string, List<string>>();
@@ -56,14 +61,18 @@ namespace AB15_GUI.WPF.ViewModels
             // TODO fix issue when propertyName not null but exeption still going
             //Contract.Requires<ArgumentNullException>((propertyName is not null), "Argument can't be null!");
 
-            // Create key and empty list for property if not yet present
-            if (!_propertyNameToErrorsDictionary.ContainsKey(propertyName))
+            // Lock to avoid issues in multithreading
+            lock (_baseLock)
             {
-                _propertyNameToErrorsDictionary.Add(propertyName, new List<string>());
-            }
+                // Create key and empty list for property if not yet present
+                if (!_propertyNameToErrorsDictionary.ContainsKey(propertyName))
+                {
+                    _propertyNameToErrorsDictionary.Add(propertyName, new List<string>());
+                }
 
-            // Add error message to property error list
-            _propertyNameToErrorsDictionary[propertyName].Add(errorMessage);
+                // Add error message to property error list
+                _propertyNameToErrorsDictionary[propertyName].Add(errorMessage);
+            }
 
             // Raise event to notify that error state has changed
             OnErrorsChanged(propertyName);
@@ -78,8 +87,12 @@ namespace AB15_GUI.WPF.ViewModels
             // TODO fix issue when propertyName not null but exeption still going
             //Contract.Requires<ArgumentNullException>((propertyName is not null), "Argument can't be null!");
 
-            // Remove list with errors for property
-            _propertyNameToErrorsDictionary.Remove(propertyName);
+            // Lock to avoid issues in multithreading
+            lock(_baseLock)
+            {
+                // Remove list with errors for property
+                _propertyNameToErrorsDictionary.Remove(propertyName);
+            }
 
             // Raise event to notify that error state has changed
             OnErrorsChanged(propertyName);
