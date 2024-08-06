@@ -33,7 +33,7 @@ namespace AB15_GUI.WPF.Views
         /// <param name="sender">Button name</param>
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            // open page based on cliked button name
+            // open page based on clicked button name
             switch (((ToggleButton)sender).Name) 
             {
                 case "HomeButton":
