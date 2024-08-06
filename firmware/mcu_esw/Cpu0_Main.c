@@ -23,9 +23,7 @@
 #include "top/spi_wrapper.h"
 #include "top/usb_wrapper.h"
 #include "Bsp.h"
-
-// for debug messages on button press JS 4/2024
-#include "button.h"
+#include "pwm.h"
 
 IFX_ALIGN(4) IfxCpu_syncEvent g_cpuSyncEvent = 0;
 
@@ -103,7 +101,6 @@ void core0_main(void)
     /* Initialize the LED port pins      */
     InitLEDs();
 
-
     /* Init pins*/
     ConfigureSelectPin();
     InitGPIOPins();
@@ -123,6 +120,12 @@ void core0_main(void)
     // Init timer module
     InitGpt12Timer();
 
+    /* Initialize the CCU6 module for PWM generation */
+    initCCU6();
+
+    // start CCU6 module PWM generation */
+    StartPWMGeneration();
+
     // Start general timer
     StartGeneralTimer();
 
@@ -140,16 +143,6 @@ void core0_main(void)
         //ToggleLED1();
         Blink_LED1_1Hz();
 
-       if(GetButtonState())
-       {
-           //OnLED2();
-
-
-       }
-       else
-       {
-          // OffLED2();
-       }
 
         // wait for 2ms for next polling // TODO: remove and check
         waitTime(IfxStm_getTicksFromMicroseconds(BSP_DEFAULT_TIMER, WAIT_TIME));
@@ -204,7 +197,7 @@ void core0_main(void)
                 CmdConfigureWatchdog(&cmdPackage);
                 break;
 
-            case USB_CMD_START_WATCHDOG:
+           case USB_CMD_START_WATCHDOG:
                 CmdStartWatchdog(&cmdPackage);
                 break;
 
@@ -212,6 +205,13 @@ void core0_main(void)
                 CmdStopWatchdog(&cmdPackage);
                 break;
 
+           case USB_CMD_SET_EXT_OSC_2MHZ:
+                CmdSetExtOsc2Mhz(&cmdPackage);
+                break;
+
+           case USB_CMD_SET_EXT_OSC_4MHZ:
+                CmdSetExtOsc4Mhz(&cmdPackage);
+                break;
            case USB_CMD_GET_MCU_VERSION:
                 CmdGetMcuVersion(&cmdPackage);
                 break;
