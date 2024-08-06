@@ -13,6 +13,7 @@
         Height="650" Width="1000"
         Icon="Resources/bosch.ico">
     <Window.Resources>
+        <cnvrt:FaultFlagToColorConverter x:Key="FaultFlagToColorConverter"/>
         <cnvrt:StatusToColorConverter x:Key="StatusToColorConverter"/>
     </Window.Resources>
     
@@ -343,29 +344,43 @@
         <!--Bottom panel group-->
         <Grid Grid.Row="2" Background="{DynamicResource BottonPanel.Background}">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="5"/>
-                <ColumnDefinition Width="auto" MinWidth="20"/>
-                <ColumnDefinition Width="3"/>
-                <ColumnDefinition Width="auto" MinWidth="20"/>
-                <ColumnDefinition Width="5"/>
-                <ColumnDefinition Width="auto" MinWidth="20"/>
-                <ColumnDefinition Width="3"/>
-                <ColumnDefinition Width="auto" MinWidth="20"/>
-                <ColumnDefinition Width="5"/>
-                <ColumnDefinition Width="auto" MinWidth="20"/>
-                <ColumnDefinition Width="3"/>
-                <ColumnDefinition Width="auto" MinWidth="20"/>
-                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal" Grid.Column="0">
+                
+                <TextBlock Style="{DynamicResource TextBlockStyle}" Text="GUI:"/>
+                
+                <TextBlock Style="{DynamicResource TextBlockStyle}" MinWidth="20"
+                           Text="{Binding GUIVersion}"/>
+                
+                <TextBlock Style="{DynamicResource TextBlockStyle}" Text="MCU:"/>
+                
+                <TextBlock Style="{DynamicResource TextBlockStyle}" MinWidth="20"
+                           Text="{Binding MCUVersion}"/>
+                
+                <TextBlock Style="{DynamicResource TextBlockStyle}" Text="AB15:"/>
 
-            <TextBlock Style="{DynamicResource TextBlockStyle}" Text="GUI:" Grid.Column="1"/>
-            <TextBlock Style="{DynamicResource TextBlockStyle}" Text="MCU:" Grid.Column="5"/>
-            <TextBlock Style="{DynamicResource TextBlockStyle}" Text="AB15:" Grid.Column="9"/>
+                <TextBlock Style="{DynamicResource TextBlockStyle}" MinWidth="20"
+                           Text="{Binding ASICID}"/>
+            </StackPanel>
 
-            <TextBlock Style="{DynamicResource TextBlockStyle}" Text="{Binding GUIVersion}" Grid.Column="3"/>
-            <TextBlock Style="{DynamicResource TextBlockStyle}" Text="{Binding MCUVersion}" Grid.Column="7"/>
-            <TextBlock Style="{DynamicResource TextBlockStyle}" Text="{Binding ASICID}" Grid.Column="9"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="2">
+                <!--Status box for WD-->
+                <Border BorderThickness="1" 
+                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                CornerRadius="5" HorizontalAlignment="Left" 
+                                Width="50" Margin="2">
+                    <Border.Background>
+                        <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
+                            <Binding Path = "WatchdogViewModel.WDFaultStatus"/>
+                            <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                        </MultiBinding>
+                    </Border.Background>
+                    <TextBlock Text="WD" HorizontalAlignment="Center" FontSize="16" Style="{DynamicResource TextBlockStyle}"/>
+                </Border>
+            </StackPanel>
         </Grid>
     </Grid>
 </Window>
