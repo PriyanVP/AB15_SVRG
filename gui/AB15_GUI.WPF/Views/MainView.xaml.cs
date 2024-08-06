@@ -33,6 +33,7 @@ namespace AB15_GUI.WPF.Views
         /// <param name="sender">Button name</param>
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            // open page based on cliked button name
             switch (((ToggleButton)sender).Name) 
             {
                 case "HomeButton":
@@ -61,16 +62,20 @@ namespace AB15_GUI.WPF.Views
                     break;
             }
 
+            // go for each menu checkbox and uncheck old one, check clicked one
             for (int i = 0; i < MenuPanel.Children.Count; i++)
             {
+                // check if element ToggleButton
                 if (MenuPanel.Children[i] is ToggleButton)
                 {
                     ToggleButton toggleButton = (ToggleButton)MenuPanel.Children[i];
+
+                    // check for clicked ToggleButton name
                     if (toggleButton.Name == ((ToggleButton)sender).Name)
                     {
                         toggleButton.IsChecked = true;
                     }
-                    else if (toggleButton.Name != "")
+                    else if (toggleButton.Name != "") // check for menu ToggleButton name
                     {
                         toggleButton.IsChecked = false;
                     }
