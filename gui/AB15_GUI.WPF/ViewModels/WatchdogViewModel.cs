@@ -90,7 +90,7 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// State values for WD feature, required for centralized flags handling for UI
         /// </summary>
-        private enum State
+        public enum State
         {
             InitialState,          /* Intial dummy state, require to handle initial transition */
             Idle,                  /* Default state, entered after startup */
@@ -755,6 +755,9 @@ namespace AB15_GUI.WPF.ViewModels
                 return;
             }
 
+            // Fire trigger for state machine
+            _stateMachine.Fire(Triggers.GotConfiguration);
+
             // Update configuration
             _spi_config_wd1.Data         = mcuResponse.Payload.Data[0];
             _spi_config_wd2.Data         = mcuResponse.Payload.Data[1];
@@ -777,8 +780,6 @@ namespace AB15_GUI.WPF.ViewModels
             WD1LockTime = 0;
             WD2LockTime = 10; // Underflow limit
 
-            // Fire trigger for state machine
-            _stateMachine.Fire(Triggers.GotConfiguration);
         }
 
         private void WriteConfigDelagate(IReceiveCommunicationPackage response)
