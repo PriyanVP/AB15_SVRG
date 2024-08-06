@@ -8,12 +8,12 @@ using System.Windows.Media;
 namespace AB15_GUI.WPF.Views.Converters
 {
     /// <summary>
-    /// Convert status of connection to color
+    /// Convert input register value to real time value
     /// </summary>
     public class WD1SliderToTextBoxValueConverter : IValueConverter
     {
         /// <summary>
-        /// Based on input values convert status to color.
+        /// Based on input values convert value for wd1
         /// Multivalue converter is used to also update colors in case theme changed (resources will change underneath)
         /// </summary>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

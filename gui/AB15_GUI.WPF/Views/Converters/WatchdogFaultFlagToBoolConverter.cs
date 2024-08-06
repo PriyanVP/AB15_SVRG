@@ -8,7 +8,7 @@ using System.Windows.Media;
 namespace AB15_GUI.WPF.Views.Converters
 {
     /// <summary>
-    /// Convert status of connection to color
+    /// Convert fault status to color
     /// </summary>
     public class WatchdogFaultFlagToBoolConverter : IMultiValueConverter
     {
