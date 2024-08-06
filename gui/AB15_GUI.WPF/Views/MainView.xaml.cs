@@ -2,6 +2,7 @@
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -32,7 +33,8 @@ namespace AB15_GUI.WPF.Views
         /// <param name="sender">Button name</param>
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            switch (((Button)sender).Name) 
+            // open page based on clicked button name
+            switch (((ToggleButton)sender).Name) 
             {
                 case "HomeButton":
                     PagesControl.SelectedIndex = 0;
@@ -58,6 +60,26 @@ namespace AB15_GUI.WPF.Views
                 default:
                     PagesControl.SelectedIndex = 0;
                     break;
+            }
+
+            // go for each menu checkbox and uncheck old one, check clicked one
+            for (int i = 0; i < MenuPanel.Children.Count; i++)
+            {
+                // check if element ToggleButton
+                if (MenuPanel.Children[i] is ToggleButton)
+                {
+                    ToggleButton toggleButton = (ToggleButton)MenuPanel.Children[i];
+
+                    // check for clicked ToggleButton name
+                    if (toggleButton.Name == ((ToggleButton)sender).Name)
+                    {
+                        toggleButton.IsChecked = true;
+                    }
+                    else if (toggleButton.Name != "") // check for menu ToggleButton name
+                    {
+                        toggleButton.IsChecked = false;
+                    }
+                }
             }
 
         }

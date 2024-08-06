@@ -41,6 +41,7 @@
     <SolidColorBrush x:Key="SimpleButton.Background.IsPressed" Color="#979197"/>
     <SolidColorBrush x:Key="SimpleButton.Background.Disable" Color="#c0c0c0c0"/>
     <SolidColorBrush x:Key="SimpleButton.BorderBrush" Color="#C0C0C0"/>
+    <SolidColorBrush x:Key="SimpleButton.ValidationError" Color="#f50000"/>
 
     <SolidColorBrush x:Key="Foreground.Helper" Color="#c0c0c0c0"/>
     <SolidColorBrush x:Key="Foreground.Disable" Color="#8a8886"/>
@@ -97,6 +98,16 @@
     <SolidColorBrush x:Key="ListViewItem.Background" Color="Transparent" />
 
     <BooleanToVisibilityConverter x:Key="btv" />
+
+    <!--#region ToolTip -->
+    <Style TargetType="ToolTip">
+        <Setter Property="Foreground" Value="{DynamicResource Foreground.Default}"/>
+        <Setter Property="Background" Value="{DynamicResource UI.BackGround}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource UI.SeparateLine}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="BorderThickness" Value="1"/>
+    </Style>
+    <!--#endregion-->
 
     <!--#region AdditionalInfoImageStyle style define -->
     <Style x:Key="AdditionalInfoImageStyle" TargetType="{x:Type Image}">
@@ -161,6 +172,27 @@
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
                 <Setter Property="Foreground" Value="{DynamicResource SimpleButton.Background.Disable}"/>
+            </Trigger>
+            <Trigger Property="Validation.HasError" Value="True">
+                <Setter Property="ToolTip">
+                    <Setter.Value>
+                        <ToolTip DataContext="{Binding RelativeSource={RelativeSource Self}, Path=PlacementTarget}">
+                            <ItemsControl ItemsSource="{Binding Path=(Validation.Errors)}" DisplayMemberPath="ErrorContent" />
+                            
+                        </ToolTip>
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+            <Trigger Property="IsVisible" Value="true">
+                <Setter Property="Validation.ErrorTemplate">
+                    <Setter.Value>
+                        <ControlTemplate>
+                            <Border BorderBrush="Red" BorderThickness="3">
+                                <AdornedElementPlaceholder/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -581,6 +613,37 @@
 
 
         <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource Button.Background.IsMouseOver}"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="{DynamicResource Button.Background.IsPressed}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="MenuToggleButtons" TargetType="ToggleButton">
+        <Setter Property="Background" Value="{DynamicResource Button.Background.StandBy}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Margin" Value="0,1"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Border Background="{TemplateBinding Background}">
+                        <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+
+        <Style.Triggers>
+            <Trigger Property="IsChecked" Value="True">
+                <Setter Property="Background" Value="{DynamicResource Button.Background.IsMouseOver}"/>
+            </Trigger>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Background" Value="{DynamicResource Button.Background.IsMouseOver}"/>
             </Trigger>

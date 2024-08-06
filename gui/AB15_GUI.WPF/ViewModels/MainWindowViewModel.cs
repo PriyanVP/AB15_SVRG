@@ -1,5 +1,6 @@
 ﻿using AB15_GUI.WPF.Views;
 using NLog;
+using System;
 
 namespace AB15_GUI.WPF.ViewModels
 {
@@ -105,7 +106,6 @@ namespace AB15_GUI.WPF.ViewModels
 
             // TODO find better way
             WatchdogViewModel = watchdogViewModel;
-            
         }
     }
 }
