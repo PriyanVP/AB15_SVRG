@@ -72,8 +72,8 @@
 
                         <!--#region Main fault flag -->
                         <Border Grid.Row="1" Grid.Column="5" Grid.ColumnSpan="2" BorderThickness="1" 
-                            BorderBrush="{DynamicResource Animation.Lines}" 
-                            CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
                             <Border.Background>
                                 <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
                                     <Binding Path = "WDFaultStatus"/>
@@ -81,13 +81,13 @@
                                 </MultiBinding>
                             </Border.Background>
                             <TextBlock Text="WD Fault Status" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-                                           FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                       FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
                         </Border>
 
                         <!--*********-->
                         <Border Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" BorderThickness="1" 
-                            BorderBrush="{DynamicResource Animation.Lines}" 
-                            CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
                             <Border.Background>
                                 <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
                                     <Binding Path = "WD1FaultStatus"/>
@@ -95,13 +95,13 @@
                                 </MultiBinding>
                             </Border.Background>
                             <TextBlock Text="   WD1 Fault   " HorizontalAlignment="Center" VerticalAlignment="Center"
-                                           FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"
-                                           Style="{DynamicResource TextBlockStyle}"/>
+                                       FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"
+                                       Style="{DynamicResource TextBlockStyle}"/>
                         </Border>
 
                         <Border Grid.Row="3" Grid.Column="5" Grid.ColumnSpan="2" BorderThickness="1" 
-                            BorderBrush="{DynamicResource Animation.Lines}" 
-                            CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
                             <Border.Background>
                                 <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
                                     <Binding Path = "WD2FaultStatus"/>
@@ -109,12 +109,12 @@
                                 </MultiBinding>
                             </Border.Background>
                             <TextBlock Text="   WD2 Fault   " HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-                                           FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                       FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
                         </Border>
                         
                         <Border Grid.Row="3" Grid.Column="9" Grid.ColumnSpan="2" BorderThickness="1" 
-                            BorderBrush="{DynamicResource Animation.Lines}" 
-                            CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
                             <Border.Background>
                                 <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
                                     <Binding Path = "ErrorPinFaultStatus"/>
@@ -122,16 +122,16 @@
                                 </MultiBinding>
                             </Border.Background>
                             <TextBlock Text="   Error Pin   " HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-                                           FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                       FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
                         </Border>
 
                         <!--*********-->
 
                         <Border Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" BorderThickness="1" 
                                 x:Name="TextScaleBorder"
-                            BorderBrush="{DynamicResource Animation.Lines}" 
-                            CornerRadius="5" HorizontalAlignment="Stretch" Margin="2"
-                            SizeChanged="TextScale_SizeChanged">
+                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2"
+                                SizeChanged="TextScale_SizeChanged">
                             <Border.Background>
                                 <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
                                     <Binding Path = "WD1TimerFaultStatus"/>
@@ -140,12 +140,12 @@
                             </Border.Background>
                             <TextBlock x:Name="TextScale" Text="WD1 Timer Fault" 
                                        HorizontalAlignment="Center" FontSize="16"
-                                           Style="{DynamicResource TextBlockStyle}"/>
+                                       Style="{DynamicResource TextBlockStyle}"/>
                         </Border>
 
                         <Border Grid.Row="4" Grid.Column="5" Grid.ColumnSpan="2" BorderThickness="1" 
-                            BorderBrush="{DynamicResource Animation.Lines}" 
-                            CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
                             <Border.Background>
                                 <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
                                     <Binding Path = "WD2TimerFaultStatus"/>
@@ -153,12 +153,12 @@
                                 </MultiBinding>
                             </Border.Background>
                             <TextBlock Text="WD2 Timer Fault" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-                                           FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                       FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
                         </Border>
 
                         <Border Grid.Row="4" Grid.Column="9" Grid.ColumnSpan="2" BorderThickness="1" 
-                            BorderBrush="{DynamicResource Animation.Lines}" 
-                            CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
                             <Border.Background>
                                 <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
                                     <Binding Path = "OSCMONFaultStatus"/>
@@ -166,14 +166,14 @@
                                 </MultiBinding>
                             </Border.Background>
                             <TextBlock Text="    OSCMON     " HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-                                           FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                       FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
                         </Border>
 
                         <!--*********-->
 
                         <Border Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" BorderThickness="1" 
-                            BorderBrush="{DynamicResource Animation.Lines}" 
-                            CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
                             <Border.Background>
                                 <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
                                     <Binding Path = "WD1QAFaultStatus"/>
@@ -181,12 +181,12 @@
                                 </MultiBinding>
                             </Border.Background>
                             <TextBlock Text="     WD1 QA    " HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-                                           FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                       FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
                         </Border>
 
                         <Border Grid.Row="5" Grid.Column="5" Grid.ColumnSpan="2" BorderThickness="1" 
-                            BorderBrush="{DynamicResource Animation.Lines}" 
-                            CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
                             <Border.Background>
                                 <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
                                     <Binding Path = "WD2QAFaultStatus"/>
@@ -194,7 +194,7 @@
                                 </MultiBinding>
                             </Border.Background>
                             <TextBlock Text="     WD2 QA    " HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-                                           FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                       FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
                         </Border>
                         <!--#endregion-->
 
@@ -204,8 +204,8 @@
                         </Border>
 
                         <Border Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="1" 
-                            BorderBrush="{DynamicResource Animation.Lines}" 
-                            CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
                             <Border.Background>
                                 <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
                                     <Binding Path = "OscillatorFaultStatus"/>
@@ -213,12 +213,12 @@
                                 </MultiBinding>
                             </Border.Background>
                             <TextBlock Text="Oscillator fault" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-                                           FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                       FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
                         </Border>
 
                         <Border Grid.Row="8" Grid.Column="2" Grid.ColumnSpan="2" BorderThickness="1" 
-                            BorderBrush="{DynamicResource Animation.Lines}" 
-                            CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
                             <Border.Background>
                                 <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
                                     <Binding Path = "WDResetFaultStatus"/>
@@ -226,13 +226,13 @@
                                 </MultiBinding>
                             </Border.Background>
                             <TextBlock Text="    WD Reset    " HorizontalAlignment="Center" 
-                                           FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"
-                                           Style="{DynamicResource TextBlockStyle}"/>
+                                       FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"
+                                       Style="{DynamicResource TextBlockStyle}"/>
                         </Border>
 
                         <Border Grid.Row="8" Grid.Column="4" Grid.ColumnSpan="2" BorderThickness="1" 
-                            BorderBrush="{DynamicResource Animation.Lines}" 
-                            CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
                             <Border.Background>
                                 <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
                                     <Binding Path = "WD1CounterFaultStatus"/>
@@ -240,12 +240,12 @@
                                 </MultiBinding>
                             </Border.Background>
                             <TextBlock Text="  WD1 counter   " HorizontalAlignment="Center" 
-                                           FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}" Style="{DynamicResource TextBlockStyle}"/>
+                                       FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}" Style="{DynamicResource TextBlockStyle}"/>
                         </Border>
 
                         <Border Grid.Row="8" Grid.Column="6" Grid.ColumnSpan="2" BorderThickness="1" 
-                            BorderBrush="{DynamicResource Animation.Lines}" 
-                            CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
                             <Border.Background>
                                 <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
                                     <Binding Path = "QA1FaultStatus"/>
@@ -253,12 +253,12 @@
                                 </MultiBinding>
                             </Border.Background>
                             <TextBlock Text="   QA1 fault    " HorizontalAlignment="Center" 
-                                           FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}" Style="{DynamicResource TextBlockStyle}"/>
+                                       FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}" Style="{DynamicResource TextBlockStyle}"/>
                         </Border>
 
                         <Border Grid.Row="8" Grid.Column="8" Grid.ColumnSpan="2" BorderThickness="1" 
-                            BorderBrush="{DynamicResource Animation.Lines}" 
-                            CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
                             <Border.Background>
                                 <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
                                     <Binding Path = "WD2CounterFaultStatus"/>
@@ -266,12 +266,12 @@
                                 </MultiBinding>
                             </Border.Background>
                             <TextBlock Text="   WD2 counter  " HorizontalAlignment="Center" 
-                                           FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}" Style="{DynamicResource TextBlockStyle}"/>
+                                       FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}" Style="{DynamicResource TextBlockStyle}"/>
                         </Border>
 
                         <Border Grid.Row="8" Grid.Column="10" Grid.ColumnSpan="2" BorderThickness="1" 
-                            BorderBrush="{DynamicResource Animation.Lines}" 
-                            CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
                             <Border.Background>
                                 <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
                                     <Binding Path = "QA2FaultStatus"/>
@@ -279,7 +279,7 @@
                                 </MultiBinding>
                             </Border.Background>
                             <TextBlock Text="   QA2 fault    " HorizontalAlignment="Center" 
-                                           FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}" Style="{DynamicResource TextBlockStyle}"/>
+                                       FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}" Style="{DynamicResource TextBlockStyle}"/>
                         </Border>
                         <!--#endregion-->
                     </Grid>
@@ -287,7 +287,7 @@
 
                     <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Height="auto" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
                         <Border BorderThickness="0,1,0,0" BorderBrush="{DynamicResource UI.SeparateLine}"
-                            Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"/>
+                                Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"/>
 
                     <!--More size toggle button-->
                     <ToggleButton Style="{DynamicResource MenuToggleButtonTemplate}" IsChecked="False"
@@ -428,8 +428,8 @@
 
                             <!--TODO add converter for text Hight - Low-->
                             <Border Grid.Row="1" BorderThickness="1" 
-                            BorderBrush="{DynamicResource Animation.Lines}" 
-                            CornerRadius="5" HorizontalAlignment="Center" Margin="2">
+                                    BorderBrush="{DynamicResource Animation.Lines}" 
+                                    CornerRadius="5" HorizontalAlignment="Center" Margin="2">
                                 <Border.Background>
                                     <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
                                         <Binding Path = "EN0HightStatus"/>
@@ -493,12 +493,12 @@
 
                         <StackPanel Grid.Column="1" Grid.Row="1" Margin="0,0,5,0" VerticalAlignment="Center">
                             <TextBlock Text="Response time"
-                                   Style="{DynamicResource CustomTextBlock}"
+                                       Style="{DynamicResource CustomTextBlock}"
                                        IsEnabled="{Binding IsConfigEnable}"
                                        HorizontalAlignment="Right"/>
                             <TextBlock Text="Lock time"
-                                   Style="{DynamicResource CustomTextBlock}"
-                                IsEnabled="{Binding IsConfigEnable}"
+                                       Style="{DynamicResource CustomTextBlock}"
+                                       IsEnabled="{Binding IsConfigEnable}"
                                        HorizontalAlignment="Right"/>
                         </StackPanel>
 
@@ -548,15 +548,15 @@
 
                         <TextBlock Text="WD2" Grid.Column="1" Grid.Row="2" VerticalAlignment="Center"
                                    Style="{DynamicResource CustomTextBlock}"
-                                IsEnabled="{Binding IsConfigEnable}"/>
+                                   IsEnabled="{Binding IsConfigEnable}"/>
 
                         <StackPanel Grid.Column="1" Grid.Row="2" Margin="0,0,5,0" VerticalAlignment="Center">
                             <TextBlock Text="Response time" 
-                                   Style="{DynamicResource CustomTextBlock}"
+                                       Style="{DynamicResource CustomTextBlock}"
                                        IsEnabled="{Binding IsConfigEnable}"
                                        HorizontalAlignment="Right"/>
                             <TextBlock Text="Lock time" 
-                                   Style="{DynamicResource CustomTextBlock}"
+                                       Style="{DynamicResource CustomTextBlock}"
                                        IsEnabled="{Binding IsConfigEnable}"
                                        HorizontalAlignment="Right"/>
                         </StackPanel>
@@ -589,7 +589,7 @@
                                 Value="{Binding WD2ResponseTime}" Width="200"
                                 Minimum="0" Maximum="63"
                                 Margin="20,0,20,0"
-                                       IsEnabled="{Binding IsConfigEnable}"/>
+                                IsEnabled="{Binding IsConfigEnable}"/>
 
                         <Slider Name="WD2LockTimeSlider" ValueChanged="WD2LockTimeSlider_ValueChanged"
                                 TickFrequency="1" IsSnapToTickEnabled="True"
@@ -599,7 +599,7 @@
                                 Value="{Binding WD2LockTime}" Width="200"
                                 Minimum="0" Maximum="63"
                                 Margin="20,0,20,0"
-                                       IsEnabled="{Binding IsConfigEnable}"/>
+                                IsEnabled="{Binding IsConfigEnable}"/>
                         <!--#endregion-->
 
                         <!--#region EN0 Disable Treshhold slider-->
@@ -617,16 +617,16 @@
                                       HorizontalAlignment="Right" Margin="5,0"
                                       IsEnabled="{Binding IsConfigEnable}"/>
                             <TextBlock Text="Enable EN0" Grid.Column="0" Grid.Row="4" VerticalAlignment="Center"
-                                   Style="{DynamicResource CustomTextBlock}"
+                                       Style="{DynamicResource CustomTextBlock}"
                                        IsEnabled="{Binding IsConfigEnable}"/>
 
                             <StackPanel HorizontalAlignment="Right" Margin="5" VerticalAlignment="Center">
                                 <TextBlock Text="WD1" Margin="0,0,5,0"
-                                   Style="{DynamicResource CustomTextBlock}"
+                                       Style="{DynamicResource CustomTextBlock}"
                                        HorizontalAlignment="Right"
                                        IsEnabled="{Binding IsConfigEnable}"/>
                                 <TextBlock Text="WD2" Margin="0,0,5,0"
-                                   Style="{DynamicResource CustomTextBlock}"
+                                       Style="{DynamicResource CustomTextBlock}"
                                        HorizontalAlignment="Right"
                                        IsEnabled="{Binding IsConfigEnable}"/>
                             </StackPanel>
@@ -645,24 +645,24 @@
 
                         <StackPanel Grid.Column="4" Grid.Row="4" VerticalAlignment="Center">
                             <Slider Name="WD1EN0DisableTreshholdSlider" 
-                                TickFrequency="1" IsSnapToTickEnabled="True"
-                                Style="{DynamicResource WatchdogTop_SliderThresholdTop}" 
-                                VerticalAlignment="Top" 
-                                HorizontalAlignment="Left"
-                                Value="{Binding WD1EN0DisableThreshold}" Width="200"
-                                Minimum="0" Maximum="63"
-                                Margin="20,0,20,5"
-                                IsEnabled="{Binding IsConfigEnable}"/>
+                                    TickFrequency="1" IsSnapToTickEnabled="True"
+                                    Style="{DynamicResource WatchdogTop_SliderThresholdTop}" 
+                                    VerticalAlignment="Top" 
+                                    HorizontalAlignment="Left"
+                                    Value="{Binding WD1EN0DisableThreshold}" Width="200"
+                                    Minimum="0" Maximum="63"
+                                    Margin="20,0,20,5"
+                                    IsEnabled="{Binding IsConfigEnable}"/>
 
                             <Slider Name="WD2EN0DisableTreshholdSlider"
-                                TickFrequency="1" IsSnapToTickEnabled="True"
-                                Style="{DynamicResource WatchdogTop_SliderThresholdTop}" 
-                                VerticalAlignment="Bottom" 
-                                HorizontalAlignment="Left"
-                                Value="{Binding WD2EN0DisableThreshold}" Width="200"
-                                Minimum="0" Maximum="63"
-                                Margin="20,5,20,0"
-                                IsEnabled="{Binding IsConfigEnable}"/>
+                                    TickFrequency="1" IsSnapToTickEnabled="True"
+                                    Style="{DynamicResource WatchdogTop_SliderThresholdTop}" 
+                                    VerticalAlignment="Bottom" 
+                                    HorizontalAlignment="Left"
+                                    Value="{Binding WD2EN0DisableThreshold}" Width="200"
+                                    Minimum="0" Maximum="63"
+                                    Margin="20,5,20,0"
+                                    IsEnabled="{Binding IsConfigEnable}"/>
                         </StackPanel>
 
                         <!--#endregion-->
@@ -679,7 +679,7 @@
 
                         <Button Style="{DynamicResource SimpleButton}" 
                                     Content="Write config to ASIC"
-                                x:Name="WriteConfigToASICButton"
+                                    x:Name="WriteConfigToASICButton"
                                     Command="{Binding WriteConfigToASIC}"/>
 
                         <Button Content="Read config from ASIC"
@@ -718,19 +718,19 @@
                     <StackPanel Orientation="Vertical"
                                 Grid.Row="0" Grid.Column="0">
                         <Button Style="{DynamicResource SimpleButton}"
-                            Content="Reset ASIC"
-                            Foreground="{DynamicResource Foreground.Red.Default}"
-                            Command="{Binding ResetAsicCommand}"/>
+                                Content="Reset ASIC"
+                                Foreground="{DynamicResource Foreground.Red.Default}"
+                                Command="{Binding ResetAsicCommand}"/>
                         
                         <Button Style="{DynamicResource SimpleButton}"
-                            Content="Reset Watchdog"
-                            Foreground="{DynamicResource Foreground.Red.Default}"
-                            Command="{Binding ResetAsicCommand}"/>
+                                Content="Reset Watchdog"
+                                Foreground="{DynamicResource Foreground.Red.Default}"
+                                Command="{Binding ResetAsicCommand}"/>
                         
                         <Button Style="{DynamicResource SimpleButton}"
-                            Content="Trigger safety logic fault"
-                            Foreground="{DynamicResource Foreground.Red.Default}"
-                            Command="{Binding ResetAsicCommand}"/>
+                                Content="Trigger safety logic fault"
+                                Foreground="{DynamicResource Foreground.Red.Default}"
+                                Command="{Binding ResetAsicCommand}"/>
                     </StackPanel>
                     
                 </Grid>
