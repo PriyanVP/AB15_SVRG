@@ -1,15 +1,5 @@
-﻿using AB15_GUI.WPF.Views;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows;
 using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace AB15_GUI.WPF.Views
 {
@@ -82,18 +72,6 @@ namespace AB15_GUI.WPF.Views
                 }
             }
 
-        }
-
-        // TODO find better way
-        /// <summary>
-        /// Set data context for watchdog page
-        /// </summary>
-        private void WatchdogFrame_LoadCompleted(object sender, NavigationEventArgs e)
-        {
-            if (WatchdogFrame.Content is FrameworkElement content)
-            {
-                content.DataContext = WatchdogFrame.DataContext;
-            }
         }
     }
 }

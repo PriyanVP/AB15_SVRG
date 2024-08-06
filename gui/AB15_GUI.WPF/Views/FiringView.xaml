@@ -6,7 +6,8 @@
       xmlns:local="clr-namespace:AB15_GUI.WPF.Views"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="Firing">
+      Title="Firing"
+      DataContext="{Binding FiringViewModel, Source={StaticResource ViewModelLocator}}">
 
     <Grid>
         <TextBlock Text="Firing placeholder"/>

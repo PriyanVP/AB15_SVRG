@@ -6,7 +6,8 @@
       xmlns:local="clr-namespace:AB15_GUI.WPF.Views"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="SensorPage">
+      Title="SensorPage"
+      DataContext="{Binding SensorViewModel, Source={StaticResource ViewModelLocator}}">
 
     <Grid>
         <TextBlock Text="Sensor placeholder"/>

@@ -25,6 +25,7 @@ namespace AB15_GUI.WPF.Views.Components
             InitializeComponent();
         }
 
+        // TODO: why here? not used
         private void Slider_DragDelta(object sender, System.Windows.Controls.Primitives.DragDeltaEventArgs e)
         {
 

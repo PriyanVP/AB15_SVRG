@@ -9,7 +9,8 @@
       xmlns:cnvrt="clr-namespace:AB15_GUI.WPF.Views.Converters"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="900"
-      Title="WatchdogView">
+      Title="WatchdogView"
+      DataContext="{Binding WatchdogViewModel, Source={StaticResource ViewModelLocator}}">
 
     <Page.Resources>
         <cnvrt:FaultFlagToColorConverter x:Key="FaultFlagToColorConverter"/>

@@ -79,18 +79,12 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// Logger window instance
         /// </summary>
-        public readonly LoggerViewModel LoggerViewModel;
+        public LoggerViewModel LoggerViewModel { get; private set; }
 
-        public WatchdogViewModel watchdogViewModel;
-        public WatchdogViewModel WatchdogViewModel
-        {
-            get => watchdogViewModel;
-            set
-            {
-                watchdogViewModel = value;
-                OnPropertyChanged();
-            }
-        }
+        /// <summary>
+        /// Watchdog page instance
+        /// </summary>
+        public WatchdogViewModel WatchdogViewModel { get; private set; }
 
         /// <summary>
         /// Constructor
@@ -99,13 +93,13 @@ namespace AB15_GUI.WPF.ViewModels
         {
             // Init Logger and logger view model
             this.logger = logger;
+
+            // Store references to child view models
             LoggerViewModel = loggerViewModel;
+            WatchdogViewModel = watchdogViewModel;
 
             logger.Trace("In MainViewModel");
-            loggerWindowView.Show();
-
-            // TODO find better way
-            WatchdogViewModel = watchdogViewModel;
+            loggerWindowView.Show();       
         }
     }
 }
