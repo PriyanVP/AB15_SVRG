@@ -2,6 +2,7 @@
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -32,7 +33,7 @@ namespace AB15_GUI.WPF.Views
         /// <param name="sender">Button name</param>
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            switch (((Button)sender).Name) 
+            switch (((ToggleButton)sender).Name) 
             {
                 case "HomeButton":
                     PagesControl.SelectedIndex = 0;
@@ -58,6 +59,22 @@ namespace AB15_GUI.WPF.Views
                 default:
                     PagesControl.SelectedIndex = 0;
                     break;
+            }
+
+            for (int i = 0; i < MenuPanel.Children.Count; i++)
+            {
+                if (MenuPanel.Children[i] is ToggleButton)
+                {
+                    ToggleButton toggleButton = (ToggleButton)MenuPanel.Children[i];
+                    if (toggleButton.Name == ((ToggleButton)sender).Name)
+                    {
+                        toggleButton.IsChecked = true;
+                    }
+                    else if (toggleButton.Name != "")
+                    {
+                        toggleButton.IsChecked = false;
+                    }
+                }
             }
 
         }
