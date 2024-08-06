@@ -655,22 +655,8 @@
 
                         <Button Style="{DynamicResource SimpleButton}" 
                                     Content="Write config to ASIC"
-                                    Command="{Binding WriteConfigToASIC}" Margin="0,0,00,50">
-                            <Validation.ErrorTemplate>
-                                <ControlTemplate>
-                                    <StackPanel>
-                                        <AdornedElementPlaceholder/>
-                                        <ItemsControl ItemsSource="{Binding}">
-                                            <ItemsControl.ItemTemplate>
-                                                <DataTemplate>
-                                                    <TextBlock Text="{Binding ErrorContent}" TextWrapping="Wrap" Foreground="Red" MaxHeight="50"/>
-                                                </DataTemplate>
-                                            </ItemsControl.ItemTemplate>
-                                        </ItemsControl>
-                                    </StackPanel>
-                                </ControlTemplate>
-                            </Validation.ErrorTemplate>
-                        </Button>
+                                x:Name="WriteConfigToASICButton"
+                                    Command="{Binding WriteConfigToASIC}"/>
 
                         <Button Content="Read config from ASIC"
                                     Style="{DynamicResource SimpleButton}"
