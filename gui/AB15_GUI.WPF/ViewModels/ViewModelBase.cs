@@ -23,6 +23,17 @@ namespace AB15_GUI.WPF.ViewModels
         private readonly Dictionary<string, List<string>> _propertyNameToErrorsDictionary = new Dictionary<string, List<string>>();
 
         /// <summary>
+        /// Dictionary that stores help messages for UI
+        /// </summary>
+        private readonly Dictionary<string, string> _helpMsgDicitionary = new Dictionary<string, string>();
+       
+        /// <summary>
+        /// Observable property for providing help messages for UI
+        /// Note: OnPropertyChanged evnt to be called manually after initial set up
+        /// </summary>
+        public Dictionary<string, string> HelpMsgDictionary => _helpMsgDicitionary;
+
+        /// <summary>
         /// Property that shows if any error is present
         /// </summary>
         public bool HasErrors => (_propertyNameToErrorsDictionary.Count > 0);
@@ -96,6 +107,27 @@ namespace AB15_GUI.WPF.ViewModels
 
             // Raise event to notify that error state has changed
             OnErrorsChanged(propertyName);
+        }
+
+        /// <summary>
+        /// Method to add help messages for properties and/or UI elements
+        /// </summary>
+        /// <param name="helpMsgKey">help message key (property name or UI element name for specific cases)</param>
+        /// <param name="helpMessage">help message</param>
+        protected void AddHelpMsg(string helpMsgKey, string helpMessage)
+        {
+            // Create key for property if not yet present
+            if (!_helpMsgDicitionary.ContainsKey(helpMsgKey))
+            {
+                _helpMsgDicitionary.Add(helpMsgKey, helpMessage);
+            }
+            else
+            {
+                _helpMsgDicitionary[helpMsgKey] = helpMessage;
+            }
+
+            // Raise event to notify that dictionary content has changed
+            OnPropertyChanged(nameof(HelpMsgDictionary));
         }
 
         /// <summary>

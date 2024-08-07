@@ -14,7 +14,7 @@
 
     <Page.Resources>
         <cnvrt:FaultFlagToColorConverter x:Key="FaultFlagToColorConverter"/>
-        <cnvrt:WDSliderToTextBoxValueConverter x:Key="WDSliderToTextBoxValueConverter"/>
+        <cnvrt:ScalingConverter x:Key="ScalingConverter"/>
     </Page.Resources>
 
     <Grid Background="{DynamicResource UI.BackGround}" KeyDown="Grid_KeyDown" MouseDown="Grid_MouseDown">
@@ -504,10 +504,10 @@
                         </StackPanel>
 
                         <StackPanel Grid.Column="2" Grid.Row="1" VerticalAlignment="Center">
-                            <TextBox Text="{Binding ElementName=WD1ResponseTimeSlider, Path=Value, Converter={StaticResource WDSliderToTextBoxValueConverter}, Mode=OneWay, ConverterParameter=50}" 
+                            <TextBox Text="{Binding ElementName=WD1ResponseTimeSlider, Path=Value, Converter={StaticResource ScalingConverter}, Mode=OneWay, ConverterParameter=50}" 
                                      Focusable="False" IsReadOnly="True"
                                      IsEnabled="{Binding IsConfigEnable}"/>
-                            <TextBox Text="{Binding ElementName=WD1LockTimeSlider, Path=Value, Converter={StaticResource WDSliderToTextBoxValueConverter}, Mode=OneWay, ConverterParameter=50}" 
+                            <TextBox Text="{Binding ElementName=WD1LockTimeSlider, Path=Value, Converter={StaticResource ScalingConverter}, Mode=OneWay, ConverterParameter=50}" 
                                      Focusable="False" IsReadOnly="True"
                                      IsEnabled="{Binding IsConfigEnable}"/>
                         </StackPanel>
@@ -563,10 +563,10 @@
                         </StackPanel>
 
                         <StackPanel Grid.Column="2" Grid.Row="2" VerticalAlignment="Center">
-                            <TextBox Text="{Binding ElementName=WD2ResponseTimeSlider, Path=Value, Converter={StaticResource WDSliderToTextBoxValueConverter}, Mode=OneWay, ConverterParameter=1}"
+                            <TextBox Text="{Binding ElementName=WD2ResponseTimeSlider, Path=Value, Converter={StaticResource ScalingConverter}, Mode=OneWay, ConverterParameter=1}"
                                      Focusable="False" IsReadOnly="True"
                                      IsEnabled="{Binding IsConfigEnable}"/>
-                            <TextBox Text="{Binding ElementName=WD2LockTimeSlider, Path=Value, Converter={StaticResource WDSliderToTextBoxValueConverter}, Mode=OneWay, ConverterParameter=1}"
+                            <TextBox Text="{Binding ElementName=WD2LockTimeSlider, Path=Value, Converter={StaticResource ScalingConverter}, Mode=OneWay, ConverterParameter=1}"
                                      Focusable="False" IsReadOnly="True"
                                      IsEnabled="{Binding IsConfigEnable}"/>
                         </StackPanel>

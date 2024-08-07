@@ -44,6 +44,9 @@ namespace AB15_GUI.WPF.ViewModels
             this.serialWrapper = serialWrapper;
             logger.Trace("In WatchdogViewModel");
 
+            // Init help messages for UI
+            InitHelpMessages();
+
             // Configure state machine
             _stateMachine = new StateMachine<State, Triggers>(State.InitialState);
 
@@ -179,6 +182,81 @@ namespace AB15_GUI.WPF.ViewModels
 
         #region Bindable_Properties
 
+        private void InitHelpMessages()
+        {
+            // TODO: fill in
+            // Bindable properties help messages
+            AddHelpMsg(nameof(IsEN0Enabled), "Indicates if EN0 pin is enabled");
+            AddHelpMsg(nameof(WD1ResponseTime), $"WD1 response time.{Environment.NewLine}Correct WD acknowledge timing window is{Environment.NewLine}LockTime < AckPeriod < LockTime+ResponseTime");
+            AddHelpMsg(nameof(WD1LockTime), "WD1 lock time. Acknowledge transactions during this time are erroneous.");
+            AddHelpMsg(nameof(WD2ResponseTime), $"WD2 response time.{Environment.NewLine}Correct WD acknowledge timing window is{Environment.NewLine}LockTime < AckPeriod < LockTime+ResponseTime");
+            AddHelpMsg(nameof(WD2LockTime), "WD2 lock time. Acknowledge transactions during this time are erroneous.");
+            AddHelpMsg(nameof(WD1EN0DisableThreshold), "EN0 disable threshold for WD1");
+            AddHelpMsg(nameof(WD2EN0DisableThreshold), "EN0 disable threshold for WD2");
+            AddHelpMsg(nameof(WDFaultStatus), "Top level WD fault flag. OR of individual WD fault flags");
+            AddHelpMsg(nameof(WD1FaultStatus), "WD1 fault status");
+            AddHelpMsg(nameof(WD2FaultStatus), "WD2 fault status");
+            AddHelpMsg(nameof(ErrorPinFaultStatus), "Fault status on error pin");
+            AddHelpMsg(nameof(WD1TimerFaultStatus), "WD1 acknowledge timing fault flag");
+            AddHelpMsg(nameof(WD2TimerFaultStatus), "WD2 acknowledge timing fault flag");
+            AddHelpMsg(nameof(OSCMONFaultStatus), "OSCMON fault flag (clock deviation is out of acceptable range)");
+            AddHelpMsg(nameof(WD1QAFaultStatus), "WD1 incorrect answer");
+            AddHelpMsg(nameof(WD2QAFaultStatus), "WD2 incorrect answer");
+            AddHelpMsg(nameof(OscillatorFaultStatus), "");
+            AddHelpMsg(nameof(WDResetFaultStatus), "");
+            AddHelpMsg(nameof(WD1CounterFaultStatus), "");
+            AddHelpMsg(nameof(QA1FaultStatus), "");
+            AddHelpMsg(nameof(WD2CounterFaultStatus), "");
+            AddHelpMsg(nameof(QA2FaultStatus), "");
+            AddHelpMsg(nameof(EN0HightStatus), "");
+            AddHelpMsg(nameof(WD1FaultCounter), "");
+            // AddHelpMsg(nameof(WD1TimeingMonitorCounter), "");
+            // AddHelpMsg(nameof(WD1ErrorEventsCounter), "");
+            // AddHelpMsg(nameof(WD1QAFailureCounter), "");
+            // AddHelpMsg(nameof(WD2FaultCounter), "");
+            // AddHelpMsg(nameof(WD2TimingMonitorCounter), "");
+            // AddHelpMsg(nameof(WD2QAFailureCounter), "");
+
+            // UI elements help messages
+        }
+
+        // TODO: not added
+        // WD1FaultCounter
+        // WD1TimeingMonitorCounter
+        // WD1ErrorEventsCounter
+        // WD1QAFailureCounter
+        // WD2FaultCounter
+        // WD2TimingMonitorCounter
+        // WD2QAFailureCounter
+
+        /// <summary>
+        /// WD1 fault counter
+        /// </summary>
+        private int wd1FaultCounter;
+        public int WD1FaultCounter
+        {
+            get => wd1FaultCounter;
+            set
+            {
+                wd1FaultCounter = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// WD2 fault counter
+        /// </summary>
+        private int wd2FaultCounter;
+        public int WD2FaultCounter
+        {
+            get => wd2FaultCounter;
+            set
+            {
+                wd2FaultCounter = value;
+                OnPropertyChanged();
+            }
+        }
+
         /// <summary>
         /// Enable EN0 thresholds configuration
         /// </summary>
@@ -306,7 +384,7 @@ namespace AB15_GUI.WPF.ViewModels
         }
 
         /// <summary>
-        /// toggle enable for configuration fields 
+        /// Enable for configuration fields 
         /// </summary>
         private bool isConfigEnable;
         public bool IsConfigEnable
@@ -755,6 +833,9 @@ namespace AB15_GUI.WPF.ViewModels
                 return;
             }
 
+            // Clear errors 
+            ClearErrors(nameof(ReadConfigFromASIC));
+
             // Fire trigger for state machine
             _stateMachine.Fire(Triggers.GotConfiguration);
 
@@ -779,7 +860,6 @@ namespace AB15_GUI.WPF.ViewModels
 
             WD1LockTime = 0;
             WD2LockTime = 10; // Underflow limit
-
         }
 
         private void WriteConfigDelagate(IReceiveCommunicationPackage response)
@@ -801,6 +881,9 @@ namespace AB15_GUI.WPF.ViewModels
                 AddError(mcuResponse.Payload.Error, nameof(WriteConfigToASIC));
                 logger.Error($"Error response received. Status: {mcuResponse.Status}");
             }
+
+            // Clear errors 
+            ClearErrors(nameof(WriteConfigToASIC));
 
             _stateMachine.Fire(Triggers.ConfigurationLoaded);
         }
@@ -825,6 +908,9 @@ namespace AB15_GUI.WPF.ViewModels
                 logger.Error($"Error response received. Status: {mcuResponse.Status}");
             }
 
+            // Clear errors 
+            ClearErrors(nameof(StartWatchdog));
+
             _stateMachine.Fire(Triggers.StartedWD);
         }
 
@@ -847,6 +933,9 @@ namespace AB15_GUI.WPF.ViewModels
                 AddError(mcuResponse.Payload.Error, nameof(StopWatchdog));
                 logger.Error($"Error response received. Status: {mcuResponse.Status}");
             }
+
+            // Clear errors 
+            ClearErrors(nameof(StopWatchdog));
 
             _stateMachine.Fire(Triggers.StoppedWD);
         }
@@ -871,6 +960,9 @@ namespace AB15_GUI.WPF.ViewModels
                 logger.Error($"Error response received. Status: {mcuResponse.Status}");
                 return;
             }
+
+            // Clear errors 
+            ClearErrors(nameof(StartWatchdog));
 
             // Update statuses
             // TODO: add implementation for AB15
