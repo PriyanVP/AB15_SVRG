@@ -374,7 +374,7 @@
                                        Text="QA1 failure counter value"/>
 
                             <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding WD1FaultCounter}"/>
-                            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding WD1TimeingMonitorCounter}"/>
+                            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding WD1TimingMonitorCounter}"/>
                             <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding WD1ErrorEventsCounter}"/>
                             <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding WD1QAFailureCounter}"/>
                         </Grid>

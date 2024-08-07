@@ -202,32 +202,23 @@ namespace AB15_GUI.WPF.ViewModels
             AddHelpMsg(nameof(OSCMONFaultStatus), "OSCMON fault flag (clock deviation is out of acceptable range)");
             AddHelpMsg(nameof(WD1QAFaultStatus), "WD1 incorrect answer");
             AddHelpMsg(nameof(WD2QAFaultStatus), "WD2 incorrect answer");
-            AddHelpMsg(nameof(OscillatorFaultStatus), "");
-            AddHelpMsg(nameof(WDResetFaultStatus), "");
-            AddHelpMsg(nameof(WD1CounterFaultStatus), "");
-            AddHelpMsg(nameof(QA1FaultStatus), "");
-            AddHelpMsg(nameof(WD2CounterFaultStatus), "");
-            AddHelpMsg(nameof(QA2FaultStatus), "");
-            AddHelpMsg(nameof(EN0HightStatus), "");
-            AddHelpMsg(nameof(WD1FaultCounter), "");
-            // AddHelpMsg(nameof(WD1TimeingMonitorCounter), "");
-            // AddHelpMsg(nameof(WD1ErrorEventsCounter), "");
-            // AddHelpMsg(nameof(WD1QAFailureCounter), "");
-            // AddHelpMsg(nameof(WD2FaultCounter), "");
-            // AddHelpMsg(nameof(WD2TimingMonitorCounter), "");
-            // AddHelpMsg(nameof(WD2QAFailureCounter), "");
+            AddHelpMsg(nameof(OscillatorFaultStatus), "Oscillator fault caused previous reset");
+            AddHelpMsg(nameof(WDResetFaultStatus), "Watchdog caused previous reset");
+            AddHelpMsg(nameof(WD1CounterFaultStatus), "WD1 counter threshold reached");
+            AddHelpMsg(nameof(QA1FaultStatus), "WD1 QA fault threshold reached (wrong answer)");
+            AddHelpMsg(nameof(WD2CounterFaultStatus), "WD2 counter threshold reached");
+            AddHelpMsg(nameof(QA2FaultStatus), "WD2 QA fault threshold reached (wrong answer)");
+            AddHelpMsg(nameof(EN0HightStatus), "EN0 pin state");
+            AddHelpMsg(nameof(WD1FaultCounter), "WD1 fault counter");
+            AddHelpMsg(nameof(WD1TimingMonitorCounter), "WD1 timing monitor results");
+            AddHelpMsg(nameof(WD1ErrorEventsCounter), "Number of counted error events");
+            AddHelpMsg(nameof(WD1QAFailureCounter), "WD1 QA failure counter value");
+            AddHelpMsg(nameof(WD2FaultCounter), "WD2 fault counter");
+            AddHelpMsg(nameof(WD2TimingMonitorCounter), "WD2 timing monitor results");
+            AddHelpMsg(nameof(WD2QAFailureCounter), "WD2 QA failure counter value");
 
             // UI elements help messages
         }
-
-        // TODO: not added
-        // WD1FaultCounter
-        // WD1TimeingMonitorCounter
-        // WD1ErrorEventsCounter
-        // WD1QAFailureCounter
-        // WD2FaultCounter
-        // WD2TimingMonitorCounter
-        // WD2QAFailureCounter
 
         /// <summary>
         /// WD1 fault counter
@@ -244,6 +235,48 @@ namespace AB15_GUI.WPF.ViewModels
         }
 
         /// <summary>
+        /// WD1 timing monitor results
+        /// </summary>
+        private int wd1TimingMonitorCounter;
+        public int WD1TimingMonitorCounter
+        {
+            get => wd1TimingMonitorCounter;
+            set
+            {
+                wd1TimingMonitorCounter = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Number of error evants
+        /// </summary>
+        private int wd1ErrorEventsCounter;
+        public int WD1ErrorEventsCounter
+        {
+            get => wd1ErrorEventsCounter;
+            set
+            {
+                wd1ErrorEventsCounter = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// WD1 QA failure counter
+        /// </summary>
+        private int wd1QAFailureCounter;
+        public int WD1QAFailureCounter
+        {
+            get => wd1QAFailureCounter;
+            set
+            {
+                wd1QAFailureCounter = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
         /// WD2 fault counter
         /// </summary>
         private int wd2FaultCounter;
@@ -253,6 +286,34 @@ namespace AB15_GUI.WPF.ViewModels
             set
             {
                 wd2FaultCounter = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// WD2 timing monitor results
+        /// </summary>
+        private int wd2TimingMonitorCounter;
+        public int WD2TimingMonitorCounter
+        {
+            get => wd2TimingMonitorCounter;
+            set
+            {
+                wd2TimingMonitorCounter = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// WD2 QA failure counter
+        /// </summary>
+        private int wd2QAFailureCounter;
+        public int WD2QAFailureCounter
+        {
+            get => wd2QAFailureCounter;
+            set
+            {
+                wd2QAFailureCounter = value;
                 OnPropertyChanged();
             }
         }
