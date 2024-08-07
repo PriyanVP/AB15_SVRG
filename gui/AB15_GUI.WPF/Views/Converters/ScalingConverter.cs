@@ -8,20 +8,22 @@ using System.Windows.Media;
 namespace AB15_GUI.WPF.Views.Converters
 {
     /// <summary>
-    /// Convert status of connection to color
+    /// Scale input value converter
     /// </summary>
-    public class WDSliderToTextBoxValueConverter : IValueConverter
-    {
+    public class ScalingConverter : IValueConverter
+    {       
         /// <summary>
-        /// Based on input values convert status to color.
-        /// Multivalue converter is used to also update colors in case theme changed (resources will change underneath)
+        /// Multiply input value by scale factor
         /// </summary>
+        /// <param name="value">input value</param>
+        /// <param name="parameter">scale factor</param>
+        /// <returns>Scaled input value</returns>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
 
-            if (value is double sliderValue)
+            if (value is double inputValue)
             {
-                return (sliderValue * double.Parse(parameter.ToString())).ToString();
+                return (inputValue * double.Parse(parameter.ToString())).ToString();
             }
             return "0";
         }
