@@ -219,104 +219,6 @@ namespace AB15_GUI.WPF.ViewModels
         }
 
         /// <summary>
-        /// WD1 fault counter
-        /// </summary>
-        private int wd1FaultCounter;
-        public int WD1FaultCounter
-        {
-            get => wd1FaultCounter;
-            set
-            {
-                wd1FaultCounter = value;
-                OnPropertyChanged();
-            }
-        }
-
-        /// <summary>
-        /// WD1 timing monitor results
-        /// </summary>
-        private int wd1TimingMonitorCounter;
-        public int WD1TimingMonitorCounter
-        {
-            get => wd1TimingMonitorCounter;
-            set
-            {
-                wd1TimingMonitorCounter = value;
-                OnPropertyChanged();
-            }
-        }
-
-        /// <summary>
-        /// Number of error evants
-        /// </summary>
-        private int wd1ErrorEventsCounter;
-        public int WD1ErrorEventsCounter
-        {
-            get => wd1ErrorEventsCounter;
-            set
-            {
-                wd1ErrorEventsCounter = value;
-                OnPropertyChanged();
-            }
-        }
-
-        /// <summary>
-        /// WD1 QA failure counter
-        /// </summary>
-        private int wd1QAFailureCounter;
-        public int WD1QAFailureCounter
-        {
-            get => wd1QAFailureCounter;
-            set
-            {
-                wd1QAFailureCounter = value;
-                OnPropertyChanged();
-            }
-        }
-
-        /// <summary>
-        /// WD2 fault counter
-        /// </summary>
-        private int wd2FaultCounter;
-        public int WD2FaultCounter
-        {
-            get => wd2FaultCounter;
-            set
-            {
-                wd2FaultCounter = value;
-                OnPropertyChanged();
-            }
-        }
-
-        /// <summary>
-        /// WD2 timing monitor results
-        /// </summary>
-        private int wd2TimingMonitorCounter;
-        public int WD2TimingMonitorCounter
-        {
-            get => wd2TimingMonitorCounter;
-            set
-            {
-                wd2TimingMonitorCounter = value;
-                OnPropertyChanged();
-            }
-        }
-
-        /// <summary>
-        /// WD2 QA failure counter
-        /// </summary>
-        private int wd2QAFailureCounter;
-        public int WD2QAFailureCounter
-        {
-            get => wd2QAFailureCounter;
-            set
-            {
-                wd2QAFailureCounter = value;
-                OnPropertyChanged();
-            }
-        }
-
-        /// <summary>
         /// Enable EN0 thresholds configuration
         /// </summary>
         private bool isEN0Enabled;
@@ -680,6 +582,104 @@ namespace AB15_GUI.WPF.ViewModels
             }
         }
 
+        /// <summary>
+        /// WD1 fault counter
+        /// </summary>
+        private int wd1FaultCounter;
+        public int WD1FaultCounter
+        {
+            get => wd1FaultCounter;
+            set
+            {
+                wd1FaultCounter = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// WD1 timing monitor results
+        /// </summary>
+        private int wd1TimingMonitorCounter;
+        public int WD1TimingMonitorCounter
+        {
+            get => wd1TimingMonitorCounter;
+            set
+            {
+                wd1TimingMonitorCounter = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Number of error evants
+        /// </summary>
+        private int wd1ErrorEventsCounter;
+        public int WD1ErrorEventsCounter
+        {
+            get => wd1ErrorEventsCounter;
+            set
+            {
+                wd1ErrorEventsCounter = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// WD1 QA failure counter
+        /// </summary>
+        private int wd1QAFailureCounter;
+        public int WD1QAFailureCounter
+        {
+            get => wd1QAFailureCounter;
+            set
+            {
+                wd1QAFailureCounter = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// WD2 fault counter
+        /// </summary>
+        private int wd2FaultCounter;
+        public int WD2FaultCounter
+        {
+            get => wd2FaultCounter;
+            set
+            {
+                wd2FaultCounter = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// WD2 timing monitor results
+        /// </summary>
+        private int wd2TimingMonitorCounter;
+        public int WD2TimingMonitorCounter
+        {
+            get => wd2TimingMonitorCounter;
+            set
+            {
+                wd2TimingMonitorCounter = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// WD2 QA failure counter
+        /// </summary>
+        private int wd2QAFailureCounter;
+        public int WD2QAFailureCounter
+        {
+            get => wd2QAFailureCounter;
+            set
+            {
+                wd2QAFailureCounter = value;
+                OnPropertyChanged();
+            }
+        }
+
         #endregion // Bindable_Properties
 
         #region Internal_configuration
@@ -689,6 +689,7 @@ namespace AB15_GUI.WPF.ViewModels
         private Reg_spi_config_wd_decouple _spi_config_wd_decouple = new Reg_spi_config_wd_decouple();
         private Reg_spi_config_wd_thres0 _spi_config_wd_thres0 = new Reg_spi_config_wd_thres0();
         private Reg_spi_set_wdsettings _spi_set_wdsettings = new Reg_spi_set_wdsettings();
+        private Reg_spi_read_res_cause _spi_read_res_cause = new Reg_spi_read_res_cause();
 
         #endregion // Internal_configuration
         
@@ -744,7 +745,6 @@ namespace AB15_GUI.WPF.ViewModels
         /// </summary>
         private void ReadConfigFromASICExecute(object obj)
         {
-            // TODO: uncomment for AB15
             TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
             packageToSend.ASICID = 1;
             // packageToSend.Cmd = MCUCommand. // TODO: add
@@ -754,13 +754,23 @@ namespace AB15_GUI.WPF.ViewModels
             packageToSend.Payload.Address.Add(_spi_config_wd_decouple.Address);
             packageToSend.Payload.Address.Add(_spi_config_wd_thres0.Address);
             packageToSend.Payload.Address.Add(_spi_set_wdsettings.Address);
+            packageToSend.Payload.Address.Add(_spi_read_res_cause.Address);
 
-            // TODO: temporary implementation for AB12, replace by actual on AB15
+            #if AB12_PLATFORM
+
+            // Temporary implementation for AB12, replace by actual on AB15
             ReceiveCommunicationPackage<AddressDataPayload> placeholderPackage = new ReceiveCommunicationPackage<AddressDataPayload>();
             placeholderPackage.ASICID = 1;
             placeholderPackage.Status = MCUStatus.DATA;
-            placeholderPackage.Payload.Data.AddRange(new List<UInt16>() { 0, 0, 0, 0, 0 });
+            placeholderPackage.Payload.Data.AddRange(new List<UInt16>() { 0, 0, 0, 0, 0, 0 });
             ReadConfigDelegate(placeholderPackage);
+
+            #else
+
+            // Send command to MCU
+            serialWrapper.SerialWrite(packageToSend);
+
+            #endif
         }
 
         /// <summary>
@@ -900,6 +910,7 @@ namespace AB15_GUI.WPF.ViewModels
             _spi_config_wd_decouple.Data = mcuResponse.Payload.Data[2];
             _spi_config_wd_thres0.Data   = mcuResponse.Payload.Data[3];
             _spi_set_wdsettings.Data     = mcuResponse.Payload.Data[4];
+            _spi_read_res_cause.Data     = mcuResponse.Payload.Data[5];
 
             // Unpacking of data for AB15
             WD1ResponseTime = (int) _spi_config_wd1.spi_set_responsetime_wd1.Data;
@@ -908,8 +919,16 @@ namespace AB15_GUI.WPF.ViewModels
             WD1LockTime = (int)_spi_config_wd1.spi_set_locktime_wd1.Data;
             WD2LockTime = (int)_spi_config_wd2.spi_set_locktime_wd2.Data;
 
+            // Warning: Clear on read ASIC registers
+            OscillatorFaultStatus = (_spi_read_res_cause.rc_oscfail_set_slff_spi.Data != 0) ? (FaultStatus.Fault) : (FaultStatus.Good);
+            WDResetFaultStatus = (_spi_read_res_cause.rc_sl_req_reset_spi.Data != 0) ? (FaultStatus.Fault) : (FaultStatus.Good);
+            WD1CounterFaultStatus = (_spi_read_res_cause.rc_wd1_set_slff_spi.Data != 0) ? (FaultStatus.Fault) : (FaultStatus.Good);
+            WD2CounterFaultStatus = (_spi_read_res_cause.rc_wd2_set_slff_spi.Data != 0) ? (FaultStatus.Fault) : (FaultStatus.Good);
+            QA1FaultStatus = (_spi_read_res_cause.rc_qa1_set_slff_spi.Data != 0) ? (FaultStatus.Fault) : (FaultStatus.Good);
+            QA2FaultStatus = (_spi_read_res_cause.rc_qa2_set_slff_spi.Data != 0) ? (FaultStatus.Fault) : (FaultStatus.Good);
+
             #if AB12_PLATFORM
-            // AB12 code, TODO: remove when AB15 available
+            // AB12 code
             // Values share same step as AB15 scale
             WD1ResponseTime = 63; 
             WD2ResponseTime = 16;
@@ -1009,7 +1028,6 @@ namespace AB15_GUI.WPF.ViewModels
             #if AB12_PLATFORM
 
             // Update statuses
-            // TODO: add implementation for AB15
             // Implementation for AB12
             WDFaultStatus = (mcuResponse.Payload.WatchdogStatus.WatchdogFault) ? (FaultStatus.Fault) : (FaultStatus.Good);
 
@@ -1023,6 +1041,31 @@ namespace AB15_GUI.WPF.ViewModels
 
             #else
 
+            // Implementation for AB15
+            WDFaultStatus = (mcuResponse.Payload.spi_read_wdstatus2.slff_set_spi.Data != 0) ? (FaultStatus.Fault) : (FaultStatus.Good);
+
+            WD1FaultStatus = (mcuResponse.Payload.spi_read_wdstatus1.wd1_set_slff_spi.Data != 0) ? (FaultStatus.Fault) : (FaultStatus.Good);
+            WD2FaultStatus = (mcuResponse.Payload.spi_read_wdstatus2.wd2_set_slff_spi.Data != 0) ? (FaultStatus.Fault) : (FaultStatus.Good);
+
+            OSCMONFaultStatus = (mcuResponse.Payload.spi_read_wdstatus2.oscfail_set_slff_spi.Data != 0) ? (FaultStatus.Fault) : (FaultStatus.Good);
+            // ErrorPinFaultStatus = (mcuResponse.Payload != 0) ? (FaultStatus.Fault) : (FaultStatus.Good); // TODO: no field in regmap
+
+            // WD1TimerFaultStatus = (mcuResponse.Payload != 0) ? (FaultStatus.Fault) : (FaultStatus.Good); // TODO: no field in regmap
+            // WD2TimerFaultStatus = (mcuResponse.Payload != 0) ? (FaultStatus.Fault) : (FaultStatus.Good); // TODO: no field in regmap
+
+            WD1QAFaultStatus = (mcuResponse.Payload.spi_read_wdqa.qa1_set_slff_spi.Data != 0) ? (FaultStatus.Fault) : (FaultStatus.Good);
+            WD2QAFaultStatus = (mcuResponse.Payload.spi_read_wdqa.qa2_set_slff_spi.Data != 0) ? (FaultStatus.Fault) : (FaultStatus.Good);
+
+            EN0HightStatus = (mcuResponse.Payload.spi_read_enx.nen0c_read_spi.Data != 0) ? (FaultStatus.Fault) : (FaultStatus.Good);
+
+            WD1FaultCounter = mcuResponse.Payload.spi_read_wdstatus1.wd1_cnt_spi.Data;
+            WD2FaultCounter = mcuResponse.Payload.spi_read_wdstatus2.wd2_cnt_spi.Data;
+
+            WD1TimingMonitorCounter = mcuResponse.Payload.spi_read_wdstatus1.wd1_tmon_spi.Data;
+            WD2TimingMonitorCounter = mcuResponse.Payload.spi_read_wdstatus2.wd2_tmon_spi.Data;
+
+            WD1ErrorEventsCounter = mcuResponse.Payload.spi_read_wdstatus1.error_count_spi.Data;
+            
             #endif
         }
 
