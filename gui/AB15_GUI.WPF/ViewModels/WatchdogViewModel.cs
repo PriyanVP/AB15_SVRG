@@ -9,7 +9,6 @@ using AB15_GUI.WPF.Models.Interfaces;
 using AB15_GUI.WPF.Models;
 using AB15_GUI.WPF.Models.Genereted.Registers;
 using AB15_GUI.WPF.Services.Interfaces;
-using System.Net;
 
 namespace AB15_GUI.WPF.ViewModels
 {
@@ -184,7 +183,6 @@ namespace AB15_GUI.WPF.ViewModels
 
         private void InitHelpMessages()
         {
-            // TODO: fill in
             // Bindable properties help messages
             AddHelpMsg(nameof(IsEN0Enabled), "Indicates if EN0 pin is enabled");
             AddHelpMsg(nameof(WD1ResponseTime), $"WD1 response time.{Environment.NewLine}Correct WD acknowledge timing window is{Environment.NewLine}LockTime < AckPeriod < LockTime+ResponseTime");
@@ -867,16 +865,12 @@ namespace AB15_GUI.WPF.ViewModels
             serialWrapper.SerialWrite(packageToSendStopMonitoringWD);
         }
 
+        /// <summary>
+        /// Method that will be called when response for read WD config command is received
+        /// </summary>
+        /// <param name="response">MCU response package</param>
         private void ReadConfigDelegate(IReceiveCommunicationPackage response)
         {
-            // Handle response absent scenario
-            if (response.Status == MCUStatus.RESPONSE_ABSENT)
-            {
-                AddError("Doesn't receive data from MCU in expected timeframe", nameof(ReadConfigFromASIC));
-                logger.Error($"Error response received. Status: {response.Status}");
-                return;
-            }
-
             // Typecast response to actual type
             ReceiveCommunicationPackage<AddressDataPayload> mcuResponse = (ReceiveCommunicationPackage<AddressDataPayload>) response;
 
@@ -914,6 +908,7 @@ namespace AB15_GUI.WPF.ViewModels
             WD1LockTime = (int)_spi_config_wd1.spi_set_locktime_wd1.Data;
             WD2LockTime = (int)_spi_config_wd2.spi_set_locktime_wd2.Data;
 
+            #if AB12_PLATFORM
             // AB12 code, TODO: remove when AB15 available
             // Values share same step as AB15 scale
             WD1ResponseTime = 63; 
@@ -921,18 +916,15 @@ namespace AB15_GUI.WPF.ViewModels
 
             WD1LockTime = 0;
             WD2LockTime = 10; // Underflow limit
+            #endif
         }
 
+        /// <summary>
+        /// Method that will be called when response for write WD config command is received
+        /// </summary>
+        /// <param name="response">MCU response package</param>
         private void WriteConfigDelagate(IReceiveCommunicationPackage response)
         {
-            // Handle response absent scenario
-            if (response.Status == MCUStatus.RESPONSE_ABSENT)
-            {
-                AddError("Doesn't receive data from MCU in expected timeframe", nameof(WriteConfigToASIC));
-                logger.Error($"Error response received. Status: {response.Status}");
-                return;
-            }
-
             // Typecast response to actual type
             ReceiveCommunicationPackage<EmptyPayload> mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>) response;
 
@@ -940,7 +932,8 @@ namespace AB15_GUI.WPF.ViewModels
             if (mcuResponse.Payload.Error is not null)
             {
                 AddError(mcuResponse.Payload.Error, nameof(WriteConfigToASIC));
-                logger.Error($"Error response received. Status: {mcuResponse.Status}");
+                logger.Error($"Error response received. Status: {mcuResponse.Status}. Message: {mcuResponse.Payload.Error}");
+                return;
             }
 
             // Clear errors 
@@ -949,16 +942,12 @@ namespace AB15_GUI.WPF.ViewModels
             _stateMachine.Fire(Triggers.ConfigurationLoaded);
         }
 
+        /// <summary>
+        /// Method that will be called when response for start WD command is received
+        /// </summary>
+        /// <param name="response">MCU response package</param>
         private void StartWatchdogDelegate(IReceiveCommunicationPackage response)
         {
-            // Handle response absent scenario
-            if (response.Status == MCUStatus.RESPONSE_ABSENT)
-            {
-                AddError("Doesn't receive data from MCU in expected timeframe", nameof(StartWatchdog));
-                logger.Error($"Error response received. Status: {response.Status}");
-                return;
-            }
-
             // Typecast response to actual type
             ReceiveCommunicationPackage<EmptyPayload> mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>) response;
 
@@ -975,16 +964,12 @@ namespace AB15_GUI.WPF.ViewModels
             _stateMachine.Fire(Triggers.StartedWD);
         }
 
+        /// <summary>
+        /// Method that will be called when response for stop WD command is received
+        /// </summary>
+        /// <param name="response">MCU response package</param>
         private void StopWatchdogDelegate(IReceiveCommunicationPackage response)
         {
-            // Handle response absent scenario
-            if (response.Status == MCUStatus.RESPONSE_ABSENT)
-            {
-                AddError("Doesn't receive data from MCU in expected timeframe", nameof(StopWatchdog));
-                logger.Error($"Error response received. Status: {response.Status}");
-                return;
-            }
-
             // Typecast response to actual type
             ReceiveCommunicationPackage<EmptyPayload> mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>) response;
 
@@ -1001,16 +986,12 @@ namespace AB15_GUI.WPF.ViewModels
             _stateMachine.Fire(Triggers.StoppedWD);
         }
 
+        /// <summary>
+        /// Method that will be called when WD status data will be received from MCU
+        /// </summary>
+        /// <param name="response">MCU response package</param>
         private void StatusMonitoringDelagate(IReceiveCommunicationPackage response)
         {
-            // Handle response absent scenario
-            if (response.Status == MCUStatus.RESPONSE_ABSENT)
-            {
-                AddError("Doesn't receive data from MCU in expected timeframe", nameof(StartWatchdog));
-                logger.Error($"Error response received. Status: {response.Status}");
-                return;
-            }
-
             // Typecast response to actual type
             ReceiveCommunicationPackage<WDStatusPayload> mcuResponse = (ReceiveCommunicationPackage<WDStatusPayload>) response;
 
@@ -1025,6 +1006,8 @@ namespace AB15_GUI.WPF.ViewModels
             // Clear errors 
             ClearErrors(nameof(StartWatchdog));
 
+            #if AB12_PLATFORM
+
             // Update statuses
             // TODO: add implementation for AB15
             // Implementation for AB12
@@ -1037,6 +1020,10 @@ namespace AB15_GUI.WPF.ViewModels
 
             WD1QAFaultStatus = (mcuResponse.Payload.WatchdogStatus.SlowWatchdogQAFault) ? (FaultStatus.Fault) : (FaultStatus.Good);
             WD2QAFaultStatus = (mcuResponse.Payload.WatchdogStatus.FastWatchdogQAFault) ? (FaultStatus.Fault) : (FaultStatus.Good);
+
+            #else
+
+            #endif
         }
 
         #endregion // Commands

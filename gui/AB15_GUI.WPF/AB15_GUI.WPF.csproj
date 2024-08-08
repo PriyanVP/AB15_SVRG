@@ -8,6 +8,14 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>$(DefineConstants);AB12_PLATFORM</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>$(DefineConstants);AB12_PLATFORM</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Remove="Views\Resources\airbag_dark.png" />
     <None Remove="Views\Resources\airbag_light.png" />
