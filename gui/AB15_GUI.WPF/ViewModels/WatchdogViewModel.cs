@@ -191,7 +191,7 @@ namespace AB15_GUI.WPF.ViewModels
             AddHelpMsg(nameof(WD2LockTime), "WD2 lock time. Acknowledge transactions during this time are erroneous.");
             AddHelpMsg(nameof(WD1EN0DisableThreshold), "EN0 disable threshold for WD1");
             AddHelpMsg(nameof(WD2EN0DisableThreshold), "EN0 disable threshold for WD2");
-            AddHelpMsg(nameof(WDFaultStatus), "Top level WD fault flag. OR of individual WD fault flags");
+            AddHelpMsg(nameof(WDFaultStatus), "Top level WD fault flag OR of individual WD fault flags");
             AddHelpMsg(nameof(WD1FaultStatus), "WD1 fault status");
             AddHelpMsg(nameof(WD2FaultStatus), "WD2 fault status");
             AddHelpMsg(nameof(ErrorPinFaultStatus), "Fault status on error pin");
