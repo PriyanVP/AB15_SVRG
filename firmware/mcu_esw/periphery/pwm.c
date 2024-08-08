@@ -34,22 +34,19 @@
 /*********************************************************************************************************************/
 /*------------------------------------------------------Macros-------------------------------------------------------*/
 /*********************************************************************************************************************/
-#define CCU6_BASE_FREQUENCY	    100000000                                   /* CCU6 base frequency, in Hertz        */
-#define PWM_FREQUENCY             4000000                                   /* PWM signal frequency, in Hertz       */
-#define PWM_PERIOD              (CCU6_BASE_FREQUENCY / PWM_FREQUENCY)       /* PWM signal period, in ticks          */
+#define CCU6_BASE_FREQUENCY	    100000000                                    /* CCU6 base frequency, in Hertz        */
+#define PWM_FREQUENCY_4MHZ        4000000                                    /* PWM signal frequency, in Hertz       */
+#define PWM_FREQUENCY_2MHZ        2000000                                    /* PWM signal frequency, in Hertz       */
+
 
 #define NUMBER_OF_CHANNELS      3
 
+//#define PWM_PERIOD              (CCU6_BASE_FREQUENCY / PWM_FREQUENCY)       /* PWM signal period, in ticks          */
 //#define DUTY_CYCLE     50                                          /* PWM Signal 1 Duty cycle, in percent  */
-//#define CHANNEL2_DUTY_CYCLE     50                                          /* PWM Signal 2 Duty cycle, in percent  */
-//#define CHANNEL3_DUTY_CYCLE     50                                          /* PWM Signal 3 Duty cycle, in percent  */
-
-//#define CHANNEL1_COMPARE_VALUE  ((PWM_PERIOD / 100) * (100 - CHANNEL1_DUTY_CYCLE))
-//#define CHANNEL2_COMPARE_VALUE  ((PWM_PERIOD / 100) * (100 - CHANNEL2_DUTY_CYCLE))
-//#define CHANNEL3_COMPARE_VALUE  ((PWM_PERIOD / 100) * (100 - CHANNEL3_DUTY_CYCLE))
-
 //#define COMPARE_VALUE   ((PWM_PERIOD / 100) * (100 - DUTY_CYCLE))
-#define COMPARE_VALUE   12
+
+#define COMPARE_VALUE_4MHZ   12
+#define COMPARE_VALUE_2MHZ   25
 
 /*********************************************************************************************************************/
 /*-------------------------------------------------Global variables--------------------------------------------------*/
@@ -60,73 +57,18 @@ IfxCcu6_PwmHl g_driver;
 /*********************************************************************************************************************/
 /*---------------------------------------------Function Implementations----------------------------------------------*/
 /*********************************************************************************************************************/
-/* Function to initialize the CCU6 module to generate PWM signals */
+
 void initCCU6(void)
 {
-    boolean interruptState = IfxCpu_disableInterrupts();            /* Disable global interrupts                    */
-
-    /* Timer configuration: timer used as counter */
-    IfxCcu6_TimerWithTrigger_Config timerConf;
-    IfxCcu6_TimerWithTrigger_initConfig(&timerConf, &MODULE_CCU60); /* Initialize the timer configuration with
-                                                                     * default values                               */
-    /* User timer configuration */
-    timerConf.base.frequency = PWM_FREQUENCY;                       /* Set the desired frequency for the PWM signal */
-    //timerConf.base.countDir = IfxStdIf_Timer_CountDir_upAndDown;    /* Configure the timer to count up and down, in
-    timerConf.base.countDir = IfxStdIf_Timer_CountDir_down;          /* Configure the timer to count down   */
-    /* Initialize the timer driver */
-    IfxCcu6_TimerWithTrigger_init(&g_timer, &timerConf);
-
-    /* PWM High/Low driver configuration */
-    IfxCcu6_PwmHl_Config pwmHlConf;
-    IfxCcu6_PwmHl_initConfig(&pwmHlConf);                           /* Initialize the PwmHl configuration with
-                                                                     * default values                               */
-    /* User PWM High/Low driver configuration */
-    pwmHlConf.timer = &g_timer;                                     /* Use the already configured timer             */
-    pwmHlConf.base.channelCount = NUMBER_OF_CHANNELS;               /* Configure the driver to use use all three
-                                                                     * compare modules available in T12             */
-
-
-    /* Assign output pins: generation of (complementary) signals */
-    /* Low-side and high-side switches */
-    //pwmHlConf.cc0 = &IfxCcu60_CC60_P02_0_OUT;
-    //pwmHlConf.cc1 = &IfxCcu60_CC61_P02_7_OUT;
-    //pwmHlConf.cc2 = &IfxCcu60_CC62_P02_4_OUT;
-    //pwmHlConf.cout0 = &IfxCcu60_COUT60_P02_1_OUT;
-    //pwmHlConf.cout1 = &IfxCcu60_COUT61_P02_3_OUT;
-    pwmHlConf.cout2 = &IfxCcu60_COUT62_P02_5_OUT;
-
-    //pwmHlConf.cc0 = &IfxCcu60_CC61_P02_7_OUT;
-    //pwmHlConf.cout0 = &IfxCcu60_COUT62_P02_5_OUT;
-
-    /* Initialize the PwmHl driver */
-    IfxCcu6_PwmHl_init(&g_driver, &pwmHlConf);
-
-    /* Instruct the driver to generate center aligned PWM signals */
-    //IfxCcu6_PwmHl_setMode(&g_driver, Ifx_Pwm_Mode_centerAligned);
-    IfxCcu6_PwmHl_setMode(&g_driver, Ifx_Pwm_Mode_leftAligned);
-
-    /* Set the duty cycles for the three channels */
-    Ifx_TimerValue cmpValues[NUMBER_OF_CHANNELS];
-    cmpValues[0] = COMPARE_VALUE;                          /* Set the compare value for channel 1          */
-    cmpValues[1] = COMPARE_VALUE;                          /* Set the compare value for channel 2          */
-    cmpValues[2] = COMPARE_VALUE;                          /* Set the compare value for channel 3          */
-
-    g_driver.update(&g_driver, cmpValues);                 /* Apply the compare values                     */
-
-    /* Update the timer.
-     * This instruction enables the shadow transfer of the compare values, copying the compare values to the
-     * compare registers */
-    IfxCcu6_TimerWithTrigger_applyUpdate(g_driver.timer);
-
-    /* Restore interrupts to their initial state */
-    IfxCpu_restoreInterrupts(interruptState);
+    SetPWMGeneration2MHZ();
 }
 
-/* Function that starts the timer and thus the generation of the PWM signals */
+
 void StartPWMGeneration(void)
 {
     IfxCcu6_TimerWithTrigger_run(&g_timer);
 }
+
 void SetPWMGeneration2MHZ(void)
 {
     boolean interruptState = IfxCpu_disableInterrupts();            /* Disable global interrupts                    */
@@ -136,8 +78,7 @@ void SetPWMGeneration2MHZ(void)
         IfxCcu6_TimerWithTrigger_initConfig(&timerConf, &MODULE_CCU60); /* Initialize the timer configuration with
                                                                          * default values                               */
         /* User timer configuration */
-        timerConf.base.frequency = 2000000;                       /* Set the desired frequency for the PWM signal */
-        //timerConf.base.countDir = IfxStdIf_Timer_CountDir_upAndDown;    /* Configure the timer to count up and down, in
+        timerConf.base.frequency = PWM_FREQUENCY_2MHZ;                       /* Set the desired frequency for the PWM signal */
         timerConf.base.countDir = IfxStdIf_Timer_CountDir_down;          /* Configure the timer to count down   */
         /* Initialize the timer driver */
         IfxCcu6_TimerWithTrigger_init(&g_timer, &timerConf);
@@ -151,31 +92,20 @@ void SetPWMGeneration2MHZ(void)
         pwmHlConf.base.channelCount = NUMBER_OF_CHANNELS;               /* Configure the driver to use use all three
                                                                          * compare modules available in T12             */
 
-
         /* Assign output pins: generation of (complementary) signals */
-        /* Low-side and high-side switches */
-        //pwmHlConf.cc0 = &IfxCcu60_CC60_P02_0_OUT;
-        //pwmHlConf.cc1 = &IfxCcu60_CC61_P02_7_OUT;
-        //pwmHlConf.cc2 = &IfxCcu60_CC62_P02_4_OUT;
-        //pwmHlConf.cout0 = &IfxCcu60_COUT60_P02_1_OUT;
-        //pwmHlConf.cout1 = &IfxCcu60_COUT61_P02_3_OUT;
         pwmHlConf.cout2 = &IfxCcu60_COUT62_P02_5_OUT;
-
-        //pwmHlConf.cc0 = &IfxCcu60_CC61_P02_7_OUT;
-        //pwmHlConf.cout0 = &IfxCcu60_COUT62_P02_5_OUT;
 
         /* Initialize the PwmHl driver */
         IfxCcu6_PwmHl_init(&g_driver, &pwmHlConf);
 
         /* Instruct the driver to generate center aligned PWM signals */
-        //IfxCcu6_PwmHl_setMode(&g_driver, Ifx_Pwm_Mode_centerAligned);
         IfxCcu6_PwmHl_setMode(&g_driver, Ifx_Pwm_Mode_leftAligned);
 
         /* Set the duty cycles for the three channels */
         Ifx_TimerValue cmpValues[NUMBER_OF_CHANNELS];
-        cmpValues[0] = 25;                          /* Set the compare value for channel 1          */
-        cmpValues[1] = 25;                          /* Set the compare value for channel 2          */
-        cmpValues[2] = 25;                          /* Set the compare value for channel 3          */
+        cmpValues[0] = COMPARE_VALUE_2MHZ;                          /* Set the compare value for channel 1          */
+        cmpValues[1] = COMPARE_VALUE_2MHZ;                          /* Set the compare value for channel 2          */
+        cmpValues[2] = COMPARE_VALUE_2MHZ;                          /* Set the compare value for channel 3          */
 
         g_driver.update(&g_driver, cmpValues);                 /* Apply the compare values                     */
 
@@ -186,14 +116,10 @@ void SetPWMGeneration2MHZ(void)
 
         /* Restore interrupts to their initial state */
         IfxCpu_restoreInterrupts(interruptState);
-
-
 }
 
 void SetPWMGeneration4MHZ(void)
 {
-    //IfxCcu6_TimerWithTrigger_setFrequency(&g_timer, 4000000);
-    //IfxCcu6_TimerWithTrigger_setPeriod(&g_timer, 12);
     boolean interruptState = IfxCpu_disableInterrupts();            /* Disable global interrupts                    */
 
         /* Timer configuration: timer used as counter */
@@ -201,7 +127,7 @@ void SetPWMGeneration4MHZ(void)
         IfxCcu6_TimerWithTrigger_initConfig(&timerConf, &MODULE_CCU60); /* Initialize the timer configuration with
                                                                          * default values                               */
         /* User timer configuration */
-        timerConf.base.frequency = 4000000;                       /* Set the desired frequency for the PWM signal */
+        timerConf.base.frequency = PWM_FREQUENCY_4MHZ;                       /* Set the desired frequency for the PWM signal */
         //timerConf.base.countDir = IfxStdIf_Timer_CountDir_upAndDown;    /* Configure the timer to count up and down, in
         timerConf.base.countDir = IfxStdIf_Timer_CountDir_down;          /* Configure the timer to count down   */
         /* Initialize the timer driver */
@@ -218,29 +144,19 @@ void SetPWMGeneration4MHZ(void)
 
 
         /* Assign output pins: generation of (complementary) signals */
-        /* Low-side and high-side switches */
-        //pwmHlConf.cc0 = &IfxCcu60_CC60_P02_0_OUT;
-        //pwmHlConf.cc1 = &IfxCcu60_CC61_P02_7_OUT;
-        //pwmHlConf.cc2 = &IfxCcu60_CC62_P02_4_OUT;
-        //pwmHlConf.cout0 = &IfxCcu60_COUT60_P02_1_OUT;
-        //pwmHlConf.cout1 = &IfxCcu60_COUT61_P02_3_OUT;
         pwmHlConf.cout2 = &IfxCcu60_COUT62_P02_5_OUT;
-
-        //pwmHlConf.cc0 = &IfxCcu60_CC61_P02_7_OUT;
-        //pwmHlConf.cout0 = &IfxCcu60_COUT62_P02_5_OUT;
 
         /* Initialize the PwmHl driver */
         IfxCcu6_PwmHl_init(&g_driver, &pwmHlConf);
 
         /* Instruct the driver to generate center aligned PWM signals */
-        //IfxCcu6_PwmHl_setMode(&g_driver, Ifx_Pwm_Mode_centerAligned);
         IfxCcu6_PwmHl_setMode(&g_driver, Ifx_Pwm_Mode_leftAligned);
 
         /* Set the duty cycles for the three channels */
         Ifx_TimerValue cmpValues[NUMBER_OF_CHANNELS];
-        cmpValues[0] = 12;                          /* Set the compare value for channel 1          */
-        cmpValues[1] = 12;                          /* Set the compare value for channel 2          */
-        cmpValues[2] = 12;                          /* Set the compare value for channel 3          */
+        cmpValues[0] = COMPARE_VALUE_4MHZ;                          /* Set the compare value for channel 1          */
+        cmpValues[1] = COMPARE_VALUE_4MHZ;                          /* Set the compare value for channel 2          */
+        cmpValues[2] = COMPARE_VALUE_4MHZ;                          /* Set the compare value for channel 3          */
 
         g_driver.update(&g_driver, cmpValues);                 /* Apply the compare values                     */
 
@@ -252,5 +168,4 @@ void SetPWMGeneration4MHZ(void)
         /* Restore interrupts to their initial state */
         IfxCpu_restoreInterrupts(interruptState);
 }
-
 

@@ -48,7 +48,7 @@ typedef enum
     WD_STATE_RUNNING_FAILING    = 3         /** \brief watchdog is being acknowledged incorrectly (intentionally) */
 } WatchdogStateEnum;
 
-/** \brief Defines applicable states for Ext clock state machine
+/** \brief Defines applicable states for Ext clock state
  */
 typedef enum
 {
@@ -141,6 +141,11 @@ static WatchdogStatusMonitoringStruct g_wdStatusMonitoringConfig =
     .wdStatusRegsAddresses = {SAFETY_LOGIC_SPI_READ_WDSTATUS1, SAFETY_LOGIC_SPI_READ_WDSTATUS2, SAFETY_LOGIC_SPI_READ_ENX},    // addresses for WD status registers are constant
     .lengthOfRegsToRead = WD_STATUS_REGS_COUNT                                                                                 // number of addresses to read
 };
+
+
+/** \brief Local static variable to store external clock state
+ */
+static ExtClockStateEnum g_extClState = EXT_CLK_STATE_2MHZ;
 
 /*********************************************************************************************************************/
 /*------------------------------------------------Function Prototypes------------------------------------------------*/
@@ -397,9 +402,13 @@ void CmdStopWatchdog(USBReceiveData const * const commandPackage)
 
 void CmdSetExtOsc2Mhz(USBReceiveData const * const commandPackage)
 {
-    // TODO check if already set to 2 MHZ
-    // if state == EXT_CLK_STATE_2MHZ return
-    //
+    // check if already set to 2 MHZ
+    if (g_extClState == EXT_CLK_STATE_2MHZ)
+    {
+        return;
+    }
+    g_extClState = EXT_CLK_STATE_2MHZ;
+
     SetPWMGeneration2MHZ();
     StartPWMGeneration();
 
@@ -415,9 +424,13 @@ void CmdSetExtOsc2Mhz(USBReceiveData const * const commandPackage)
 
 void CmdSetExtOsc4Mhz(USBReceiveData const * const commandPackage)
 {
-    // TODO check if already set to 4 MHZ
-    // if state == EXT_CLK_STATE_4MHZ return
-    //
+    // check if already set to 2 MHZ
+    if (g_extClState == EXT_CLK_STATE_4MHZ)
+    {
+        return;
+    }
+    g_extClState = EXT_CLK_STATE_4MHZ;
+
     SetPWMGeneration4MHZ();
     StartPWMGeneration();
 
