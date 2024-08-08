@@ -23,7 +23,7 @@
 
 #define WD_CFG_PACKAGE_MAX_LEN  (6)             /** \brief Max number of addr+data items (4 bytes) in package  */
 
-#define WD_STATUS_REGS_COUNT    (3)             /** \brief Number of WD status registers for periodic reading */
+#define WD_STATUS_REGS_COUNT    (4)             /** \brief Number of WD status registers for periodic reading */
 
 #define AB12_WD2_ACK_PERIOD     (12)            /** \brief Periodicity of acknowledging WD2 on AB12 platform: 600 us/ 50 us
                                                     where 50 us - timer interrupt periodicity on MCU */
@@ -126,9 +126,10 @@ static WatchdogParametersStruct g_wd2Parameters =
  */
 static WatchdogStatusMonitoringStruct g_wdStatusMonitoringConfig =
 {
-    .enStatusReading = FALSE,                                                                                                  // at startup WD is not configured
-    .wdStatusRegsAddresses = {SAFETY_LOGIC_SPI_READ_WDSTATUS1, SAFETY_LOGIC_SPI_READ_WDSTATUS2, SAFETY_LOGIC_SPI_READ_ENX},    // addresses for WD status registers are constant
-    .lengthOfRegsToRead = WD_STATUS_REGS_COUNT                                                                                 // number of addresses to read
+    .enStatusReading = FALSE,                                                                           // at startup WD is not configured
+    .wdStatusRegsAddresses = {SAFETY_LOGIC_SPI_READ_WDSTATUS1, SAFETY_LOGIC_SPI_READ_WDSTATUS2, 
+                              SAFETY_LOGIC_SPI_READ_ENX, SAFETY_LOGIC_SPI_READ_WDQA},                   // addresses for WD status registers are constant
+    .lengthOfRegsToRead = WD_STATUS_REGS_COUNT                                                          // number of addresses to read
 };
 
 /*********************************************************************************************************************/
@@ -456,8 +457,8 @@ void IntCmdMonitorWatchdog(void)
         // Store SPI response frame to temporary variable for extracting data
         dataRecived.dw = data[i];
 
-        packageToSend.data[i*2]     = GetLSB(dataRecived.bf.output_data);
-        packageToSend.data[(i*2)+1] = GetMSB(dataRecived.bf.output_data);
+        packageToSend.data[i<<1]     = GetLSB(dataRecived.bf.output_data);
+        packageToSend.data[(i<<1)+1] = GetMSB(dataRecived.bf.output_data);
     }
     #endif
 

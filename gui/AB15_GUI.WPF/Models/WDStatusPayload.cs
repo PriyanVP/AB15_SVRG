@@ -2,6 +2,7 @@ using AB15_GUI.WPF.Models.Interfaces;
 using System;
 using System.Collections.Generic;
 using AB15_GUI.WPF.Models.Genereted.Registers;
+using System.Diagnostics;
 
 namespace AB15_GUI.WPF.Models
 {
@@ -119,6 +120,11 @@ namespace AB15_GUI.WPF.Models
         public Reg_spi_read_enx spi_read_enx = new Reg_spi_read_enx();
 
         /// <summary>
+        /// QA config register
+        /// </summary>
+        public Reg_spi_read_wdqa spi_read_wdqa = new Reg_spi_read_wdqa();
+
+        /// <summary>
         /// Property to report errors
         /// </summary>
         public string? Error { get; set; } = null;
@@ -150,6 +156,8 @@ namespace AB15_GUI.WPF.Models
                     break;
                 case MCUStatus.DATA:
                     // WD Status was received
+                    #if AB12_PLATFORM
+
                     // Check if correct amount of data in payload present
                     if (rawData.Count < 3)
                     {
@@ -160,6 +168,23 @@ namespace AB15_GUI.WPF.Models
                     // Based on WD WatchdogStatus code - decode the bitfields of the payload
                     // TODO Get the rawData bytes and extract the boolean flags as the bitfield is defined
                     decodeStatus(rawData);
+
+                    #else
+
+                    // Check if correct amount of data in payload present
+                    if (rawData.Count < 8)
+                    {
+                        Error = $"Received package without correct datalength in payload";
+                        break;
+                    }
+
+                    // Unpack data to properties
+                    spi_read_wdstatus1.Data = ConstructWordFromBytes(rawData[0], rawData[1]);
+                    spi_read_wdstatus2.Data = ConstructWordFromBytes(rawData[2], rawData[3]);
+                    spi_read_enx.Data = ConstructWordFromBytes(rawData[4], rawData[5]);
+                    spi_read_wdqa.Data = ConstructWordFromBytes(rawData[6], rawData[7]);
+
+                    #endif
 
                     break;
                 default:
@@ -183,7 +208,7 @@ namespace AB15_GUI.WPF.Models
         /// AB12 Payload: WD Status Payload 16 bits (MSB, LSB) + WDF flag as 1 byte
         /// </summary>
         /// <param name="dataBytes">Payload bytes from the response to Read WD WatchdogStatus</param>
-        /// <returns></returns>
+        [Conditional("AB12_PLATFORM")]
         private void decodeStatus(List<byte> dataBytes)
         {
             // AB12: 3 bytes
