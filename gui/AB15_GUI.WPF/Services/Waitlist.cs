@@ -192,11 +192,11 @@ public class Waitlist : IWaitlist
     /// <summary>
     /// Removes outdated items from waitlist and returns list of their delegates
     /// </summary>
-    /// <returns>List with outdated commands delegates</returns>
-    public List<Action<IReceiveCommunicationPackage>> RemoveOutdatedItems()
+    /// <returns>List with outdated commands delegates and payload types</returns>
+    public List<(Action<IReceiveCommunicationPackage> deleg, Type? payloadType)> RemoveOutdatedItems()
     {
         DateTime timeNow = DateTime.Now;
-        List<Action<IReceiveCommunicationPackage>> outdatedItems = new List<Action<IReceiveCommunicationPackage>>();
+        List<(Action<IReceiveCommunicationPackage> deleg, Type? payloadType)> outdatedItems = new List<(Action<IReceiveCommunicationPackage> deleg, Type? payloadType)>();
         List<WaitlistItem> itemsForRemove = new List<WaitlistItem>();
 
         lock(_waitlist)
@@ -219,7 +219,7 @@ public class Waitlist : IWaitlist
                         itemsForRemove.Add(item);
 
                         // Add package to list
-                        outdatedItems.Add(item.deleg);
+                        outdatedItems.Add((item.deleg, item.payloadType));
                     }
                 }
             }
