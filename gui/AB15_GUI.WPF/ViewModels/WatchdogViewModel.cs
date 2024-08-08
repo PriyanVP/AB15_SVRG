@@ -80,11 +80,11 @@ namespace AB15_GUI.WPF.ViewModels
             string graph = UmlDotGraph.Format(_stateMachine.GetInfo());
 
             // Init commands for buttons
-            ReadConfigFromASIC  = new RelayCommand(ReadConfigFromASICExecute, ((x) => _isReadWDConfigButtonEnabled));
-            WriteConfigToASIC   = new RelayCommand(WriteConfigToASICExecute, ((x) => _isWriteWDConfigButtonEnabled));
+            ReadConfigFromASIC  = new RelayCommand(ReadConfigFromASICExecute, ((x) => _readWDConfigCommand.IsEnabled));
+            WriteConfigToASIC   = new RelayCommand(WriteConfigToASICExecute, ((x) => _writeWDConfigCommand.IsEnabled));
 
-            StartWatchdog       = new RelayCommand(StartWatchdogExecute, ((x) => _isStartWDButtonEnabled));
-            StopWatchdog        = new RelayCommand(StopWatchdogExecute, ((x) => _isStopWDButtonEnabled));
+            StartWatchdog       = new RelayCommand(StartWatchdogExecute, ((x) => _startWDCommand.IsEnabled));
+            StopWatchdog        = new RelayCommand(StopWatchdogExecute, ((x) => _stopWDCommand.IsEnabled));
         }
 
         #region State_Machine
@@ -133,41 +133,41 @@ namespace AB15_GUI.WPF.ViewModels
             switch (_stateMachine.State)
             {
                 case State.Idle:
-                    // Buttons enable handling
-                    _isReadWDConfigButtonEnabled = true;
-                    _isWriteWDConfigButtonEnabled = false;
-                    _isStartWDButtonEnabled = false;
-                    _isStopWDButtonEnabled = false;
+                    // Buttons/commands enable handling
+                    _readWDConfigCommand.Enable   = true;
+                    _writeWDConfigCommand.Enable  = false;
+                    _startWDCommand.Enable        = false;
+                    _stopWDCommand.Enable         = false;
 
                     // Configuration enable handling
                     IsConfigEnable = false;
                     break;
                 case State.InConfiguration:
-                    // Buttons enable handling
-                    _isReadWDConfigButtonEnabled = true;
-                    _isWriteWDConfigButtonEnabled = true;
-                    _isStartWDButtonEnabled = false;
-                    _isStopWDButtonEnabled = false;
+                    // Buttons/commands enable handling
+                    _readWDConfigCommand.Enable   = true;
+                    _writeWDConfigCommand.Enable  = true;
+                    _startWDCommand.Enable        = false;
+                    _stopWDCommand.Enable         = false;
 
                     // Configuration enable handling
                     IsConfigEnable = true;
                     break;
                 case State.Configured:
-                    // Buttons enable handling
-                    _isReadWDConfigButtonEnabled = true;
-                    _isWriteWDConfigButtonEnabled = true;
-                    _isStartWDButtonEnabled = true;
-                    _isStopWDButtonEnabled = true;
+                    // Buttons/commands enable handling
+                    _readWDConfigCommand.Enable   = true;
+                    _writeWDConfigCommand.Enable  = true;
+                    _startWDCommand.Enable        = true;
+                    _stopWDCommand.Enable         = true;
 
                     // Configuration enable handling
                     IsConfigEnable = true;
                     break;
                 case State.Running:
-                    // Buttons enable handling
-                    _isReadWDConfigButtonEnabled = true;
-                    _isWriteWDConfigButtonEnabled = false;
-                    _isStartWDButtonEnabled = false;
-                    _isStopWDButtonEnabled = true;
+                    // Buttons/commands enable handling
+                    _readWDConfigCommand.Enable   = true;
+                    _writeWDConfigCommand.Enable  = false;
+                    _startWDCommand.Enable        = false;
+                    _stopWDCommand.Enable         = true;
 
                     // Configuration enable handling
                     IsConfigEnable = false;
@@ -214,6 +214,12 @@ namespace AB15_GUI.WPF.ViewModels
             AddHelpMsg(nameof(WD2FaultCounter), "WD2 fault counter");
             AddHelpMsg(nameof(WD2TimingMonitorCounter), "WD2 timing monitor results");
             AddHelpMsg(nameof(WD2QAFailureCounter), "WD2 QA failure counter value");
+
+            // Commands
+            AddHelpMsg(nameof(ReadConfigFromASIC), $"Read watchdog configuration stored in ASIC registers.{Environment.NewLine}WARNING: reset cause will be cleared after first read!");
+            AddHelpMsg(nameof(WriteConfigToASIC), "Write configuration of WD to ASIC. Config won't be locked");
+            AddHelpMsg(nameof(StartWatchdog), "Start watchdog and watchdog status reading. Configuration will be locked");
+            AddHelpMsg(nameof(StopWatchdog), "Stop watchdog and watchdog status reading. Configuration will remain locked");
 
             // UI elements help messages
         }
@@ -701,24 +707,24 @@ namespace AB15_GUI.WPF.ViewModels
         private int? _msgIdForMonitoring = null;
 
         /// <summary>
-        /// Start WD button enable state
+        /// Start WD button/command enable state
         /// </summary>
-        private bool _isStartWDButtonEnabled;
+        private CommandState _startWDCommand        = new CommandState();
 
         /// <summary>
-        /// Stop WD button enable state
+        /// Stop WD button/command enable state
         /// </summary>
-        private bool _isStopWDButtonEnabled;
+        private CommandState _stopWDCommand         = new CommandState();
 
         /// <summary>
-        /// Read WD config button enable state
+        /// Read WD config button/command enable state
         /// </summary>
-        private bool _isReadWDConfigButtonEnabled;
+        private CommandState _readWDConfigCommand   = new CommandState();
 
         /// <summary>
-        /// Write WD config button enable state
+        /// Write WD config button/command enable state
         /// </summary>
-        private bool _isWriteWDConfigButtonEnabled;
+        private CommandState _writeWDConfigCommand  = new CommandState();
 
         /// <summary>
         /// Command handler for Read config from ASIC button
@@ -745,6 +751,11 @@ namespace AB15_GUI.WPF.ViewModels
         /// </summary>
         private void ReadConfigFromASICExecute(object obj)
         {
+            // Handle that command execution can only be done once in a row
+            if (_readWDConfigCommand.IsEnabled == false) return;
+            _readWDConfigCommand.InProgress = true;
+            
+            // Create package to MCU
             TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
             packageToSend.ASICID = 1;
             // packageToSend.Cmd = MCUCommand. // TODO: add
@@ -778,6 +789,11 @@ namespace AB15_GUI.WPF.ViewModels
         /// </summary>
         private void WriteConfigToASICExecute(object obj)
         {
+            // Handle that command execution can only be done once in a row
+            if (_writeWDConfigCommand.IsEnabled == false) return;
+            _writeWDConfigCommand.InProgress = true;
+            
+            // Create package to MCU
             TransmitCommunicationPackage<WDConfigurePayload> packageToSend = new TransmitCommunicationPackage<WDConfigurePayload>();
 
             packageToSend.ASICID = 1;
@@ -813,6 +829,11 @@ namespace AB15_GUI.WPF.ViewModels
         /// </summary>
         private void StartWatchdogExecute(object obj)
         {
+            // Handle that command execution can only be done once in a row
+            if (_startWDCommand.IsEnabled == false) return;
+            _startWDCommand.InProgress = true;
+            
+            // Create package to MCU
             TransmitCommunicationPackage<EmptyPayload> packageToSendStartWD = new TransmitCommunicationPackage<EmptyPayload>();
             TransmitCommunicationPackage<EmptyPayload> packageToSendStartMonitoringWD = new TransmitCommunicationPackage<EmptyPayload>();
 
@@ -844,6 +865,11 @@ namespace AB15_GUI.WPF.ViewModels
         /// </summary>
         private void StopWatchdogExecute(object obj)
         {
+            // Handle that command execution can only be done once in a row
+            if (_stopWDCommand.IsEnabled == false) return;
+            _stopWDCommand.InProgress = true;
+            
+            // Create package to MCU
             TransmitCommunicationPackage<EmptyPayload> packageToSendStopWD = new TransmitCommunicationPackage<EmptyPayload>();
             TransmitCommunicationPackage<EmptyPayload> packageToSendStopMonitoringWD = new TransmitCommunicationPackage<EmptyPayload>();
 
@@ -881,6 +907,9 @@ namespace AB15_GUI.WPF.ViewModels
         /// <param name="response">MCU response package</param>
         private void ReadConfigDelegate(IReceiveCommunicationPackage response)
         {
+            // Response received - unlock command usage
+            _readWDConfigCommand.InProgress = false;
+
             // Typecast response to actual type
             ReceiveCommunicationPackage<AddressDataPayload> mcuResponse = (ReceiveCommunicationPackage<AddressDataPayload>) response;
 
@@ -944,6 +973,9 @@ namespace AB15_GUI.WPF.ViewModels
         /// <param name="response">MCU response package</param>
         private void WriteConfigDelagate(IReceiveCommunicationPackage response)
         {
+            // Response received - unlock command usage
+            _writeWDConfigCommand.InProgress = false;
+
             // Typecast response to actual type
             ReceiveCommunicationPackage<EmptyPayload> mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>) response;
 
@@ -967,6 +999,9 @@ namespace AB15_GUI.WPF.ViewModels
         /// <param name="response">MCU response package</param>
         private void StartWatchdogDelegate(IReceiveCommunicationPackage response)
         {
+            // Response received - unlock command usage
+            _startWDCommand.InProgress = false;
+
             // Typecast response to actual type
             ReceiveCommunicationPackage<EmptyPayload> mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>) response;
 
@@ -989,6 +1024,9 @@ namespace AB15_GUI.WPF.ViewModels
         /// <param name="response">MCU response package</param>
         private void StopWatchdogDelegate(IReceiveCommunicationPackage response)
         {
+            // Response received - unlock command usage
+            _stopWDCommand.InProgress = false;
+
             // Typecast response to actual type
             ReceiveCommunicationPackage<EmptyPayload> mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>) response;
 
