@@ -120,8 +120,8 @@ void core0_main(void)
     // Init timer module
     InitGpt12Timer();
 
-    /* Initialize the CCU6 module for PWM generation */
-    initCCU6();
+    /* set default Frequency for PWM generation */
+    SetDefaultPWMFrequency();
 
     // start CCU6 module PWM generation */
     StartPWMGeneration();
