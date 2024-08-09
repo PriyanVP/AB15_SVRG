@@ -137,6 +137,7 @@ namespace AB15_GUI.WPF
         {
             logger.Fatal((Exception)ex.ExceptionObject, "Unhandled exception!");
             LogManager.Shutdown();
+            Environment.Exit(0);
         }
 
         /// <summary>

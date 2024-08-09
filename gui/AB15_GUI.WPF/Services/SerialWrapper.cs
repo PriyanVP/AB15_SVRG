@@ -8,6 +8,7 @@ using AB15_GUI.WPF.Models;
 using AB15_GUI.WPF.Models.Interfaces;
 using AB15_GUI.WPF.Services.Interfaces;
 using System.Threading.Tasks;
+using System.IO.Packaging;
 
 namespace AB15_GUI.WPF.Services;
 
@@ -123,7 +124,7 @@ public class SerialWrapper : IDisposable, ISerialWrapper
     }
 
     /// <summary>
-    /// 
+    /// Check if any of the waitlist items are outdated
     /// </summary>
     /// <param name="source">caller</param>
     /// <param name="e">event arguments</param>
@@ -132,18 +133,30 @@ public class SerialWrapper : IDisposable, ISerialWrapper
         // Stop timer
         _waitlistTimeOfLifeTimer.Stop();
 
-        // Package for delegate i
-        Type type = typeof(ReceiveCommunicationPackage<>).MakeGenericType(typeof(EmptyPayload));
-        IReceiveCommunicationPackage tmpReceivedPackage = (IReceiveCommunicationPackage)Activator.CreateInstance(type);
-        tmpReceivedPackage!.Status = MCUStatus.RESPONSE_ABSENT;
-
         // Run removal of outdated packages
-        List<Action<IReceiveCommunicationPackage>> removedItemsDelegates = _responseWaitlist.RemoveOutdatedItems();
+        List<(Action<IReceiveCommunicationPackage> deleg, Type? payloadType)> removedItems = _responseWaitlist.RemoveOutdatedItems();
 
         // Invoke delegates
-        foreach (var deleg in removedItemsDelegates)
+        foreach (var itm in removedItems)
         {
-            Task.Run(() => deleg(tmpReceivedPackage));
+            // Local variables
+            Type? payloadType;
+
+            // Get payload type for package from waitlist based on message ID
+            payloadType = itm.payloadType;
+            if (payloadType is null)
+            {
+                logger.Warn("Received package without type in waitlist item");
+                continue;
+            }
+
+            // Create received package instance dynamically based on type
+            Type type = typeof(ReceiveCommunicationPackage<>).MakeGenericType(payloadType);
+            IReceiveCommunicationPackage tmpReceivedPackage = (IReceiveCommunicationPackage)Activator.CreateInstance(type);
+            tmpReceivedPackage!.UnpackPackage(new List<byte>() { (byte)MCUStatus.RESPONSE_ABSENT }); // Use specific package layout for response absen
+
+            // Invoke delegate
+            Task.Run(() => itm.deleg(tmpReceivedPackage));
         }
 
         // Start timer

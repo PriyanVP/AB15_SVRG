@@ -29,7 +29,6 @@ namespace AB15_GUI.WPF.Models
                     Error = $"Message with error status received: Payload {string.Join(" ", rawData)}";
                     break;
                 case MCUStatus.RESPONSE_ABSENT:
-                    // TODO: unoperational due to UnpackPackage flow
                     // Error handling -> store data to property
                     Error = $"Message with response from MCU wasn't received in expected timeframe.";
                     break;
