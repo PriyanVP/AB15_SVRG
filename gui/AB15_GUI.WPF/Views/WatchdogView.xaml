@@ -756,7 +756,7 @@
                                     HorizontalAlignment="Left"
                                     Value="{Binding WD1EN0DisableThreshold}" Width="200"
                                     Minimum="0" Maximum="63"
-                                    Margin="20,0,20,5"
+                                    Margin="20,15,20,5"
                                     IsEnabled="{Binding IsConfigEnable}"/>
 
                             <Slider Name="WD2EN0DisableTreshholdSlider"
@@ -785,21 +785,29 @@
                         <Button Style="{DynamicResource SimpleButton}" 
                                     Content="Write config to ASIC"
                                     x:Name="WriteConfigToASICButton"
-                                    Command="{Binding WriteConfigToASIC}"/>
+                                    Command="{Binding WriteConfigToASIC}"
+                                    ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='WriteConfigToASIC', Mode=OneWay}"
+                                    ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
 
                         <Button Content="Read config from ASIC"
                                     Style="{DynamicResource SimpleButton}"
-                                    Command="{Binding ReadConfigFromASIC}"/>
+                                    Command="{Binding ReadConfigFromASIC}"
+                                    ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='ReadConfigFromASIC', Mode=OneWay}"
+                                    ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
 
                         <TextBlock Text="Watchdog Control" HorizontalAlignment="Center" Margin="5"/>
                         
                         <Button Content="Start Watchdog"
                                     Style="{DynamicResource SimpleButton}"
-                                    Command="{Binding StartWatchdog}"/>
+                                    Command="{Binding StartWatchdog}"
+                                    ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='StartWatchdog', Mode=OneWay}"
+                                    ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
 
                         <Button Content="Stop Watchdog"
                                     Style="{DynamicResource SimpleButton}"
-                                    Command="{Binding StopWatchdog}"/>
+                                    Command="{Binding StopWatchdog}"
+                                    ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='StopWatchdog', Mode=OneWay}"
+                                    ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
                     </StackPanel>
                                 
                 </Grid>
