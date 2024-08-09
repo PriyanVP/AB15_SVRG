@@ -416,6 +416,7 @@ void CmdSetExtOsc2Mhz(USBReceiveData const * const commandPackage)
     // Prepare acknowledge message
     USBTransmitData packageToSend;
     packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
+    packageToSend.asic_id = 1;
     packageToSend.status = USB_STATUS_ACK;
     packageToSend.dataLength = 0;
 
@@ -438,6 +439,7 @@ void CmdSetExtOsc4Mhz(USBReceiveData const * const commandPackage)
     // Prepare acknowledge message
     USBTransmitData packageToSend;
     packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
+    packageToSend.asic_id = 1;
     packageToSend.status = USB_STATUS_ACK;
     packageToSend.dataLength = 0;
 
