@@ -3,8 +3,8 @@
  * \copyright Copyright (C) RobertBosch GmbH
  *********************************************************************************************************************/
 
-#ifndef CCU6_PWM_GENERATION_H_
-#define CCU6_PWM_GENERATION_H_
+#ifndef PWM_H_
+#define PWM_H_
 
 /*********************************************************************************************************************/
 /*------------------------------------------------Function Prototypes------------------------------------------------*/
@@ -39,4 +39,4 @@ void SetPWMGeneration2MHZ(void);
  */
 void SetPWMGeneration4MHZ(void);
 
-#endif /* CCU6_PWM_GENERATION_H_ */
+#endif /* PWM_H_ */

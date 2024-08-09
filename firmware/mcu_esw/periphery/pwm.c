@@ -12,19 +12,23 @@
 /*********************************************************************************************************************/
 /*------------------------------------------------------Macros-------------------------------------------------------*/
 /*********************************************************************************************************************/
-#define CCU6_BASE_FREQUENCY	    100000000                                    /* CCU6 base frequency, in Hertz        */
-#define PWM_FREQUENCY_4MHZ        4000000                                    /* PWM signal frequency, in Hertz       */
-#define PWM_FREQUENCY_2MHZ        2000000                                    /* PWM signal frequency, in Hertz       */
+#define CCU6_BASE_FREQUENCY	    100000000                             /* CCU6 base frequency, in Hertz               */
+#define PWM_FREQUENCY_4MHZ        4000000                             /* PWM signal frequency, in Hertz              */
+#define PWM_FREQUENCY_2MHZ        2000000                             /* PWM signal frequency, in Hertz              */
 
 
-#define NUMBER_OF_CHANNELS      3
+#define NUMBER_OF_CHANNELS      3                                     /* Number of channels for capture-compare unit */
 
 //#define PWM_PERIOD              (CCU6_BASE_FREQUENCY / PWM_FREQUENCY)      /* PWM signal period, in ticks          */
 //#define DUTY_CYCLE     50                                          /* PWM Signal 1 Duty cycle, in percent  */
 //#define COMPARE_VALUE   ((PWM_PERIOD / 100) * (100 - DUTY_CYCLE))
 
-#define COMPARE_VALUE_4MHZ   12                                              /* PWM signal frequency, in Hertz       */
-#define COMPARE_VALUE_2MHZ   25
+#define COMPARE_VALUE_4MHZ   12                                              /* by using formular above, the PWM_PERIOD
+                                                                                will be 25 for 4MHZ, a compare value of
+                                                                                12.5 would be necessary, only full
+                                                                                numbers are possible -->
+                                                                                duty cycle will be 52%               */
+#define COMPARE_VALUE_2MHZ   25                                             /*  set duty cycle to 50%                */
 
 /*********************************************************************************************************************/
 /*-------------------------------------------------Global variables--------------------------------------------------*/
@@ -48,6 +52,7 @@ void StartPWMGeneration(void)
 
 void SetPWMGeneration2MHZ(void)
 {
+    // TODO: may be refactored into same function - both 2 and 4 MHz
     boolean interruptState = IfxCpu_disableInterrupts();            /* Disable global interrupts                    */
 
     /* Timer configuration: timer used as counter */
@@ -145,4 +150,3 @@ void SetPWMGeneration4MHZ(void)
     /* Restore interrupts to their initial state */
     IfxCpu_restoreInterrupts(interruptState);
 }
-
