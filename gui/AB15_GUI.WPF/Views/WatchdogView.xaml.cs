@@ -26,10 +26,11 @@ namespace AB15_GUI.WPF.Views
         {
             InitializeComponent();
 
-            // inital value
+            // inital value TODO: why here, can be done in XAML
             MoreInfoButton.IsChecked = true;
         }
 
+        // TODO: check if can be moved to Slider back itself (all 4 slider events)
         /// <summary>
         /// Backend of WD1 response - lock time Slider dependency 
         /// </summary>

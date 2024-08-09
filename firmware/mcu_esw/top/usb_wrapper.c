@@ -151,7 +151,6 @@ boolean ReceiveUSBPackage(USBReceiveData * const data)
         ReceiveUSBData(&(buffer[USB_MSG_ID_POS]), &bytesToRead);
 
         /*construct the number of remaining bytes to read */
-        //itemCounter = buffer[USB_PAYLOAD_LEN_POS] + 2; /* payload length + CRC + end byte TODO: remove magic number*/
         remainingBytesInMessange =  buffer[USB_PAYLOAD_LEN_POS] + USB_CRC_LENGTH + USB_STOPBYTE_LENGTH; /* bytes = payload  + CRC + end byte */
 
     }
@@ -166,7 +165,7 @@ boolean ReceiveUSBPackage(USBReceiveData * const data)
     }
     else
     {
-        // TODO: might also check for BUffer end byte?
+        // TODO: might also check for Buffer end byte?
         previousReadNotFinished = FALSE;
     }
 
@@ -196,9 +195,7 @@ boolean ReceiveUSBPackage(USBReceiveData * const data)
     if (IsCRC8Correct(&(buffer[USB_MSG_ID_POS]), crcLength, expectedCrc) == FALSE)
     {
         IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, FALSE);
-        //TODO: uncomment for debugging
-        //return FALSE;
-        // ******************************************************************************************************* !!!
+        return FALSE;
     }
 
     // Unpack data from buffer to struct

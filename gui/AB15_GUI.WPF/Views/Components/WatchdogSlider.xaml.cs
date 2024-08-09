@@ -24,11 +24,5 @@ namespace AB15_GUI.WPF.Views.Components
         {
             InitializeComponent();
         }
-
-        private void Slider_DragDelta(object sender, System.Windows.Controls.Primitives.DragDeltaEventArgs e)
-        {
-
-        }
-
     }
 }

@@ -249,9 +249,9 @@ namespace AB15_GUI.Tests.Services
                 throw new NotImplementedException();
             }
 
-            public List<Action<IReceiveCommunicationPackage>> RemoveOutdatedItems()
+            List<(Action<IReceiveCommunicationPackage> deleg, Type? payloadType)> IWaitlist.RemoveOutdatedItems()
             {
-                return new List<Action<IReceiveCommunicationPackage>>();
+                return new List<(Action<IReceiveCommunicationPackage> deleg, Type? payloadType)>();
             }
         }
 

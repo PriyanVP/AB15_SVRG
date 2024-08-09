@@ -62,10 +62,18 @@ public class ReceiveCommunicationPackage<T> : IReceiveCommunicationPackage where
 
     /// <summary>
     /// Unpack data from received byte array to format suitable for further use in application
-    /// <param name="receivedPackage">array with one full package received by serial communication</param>
+    /// <param name="receivedPackage">array with one full package received by serial communication. Specific case: 1 item in list - response absent scenario</param>
     /// <returns>Flag signalizing if unpacked data is valid</returns>
     public bool UnpackPackage(List<byte> receivedPackage)
     {
+        // Handle package with response absent status
+        if (receivedPackage.Count == 1)
+        {
+            Status = (MCUStatus)receivedPackage[0];
+            Payload.Deserialize(Status, new List<byte>());
+            return true;
+        }
+
         // Return false if input parameters are incorrect
         if (receivedPackage.Count < SerialPackageConstants.MinPackageLength) return false;
 
