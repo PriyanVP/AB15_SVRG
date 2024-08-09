@@ -109,11 +109,12 @@
     </Style>
     <!--#endregion-->
 
-    
+    <!--#region SimpleToggleButton -->
     <Style x:Key="SimpleToggleButton" TargetType="ToggleButton">
 
         <Setter Property="Background" Value="{DynamicResource Button.Background.StandBy}"/>
         <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="Foreground" Value="{DynamicResource Foreground.Default}"/>
 
         <Setter Property="Template">
             <Setter.Value>
@@ -140,6 +141,7 @@
             </Trigger>
         </Style.Triggers>
     </Style>
+    <!--#endregion-->
 
     <!--#region AdditionalInfoImageStyle style define -->
     <Style x:Key="AdditionalInfoImageStyle" TargetType="{x:Type Image}">
