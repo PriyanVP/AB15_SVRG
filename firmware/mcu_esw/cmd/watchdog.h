@@ -57,6 +57,20 @@ void CmdStartWatchdog(USBReceiveData const * const commandPackage);
  */
 void CmdStopWatchdog(USBReceiveData const * const commandPackage);
 
+/** \brief Function to set MCU External clock output to 2MHz
+ *
+ * \param commandPackage package without command
+ * \return Returns nothing
+ */
+void CmdSetExtOsc2Mhz(USBReceiveData const * const commandPackage);
+
+/** \brief Function to set MCU External clock output to 4MHz
+ *
+ * \param commandPackage package without command
+ * \return Returns nothing
+ */
+void CmdSetExtOsc4Mhz(USBReceiveData const * const commandPackage);
+
 /** \brief Function to enable MCU functionality that sends values of Watchdog status registers to PC
  * 
  * Corresponds to USB command USB_CMD_START_MONITORING_WATCHDOG

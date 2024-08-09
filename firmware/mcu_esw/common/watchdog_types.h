@@ -27,7 +27,7 @@ typedef enum
     NOT_SET                     = 0,        /** \brief WD type was not yet defined */
     WD1                         = 1,        /** \brief Watchdog 1 */
     WD2                         = 2,        /** \brief Watchdog 2 */
-    WD3                         = 3,        /** \brief Watchdog 3 */
+    OSCMON                      = 3,        /** \brief Watchdog 3 -> ECLK monitor */
     WD12                        = 4         /** \brief Watchdog 1 and 2 */
 } WatchdogTypeEnum;
 

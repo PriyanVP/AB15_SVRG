@@ -9,7 +9,8 @@
         mc:Ignorable="d"
         Title="Logger Window" Height="450" Width="800"
         MinWidth="600" MinHeight="300"
-        Icon="Resources/bosch.ico">
+        Icon="Resources/bosch.ico"
+        DataContext="{Binding LoggerViewModel, Source={StaticResource ViewModelLocator}}">
     <Window.Resources>
         <cnvrt:CustomDateTimeConverter x:Key="CustomDateTimeConverter"/>
     </Window.Resources>
@@ -47,8 +48,14 @@
 
             <ToggleButton x:Name="SortingButton" Grid.Column="1" MinWidth="20" Click="SortingButton_Click" Style="{DynamicResource SortingToggleButtonStyle}"/>
 
-            <Button Grid.Column="3" MinWidth="20" Content="{DynamicResource FontSizeIncreaseIco}" Click="IncreaseFont_Click" Height="35"/>
-            <Button Grid.Column="4" MinWidth="20" Content="{DynamicResource FontSizeDecreaseIco}" Click="DecreaseFont_Click" Height="35"/>
+            <Button Grid.Column="3" MinWidth="20" 
+                    Content="{DynamicResource FontSizeIncreaseIco}" 
+                    Style="{DynamicResource DefaultButton}"
+                    Click="IncreaseFont_Click" Height="35"/>
+            <Button Grid.Column="4" MinWidth="20" 
+                    Content="{DynamicResource FontSizeDecreaseIco}" 
+                    Style="{DynamicResource DefaultButton}"
+                    Click="DecreaseFont_Click" Height="35"/>
 
             <TextBox Grid.Column="5" MinWidth="40" Style="{DynamicResource TextBoxStyle}" FontSize="20">
                 <TextBox.Text>

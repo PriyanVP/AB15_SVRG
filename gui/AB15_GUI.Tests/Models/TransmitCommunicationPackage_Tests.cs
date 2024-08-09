@@ -57,7 +57,7 @@ namespace AB15_GUI.Tests.Models
         }
 
         [TestCaseSource(nameof(InValidTestCases)), Description("Checking that invalid data is not packed and error is reported")]
-        public void WhenDataIsNotValid_ThenDataHandledExpectedly((int msgId, int asicID, int cmd) tcParams) // TODO: not ready
+        public void WhenDataIsNotValid_ThenDataHandledExpectedly((int msgId, int asicID, int cmd) tcParams)
         {
             // Arrange
             TransmitCommunicationPackage<ByteListSeializableMock> tstPackage = new TransmitCommunicationPackage<ByteListSeializableMock>();
@@ -90,7 +90,7 @@ namespace AB15_GUI.Tests.Models
         /// <summary>
         /// List of test cases data for invalid TransmitCommunicationPackage scenarios
         /// </summary>
-        public static IEnumerable<(int, int, int)> InValidTestCases() // TODO: recalculate CRC
+        public static IEnumerable<(int, int, int)> InValidTestCases()
         {
             yield return (0, 0, (int) MCUCommand._EXT_CMD_MAX);
             yield return (0, 0, (int) MCUCommand._CMD_MIN);

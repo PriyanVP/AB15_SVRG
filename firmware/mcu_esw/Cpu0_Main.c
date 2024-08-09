@@ -23,13 +23,11 @@
 #include "top/spi_wrapper.h"
 #include "top/usb_wrapper.h"
 #include "Bsp.h"
-
-// for debug messages on button press JS 4/2024
-#include "button.h"
+#include "pwm.h"
 
 IFX_ALIGN(4) IfxCpu_syncEvent g_cpuSyncEvent = 0;
 
-#define WAIT_TIME 2   /*mseconds */
+#define WAIT_TIME 25   /*useconds */
 
 /** \brief Watchdog 1 interrupt routine
  * Arms single acknowledgement of ASIC watchdog
@@ -45,8 +43,8 @@ void Watchdog1InterruptRoutine(void)
     };
 
     // Add WD serving internal command to command queue
-    // QueueWriteTail(&serveWatchdogCommand);    // TODO: commented out to have MCU contained WD routine. Uncomment for actual communication with ASIC
-    ToggleLED2(); // TODO: remove after testing WD
+    QueueWriteTail(&serveWatchdogCommand);    // TODO: commented out to have MCU contained WD routine. Uncomment for actual communication with ASIC
+    //ToggleLED2(); // TODO: remove after testing WD
 }
 
 /** \brief Watchdog 2 interrupt routine
@@ -63,8 +61,8 @@ void Watchdog2InterruptRoutine(void)
     };
 
     // Add WD serving internal command to command queue
-    // QueueWriteTail(&serveWatchdogCommand);    // TODO: commented out to have MCU contained WD routine. Uncomment for actual communication with ASIC
-    ToggleLED2(); // TODO: remove after testing WD
+    QueueWriteTail(&serveWatchdogCommand);    // TODO: commented out to have MCU contained WD routine. Uncomment for actual communication with ASIC
+    //ToggleLED2(); // TODO: remove after testing WD
 }
 
 /** \brief Watchdogs status reading interrupt routine
@@ -103,7 +101,6 @@ void core0_main(void)
     /* Initialize the LED port pins      */
     InitLEDs();
 
-
     /* Init pins*/
     ConfigureSelectPin();
     InitGPIOPins();
@@ -123,6 +120,12 @@ void core0_main(void)
     // Init timer module
     InitGpt12Timer();
 
+    /* set default Frequency for PWM generation */
+    SetDefaultPWMFrequency();
+
+    // start CCU6 module PWM generation */
+    StartPWMGeneration();
+
     // Start general timer
     StartGeneralTimer();
 
@@ -140,19 +143,9 @@ void core0_main(void)
         //ToggleLED1();
         Blink_LED1_1Hz();
 
-       if(GetButtonState())
-       {
-           //OnLED2();
-
-
-       }
-       else
-       {
-          // OffLED2();
-       }
 
         // wait for 2ms for next polling // TODO: remove and check
-        waitTime(IfxStm_getTicksFromMilliseconds(BSP_DEFAULT_TIMER, WAIT_TIME));
+        waitTime(IfxStm_getTicksFromMicroseconds(BSP_DEFAULT_TIMER, WAIT_TIME));
 
         // Receive package (assumes it already in in buffer of UART
         isSuccessfulFlag = ReceiveUSBPackage(&receivedPackage);
@@ -204,7 +197,7 @@ void core0_main(void)
                 CmdConfigureWatchdog(&cmdPackage);
                 break;
 
-            case USB_CMD_START_WATCHDOG:
+           case USB_CMD_START_WATCHDOG:
                 CmdStartWatchdog(&cmdPackage);
                 break;
 
@@ -212,6 +205,13 @@ void core0_main(void)
                 CmdStopWatchdog(&cmdPackage);
                 break;
 
+           case USB_CMD_SET_EXT_OSC_2MHZ:
+                CmdSetExtOsc2Mhz(&cmdPackage);
+                break;
+
+           case USB_CMD_SET_EXT_OSC_4MHZ:
+                CmdSetExtOsc4Mhz(&cmdPackage);
+                break;
            case USB_CMD_GET_MCU_VERSION:
                 CmdGetMcuVersion(&cmdPackage);
                 break;

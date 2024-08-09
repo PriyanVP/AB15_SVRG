@@ -51,24 +51,15 @@ namespace AB15_GUI.WPF
 
                             services.AddSingleton<MainViewModel>();
                             services.AddSingleton<LoggerViewModel>();
+                            services.AddSingleton<WatchdogViewModel>();
 
                             #endregion // ViewModels
 
                             #region Views
 
-                            services.AddSingleton<MainView>(sp =>
-                            {
-                                MainView mainWindow = new MainView();
-                                mainWindow.DataContext = sp.GetRequiredService<MainViewModel>();
-                                return mainWindow;
-                            });
+                            services.AddSingleton<MainView>();
 
-                            services.AddSingleton<LoggerView>(sp =>
-                            {
-                                LoggerView tmpWindow = new LoggerView();
-                                tmpWindow.DataContext = sp.GetRequiredService<LoggerViewModel>();
-                                return tmpWindow;
-                            });
+                            services.AddSingleton<LoggerView>();
 
                             #endregion // Views
 
@@ -146,6 +137,7 @@ namespace AB15_GUI.WPF
         {
             logger.Fatal((Exception)ex.ExceptionObject, "Unhandled exception!");
             LogManager.Shutdown();
+            Environment.Exit(0);
         }
 
         /// <summary>

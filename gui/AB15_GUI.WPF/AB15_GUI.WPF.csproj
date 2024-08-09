@@ -8,9 +8,21 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>$(DefineConstants);AB12_PLATFORM</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>$(DefineConstants);AB12_PLATFORM</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Remove="Views\Resources\airbag_dark.png" />
     <None Remove="Views\Resources\airbag_light.png" />
+    <None Remove="Views\Resources\align_down_arrow_dark.png" />
+    <None Remove="Views\Resources\align_down_arrow_light.png" />
+    <None Remove="Views\Resources\align_up_arrow_dark.png" />
+    <None Remove="Views\Resources\align_up_arrow_light.png" />
     <None Remove="Views\Resources\bosch.ico" />
     <None Remove="Views\Resources\chip_dark.png" />
     <None Remove="Views\Resources\chip_light.png" />
@@ -39,6 +51,8 @@
   <ItemGroup>
     <Resource Include="Views\Resources\airbag_dark.png" />
     <Resource Include="Views\Resources\airbag_light.png" />
+    <Resource Include="Views\Resources\align_down_arrow_light.png" />
+    <Resource Include="Views\Resources\align_up_arrow_light.png" />
     <Resource Include="Views\Resources\bosch.ico" />
     <Resource Include="Views\Resources\chip_dark.png" />
     <Resource Include="Views\Resources\chip_light.png" />
@@ -52,6 +66,8 @@
     <Resource Include="Views\Resources\home_light.png" />
     <Resource Include="Views\Resources\menu_dark.png" />
     <Resource Include="Views\Resources\menu_light.png" />
+    <Resource Include="Views\Resources\align_down_arrow_dark.png" />
+    <Resource Include="Views\Resources\align_up_arrow_dark.png" />
     <Resource Include="Views\Resources\sensor_dark.png" />
     <Resource Include="Views\Resources\sensor_light.png" />
     <Resource Include="Views\Resources\sort_ascending_light.png" />
@@ -68,6 +84,7 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
     <PackageReference Include="NLog" Version="5.3.2" />
+    <PackageReference Include="Stateless" Version="5.16.0" />
     <PackageReference Include="System.IO.Ports" Version="8.0.0" />
     <PackageReference Include="System.Management" Version="8.0.0" />
   </ItemGroup>
