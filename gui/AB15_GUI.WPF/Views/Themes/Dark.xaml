@@ -109,7 +109,41 @@
         <Setter Property="BorderThickness" Value="1"/>
     </Style>
     <!--#endregion-->
+    
+    <!--#region SimpleToggleButton -->
+    <Style x:Key="SimpleToggleButton" TargetType="ToggleButton">
 
+        <Setter Property="Background" Value="{DynamicResource Button.Background.StandBy}"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="Foreground" Value="{DynamicResource Foreground.Default}"/>
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Border Background="{TemplateBinding Background}" 
+                        BorderThickness="1"
+                        BorderBrush="{DynamicResource SimpleButton.BorderBrush}">
+                        <ContentPresenter HorizontalAlignment="Center"                  
+                                      VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource Button.Background.IsMouseOver}"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="{DynamicResource Button.Background.IsPressed}"/>
+            </Trigger>
+            <Trigger Property="IsChecked" Value="True">
+                <Setter Property="Background" Value="{DynamicResource SimpleButton.Background.IsMouseOver}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <!--#endregion-->
+    
     <!--#region AdditionalInfoImageStyle style define -->
     <Style x:Key="AdditionalInfoImageStyle" TargetType="{x:Type Image}">
         <Setter Property="Source" Value="{DynamicResource Ico.Arrow.Down}"/>
