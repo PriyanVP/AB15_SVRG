@@ -9,10 +9,12 @@
         xmlns:local="clr-namespace:AB15_GUI.WPF.Views"
         mc:Ignorable="d"
         Title="Bosch AB15" 
-        MinHeight="550" MinWidth="800"
+        MinHeight="550" MinWidth="1000"
         Height="650" Width="1000"
-        Icon="Resources/bosch.ico">
+        Icon="Resources/bosch.ico"
+        DataContext="{Binding MainViewModel, Source={StaticResource ViewModelLocator}}">
     <Window.Resources>
+        <cnvrt:FaultFlagToColorConverter x:Key="FaultFlagToColorConverter"/>
         <cnvrt:StatusToColorConverter x:Key="StatusToColorConverter"/>
     </Window.Resources>
     
@@ -74,13 +76,42 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
+            <TabControl Grid.Column="1" x:Name="PagesControl" BorderThickness="0" Background="{DynamicResource UI.BackGround}">
+                <TabControl.Resources>
+                    <Style TargetType="TabItem">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                    </Style>
+                </TabControl.Resources>
+                <TabItem>
+                    <Frame Source="HomeView.xaml"/>
+                </TabItem>
+                <TabItem>
+                    <Frame Source="SPILearningView.xaml"/>
+                </TabItem>
+                <TabItem>
+                    <Frame Source="WatchdogView.xaml"/>
+                </TabItem>
+                <TabItem>
+                    <Frame Source="FiringView.xaml"/>
+                </TabItem>
+                <TabItem>
+                    <Frame Source="AB15DataView.xaml"/>
+                </TabItem>
+                <TabItem>
+                    <Frame Source="SensorView.xaml"/>
+                </TabItem>
+                <TabItem>
+                    <Frame Source="DiagnosticsView.xaml"/>
+                </TabItem>
+            </TabControl>
+
             <Border Grid.Column="0" BorderThickness="0,1,1,1" BorderBrush="{DynamicResource Menu.SeparateLine}"/>
 
             <!--Subsection-->
             <Grid Grid.Column="0" x:Name="MenuPanel" Margin="3,3" Background="{DynamicResource Menu.Background}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto" MinWidth="40"/>
-                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
                 <Grid.RowDefinitions>
@@ -98,7 +129,7 @@
                 
                 <!--Menu size toggle button-->
                 <ToggleButton Style="{DynamicResource MenuToggleButtonTemplate}" IsChecked="True"
-                        Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+                              Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
                     
                     <StackPanel Orientation="Horizontal">
                         <Image Source="{DynamicResource Ico.Menu}" 
@@ -152,81 +183,88 @@
                 </ToggleButton>
 
                 <!--Home button-->
-                <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
-                        Style="{DynamicResource MenuButtons}" Command="{Binding GoToHomePage}">
+                <ToggleButton Name="HomeButton" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                              Style="{DynamicResource MenuToggleButtons}" Command="{Binding GoToHomePage}"
+                              Click="Button_Click">
                     <StackPanel Orientation="Horizontal">
 
                         <Image Source="{DynamicResource Ico.Home}" Margin="5,0" Width="30"/>
                         <TextBlock Text="Home" FontSize="20" Style="{DynamicResource TextBlockStyle}"/>
 
                     </StackPanel>
-                </Button>
+                </ToggleButton>
 
                 <!--SPI Learning button-->
-                <Button Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
-                        Style="{DynamicResource MenuButtons}" Command="{Binding GoToSPILearningPage}">
+                <ToggleButton Name="LearningButton" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                              Style="{DynamicResource MenuToggleButtons}" Command="{Binding GoToSPILearningPage}"
+                              Click="Button_Click">
                     <StackPanel Orientation="Horizontal">
 
                         <Image Source="{DynamicResource Ico.Zoom}" Margin="5,0" Width="30"/>
                         <TextBlock Text="SPI Learning" FontSize="20" Style="{DynamicResource TextBlockStyle}"/>
                         
                     </StackPanel>
-                </Button>
+                </ToggleButton>
 
                 <!--Watchdog button-->
-                <Button Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
-                        Style="{DynamicResource MenuButtons}" Command="{Binding GoToWhatchdogPage}">
+                <ToggleButton Name="WatchdogButton" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
+                              Style="{DynamicResource MenuToggleButtons}" Command="{Binding GoToWhatchdogPage}"
+                              Click="Button_Click">
                     <StackPanel Orientation="Horizontal">
 
                         <Image Source="{DynamicResource Ico.Watchdog}" Margin="5,0" Width="30"/>
                         <TextBlock Text="Watchdog" FontSize="20" Style="{DynamicResource TextBlockStyle}"/>
                         
                     </StackPanel>
-                </Button>
+                </ToggleButton>
 
                 <!--Firing button-->
-                <Button Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"
-                        Style="{DynamicResource MenuButtons}" Command="{Binding GoToFiringPage}">
+                <ToggleButton Name="FiringButton" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"
+                              Style="{DynamicResource MenuToggleButtons}" Command="{Binding GoToFiringPage}"
+                              Click="Button_Click">
                     <StackPanel Orientation="Horizontal">
 
                         <Image Source="{DynamicResource Ico.Airbag}" Margin="5,0" Width="30"/>
                         <TextBlock Text="Firing" FontSize="20" Style="{DynamicResource TextBlockStyle}"/>
                         
                     </StackPanel>
-                </Button>
+                </ToggleButton>
 
-                <!--AB12 Data button-->
-                <Button Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"
-                        Style="{DynamicResource MenuButtons}" Command="{Binding GoToAbDataPage}">
+                <!--AB15 Data button-->
+                <ToggleButton Name="AB15DataButton" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"
+                              Style="{DynamicResource MenuToggleButtons}" Command="{Binding GoToAbDataPage}"
+                              Click="Button_Click">
                     <StackPanel Orientation="Horizontal">
 
                         <Image Source="{DynamicResource Ico.Chip}" Margin="5,0" Width="30"/>
                         <TextBlock Text="AB15 Data" FontSize="20" Style="{DynamicResource TextBlockStyle}"/>
                         
                     </StackPanel>
-                </Button>
+                </ToggleButton>
 
                 <!--Sensors button-->
-                <Button Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2"
-                        Style="{DynamicResource MenuButtons}" Command="{Binding GoToSensorPage}">
+                <ToggleButton Name="SensorsButton" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2"
+                              Style="{DynamicResource MenuToggleButtons}" Command="{Binding GoToSensorPage}"
+                              Click="Button_Click">
                     <StackPanel Orientation="Horizontal">
 
                         <Image Source="{DynamicResource Ico.Sensor}" Margin="5,0" Width="30"/>
                         <TextBlock Text="Sensor" FontSize="20" Style="{DynamicResource TextBlockStyle}"/>
                         
                     </StackPanel>
-                </Button>
+                </ToggleButton>
 
                 <!--Diagnostics button-->
-                <Button Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2"
-                        Style="{DynamicResource MenuButtons}" Command="{Binding GoToDiagnosticsPage}">
+                <ToggleButton Name="DiagnosticsButton" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2"
+                              Style="{DynamicResource MenuToggleButtons}" Command="{Binding GoToDiagnosticsPage}"
+                              Click="Button_Click">
                     <StackPanel Orientation="Horizontal">
 
                         <Image Source="{DynamicResource Ico.Config}" Margin="5,0" Width="30"/>
                         <TextBlock Text="Diagnostics" FontSize="20" Style="{DynamicResource TextBlockStyle}"/>
                         
                     </StackPanel>
-                </Button>
+                </ToggleButton>
 
                 <!--Status section-->
                 <Grid Grid.Row="8" VerticalAlignment="Bottom">
@@ -242,17 +280,17 @@
 
                         <!--Animation connection for PC - MCU-->
                         <custom:ConnectionAnimation x:Name="animationTest1" Grid.Row="1" Height="20" 
-                                                  HorizontalAlignment="Left" 
-                                                  ArrowColor="{DynamicResource Animation.Arrow}" 
-                                                  BorderColor="{DynamicResource Animation.Lines}" 
-                                                  IsAnimationEnabled="{Binding MCUConnectionStatus}"/>
+                                                    HorizontalAlignment="Left" 
+                                                    ArrowColor="{DynamicResource Animation.Arrow}" 
+                                                    BorderColor="{DynamicResource Animation.Lines}" 
+                                                    IsAnimationEnabled="{Binding MCUConnectionStatus}"/>
 
                         <!--Animation connection for MCU - AB-->
                         <custom:ConnectionAnimation x:Name="animationTest2" Grid.Row="3" Height="20" 
-                                                  HorizontalAlignment="Left" 
-                                                  ArrowColor="{DynamicResource Animation.Arrow}" 
-                                                  BorderColor="{DynamicResource Animation.Lines}" 
-                                                  IsAnimationEnabled="{Binding ABConnectionStatus}"/>
+                                                    HorizontalAlignment="Left" 
+                                                    ArrowColor="{DynamicResource Animation.Arrow}" 
+                                                    BorderColor="{DynamicResource Animation.Lines}" 
+                                                    IsAnimationEnabled="{Binding ABConnectionStatus}"/>
 
                         <!--Status box for PC-->
                         <Border Grid.Row="0" BorderThickness="1" 
@@ -303,29 +341,43 @@
         <!--Bottom panel group-->
         <Grid Grid.Row="2" Background="{DynamicResource BottonPanel.Background}">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="5"/>
-                <ColumnDefinition Width="auto" MinWidth="20"/>
-                <ColumnDefinition Width="3"/>
-                <ColumnDefinition Width="auto" MinWidth="20"/>
-                <ColumnDefinition Width="5"/>
-                <ColumnDefinition Width="auto" MinWidth="20"/>
-                <ColumnDefinition Width="3"/>
-                <ColumnDefinition Width="auto" MinWidth="20"/>
-                <ColumnDefinition Width="5"/>
-                <ColumnDefinition Width="auto" MinWidth="20"/>
-                <ColumnDefinition Width="3"/>
-                <ColumnDefinition Width="auto" MinWidth="20"/>
-                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal" Grid.Column="0">
+                
+                <TextBlock Style="{DynamicResource TextBlockStyle}" Text="GUI:"/>
+                
+                <TextBlock Style="{DynamicResource TextBlockStyle}" MinWidth="20"
+                           Text="{Binding GUIVersion}"/>
+                
+                <TextBlock Style="{DynamicResource TextBlockStyle}" Text="MCU:"/>
+                
+                <TextBlock Style="{DynamicResource TextBlockStyle}" MinWidth="20"
+                           Text="{Binding MCUVersion}"/>
+                
+                <TextBlock Style="{DynamicResource TextBlockStyle}" Text="AB15:"/>
 
-            <TextBlock Style="{DynamicResource TextBlockStyle}" Text="GUI:" Grid.Column="1"/>
-            <TextBlock Style="{DynamicResource TextBlockStyle}" Text="MCU:" Grid.Column="5"/>
-            <TextBlock Style="{DynamicResource TextBlockStyle}" Text="AB15:" Grid.Column="9"/>
+                <TextBlock Style="{DynamicResource TextBlockStyle}" MinWidth="20"
+                           Text="{Binding ASICID}"/>
+            </StackPanel>
 
-            <TextBlock Style="{DynamicResource TextBlockStyle}" Text="{Binding GUIVersion}" Grid.Column="3"/>
-            <TextBlock Style="{DynamicResource TextBlockStyle}" Text="{Binding MCUVersion}" Grid.Column="7"/>
-            <TextBlock Style="{DynamicResource TextBlockStyle}" Text="{Binding ASICID}" Grid.Column="9"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="2">
+                <!--Status box for WD-->
+                <Border BorderThickness="1" 
+                        BorderBrush="{DynamicResource Animation.Lines}" 
+                        CornerRadius="5" HorizontalAlignment="Left" 
+                        Width="50" Margin="2">
+                    <Border.Background>
+                        <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
+                            <Binding Path = "WatchdogViewModel.WDFaultStatus"/>
+                            <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                        </MultiBinding>
+                    </Border.Background>
+                    <TextBlock Text="WD" HorizontalAlignment="Center" FontSize="16" Style="{DynamicResource TextBlockStyle}"/>
+                </Border>
+            </StackPanel>
         </Grid>
     </Grid>
 </Window>

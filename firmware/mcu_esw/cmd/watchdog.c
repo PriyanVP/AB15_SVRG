@@ -16,6 +16,7 @@
 #include "top/spi_wrapper.h"
 #include "top/usb_wrapper.h"
 #include "watchdog.h"
+#include "pwm.h"
 
 /*********************************************************************************************************************/
 /*------------------------------------------------------Macros-------------------------------------------------------*/
@@ -23,7 +24,7 @@
 
 #define WD_CFG_PACKAGE_MAX_LEN  (6)             /** \brief Max number of addr+data items (4 bytes) in package  */
 
-#define WD_STATUS_REGS_COUNT    (3)             /** \brief Number of WD status registers for periodic reading */
+#define WD_STATUS_REGS_COUNT    (4)             /** \brief Number of WD status registers for periodic reading */
 
 #define AB12_WD2_ACK_PERIOD     (12)            /** \brief Periodicity of acknowledging WD2 on AB12 platform: 600 us/ 50 us
                                                     where 50 us - timer interrupt periodicity on MCU */
@@ -46,6 +47,16 @@ typedef enum
     WD_STATE_RUNNING_NORMAL     = 2,        /** \brief watchdog is being acknowledged correctly */
     WD_STATE_RUNNING_FAILING    = 3         /** \brief watchdog is being acknowledged incorrectly (intentionally) */
 } WatchdogStateEnum;
+
+/** \brief Defines applicable states for Ext clock state
+ */
+typedef enum
+{
+    EXT_CLK_STATE_IDLE          = 0,        /** \brief init state after POR */
+    EXT_CLK_STATE_2MHZ          = 1,        /** \brief default state eclock is running with 2 Mhz   */
+    EXT_CLK_STATE_4MHZ          = 2,        /** \brief eclock is running with 2 Mhz */
+    EXT_CLK_STATE_FAIL          = 3         /** \brief not used yet */
+} ExtClockStateEnum;
 
 /** \brief Defines applicable options for WD failing (intentional)
  */
@@ -126,10 +137,16 @@ static WatchdogParametersStruct g_wd2Parameters =
  */
 static WatchdogStatusMonitoringStruct g_wdStatusMonitoringConfig =
 {
-    .enStatusReading = FALSE,                                                                                                  // at startup WD is not configured
-    .wdStatusRegsAddresses = {SAFETY_LOGIC_SPI_READ_WDSTATUS1, SAFETY_LOGIC_SPI_READ_WDSTATUS2, SAFETY_LOGIC_SPI_READ_ENX},    // addresses for WD status registers are constant
-    .lengthOfRegsToRead = WD_STATUS_REGS_COUNT                                                                                 // number of addresses to read
+    .enStatusReading = FALSE,                                                                           // at startup WD is not configured
+    .wdStatusRegsAddresses = {SAFETY_LOGIC_SPI_READ_WDSTATUS1, SAFETY_LOGIC_SPI_READ_WDSTATUS2, 
+                              SAFETY_LOGIC_SPI_READ_ENX, SAFETY_LOGIC_SPI_READ_WDQA},                   // addresses for WD status registers are constant
+    .lengthOfRegsToRead = WD_STATUS_REGS_COUNT                                                          // number of addresses to read
 };
+
+
+/** \brief Local static variable to store external clock state
+ */
+static ExtClockStateEnum g_extClState = EXT_CLK_STATE_2MHZ;
 
 /*********************************************************************************************************************/
 /*------------------------------------------------Function Prototypes------------------------------------------------*/
@@ -139,7 +156,7 @@ static WatchdogStatusMonitoringStruct g_wdStatusMonitoringConfig =
  * \param challengeValue value of AB12's Watchdog 1 and 2 Challenge word
  * \return Returns Response word
  */
-uint16 GetResponseWordAB12(uint8 challengeValue);
+uint16 GetResponseWordAB12(uint16 challengeValue);
 
 /** \brief Function to provide an Answer word for Question of AB15's Watchdog 1 
  * \param questionValue value of AB15's Watchdog 1 Question word
@@ -159,7 +176,18 @@ uint16 GetAnswerWordWD2AB15(uint8 questionValue);
 
 void CmdConfigureWatchdog(USBReceiveData const * const commandPackage)
 {
+    // Command should not be executed in certain WD feature states
+    if ((g_wd1Parameters.state == WD_STATE_RUNNING_NORMAL) || 
+        (g_wd2Parameters.state == WD_STATE_RUNNING_NORMAL) || 
+        (g_wd1Parameters.state == WD_STATE_RUNNING_FAILING)||
+        (g_wd2Parameters.state == WD_STATE_RUNNING_FAILING))
+    {
+        // Skip function execution - GUI will see no response
+        return;
+    }
+
     // Temporary variables
+    USBTransmitData packageToSend;
     boolean isSuccessfulFlag = TRUE;                    //Default true is used to handle write of series of data (AND logic on flags)
     uint8 indexerForPayload = 0;
  
@@ -220,7 +248,6 @@ void CmdConfigureWatchdog(USBReceiveData const * const commandPackage)
     #endif
 
     // Prepare report for GUI
-    USBTransmitData packageToSend;
     packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
 
     if (isSuccessfulFlag == FALSE)
@@ -286,7 +313,7 @@ void IntCmdAcknowledgeWatchdog2(void)
     QSPIExecuteInstruction(WD2_TRIGGER, FALSE, answer, &data.dw);
 
     // Store new question
-    g_wd1Parameters.wdQuestion = data.bf.output_data; 
+    g_wd2Parameters.wdQuestion = data.bf.output_data; 
     #else
     // AB15 platform
     // Read question from ASIC
@@ -303,6 +330,14 @@ void IntCmdAcknowledgeWatchdog2(void)
 
 void CmdStartWatchdog(USBReceiveData const * const commandPackage)
 {
+    // Command should not be executed in certain WD feature states
+    if ((g_wd1Parameters.state != WD_STATE_CONFIGURED) || 
+        (g_wd2Parameters.state == WD_STATE_CONFIGURED))
+    {
+        // Skip function execution - GUI will see no response
+        return;
+    }
+
     // Local variables
     USBTransmitData packageToSend;
 
@@ -315,6 +350,14 @@ void CmdStartWatchdog(USBReceiveData const * const commandPackage)
         SendUSBPackage(&packageToSend);
         return;
     }
+
+    #ifndef AB12_PLATFORM
+
+    // Lock config for AB15
+    // Note: assumed that all other bites in spi_set_wdsettings can be 0
+    QSPIWriteNormal(SAFETY_LOGIC_SPI_SET_WDSETTINGS, SAFETY_LOGIC_SPI_SET_WDSETTINGS_SPI_ON_SL_MASK);
+
+    #endif
 
     // Configure periodicity of Watchdog serving MCU interrupt
     ConfigureWatchdogPeriodicity(WD1, g_wd1Parameters.wdConfig.ackPeriod);
@@ -358,6 +401,51 @@ void CmdStopWatchdog(USBReceiveData const * const commandPackage)
     SendUSBPackage(&packageToSend);
 }
 
+void CmdSetExtOsc2Mhz(USBReceiveData const * const commandPackage)
+{
+    // check if already set to 2 MHZ
+    if (g_extClState == EXT_CLK_STATE_2MHZ)
+    {
+        return;
+    }
+    g_extClState = EXT_CLK_STATE_2MHZ;
+
+    SetPWMGeneration2MHZ();
+    StartPWMGeneration();
+
+    // Prepare acknowledge message
+    USBTransmitData packageToSend;
+    packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
+    packageToSend.asic_id = 1;
+    packageToSend.status = USB_STATUS_ACK;
+    packageToSend.dataLength = 0;
+
+    // Send acknowledge message to GUI
+    SendUSBPackage(&packageToSend);
+}
+
+void CmdSetExtOsc4Mhz(USBReceiveData const * const commandPackage)
+{
+    // check if already set to 2 MHZ
+    if (g_extClState == EXT_CLK_STATE_4MHZ)
+    {
+        return;
+    }
+    g_extClState = EXT_CLK_STATE_4MHZ;
+
+    SetPWMGeneration4MHZ();
+    StartPWMGeneration();
+
+    // Prepare acknowledge message
+    USBTransmitData packageToSend;
+    packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
+    packageToSend.asic_id = 1;
+    packageToSend.status = USB_STATUS_ACK;
+    packageToSend.dataLength = 0;
+
+    // Send acknowledge message to GUI
+    SendUSBPackage(&packageToSend);
+}
 void CmdStartMonitoringWatchdog(USBReceiveData const * const commandPackage)
 {
     // Save message ID
@@ -413,8 +501,8 @@ void IntCmdMonitorWatchdog(void)
 
     // Pack data for sending to PC
     packageToSend.dataLength = 3;
-    packageToSend.data[0] = GetLSB(data.bf.output_data);
-    packageToSend.data[1] = GetMSB(data.bf.output_data);
+    packageToSend.data[0] = GetMSB(data.bf.output_data);
+    packageToSend.data[1] = GetLSB(data.bf.output_data);
     packageToSend.data[2] = data.bf.wdf;
     #else
     // AB15 platform
@@ -430,8 +518,8 @@ void IntCmdMonitorWatchdog(void)
         // Store SPI response frame to temporary variable for extracting data
         dataRecived.dw = data[i];
 
-        packageToSend.data[i*2]     = GetLSB(dataRecived.bf.output_data);
-        packageToSend.data[(i*2)+1] = GetMSB(dataRecived.bf.output_data);
+        packageToSend.data[i<<1]     = GetLSB(dataRecived.bf.output_data);
+        packageToSend.data[(i<<1)+1] = GetMSB(dataRecived.bf.output_data);
     }
     #endif
 
@@ -444,7 +532,7 @@ void IntCmdMonitorWatchdog(void)
     SendUSBPackage(&packageToSend);
 }
 
-uint16 GetResponseWordAB12(uint8 challengeValue)
+uint16 GetResponseWordAB12(uint16 challengeValue)
 {
     // Table of Challenge-Response values (according to datasheet AB12)
     static const uint16 responseWordArray[8] =  {0xE106,
@@ -455,7 +543,7 @@ uint16 GetResponseWordAB12(uint8 challengeValue)
                                                  0xA542,
                                                  0x789F,
                                                  0x0FE8};
-    static const uint16 challengeWordArray[8] =  {0x2020,
+    static const uint16 challengeWordArray[8] = {0x2020,
                                                  0xFDFD,
                                                  0x8A8A,
                                                  0x5757,
@@ -519,12 +607,12 @@ uint16 GetAnswerWordWD1AB15(uint8 questionValue)
 uint16 GetAnswerWordWD2AB15(uint8 questionValue)
 {
     static const uint16 answerWordArrayWD2[8] = {0x35CF,
-                                        0x9867,
-                                        0x68B3,
-                                        0xC51B,
-                                        0x5789,
-                                        0xFA21,
-                                        0x0AF5,
-                                        0xA75D};
+                                                 0x9867,
+                                                 0x68B3,
+                                                 0xC51B,
+                                                 0x5789,
+                                                 0xFA21,
+                                                 0x0AF5,
+                                                 0xA75D};
     return (answerWordArrayWD2[questionValue]);
 }

@@ -44,8 +44,8 @@ namespace AB15_GUI.WPF.Services.Interfaces
         /// <summary>
         /// Removes outdated items from waitlist and returns list of their delegates
         /// </summary>
-        /// <returns>List with outdated commands delegates</returns>
-        List<Action<IReceiveCommunicationPackage>> RemoveOutdatedItems();
+        /// <returns>List with outdated commands delegates and payload types</returns>
+        List<(Action<IReceiveCommunicationPackage> deleg, Type? payloadType)> RemoveOutdatedItems();
         
         /// <summary>
         /// Remove item from waitlist by ID. Intended for removing continuous items

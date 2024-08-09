@@ -122,11 +122,11 @@ void Blink_LED1_1Hz(void)
     static uint16 cntr;
 
     cntr++;
-    if (cntr >=500){
+    if (cntr >=40000){ // wrap around after 40000*25us
         cntr = 0;
     }
 
-    if (cntr < 250)
+    if (cntr < 12000) // 30% duty cycle for blink
     {
         OnLED1();
     }

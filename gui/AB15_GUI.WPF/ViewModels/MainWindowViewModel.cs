@@ -1,16 +1,6 @@
-﻿using AB15_GUI.WPF.Models;
-using AB15_GUI.WPF.Models.Interfaces;
-using AB15_GUI.WPF.Services.Interfaces;
-using AB15_GUI.WPF.Views;
+﻿using AB15_GUI.WPF.Views;
 using NLog;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Net.NetworkInformation;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AB15_GUI.WPF.ViewModels
 {
@@ -89,19 +79,27 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// Logger window instance
         /// </summary>
-        public readonly LoggerViewModel LoggerViewModel;
+        public LoggerViewModel LoggerViewModel { get; private set; }
+
+        /// <summary>
+        /// Watchdog page instance
+        /// </summary>
+        public WatchdogViewModel WatchdogViewModel { get; private set; }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public MainViewModel(Logger logger, LoggerViewModel loggerViewModel, LoggerView loggerWindowView)
+        public MainViewModel(Logger logger, LoggerViewModel loggerViewModel, LoggerView loggerWindowView, WatchdogViewModel watchdogViewModel)
         {
             // Init Logger and logger view model
             this.logger = logger;
+
+            // Store references to child view models
             LoggerViewModel = loggerViewModel;
+            WatchdogViewModel = watchdogViewModel;
 
             logger.Trace("In MainViewModel");
-            loggerWindowView.Show();
+            loggerWindowView.Show();       
         }
     }
 }

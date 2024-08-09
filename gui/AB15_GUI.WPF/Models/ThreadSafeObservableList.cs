@@ -122,7 +122,7 @@ namespace AB15_GUI.WPF.Models
                     {
                         T removedItem = _list.ElementAt(0);
                         _list.RemoveAt(0);
-                        OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item));
+                        OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removedItem, 0));
                     }
                     _list.Add(item);
                     OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item));

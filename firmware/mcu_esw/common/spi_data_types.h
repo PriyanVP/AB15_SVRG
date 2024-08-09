@@ -160,7 +160,7 @@ typedef union
         uint32 gs_flag          : 1;  /** \brief global status flag */
         uint32 output_data      : 16; /** \brief receive data */
         uint32 sid_add_status   : 5;  /** \brief safety ID */
-        uint32 s_bit            : 1;  /** \brief sebsor data flag */
+        uint32 s_bit            : 1;  /** \brief sensor data flag */
         uint32 dis1             : 1;  /** \brief Disposal flag 1 */
         uint32 dis2             : 1;  /** \brief Disposal flag 2 */
         uint32 wdf              : 1;  /** \brief Watchdog fault */
