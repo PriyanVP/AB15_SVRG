@@ -42,7 +42,6 @@ namespace AB15_GUI.WPF.Models
         /// <param name="rawData">Data that should be converted to parameters values (payload only)</param>
         public void Deserialize(MCUStatus status, List<byte> rawData)
         {
-            
             // Apply different handling based on WatchdogStatus
             switch (status)
             {

@@ -2,15 +2,14 @@ using System;
 using System.Collections.Generic;
 using AB15_GUI.WPF.Models;
 using AB15_GUI.WPF.Models.Interfaces;
-using static AB15_GUI.WPF.Models.WDConfigurePayload;
 
 namespace AB15_GUI.Tests.Models
 {
     /// <summary>
-    /// Checking TransmitCommunicationPackage class
+    /// Checking WDConfigurePayload class
     /// </summary>
     /// <tc_links>
-    ///     <link ID="ABEVBSW-xx" Link="https://rb-tracker.bosch.com/tracker19/browse/ABEVBSW-xx" />
+    ///     <link ID="ABEVBSW-132" Link="https://rb-tracker.bosch.com/tracker19/browse/ABEVBSW-132" />
     /// </tc_links>
     [TestFixture]
     [Parallelizable(scope: ParallelScope.Self)]
@@ -66,7 +65,7 @@ namespace AB15_GUI.Tests.Models
 //            WDConfigurePayload tstPayload = new();
 
 //            // Act
-////            List<byte> constructedPayload = tstPayload.Serialize();
+// //            List<byte> constructedPayload = tstPayload.Serialize();
 
 //            // Assert
 //            // Payload content is expected

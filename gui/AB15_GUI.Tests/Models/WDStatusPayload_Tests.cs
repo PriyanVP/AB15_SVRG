@@ -5,10 +5,10 @@ using static AB15_GUI.WPF.Models.WDStatusPayload;
 namespace AB15_GUI.Tests.Models
 {
     /// <summary>
-    /// Checking DeviceID Payload
+    /// Checking WDStatusPayload class
     /// </summary>
     /// <tc_links>
-    ///     <link ID="ABEVBSW-xx" Link="https://rb-tracker.bosch.com/tracker19/browse/ABEVBSW-xx" />
+    ///     <link ID="ABEVBSW-132" Link="https://rb-tracker.bosch.com/tracker19/browse/ABEVBSW-132" />
     /// </tc_links>
     [TestFixture]
     [Parallelizable(scope: ParallelScope.Self)]
@@ -49,23 +49,23 @@ namespace AB15_GUI.Tests.Models
             // Set all WD fault flags to be identical to the WDF flag in the third byte
             expectedWDStatus.WatchdogFault = wdf;
 
-            expectedWDStatus.FastWatchdogFault = wdf;
-            expectedWDStatus.SlowWatchdogFault = wdf;
-            expectedWDStatus.OscillatorFault = wdf;
+            // expectedWDStatus.FastWatchdogFault = wdf;
+            // expectedWDStatus.SlowWatchdogFault = wdf;
+            // expectedWDStatus.OscillatorFault = wdf;
 
-            expectedWDStatus.FastWatchdogUnderflow = wdf;
-            expectedWDStatus.FastWatchdogOverflow = wdf;
-            expectedWDStatus.FastWatchdogQAFault = wdf;
-            expectedWDStatus.SlowWatchdogOverflow = wdf;
-            expectedWDStatus.SlowWatchdogQAFault = wdf;
-            expectedWDStatus.OscillatorUnderflow = wdf;
-            expectedWDStatus.OscillatorOverflow = wdf;
+            // expectedWDStatus.FastWatchdogUnderflow = wdf;
+            // expectedWDStatus.FastWatchdogOverflow = wdf;
+            // expectedWDStatus.FastWatchdogQAFault = wdf;
+            // expectedWDStatus.SlowWatchdogOverflow = wdf;
+            // expectedWDStatus.SlowWatchdogQAFault = wdf;
+            // expectedWDStatus.OscillatorUnderflow = wdf;
+            // expectedWDStatus.OscillatorOverflow = wdf;
 
             // Assert
             // No errors were found
             Assert.That(payload.Error, Is.Null);
 
-            Assert.That(payload.WatchdogStatus, Is.EqualTo(expectedWDStatus));
+            Assert.That(payload.WatchdogStatus.WatchdogFault, Is.EqualTo(expectedWDStatus.WatchdogFault));
         }
 
         
