@@ -216,6 +216,7 @@ namespace AB15_GUI.WPF.ViewModels
             AddHelpMsg(nameof(WD2FaultCounter), "WD2 fault counter");
             AddHelpMsg(nameof(WD2TimingMonitorCounter), "WD2 timing monitor results");
             AddHelpMsg(nameof(WD2QAFailureCounter), "WD2 QA failure counter value");
+            AddHelpMsg(nameof(WriteConfigToASIC), "WD2 QA failure counter value");
 
             // UI elements help messages
         }

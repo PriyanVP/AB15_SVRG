@@ -15,9 +15,11 @@
     <Page.Resources>
         <cnvrt:FaultFlagToColorConverter x:Key="FaultFlagToColorConverter"/>
         <cnvrt:ScalingConverter x:Key="ScalingConverter"/>
+        <cnvrt:HelpMessageConverter x:Key="HelpMessageConverter"/>
     </Page.Resources>
 
-    <Grid Background="{DynamicResource UI.BackGround}" KeyDown="Grid_KeyDown" MouseDown="Grid_MouseDown">
+    <Grid Background="{DynamicResource UI.BackGround}" 
+          KeyDown="Grid_KeyDown" MouseDown="Grid_MouseDown">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" MinHeight="20"/>
@@ -43,6 +45,7 @@
                     </Grid.RowDefinitions>
 
                     <Grid Grid.Row="0">
+                        
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="*"/>
@@ -74,7 +77,9 @@
                         <!--#region Main fault flag -->
                         <Border Grid.Row="1" Grid.Column="5" Grid.ColumnSpan="2" BorderThickness="1" 
                                 BorderBrush="{DynamicResource Animation.Lines}" 
-                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2"
+                                ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='WDFaultStatus', Mode=OneWay}"
+                                ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                             <Border.Background>
                                 <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
                                     <Binding Path = "WDFaultStatus"/>
@@ -88,7 +93,9 @@
                         <!--*********-->
                         <Border Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" BorderThickness="1" 
                                 BorderBrush="{DynamicResource Animation.Lines}" 
-                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2"
+                                ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='WD1FaultStatus', Mode=OneWay}"
+                                ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                             <Border.Background>
                                 <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
                                     <Binding Path = "WD1FaultStatus"/>
@@ -102,7 +109,9 @@
 
                         <Border Grid.Row="3" Grid.Column="5" Grid.ColumnSpan="2" BorderThickness="1" 
                                 BorderBrush="{DynamicResource Animation.Lines}" 
-                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2"
+                                ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='WD2FaultStatus', Mode=OneWay}"
+                                ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                             <Border.Background>
                                 <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
                                     <Binding Path = "WD2FaultStatus"/>
@@ -115,7 +124,9 @@
                         
                         <Border Grid.Row="3" Grid.Column="9" Grid.ColumnSpan="2" BorderThickness="1" 
                                 BorderBrush="{DynamicResource Animation.Lines}" 
-                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2"
+                                ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='ErrorPinFaultStatus', Mode=OneWay}"
+                                ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                             <Border.Background>
                                 <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
                                     <Binding Path = "ErrorPinFaultStatus"/>
@@ -132,7 +143,9 @@
                                 x:Name="TextScaleBorder"
                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2"
-                                SizeChanged="TextScale_SizeChanged">
+                                SizeChanged="TextScale_SizeChanged"
+                                ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='WD1TimerFaultStatus', Mode=OneWay}"
+                                ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                             <Border.Background>
                                 <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
                                     <Binding Path = "WD1TimerFaultStatus"/>
@@ -146,7 +159,9 @@
 
                         <Border Grid.Row="4" Grid.Column="5" Grid.ColumnSpan="2" BorderThickness="1" 
                                 BorderBrush="{DynamicResource Animation.Lines}" 
-                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2"
+                                ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='WD2TimerFaultStatus', Mode=OneWay}"
+                                ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                             <Border.Background>
                                 <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
                                     <Binding Path = "WD2TimerFaultStatus"/>
@@ -159,7 +174,9 @@
 
                         <Border Grid.Row="4" Grid.Column="9" Grid.ColumnSpan="2" BorderThickness="1" 
                                 BorderBrush="{DynamicResource Animation.Lines}" 
-                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2"
+                                ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='OSCMONFaultStatus', Mode=OneWay}"
+                                ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                             <Border.Background>
                                 <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
                                     <Binding Path = "OSCMONFaultStatus"/>
@@ -174,7 +191,9 @@
 
                         <Border Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" BorderThickness="1" 
                                 BorderBrush="{DynamicResource Animation.Lines}" 
-                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2"
+                                ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='WD1QAFaultStatus', Mode=OneWay}"
+                                ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                             <Border.Background>
                                 <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
                                     <Binding Path = "WD1QAFaultStatus"/>
@@ -187,7 +206,9 @@
 
                         <Border Grid.Row="5" Grid.Column="5" Grid.ColumnSpan="2" BorderThickness="1" 
                                 BorderBrush="{DynamicResource Animation.Lines}" 
-                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2"
+                                ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='WD2QAFaultStatus', Mode=OneWay}"
+                                ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                             <Border.Background>
                                 <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
                                     <Binding Path = "WD2QAFaultStatus"/>
@@ -206,7 +227,9 @@
 
                         <Border Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="1" 
                                 BorderBrush="{DynamicResource Animation.Lines}" 
-                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2"
+                                ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='OscillatorFaultStatus', Mode=OneWay}"
+                                ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                             <Border.Background>
                                 <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
                                     <Binding Path = "OscillatorFaultStatus"/>
@@ -219,7 +242,9 @@
 
                         <Border Grid.Row="8" Grid.Column="2" Grid.ColumnSpan="2" BorderThickness="1" 
                                 BorderBrush="{DynamicResource Animation.Lines}" 
-                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2"
+                                ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='WDResetFaultStatus', Mode=OneWay}"
+                                ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                             <Border.Background>
                                 <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
                                     <Binding Path = "WDResetFaultStatus"/>
@@ -233,7 +258,9 @@
 
                         <Border Grid.Row="8" Grid.Column="4" Grid.ColumnSpan="2" BorderThickness="1" 
                                 BorderBrush="{DynamicResource Animation.Lines}" 
-                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2"
+                                ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='WD1CounterFaultStatus', Mode=OneWay}"
+                                ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                             <Border.Background>
                                 <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
                                     <Binding Path = "WD1CounterFaultStatus"/>
@@ -246,7 +273,9 @@
 
                         <Border Grid.Row="8" Grid.Column="6" Grid.ColumnSpan="2" BorderThickness="1" 
                                 BorderBrush="{DynamicResource Animation.Lines}" 
-                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2"
+                                ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='QA1FaultStatus', Mode=OneWay}"
+                                ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                             <Border.Background>
                                 <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
                                     <Binding Path = "QA1FaultStatus"/>
@@ -259,7 +288,9 @@
 
                         <Border Grid.Row="8" Grid.Column="8" Grid.ColumnSpan="2" BorderThickness="1" 
                                 BorderBrush="{DynamicResource Animation.Lines}" 
-                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2"
+                                ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='WD2CounterFaultStatus', Mode=OneWay}"
+                                ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                             <Border.Background>
                                 <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
                                     <Binding Path = "WD2CounterFaultStatus"/>
@@ -272,7 +303,9 @@
 
                         <Border Grid.Row="8" Grid.Column="10" Grid.ColumnSpan="2" BorderThickness="1" 
                                 BorderBrush="{DynamicResource Animation.Lines}" 
-                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2"
+                                ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='QA2FaultStatus', Mode=OneWay}"
+                                ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                             <Border.Background>
                                 <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
                                     <Binding Path = "QA2FaultStatus"/>
@@ -359,24 +392,44 @@
                             <TextBlock Grid.Row="1" Grid.Column="0" Margin="2"
                                        VerticalAlignment="Center" HorizontalAlignment="Center"
                                        Style="{DynamicResource CustomTextBlock}"
-                                       Text="Fault counter"/>
+                                       Text="Fault counter"
+                                       ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='WD1FaultCounter', Mode=OneWay}"
+                                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
                             <TextBlock Grid.Row="2" Grid.Column="0" Margin="2"
                                        VerticalAlignment="Center" HorizontalAlignment="Center"
                                        Style="{DynamicResource CustomTextBlock}"
-                                       Text="Timing monitor results"/>
+                                       Text="Timing monitor results"
+                                       ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='WD1TimingMonitorCounter', Mode=OneWay}"
+                                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
                             <TextBlock Grid.Row="3" Grid.Column="0" Margin="2"
                                        VerticalAlignment="Center" HorizontalAlignment="Center"
                                        Style="{DynamicResource CustomTextBlock}"
-                                       Text="Number of counted error events"/>
+                                       Text="Number of counted error events"
+                                       ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='WD1ErrorEventsCounter', Mode=OneWay}"
+                                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
                             <TextBlock Grid.Row="4" Grid.Column="0" Margin="2"
                                        VerticalAlignment="Center" HorizontalAlignment="Center"
                                        Style="{DynamicResource CustomTextBlock}"
-                                       Text="QA1 failure counter value"/>
+                                       Text="QA1 failure counter value"
+                                       ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='WD1QAFailureCounter', Mode=OneWay}"
+                                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
 
-                            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding WD1FaultCounter}"/>
-                            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding WD1TimingMonitorCounter}"/>
-                            <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding WD1ErrorEventsCounter}"/>
-                            <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding WD1QAFailureCounter}"/>
+                            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding WD1FaultCounter}"
+                                     Focusable="False" IsReadOnly="True"
+                                     ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='WD1FaultCounter', Mode=OneWay}"
+                                     ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
+                            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding WD1TimingMonitorCounter}"
+                                     Focusable="False" IsReadOnly="True"
+                                     ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='WD1TimingMonitorCounter', Mode=OneWay}"
+                                     ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
+                            <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding WD1ErrorEventsCounter}"
+                                     Focusable="False" IsReadOnly="True"
+                                     ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='WD1ErrorEventsCounter', Mode=OneWay}"
+                                     ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
+                            <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding WD1QAFailureCounter}"
+                                     Focusable="False" IsReadOnly="True"
+                                     ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='WD1QAFailureCounter', Mode=OneWay}"
+                                     ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
                         </Grid>
 
                         <Grid Grid.Column="1" Margin="2">
@@ -402,19 +455,34 @@
                             <TextBlock Grid.Row="1" Grid.Column="0" Margin="2"
                                        VerticalAlignment="Center" HorizontalAlignment="Center"
                                        Style="{DynamicResource CustomTextBlock}"
-                                       Text="Fault counter"/>
+                                       Text="Fault counter"
+                                       ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='WD2FaultCounter', Mode=OneWay}"
+                                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
                             <TextBlock Grid.Row="2" Grid.Column="0" Margin="2"
                                        VerticalAlignment="Center" HorizontalAlignment="Center"
                                        Style="{DynamicResource CustomTextBlock}"
-                                       Text="Timing monitor results"/>
+                                       Text="Timing monitor results"
+                                       ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='WD2TimingMonitorCounter', Mode=OneWay}"
+                                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
                             <TextBlock Grid.Row="3" Grid.Column="0" Margin="2"
                                        VerticalAlignment="Center" HorizontalAlignment="Center"
                                        Style="{DynamicResource CustomTextBlock}"
-                                       Text="QA2 failure counter value"/>
+                                       Text="QA2 failure counter value"
+                                       ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='WD2QAFailureCounter', Mode=OneWay}"
+                                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
 
-                            <TextBox Margin="1,2,5,2" Grid.Row="1" Grid.Column="1" Text="{Binding WD2FaultCounter}"/>
-                            <TextBox Margin="1,2,5,2" Grid.Row="2" Grid.Column="1" Text="{Binding WD2TimingMonitorCounter}"/>
-                            <TextBox Margin="1,2,5,2" Grid.Row="3" Grid.Column="1" Text="{Binding WD2QAFailureCounter}"/>
+                            <TextBox Margin="1,2,5,2" Grid.Row="1" Grid.Column="1" Text="{Binding WD2FaultCounter}"
+                                     Focusable="False" IsReadOnly="True"
+                                     ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='WD2FaultCounter', Mode=OneWay}"
+                                     ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
+                            <TextBox Margin="1,2,5,2" Grid.Row="2" Grid.Column="1" Text="{Binding WD2TimingMonitorCounter}"
+                                     Focusable="False" IsReadOnly="True"
+                                     ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='WD2TimingMonitorCounter', Mode=OneWay}"
+                                     ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
+                            <TextBox Margin="1,2,5,2" Grid.Row="3" Grid.Column="1" Text="{Binding WD2QAFailureCounter}"
+                                     Focusable="False" IsReadOnly="True"
+                                     ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='WD2QAFailureCounter', Mode=OneWay}"
+                                     ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
                         </Grid>
 
                         <Grid Grid.Column="2" Margin="2">
@@ -430,7 +498,9 @@
                             <!--TODO add converter for text Hight - Low-->
                             <Border Grid.Row="1" BorderThickness="1" 
                                     BorderBrush="{DynamicResource Animation.Lines}" 
-                                    CornerRadius="5" HorizontalAlignment="Center" Margin="2">
+                                    CornerRadius="5" HorizontalAlignment="Center" Margin="2"
+                                    ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='EN0HightStatus', Mode=OneWay}"
+                                    ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                                 <Border.Background>
                                     <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
                                         <Binding Path = "EN0HightStatus"/>
@@ -496,31 +566,43 @@
                             <TextBlock Text="Response time"
                                        Style="{DynamicResource CustomTextBlock}"
                                        IsEnabled="{Binding IsConfigEnable}"
-                                       HorizontalAlignment="Right"/>
+                                       HorizontalAlignment="Right"
+                                       ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='WD1ResponseTime', Mode=OneWay}"
+                                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
                             <TextBlock Text="Lock time"
                                        Style="{DynamicResource CustomTextBlock}"
                                        IsEnabled="{Binding IsConfigEnable}"
-                                       HorizontalAlignment="Right"/>
+                                       HorizontalAlignment="Right"
+                                       ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='WD1LockTime', Mode=OneWay}"
+                                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
                         </StackPanel>
 
                         <StackPanel Grid.Column="2" Grid.Row="1" VerticalAlignment="Center">
                             <TextBox Text="{Binding ElementName=WD1ResponseTimeSlider, Path=Value, Converter={StaticResource ScalingConverter}, Mode=OneWay, ConverterParameter=50}" 
                                      Focusable="False" IsReadOnly="True"
-                                     IsEnabled="{Binding IsConfigEnable}"/>
+                                     IsEnabled="{Binding IsConfigEnable}"
+                                     ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='WD1ResponseTime', Mode=OneWay}"
+                                     ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
                             <TextBox Text="{Binding ElementName=WD1LockTimeSlider, Path=Value, Converter={StaticResource ScalingConverter}, Mode=OneWay, ConverterParameter=50}" 
                                      Focusable="False" IsReadOnly="True"
-                                     IsEnabled="{Binding IsConfigEnable}"/>
+                                     IsEnabled="{Binding IsConfigEnable}"
+                                     ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='WD1LockTime', Mode=OneWay}"
+                                     ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
                         </StackPanel>
 
                         <StackPanel Grid.Column="3" Grid.Row="1" Margin="2,0" VerticalAlignment="Center">
                             <TextBlock Text="μs"
                                        Style="{DynamicResource CustomTextBlock}"
                                        IsEnabled="{Binding IsConfigEnable}"
-                                       HorizontalAlignment="Center"/>
+                                       HorizontalAlignment="Center"
+                                       ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='WD1ResponseTime', Mode=OneWay}"
+                                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
                             <TextBlock Text="μs"
                                        Style="{DynamicResource CustomTextBlock}"
                                        IsEnabled="{Binding IsConfigEnable}"
-                                       HorizontalAlignment="Center"/>
+                                       HorizontalAlignment="Center"
+                                       ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='WD1LockTime', Mode=OneWay}"
+                                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
                         </StackPanel>
 
                         <Slider Name="WD1ResponseTimeSlider" ValueChanged="WD1ResponseTimeSlider_ValueChanged"
@@ -555,31 +637,43 @@
                             <TextBlock Text="Response time" 
                                        Style="{DynamicResource CustomTextBlock}"
                                        IsEnabled="{Binding IsConfigEnable}"
-                                       HorizontalAlignment="Right"/>
+                                       HorizontalAlignment="Right"
+                                       ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='WD2ResponseTime', Mode=OneWay}"
+                                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
                             <TextBlock Text="Lock time" 
                                        Style="{DynamicResource CustomTextBlock}"
                                        IsEnabled="{Binding IsConfigEnable}"
-                                       HorizontalAlignment="Right"/>
+                                       HorizontalAlignment="Right"
+                                       ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='WD2LockTime', Mode=OneWay}"
+                                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
                         </StackPanel>
 
                         <StackPanel Grid.Column="2" Grid.Row="2" VerticalAlignment="Center">
                             <TextBox Text="{Binding ElementName=WD2ResponseTimeSlider, Path=Value, Converter={StaticResource ScalingConverter}, Mode=OneWay, ConverterParameter=1}"
                                      Focusable="False" IsReadOnly="True"
-                                     IsEnabled="{Binding IsConfigEnable}"/>
+                                     IsEnabled="{Binding IsConfigEnable}"
+                                     ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='WD2ResponseTime', Mode=OneWay}"
+                                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
                             <TextBox Text="{Binding ElementName=WD2LockTimeSlider, Path=Value, Converter={StaticResource ScalingConverter}, Mode=OneWay, ConverterParameter=1}"
                                      Focusable="False" IsReadOnly="True"
-                                     IsEnabled="{Binding IsConfigEnable}"/>
+                                     IsEnabled="{Binding IsConfigEnable}"
+                                     ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='WD2LockTime', Mode=OneWay}"
+                                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
                         </StackPanel>
 
                         <StackPanel Grid.Column="3" Grid.Row="2" Margin="2,0" VerticalAlignment="Center">
                             <TextBlock Text="ms"
                                        Style="{DynamicResource CustomTextBlock}"
                                        IsEnabled="{Binding IsConfigEnable}"
-                                       HorizontalAlignment="Center"/>
+                                       HorizontalAlignment="Center"
+                                       ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='WD2ResponseTime', Mode=OneWay}"
+                                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
                             <TextBlock Text="ms"
                                        Style="{DynamicResource CustomTextBlock}"
                                        IsEnabled="{Binding IsConfigEnable}"
-                                       HorizontalAlignment="Center"/>
+                                       HorizontalAlignment="Center"
+                                       ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='WD2LockTime', Mode=OneWay}"
+                                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
                         </StackPanel>
 
                         <Slider Name="WD2ResponseTimeSlider" ValueChanged="WD2ResponseTimeSlider_ValueChanged"
@@ -616,7 +710,9 @@
                                       IsChecked="{Binding IsEN0Enabled}"
                                       Style="{DynamicResource ToggleSwitchStyle}" 
                                       HorizontalAlignment="Right" Margin="5,0"
-                                      IsEnabled="{Binding IsConfigEnable}"/>
+                                      IsEnabled="{Binding IsConfigEnable}"
+                                      ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='IsEN0Enabled', Mode=OneWay}"
+                                      ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
                             <TextBlock Text="Enable EN0" Grid.Column="0" Grid.Row="4" VerticalAlignment="Center"
                                        Style="{DynamicResource CustomTextBlock}"
                                        IsEnabled="{Binding IsConfigEnable}"/>
@@ -625,11 +721,15 @@
                                 <TextBlock Text="WD1" Margin="0,0,5,0"
                                        Style="{DynamicResource CustomTextBlock}"
                                        HorizontalAlignment="Right"
-                                       IsEnabled="{Binding IsConfigEnable}"/>
+                                       IsEnabled="{Binding IsConfigEnable}"
+                                       ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='WD1EN0DisableThreshold', Mode=OneWay}"
+                                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
                                 <TextBlock Text="WD2" Margin="0,0,5,0"
                                        Style="{DynamicResource CustomTextBlock}"
                                        HorizontalAlignment="Right"
-                                       IsEnabled="{Binding IsConfigEnable}"/>
+                                       IsEnabled="{Binding IsConfigEnable}"
+                                       ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='WD2EN0DisableThreshold', Mode=OneWay}"
+                                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
                             </StackPanel>
                         </StackPanel>
 
@@ -638,10 +738,14 @@
                         <StackPanel Grid.Column="2" Grid.Row="4" VerticalAlignment="Center">
                             <TextBox Text="{Binding ElementName=WD1EN0DisableTreshholdSlider,Path=Value}"
                                      Focusable="False" IsReadOnly="True"
-                                     IsEnabled="{Binding IsConfigEnable}"/>
+                                     IsEnabled="{Binding IsConfigEnable}"
+                                     ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='WD1EN0DisableThreshold', Mode=OneWay}"
+                                     ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
                             <TextBox Text="{Binding ElementName=WD2EN0DisableTreshholdSlider,Path=Value}"
                                      Focusable="False" IsReadOnly="True"
-                                     IsEnabled="{Binding IsConfigEnable}"/>
+                                     IsEnabled="{Binding IsConfigEnable}"
+                                     ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='WD2EN0DisableThreshold', Mode=OneWay}"
+                                     ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
                         </StackPanel>
 
                         <StackPanel Grid.Column="4" Grid.Row="4" VerticalAlignment="Center">
@@ -703,7 +807,8 @@
 
             <!-- Testing tab -->
             <TabItem Header="Testing" FontSize="20" Style="{DynamicResource CustomTabItem}">
-
+                
+                <!--#region Testing tab content -->
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -722,24 +827,28 @@
                                 Content="Reset ASIC"
                                 Foreground="{DynamicResource Foreground.Red.Default}"
                                 Command="{Binding ResetAsicCommand}"/>
-                        
+
                         <Button Style="{DynamicResource SimpleButton}"
                                 Content="Reset Watchdog"
                                 Foreground="{DynamicResource Foreground.Red.Default}"
                                 Command="{Binding ResetAsicCommand}"/>
-                        
+
                         <Button Style="{DynamicResource SimpleButton}"
                                 Content="Trigger safety logic fault"
                                 Foreground="{DynamicResource Foreground.Red.Default}"
                                 Command="{Binding ResetAsicCommand}"/>
                     </StackPanel>
-                    
+
                 </Grid>
+                <!--#endregion-->
             </TabItem>
         </TabControl>
 
 
-        <Button Content="?" Grid.Row="0" Grid.Column="1" BorderThickness="1" Margin="2" Width="20"/>
+        <ToggleButton Style="{DynamicResource SimpleToggleButton}" 
+                      x:Name="HelpProviderToggleButton"
+                      Content="?" Grid.Row="0" Grid.Column="1" 
+                      BorderThickness="1" Margin="2" Width="20"/>
 
     </Grid>
 </Page>
