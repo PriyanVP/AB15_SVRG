@@ -16,6 +16,7 @@
 #include "top/spi_wrapper.h"
 #include "top/usb_wrapper.h"
 #include "watchdog.h"
+#include "pwm.h"
 
 /*********************************************************************************************************************/
 /*------------------------------------------------------Macros-------------------------------------------------------*/
@@ -46,6 +47,16 @@ typedef enum
     WD_STATE_RUNNING_NORMAL     = 2,        /** \brief watchdog is being acknowledged correctly */
     WD_STATE_RUNNING_FAILING    = 3         /** \brief watchdog is being acknowledged incorrectly (intentionally) */
 } WatchdogStateEnum;
+
+/** \brief Defines applicable states for Ext clock state
+ */
+typedef enum
+{
+    EXT_CLK_STATE_IDLE          = 0,        /** \brief init state after POR */
+    EXT_CLK_STATE_2MHZ          = 1,        /** \brief default state eclock is running with 2 Mhz   */
+    EXT_CLK_STATE_4MHZ          = 2,        /** \brief eclock is running with 2 Mhz */
+    EXT_CLK_STATE_FAIL          = 3         /** \brief not used yet */
+} ExtClockStateEnum;
 
 /** \brief Defines applicable options for WD failing (intentional)
  */
@@ -131,6 +142,11 @@ static WatchdogStatusMonitoringStruct g_wdStatusMonitoringConfig =
                               SAFETY_LOGIC_SPI_READ_ENX, SAFETY_LOGIC_SPI_READ_WDQA},                   // addresses for WD status registers are constant
     .lengthOfRegsToRead = WD_STATUS_REGS_COUNT                                                          // number of addresses to read
 };
+
+
+/** \brief Local static variable to store external clock state
+ */
+static ExtClockStateEnum g_extClState = EXT_CLK_STATE_2MHZ;
 
 /*********************************************************************************************************************/
 /*------------------------------------------------Function Prototypes------------------------------------------------*/
@@ -385,6 +401,51 @@ void CmdStopWatchdog(USBReceiveData const * const commandPackage)
     SendUSBPackage(&packageToSend);
 }
 
+void CmdSetExtOsc2Mhz(USBReceiveData const * const commandPackage)
+{
+    // check if already set to 2 MHZ
+    if (g_extClState == EXT_CLK_STATE_2MHZ)
+    {
+        return;
+    }
+    g_extClState = EXT_CLK_STATE_2MHZ;
+
+    SetPWMGeneration2MHZ();
+    StartPWMGeneration();
+
+    // Prepare acknowledge message
+    USBTransmitData packageToSend;
+    packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
+    packageToSend.asic_id = 1;
+    packageToSend.status = USB_STATUS_ACK;
+    packageToSend.dataLength = 0;
+
+    // Send acknowledge message to GUI
+    SendUSBPackage(&packageToSend);
+}
+
+void CmdSetExtOsc4Mhz(USBReceiveData const * const commandPackage)
+{
+    // check if already set to 2 MHZ
+    if (g_extClState == EXT_CLK_STATE_4MHZ)
+    {
+        return;
+    }
+    g_extClState = EXT_CLK_STATE_4MHZ;
+
+    SetPWMGeneration4MHZ();
+    StartPWMGeneration();
+
+    // Prepare acknowledge message
+    USBTransmitData packageToSend;
+    packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
+    packageToSend.asic_id = 1;
+    packageToSend.status = USB_STATUS_ACK;
+    packageToSend.dataLength = 0;
+
+    // Send acknowledge message to GUI
+    SendUSBPackage(&packageToSend);
+}
 void CmdStartMonitoringWatchdog(USBReceiveData const * const commandPackage)
 {
     // Save message ID
