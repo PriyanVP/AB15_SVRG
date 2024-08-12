@@ -13,7 +13,7 @@
 #include "common/bit_manipulation.h"
 #include "top/spi_wrapper.h"
 #include "top/usb_wrapper.h"
-#include "top/version.h"
+#include "common/version.h"
 #include "periphery/led.h"
 #include "general_cmd.h"
 
