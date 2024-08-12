@@ -42,6 +42,13 @@ firmware/mcu_esw/TriCoreDebug*/
 #smudge = cat
 firmware/mcu_esw/.settings/language.settings.xml
 
+# Ignore binaries
+firmware/TC375_iLLD/Debug/
+firmware/TC375_iLLD/Release/
+
+# Except main library build
+!firmware/TC375_iLLD/Debug/TC375_iLLD.a
+
 
 # .. except certain files
 #!firmware/mcu_esw/TriCoreDebug\(TASKING\)/*.hex
