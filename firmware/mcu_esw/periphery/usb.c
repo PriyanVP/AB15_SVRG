@@ -40,17 +40,17 @@ void InitSerialInterface(void);
 /*********************************************************************************************************************/
 /*-------------------------------------------------Global variables--------------------------------------------------*/
 /*********************************************************************************************************************/
-IfxStdIf_DPipe  g_ascStandardInterface;                              /** \brief Standard interface object            */
-IfxAsclin_Asc   g_asclin;                                            /** \brief ASCLIN module object                 */
+static IfxStdIf_DPipe  g_ascStandardInterface;                       /** \brief Standard interface object            */
+static IfxAsclin_Asc   g_asclin;                                     /** \brief ASCLIN module object                 */
 
 /* The transfer buffers allocate memory for the data itself and for FIFO runtime variables.
  * 8 more bytes have to be added to ensure a proper circular buffer handling independent from
  * the address to which the buffers have been located.
  */
-uint8 g_uartTxBuffer[ASC_TX_BUFFER_SIZE + sizeof(Ifx_Fifo) + 8];
-uint8 g_uartRxBuffer[ASC_RX_BUFFER_SIZE + sizeof(Ifx_Fifo) + 8];
+static uint8 g_uartTxBuffer[ASC_TX_BUFFER_SIZE + sizeof(Ifx_Fifo) + 8];
+static uint8 g_uartRxBuffer[ASC_RX_BUFFER_SIZE + sizeof(Ifx_Fifo) + 8];
 
-sint32 g_timeout;                             /** \brief USB timeout variable, used to store timer ticks for timeout */
+static sint32 g_timeout;                      /** \brief USB timeout variable, used to store timer ticks for timeout */
 
 /*********************************************************************************************************************/
 /*---------------------------------------------Function Implementations----------------------------------------------*/

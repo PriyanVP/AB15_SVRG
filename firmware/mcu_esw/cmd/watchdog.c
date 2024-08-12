@@ -79,14 +79,14 @@ typedef struct
     boolean enStatusReading;                               /** \brief enable periodic WD status reading flag */
     uint16 wdStatusRegsAddresses[WD_STATUS_REGS_COUNT];    /** \brief array with adresses of WD status registers */
     uint16 lengthOfRegsToRead;                             /** \brief number of registers to read */
-    uint16 monitoringMessageID;                            /** \brief message ID for sending back WD status data */
+    uint8  monitoringMessageID;                            /** \brief message ID for sending back WD status data */
 } WatchdogStatusMonitoringStruct;
 
 /** \brief Structure for Watchdog configuration
  */
 typedef struct
 {
-    uint32 ackPeriod;                   /** \brief acknowledge periodicity in timer interrupts */
+    uint16 ackPeriod;                   /** \brief acknowledge periodicity in timer interrupts */
     WatchdogTypeEnum wdType;            /** \brief type of WD */
 } WatchdogConfigStruct;
 

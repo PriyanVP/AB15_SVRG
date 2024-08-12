@@ -13,7 +13,7 @@
 #include "common/bit_manipulation.h"
 #include "top/spi_wrapper.h"
 #include "top/usb_wrapper.h"
-#include "top/version.h"
+#include "common/version.h"
 #include "periphery/led.h"
 #include "general_cmd.h"
 
@@ -50,9 +50,9 @@ void CmdGetMcuVersion(USBReceiveData const * const commandPackage)
     packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
     packageToSend.status = USB_STATUS_STATUS;
     packageToSend.dataLength = 3;
-    packageToSend.data[0] = (char)VERSION_MAJOR;
-    packageToSend.data[1] = (char)VERSION_MINOR;
-    packageToSend.data[2] = (char)VERSION_PATCH;
+    packageToSend.data[0] = VERSION_MAJOR;
+    packageToSend.data[1] = VERSION_MINOR;
+    packageToSend.data[2] = VERSION_PATCH;
     // Send data back to MCU
     SendUSBPackage(&packageToSend);
 }
