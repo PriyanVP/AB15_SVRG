@@ -3,6 +3,7 @@
 	<name>mcu_esw</name>
 	<comment></comment>
 	<projects>
+		<project>TC375_iLLD</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
