@@ -30,7 +30,7 @@
 /*-------------------------------------------------Global variables--------------------------------------------------*/
 /*********************************************************************************************************************/
 
-QSPIHandles g_qspi;                         /** \brief QSPI object to store module and channel handles               */
+static QSPIHandles g_qspi;                         /** \brief QSPI object to store module and channel handles               */
 
 /* Select the port pins for communication */
 const IfxQspi_SpiMaster_Pins qspi1MasterPins = {
