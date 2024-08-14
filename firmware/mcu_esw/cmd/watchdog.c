@@ -332,7 +332,7 @@ void CmdStartWatchdog(USBReceiveData const * const commandPackage)
 {
     // Command should not be executed in certain WD feature states
     if ((g_wd1Parameters.state != WD_STATE_CONFIGURED) || 
-        (g_wd2Parameters.state == WD_STATE_CONFIGURED))
+        (g_wd2Parameters.state != WD_STATE_CONFIGURED))
     {
         // Skip function execution - GUI will see no response
         return;
