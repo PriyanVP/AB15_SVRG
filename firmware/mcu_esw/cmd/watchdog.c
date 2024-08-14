@@ -79,14 +79,14 @@ typedef struct
     boolean enStatusReading;                               /** \brief enable periodic WD status reading flag */
     uint16 wdStatusRegsAddresses[WD_STATUS_REGS_COUNT];    /** \brief array with adresses of WD status registers */
     uint16 lengthOfRegsToRead;                             /** \brief number of registers to read */
-    uint16 monitoringMessageID;                            /** \brief message ID for sending back WD status data */
+    uint8  monitoringMessageID;                            /** \brief message ID for sending back WD status data */
 } WatchdogStatusMonitoringStruct;
 
 /** \brief Structure for Watchdog configuration
  */
 typedef struct
 {
-    uint32 ackPeriod;                   /** \brief acknowledge periodicity in timer interrupts */
+    uint16 ackPeriod;                   /** \brief acknowledge periodicity in timer interrupts */
     WatchdogTypeEnum wdType;            /** \brief type of WD */
 } WatchdogConfigStruct;
 
@@ -332,7 +332,7 @@ void CmdStartWatchdog(USBReceiveData const * const commandPackage)
 {
     // Command should not be executed in certain WD feature states
     if ((g_wd1Parameters.state != WD_STATE_CONFIGURED) || 
-        (g_wd2Parameters.state == WD_STATE_CONFIGURED))
+        (g_wd2Parameters.state != WD_STATE_CONFIGURED))
     {
         // Skip function execution - GUI will see no response
         return;

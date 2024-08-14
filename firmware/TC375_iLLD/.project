@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>mcu_esw</name>
+	<name>TC375_iLLD</name>
 	<comment></comment>
 	<projects>
-		<project>TC375_iLLD</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

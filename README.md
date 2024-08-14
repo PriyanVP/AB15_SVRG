@@ -102,6 +102,7 @@ to get in contact with you or provide feedback.
 * Developer: [Dudnyk Oleksii](https://connect.bosch.com/profiles/html/profileView.do?key=7a5402e8-f7ce-4dd0-bc62-a9b66e4c6b9a#&tabinst=Updates)
 * Developer: [Tkachenko Nikita](https://connect.bosch.com/profiles/html/profileView.do?key=60124c2b-b45f-4bb6-a004-9323e6ea1a9a#&tabinst=Updates)
 * Developer: [Salziger Jan](https://connect.bosch.com/profiles/html/profileView.do?key=9a0923e5-6a55-4333-821e-a0001ec3c013#&tabinst=Updates)
+* Developer: [Khudobets Vadym](https://connect.bosch.com/profiles/html/profileView.do?userid=1AA2475F-410A-47F5-8779-3342667C808D#&tabinst=contactInfo)
 * Developer: [Hoefflinger Jens](https://connect.bosch.com/profiles/html/profileView.do?key=64ef3baf-ecf6-4a9c-bc42-4382113200d3#&tabinst=Updates)
 
 
@@ -116,7 +117,12 @@ project here. Example:
 
 | Name | License | Type |
 |------|---------|------|
-| [Apache Felix](http://felix.apache.org/) | [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0.txt) | Dependency
+| [Newtonsoft.Json](https://www.newtonsoft.com/json) | [MIT](https://github.com/JamesNK/Newtonsoft.Json?tab=MIT-1-ov-file) | Dependency
+| [System.IO.Ports](https://dotnet.microsoft.com/en-us/) | [MIT](https://licenses.nuget.org/MIT) | Dependency
+| [System.Management](http://felix.apache.org/) | [MIT](https://dotnet.microsoft.com/en-us/) | Dependency
+| [Stateless](https://github.com/dotnet-state-machine/stateless?tab=readme-ov-file) | [Apache-2.0](https://github.com/dotnet-state-machine/stateless?tab=License-1-ov-file) | Dependency
+| [iLLD](https://www.infineon.com/cms/en/tools/aurix-embedded-sw/aurix-illd-drivers/) | [BSL-1.0](https://softwaretools.infineon.com/tools/com.ifx.tb.tool.tc3xxilld) | Dependency
+
 
 ### Used Encryption <a name="used-encryption"></a>
 

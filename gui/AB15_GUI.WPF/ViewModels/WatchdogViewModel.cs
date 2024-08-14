@@ -64,7 +64,8 @@ namespace AB15_GUI.WPF.ViewModels
             _stateMachine.Configure(State.Configured)
                          .Permit(Triggers.ConfigurationChanged, State.InConfiguration)
                          .Permit(Triggers.StartedWD, State.Running)
-                         .Ignore(Triggers.GotConfiguration);
+                         .Ignore(Triggers.GotConfiguration)
+                         .Ignore(Triggers.StoppedWD);
 
             _stateMachine.Configure(State.Running)
                          .Permit(Triggers.StoppedWD, State.InConfiguration);
@@ -130,6 +131,8 @@ namespace AB15_GUI.WPF.ViewModels
         /// </summary>
         private void ExecuteStateTransition()
         {
+            logger.Debug($"In state machine transition: state {_stateMachine.State}");
+
             switch (_stateMachine.State)
             {
                 case State.Idle:
@@ -754,6 +757,8 @@ namespace AB15_GUI.WPF.ViewModels
             // Handle that command execution can only be done once in a row
             if (_readWDConfigCommand.IsEnabled == false) return;
             _readWDConfigCommand.InProgress = true;
+
+            logger.Debug($"Pressed read config button");
             
             // Create package to MCU
             TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
@@ -792,6 +797,8 @@ namespace AB15_GUI.WPF.ViewModels
             // Handle that command execution can only be done once in a row
             if (_writeWDConfigCommand.IsEnabled == false) return;
             _writeWDConfigCommand.InProgress = true;
+
+            logger.Debug($"Pressed write config button");
             
             // Create package to MCU
             TransmitCommunicationPackage<WDConfigurePayload> packageToSend = new TransmitCommunicationPackage<WDConfigurePayload>();
@@ -832,6 +839,8 @@ namespace AB15_GUI.WPF.ViewModels
             // Handle that command execution can only be done once in a row
             if (_startWDCommand.IsEnabled == false) return;
             _startWDCommand.InProgress = true;
+
+            logger.Debug($"Pressed start WD button");
             
             // Create package to MCU
             TransmitCommunicationPackage<EmptyPayload> packageToSendStartWD = new TransmitCommunicationPackage<EmptyPayload>();
@@ -868,6 +877,8 @@ namespace AB15_GUI.WPF.ViewModels
             // Handle that command execution can only be done once in a row
             if (_stopWDCommand.IsEnabled == false) return;
             _stopWDCommand.InProgress = true;
+
+            logger.Debug($"Pressed stop WD button");
             
             // Create package to MCU
             TransmitCommunicationPackage<EmptyPayload> packageToSendStopWD = new TransmitCommunicationPackage<EmptyPayload>();
@@ -875,7 +886,7 @@ namespace AB15_GUI.WPF.ViewModels
 
             // Configure start watchdog command
             packageToSendStopWD.ASICID = 1;
-            packageToSendStopWD.Cmd = MCUCommand.START_WATCHDOG;
+            packageToSendStopWD.Cmd = MCUCommand.STOP_WATCHDOG;
             packageToSendStopWD.Deleg = StopWatchdogDelegate;
             packageToSendStopWD.PayloadType = typeof(EmptyPayload);
        
@@ -965,6 +976,8 @@ namespace AB15_GUI.WPF.ViewModels
             WD1LockTime = 0;
             WD2LockTime = 10; // Underflow limit
             #endif
+
+            logger.Debug($"Received read config delegate");
         }
 
         /// <summary>
@@ -991,6 +1004,8 @@ namespace AB15_GUI.WPF.ViewModels
             ClearErrors(nameof(WriteConfigToASIC));
 
             _stateMachine.Fire(Triggers.ConfigurationLoaded);
+
+            logger.Debug($"Received write config delegate");
         }
 
         /// <summary>
@@ -1010,12 +1025,15 @@ namespace AB15_GUI.WPF.ViewModels
             {
                 AddError(mcuResponse.Payload.Error, nameof(StartWatchdog));
                 logger.Error($"Error response received. Status: {mcuResponse.Status}");
+                return;
             }
 
             // Clear errors 
             ClearErrors(nameof(StartWatchdog));
 
             _stateMachine.Fire(Triggers.StartedWD);
+
+            logger.Debug($"Received start wd delegate");
         }
 
         /// <summary>
@@ -1035,12 +1053,15 @@ namespace AB15_GUI.WPF.ViewModels
             {
                 AddError(mcuResponse.Payload.Error, nameof(StopWatchdog));
                 logger.Error($"Error response received. Status: {mcuResponse.Status}");
+                return;
             }
 
             // Clear errors 
             ClearErrors(nameof(StopWatchdog));
 
             _stateMachine.Fire(Triggers.StoppedWD);
+
+            logger.Debug($"Received stop wd delegate");
         }
 
         /// <summary>
