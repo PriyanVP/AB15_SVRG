@@ -131,7 +131,7 @@ namespace AB15_GUI.WPF.ViewModels
         /// </summary>
         private void ExecuteStateTransition()
         {
-            logger.Debug($"In statate machine transition: state {_stateMachine.State}");
+            logger.Debug($"In state machine transition: state {_stateMachine.State}");
 
             switch (_stateMachine.State)
             {
