@@ -60,3 +60,4 @@ firmware/TC375_iLLD/Release/
 /firmware/AB15_MCU.Tests/Tests/__pycache__
 /firmware/AB15_MCU.Tests/Tests/.pytest_cache
 /firmware/AB15_MCU.Tests/.pytest_cache
+/firmware/AB15_MCU.Tests/Tests/fixtures/__pycache__
