@@ -73,9 +73,6 @@ namespace AB15_GUI.WPF.ViewModels
             // Action that will be executed on every state change
             _stateMachine.OnTransitionCompleted((transition) => ExecuteStateTransition());
 
-            // Fire transition to Idle state
-            _stateMachine.Fire(Triggers.POR);
-
             // DOT graph of state machine
             // Can be used with debugger to plot state machine visualization
             string graph = UmlDotGraph.Format(_stateMachine.GetInfo());
@@ -86,6 +83,9 @@ namespace AB15_GUI.WPF.ViewModels
 
             StartWatchdog       = new RelayCommand(StartWatchdogExecute, ((x) => _startWDCommand.IsEnabled));
             StopWatchdog        = new RelayCommand(StopWatchdogExecute, ((x) => _stopWDCommand.IsEnabled));
+
+            // Fire transition to Idle state
+            _stateMachine.Fire(Triggers.POR);
         }
 
         #region State_Machine
@@ -178,6 +178,13 @@ namespace AB15_GUI.WPF.ViewModels
                 default:
                     throw new ArgumentOutOfRangeException(nameof(_stateMachine.State), "Unexpected state received");
             }
+
+            // Any button would work - all can execute will be validated
+            // RelayCommand.RaiseCanExecuteChanged();
+            //((RelayCommand)WriteConfigToASIC).RaiseCanExecuteChanged();
+            //((RelayCommand)ReadConfigFromASIC).RaiseCanExecuteChanged();
+            //((RelayCommand)StartWatchdog).RaiseCanExecuteChanged();
+            //((RelayCommand)StopWatchdog).RaiseCanExecuteChanged();
         }
 
         #endregion //State_Machine
@@ -757,6 +764,8 @@ namespace AB15_GUI.WPF.ViewModels
             // Handle that command execution can only be done once in a row
             if (_readWDConfigCommand.IsEnabled == false) return;
             _readWDConfigCommand.InProgress = true;
+            // RelayCommand.RaiseCanExecuteChanged();
+            // ((RelayCommand)ReadConfigFromASIC).RaiseCanExecuteChanged();
 
             logger.Debug($"Pressed read config button");
             
@@ -797,6 +806,8 @@ namespace AB15_GUI.WPF.ViewModels
             // Handle that command execution can only be done once in a row
             if (_writeWDConfigCommand.IsEnabled == false) return;
             _writeWDConfigCommand.InProgress = true;
+            // RelayCommand.RaiseCanExecuteChanged();
+            ((RelayCommand)WriteConfigToASIC).RaiseCanExecuteChanged();
 
             logger.Debug($"Pressed write config button");
             
@@ -839,6 +850,7 @@ namespace AB15_GUI.WPF.ViewModels
             // Handle that command execution can only be done once in a row
             if (_startWDCommand.IsEnabled == false) return;
             _startWDCommand.InProgress = true;
+            // RelayCommand.RaiseCanExecuteChanged();
 
             logger.Debug($"Pressed start WD button");
             
@@ -877,6 +889,7 @@ namespace AB15_GUI.WPF.ViewModels
             // Handle that command execution can only be done once in a row
             if (_stopWDCommand.IsEnabled == false) return;
             _stopWDCommand.InProgress = true;
+            // RelayCommand.RaiseCanExecuteChanged();
 
             logger.Debug($"Pressed stop WD button");
             
@@ -920,6 +933,9 @@ namespace AB15_GUI.WPF.ViewModels
         {
             // Response received - unlock command usage
             _readWDConfigCommand.InProgress = false;
+            // RelayCommand.RaiseCanExecuteChanged();
+            // ((RelayCommand)WriteConfigToASIC).RaiseCanExecuteChanged();
+            // ((RelayCommand)ReadConfigFromASIC).RaiseCanExecuteChanged();
 
             // Typecast response to actual type
             ReceiveCommunicationPackage<AddressDataPayload> mcuResponse = (ReceiveCommunicationPackage<AddressDataPayload>) response;
@@ -988,6 +1004,8 @@ namespace AB15_GUI.WPF.ViewModels
         {
             // Response received - unlock command usage
             _writeWDConfigCommand.InProgress = false;
+            // RelayCommand.RaiseCanExecuteChanged();
+            ((RelayCommand)WriteConfigToASIC).RaiseCanExecuteChanged();
 
             // Typecast response to actual type
             ReceiveCommunicationPackage<EmptyPayload> mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>) response;
@@ -1016,6 +1034,7 @@ namespace AB15_GUI.WPF.ViewModels
         {
             // Response received - unlock command usage
             _startWDCommand.InProgress = false;
+            // RelayCommand.RaiseCanExecuteChanged();
 
             // Typecast response to actual type
             ReceiveCommunicationPackage<EmptyPayload> mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>) response;
@@ -1044,6 +1063,7 @@ namespace AB15_GUI.WPF.ViewModels
         {
             // Response received - unlock command usage
             _stopWDCommand.InProgress = false;
+            // RelayCommand.RaiseCanExecuteChanged();
 
             // Typecast response to actual type
             ReceiveCommunicationPackage<EmptyPayload> mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>) response;
