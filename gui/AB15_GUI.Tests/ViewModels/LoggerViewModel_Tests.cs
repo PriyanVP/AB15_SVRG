@@ -24,17 +24,17 @@ namespace AB15_GUI.Tests.ViewModels
         [OneTimeSetUp]
         public void SetUp()
         {
-            logger = LogManager.Setup()
-                                .SetupExtensions(ext => ext.RegisterLayoutRenderer<BuildConfigurationLayoutRenderer>("build-configuration"))
-                                .SetupExtensions(ext => ext.RegisterTarget<LogMemoryRecordTarget>("MemoryRecord"))
-                                .GetCurrentClassLogger(); // Same logger will be used across all tests
-            target = (LogMemoryRecordTarget)LogManager.Configuration.FindTargetByName("memory");
-
             // Workaround for thread sync to work correctly TODO: refactor approach to remove close coupling
             if (Application.Current == null)
             { 
                 new Application { ShutdownMode = ShutdownMode.OnExplicitShutdown }; 
             }
+
+            logger = LogManager.Setup()
+                                .SetupExtensions(ext => ext.RegisterLayoutRenderer<BuildConfigurationLayoutRenderer>("build-configuration"))
+                                .SetupExtensions(ext => ext.RegisterTarget<LogMemoryRecordTarget>("MemoryRecord"))
+                                .GetCurrentClassLogger(); // Same logger will be used across all tests
+            target = (LogMemoryRecordTarget)LogManager.Configuration.FindTargetByName("memory");
         }
 
         /// <summary>
