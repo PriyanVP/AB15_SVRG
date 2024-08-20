@@ -14,7 +14,7 @@ namespace AB15_GUI.Tests.ViewModels
     /// Watchdog View Model tests
     /// </summary>
     /// <tc_links>
-    ///     <link ID="ABEVBSW-" Link="" />
+    ///     <link ID="ABEVBSW-132" Link="https://rb-tracker.bosch.com/tracker19/browse/ABEVBSW-132" />
     /// </tc_links>
     [TestFixture]
     [NonParallelizable]
