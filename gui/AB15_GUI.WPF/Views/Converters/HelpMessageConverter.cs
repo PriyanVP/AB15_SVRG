@@ -6,7 +6,6 @@ using System.Windows.Data;
 
 namespace AB15_GUI.WPF.Views.Converters
 {
-    // TODO: connect to XAML in WatchdogPage
     /// <summary>
     /// Provides help messages for bindable properties and UI elements from ViewModel storage
     /// </summary>
