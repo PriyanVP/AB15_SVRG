@@ -786,12 +786,14 @@
                                     Content="Write config to ASIC"
                                     x:Name="WriteConfigToASICButton"
                                     Command="{Binding WriteConfigToASIC}"
+                                    IsEnabled="{Binding WriteWDConfigCommandEn}"
                                     ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='WriteConfigToASIC', Mode=OneWay}"
                                     ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
 
                         <Button Content="Read config from ASIC"
                                     Style="{DynamicResource SimpleButton}"
                                     Command="{Binding ReadConfigFromASIC}"
+                                    IsEnabled="{Binding ReadWDConfigCommandEn}"
                                     ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='ReadConfigFromASIC', Mode=OneWay}"
                                     ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
 
@@ -800,12 +802,14 @@
                         <Button Content="Start Watchdog"
                                     Style="{DynamicResource SimpleButton}"
                                     Command="{Binding StartWatchdog}"
+                                    IsEnabled="{Binding StartWDCommandEn}"
                                     ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='StartWatchdog', Mode=OneWay}"
                                     ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
 
                         <Button Content="Stop Watchdog"
                                     Style="{DynamicResource SimpleButton}"
                                     Command="{Binding StopWatchdog}"
+                                    IsEnabled="{Binding StopWDCommandEn}"
                                     ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='StopWatchdog', Mode=OneWay}"
                                     ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
                     </StackPanel>

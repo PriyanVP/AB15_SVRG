@@ -67,10 +67,10 @@ namespace AB15_GUI.Tests.ViewModels
             Assert.That(watchdogVM.StateObservation, Is.EqualTo(WatchdogViewModel.State.Idle));
 
             // Expected commands can execute states and config enable flag
-            Assert.That(watchdogVM.ReadConfigFromASIC.CanExecute(null), Is.True);
-            Assert.That(watchdogVM.WriteConfigToASIC.CanExecute(null),  Is.False);
-            Assert.That(watchdogVM.StartWatchdog.CanExecute(null),      Is.False);
-            Assert.That(watchdogVM.StopWatchdog.CanExecute(null),       Is.False);
+            Assert.That(watchdogVM.ReadWDConfigCommandEn, Is.True);
+            Assert.That(watchdogVM.WriteWDConfigCommandEn,  Is.False);
+            Assert.That(watchdogVM.StartWDCommandEn,      Is.False);
+            Assert.That(watchdogVM.StopWDCommandEn,       Is.False);
             Assert.That(watchdogVM.IsConfigEnable,                      Is.False);
         }
 
@@ -89,7 +89,7 @@ namespace AB15_GUI.Tests.ViewModels
 
             // Act
             // serialMock.receiveCommunicationPackages.Add(receiveCommunicationPackage); // commented for AB12
-            commandCanExecuteBefore = watchdogVM.ReadConfigFromASIC.CanExecute(null);
+            commandCanExecuteBefore = watchdogVM.ReadWDConfigCommandEn;
             watchdogVM.ReadConfigFromASIC.Execute(null); // Emulate transition
 
             // Assert
@@ -102,10 +102,10 @@ namespace AB15_GUI.Tests.ViewModels
 
             // Expected commands can execute states and config enable flag
             Assert.That(commandCanExecuteBefore,                        Is.True);
-            Assert.That(watchdogVM.ReadConfigFromASIC.CanExecute(null), Is.True);
-            Assert.That(watchdogVM.WriteConfigToASIC.CanExecute(null),  Is.True);
-            Assert.That(watchdogVM.StartWatchdog.CanExecute(null),      Is.False);
-            Assert.That(watchdogVM.StopWatchdog.CanExecute(null),       Is.False);
+            Assert.That(watchdogVM.ReadWDConfigCommandEn, Is.True);
+            Assert.That(watchdogVM.WriteWDConfigCommandEn,  Is.True);
+            Assert.That(watchdogVM.StartWDCommandEn,      Is.False);
+            Assert.That(watchdogVM.StopWDCommandEn,       Is.False);
             Assert.That(watchdogVM.IsConfigEnable,                      Is.True);
 
             // Observable properties are expected
@@ -130,7 +130,7 @@ namespace AB15_GUI.Tests.ViewModels
 
             // Act
             serialMock.receiveCommunicationPackages.Add(receiveCommunicationPackage);
-            commandCanExecuteBefore = watchdogVM.WriteConfigToASIC.CanExecute(null);
+            commandCanExecuteBefore = watchdogVM.WriteWDConfigCommandEn;
             watchdogVM.WriteConfigToASIC.Execute(null); // Emulate transition
 
             // Assert
@@ -143,10 +143,10 @@ namespace AB15_GUI.Tests.ViewModels
 
             // Expected commands can execute states and config enable flag
             Assert.That(commandCanExecuteBefore,                        Is.True);
-            Assert.That(watchdogVM.ReadConfigFromASIC.CanExecute(null), Is.True);
-            Assert.That(watchdogVM.WriteConfigToASIC.CanExecute(null),  Is.True);
-            Assert.That(watchdogVM.StartWatchdog.CanExecute(null),      Is.True);
-            Assert.That(watchdogVM.StopWatchdog.CanExecute(null),       Is.True);
+            Assert.That(watchdogVM.ReadWDConfigCommandEn, Is.True);
+            Assert.That(watchdogVM.WriteWDConfigCommandEn,  Is.True);
+            Assert.That(watchdogVM.StartWDCommandEn,      Is.True);
+            Assert.That(watchdogVM.StopWDCommandEn,       Is.True);
             Assert.That(watchdogVM.IsConfigEnable,                      Is.True);
         }
 
@@ -170,7 +170,7 @@ namespace AB15_GUI.Tests.ViewModels
             // Act
             serialMock.receiveCommunicationPackages.Add(receiveCommunicationPackage);
             serialMock.receiveCommunicationPackages.Add(receiveCommunicationPackageMonitor);
-            commandCanExecuteBefore = watchdogVM.StartWatchdog.CanExecute(null);
+            commandCanExecuteBefore = watchdogVM.StartWDCommandEn;
             watchdogVM.StartWatchdog.Execute(null); // Emulate transition
 
             // Assert
@@ -184,10 +184,10 @@ namespace AB15_GUI.Tests.ViewModels
 
             // Expected commands can execute states and config enable flag
             Assert.That(commandCanExecuteBefore,                        Is.True);
-            Assert.That(watchdogVM.ReadConfigFromASIC.CanExecute(null), Is.True);
-            Assert.That(watchdogVM.WriteConfigToASIC.CanExecute(null),  Is.False);
-            Assert.That(watchdogVM.StartWatchdog.CanExecute(null),      Is.False);
-            Assert.That(watchdogVM.StopWatchdog.CanExecute(null),       Is.True);
+            Assert.That(watchdogVM.ReadWDConfigCommandEn, Is.True);
+            Assert.That(watchdogVM.WriteWDConfigCommandEn,  Is.False);
+            Assert.That(watchdogVM.StartWDCommandEn,      Is.False);
+            Assert.That(watchdogVM.StopWDCommandEn,       Is.True);
             Assert.That(watchdogVM.IsConfigEnable,                      Is.False);
 
             // Expected flags (for AB12)
@@ -214,7 +214,7 @@ namespace AB15_GUI.Tests.ViewModels
             // Act
             serialMock.receiveCommunicationPackages.Add(receiveCommunicationPackage);
             serialMock.receiveCommunicationPackages.Add(receiveCommunicationPackageMonitor);
-            commandCanExecuteBefore = watchdogVM.StopWatchdog.CanExecute(null);
+            commandCanExecuteBefore = watchdogVM.StopWDCommandEn;
             watchdogVM.StopWatchdog.Execute(null); // Emulate transition
 
             // Assert
@@ -228,10 +228,10 @@ namespace AB15_GUI.Tests.ViewModels
 
             // Expected commands can execute states and config enable flag
             Assert.That(commandCanExecuteBefore,                        Is.True);
-            Assert.That(watchdogVM.ReadConfigFromASIC.CanExecute(null), Is.True);
-            Assert.That(watchdogVM.WriteConfigToASIC.CanExecute(null),  Is.True);
-            Assert.That(watchdogVM.StartWatchdog.CanExecute(null),      Is.False);
-            Assert.That(watchdogVM.StopWatchdog.CanExecute(null),       Is.False);
+            Assert.That(watchdogVM.ReadWDConfigCommandEn, Is.True);
+            Assert.That(watchdogVM.WriteWDConfigCommandEn,  Is.True);
+            Assert.That(watchdogVM.StartWDCommandEn,      Is.False);
+            Assert.That(watchdogVM.StopWDCommandEn,       Is.False);
             Assert.That(watchdogVM.IsConfigEnable,                      Is.True);
 
             // Check that waitlist item removal was called for stop monitoring watchdog
