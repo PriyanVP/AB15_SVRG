@@ -14,8 +14,6 @@ namespace AB15_GUI.WPF.ViewModels.Commands
         private Action<object> execute;
         private Func<object, bool>? canExecute;
 
-        Logger logger;
-
         /// <summary>
         /// Creates new Relay Command
         /// </summary>
@@ -30,58 +28,30 @@ namespace AB15_GUI.WPF.ViewModels.Commands
 
             this.execute = execute;
             this.canExecute = canExecute;
-
-            this.logger = LogManager.Setup()
-                    .SetupExtensions(ext => ext.RegisterLayoutRenderer<BuildConfigurationLayoutRenderer>("build-configuration"))
-                    .SetupExtensions(ext => ext.RegisterTarget<LogMemoryRecordTarget>("MemoryRecord"))
-                    .GetCurrentClassLogger(); // Same logger will be used across all tests
         }
 
         /// <summary>
         /// Occurs when changes occur that affect whether the command should execute.
+        /// Empty + unused, required by ICommand interface
         /// </summary>
         public event EventHandler? CanExecuteChanged
         {
-            add 
-            { 
-                if (canExecute != null)
-                {
-                   CommandManager.RequerySuggested += value;
-                   logger.Debug("In add for CanExecuteChanged");
-                }
-            }
-            remove 
-            { 
-                if (canExecute != null)
-                {
-                   CommandManager.RequerySuggested -= value;
-                   logger.Debug("In remove for CanExecuteChanged");
-                }
-            }
+            add {}
+            remove {}
         }
-
-        // /// <summary>
-        // /// Raises the <see cref="CanExecuteChanged" /> event.
-        // /// </summary>
-        // public static void RaiseCanExecuteChanged()
-        // {
-        //     //Application.Current.Dispatcher.Invoke(CommandManager.InvalidateRequerySuggested);
-        // }
 
         /// <summary>
-        /// Raises the <see cref="CanExecuteChanged" /> event.
+        /// Method to check if command can be executed
         /// </summary>
-        public void RaiseCanExecuteChanged()
-        {
-            Application.Current.Dispatcher.Invoke(CommandManager.InvalidateRequerySuggested);
-        }
-
+        /// <returns>flag indicating if command can be executed</returns>
         public bool CanExecute(object? parameter)
         {
-            logger.Debug($"Reevaluated CanExecute for {execute.Method.Name}");
             return (canExecute == null) ? (true) : (canExecute(parameter));
         }
 
+        /// <summary>
+        /// Command to be executed
+        /// </summary>
         public void Execute(object? parameter)
         {
             execute(parameter);
