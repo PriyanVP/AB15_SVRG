@@ -66,9 +66,7 @@ def test_MCUVersion(serial):
     assert (result[5] == VERSION_MAJOR) and (result[6] == VERSION_MINOR) and (result[7] == VERSION_PATCH)
     
     # Output to be captured if test passes
-    print(f'Firmware version: ', end='') # expected 0xab 0x80 0x0 0x83 0x3 0x0 0x2 0x0 0xfe 0xba
-    for itm in result:
-        print(f'{itm:#03x} ', end='')
+    print('Firmware version: ', hex(result[5]), hex(result[6]), hex(result[7])) # expected 0x0 0x2 0x0
 
 @pytest.mark.serial
 @pytest.mark.basic
