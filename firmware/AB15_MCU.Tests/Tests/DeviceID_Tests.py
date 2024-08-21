@@ -1,16 +1,17 @@
 # group basic tests
 # tests TODO mcu commands
 
+import os
+import pytest
 import serial
 import time
-
-#TestMCUFWVersion TODO implement for test example to run without ASIC (CmdGetMcuVersion() from general_cmd.c)
+from fixtures.serial_fixtures import *
 
 # MCU characteristics
 VENDOR_ID = 0x058B # Infineon DAS JDS - vendor ID
 PRODUCT_ID = 0x0043 # Infineon DAS JDS - product_ID
 
-# MCU firmware version
+# MCU firmware version TODO: find a vay to keep up-to-date automatically
 VERSION_MAJOR = 0x00
 VERSION_MINOR = 0x02
 VERSION_PATCH = 0x00
@@ -21,35 +22,23 @@ DEVICE_ID_AB12 = 0xC4
 USB_CMD_GET_MCU_VERSION = 0xAB0000120028BA
 USB_CMD_READ_DEV_ID = 0xAB0F010300D3BA
 
-# Protocol characteristics
-baud_rate = 115200
-data_size = 8
-parity = None
-stop_bit = 1
-port_name = 'COM14' # hardcoded, can be different
-com_port = serial.Serial()
-com_port.baudrate = baud_rate
-com_port.port = port_name
-com_port.bytesize = 8
-com_port.parity = 'N'
-com_port.stopbits = 1
-com_port.timeout = 3 # in seconds
+@pytest.fixture() # COM port handling; connects to COM14 by default
+def serial():
+    serial = SerialWrapper()
+    return serial
 
 
-def test_COMport():
+def test_COMport(serial):
     '''group basic tests
     tests:
     - ShieldBuddy connection'''
-
-    # Open COM port
-    com_port.open()
-    assert com_port.is_open == True
-
-    # Close com port
-    com_port.close()
+    
+    serial.OpenSerialPort()
+    assert serial.com_port.is_open == True
+    serial.CloseSerialPort()
 
 
-def test_MCUVersion():
+def test_MCUVersion(serial):
     '''group basic tests
     verifies ShieldBuddy's firmware version
     tests:
@@ -57,23 +46,22 @@ def test_MCUVersion():
     - MCU command:
         * USB_CMD_GET_MCU_BUILD_VERSION'''
 
-    com_port.open()
+    serial.OpenSerialPort()
 
     user_cmd = USB_CMD_GET_MCU_VERSION
-    com_port.write(int(user_cmd).to_bytes(7, 'big'))
+    serial.com_port.write(int(user_cmd).to_bytes(7, 'big'))
     time.sleep(1)
 
-    result = com_port.read(10)
-    print(f'Firmware version: ', end='') # expected 0xab 0x80 0x0 0x83 0x3 0x30 0x31 0x35 0x52 0xba TODO: update comment, version is 0.2.0.
+    result = serial.com_port.read(10)
+    print(f'Firmware version: ', end='') # expected 0xab 0x80 0x0 0x83 0x3 0x0 0x2 0x0 0xfe 0xba
     for itm in result:
         print(f'{itm:#03x} ', end='')
     assert (result[5] == VERSION_MAJOR) and (result[6] == VERSION_MINOR) and (result[7] == VERSION_PATCH)
 
-    # Close com port
-    com_port.close()
+    serial.CloseSerialPort()
 
 
-def test_DeviceID():
+def test_DeviceID(serial):
     #Add documentation comments for functions of test files
     '''group basic tests
     verifies AB15(12) DeviceID
@@ -81,16 +69,16 @@ def test_DeviceID():
     - MCU command:
         * USB_CMD_READ_DEV_ID'''
     
-    com_port.open()
+    serial.OpenSerialPort()
 
     user_cmd = USB_CMD_READ_DEV_ID
-    com_port.write(int(user_cmd).to_bytes(7, 'big'))
+    serial.com_port.write(int(user_cmd).to_bytes(7, 'big'))
     time.sleep(1)
 
-    result = com_port.read(8)
+    result = serial.com_port.read(8)
     print(f'MCU response with IC device ID: ', end='') # expected 0xAB 0x8F 0x00 0x80 0x01 0xC4 0xBE 0xBA
     for itm in result:
         print(f'{itm:#03x} ', end='')
     assert (result[5] == DEVICE_ID_AB12)
 
-    com_port.close()
+    serial.CloseSerialPort()

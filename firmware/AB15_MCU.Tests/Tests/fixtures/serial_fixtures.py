@@ -1,25 +1,22 @@
 import serial
 
-# Protocol characteristics
-baud_rate = 115200
-data_size = 8
-parity = None
-stop_bit = 1
-port_name = 'COM14' # hardcoded, can be different
-com_port = serial.Serial()
-com_port.baudrate = baud_rate
-com_port.port = port_name
-com_port.bytesize = 8
-com_port.parity = 'N'
-com_port.stopbits = 1
-com_port.timeout = 3 # in seconds
+class SerialWrapper():
+    def __init__(self, port_name:str="COM14"):
+        # Protocol characteristics
+        self.com_port = serial.Serial()
+        self.com_port.baudrate = 115200
+        self.com_port.port = port_name # hardcoded, can be different
+        self.com_port.bytesize = 8
+        self.com_port.parity = 'N'
+        self.com_port.stopbits = 1
+        self.com_port.timeout = 3 # in seconds
 
-def OpenSerialPort():
-    com_port.open()
-    if (not com_port.is_open):
-        raise Exception("Can't open COM port!")
+    def OpenSerialPort(self):
+        self.com_port.open()
+        if (not self.com_port.is_open):
+            raise Exception("Can't open COM port!")
 
-def CloseSerialPort():
-    com_port.close()
-    if (com_port.is_open):
-        raise Exception("Can't close COM port!")
+    def CloseSerialPort(self):
+        self.com_port.close()
+        if (self.com_port.is_open):
+            raise Exception("Can't close COM port!")
