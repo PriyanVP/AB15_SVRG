@@ -1,6 +1,11 @@
 import serial
 
 class SerialWrapper():
+    
+    # MCU characteristics
+    VENDOR_ID = 0x058B # Infineon DAS JDS - vendor ID
+    PRODUCT_ID = 0x0043 # Infineon DAS JDS - product_ID
+
     def __init__(self, port_name:str="COM14"):
         # Protocol characteristics
         self.com_port = serial.Serial()
