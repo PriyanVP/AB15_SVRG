@@ -47,7 +47,7 @@ class TestDeviceID:
         print("ShieldBuddy is connected sucesfully at port", serial.com_port.name)
 
     @pytest.mark.serial
-    #@pytest.mark.basic
+    @pytest.mark.basic
     def test_MCUVersion(self, serial):
         '''group basic tests
         verifies ShieldBuddy's firmware version
