@@ -1,5 +1,6 @@
 from pytest_metadata.plugin import metadata_key 
 import pytest
+from os import environ
 from py.xml import html
 
 def pytest_html_report_title(report):  
@@ -7,6 +8,7 @@ def pytest_html_report_title(report):
 
 def pytest_configure(config):  
     config.stash[metadata_key]["Project"] = "AB15 SW"
+    config.stash[metadata_key]["Tester"] = environ.get('USERNAME')
 
 @pytest.hookimpl(optionalhook=True)
 def pytest_html_results_table_header(cells):
