@@ -36,7 +36,7 @@ class TestExample:
         print(f"Var: {self.some_var}")
 
         # Assert
-        assert True
+        assert False, "Some arbitrary msg"
 
     def test_two(self):
         '''description 2'''

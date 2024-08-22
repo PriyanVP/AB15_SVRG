@@ -47,7 +47,7 @@ class TestDeviceID:
         # Act
 
         # Assert
-        assert serial.com_port.is_open == True
+        assert serial.com_port.is_open == True, "COM port is closed, when expected to be open"
 
         # Output to be captured if test passes
         print("ShieldBuddy is connected sucesfully at port", self.com_port.name)
@@ -72,8 +72,8 @@ class TestDeviceID:
         result = self.packages.pop(0)
 
         # Assert
-        assert is_response_received
-        assert (result[5] == self.VERSION_MAJOR) and (result[6] == self.VERSION_MINOR) and (result[7] == self.VERSION_PATCH)
+        assert is_response_received, "No response from MCU received"
+        assert (result[5] == self.VERSION_MAJOR) and (result[6] == self.VERSION_MINOR) and (result[7] == self.VERSION_PATCH), f"MCU version is not expected. Expected {hex(self.VERSION_MAJOR)}.{hex(self.VERSION_MINOR)}.{hex(self.VERSION_PATCH)}, but received {hex(result[5])}.{hex(result[6])}.{hex(result[7])}"
 
         # Output to be captured if test passes
         print(f'Firmware version: {hex(result[5])}.{hex(result[6])}.{hex(result[7])}') # expected 0x0 0x2 0x0
@@ -96,10 +96,12 @@ class TestDeviceID:
         self.com_port.write(packageToSend.serialize())
 
         sleep(0.1)
-        result = self.com_port.read(8)
+        is_response_received = self.com_port.extract_packages()
+        result = self.packages.pop(0)
 
         # Assert
-        assert (result[5] == DEVICE_ID_AB12)
+        assert is_response_received, "No response from MCU received"
+        assert (result[5] == DEVICE_ID_AB12), f"Unexpected device ID. Expected {hex(DEVICE_ID_AB12)}, but received {result[5]}"
 
         # Output to be captured if test passes
         print(f'MCU response with IC device ID: ', end='') # expected 0xAB 0x8F 0x00 0x80 0x01 0xC4 0xBE 0xBA
