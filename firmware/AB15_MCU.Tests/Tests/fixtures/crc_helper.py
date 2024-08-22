@@ -1,3 +1,6 @@
+from typeguard import typechecked
+
+@typechecked
 def crc8(data_array: list, start_idx: int, length: int) -> int:
     '''CRC8 algorithm'''
     polynomial = 0x7 # polynomial (MSB not included)

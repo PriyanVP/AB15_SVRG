@@ -16,11 +16,19 @@ class SerialWrapper():
         # Protocol characteristics
         self.com_port = serial.Serial()
         self.com_port.baudrate = 115200
-        self.com_port.port = port_name  #TODO: provide manual name option and autodetect
         self.com_port.bytesize = 8
         self.com_port.parity = 'N'
         self.com_port.stopbits = 1
         self.com_port.timeout = 1 # in seconds
+
+        # COM port selection
+        if (port_name is not None):
+            self.com_port.port = port_name
+        else:
+            try:
+                self.com_port.port = self.find_connected_boards()[0]
+            except:
+                raise Exception("No ShieldBuddy board was found connected to COM port!")
 
         self.packages = []
 
@@ -36,12 +44,15 @@ class SerialWrapper():
 
     def find_connected_boards(self) -> List[str]:
         '''Get list of COM ports where ShieldBuddy TC375 are connected'''
+        # Get all COM ports
         ports = serial.tools.list_ports.comports()
-        # List all COM ports with human readable data
-        for port, desc, hwid in sorted(ports):
-            print(f"{port}: {desc} [{hwid}]")
-            # TODO: use port data to determine where SB TC375 is connected
-        pass
+
+        # Find COM ports with SB TC375 connected to it
+        sb_ports_list = []
+        for port in sorted(ports):
+            if ((port.vid == VENDOR_ID) and (port.pid == PORT_ID)):
+                sb_ports_list.append(port.name)
+        return sb_ports_list
 
     def extract_packages(self) -> bool:
         '''Extract MCU responses from input com port buffer and store them to attribute

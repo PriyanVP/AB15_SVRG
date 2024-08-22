@@ -75,13 +75,13 @@ class TransmitPackage(): #metaclass=MultipleMeta
         if (self.payload_len > 0xFF):
             raise Exception("Payload length is too big")
 
-    def serialize(self) -> List[int]:
+    def serialize(self) -> bytes:
         '''Get package as list of bytes (ints)'''
         self.validate_package()
         package_array = [pkg_const.START_BYTE_VALUE, self.msg_id, self.asic_id, self.cmd, self.payload_len, *self.payload]
         package_array.append(crc8(package_array, pkg_const.MSG_ID_POSITION, (len(package_array)-pkg_const.END_BYTE_LENGTH)))
         package_array.append(pkg_const.END_BYTE_VALUE)
-        return package_array
+        return bytes(package_array)
 
 @typechecked
 class ReceivePackage():
