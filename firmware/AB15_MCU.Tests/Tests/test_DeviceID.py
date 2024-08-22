@@ -1,5 +1,5 @@
 # group basic tests
-# tests USB_CMD_GET_MCU_VERSION, USB_CMD_READ_DEV_ID
+# tests GET_MCU_VERSION, READ_DEV_ID
 #TODO: add comprehensive `test failed` description messages into test's asserts
 
 import os
@@ -12,6 +12,8 @@ from fixtures.serial_fixtures import SerialWrapper
 #os.chdir(os.path.dirname(__file__))
 
 class TestDeviceID:
+    '''DeviceId command tests'''
+    
     # MCU firmware version TODO: find a vay to keep up-to-date automatically
     VERSION_MAJOR = 0x00
     VERSION_MINOR = 0x02
@@ -20,8 +22,8 @@ class TestDeviceID:
     DEVICE_ID_AB12 = 0xC4
 
     # USB commands tested, from AB_protocol_description.xlsx, corresponds to CmdGetMcuVersion()
-    USB_CMD_GET_MCU_VERSION = 0xAB0000120028BA
-    USB_CMD_READ_DEV_ID = 0xAB0F010300D3BA
+    GET_MCU_VERSION = 0xAB0000120028BA
+    READ_DEV_ID = 0xAB0F010300D3BA
 
     @pytest.fixture() 
     # COM port handling; connects to COM14 by default before each test, 
@@ -29,10 +31,10 @@ class TestDeviceID:
     def serial(self):
         # setup
         serial = SerialWrapper()
-        serial.OpenSerialPort()
+        serial.open_port()
         yield serial
         # teardown
-        serial.CloseSerialPort()
+        serial.close_port()
 
     @pytest.mark.basic
     @pytest.mark.serial
@@ -54,9 +56,9 @@ class TestDeviceID:
         tests:
         - firmware version;
         - MCU command:
-            * USB_CMD_GET_MCU_BUILD_VERSION'''
+            * GET_MCU_BUILD_VERSION'''
 
-        user_cmd = self.USB_CMD_GET_MCU_VERSION
+        user_cmd = self.GET_MCU_VERSION
         serial.com_port.write(int(user_cmd).to_bytes(7, 'big'))
         time.sleep(1)
         result = serial.com_port.read(10)
@@ -75,9 +77,9 @@ class TestDeviceID:
         verifies AB15(12) DeviceID
         tests:
         - MCU command:
-            * USB_CMD_READ_DEV_ID'''
+            * READ_DEV_ID'''
 
-        user_cmd = self.USB_CMD_READ_DEV_ID
+        user_cmd = self.READ_DEV_ID
         serial.com_port.write(int(user_cmd).to_bytes(7, 'big'))
         time.sleep(1)
         result = serial.com_port.read(8)
