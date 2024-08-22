@@ -2,3 +2,5 @@ pytest
 pyserial 
 pytest-html 
 pytest-json
+typeguard
+py
