@@ -1,68 +1,71 @@
-import typing
+from typing import List
+from typeguard import typechecked
 from enum import Enum
 from crc_helper import crc8
+from package_constants import pkg_const
 
 class Command(Enum):
-    _USB_CMD_MIN                        = 0              # minimal value of command (not included)
+    '''USB commands enumeration. Must be in sync with enumeration in firmware'''
+    _MIN                        = 0              # minimal value of command (not included)
  
-    USB_CMD_IS_ALIVE                    = 1              # transaction to check if USB communication works
-    USB_CMD_SPI_INSTRUCTION             = 2              # execute SPI instruction with 16bit input data (send via payload)
-    USB_CMD_READ_DEV_ID                 = 3              # reads ASIC Device ID, reports error if unsuccessful
-    USB_CMD_READ_REG                    = 4              # read single register, otput data in raw format, reports error if unsuccessful
-    USB_CMD_WRITE_REG                   = 5              # write single register, otput data in raw format, reports error if unsuccessful
-    USB_CMD_CONFIGURE_READING           = 6              # reconfigure continuos reading (table, periodiciyr, etc.)
-    USB_CMD_START_READING_SEQ           = 7              # start reading defined set of registers
-    USB_CMD_STOP_READING_SEQ            = 8              # stop reading sequence
-    USB_CMD_STOP_WATCHDOG               = 9              # stop to perform periodic Watchdog Request acknowledgement by MCU
-    USB_CMD_EXECUTE_RW_SEQUENCE         = 10             # perform single read/write series of operation
-    USB_CMD_EXECUTE_READ_SEQUENCE       = 11             # perform single read series operation
-    USB_CMD_EXECUTE_WRITE_SEQUENCE      = 12             # perform single write series operation
-    USB_CMD_CONFIGURE_WATCHDOG          = 13             # configure watchdog (Note: initiates read/write seq, configs timer, arms watchdog response)
-    USB_CMD_START_WATCHDOG              = 14             # start to perform periodic Watchdog Request acknowledgement by MCU  
-    USB_CMD_RESET_TO_IDLE               = 15             # stop all continuous operations, set all pins to default state, wait for new command
-    USB_CMD_START_MONITORING_WATCHDOG   = 16             # enables MCU functionality that sends values of Watchdog status registers and time durations between the polls to GUI; continuous command
-    USB_CMD_STOP_MONITORING_WATCHDOG    = 17             # disables MCU functionality that sends values of Watchdog status registers and time durations between the polls to GUI
-    USB_CMD_GET_MCU_VERSION             = 18             # returns MCU SW version
-    USB_CMD_GET_MCU_BUILD_DATE          = 19             # returns MCU SW build date
-    USB_CMD_GET_MCU_BUILD_TIME          = 20             # returns MCU SW build time
-    USB_CMD_SET_EXT_OSC_2MHZ            = 21             # sets external clock output to 2Mhz
-    USB_CMD_SET_EXT_OSC_4MHZ            = 22             # sets external clock output to 4Mhz  
+    IS_ALIVE                    = 1              # transaction to check if USB communication works
+    SPI_INSTRUCTION             = 2              # execute SPI instruction with 16bit input data (send via payload)
+    READ_DEV_ID                 = 3              # reads ASIC Device ID, reports error if unsuccessful
+    READ_REG                    = 4              # read single register, otput data in raw format, reports error if unsuccessful
+    WRITE_REG                   = 5              # write single register, otput data in raw format, reports error if unsuccessful
+    CONFIGURE_READING           = 6              # reconfigure continuos reading (table, periodiciyr, etc.)
+    START_READING_SEQ           = 7              # start reading defined set of registers
+    STOP_READING_SEQ            = 8              # stop reading sequence
+    STOP_WATCHDOG               = 9              # stop to perform periodic Watchdog Request acknowledgement by MCU
+    EXECUTE_RW_SEQUENCE         = 10             # perform single read/write series of operation
+    EXECUTE_READ_SEQUENCE       = 11             # perform single read series operation
+    EXECUTE_WRITE_SEQUENCE      = 12             # perform single write series operation
+    CONFIGURE_WATCHDOG          = 13             # configure watchdog (Note: initiates read/write seq, configs timer, arms watchdog response)
+    START_WATCHDOG              = 14             # start to perform periodic Watchdog Request acknowledgement by MCU  
+    RESET_TO_IDLE               = 15             # stop all continuous operations, set all pins to default state, wait for new command
+    START_MONITORING_WATCHDOG   = 16             # enables MCU functionality that sends values of Watchdog status registers and time durations between the polls to GUI; continuous command
+    STOP_MONITORING_WATCHDOG    = 17             # disables MCU functionality that sends values of Watchdog status registers and time durations between the polls to GUI
+    GET_MCU_VERSION             = 18             # returns MCU SW version
+    GET_MCU_BUILD_DATE          = 19             # returns MCU SW build date
+    GET_MCU_BUILD_TIME          = 20             # returns MCU SW build time
+    SET_EXT_OSC_2MHZ            = 21             # sets external clock output to 2Mhz
+    SET_EXT_OSC_4MHZ            = 22             # sets external clock output to 4Mhz  
    
-    _USB_EXT_CMD_MAX                    = 63             # maximal value of command send via USB, start of internal commands (generated by MCU)
+    _USB_EXT_CMD_MAX            = 63             # maximal value of command send via USB, start of internal commands (generated by MCU)
  
-    INT_CMD_SYS_TIMER_UPD               = 64             # execute system timer sequence
-    INT_CMD_ACK_WATCHDOG1               = 65             # acknowlege watchdog 1
-    INT_CMD_ACK_WATCHDOG2               = 66             # acknowlege watchdog 2
-    INT_CMD_READ_WD_STATUS              = 67             # read watchdogs status registers
+    INT_CMD_SYS_TIMER_UPD       = 64             # execute system timer sequence
+    INT_CMD_ACK_WATCHDOG1       = 65             # acknowlege watchdog 1
+    INT_CMD_ACK_WATCHDOG2       = 66             # acknowlege watchdog 2
+    INT_CMD_READ_WD_STATUS      = 67             # read watchdogs status registers
  
-    _USB_CMD_MAX                        = 127            # maximal value of command (not included)
+    _MAX                        = 127            # maximal value of command (not included)
 
 class Status(Enum):
-    _USB_STATUS_MIN                     = 127            #brief minimal value of status (not included) 
+    '''USB statuses enumeration. Must be in sync with enumeration in firmware'''
+    _MIN                        = 127            # minimal value of status (not included) 
  
-    USB_STATUS_ACK                      = 128            #brief response to is alive transaction 
-    USB_STATUS_ERROR                    = 129            #brief error at MCU or CS600, data holds error info 
-    USB_STATUS_ERROR_TELEMETRY          = 130            #brief error telemetry data of CS600 and MCU 
-    USB_STATUS_STATUS                   = 131            #brief status of MCU, data holds status info/log 
-    USB_STATUS_BUSY                     = 132            #brief MCU is busy processing previous command
-    USB_STATUS_DATA                     = 133            #brief response to read or read/write transaction (also works for transactions including such behaviour) 
-    USB_STATUS_RESPONSE_ABSENT          = 134            #brief response from MCU hasn't been received in expected timeframe 
-    USB_STATUS_CMD_NO_SUPPORTED         = 135            #brief response if cmd is not supported
-    USB_STATUS_CMD_WRONG_PAYLOAD_LEN    = 136            #brief response if cmd has wrong payload len
+    ACK                         = 128            # response to is alive transaction 
+    ERROR                       = 129            # error at MCU or CS600, data holds error info 
+    ERROR_TELEMETRY             = 130            # error telemetry data of CS600 and MCU 
+    STATUS                      = 131            # status of MCU, data holds status info/log 
+    BUSY                        = 132            # MCU is busy processing previous command
+    DATA                        = 133            # response to read or read/write transaction (also works for transactions including such behaviour) 
+    RESPONSE_ABSENT             = 134            # response from MCU hasn't been received in expected timeframe 
+    CMD_NO_SUPPORTED            = 135            # response if cmd is not supported
+    CMD_WRONG_PAYLOAD_LEN       = 136            # response if cmd has wrong payload len
     
-    _USB_STATUS_MAX                     = 255            #brief maximal value of command (not included) 
+    _MAX                        = 255            # maximal value of command (not included) 
 
+@typechecked
 class TransmitPackage(): #metaclass=MultipleMeta
-    ''''''
-    def __init__(self, msg_id:int, asic_id:int, cmd:Command, payload: list): #TODO: investigate - somehow this type declaration does not prevent an object creation with wrong type
+    '''Wrapper for packages from PC to MCU'''
+
+    def __init__(self, msg_id:int=0, asic_id:int=0, cmd:Command=Command._MIN, payload: List[int]=[]):
         self.msg_id = msg_id
         self.asic_id = asic_id
-        self.cmd = cmd
+        self.cmd = cmd.value
         self.payload_len = len(payload)
         self.payload = payload
- 
-    #def __init__(self):
-    #    self.__init__(None, None, None, None)
 
     def validate_package(self):
         if ((self.msg_id < 0) or (self.msg_id >= 0x80)):
@@ -72,45 +75,54 @@ class TransmitPackage(): #metaclass=MultipleMeta
         if (self.payload_len > 0xFF):
             raise Exception("Payload length is too big")
 
- 
-    def serialize(self) -> list:
+    def serialize(self) -> List[int]:
+        '''Get package as list of bytes (ints)'''
         self.validate_package()
-        package_array = [0xAB, self.msg_id, self.asic_id, self.cmd, self.payload_len, *self.payload]
-        package_array.append(crc8(package_array, 1, (len(package_array)-1)))
-        package_array.append(0xBA)
+        package_array = [pkg_const.START_BYTE_VALUE, self.msg_id, self.asic_id, self.cmd, self.payload_len, *self.payload]
+        package_array.append(crc8(package_array, pkg_const.MSG_ID_POSITION, (len(package_array)-pkg_const.END_BYTE_LENGTH)))
+        package_array.append(pkg_const.END_BYTE_VALUE)
         return package_array
 
+@typechecked
 class ReceivePackage():
-    ''''''
-    def __init__(self, package:list): #TODO: investigate - somehow this type declaration does not prevent an object creation with wrong type
+    '''Wrapper for packages from MCU to PC'''
+
+    def __init__(self, package:List[int]):
         self.package = package
-        self.start_byte = package[0]
-        self.msg_id = package[1]
-        self.asic_id = package[2]
-        self.status:Status = package[3]
-        self.payload_len = package[4]
-        self.payload = package[5 : (5+self.payload_len)]
-        self.crc = package[5+self.payload_len]
-        self.stop_byte = package[5+self.payload_len+1]
+        self.unpack()
+
+    def unpack(self):
+        self.start_byte  = self.package[pkg_const.START_BYTE_POSITION]
+        self.msg_id      = self.package[pkg_const.MSG_ID_POSITION]
+        self.asic_id     = self.package[pkg_const.ASIC_ID_POSITION]
+        self.status      = Status(self.package[pkg_const.CMD_STATUS_POSITION])
+        self.payload_len = self.package[pkg_const.PAYLOAD_LENGTH_POSITION]
+        self.payload     = self.package[pkg_const.PAYLOAD_POSITION : (pkg_const.PAYLOAD_POSITION + self.payload_len)]
+        self.crc         = self.package[pkg_const.PAYLOAD_POSITION+self.payload_len]
+        self.stop_byte   = self.package[pkg_const.PAYLOAD_POSITION+self.payload_len+pkg_const.CRC_LENGTH]
+
         self.validate_package()
 
     def validate_package(self):
-        if (self.start_byte != 0xAB):
+        if (self.start_byte != pkg_const.START_BYTE_VALUE):
             raise Exception("Start byte value is wrong")
-        if (self.crc != crc8(self.package, 1, len(self.package)-3)):
+        if (self.crc != crc8(self.package, pkg_const.MSG_ID_POSITION, len(self.package) - pkg_const.START_BYTE_LENGTH - pkg_const.CRC_LENGTH - pkg_const.END_BYTE_LENGTH)):
             raise Exception("CRC value is incorrect")
-        # TODO: heck status val is from Status enum values list
-        if ((self.msg_id < 0x80) or (self.msg_id >= 0x80+0xFF)):
+        if ((self.msg_id < 0x80) or (self.msg_id >= 0xFF)):
             raise Exception("MessageID has incorrect value")
         if ((self.asic_id < 0) or (self.asic_id > 4)):
             raise Exception("ASIC index has incorrect value")
         if (self.payload_len > 0xFF):
             raise Exception("Payload length is too big")
-        if (self.stop_byte != 0xBA):
+        if (self.stop_byte != pkg_const.END_BYTE_VALUE):
             raise Exception("Stop byte value is wrong")
 
+
+# Selftest + usage example
 if __name__ == "__main__":
-    package = TransmitPackage(0x0F, 1, 0x03, []) # example with USB_CMD_READ_DEV_ID command
+    package = TransmitPackage(0x0F, 1, Command.READ_DEV_ID, []) # example with READ_DEV_ID command
     test = package.serialize()
 
-    package2 = ReceivePackage([0xAB, 0x80, 0x0, 0x83, 0x3, 0x0, 0x2, 0x0, 0xFE, 0xBA]) # example with USB_CMD_GET_MCU_BUILD_VERSION response
+    package2 = ReceivePackage([0xAB, 0x80, 0x0, 0x83, 0x3, 0x0, 0x2, 0x0, 0xFE, 0xBA]) # example with GET_MCU_BUILD_VERSION response
+
+    package3 = TransmitPackage()
