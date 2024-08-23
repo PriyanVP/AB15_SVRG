@@ -2,3 +2,6 @@ pytest
 pyserial 
 pytest-html 
 pytest-json
+pytest-metadata
+typeguard
+py

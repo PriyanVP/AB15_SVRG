@@ -1,17 +1,17 @@
 # group basic tests
-# tests USB_CMD_GET_MCU_VERSION, USB_CMD_READ_DEV_ID
+# tests GET_MCU_VERSION, READ_DEV_ID
 #TODO: add comprehensive `test failed` description messages into test's asserts
 
 import os
 import pytest
 import serial
-import time
-from fixtures.serial_fixtures import SerialWrapper
-
-# Change working directory to script directory TODO: investigate why it doesn't work as expected
-#os.chdir(os.path.dirname(__file__))
+from time import sleep
+from serial_fixtures import SerialWrapper
+import package_helper as pkg
 
 class TestDeviceID:
+    '''DeviceId command tests'''
+    
     # MCU firmware version TODO: find a vay to keep up-to-date automatically
     VERSION_MAJOR = 0x00
     VERSION_MINOR = 0x02
@@ -19,72 +19,91 @@ class TestDeviceID:
     # AB12 IC device ID
     DEVICE_ID_AB12 = 0xC4
 
-    # USB commands tested, from AB_protocol_description.xlsx, corresponds to CmdGetMcuVersion()
-    USB_CMD_GET_MCU_VERSION = 0xAB0000120028BA
-    USB_CMD_READ_DEV_ID = 0xAB0F010300D3BA
+    @classmethod
+    def setup_class(cls):
+        # COM port handling; connects to COM port with SW TC375 by default once before executing tests in class
+        cls.serial = SerialWrapper()
+        cls.serial.open_port()
+        print ('\nsetup_class()')
 
-    @pytest.fixture() 
-    # COM port handling; connects to COM14 by default before each test, 
-    # disconnects after test's completion
-    def serial(self):
-        # setup
-        serial = SerialWrapper()
-        serial.OpenSerialPort()
-        yield serial
-        # teardown
-        serial.CloseSerialPort()
+    @classmethod 
+    def teardown_class(cls):
+        # disconnects after test's completion
+        cls.close_port()
+        print ('\nteardown_class()')
+
 
     @pytest.mark.basic
     @pytest.mark.serial
-    def test_COMport(self, serial):
+    def test_COMport(self):
         '''group `basic` tests
         tests:
         - ShieldBuddy's serial connection to PC'''
 
-        assert serial.com_port.is_open == True
+        # TODO: check if approach works
+
+        # Arrange
+
+        # Act
+
+        # Assert
+        assert serial.com_port.is_open == True, "COM port is closed, when expected to be open"
 
         # Output to be captured if test passes
-        print("ShieldBuddy is connected sucesfully at port", serial.com_port.name)
+        print("ShieldBuddy is connected sucesfully at port", self.com_port.name)
 
     @pytest.mark.serial
     @pytest.mark.basic
-    def test_MCUVersion(self, serial):
+    def test_MCUVersion(self):
         '''group basic tests
         verifies ShieldBuddy's firmware version
         tests:
         - firmware version;
         - MCU command:
-            * USB_CMD_GET_MCU_BUILD_VERSION'''
+            * GET_MCU_BUILD_VERSION'''
 
-        user_cmd = self.USB_CMD_GET_MCU_VERSION
-        serial.com_port.write(int(user_cmd).to_bytes(7, 'big'))
-        time.sleep(1)
-        result = serial.com_port.read(10)
+        # Arrange
+        packageToSend = pkg.TransmitPackage(0x00, 0x00, pkg.Command.GET_MCU_VERSION)
 
-        assert (result[5] == self.VERSION_MAJOR) and (result[6] == self.VERSION_MINOR) and (result[7] == self.VERSION_PATCH)
+        # Act
+        self.com_port.write(packageToSend.serialize())
+        sleep(0.1)
+        is_response_received = self.com_port.extract_packages()
+        result = pkg.ReceivePackage(self.packages.pop(0))
+
+        # Assert
+        assert is_response_received, "No response from MCU received"
+        assert (result.payload[0] == self.VERSION_MAJOR) and (result.payload[1] == self.VERSION_MINOR) and (result.payload[2] == self.VERSION_PATCH), f"MCU version is not expected. Expected {hex(self.VERSION_MAJOR)}.{hex(self.VERSION_MINOR)}.{hex(self.VERSION_PATCH)}, but received {hex(result.payload[0])}.{hex(result.payload[1])}.{hex(result.payload[2])}"
 
         # Output to be captured if test passes
-        print('Firmware version: ', hex(result[5]), hex(result[6]), hex(result[7])) # expected 0x0 0x2 0x0
+        print(f'Firmware version: {hex(result.payload[0])}.{hex(result.payload[1])}.{hex(result.payload[2])}') # expected 0x0 0x2 0x0
 
     @pytest.mark.serial
     @pytest.mark.basic
     @pytest.mark.skip(reason="Skipped due no HW connected (AB12/15 ASIC board)")
-    def test_DeviceID(self, serial):
+    def test_DeviceID(self):
         #Add documentation comments for functions of test files
         '''group basic tests
         verifies AB15(12) DeviceID
         tests:
         - MCU command:
-            * USB_CMD_READ_DEV_ID'''
+            * READ_DEV_ID'''
 
-        user_cmd = self.USB_CMD_READ_DEV_ID
-        serial.com_port.write(int(user_cmd).to_bytes(7, 'big'))
-        time.sleep(1)
-        result = serial.com_port.read(8)
+        # Arrange
+        packageToSend = pkg.TransmitPackage(0x0F, 0x01, pkg.Command.READ_DEV_ID)
 
-        assert (result[5] == DEVICE_ID_AB12)
+        # Act
+        self.com_port.write(packageToSend.serialize())
+
+        sleep(0.1)
+        is_response_received = self.com_port.extract_packages()
+        result = pkg.ReceivePackage(self.packages.pop(0))
+
+        # Assert
+        assert is_response_received, "No response from MCU received"
+        assert (result.payload[0] == DEVICE_ID_AB12), f"Unexpected device ID. Expected {hex(DEVICE_ID_AB12)}, but received {result.payload[0]}"
 
         # Output to be captured if test passes
         print(f'MCU response with IC device ID: ', end='') # expected 0xAB 0x8F 0x00 0x80 0x01 0xC4 0xBE 0xBA
-        for itm in result:
+        for itm in result.package:
             print(f'{itm:#03x} ', end='')
