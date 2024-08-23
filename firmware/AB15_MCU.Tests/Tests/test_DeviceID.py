@@ -29,7 +29,7 @@ class TestDeviceID:
     @classmethod 
     def teardown_class(cls):
         # disconnects after test's completion
-        cls.close_port()
+        cls.serial.close_port()
         print ('\nteardown_class()')
 
 
@@ -47,10 +47,10 @@ class TestDeviceID:
         # Act
 
         # Assert
-        assert serial.com_port.is_open == True, "COM port is closed, when expected to be open"
+        assert self.serial.com_port.is_open == True, "COM port is closed, when expected to be open"
 
         # Output to be captured if test passes
-        print("ShieldBuddy is connected sucesfully at port", self.com_port.name)
+        print("ShieldBuddy is connected sucesfully at port", self.serial.com_port.name)
 
     @pytest.mark.serial
     @pytest.mark.basic
@@ -66,10 +66,10 @@ class TestDeviceID:
         packageToSend = pkg.TransmitPackage(0x00, 0x00, pkg.Command.GET_MCU_VERSION)
 
         # Act
-        self.com_port.write(packageToSend.serialize())
+        self.serial.com_port.write(packageToSend.serialize())
         sleep(0.1)
-        is_response_received = self.com_port.extract_packages()
-        result = pkg.ReceivePackage(self.packages.pop(0))
+        is_response_received = self.serial.extract_packages()
+        result = pkg.ReceivePackage(self.serial.packages.pop(0))
 
         # Assert
         assert is_response_received, "No response from MCU received"
@@ -93,11 +93,11 @@ class TestDeviceID:
         packageToSend = pkg.TransmitPackage(0x0F, 0x01, pkg.Command.READ_DEV_ID)
 
         # Act
-        self.com_port.write(packageToSend.serialize())
+        self.serial.com_port.write(packageToSend.serialize())
 
         sleep(0.1)
-        is_response_received = self.com_port.extract_packages()
-        result = pkg.ReceivePackage(self.packages.pop(0))
+        is_response_received = self.serial.extract_packages()
+        result = pkg.ReceivePackage(self.serial.packages.pop(0))
 
         # Assert
         assert is_response_received, "No response from MCU received"
