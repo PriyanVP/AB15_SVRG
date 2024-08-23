@@ -69,14 +69,14 @@ class TestDeviceID:
         self.com_port.write(packageToSend.serialize())
         sleep(0.1)
         is_response_received = self.com_port.extract_packages()
-        result = self.packages.pop(0)
+        result = pkg.ReceivePackage(self.packages.pop(0))
 
         # Assert
         assert is_response_received, "No response from MCU received"
-        assert (result[5] == self.VERSION_MAJOR) and (result[6] == self.VERSION_MINOR) and (result[7] == self.VERSION_PATCH), f"MCU version is not expected. Expected {hex(self.VERSION_MAJOR)}.{hex(self.VERSION_MINOR)}.{hex(self.VERSION_PATCH)}, but received {hex(result[5])}.{hex(result[6])}.{hex(result[7])}"
+        assert (result.payload[0] == self.VERSION_MAJOR) and (result.payload[1] == self.VERSION_MINOR) and (result.payload[2] == self.VERSION_PATCH), f"MCU version is not expected. Expected {hex(self.VERSION_MAJOR)}.{hex(self.VERSION_MINOR)}.{hex(self.VERSION_PATCH)}, but received {hex(result.payload[0])}.{hex(result.payload[1])}.{hex(result.payload[2])}"
 
         # Output to be captured if test passes
-        print(f'Firmware version: {hex(result[5])}.{hex(result[6])}.{hex(result[7])}') # expected 0x0 0x2 0x0
+        print(f'Firmware version: {hex(result.payload[0])}.{hex(result.payload[1])}.{hex(result.payload[2])}') # expected 0x0 0x2 0x0
 
     @pytest.mark.serial
     @pytest.mark.basic
@@ -97,13 +97,13 @@ class TestDeviceID:
 
         sleep(0.1)
         is_response_received = self.com_port.extract_packages()
-        result = self.packages.pop(0)
+        result = pkg.ReceivePackage(self.packages.pop(0))
 
         # Assert
         assert is_response_received, "No response from MCU received"
-        assert (result[5] == DEVICE_ID_AB12), f"Unexpected device ID. Expected {hex(DEVICE_ID_AB12)}, but received {result[5]}"
+        assert (result.payload[0] == DEVICE_ID_AB12), f"Unexpected device ID. Expected {hex(DEVICE_ID_AB12)}, but received {result.payload[0]}"
 
         # Output to be captured if test passes
         print(f'MCU response with IC device ID: ', end='') # expected 0xAB 0x8F 0x00 0x80 0x01 0xC4 0xBE 0xBA
-        for itm in result:
+        for itm in result.package:
             print(f'{itm:#03x} ', end='')
