@@ -18,7 +18,11 @@ Tests can be ran altogether, separately, or by marker (see Running test paragrap
     1) ShieldBuddy is powered up and connected to PC;
     2) AB15(12) is powered and connected to ShieldBuddy;
     3) Adequate firmware is flashed into ShieldBuddy.
-4. Change working directory to .\firmware\AB15_MCU.Tests\Tests 
+4. Change working directory to .\firmware\AB15_MCU.Tests\Tests
+5. (Optional) Configure VS code for pytest integration:
+    1) Install the VS Code Python extension from Microsoft (search for 'python' in Extesnsions);
+    2) Open any pytest test file; Testing icon should appear on Activity bar;
+    3) Tests now can be run from graphic interface of Test Explorer
 
 ## Running Tests
 

@@ -76,6 +76,9 @@ Generating register classes for GUI:
 * Launch Python 3.11.9 or higher environment (should contain jinja2, argparse, re, lxlm packages)
 * Run gui\utilities\registers_generation\gen_registers.py (provide -h for help)
 
+Firmware testing:
+* Refer to pytest invironment setup instructions in \firmware\AB15_MCU.Tests\README.md
+
 ## Contribution Guidelines <a name="contribution-guidelines"></a>
 
 Use this section to describe or link to documentation which explaining how users can make contributions to the contents of this repository. Consider adopting the [BIOS way of facilitating contributions](http://bos.ch/ygF).
