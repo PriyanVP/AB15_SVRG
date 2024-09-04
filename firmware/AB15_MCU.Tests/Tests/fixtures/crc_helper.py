@@ -4,7 +4,7 @@ from typing import List
 @typechecked
 def crc8(data_array: list, start_idx: int, length: int) -> int:
     '''CRC8 algorithm
-    Polynom: x3+x2+x1+1, Initial value: 0x00'''
+    Polynom: x8+x2+x1+1, Initial value: 0x00'''
     polynomial = 0x7 # polynomial (MSB not included)
     crc = 0x00
     for i in range(start_idx, start_idx+length):
