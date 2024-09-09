@@ -9,8 +9,230 @@
       Title="Firing"
       DataContext="{Binding FiringViewModel, Source={StaticResource ViewModelLocator}}">
 
-    <Grid>
-        <TextBlock Text="Firing placeholder"/>
+    <Grid Background="{DynamicResource UI.BackGround}">
+        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="5"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="5"/>
+            </Grid.RowDefinitions>
+
+            <!--#region Fire buttons -->
+            <Grid Grid.Row="2" MinHeight="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="1" Style="{DynamicResource SimpleButton}">
+                    <StackPanel>
+                        <TextBlock Text="Fire" 
+                                   HorizontalAlignment="Center"/>
+                        <TextBlock Text="Sequential" 
+                                   HorizontalAlignment="Center"
+                                   FontSize="18"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Grid.Column="3" Style="{DynamicResource SimpleButton}">
+                    <StackPanel>
+                        <TextBlock Text="Fire" 
+                                   HorizontalAlignment="Center"/>
+                        <TextBlock Text="Simultaneous" 
+                                   HorizontalAlignment="Center"
+                                   FontSize="18"/>
+                    </StackPanel>
+                </Button>
+            </Grid>
+            <!--#endregion-->
+
+            <Grid Grid.Row="4">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock HorizontalAlignment="Center" Text="STATUS" 
+                           Style="{DynamicResource CustomTextBlock}" 
+                           Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="4"/>
+
+                <Border Grid.Row="2" Grid.Column="1" BorderThickness="1" 
+                        BorderBrush="{DynamicResource Animation.Lines}" 
+                        CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                    <!--<Border.Background>
+                        <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
+                            <Binding Path = "WD1QAFaultStatus"/>
+                            <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                        </MultiBinding>
+                    </Border.Background>-->
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="ASIC 1" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                               FontSize="20"/>
+                        <TextBlock Text="ASIC Status" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                               FontSize="20"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Row="2" Grid.Column="2" BorderThickness="1" 
+                        BorderBrush="{DynamicResource Animation.Lines}" 
+                        CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                    <!--<Border.Background>
+                        <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
+                            <Binding Path = "WD1QAFaultStatus"/>
+                            <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                        </MultiBinding>
+                    </Border.Background>-->
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="ASIC 2" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                               FontSize="20"/>
+                        <TextBlock Text="ASIC Status" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                               FontSize="20"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Row="2" Grid.Column="3" BorderThickness="1" 
+                        BorderBrush="{DynamicResource Animation.Lines}" 
+                        CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                    <!--<Border.Background>
+                        <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
+                            <Binding Path = "WD1QAFaultStatus"/>
+                            <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                        </MultiBinding>
+                    </Border.Background>-->
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="ASIC 3" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                               FontSize="20"/>
+                        <TextBlock Text="ASIC Status" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                               FontSize="20"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Row="2" Grid.Column="4" BorderThickness="1" 
+                        BorderBrush="{DynamicResource Animation.Lines}" 
+                        CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                    <!--<Border.Background>
+                        <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
+                            <Binding Path = "WD1QAFaultStatus"/>
+                            <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                        </MultiBinding>
+                    </Border.Background>-->
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="ASIC 4" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                               FontSize="20"/>
+                        <TextBlock Text="ASIC Status" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                               FontSize="20"/>
+                    </StackPanel>
+                </Border>
+
+                <TextBlock HorizontalAlignment="Center" Text="PRECONDITIONS" 
+                           Style="{DynamicResource CustomTextBlock}" 
+                           Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="4"/>
+
+
+                <Border Grid.Row="4" Grid.Column="1" BorderThickness="1" 
+                        BorderBrush="{DynamicResource Animation.Lines}" 
+                        CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                    <!--<Border.Background>
+                        <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
+                            <Binding Path = "WD1QAFaultStatus"/>
+                            <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                        </MultiBinding>
+                    </Border.Background>-->
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="VH voltage at" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                               FontSize="20"/>
+                        <TextBlock Text="11 nodes" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                               FontSize="20"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Row="4" Grid.Column="2" BorderThickness="1" 
+                        BorderBrush="{DynamicResource Animation.Lines}" 
+                        CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                    <!--<Border.Background>
+                        <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
+                            <Binding Path = "WD1QAFaultStatus"/>
+                            <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                        </MultiBinding>
+                    </Border.Background>-->
+                    <TextBlock Text="CAP Button" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                               FontSize="20"/>
+                </Border>
+
+                <Border Grid.Row="4" Grid.Column="3" BorderThickness="1" 
+                        BorderBrush="{DynamicResource Animation.Lines}" 
+                        CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                    <!--<Border.Background>
+                        <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
+                            <Binding Path = "WD1QAFaultStatus"/>
+                            <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                        </MultiBinding>
+                    </Border.Background>-->
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="Squid/LEA" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                               FontSize="20"/>
+                        <TextBlock Text="loads" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                               FontSize="20"/>
+                        <TextBlock Text="connection" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                               FontSize="20"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Row="4" Grid.Column="4" BorderThickness="1" 
+                        BorderBrush="{DynamicResource Animation.Lines}" 
+                        CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                    <!--<Border.Background>
+                        <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
+                            <Binding Path = "WD1QAFaultStatus"/>
+                            <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                        </MultiBinding>
+                    </Border.Background>-->
+                    <TextBlock Text="Junction temp" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                               FontSize="20"/>
+                </Border>
+
+            </Grid>
+
+        </Grid>
+
+        <Grid Grid.Column="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="5"/>
+            </Grid.ColumnDefinitions>
+        </Grid>
         
     </Grid>
 </Page>
