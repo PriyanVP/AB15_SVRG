@@ -4,16 +4,17 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:AB15_GUI.WPF.Views"
+      xmlns:custom="clr-namespace:AB15_GUI.WPF.Views.Components"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      d:DesignHeight="450" d:DesignWidth="900"
       Title="Firing"
       DataContext="{Binding FiringViewModel, Source={StaticResource ViewModelLocator}}">
 
     <Grid Background="{DynamicResource UI.BackGround}">
         
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
 
         <Grid Grid.Column="0">
@@ -32,7 +33,7 @@
             </Grid.RowDefinitions>
 
             <!--#region Fire buttons -->
-            <Grid Grid.Row="2" MinHeight="10">
+            <Grid Grid.Row="2" Grid.Column="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
@@ -64,7 +65,7 @@
             <!--#endregion-->
             
             <!--#region Status -->
-            <Grid Grid.Row="4">
+            <Grid Grid.Row="4" Grid.Column="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="auto"/>
@@ -225,6 +226,260 @@
             </Grid>
             <!--#endregion-->
 
+            <!--#region Channel configuration -->
+            <Grid Grid.Row="6" Grid.Column="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="5"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="5"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+
+                <!--<ToggleButton Content="" Background="Red" 
+                              Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2"
+                              Style="{DynamicResource SimpleToggleButton}"/>-->
+                
+                <ToggleButton Style="{DynamicResource MenuToggleButtonTemplate}" IsChecked="True"
+                              Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2">
+
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="ASIC 1" FontSize="20" Grid.Column="1" Style="{DynamicResource TextBlockStyle}"/>
+                    </StackPanel>
+
+                    <ToggleButton.Triggers>
+                        <EventTrigger RoutedEvent="ToggleButton.Unchecked">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation 
+                                        Storyboard.TargetName="ASIC1ChannelsConfig"
+                                        Storyboard.TargetProperty="Width"
+                                        BeginTime="0:0:0"
+                                        From="200" To="0"
+                                        Duration="0:0:0.2"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="ToggleButton.Checked">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation 
+                                        Storyboard.TargetName="ASIC1ChannelsConfig"
+                                        Storyboard.TargetProperty="Width"
+                                        BeginTime="0:0:0"
+                                        To="200" From="0"
+                                        Duration="0:0:0.2"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </ToggleButton.Triggers>
+                </ToggleButton>
+
+                <ToggleButton Content="ASIC 2" Background="Green" 
+                              Grid.Row="0" Grid.Column="4" Grid.ColumnSpan="2"
+                              Style="{DynamicResource SimpleToggleButton}"/>
+
+                <ToggleButton Content="ASIC 3" Background="Yellow" 
+                              Grid.Row="0" Grid.Column="6" Grid.ColumnSpan="2"
+                              Style="{DynamicResource SimpleToggleButton}"/>
+
+                <ToggleButton Content="ASIC 4" Background="Blue" 
+                              Grid.Row="0" Grid.Column="8" Grid.ColumnSpan="2"
+                              Style="{DynamicResource SimpleToggleButton}"/>
+
+                <!--#region ASIC Channel status boxes -->
+                <Grid Grid.Row="1" Grid.Column="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="0" Grid.Column="0"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="1" Grid.Column="0"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="2" Grid.Column="0"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="3" Grid.Column="0"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="4" Grid.Column="0"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="5" Grid.Column="0"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="6" Grid.Column="0"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="7" Grid.Column="0"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="8" Grid.Column="0"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="9" Grid.Column="0"/>
+
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="0" Grid.Column="1"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="1" Grid.Column="1"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="2" Grid.Column="1"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="3" Grid.Column="1"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="4" Grid.Column="1"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="5" Grid.Column="1"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="6" Grid.Column="1"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="7" Grid.Column="1"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="8" Grid.Column="1"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="9" Grid.Column="1"/>
+                </Grid>
+
+                <Grid Grid.Row="1" Grid.Column="4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="0" Grid.Column="0"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="1" Grid.Column="0"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="2" Grid.Column="0"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="3" Grid.Column="0"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="4" Grid.Column="0"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="5" Grid.Column="0"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="6" Grid.Column="0"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="7" Grid.Column="0"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="8" Grid.Column="0"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="9" Grid.Column="0"/>
+
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="0" Grid.Column="1"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="1" Grid.Column="1"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="2" Grid.Column="1"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="3" Grid.Column="1"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="4" Grid.Column="1"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="5" Grid.Column="1"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="6" Grid.Column="1"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="7" Grid.Column="1"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="8" Grid.Column="1"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="9" Grid.Column="1"/>
+                </Grid>
+
+                <Grid Grid.Row="1" Grid.Column="6">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="0" Grid.Column="0"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="1" Grid.Column="0"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="2" Grid.Column="0"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="3" Grid.Column="0"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="4" Grid.Column="0"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="5" Grid.Column="0"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="6" Grid.Column="0"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="7" Grid.Column="0"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="8" Grid.Column="0"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="9" Grid.Column="0"/>
+
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="0" Grid.Column="1"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="1" Grid.Column="1"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="2" Grid.Column="1"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="3" Grid.Column="1"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="4" Grid.Column="1"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="5" Grid.Column="1"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="6" Grid.Column="1"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="7" Grid.Column="1"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="8" Grid.Column="1"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="9" Grid.Column="1"/>
+                </Grid>
+
+                <Grid Grid.Row="1" Grid.Column="8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="0" Grid.Column="0"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="1" Grid.Column="0"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="2" Grid.Column="0"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="3" Grid.Column="0"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="4" Grid.Column="0"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="5" Grid.Column="0"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="6" Grid.Column="0"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="7" Grid.Column="0"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="8" Grid.Column="0"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="9" Grid.Column="0"/>
+
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="0" Grid.Column="1"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="1" Grid.Column="1"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="2" Grid.Column="1"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="3" Grid.Column="1"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="4" Grid.Column="1"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="5" Grid.Column="1"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="6" Grid.Column="1"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="7" Grid.Column="1"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="8" Grid.Column="1"/>
+                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="9" Grid.Column="1"/>
+                </Grid>
+                <!--#endregion-->
+
+                <Frame Grid.Column="3" Grid.Row="1" Source="Components/FiringChannelConfig.xaml" x:Name="ASIC1ChannelsConfig"/>
+                <Frame Grid.Column="5" Grid.Row="1" Source="Components/FiringChannelConfig.xaml"/>
+                <Frame Grid.Column="7" Grid.Row="1" Source="Components/FiringChannelConfig.xaml"/>
+                <Frame Grid.Column="9" Grid.Row="1" Source="Components/FiringChannelConfig.xaml"/>
+
+
+
+            </Grid>
+            <!--#endregion-->
+
+            <!--#region Get/Set/Proceed buttons -->
             <Grid Grid.Row="8" Grid.Column="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="5"/>
@@ -236,7 +491,7 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="5"/>
                 </Grid.ColumnDefinitions>
-                
+
                 <Button Style="{DynamicResource SimpleButton}" 
                         Content="Get Config from ASIC"
                         Grid.Column="2" 
@@ -257,18 +512,11 @@
                         Grid.Column="5"
                         Margin="5"/>
             </Grid>
+            <!--#endregion-->
+            
+            
         </Grid>
 
-        <Grid Grid.Column="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="5"/>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="5"/>
-            </Grid.ColumnDefinitions>
-        </Grid>
         
     </Grid>
 </Page>

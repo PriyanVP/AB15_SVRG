@@ -99,6 +99,17 @@
 
     <BooleanToVisibilityConverter x:Key="btv" />
 
+    <Style TargetType="Button" x:Key="ChannelChooseButton">
+
+        <Setter Property="Background" Value="{DynamicResource Foreground.Disable}"/>
+        <Setter Property="BorderThickness" Value="2"/>
+        <Setter Property="BorderBrush" Value="Black"/>
+        <Setter Property="MinHeight" Value="15"/>
+        <Setter Property="MinWidth" Value="15"/>
+        <Setter Property="Margin" Value="1"/>
+        
+    </Style>
+
     <!--#region ToolTip -->
     <Style TargetType="ToolTip">
         <Setter Property="Foreground" Value="{DynamicResource Foreground.Default}"/>
