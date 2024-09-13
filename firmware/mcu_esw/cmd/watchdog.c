@@ -279,7 +279,7 @@ void IntCmdAcknowledgeWatchdog1(void)
     answer = GetResponseWordAB12(g_wd1Parameters.wdQuestion);
 
     // Send answer word to ASIC
-    QSPIExecuteInstruction(WD3_TRIGGER, FALSE, answer, &data.dw);
+    QSPIExecuteInstruction(SPI1_CS1MASTER, WD3_TRIGGER, FALSE, answer, &data.dw);
 
     // Store new question
     g_wd1Parameters.wdQuestion = data.bf.output_data; 
@@ -310,7 +310,7 @@ void IntCmdAcknowledgeWatchdog2(void)
     answer = GetResponseWordAB12(g_wd2Parameters.wdQuestion);
 
     // Send answer word to ASIC
-    QSPIExecuteInstruction(WD2_TRIGGER, FALSE, answer, &data.dw);
+    QSPIExecuteInstruction(SPI1_CS1MASTER, WD2_TRIGGER, FALSE, answer, &data.dw);
 
     // Store new question
     g_wd2Parameters.wdQuestion = data.bf.output_data; 
@@ -497,7 +497,7 @@ void IntCmdMonitorWatchdog(void)
     SPIReceiveData data;
 
     // Read WD status from ASIC
-    isSuccessfulFlag = QSPIExecuteInstruction(WD_STATUS, FALSE, 0x0, &data.dw);
+    isSuccessfulFlag = QSPIExecuteInstruction(SPI1_CS1MASTER, WD_STATUS, FALSE, 0x0, &data.dw);
 
     // Pack data for sending to PC
     packageToSend.dataLength = 3;

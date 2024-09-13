@@ -28,17 +28,18 @@ typedef struct
     IfxQspi_SpiMaster_Channel spiMasterChannel;     /** \brief QSPI Master Channel handle    */
 } QSPIHandles;
 
-
-/** \brief Structure for QSPI handle required for its functions
- */
 typedef enum
 {
-    SPI1_CSMON1      = 0,                  /** \brief  P10_4    CS_MON1     SLSO8    */
-    SPI1_CS1MASTER   = 1,                  /** \brief  P10_5    CS1_MASTER  SLSO9    */
-    SPI1_CS1_SENSOR1 = 2,                  /** \brief  P11_2    CS1_SENSOR1 SLSO5    */
-    SPI1_CS1_SENSOR2 = 3,                  /** \brief  P11_10   CS1_SENSOR2 SLSO3    */
-    SPI1_CS1_SENSOR3 = 4,                  /** \brief  P11_11   CS1_SENSOR3 SLSO4    */
-}Spi1SlaveSelectEnum;
+    SPI1_SLSO_NONE      = 0,                  /** \brief  none    */
+    SPI1_SLSO8          = 1,                  /** \brief  P10_4    SLSO8    */
+    SPI1_SLSO9          = 2,                  /** \brief  P10_5    SLSO9    */
+    SPI1_SLSO5          = 3,                  /** \brief  P11_2    SLSO5    */
+    SPI1_SLSO3          = 4,                  /** \brief  P11_10   SLSO3    */
+    SPI1_SLSO4          = 5,                  /** \brief  P11_11   SLSO4    */
+    SPI1_SLSO_ENUM_LAST  = 6,                  /** \brief  enum Last    */
+}Spi1SlsoLinesEnum;
+
+#define SPI1_DEFAULT_CHANNEL SPI1_SLSO9
 
 /*********************************************************************************************************************/
 /*------------------------------------------------Function Prototypes------------------------------------------------*/
@@ -71,6 +72,6 @@ void QSPIDeinitPeriphery(void);
  */
 void QSPIExchangeData(const uint32 * const dataToSend, uint32 * const dataOut, uint8 length);
 
+void QSPIMasterChannelInit(Spi1SlsoLinesEnum spiSlaveSel);
 
-void QSPIMasterChannelInit(Spi1SlaveSelectEnum SpiChannel);
 #endif /* SPI_H_ */

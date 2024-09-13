@@ -52,7 +52,7 @@ void QSPIDeinit(void);
  * \param p_data empty variable (as pointer) to store readout data
  * \return Returns TRUE if no errors in received data, FALSE - otherwise
  */
-boolean QSPIExecuteInstruction(AB12SPIInstructionsEnum instruction, boolean programmingEnable, uint16 dataToSend, uint32 * const p_data);
+boolean QSPIExecuteInstruction(uint8 spiChannel, AB12SPIInstructionsEnum instruction, boolean programmingEnable, uint16 dataToSend, uint32 * const p_data);
 
 // AB15 prototypes
 

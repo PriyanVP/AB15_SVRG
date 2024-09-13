@@ -10,7 +10,6 @@
 #include "IfxPort.h"
 #include "common/Ifx_IntPrioDef.h"
 #include "Bsp.h"
-
 /*********************************************************************************************************************/
 /*------------------------------------------------------Macros-------------------------------------------------------*/
 /*********************************************************************************************************************/
@@ -136,7 +135,7 @@ void QSPIMasterModuleInit(void)
     IfxQspi_SpiMaster_initModule(&g_qspi.spiMaster, &spiMasterConfig);
 }
 
-void QSPIMasterChannelInit(Spi1SlaveSelectEnum SpiChannel)
+void QSPIMasterChannelInit(Spi1SlsoLinesEnum spiSlaveSel)
 {
     IfxQspi_SpiMaster_ChannelConfig spiMasterChannelConfig;             /* Define a Master Channel configuration    */
 
@@ -147,20 +146,20 @@ void QSPIMasterChannelInit(Spi1SlaveSelectEnum SpiChannel)
     spiMasterChannelConfig.base.baudrate = MASTER_CHANNEL_BAUDRATE;     /* Set SCLK frequency                       */
 
     /* Select the port pin for the Chip Select signal --> SLSO9 (CS_MASTER) as default*/
-    switch(SpiChannel){
-        case SPI1_CSMON1:                    /* SLSO8    */
+    switch(spiSlaveSel){
+        case SPI1_SLSO8:                 /* SLSO8    */
             spiMasterChannelConfig.sls.output = qspi1Slave8Select;
             break;
-        case SPI1_CS1MASTER:                 /* SLSO9   */
+        case SPI1_SLSO9:                 /* SLSO9   */
             spiMasterChannelConfig.sls.output = qspi1Slave9Select;
             break;
-        case SPI1_CS1_SENSOR1:                 /* SLSO5    */
+        case SPI1_SLSO5:                 /* SLSO5    */
             spiMasterChannelConfig.sls.output = qspi1Slave5Select;
             break;
-        case SPI1_CS1_SENSOR2:                 /* SLSO3    */
+        case SPI1_SLSO3:                 /* SLSO3    */
             spiMasterChannelConfig.sls.output = qspi1Slave3Select;
             break;
-        case SPI1_CS1_SENSOR3:                 /* SLSO4    */
+        case SPI1_SLSO4:                 /* SLSO4    */
             spiMasterChannelConfig.sls.output = qspi1Slave4Select;
             break;
         default:
@@ -177,7 +176,7 @@ void QSPIInitPeriphery(void)
 {
     /* Initialize the Master */
     QSPIMasterModuleInit();
-    QSPIMasterChannelInit(SPI1_CS1MASTER);
+    QSPIMasterChannelInit(SPI1_DEFAULT_CHANNEL);
 }
 
 void QSPIDeinitPeriphery(void)

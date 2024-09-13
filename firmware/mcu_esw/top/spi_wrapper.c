@@ -10,7 +10,6 @@
 #include "Ifx_Types.h"
 #include "Ifx_Ssw_Compilers.h"
 #include "IfxAsclin_Asc.h"
-
 #include "common/global_defines.h"
 #include "common/spi_data_types.h"
 #include "periphery/spi.h"
@@ -44,7 +43,7 @@ typedef enum
 /*********************************************************************************************************************/
 
 static boolean enSPICommunication = FALSE;                 /** \brief Flag indicating if SPI communication enabled   */
-
+static Spi1SlaveSelectEnum currectSpiChannelConfig = SPI1_CS1_ENUM_LAST; // force initi to correct channel
 /*********************************************************************************************************************/
 /*------------------------------------------------Function Prototypes------------------------------------------------*/
 /*********************************************************************************************************************/
@@ -80,15 +79,19 @@ void QSPIDeinit(void)
 #ifdef AB12_PLATFORM
 // AB12 implementations
 
-boolean QSPIExecuteInstruction(AB12SPIInstructionsEnum instruction, boolean programmingEnable, uint16 dataToSend, uint32 * const p_data)
+boolean QSPIExecuteInstruction(uint8 spiChannel, AB12SPIInstructionsEnum instruction, boolean programmingEnable, uint16 dataToSend, uint32 * const p_data)
 {
     // Execute only if enabled
     if (enSPICommunication == FALSE) return FALSE;
+
+    if (spiChannel == SPI1_CS_INVALID) return FALSE;
+    if (spiChannel >= SPI1_CS1_ENUM_LAST) return FALSE;
 
     // Initialize variables
     boolean isReceivedDataValid = FALSE;
     SPITransmitData dataToTransmit;
     SPIReceiveData dataToReceive;
+    uint8 Spi1SlaveSelectLine;
 
     // Configure and execute read request
     dataToTransmit.dw = 0;
@@ -97,11 +100,41 @@ boolean QSPIExecuteInstruction(AB12SPIInstructionsEnum instruction, boolean prog
     dataToTransmit.bf.data = dataToSend;
     dataToTransmit.bf.crc = GetCRC3(&(dataToTransmit.dw));
 
-    QSPIMasterChannelInit(SPI1_CSMON1);
+    //TODO check if slave select config maches, if so refuse configure slave
+    // wrap spi slave to SLSO lines
+    if (spiChannel != currectSpiChannelConfig){
+        currectSpiChannelConfig = spiChannel;
+        switch(spiChannel){
+            case SPI1_CSMON1:                 /* SLSO8    */
+                Spi1SlaveSelectLine = SPI1_SLSO8;
+                break;
+            case SPI1_CS1MASTER:                 /* SLSO8    */
+                Spi1SlaveSelectLine = SPI1_SLSO9;
+                break;
+            case SPI1_CS1_SENSOR1:                 /* SLSO8    */
+                Spi1SlaveSelectLine = SPI1_SLSO5;
+                break;
+            case SPI1_CS1_SENSOR2:                 /* SLSO8    */
+                Spi1SlaveSelectLine = SPI1_SLSO3;
+                break;
+            case SPI1_CS1_SENSOR3:                 /* SLSO8    */
+                Spi1SlaveSelectLine = SPI1_SLSO4;
+                break;
+            default:
+                /* by fdefault use SLSO9, default master    */
+                Spi1SlaveSelectLine = SPI1_SLSO9;
+               break;
+           }
+        // reconfigure
+        QSPIMasterChannelInit(Spi1SlaveSelectLine);
+    }
+    QSPIExchangeData(&dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
+
+    QSPIMasterChannelInit(SPI1_CS1MASTER);
     QSPIExchangeData(&dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
 
     // switch Spi channel
-    QSPIMasterChannelInit(SPI1_CS1MASTER);
+    QSPIMasterChannelInit(SPI1_CSMON1);
     QSPIExchangeData(&dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
 
     // switch Spi channel

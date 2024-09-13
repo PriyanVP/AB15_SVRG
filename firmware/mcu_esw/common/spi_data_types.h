@@ -52,6 +52,22 @@ typedef enum
     TEST_FLM                = 0x016c              /** \brief Test FLM                                 */
 } AB12SPIInstructionsEnum;
 
+
+/** \brief ASIC ID to SPI1 chip select mapping
+ */
+typedef enum
+{
+    SPI1_CS_INVALID     = 0,                  /** \brief  no chip select    */
+    SPI1_CS1MASTER      = 1,                  /** \brief  ASIC ID 1 =   CS1MASTER   */
+    SPI1_CSMON1         = 2,                  /** \brief  ASIc ID 2 = CSMON1   9    */
+    SPI1_CS1_SENSOR1    = 3,                  /** \brief      */
+    SPI1_CS1_SENSOR2    = 4,                  /** \brief       */
+    SPI1_CS1_SENSOR3    = 5,                  /** \brief       */
+    SPI1_CS1_ENUM_LAST  = 6,                  /** \brief  enum Last    */
+}Spi1SlaveSelectEnum;
+
+
+
 /*********************************************************************************************************************/
 /*-------------------------------------------------Data Structures---------------------------------------------------*/
 /*********************************************************************************************************************/
