@@ -194,8 +194,8 @@ boolean ReceiveUSBPackage(USBReceiveData * const data)
     expectedCrc = buffer[messageLength - (USB_CRC_LENGTH + USB_STOPBYTE_LENGTH)];
     if (IsCRC8Correct(&(buffer[USB_MSG_ID_POS]), crcLength, expectedCrc) == FALSE)
     {
-        IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, FALSE);
-        return FALSE;
+        //IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, FALSE);
+        //return FALSE;
     }
 
     // Unpack data from buffer to struct

@@ -118,16 +118,16 @@ void core0_main(void)
     InitStatus();
 
     // Init timer module
-    InitGpt12Timer();
+    //InitGpt12Timer();
 
     /* set default Frequency for PWM generation */
-    SetDefaultPWMFrequency();
+    //SetDefaultPWMFrequency();
 
     // start CCU6 module PWM generation */
-    StartPWMGeneration();
+    //StartPWMGeneration();
 
     // Start general timer
-    StartGeneralTimer();
+    //StartGeneralTimer();
 
     // Local temporary variable for receiving data
     USBReceiveData receivedPackage;

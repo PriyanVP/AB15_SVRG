@@ -96,6 +96,24 @@ boolean QSPIExecuteInstruction(AB12SPIInstructionsEnum instruction, boolean prog
     dataToTransmit.bf.pe = programmingEnable;
     dataToTransmit.bf.data = dataToSend;
     dataToTransmit.bf.crc = GetCRC3(&(dataToTransmit.dw));
+
+    QSPIMasterChannelInit(SPI1_CSMON1);
+    QSPIExchangeData(&dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
+
+    // switch Spi channel
+    QSPIMasterChannelInit(SPI1_CS1MASTER);
+    QSPIExchangeData(&dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
+
+    // switch Spi channel
+    QSPIMasterChannelInit(SPI1_CS1_SENSOR1);
+    QSPIExchangeData(&dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
+
+    // switch Spi channel
+    QSPIMasterChannelInit(SPI1_CS1_SENSOR2);
+    QSPIExchangeData(&dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
+
+    // switch Spi channel
+    QSPIMasterChannelInit(SPI1_CS1_SENSOR3);
     QSPIExchangeData(&dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
 
     // Validating input
