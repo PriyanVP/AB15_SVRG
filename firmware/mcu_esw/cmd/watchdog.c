@@ -278,7 +278,7 @@ void IntCmdAcknowledgeWatchdog1(void)
     // Get answer from the table (question is stored from previous WD triggering)
     answer = GetResponseWordAB12(g_wd1Parameters.wdQuestion);
 
-    // Send answer word to ASIC
+    // Send answer word to ASIC, only CS1MASTER is responsible for Watchdog
     QSPIExecuteInstruction(SPI1_CS1MASTER, WD3_TRIGGER, FALSE, answer, &data.dw);
 
     // Store new question
@@ -309,7 +309,7 @@ void IntCmdAcknowledgeWatchdog2(void)
     // Get answer from the table (question is stored from previous WD triggering)
     answer = GetResponseWordAB12(g_wd2Parameters.wdQuestion);
 
-    // Send answer word to ASIC
+    // Send answer word to ASIC, only CS1MASTER is responsible for Watchdog
     QSPIExecuteInstruction(SPI1_CS1MASTER, WD2_TRIGGER, FALSE, answer, &data.dw);
 
     // Store new question

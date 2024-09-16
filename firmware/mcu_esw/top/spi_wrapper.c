@@ -43,7 +43,7 @@ typedef enum
 /*********************************************************************************************************************/
 
 static boolean enSPICommunication = FALSE;                 /** \brief Flag indicating if SPI communication enabled   */
-static Spi1SlaveSelectEnum currectSpiChannelConfig = SPI1_CS1_ENUM_LAST; // force initi to correct channel
+static Spi1SlaveSelectEnum currectSpiChannelConfig = SPI1_CS1_ENUM_LAST; // force init to correct channel
 /*********************************************************************************************************************/
 /*------------------------------------------------Function Prototypes------------------------------------------------*/
 /*********************************************************************************************************************/
@@ -100,8 +100,9 @@ boolean QSPIExecuteInstruction(uint8 spiChannel, AB12SPIInstructionsEnum instruc
     dataToTransmit.bf.data = dataToSend;
     dataToTransmit.bf.crc = GetCRC3(&(dataToTransmit.dw));
 
-    //TODO check if slave select config maches, if so refuse configure slave
-    // wrap spi slave to SLSO lines
+    /*translate the spi slaves to the dedicated SLSO lines*/
+    //TODO check if slave select is same as before, if so refuse duplicate configure
+
     if (spiChannel != currectSpiChannelConfig){
         currectSpiChannelConfig = spiChannel;
         switch(spiChannel){
@@ -128,25 +129,6 @@ boolean QSPIExecuteInstruction(uint8 spiChannel, AB12SPIInstructionsEnum instruc
         // reconfigure
         QSPIMasterChannelInit(Spi1SlaveSelectLine);
     }
-    QSPIExchangeData(&dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
-
-    QSPIMasterChannelInit(SPI1_CS1MASTER);
-    QSPIExchangeData(&dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
-
-    // switch Spi channel
-    QSPIMasterChannelInit(SPI1_CSMON1);
-    QSPIExchangeData(&dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
-
-    // switch Spi channel
-    QSPIMasterChannelInit(SPI1_CS1_SENSOR1);
-    QSPIExchangeData(&dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
-
-    // switch Spi channel
-    QSPIMasterChannelInit(SPI1_CS1_SENSOR2);
-    QSPIExchangeData(&dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
-
-    // switch Spi channel
-    QSPIMasterChannelInit(SPI1_CS1_SENSOR3);
     QSPIExchangeData(&dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
 
     // Validating input

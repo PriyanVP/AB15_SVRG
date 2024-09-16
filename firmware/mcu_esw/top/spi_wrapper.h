@@ -46,6 +46,7 @@ void QSPIDeinit(void);
 
 /** \brief Execute SPI instruction for AB12 via QSPI
  *
+ * \param spiChannel SPI Slave to and from which the SPI instruction is executed
  * \param instruction absolute address to read from
  * \param programmingEnable boolean flag to enable ASIC programming
  * \param dataToSend data that should be send as SPI input data (look for correct format for each instruction individually)
