@@ -2,6 +2,7 @@
 using NLog;
 using System.Collections.Generic;
 using AB15_GUI.WPF.Models;
+using System.Windows.Threading;
 
 namespace AB15_GUI.WPF.NLog
 {
@@ -15,17 +16,19 @@ namespace AB15_GUI.WPF.NLog
         /// <summary>
         /// Constant that defines max size of logs list
         /// </summary> 
-        private const int MaxListSize = 100;
+        private const int MaxListSize = 50;
+
+        private readonly object _lock = new object();
 
         /// <summary>
         /// Internal list that stores records and implements notifications
         /// </summary>
         private readonly ThreadSafeObservableList<LoggerRecord> _logs = new ThreadSafeObservableList<LoggerRecord>(MaxListSize);
 
-        public LogMemoryRecordTarget()
-        {
-            //
-        }
+        /// <summary>
+        /// Internal list for observable list for <see cref="Logs"/>.
+        /// </summary>
+        private ThreadSafeObservableList<LoggerRecord> _observableLogs = new ThreadSafeObservableList<LoggerRecord>(MaxListSize);
 
         /// <summary>
         /// Gets the list of logs gathered in the <see cref="MemoryRecordTarget"/>.
@@ -34,7 +37,7 @@ namespace AB15_GUI.WPF.NLog
         /// <remarks>
         /// Thread safety is implemented using lock
         /// </remarks>
-        public IList<LoggerRecord> Logs => _logs;
+        public IList<LoggerRecord> Logs => _observableLogs;
 
         /// <summary>
         /// Event handler that is called when new log record received
@@ -50,10 +53,26 @@ namespace AB15_GUI.WPF.NLog
 
             // Invoking operations on logs list on GUI thread
             // TODO: refactor thread synchronization approach. Current one is closely coupled to WPF
-            App.Current.Dispatcher.Invoke(() =>
+            _logs.Add(logRecord);
+            SynchronizeLists();
+        }
+
+        /// <summary>
+        /// Method to update content of bindable list
+        /// </summary>
+        private void SynchronizeLists()
+        {
+            App.Current.Dispatcher.BeginInvoke(() =>
             {
-                _logs.Add(logRecord);
-            });
+                lock (_lock)
+                {
+                    _observableLogs.Clear();
+                    foreach (var item in _logs)
+                    {
+                        _observableLogs.Add(item);
+                    }
+                }
+            }, DispatcherPriority.Background);
         }
     }
 }

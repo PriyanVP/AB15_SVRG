@@ -1,5 +1,8 @@
+using NLog;
 using System;
+using System.Windows;
 using System.Windows.Input;
+using AB15_GUI.WPF.NLog;
 
 namespace AB15_GUI.WPF.ViewModels.Commands
 {
@@ -27,17 +30,28 @@ namespace AB15_GUI.WPF.ViewModels.Commands
             this.canExecute = canExecute;
         }
 
+        /// <summary>
+        /// Occurs when changes occur that affect whether the command should execute.
+        /// Empty + unused, required by ICommand interface
+        /// </summary>
         public event EventHandler? CanExecuteChanged
         {
-            add { CommandManager.RequerySuggested += value; }
-            remove { CommandManager.RequerySuggested -= value; }
+            add {}
+            remove {}
         }
 
+        /// <summary>
+        /// Method to check if command can be executed
+        /// </summary>
+        /// <returns>flag indicating if command can be executed</returns>
         public bool CanExecute(object? parameter)
         {
             return (canExecute == null) ? (true) : (canExecute(parameter));
         }
 
+        /// <summary>
+        /// Command to be executed
+        /// </summary>
         public void Execute(object? parameter)
         {
             execute(parameter);

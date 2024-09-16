@@ -73,19 +73,19 @@ namespace AB15_GUI.WPF.ViewModels
             // Action that will be executed on every state change
             _stateMachine.OnTransitionCompleted((transition) => ExecuteStateTransition());
 
-            // Fire transition to Idle state
-            _stateMachine.Fire(Triggers.POR);
-
             // DOT graph of state machine
             // Can be used with debugger to plot state machine visualization
             string graph = UmlDotGraph.Format(_stateMachine.GetInfo());
 
             // Init commands for buttons
-            ReadConfigFromASIC  = new RelayCommand(ReadConfigFromASICExecute, ((x) => _readWDConfigCommand.IsEnabled));
-            WriteConfigToASIC   = new RelayCommand(WriteConfigToASICExecute, ((x) => _writeWDConfigCommand.IsEnabled));
+            ReadConfigFromASIC  = new RelayCommand(ReadConfigFromASICExecute);
+            WriteConfigToASIC   = new RelayCommand(WriteConfigToASICExecute);
 
-            StartWatchdog       = new RelayCommand(StartWatchdogExecute, ((x) => _startWDCommand.IsEnabled));
-            StopWatchdog        = new RelayCommand(StopWatchdogExecute, ((x) => _stopWDCommand.IsEnabled));
+            StartWatchdog       = new RelayCommand(StartWatchdogExecute);
+            StopWatchdog        = new RelayCommand(StopWatchdogExecute);
+
+            // Fire transition to Idle state
+            _stateMachine.Fire(Triggers.POR);
         }
 
         #region State_Machine
@@ -178,6 +178,12 @@ namespace AB15_GUI.WPF.ViewModels
                 default:
                     throw new ArgumentOutOfRangeException(nameof(_stateMachine.State), "Unexpected state received");
             }
+
+            // Request update of buttons states
+            OnPropertyChanged(nameof(ReadWDConfigCommandEn));
+            OnPropertyChanged(nameof(WriteWDConfigCommandEn));
+            OnPropertyChanged(nameof(StartWDCommandEn));
+            OnPropertyChanged(nameof(StopWDCommandEn));
         }
 
         #endregion //State_Machine
@@ -710,24 +716,44 @@ namespace AB15_GUI.WPF.ViewModels
         private int? _msgIdForMonitoring = null;
 
         /// <summary>
-        /// Start WD button/command enable state
-        /// </summary>
-        private CommandState _startWDCommand        = new CommandState();
-
-        /// <summary>
-        /// Stop WD button/command enable state
-        /// </summary>
-        private CommandState _stopWDCommand         = new CommandState();
-
-        /// <summary>
         /// Read WD config button/command enable state
         /// </summary>
         private CommandState _readWDConfigCommand   = new CommandState();
 
         /// <summary>
+        /// Bindable read WD config button/command enable state
+        /// </summary>
+        public bool ReadWDConfigCommandEn => _readWDConfigCommand.IsEnabled;
+
+        /// <summary>
         /// Write WD config button/command enable state
         /// </summary>
         private CommandState _writeWDConfigCommand  = new CommandState();
+
+        /// <summary>
+        /// Bindable write WD config button/command enable state
+        /// </summary>
+        public bool WriteWDConfigCommandEn => _writeWDConfigCommand.IsEnabled;
+
+        /// <summary>
+        /// Start WD button/command enable state
+        /// </summary>
+        private CommandState _startWDCommand        = new CommandState();
+        
+        /// <summary>
+        /// Bindable start WD button/command enable state
+        /// </summary>
+        public bool StartWDCommandEn => _startWDCommand.IsEnabled;
+
+        /// <summary>
+        /// Stop WD button/command enable state
+        /// </summary>
+        private CommandState _stopWDCommand         = new CommandState();
+        
+        /// <summary>
+        /// Bindable stop WD button/command enable state
+        /// </summary>
+        public bool StopWDCommandEn => _stopWDCommand.IsEnabled;
 
         /// <summary>
         /// Command handler for Read config from ASIC button
@@ -757,6 +783,7 @@ namespace AB15_GUI.WPF.ViewModels
             // Handle that command execution can only be done once in a row
             if (_readWDConfigCommand.IsEnabled == false) return;
             _readWDConfigCommand.InProgress = true;
+            OnPropertyChanged(nameof(ReadWDConfigCommandEn));
 
             logger.Debug($"Pressed read config button");
             
@@ -797,6 +824,7 @@ namespace AB15_GUI.WPF.ViewModels
             // Handle that command execution can only be done once in a row
             if (_writeWDConfigCommand.IsEnabled == false) return;
             _writeWDConfigCommand.InProgress = true;
+            OnPropertyChanged(nameof(WriteWDConfigCommandEn));
 
             logger.Debug($"Pressed write config button");
             
@@ -839,6 +867,7 @@ namespace AB15_GUI.WPF.ViewModels
             // Handle that command execution can only be done once in a row
             if (_startWDCommand.IsEnabled == false) return;
             _startWDCommand.InProgress = true;
+            OnPropertyChanged(nameof(StartWDCommandEn));
 
             logger.Debug($"Pressed start WD button");
             
@@ -877,6 +906,7 @@ namespace AB15_GUI.WPF.ViewModels
             // Handle that command execution can only be done once in a row
             if (_stopWDCommand.IsEnabled == false) return;
             _stopWDCommand.InProgress = true;
+            OnPropertyChanged(nameof(StopWDCommandEn));
 
             logger.Debug($"Pressed stop WD button");
             
@@ -920,6 +950,7 @@ namespace AB15_GUI.WPF.ViewModels
         {
             // Response received - unlock command usage
             _readWDConfigCommand.InProgress = false;
+            OnPropertyChanged(nameof(ReadWDConfigCommandEn));
 
             // Typecast response to actual type
             ReceiveCommunicationPackage<AddressDataPayload> mcuResponse = (ReceiveCommunicationPackage<AddressDataPayload>) response;
@@ -988,6 +1019,7 @@ namespace AB15_GUI.WPF.ViewModels
         {
             // Response received - unlock command usage
             _writeWDConfigCommand.InProgress = false;
+            OnPropertyChanged(nameof(WriteWDConfigCommandEn));
 
             // Typecast response to actual type
             ReceiveCommunicationPackage<EmptyPayload> mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>) response;
@@ -1016,6 +1048,7 @@ namespace AB15_GUI.WPF.ViewModels
         {
             // Response received - unlock command usage
             _startWDCommand.InProgress = false;
+            OnPropertyChanged(nameof(StartWDCommandEn));
 
             // Typecast response to actual type
             ReceiveCommunicationPackage<EmptyPayload> mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>) response;
@@ -1044,6 +1077,7 @@ namespace AB15_GUI.WPF.ViewModels
         {
             // Response received - unlock command usage
             _stopWDCommand.InProgress = false;
+            OnPropertyChanged(nameof(StopWDCommandEn));
 
             // Typecast response to actual type
             ReceiveCommunicationPackage<EmptyPayload> mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>) response;
