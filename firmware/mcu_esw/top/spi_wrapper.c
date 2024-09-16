@@ -101,7 +101,7 @@ boolean QSPIExecuteInstruction(uint8 spiChannel, AB12SPIInstructionsEnum instruc
     dataToTransmit.bf.crc = GetCRC3(&(dataToTransmit.dw));
 
     /*translate the spi slaves to the dedicated SLSO lines*/
-    //TODO check if slave select is same as before, if so refuse duplicate configure
+    /* TODO: function shall also operate on SPI2. finally it shall route all commands to dedicated SPI devices on dedicated SPI Bus and Slave select line  */
 
     if (spiChannel != currectSpiChannelConfig){
         currectSpiChannelConfig = spiChannel;
