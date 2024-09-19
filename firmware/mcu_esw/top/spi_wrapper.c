@@ -170,6 +170,9 @@ boolean QSPIWriteNormal(uint8 spiChannel, uint16 address, uint16 data)
     // Validating input
     isReceivedDataValid = IsCRC3Correct(&(dataToReceive.dw), dataToReceive.bf.crc);
     isReceivedDataValid &= (dataToReceive.bf.asic_error_flag == FALSE);
+    isReceivedDataValid &= (dataToReceive.bf.gs0 == FALSE);
+    isReceivedDataValid &= (dataToReceive.bf.gs2 == FALSE);
+    isReceivedDataValid &= (dataToReceive.bf.gs5 == FALSE);
 
     return isReceivedDataValid;
 }

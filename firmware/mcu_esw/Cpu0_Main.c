@@ -178,17 +178,15 @@ void core0_main(void)
                 CmdIsAlive(&cmdPackage);
                 break;
 
-            case USB_CMD_SPI_INSTRUCTION:
-                CmdSpiInstuction(&cmdPackage);
-                break;
-
             case USB_CMD_READ_DEV_ID:
                 CmdGetDeviceId(&cmdPackage);
                 break;
-            // case :
-            //     break;
-            // case :
-            //     break;
+            case USB_CMD_READ_REG:
+                CmdReadReg(&cmdPackage);
+                break;
+            case USB_CMD_WRITE_REG:
+                CmdWriteReg(&cmdPackage);
+                break;
             // case :
             //     break;
             // case :
