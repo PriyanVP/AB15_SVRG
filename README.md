@@ -77,7 +77,7 @@ Generating register classes for GUI:
 * Run gui\utilities\registers_generation\gen_registers.py (provide -h for help)
 
 Firmware testing:
-* Refer to pytest invironment setup instructions in \firmware\AB15_MCU.Tests\README.md
+* Refer to pytest invironment setup [instructions](firmware/AB15_MCU.Tests/README.md)
 
 ## Contribution Guidelines <a name="contribution-guidelines"></a>
 
@@ -101,12 +101,12 @@ to get in contact with you or provide feedback.
 
 ### Maintainers <a name="maintainers"></a>
 
-* Developer: [Brinkmann Matthias](https://connect.bosch.com/profiles/html/profileView.do?key=385a0c29-acbe-4645-a323-dd0f930db781#&tabinst=Updates)
-* Developer: [Dudnyk Oleksii](https://connect.bosch.com/profiles/html/profileView.do?key=7a5402e8-f7ce-4dd0-bc62-a9b66e4c6b9a#&tabinst=Updates)
-* Developer: [Tkachenko Nikita](https://connect.bosch.com/profiles/html/profileView.do?key=60124c2b-b45f-4bb6-a004-9323e6ea1a9a#&tabinst=Updates)
-* Developer: [Salziger Jan](https://connect.bosch.com/profiles/html/profileView.do?key=9a0923e5-6a55-4333-821e-a0001ec3c013#&tabinst=Updates)
-* Developer: [Khudobets Vadym](https://connect.bosch.com/profiles/html/profileView.do?userid=1AA2475F-410A-47F5-8779-3342667C808D#&tabinst=contactInfo)
-* Developer: [Hoefflinger Jens](https://connect.bosch.com/profiles/html/profileView.do?key=64ef3baf-ecf6-4a9c-bc42-4382113200d3#&tabinst=Updates)
+* Developer (T&R): 				[Brinkmann Matthias](https://connect.bosch.com/profiles/html/profileView.do?key=385a0c29-acbe-4645-a323-dd0f930db781#&tabinst=Updates)
+* Developer (GUI, firmware):	[Dudnyk Oleksii](https://connect.bosch.com/profiles/html/profileView.do?key=7a5402e8-f7ce-4dd0-bc62-a9b66e4c6b9a#&tabinst=Updates)
+* Developer (GUI, UI): 			[Tkachenko Nikita](https://connect.bosch.com/profiles/html/profileView.do?key=60124c2b-b45f-4bb6-a004-9323e6ea1a9a#&tabinst=Updates)
+* Developer (firmware): 		[Salziger Jan](https://connect.bosch.com/profiles/html/profileView.do?key=9a0923e5-6a55-4333-821e-a0001ec3c013#&tabinst=Updates)
+* Developer (firmware): 		[Khudobets Vadym](https://connect.bosch.com/profiles/html/profileView.do?userid=1AA2475F-410A-47F5-8779-3342667C808D#&tabinst=contactInfo)
+* Developer (GUI): 				[Hoefflinger Jens](https://connect.bosch.com/profiles/html/profileView.do?key=64ef3baf-ecf6-4a9c-bc42-4382113200d3#&tabinst=Updates)
 
 
 ### Contributors <a name="contributors"></a>
