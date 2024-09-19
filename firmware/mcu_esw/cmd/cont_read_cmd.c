@@ -134,5 +134,5 @@ void IntCmdContRead(void)
     if (g_continuousReadConfigured == FALSE) return;
 
     // Call function to read sequence of registers (addresses to read set during feature configuration)
-    CmdExecuteReadSequence(&g_continuousReadPackage);
+    // CmdExecuteReadSequence(&g_continuousReadPackage); // TODO: uncomment
 }

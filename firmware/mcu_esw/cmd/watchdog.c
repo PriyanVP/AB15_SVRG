@@ -242,7 +242,7 @@ void CmdConfigureWatchdog(USBReceiveData const * const commandPackage)
     // Write both WD configs to ASIC to ASIC
     for (uint8 i = 0; i < length; i++)
     {
-        isSuccessfulFlag = QSPIWriteSequence(SPI1_CS1MASTER, &(address[i]), &(data[i]), &length); // TODO: configuration, not yet implemented; not available for AB12
+        // isSuccessfulFlag = QSPIWriteSequence(SPI1_CS1MASTER, &(address[i]), &(data[i]), &length); // TODO: configuration, not yet implemented; not available for AB12
     }
 
     #endif
@@ -509,7 +509,7 @@ void IntCmdMonitorWatchdog(void)
     SPIReceiveDataNormal data[WD_STATUS_REGS_COUNT] = {0};
 
     // Read WD related registers from ASIC
-    isSuccessfulFlag = QSPIReadSequenceNormal(SPI1_CS1MASTER, g_wdStatusMonitoringConfig.wdStatusRegsAddresses, &data[0].dw, &length);
+    // isSuccessfulFlag = QSPIReadSequenceNormal(SPI1_CS1MASTER, g_wdStatusMonitoringConfig.wdStatusRegsAddresses, &data[0].dw, &length); // TODO: not implemented
 
     packageToSend.dataLength = length << 1; // each data item is send as 2 bytes
 

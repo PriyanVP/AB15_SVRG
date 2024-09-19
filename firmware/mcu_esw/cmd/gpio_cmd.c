@@ -126,5 +126,5 @@ void IntCmdGPIORead(void)
     if (g_GPIOPollingConfigured == FALSE) return;
 
     // Call function to read sequence of registers (addresses to read set during feature configuration)
-    CmdExecuteReadSequence(&g_GPIOReadPackage);
+    // CmdExecuteReadSequence(&g_GPIOReadPackage); TODO: uncomment
 }
