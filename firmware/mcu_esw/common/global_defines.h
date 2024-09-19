@@ -14,7 +14,7 @@
 /*------------------------------------------------------Macros-------------------------------------------------------*/
 /*********************************************************************************************************************/
 
-#define AB12_PLATFORM             /** \brief define macros for working with AB12 platform               */
+// #define AB12_PLATFORM             /** \brief define macros for working with AB12 platform               */
 
 
 #endif /* GLOBAL_DEFINES_H_ */
