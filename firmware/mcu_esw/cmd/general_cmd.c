@@ -100,14 +100,16 @@ void CmdSpiInstuction(USBReceiveData const * const commandPackage)
     AB12SPIInstructionsEnum instruction;
     boolean programmingEnable;
     boolean isSuccessfulFlag;
+    uint8 spiChannel;
 
     // Unpack data required for SPI command
     instruction = (AB12SPIInstructionsEnum) ConstructWordFromBytes(commandPackage->data[1], commandPackage->data[0]);
     programmingEnable = (commandPackage->data[4] != 0);
     dataToSend = ConstructWordFromBytes(commandPackage->data[3], commandPackage->data[2]);
+    spiChannel = commandPackage->asic_id;
 
     // Send data to SPI with waiting for response
-    isSuccessfulFlag = QSPIExecuteInstruction(instruction, programmingEnable, dataToSend, &dataReceived.dw);
+    isSuccessfulFlag = QSPIExecuteInstruction(spiChannel, instruction, programmingEnable, dataToSend, &dataReceived.dw);
 
     // Construct package to PC
     packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
@@ -139,9 +141,12 @@ void CmdGetDeviceId(USBReceiveData * commandPackage)
     USBTransmitData packageToSend;
     SPIReceiveData data; // TODO: will need type change for AB15
     boolean isSuccessfulFlag;
+    uint8 spiChannel;
+
+    spiChannel = commandPackage->asic_id;
 
     // SPI instruction for get device ID
-    isSuccessfulFlag = QSPIExecuteInstruction(READ_DEV_ID, FALSE, 0x0, &data.dw);
+    isSuccessfulFlag = QSPIExecuteInstruction(spiChannel, READ_DEV_ID, FALSE, 0x0, &data.dw);
 
     if (isSuccessfulFlag && (!data.bf.gs_flag))
     {
