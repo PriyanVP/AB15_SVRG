@@ -15,6 +15,7 @@
 /*********************************************************************************************************************/
 
 // #define AB12_PLATFORM             /** \brief define macros for working with AB12 platform               */
+#define BYPASS_CRC8_FOR_USB             /** \brief if defined - CRC8 check won't be done               */
 
 
 #endif /* GLOBAL_DEFINES_H_ */
