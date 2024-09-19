@@ -7,8 +7,10 @@
 /*-----------------------------------------------------Includes------------------------------------------------------*/
 /*********************************************************************************************************************/
 #include "spi.h"
+#include "Ifx_Types.h"
 #include "IfxPort.h"
 #include "common/Ifx_IntPrioDef.h"
+#include "common/spi_data_types.h"
 #include "Bsp.h"
 /*********************************************************************************************************************/
 /*------------------------------------------------------Macros-------------------------------------------------------*/
@@ -78,6 +80,16 @@ const IfxQspi_SpiMaster_Output qspi1Slave9Select = {                 /* QSPI1 Ma
  * \return Returns nothing.
  */
 void QSPIMasterModuleInit(void);
+
+/** \brief QSPI Master channel initialization
+ * This functions:\n
+ * 1) Initializes the QSPI1 Master channel.\n
+ * 2) Configure CS pin.\n
+ * 3) Configure baudrate.\n
+ *
+ * \return Returns nothing.
+ */
+void QSPIMasterChannelInit(Spi1SlsoLinesEnum spiSlaveSel);
 
 /*********************************************************************************************************************/
 /*----------------------------------------------Function Implementations---------------------------------------------*/
@@ -204,4 +216,50 @@ void QSPIExchangeData(const uint32 * const dataToSend, uint32 * const dataOut, u
         if ((--timeout) <= 0) break;
     }
     *dataOut = SWAP_ENDIAN(dataToRecive);
+}
+
+boolean QSPIUpdateChannelConfig(uint8 spiChannel)
+{
+    // Validate input
+    if (spiChannel == SPI1_CS_INVALID) return FALSE;
+    if (spiChannel >= SPI1_CS1_ENUM_LAST) return FALSE;
+
+    // Initialize variables
+    static Spi1SlaveSelectEnum currectSpiChannelConfig = SPI1_CS1_ENUM_LAST; // force init to correct channel
+    uint8 Spi1SlaveSelectLine;
+
+    /*translate the spi slaves to the dedicated SLSO lines*/
+    /* TODO: function shall also operate on SPI2. finally it shall route all commands to dedicated SPI devices on dedicated SPI Bus and Slave select line  */
+
+    if (spiChannel != currectSpiChannelConfig)
+    {
+        currectSpiChannelConfig = spiChannel;
+        switch(spiChannel)
+        {
+            case SPI1_CSMON1:                       /* SLSO8    */
+                Spi1SlaveSelectLine = SPI1_SLSO8;
+                break;
+            case SPI1_CS1MASTER:                    /* SLSO8    */
+                Spi1SlaveSelectLine = SPI1_SLSO9;
+                break;
+            case SPI1_CS1_SENSOR1:                  /* SLSO8    */
+                Spi1SlaveSelectLine = SPI1_SLSO5;
+                break;
+            case SPI1_CS1_SENSOR2:                  /* SLSO8    */
+                Spi1SlaveSelectLine = SPI1_SLSO3;
+                break;
+            case SPI1_CS1_SENSOR3:                  /* SLSO8    */
+                Spi1SlaveSelectLine = SPI1_SLSO4;
+                break;
+            default:
+                /* by default use SLSO9, default master    */
+                Spi1SlaveSelectLine = SPI1_SLSO9;
+               break;
+        }
+
+        // Reconfigure master to use other CS
+        QSPIMasterChannelInit(Spi1SlaveSelectLine);
+    }
+
+    return TRUE;
 }

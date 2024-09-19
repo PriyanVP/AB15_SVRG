@@ -64,7 +64,7 @@ typedef enum
     SPI1_CS1_SENSOR2    = 4,
     SPI1_CS1_SENSOR3    = 5,
     SPI1_CS1_ENUM_LAST  = 6,                  /** \brief  enum Last    */
-}Spi1SlaveSelectEnum;
+} Spi1SlaveSelectEnum;
 
 
 

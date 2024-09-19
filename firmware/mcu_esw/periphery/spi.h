@@ -72,14 +72,15 @@ void QSPIDeinitPeriphery(void);
  */
 void QSPIExchangeData(const uint32 * const dataToSend, uint32 * const dataOut, uint8 length);
 
-/** \brief QSPI Master channel initialization
+/** \brief QSPI Master channel CS pin reconfiguration
+ * Channel will be reconfigured only if new spiChannel is not the same as previous one
  * This functions:\n
- * 1) Initializes the QSPI1 Master channel.\n
- * 2) Configure CS pin.\n
- * 3) Configure baudrate.\n
+ * 1) Configure CS pin based on input.\n
+ * 2) Initializes the QSPI1 Master channel.\n
  *
+ * \param spiChannel new spi channel
  * \return Returns nothing.
  */
-void QSPIMasterChannelInit(Spi1SlsoLinesEnum spiSlaveSel);
+boolean QSPIUpdateChannelConfig(uint8 spiChannel);
 
 #endif /* SPI_H_ */

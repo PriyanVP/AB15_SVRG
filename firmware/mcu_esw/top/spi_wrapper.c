@@ -43,7 +43,7 @@ typedef enum
 /*********************************************************************************************************************/
 
 static boolean enSPICommunication = FALSE;                 /** \brief Flag indicating if SPI communication enabled   */
-static Spi1SlaveSelectEnum currectSpiChannelConfig = SPI1_CS1_ENUM_LAST; // force init to correct channel
+
 /*********************************************************************************************************************/
 /*------------------------------------------------Function Prototypes------------------------------------------------*/
 /*********************************************************************************************************************/
@@ -84,14 +84,14 @@ boolean QSPIExecuteInstruction(uint8 spiChannel, AB12SPIInstructionsEnum instruc
     // Execute only if enabled
     if (enSPICommunication == FALSE) return FALSE;
 
-    if (spiChannel == SPI1_CS_INVALID) return FALSE;
-    if (spiChannel >= SPI1_CS1_ENUM_LAST) return FALSE;
+    // Configure SPI channel for communication and stop execution if unsuccussful
+    boolean isSpiChannelConigOk = QSPIUpdateChannelConfig(spiChannel);
+    if (isSpiChannelConigOk == FALSE) return FALSE;
 
     // Initialize variables
     boolean isReceivedDataValid = FALSE;
     SPITransmitData dataToTransmit;
     SPIReceiveData dataToReceive;
-    uint8 Spi1SlaveSelectLine;
 
     // Configure and execute read request
     dataToTransmit.dw = 0;
@@ -100,35 +100,6 @@ boolean QSPIExecuteInstruction(uint8 spiChannel, AB12SPIInstructionsEnum instruc
     dataToTransmit.bf.data = dataToSend;
     dataToTransmit.bf.crc = GetCRC3(&(dataToTransmit.dw));
 
-    /*translate the spi slaves to the dedicated SLSO lines*/
-    /* TODO: function shall also operate on SPI2. finally it shall route all commands to dedicated SPI devices on dedicated SPI Bus and Slave select line  */
-
-    if (spiChannel != currectSpiChannelConfig){
-        currectSpiChannelConfig = spiChannel;
-        switch(spiChannel){
-            case SPI1_CSMON1:                 /* SLSO8    */
-                Spi1SlaveSelectLine = SPI1_SLSO8;
-                break;
-            case SPI1_CS1MASTER:                 /* SLSO8    */
-                Spi1SlaveSelectLine = SPI1_SLSO9;
-                break;
-            case SPI1_CS1_SENSOR1:                 /* SLSO8    */
-                Spi1SlaveSelectLine = SPI1_SLSO5;
-                break;
-            case SPI1_CS1_SENSOR2:                 /* SLSO8    */
-                Spi1SlaveSelectLine = SPI1_SLSO3;
-                break;
-            case SPI1_CS1_SENSOR3:                 /* SLSO8    */
-                Spi1SlaveSelectLine = SPI1_SLSO4;
-                break;
-            default:
-                /* by fdefault use SLSO9, default master    */
-                Spi1SlaveSelectLine = SPI1_SLSO9;
-               break;
-           }
-        // reconfigure
-        QSPIMasterChannelInit(Spi1SlaveSelectLine);
-    }
     QSPIExchangeData(&dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
 
     // Validating input
@@ -143,10 +114,14 @@ boolean QSPIExecuteInstruction(uint8 spiChannel, AB12SPIInstructionsEnum instruc
 #else
 // AB15 implementations
 
-boolean QSPIReadNormal(uint16 address, uint32 * const p_data)
+boolean QSPIReadNormal(uint8 spiChannel, uint16 address, uint32 * const p_data)
 {
     // Execute only if enabled
     if (enSPICommunication == FALSE) return FALSE;
+
+    // Configure SPI channel for communication and stop execution if unsuccussful
+    boolean isSpiChannelConigOk = QSPIUpdateChannelConfig(spiChannel);
+    if (isSpiChannelConigOk == FALSE) return FALSE;
 
     // Initialize variables
     boolean isReceivedDataValid = FALSE;
@@ -171,10 +146,14 @@ boolean QSPIReadNormal(uint16 address, uint32 * const p_data)
     return (isReceivedDataValid);
 }
 
-boolean QSPIWriteNormal(uint16 address, uint16 data)
+boolean QSPIWriteNormal(uint8 spiChannel, uint16 address, uint16 data)
 {
     // Execute only if enabled
     if (enSPICommunication == FALSE) return;
+
+    // Configure SPI channel for communication and stop execution if unsuccussful
+    boolean isSpiChannelConigOk = QSPIUpdateChannelConfig(spiChannel);
+    if (isSpiChannelConigOk == FALSE) return FALSE;
 
     // Initialize variables
     boolean isReceivedDataValid = FALSE;
@@ -195,25 +174,29 @@ boolean QSPIWriteNormal(uint16 address, uint16 data)
     return isReceivedDataValid;
 }
 
-boolean QSPIReadSequenceNormal(const uint16 * const p_addressBuffer, uint32 * const p_dataBuffer, uint16 * const p_length)
+boolean QSPIReadSequenceNormal(uint8 spiChannel, const uint16 * const p_addressBuffer, uint32 * const p_dataBuffer, uint16 * const p_length)
 {
-    return QSPIReadWriteSequenceNormalInline(p_addressBuffer, p_dataBuffer, NULL_PTR, READ_ONLY, p_length);
+    return QSPIReadWriteSequenceNormalInline(uint8 spiChannel, p_addressBuffer, p_dataBuffer, NULL_PTR, READ_ONLY, p_length);
 }
 
-boolean QSPIWriteSequenceNormal(const uint16 * const addressBuffer, const uint16 * const dataBuffer, uint16 * const length)
+boolean QSPIWriteSequenceNormal(uint8 spiChannel, const uint16 * const addressBuffer, const uint16 * const dataBuffer, uint16 * const length)
 {
-    return QSPIReadWriteSequenceNormalInline(p_addressBuffer, p_dataBuffer, NULL_PTR, WRITE_ONLY, p_length);
+    return QSPIReadWriteSequenceNormalInline(uint8 spiChannel, p_addressBuffer, p_dataBuffer, NULL_PTR, WRITE_ONLY, p_length);
 }
 
-boolean QSPIReadWriteSequenceNormal(const uint16 * const addressBuffer, const uint16 * const dataBuffer, const RWFlagEnum * const p_rwBuffer, uint16 * const length)
+boolean QSPIReadWriteSequenceNormal(uint8 spiChannel, const uint16 * const addressBuffer, const uint16 * const dataBuffer, const RWFlagEnum * const p_rwBuffer, uint16 * const length)
 {
-    return QSPIReadWriteSequenceNormalInline(p_addressBuffer, p_dataBuffer, p_rwBuffer, COMBINATION, p_length);
+    return QSPIReadWriteSequenceNormalInline(uint8 spiChannel, p_addressBuffer, p_dataBuffer, p_rwBuffer, COMBINATION, p_length);
 }
 
-IFX_INLINE boolean QSPIReadWriteSequenceNormalInline(const uint16 * const p_addressBuffer, uint32 * const p_dataBuffer, const RWFlagEnum * const p_rwBuffer, const SequenceTypeEnum SEQ_TYPE, uint16 * const p_length)
+IFX_INLINE boolean QSPIReadWriteSequenceNormalInline(uint8 spiChannel, const uint16 * const p_addressBuffer, uint32 * const p_dataBuffer, const RWFlagEnum * const p_rwBuffer, const SequenceTypeEnum SEQ_TYPE, uint16 * const p_length)
 {
     // Execute only if enabled
     if (enSPICommunication == FALSE) return FALSE;
+
+    // Configure SPI channel for communication and stop execution if unsuccussful
+    boolean isSpiChannelConigOk = QSPIUpdateChannelConfig(spiChannel);
+    if (isSpiChannelConigOk == FALSE) return FALSE;
 
     // Initialize variables
     boolean isReceivedDataValid = FALSE;
@@ -272,10 +255,14 @@ IFX_INLINE boolean QSPIReadWriteSequenceNormalInline(const uint16 * const p_addr
     return TRUE;
 }
 
-boolean QSPIReadSensor(uint16 address, uint32 * const p_data)
+boolean QSPIReadSensor(uint8 spiChannel, uint16 address, uint32 * const p_data)
 {
     // Execute only if enabled
     if (enSPICommunication == FALSE) return FALSE;
+
+    // Configure SPI channel for communication and stop execution if unsuccussful
+    boolean isSpiChannelConigOk = QSPIUpdateChannelConfig(spiChannel);
+    if (isSpiChannelConigOk == FALSE) return FALSE;
 
     // Initialize variables
     boolean isReceivedDataValid = FALSE;
@@ -299,10 +286,14 @@ boolean QSPIReadSensor(uint16 address, uint32 * const p_data)
     return (isReceivedDataValid);
 }
 
-boolean QSPIReadSequenceSensor(const uint16 * const p_addressBuffer, uint32 * const p_dataBuffer, uint16 * const p_length)
+boolean QSPIReadSequenceSensor(uint8 spiChannel, const uint16 * const p_addressBuffer, uint32 * const p_dataBuffer, uint16 * const p_length)
 {
     // Execute only if enabled
     if (enSPICommunication == FALSE) return FALSE;
+
+    // Configure SPI channel for communication and stop execution if unsuccussful
+    boolean isSpiChannelConigOk = QSPIUpdateChannelConfig(spiChannel);
+    if (isSpiChannelConigOk == FALSE) return FALSE;
 
     // Initialize variables
     boolean isReceivedDataValid = FALSE;
