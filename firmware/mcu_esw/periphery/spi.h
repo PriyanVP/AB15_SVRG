@@ -72,6 +72,14 @@ void QSPIDeinitPeriphery(void);
  */
 void QSPIExchangeData(const uint32 * const dataToSend, uint32 * const dataOut, uint8 length);
 
+/** \brief QSPI Master channel initialization
+ * This functions:\n
+ * 1) Initializes the QSPI1 Master channel.\n
+ * 2) Configure CS pin.\n
+ * 3) Configure baudrate.\n
+ *
+ * \return Returns nothing.
+ */
 void QSPIMasterChannelInit(Spi1SlsoLinesEnum spiSlaveSel);
 
 #endif /* SPI_H_ */

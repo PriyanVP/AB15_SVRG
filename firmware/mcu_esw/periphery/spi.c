@@ -39,30 +39,31 @@ const IfxQspi_SpiMaster_Pins qspi1MasterPins = {
     IfxPort_PadDriver_ttl3v3Speed3                                                                  /* Pad driver mode                          */
 };
 
-/* setup the different SLSO pins for SPi slaves according SPI tab in PinMapping Table */
+/* setup the different SLSO pins for SPI 1 slaves according SPI tab in PinMapping Table. only pin P10.5
+ * can be identified to have pullup resistor, others can not confirmed --> set all to push pull to be safe*/
 
 const IfxQspi_SpiMaster_Output qspi1Slave3Select = {                 /* QSPI1 Master selects the QSPI1 Slave     */
-        &IfxQspi1_SLSO3_P11_10_OUT, IfxPort_OutputMode_pushPull,     /* Slave Select 1 port pin (CS1_SENSOR2)    */
+        &IfxQspi1_SLSO3_P11_10_OUT, IfxPort_OutputMode_pushPull,     /* Slave Select port pin (CS1_SENSOR2)      */
         IfxPort_PadDriver_ttl3v3Speed1                               /* Pad driver mode                          */
 };
 
 const IfxQspi_SpiMaster_Output qspi1Slave4Select = {                 /* QSPI1 Master selects the QSPI1 Slave     */
-        &IfxQspi1_SLSO4_P11_11_OUT, IfxPort_OutputMode_pushPull,     /* Slave Select 1 port pin (CS1_SENSOR3)    */
+        &IfxQspi1_SLSO4_P11_11_OUT, IfxPort_OutputMode_pushPull,     /* Slave Select port pin (CS1_SENSOR3)      */
         IfxPort_PadDriver_ttl3v3Speed1                               /* Pad driver mode                          */
 };
 
 const IfxQspi_SpiMaster_Output qspi1Slave5Select = {                 /* QSPI1 Master selects the QSPI1 Slave     */
-        &IfxQspi1_SLSO5_P11_2_OUT, IfxPort_OutputMode_pushPull,      /* Slave Select 1 port pin (CS1_SENSOR1)    */
+        &IfxQspi1_SLSO5_P11_2_OUT, IfxPort_OutputMode_pushPull,      /* Slave Select port pin (CS1_SENSOR1)      */
         IfxPort_PadDriver_ttl3v3Speed1                               /* Pad driver mode                          */
 };
 
-const IfxQspi_SpiMaster_Output qspi1Slave8Select = {                 /* QSPI1 Master selects the QSPI2 Slave      */
-        &IfxQspi1_SLSO8_P10_4_OUT, IfxPort_OutputMode_pushPull,      /* Slave Select 2 port pin (CS_MON1)         */
+const IfxQspi_SpiMaster_Output qspi1Slave8Select = {                 /* QSPI1 Master selects the QSPI1 Slave      */
+        &IfxQspi1_SLSO8_P10_4_OUT, IfxPort_OutputMode_pushPull,      /* Slave Select port pin (CS_MON1)           */
         IfxPort_PadDriver_ttl3v3Speed1                               /* Pad driver mode                           */
 };
 
 const IfxQspi_SpiMaster_Output qspi1Slave9Select = {                 /* QSPI1 Master selects the QSPI1 Slave      */
-        &IfxQspi1_SLSO9_P10_5_OUT, IfxPort_OutputMode_pushPull,      /* Slave Select 1 port pin (CS1_MASTER)      */
+        &IfxQspi1_SLSO9_P10_5_OUT, IfxPort_OutputMode_pushPull,      /* Slave Select port pin (CS1_MASTER)        */
         IfxPort_PadDriver_ttl3v3Speed1                               /* Pad driver mode                           */
 };
 /*********************************************************************************************************************/
@@ -77,16 +78,6 @@ const IfxQspi_SpiMaster_Output qspi1Slave9Select = {                 /* QSPI1 Ma
  * \return Returns nothing.
  */
 void QSPIMasterModuleInit(void);
-
-/** \brief QSPI Master channel initialization
- * This functions:\n
- * 1) Initializes the QSPI1 Master channel.\n
- * 2) Configure CS pin.\n
- * 3) Configure baudrate.\n
- *
- * \return Returns nothing.
- */
-// TODO: bug in iLLD: function not existing : void QSPIMasterModuleInitChannel(void);
 
 /*********************************************************************************************************************/
 /*----------------------------------------------Function Implementations---------------------------------------------*/
@@ -187,16 +178,16 @@ void QSPIDeinitPeriphery(void)
     // Module deinit
     IfxQspi_resetModule(g_qspi.spiMaster.qspi);
 
-    // Set all pins to input without pull-up (high-Z state)
+    // Set all pins to input without pull-up (high-Z state): switch off Pull-Device to save power consumption
     IfxPort_setPinModeInput(qspi1MasterPins.sclk->pin.port, qspi1MasterPins.sclk->pin.pinIndex, IfxPort_InputMode_noPullDevice);
     IfxPort_setPinModeInput(qspi1MasterPins.mrst->pin.port, qspi1MasterPins.mrst->pin.pinIndex, IfxPort_InputMode_noPullDevice);
     IfxPort_setPinModeInput(qspi1MasterPins.mtsr->pin.port, qspi1MasterPins.mtsr->pin.pinIndex, IfxPort_InputMode_noPullDevice);
     // set all slave select pins
-    IfxPort_setPinModeInput(qspi1Slave8Select.pin->pin.port, qspi1Slave8Select.pin->pin.pinIndex, IfxPort_InputMode_noPullDevice); // has HW pull up
-    IfxPort_setPinModeInput(qspi1Slave9Select.pin->pin.port, qspi1Slave9Select.pin->pin.pinIndex, IfxPort_InputMode_noPullDevice); // has HW pull up
-    IfxPort_setPinModeInput(qspi1Slave5Select.pin->pin.port, qspi1Slave5Select.pin->pin.pinIndex, IfxPort_InputMode_noPullDevice); // has HW pull up
-    IfxPort_setPinModeInput(qspi1Slave3Select.pin->pin.port, qspi1Slave3Select.pin->pin.pinIndex, IfxPort_InputMode_noPullDevice); // has HW pull up
-    IfxPort_setPinModeInput(qspi1Slave4Select.pin->pin.port, qspi1Slave4Select.pin->pin.pinIndex, IfxPort_InputMode_noPullDevice); // has HW pull up
+    IfxPort_setPinModeInput(qspi1Slave8Select.pin->pin.port, qspi1Slave8Select.pin->pin.pinIndex, IfxPort_InputMode_noPullDevice);
+    IfxPort_setPinModeInput(qspi1Slave9Select.pin->pin.port, qspi1Slave9Select.pin->pin.pinIndex, IfxPort_InputMode_noPullDevice);
+    IfxPort_setPinModeInput(qspi1Slave5Select.pin->pin.port, qspi1Slave5Select.pin->pin.pinIndex, IfxPort_InputMode_noPullDevice);
+    IfxPort_setPinModeInput(qspi1Slave3Select.pin->pin.port, qspi1Slave3Select.pin->pin.pinIndex, IfxPort_InputMode_noPullDevice);
+    IfxPort_setPinModeInput(qspi1Slave4Select.pin->pin.port, qspi1Slave4Select.pin->pin.pinIndex, IfxPort_InputMode_noPullDevice);
 }
 
 void QSPIExchangeData(const uint32 * const dataToSend, uint32 * const dataOut, uint8 length)

@@ -66,7 +66,6 @@ static boolean g_GPIOEnable                 = FALSE;    /** \brief GPIO interrup
 /*--------------------------------------------Function Implementations-----------------------------------------------*/
 /*********************************************************************************************************************/
 /* Macro defining the Interrupt Service Routines */
-//TODO: disable IRQ
 IFX_INTERRUPT(UpdateTimersRoutine, 0, ISR_PRIORITY_GPT1_T3_TIMER);
 
 
