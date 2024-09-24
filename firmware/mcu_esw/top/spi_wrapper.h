@@ -114,7 +114,7 @@ boolean QSPIReadSequenceNormal(uint8 spiChannel, const uint16 * const p_addressB
  * \param p_length pointer to variable storing length of input buffers, after execution stores length of p_dataBuffer
  * \return Returns TRUE is there were no errors during operation, FALSE otherwise
  */
-boolean QSPIWriteSequenceNormal(uint8 spiChannel, const uint16 * const p_addressBuffer, uint16 * const p_dataBuffer, uint16 * const p_length);
+boolean QSPIWriteSequenceNormal(uint8 spiChannel, const uint16 * const p_addressBuffer, uint32 * const p_dataBuffer, uint16 * const p_length);
 
 /** \brief Reads/writes data via QSPI to ASIC in sequence by specified addresses 
  * Created for executing read+write sequences with minimum overhead and with communication error checking
@@ -126,7 +126,7 @@ boolean QSPIWriteSequenceNormal(uint8 spiChannel, const uint16 * const p_address
  * \param p_length pointer to variable storing length of input buffers, after execution stores length of p_dataBuffer
  * \return Returns TRUE is there were no errors during operation, FALSE otherwise
  */
-boolean QSPIReadWriteSequenceNormal(uint8 spiChannel, const uint16 * const p_addressBuffer, uint16 * const p_dataBuffer, 
+boolean QSPIReadWriteSequenceNormal(uint8 spiChannel, const uint16 * const p_addressBuffer, uint32 * const p_dataBuffer, 
                                     const RWFlagEnum * const p_rwBuffer, uint16 * const p_length);
 
 /*********************************************************************************************************************/

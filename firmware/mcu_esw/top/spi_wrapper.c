@@ -145,6 +145,9 @@ boolean QSPIReadNormal(uint8 spiChannel, uint16 address, uint32 * const p_data)
     // Validating input
     isReceivedDataValid = IsCRC3Correct(&(dataToReceive.dw), dataToReceive.bf.crc);
     isReceivedDataValid &= (dataToReceive.bf.asic_error_flag == FALSE);
+    isReceivedDataValid &= (dataToReceive.bf.gs0 == FALSE);
+    isReceivedDataValid &= (dataToReceive.bf.gs2 == FALSE);
+    isReceivedDataValid &= (dataToReceive.bf.gs5 == FALSE);
 
     // Return data
     *p_data = dataToReceive.dw;
@@ -188,12 +191,12 @@ boolean QSPIReadSequenceNormal(uint8 spiChannel, const uint16 * const p_addressB
     return QSPIReadWriteSequenceNormalInline(spiChannel, p_addressBuffer, p_dataBuffer, NULL_PTR, READ_ONLY, p_length);
 }
 
-boolean QSPIWriteSequenceNormal(uint8 spiChannel, const uint16 * const p_addressBuffer, uint16 * const p_dataBuffer, uint16 * const p_length)
+boolean QSPIWriteSequenceNormal(uint8 spiChannel, const uint16 * const p_addressBuffer, uint32 * const p_dataBuffer, uint16 * const p_length)
 {
     return QSPIReadWriteSequenceNormalInline(spiChannel, p_addressBuffer, p_dataBuffer, NULL_PTR, WRITE_ONLY, p_length);
 }
 
-boolean QSPIReadWriteSequenceNormal(uint8 spiChannel, const uint16 * const p_addressBuffer, uint16 * const p_dataBuffer, const RWFlagEnum * const p_rwBuffer, uint16 * const p_length)
+boolean QSPIReadWriteSequenceNormal(uint8 spiChannel, const uint16 * const p_addressBuffer, uint32 * const p_dataBuffer, const RWFlagEnum * const p_rwBuffer, uint16 * const p_length)
 {
     return QSPIReadWriteSequenceNormalInline(spiChannel, p_addressBuffer, p_dataBuffer, p_rwBuffer, COMBINATION, p_length);
 }
@@ -247,12 +250,15 @@ IFX_INLINE boolean QSPIReadWriteSequenceNormalInline(uint8 spiChannel, const uin
         // Validating input
         isReceivedDataValid = IsCRC3Correct(&(dataToReceive.dw), dataToReceive.bf.crc);
         isReceivedDataValid &= (dataToReceive.bf.asic_error_flag == FALSE);
+        isReceivedDataValid &= (dataToReceive.bf.gs0 == FALSE);
+        isReceivedDataValid &= (dataToReceive.bf.gs2 == FALSE);
+        isReceivedDataValid &= (dataToReceive.bf.gs5 == FALSE);
 
         // Store received data
         *p_length = i; // store number of received frames
 
-        // save package to output buffer
-        p_dataBuffer[i] = dataToReceive.dw;
+        // save package to output buffer only if read option used, otherwise store 0
+        p_dataBuffer[i] = (dataToTransmit.bf.rw == READ) ? (dataToReceive.dw) : (0);
 
         if (isReceivedDataValid == FALSE)
         {
