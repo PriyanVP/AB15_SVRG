@@ -60,7 +60,7 @@ class Status(Enum):
 class TransmitPackage(): #metaclass=MultipleMeta
     '''Wrapper for packages from PC to MCU'''
 
-    def __init__(self, msg_id:int=0, device_id:int=0, cmd:Command=Command._MIN, payload: List[int]=[]):
+    def __init__(self, msg_id:int=0, device_id:int=0, cmd:Command=Command._MIN, payload:List[int]=[]):
         self.msg_id = msg_id
         self.device_id = device_id
         self.cmd = cmd.value

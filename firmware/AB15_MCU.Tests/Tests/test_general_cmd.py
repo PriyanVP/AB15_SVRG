@@ -1,6 +1,5 @@
 # group basic tests
-# tests GET_MCU_VERSION, READ_DEV_ID
-#TODO: add comprehensive `test failed` description messages into test's asserts
+# tests all commands in general_cmd.c
 
 import os
 import pytest
@@ -10,28 +9,27 @@ from serial_fixtures import SerialWrapper
 import package_helper as pkg
 
 class TestDeviceID:
-    '''DeviceId command tests'''
-    
+    '''General commands tests'''
+
     # MCU firmware version TODO: find a vay to keep up-to-date automatically
     VERSION_MAJOR = 0x00
     VERSION_MINOR = 0x02
     VERSION_PATCH = 0x00
-    # AB12 IC device ID
-    DEVICE_ID_AB12 = 0xC4
 
+    # AB12/15 IC device ID
+    DEVICE_ID_AB12 = 0xC4
+    DEVICE_ID_AB15 = 0xC4 # TODO: what is correct value?
+    
     @classmethod
     def setup_class(cls):
         # COM port handling; connects to COM port with SW TC375 by default once before executing tests in class
         cls.serial = SerialWrapper()
         cls.serial.open_port()
-        print ('\nsetup_class()')
 
     @classmethod 
     def teardown_class(cls):
         # disconnects after test's completion
         cls.serial.close_port()
-        print ('\nteardown_class()')
-
 
     @pytest.mark.basic
     @pytest.mark.serial
@@ -52,9 +50,27 @@ class TestDeviceID:
         # Output to be captured if test passes
         print("ShieldBuddy is connected sucesfully at port", self.serial.com_port.name)
 
+    def test_IsAlive(self):
+        ''' Check if "is alive" command is working
+        tests:
+        - USB_CMD_IS_ALIVE'''
+
+        # Arrange
+        packageToSend = pkg.TransmitPackage(0x00, 0x00, pkg.Command.IS_ALIVE)
+
+        # Act
+        self.serial.com_port.write(packageToSend.serialize())
+        sleep(0.01)
+        is_response_received = self.serial.extract_packages()
+        result = pkg.ReceivePackage(self.serial.packages.pop(0))
+
+        # Assert
+        assert is_response_received, "No response from MCU received"
+        assert result.status == pkg.Status.ACK
+
     @pytest.mark.serial
     @pytest.mark.basic
-    def test_MCUVersion(self):
+    def test_GetMcuVersion(self):
         '''group basic tests
         verifies ShieldBuddy's firmware version
         tests:
@@ -73,18 +89,14 @@ class TestDeviceID:
 
         # Assert
         assert is_response_received, "No response from MCU received"
+        assert result.status == pkg.Status.STATUS, f"Incorrect status in payload. Expected STATUS, but received {result.status}"
         assert (result.payload[0] == self.VERSION_MAJOR) and (result.payload[1] == self.VERSION_MINOR) and (result.payload[2] == self.VERSION_PATCH), f"MCU version is not expected. Expected {hex(self.VERSION_MAJOR)}.{hex(self.VERSION_MINOR)}.{hex(self.VERSION_PATCH)}, but received {hex(result.payload[0])}.{hex(result.payload[1])}.{hex(result.payload[2])}"
-
-        # Output to be captured if test passes
-        print(f'Firmware version: {hex(result.payload[0])}.{hex(result.payload[1])}.{hex(result.payload[2])}') # expected 0x0 0x2 0x0
 
     @pytest.mark.serial
     @pytest.mark.basic
-    @pytest.mark.skip(reason="Skipped due no HW connected (AB12/15 ASIC board)")
-    def test_DeviceID(self):
-        #Add documentation comments for functions of test files
+    def test_GetDeviceId(self):
         '''group basic tests
-        verifies AB15(12) DeviceID
+        verifies AB15 DeviceID
         tests:
         - MCU command:
             * READ_DEV_ID'''
@@ -95,13 +107,38 @@ class TestDeviceID:
         # Act
         self.serial.com_port.write(packageToSend.serialize())
 
-        sleep(0.1)
+        sleep(0.01)
         is_response_received = self.serial.extract_packages()
         result = pkg.ReceivePackage(self.serial.packages.pop(0))
 
         # Assert
         assert is_response_received, "No response from MCU received"
-        assert (result.payload[0] == DEVICE_ID_AB12), f"Unexpected device ID. Expected {hex(DEVICE_ID_AB12)}, but received {result.payload[0]}"
+        assert (result.payload[0] == DEVICE_ID_AB15), f"Unexpected device ID. Expected {hex(DEVICE_ID_AB15)}, but received {result.payload[0]}"
+
+        # Output to be captured if test passes
+        print(f'MCU response with IC device ID: ', end='') # expected 0xAB 0x8F 0x00 0x80 0x01 0xC4 0xBE 0xBA
+        for itm in result.package:
+            print(f'{itm:#03x} ', end='')
+
+    @pytest.mark.parametrize("address,expected", [(0x000, 0x0241), (0x001, 0x0096)])
+    def test_ReadReg(self, address):
+        '''Checks if reading single register works as expected
+        tests:
+        - READ_REG'''
+
+        # Arrange
+        packageToSend = pkg.TransmitPackage(0x00, 0x01, pkg.Command.READ_REG, )
+
+        # Act
+        self.serial.com_port.write(packageToSend.serialize())
+
+        sleep(0.01)
+        is_response_received = self.serial.extract_packages()
+        result = pkg.ReceivePackage(self.serial.packages.pop(0))
+
+        # Assert
+        assert is_response_received, "No response from MCU received"
+        assert (result.payload[0] == DEVICE_ID_AB15), f"Unexpected device ID. Expected {hex(DEVICE_ID_AB15)}, but received {result.payload[0]}"
 
         # Output to be captured if test passes
         print(f'MCU response with IC device ID: ', end='') # expected 0xAB 0x8F 0x00 0x80 0x01 0xC4 0xBE 0xBA
