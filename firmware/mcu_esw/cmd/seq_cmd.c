@@ -11,6 +11,7 @@
 #include "common/spi_data_types.h"
 #include "common/command_queue.h"
 #include "common/bit_manipulation.h"
+#include "common/package_helper.h"
 #include "top/spi_wrapper.h"
 #include "top/usb_wrapper.h"
 
@@ -49,7 +50,7 @@ void CmdExecuteRWSequence(USBReceiveData const * const commandPackage)
     boolean isSuccessfulFlag = FALSE;
     uint8 spiChannel;
 
-    spiChannel = commandPackage->device_id; // TODO: converter function needed, won't work with ASIC 1, 2, 3
+    spiChannel = GetSpiChannelById(commandPackage->device_id);
 
     // Unpack received data to variables
     for (uint8 i = 0; i < length; i++)
@@ -103,7 +104,7 @@ void CmdExecuteReadSequence(USBReceiveData const * const commandPackage)
     boolean isSuccessfulFlag = FALSE;
     uint8 spiChannel;
 
-    spiChannel = commandPackage->device_id; // TODO: converter function needed, won't work with ASIC 1, 2, 3
+    spiChannel = GetSpiChannelById(commandPackage->device_id);
 
     // Unpack received data to variables
     for (uint8 i = 0; i < length; i++)
@@ -167,7 +168,7 @@ void CmdExecuteWriteSequence(USBReceiveData const * const commandPackage)
     boolean isSuccessfulFlag = FALSE;
     uint8 spiChannel;
 
-    spiChannel = commandPackage->device_id; // TODO: converter function needed, won't work with ASIC 1, 2, 3
+    spiChannel = GetSpiChannelById(commandPackage->device_id);
 
     // Unpack received data to variables
     for (uint8 i = 0; i < length; i++)
