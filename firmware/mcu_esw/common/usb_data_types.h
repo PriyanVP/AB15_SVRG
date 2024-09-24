@@ -131,7 +131,7 @@ typedef enum
 typedef struct
 {
     uint8           msg_id;                                 /** \brief message ID */
-    uint8           asic_id;                                /** \brief ASIC ID */
+    uint8           device_id;                                /** \brief Device ID (ASICs + sensors) */
     USBCommandsEnum command;                                /** \brief command from PC */
     uint8           dataLength;                             /** \brief data length in bytes */
     uint8           data[MAX_USB_RECIEVE_PAYLOAD_LENGTH];   /** \brief array with payload */
@@ -142,7 +142,7 @@ typedef struct
 typedef struct
 {
     uint8           msg_id;                                 /** \brief message ID */
-    uint8           asic_id;                                /** \brief ASIC ID */
+    uint8           device_id;                                /** \brief Device ID (ASICs + sensors) */
     USBStatusesEnum status;                                 /** \brief MCU status */
     uint8           dataLength;                             /** \brief data length in bytes */
     uint8           data[MAX_USB_TRANSMIT_PAYLOAD_LENGTH];  /** \brief array with payload */

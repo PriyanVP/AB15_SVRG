@@ -60,7 +60,7 @@ boolean SendUSBPackage(const USBTransmitData * data)
     buffer[USB_MSG_ID_POS] = data->msg_id;
     itemCounter++;
 
-    buffer[USB_ASIC_ID_POS] = data->asic_id;
+    buffer[USB_ASIC_ID_POS] = data->device_id;
     itemCounter++;
 
     buffer[USB_CMD_STAT_POS] = data->status;
@@ -203,7 +203,7 @@ boolean ReceiveUSBPackage(USBReceiveData * const data)
 
     // Unpack data from buffer to struct
     data->msg_id     = buffer[USB_MSG_ID_POS];
-    data->asic_id    = buffer[USB_ASIC_ID_POS];
+    data->device_id    = buffer[USB_ASIC_ID_POS];
     data->command    = (USBCommandsEnum) buffer[USB_CMD_STAT_POS];
     data->dataLength = buffer[USB_PAYLOAD_LEN_POS];
     for (uint16 i = 0; i < data->dataLength; i++)

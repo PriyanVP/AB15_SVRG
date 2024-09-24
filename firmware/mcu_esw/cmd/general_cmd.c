@@ -37,6 +37,7 @@
 void CmdIsAlive(USBReceiveData const * const commandPackage)
 {
     USBTransmitData packageToSend;
+    packageToSend.device_id = commandPackage->device_id;
     packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
     packageToSend.status = USB_STATUS_ACK;
     packageToSend.dataLength = 0;
@@ -48,6 +49,7 @@ void CmdGetMcuVersion(USBReceiveData const * const commandPackage)
 {
     USBTransmitData packageToSend;
 
+    packageToSend.device_id = commandPackage->device_id;
     packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
     packageToSend.status = USB_STATUS_STATUS;
     packageToSend.dataLength = 3;
@@ -62,6 +64,7 @@ void CmdGetMcuBuildDate(USBReceiveData const * const commandPackage)
 {
     USBTransmitData packageToSend;
 
+    packageToSend.device_id = commandPackage->device_id;
     packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
     packageToSend.status = USB_STATUS_STATUS;
     packageToSend.dataLength = 8;
@@ -81,6 +84,7 @@ void CmdGetMcuBuildTime(USBReceiveData const * const commandPackage)
 {
     USBTransmitData packageToSend;
 
+    packageToSend.device_id = commandPackage->device_id;
     packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
     packageToSend.status = USB_STATUS_STATUS;
     packageToSend.dataLength = 4;
@@ -99,12 +103,13 @@ void CmdGetDeviceId(USBReceiveData const * const commandPackage)
     boolean isSuccessfulFlag;
     uint8 spiChannel;
 
-    spiChannel = commandPackage->asic_id; // TODO: converter function needed, won't work with ASIC 1, 2, 3
+    spiChannel = commandPackage->device_id; // TODO: converter function needed, won't work with ASIC 1, 2, 3
 
     // SPI instruction for get device ID
     isSuccessfulFlag = QSPIReadNormal(spiChannel, DEVICE_ID_DEVICE_ID, &data.dw);
 
     // Construct package to PC
+    packageToSend.device_id = commandPackage->device_id;
     packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
 
     if (isSuccessfulFlag)
@@ -132,7 +137,7 @@ void CmdWriteReg(USBReceiveData const * const commandPackage)
     boolean isSuccessfulFlag = FALSE;
     uint8 spiChannel;
 
-    spiChannel = commandPackage->asic_id; // TODO: converter function needed, won't work with ASIC 1, 2, 3
+    spiChannel = commandPackage->device_id; // TODO: converter function needed, won't work with ASIC 1, 2, 3
 
     // Unpack received data to variables
     address = ConstructWordFromBytes(commandPackage->data[1], commandPackage->data[0]);
@@ -142,6 +147,7 @@ void CmdWriteReg(USBReceiveData const * const commandPackage)
     isSuccessfulFlag = QSPIWriteNormal(spiChannel, address, data);
 
     // Construct package to PC
+    packageToSend.device_id = commandPackage->device_id;
     packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
 
     // Construct packages based on error status
@@ -171,7 +177,7 @@ void CmdReadReg(USBReceiveData const * const commandPackage)
     boolean isSuccessfulFlag = FALSE;
     uint8 spiChannel;
 
-    spiChannel = commandPackage->asic_id; // TODO: converter function needed, won't work with ASIC 1, 2, 3
+    spiChannel = commandPackage->device_id; // TODO: converter function needed, won't work with ASIC 1, 2, 3
 
     // Unpack received data to variables
     address = ConstructWordFromBytes(commandPackage->data[1], commandPackage->data[0]);
@@ -180,6 +186,7 @@ void CmdReadReg(USBReceiveData const * const commandPackage)
     isSuccessfulFlag = QSPIReadNormal(spiChannel, address, &dataReceived.dw);
 
     // Construct package to PC
+    packageToSend.device_id = commandPackage->device_id;
     packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
 
     // Construct packages based on error status

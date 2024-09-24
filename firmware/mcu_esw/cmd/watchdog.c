@@ -248,6 +248,7 @@ void CmdConfigureWatchdog(USBReceiveData const * const commandPackage)
     #endif
 
     // Prepare report for GUI
+    packageToSend.device_id = commandPackage->device_id;
     packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
 
     if (isSuccessfulFlag == FALSE)
@@ -393,6 +394,7 @@ void CmdStopWatchdog(USBReceiveData const * const commandPackage)
 
     // Prepare acknowledge message
     USBTransmitData packageToSend;
+    packageToSend.device_id = commandPackage->device_id;
     packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
     packageToSend.status = USB_STATUS_ACK;
     packageToSend.dataLength = 0;
@@ -415,8 +417,9 @@ void CmdSetExtOsc2Mhz(USBReceiveData const * const commandPackage)
 
     // Prepare acknowledge message
     USBTransmitData packageToSend;
+    packageToSend.device_id = commandPackage->device_id;
     packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
-    packageToSend.asic_id = 1;
+    packageToSend.device_id = 1;
     packageToSend.status = USB_STATUS_ACK;
     packageToSend.dataLength = 0;
 
@@ -438,8 +441,9 @@ void CmdSetExtOsc4Mhz(USBReceiveData const * const commandPackage)
 
     // Prepare acknowledge message
     USBTransmitData packageToSend;
+    packageToSend.device_id = commandPackage->device_id;
     packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
-    packageToSend.asic_id = 1;
+    packageToSend.device_id = 1;
     packageToSend.status = USB_STATUS_ACK;
     packageToSend.dataLength = 0;
 
@@ -469,6 +473,7 @@ void CmdStopMonitoringWatchdog(USBReceiveData const * const commandPackage)
 
     // Prepare acknowledge message
     USBTransmitData packageToSend;
+    packageToSend.device_id = commandPackage->device_id;
     packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
     packageToSend.status = USB_STATUS_ACK;
     packageToSend.dataLength = 0;
@@ -522,7 +527,7 @@ void IntCmdMonitorWatchdog(void)
 
     // Send data
     packageToSend.status = (isSuccessfulFlag) ? USB_STATUS_DATA : USB_STATUS_ERROR;
-    packageToSend.asic_id = 1;
+    packageToSend.device_id = SPI1_CS1MASTER;
     packageToSend.msg_id = g_wdStatusMonitoringConfig.monitoringMessageID;
 
     // Send message to GUI
