@@ -133,7 +133,7 @@ void CmdWriteReg(USBReceiveData const * const commandPackage)
     // Parameters for SPI packages and variable to store output data
     USBTransmitData packageToSend;
     uint16 address;
-    uint32 data;
+    uint16 data;
     boolean isSuccessfulFlag = FALSE;
     uint8 spiChannel;
 

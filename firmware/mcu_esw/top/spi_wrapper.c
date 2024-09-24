@@ -155,7 +155,7 @@ boolean QSPIReadNormal(uint8 spiChannel, uint16 address, uint32 * const p_data)
     return (isReceivedDataValid);
 }
 
-boolean QSPIWriteNormal(uint8 spiChannel, uint16 address, uint16 data)
+boolean QSPIWriteNormal(uint8 spiChannel, uint16 address, uint16 data) // TODO: 
 {
     // Execute only if enabled
     if (enSPICommunication == FALSE) return FALSE;

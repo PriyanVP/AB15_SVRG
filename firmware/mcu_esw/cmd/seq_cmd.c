@@ -64,7 +64,7 @@ void CmdExecuteRWSequence(USBReceiveData const * const commandPackage)
     }
 
     // Send data to SPI with waiting for response
-    isSuccessfulFlag = QSPIReadWriteSequenceNormal(spiChannel, &address, &dataReceived.dw, &rwOption, &length);
+    isSuccessfulFlag = QSPIReadWriteSequenceNormal(spiChannel, address, &(dataReceived[0].dw), rwOption, &length);
 
     // Construct package to PC
     packageToSend.device_id = commandPackage->device_id;
@@ -84,8 +84,8 @@ void CmdExecuteRWSequence(USBReceiveData const * const commandPackage)
 
         for (uint8 i = 0; i < packageToSend.dataLength; i += 2)
         {
-            packageToSend.data[i]     = GetLSB(dataReceived.bf.output_data);
-            packageToSend.data[i+1] = GetMSB(dataReceived.bf.output_data);
+            packageToSend.data[i]   = GetLSB(dataReceived[i >> 1].bf.output_data);
+            packageToSend.data[i+1] = GetMSB(dataReceived[i >> 1].bf.output_data);
         }
     }
 
@@ -116,7 +116,7 @@ void CmdExecuteReadSequence(USBReceiveData const * const commandPackage)
     }
 
     // Send data to SPI with waiting for response
-    isSuccessfulFlag = QSPIReadSequenceNormal(spiChannel, &address, &dataReceived.dw, &length);
+    isSuccessfulFlag = QSPIReadSequenceNormal(spiChannel, address, &(dataReceived[0].dw), &length);
 
     // Construct package to PC
     packageToSend.device_id = commandPackage->device_id;
@@ -148,8 +148,8 @@ void CmdExecuteReadSequence(USBReceiveData const * const commandPackage)
 
         for (uint8 i = 0; i < packageToSend.dataLength; i += 2)
         {
-            packageToSend.data[i]   = GetLSB(dataReceived.bf.output_data);
-            packageToSend.data[i+1] = GetMSB(dataReceived.bf.output_data);
+            packageToSend.data[i]   = GetLSB(dataReceived[i >> 1].bf.output_data);
+            packageToSend.data[i+1] = GetMSB(dataReceived[i >> 1].bf.output_data);
         }
     }
 
@@ -181,7 +181,7 @@ void CmdExecuteWriteSequence(USBReceiveData const * const commandPackage)
     }
 
     // Send data to SPI with waiting for response
-    isSuccessfulFlag = QSPIWriteSequenceNormal(spiChannel, &address, &dataToSend, &length);
+    isSuccessfulFlag = QSPIWriteSequenceNormal(spiChannel, address, dataToSend, &length);
 
     // Construct package to PC
     packageToSend.device_id = commandPackage->device_id;
