@@ -1,3 +1,20 @@
+# Version 00.03.00 (2024-09-19) 
+Watchdog feature release.
+
+### **MCU SW (firmware)**:
+- Implemented firmware testing framework
+- Implemented device routing on SPI1
+- Fixed bug in watchdog state transition
+
+### **PC SW (GUI)**:
+#### **UI**:
+- Refactored approach for locking buttons
+#### **Backend**
+- Added WD ViewModel tests
+- Refactored multithreading for logs
+- Refactored approach for locking buttons. Improved performance
+
+
 # Version 00.02.00 (2024-08-12) 
 Watchdog feature release.
 
@@ -41,6 +58,7 @@ Watchdog feature release.
 - Refactored approach to handliing absent response from MCU
 - Added methods to do common bit operations
 - Added generic payload handler for address-data payload
+
 
 # Version 00.01.05 (2024-06-24) 
 Initial changelog update.

@@ -242,15 +242,15 @@ namespace AB15_GUI.Tests.ViewModels
 
         public class SerialWrapperMock : ISerialWrapper
         {
-            public List<string> AvailableCOMPorts => throw new System.NotImplementedException();
+            public List<string> AvailableCOMPorts => throw new NotImplementedException();
 
-            public bool IsCOMPortPresent => throw new System.NotImplementedException();
+            public bool IsCOMPortPresent => throw new NotImplementedException();
 
-            public string? ManualComPortName { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+            public string? ManualComPortName { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-            public void Dispose() => throw new System.NotImplementedException();
+            public void Dispose() => throw new NotImplementedException();
 
-            public bool ReconnectCOMPort() => throw new System.NotImplementedException();
+            public bool ReconnectCOMPort() => throw new NotImplementedException();
 
             public bool RemoveWaitlistItem(int? msgID)
             { 
@@ -277,23 +277,6 @@ namespace AB15_GUI.Tests.ViewModels
             {
                 // Store transmitted packages
                 transmittedPackages.Add(packageToSend);
-
-                // TODO: not needed?
-                switch (packageToSend.Cmd)
-                {
-                    case MCUCommand.CONFIGURE_WATCHDOG:
-                        break;
-                    case MCUCommand.START_WATCHDOG:
-                        break;
-                    case MCUCommand.STOP_WATCHDOG:
-                        break;
-                    case MCUCommand.START_MONITORING_WATCHDOG:
-                        break;
-                    case MCUCommand.STOP_MONITORING_WATCHDOG:
-                        break;
-                    default:
-                        throw new System.NotImplementedException();
-                }
 
                 // Emulate recieving response from MCU
                 if (receiveCommunicationPackages.Count != 0)
