@@ -138,9 +138,26 @@ class TestDeviceID:
 
         # Assert
         assert is_response_received, "No response from MCU received"
+        assert result.status == pkg.Status.DATA, f"Incorrect status in payload. Expected DATA, but received {result.status}"
         assert (result.payload[0] == DEVICE_ID_AB15), f"Unexpected device ID. Expected {hex(DEVICE_ID_AB15)}, but received {result.payload[0]}"
 
-        # Output to be captured if test passes
-        print(f'MCU response with IC device ID: ', end='') # expected 0xAB 0x8F 0x00 0x80 0x01 0xC4 0xBE 0xBA
-        for itm in result.package:
-            print(f'{itm:#03x} ', end='')
+    # @pytest.mark.parametrize("address,data, expected", [(0x000, 0x, 0x), (0x001, 0x)])
+    # def test_WriteReg(self, address):
+    #     '''Checks if writing single register works as expected
+    #     tests:
+    #     - WRITE_REG'''
+
+    #     # Arrange
+    #     packageToSend = pkg.TransmitPackage(0x00, 0x01, pkg.Command.WRITE_REG, )
+
+    #     # Act
+    #     self.serial.com_port.write(packageToSend.serialize())
+
+    #     sleep(0.01)
+    #     is_response_received = self.serial.extract_packages()
+    #     result = pkg.ReceivePackage(self.serial.packages.pop(0))
+
+    #     # Assert
+    #     assert is_response_received, "No response from MCU received"
+    #     assert result.status == pkg.Status.DATA, f"Incorrect status in payload. Expected DATA, but received {result.status}"
+    #     assert (result.payload[0] == DEVICE_ID_AB15), f"Unexpected device ID. Expected {hex(DEVICE_ID_AB15)}, but received {result.payload[0]}"
