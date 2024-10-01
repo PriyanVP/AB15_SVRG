@@ -39,7 +39,20 @@ typedef enum
     SPI1_SLSO_ENUM_LAST  = 6,                  /** \brief  enum Last    */
 }Spi1SlsoLinesEnum;
 
-#define SPI1_DEFAULT_CHANNEL SPI1_SLSO9
+typedef enum
+{
+    SPI2_SLSO_NONE      = 0,                  /** \brief  none    */
+    SPI2_SLSO5          = 1,                  /** \brief  P10_4    SLSO8    */
+    SPI2_SLSO0          = 2,                  /** \brief  P10_5    SLSO9    */
+    SPI2_SLSO8          = 3,                  /** \brief  P11_2    SLSO5    */
+    SPI2_SLSO10         = 4,                  /** \brief  P11_10   SLSO3    */
+    SPI2_SLSO9          = 5,                  /** \brief  P11_11   SLSO4    */
+    SPI2_SLSO11         = 6,                  /** \brief  P11_11   SLSO4    */
+    SPI2_SLSO_ENUM_LAST  = 7,                  /** \brief  enum Last    */
+}Spi2SlsoLinesEnum;
+
+#define SPI1_DEFAULT_CHANNEL SPI1_SLSO9  // CS1 Master
+#define SPI2_DEFAULT_CHANNEL SPI2_SLSO10 // CS2 Slave1
 
 /*********************************************************************************************************************/
 /*------------------------------------------------Function Prototypes------------------------------------------------*/
