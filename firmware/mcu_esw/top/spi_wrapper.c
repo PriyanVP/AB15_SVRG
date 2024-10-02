@@ -91,8 +91,8 @@ boolean QSPIExecuteInstruction(uint8 spiChannel, AB12SPIInstructionsEnum instruc
     if (enSPICommunication == FALSE) return FALSE;
 
     // Configure SPI channel for communication and stop execution if unsuccussful
-    boolean isSpiChannelConigOk = QSPIUpdateChannelConfig(spiChannel);
-    if (isSpiChannelConigOk == FALSE) return FALSE;
+    SpiBusSelectEnum SpiBusNumber = QSPIUpdateChannelConfig(spiChannel);
+    if (SpiBusNumber == SPI_BUS_INVALID) return FALSE;
 
     // Initialize variables
     boolean isReceivedDataValid = FALSE;
@@ -106,7 +106,7 @@ boolean QSPIExecuteInstruction(uint8 spiChannel, AB12SPIInstructionsEnum instruc
     dataToTransmit.bf.data = dataToSend;
     dataToTransmit.bf.crc = GetCRC3(&(dataToTransmit.dw));
 
-    QSPIExchangeData(&dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
+    QSPIExchangeData(SpiBusNum, &dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
 
     // Validating input
     isReceivedDataValid = IsCRC3Correct(&(dataToReceive.dw), dataToReceive.bf.crc);
@@ -126,8 +126,8 @@ boolean QSPIReadNormal(uint8 spiChannel, uint16 address, uint32 * const p_data)
     if (enSPICommunication == FALSE) return FALSE;
 
     // Configure SPI channel for communication and stop execution if unsuccussful
-    boolean isSpiChannelConigOk = QSPIUpdateChannelConfig(spiChannel);
-    if (isSpiChannelConigOk == FALSE) return FALSE;
+    SpiBusSelectEnum SpiBusNumber = QSPIUpdateChannelConfig(spiChannel);
+    if (SpiBusNumber == SPI_BUS_INVALID) return FALSE;
 
     // Initialize variables
     boolean isReceivedDataValid = FALSE;
@@ -140,7 +140,7 @@ boolean QSPIReadNormal(uint8 spiChannel, uint16 address, uint32 * const p_data)
     dataToTransmit.bf.address = address;
     dataToTransmit.bf.rw = READ;
     dataToTransmit.bf.crc = GetCRC3(&(dataToTransmit.dw));
-    QSPIExchangeData(&dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
+    QSPIExchangeData((uint8)SpiBusNumber, &dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
 
     // Validating input
     isReceivedDataValid = IsCRC3Correct(&(dataToReceive.dw), dataToReceive.bf.crc);
@@ -161,8 +161,9 @@ boolean QSPIWriteNormal(uint8 spiChannel, uint16 address, uint16 data) // TODO:
     if (enSPICommunication == FALSE) return FALSE;
 
     // Configure SPI channel for communication and stop execution if unsuccessful
-    boolean isSpiChannelConigOk = QSPIUpdateChannelConfig(spiChannel);
-    if (isSpiChannelConigOk == FALSE) return FALSE;
+    SpiBusSelectEnum SpiBusNumber = QSPIUpdateChannelConfig(spiChannel);
+    if (SpiBusNumber == SPI_BUS_INVALID) return FALSE;
+
 
     // Initialize variables
     boolean isReceivedDataValid = FALSE;
@@ -174,7 +175,7 @@ boolean QSPIWriteNormal(uint8 spiChannel, uint16 address, uint16 data) // TODO:
     dataToTransmit.bf.address = address;
     dataToTransmit.bf.rw = WRITE;
     dataToTransmit.bf.crc = GetCRC3(&(dataToTransmit.dw));
-    QSPIExchangeData(&dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
+    QSPIExchangeData((uint8)SpiBusNumber, &dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
 
     // Validating input
     isReceivedDataValid = IsCRC3Correct(&(dataToReceive.dw), dataToReceive.bf.crc);
@@ -207,8 +208,9 @@ IFX_INLINE boolean QSPIReadWriteSequenceNormalInline(uint8 spiChannel, const uin
     if (enSPICommunication == FALSE) return FALSE;
 
     // Configure SPI channel for communication and stop execution if unsuccessful
-    boolean isSpiChannelConigOk = QSPIUpdateChannelConfig(spiChannel);
-    if (isSpiChannelConigOk == FALSE) return FALSE;
+    SpiBusSelectEnum SpiBusNumber = QSPIUpdateChannelConfig(spiChannel);
+    if (SpiBusNumber == SPI_BUS_INVALID) return FALSE;
+
 
     // Initialize variables
     boolean isReceivedDataValid = FALSE;
@@ -245,7 +247,7 @@ IFX_INLINE boolean QSPIReadWriteSequenceNormalInline(uint8 spiChannel, const uin
         dataToTransmit.bf.crc = GetCRC3(&(dataToTransmit.dw));
 
         // Execute SPI transaction exchange
-        QSPIExchangeData(&dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
+        QSPIExchangeData((uint8)SpiBusNumber, &dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
 
         // Validating input
         isReceivedDataValid = IsCRC3Correct(&(dataToReceive.dw), dataToReceive.bf.crc);
@@ -276,8 +278,9 @@ boolean QSPIReadSensor(uint8 spiChannel, uint16 address, uint32 * const p_data)
     if (enSPICommunication == FALSE) return FALSE;
 
     // Configure SPI channel for communication and stop execution if unsuccessful
-    boolean isSpiChannelConigOk = QSPIUpdateChannelConfig(spiChannel);
-    if (isSpiChannelConigOk == FALSE) return FALSE;
+    SpiBusSelectEnum SpiBusNumber = QSPIUpdateChannelConfig(spiChannel);
+    if (SpiBusNumber == SPI_BUS_INVALID) return FALSE;
+
 
     // Initialize variables
     boolean isReceivedDataValid = FALSE;
@@ -289,7 +292,7 @@ boolean QSPIReadSensor(uint8 spiChannel, uint16 address, uint32 * const p_data)
     dataToTransmit.bf.sensor_data = TRUE;
     dataToTransmit.bf.address = address;
     dataToTransmit.bf.crc = GetCRC3(&(dataToTransmit.dw));
-    QSPIExchangeData(&dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
+    QSPIExchangeData((uint8)SpiBusNumber, &dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
 
     // Validating input
     isReceivedDataValid = IsCRC3Correct(&(dataToReceive.dw), dataToReceive.bf.crc);
@@ -307,8 +310,8 @@ boolean QSPIReadSequenceSensor(uint8 spiChannel, const uint16 * const p_addressB
     if (enSPICommunication == FALSE) return FALSE;
 
     // Configure SPI channel for communication and stop execution if unsuccessful
-    boolean isSpiChannelConigOk = QSPIUpdateChannelConfig(spiChannel);
-    if (isSpiChannelConigOk == FALSE) return FALSE;
+    SpiBusSelectEnum SpiBusNumber = QSPIUpdateChannelConfig(spiChannel);
+    if (SpiBusNumber == SPI_BUS_INVALID) return FALSE;
 
     // Initialize variables
     boolean isReceivedDataValid = FALSE;
@@ -338,7 +341,7 @@ boolean QSPIReadSequenceSensor(uint8 spiChannel, const uint16 * const p_addressB
         dataToTransmit.bf.crc = GetCRC3(&(dataToTransmit.dw));
 
         // Execute SPI transaction exchange
-        QSPIExchangeData(&dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
+        QSPIExchangeData((uint8)SpiBusNumber, &dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
 
         // Validating input
         isReceivedDataValid = IsCRC3Correct(&(dataToReceive.dw), dataToReceive.bf.crc);

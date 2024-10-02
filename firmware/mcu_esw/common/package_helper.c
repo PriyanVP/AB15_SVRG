@@ -32,7 +32,7 @@ uint8 GetSpiChannelById(uint8 device_id)
     switch (device_id)
     {
         case 0:
-            spiChannel = SPI1_CS_INVALID;
+            spiChannel = SPI_CH_INVALID;
             break;
         case 1:
             spiChannel = SPI1_CS1MASTER;
@@ -50,10 +50,28 @@ uint8 GetSpiChannelById(uint8 device_id)
             spiChannel = SPI1_CS1_SENSOR3;
             break;
         case 6:
-            spiChannel = SPI1_CS1_ENUM_LAST;
+            spiChannel = SPI2_CS2_SENSOR1;
+            break;
+        case 7:
+            spiChannel = SPI2_CS_MON2;
+            break;
+        case 8:
+            spiChannel = SPI2_CS2_SENSOR2;
+            break;
+        case 9:
+            spiChannel = SPI2_CS2_SLAVE1;
+            break;
+        case 10:
+            spiChannel = SPI2_CS2_SLAVE2;
+            break;
+        case 11:
+            spiChannel = SPI2_CS2_SLAVE3;
+            break;
+        case 12:
+            spiChannel = SPI_CH_ENUM_LAST;
             break;
         default:
-            spiChannel = SPI1_CS_INVALID;
+            spiChannel = SPI_CH_INVALID;
             break;
     }
 

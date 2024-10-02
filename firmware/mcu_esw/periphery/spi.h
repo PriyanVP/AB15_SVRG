@@ -30,26 +30,22 @@ typedef struct
 
 typedef enum
 {
-    SPI1_SLSO_NONE      = 0,                  /** \brief  none    */
+    SPI_SLSO_NONE      = 0,                  /** \brief  none    */
     SPI1_SLSO8          = 1,                  /** \brief  P10_4    SLSO8    */
     SPI1_SLSO9          = 2,                  /** \brief  P10_5    SLSO9    */
     SPI1_SLSO5          = 3,                  /** \brief  P11_2    SLSO5    */
     SPI1_SLSO3          = 4,                  /** \brief  P11_10   SLSO3    */
     SPI1_SLSO4          = 5,                  /** \brief  P11_11   SLSO4    */
-    SPI1_SLSO_ENUM_LAST  = 6,                  /** \brief  enum Last    */
-}Spi1SlsoLinesEnum;
+    /*SPI 2*/
+    SPI2_SLSO5          = 6,                  /** \brief  P15_1    SLSO5    */
+    SPI2_SLSO0          = 7,                  /** \brief  P15_2    SLSO0    */
+    SPI2_SLSO8          = 8,                  /** \brief  P20_6    SLS8     */
+    SPI2_SLSO10         = 9,                  /** \brief  P33_2    SLSO10   */
+    SPI2_SLSO9          = 10,                 /** \brief  P20_3    SLSO9    */
+    SPI2_SLSO11         = 11,                 /** \brief  P33_6    SLSO11   */
+    SPI_SLSO_ENUM_LAST  = 12,                 /** \brief  enum Last         */
+}SpiSlsoLinesEnum;
 
-typedef enum
-{
-    SPI2_SLSO_NONE      = 0,                  /** \brief  none    */
-    SPI2_SLSO5          = 1,                  /** \brief  P10_4    SLSO8    */
-    SPI2_SLSO0          = 2,                  /** \brief  P10_5    SLSO9    */
-    SPI2_SLSO8          = 3,                  /** \brief  P11_2    SLSO5    */
-    SPI2_SLSO10         = 4,                  /** \brief  P11_10   SLSO3    */
-    SPI2_SLSO9          = 5,                  /** \brief  P11_11   SLSO4    */
-    SPI2_SLSO11         = 6,                  /** \brief  P11_11   SLSO4    */
-    SPI2_SLSO_ENUM_LAST  = 7,                  /** \brief  enum Last    */
-}Spi2SlsoLinesEnum;
 
 #define SPI1_DEFAULT_CHANNEL SPI1_SLSO9  // CS1 Master
 #define SPI2_DEFAULT_CHANNEL SPI2_SLSO10 // CS2 Slave1
@@ -83,17 +79,17 @@ void QSPIDeinitPeriphery(void);
  * \param length data length in bytes
  * \return Returns nothing.
  */
-void QSPIExchangeData(const uint32 * const dataToSend, uint32 * const dataOut, uint8 length);
+void QSPIExchangeData(uint8 spiBus, const uint32 * const dataToSend, uint32 * const dataOut, uint8 length);
 
 /** \brief QSPI Master channel CS pin reconfiguration
  * Channel will be reconfigured only if new spiChannel is not the same as previous one
  * This functions:\n
  * 1) Configure CS pin based on input.\n
- * 2) Initializes the QSPI1 Master channel.\n
- *
- * \param spiChannel new spi channel
- * \return Returns nothing.
+ * 2) Initializes the QSPI1 or QSPI2 Master channel. based on the selected CS channel\n
+ * 3) returns the selected SPI BUS based on the selected SPI channel
+ * \param spiChannel
+ * \return SPI bus number.
  */
-boolean QSPIUpdateChannelConfig(uint8 spiChannel);
+uint8 QSPIUpdateChannelConfig(uint8 spiChannel);
 
 #endif /* SPI_H_ */

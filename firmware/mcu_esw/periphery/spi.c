@@ -71,46 +71,46 @@ const IfxQspi_SpiMaster_Output qspi1Slave5Select = {                 /* QSPI1 Ma
         IfxPort_PadDriver_ttl3v3Speed1                               /* Pad driver mode                          */
 };
 
-const IfxQspi_SpiMaster_Output qspi1Slave8Select = {                 /* QSPI1 Master selects the QSPI1 Slave      */
-        &IfxQspi1_SLSO8_P10_4_OUT, IfxPort_OutputMode_pushPull,      /* Slave Select port pin (CS_MON1)           */
-        IfxPort_PadDriver_ttl3v3Speed1                               /* Pad driver mode                           */
+const IfxQspi_SpiMaster_Output qspi1Slave8Select = {                 /* QSPI1 Master selects the QSPI1 Slave     */
+        &IfxQspi1_SLSO8_P10_4_OUT, IfxPort_OutputMode_pushPull,      /* Slave Select port pin (CS_MON1)          */
+        IfxPort_PadDriver_ttl3v3Speed1                               /* Pad driver mode                          */
 };
 
-const IfxQspi_SpiMaster_Output qspi1Slave9Select = {                 /* QSPI1 Master selects the QSPI1 Slave      */
-        &IfxQspi1_SLSO9_P10_5_OUT, IfxPort_OutputMode_pushPull,      /* Slave Select port pin (CS1_MASTER)        */
-        IfxPort_PadDriver_ttl3v3Speed1                               /* Pad driver mode                           */
+const IfxQspi_SpiMaster_Output qspi1Slave9Select = {                 /* QSPI1 Master selects the QSPI1 Slave     */
+        &IfxQspi1_SLSO9_P10_5_OUT, IfxPort_OutputMode_pushPull,      /* Slave Select port pin (CS1_MASTER)       */
+        IfxPort_PadDriver_ttl3v3Speed1                               /* Pad driver mode                          */
 };
 
 
 /* setup the different SLSO pins for SPI 2 slaves according SPI tab in PinMapping Table.*/
 
 const IfxQspi_SpiMaster_Output qspi2Slave5Select = {                 /* QSPI2 Master selects the QSPI2 Slave     */
-        &IfxQspi2_SLSO5_P15_1_OUT, IfxPort_OutputMode_pushPull,     /* Slave Select port pin ()      */
+        &IfxQspi2_SLSO5_P15_1_OUT, IfxPort_OutputMode_pushPull,      /* Slave Select port pin (CS2_SENSOR1)      */
         IfxPort_PadDriver_ttl3v3Speed1                               /* Pad driver mode                          */
 };
 
 const IfxQspi_SpiMaster_Output qspi2Slave0Select = {                 /* QSPI2 Master selects the QSPI2 Slave     */
-        &IfxQspi2_SLSO0_P15_2_OUT, IfxPort_OutputMode_pushPull,     /* Slave Select port pin ()      */
+        &IfxQspi2_SLSO0_P15_2_OUT, IfxPort_OutputMode_pushPull,      /* Slave Select port pin (CS_MON2)          */
         IfxPort_PadDriver_ttl3v3Speed1                               /* Pad driver mode                          */
 };
 
 const IfxQspi_SpiMaster_Output qspi2Slave8Select = {                 /* QSPI2 Master selects the QSPI2 Slave     */
-        &IfxQspi2_SLSO8_P20_6_OUT, IfxPort_OutputMode_pushPull,     /* Slave Select port pin ()      */
+        &IfxQspi2_SLSO8_P20_6_OUT, IfxPort_OutputMode_pushPull,      /* Slave Select port pin (CS2_SENSOR2)      */
         IfxPort_PadDriver_ttl3v3Speed1                               /* Pad driver mode                          */
 };
 
-const IfxQspi_SpiMaster_Output qspi2Slave10Select = {                 /* QSPI2 Master selects the QSPI2 Slave     */
-        &IfxQspi2_SLSO10_P33_2_OUT, IfxPort_OutputMode_pushPull,     /* Slave Select port pin ()      */
+const IfxQspi_SpiMaster_Output qspi2Slave10Select = {                /* QSPI2 Master selects the QSPI2 Slave     */
+        &IfxQspi2_SLSO10_P33_2_OUT, IfxPort_OutputMode_pushPull,     /* Slave Select port pin (CS2_SLAVE1)       */
         IfxPort_PadDriver_ttl3v3Speed1                               /* Pad driver mode                          */
 };
 
 const IfxQspi_SpiMaster_Output qspi2Slave9Select = {                 /* QSPI2 Master selects the QSPI2 Slave     */
-        &IfxQspi2_SLSO9_P20_3_OUT, IfxPort_OutputMode_pushPull,     /* Slave Select port pin ()      */
+        &IfxQspi2_SLSO9_P20_3_OUT, IfxPort_OutputMode_pushPull,      /* Slave Select port pin (CS2_SLAVE2)       */
         IfxPort_PadDriver_ttl3v3Speed1                               /* Pad driver mode                          */
 };
 
-const IfxQspi_SpiMaster_Output qspi2Slave11Select = {                 /* QSPI2 Master selects the QSPI2 Slave     */
-        &IfxQspi2_SLSO11_P33_6_OUT, IfxPort_OutputMode_pushPull,     /* Slave Select port pin ()      */
+const IfxQspi_SpiMaster_Output qspi2Slave11Select = {                /* QSPI2 Master selects the QSPI2 Slave     */
+        &IfxQspi2_SLSO11_P33_6_OUT, IfxPort_OutputMode_pushPull,     /* Slave Select port pin (CS2_SLAVE3)       */
         IfxPort_PadDriver_ttl3v3Speed1                               /* Pad driver mode                          */
 };
 
@@ -170,7 +170,7 @@ void QSPIMaster2ModuleInit(void);
  *
  * \return Returns nothing.
  */
-void QSPIMaster1ChannelInit(Spi1SlsoLinesEnum spiSlaveSel);
+void QSPIMaster1ChannelInit(SpiSlsoLinesEnum spiSlaveSel);
 
 /** \brief QSPI Master2 channel initialization
  * This functions:\n
@@ -180,7 +180,7 @@ void QSPIMaster1ChannelInit(Spi1SlsoLinesEnum spiSlaveSel);
  *
  * \return Returns nothing.
  */
-void QSPIMaster2ChannelInit(Spi1SlsoLinesEnum spiSlaveSel);
+void QSPIMaster2ChannelInit(SpiSlsoLinesEnum spiSlaveSel);
 /*********************************************************************************************************************/
 /*----------------------------------------------Function Implementations---------------------------------------------*/
 /*********************************************************************************************************************/
@@ -273,31 +273,32 @@ void QSPIMaster2ModuleInit(void)
     IfxQspi_SpiMaster_initModule(&g_qspi2.spiMaster, &spiMasterConfig);
 }
 
-void QSPIMaster1ChannelInit(Spi1SlsoLinesEnum spiSlaveSel)
+void QSPIMaster1ChannelInit(SpiSlsoLinesEnum spiSlaveSel)
 {
     IfxQspi_SpiMaster_ChannelConfig spiMasterChannelConfig;             /* Define a Master Channel configuration    */
 
     /* Initialize the configuration with default values */
-    // Bitorder, default pin states, etc. are set in base configuration of SPI Master chanel
+    // Bitorder, default pin states, etc. are set in base configuration of SPI Master channel
     IfxQspi_SpiMaster_initChannelConfig(&spiMasterChannelConfig, &g_qspi1.spiMaster);
 
     spiMasterChannelConfig.base.baudrate = MASTER_CHANNEL_BAUDRATE;     /* Set SCLK frequency                       */
+    // TODO: assert if SpiSlsoLinesEnum > SPI1_SLSO4
 
     /* Select the port pin for the Chip Select signal --> SLSO9 (CS_MASTER) as default*/
     switch(spiSlaveSel){
-        case SPI1_SLSO8:                 /* SLSO8    */
+        case SPI1_SLSO8:
             spiMasterChannelConfig.sls.output = qspi1Slave8Select;
             break;
-        case SPI1_SLSO9:                 /* SLSO9   */
+        case SPI1_SLSO9:
             spiMasterChannelConfig.sls.output = qspi1Slave9Select;
             break;
-        case SPI1_SLSO5:                 /* SLSO5    */
+        case SPI1_SLSO5:
             spiMasterChannelConfig.sls.output = qspi1Slave5Select;
             break;
-        case SPI1_SLSO3:                 /* SLSO3    */
+        case SPI1_SLSO3:
             spiMasterChannelConfig.sls.output = qspi1Slave3Select;
             break;
-        case SPI1_SLSO4:                 /* SLSO4    */
+        case SPI1_SLSO4:
             spiMasterChannelConfig.sls.output = qspi1Slave4Select;
             break;
         default:
@@ -310,41 +311,42 @@ void QSPIMaster1ChannelInit(Spi1SlsoLinesEnum spiSlaveSel)
 }
 
 
-void QSPIMaster2ChannelInit(Spi1SlsoLinesEnum spiSlaveSel)
+void QSPIMaster2ChannelInit(SpiSlsoLinesEnum spiSlaveSel)
 {
     IfxQspi_SpiMaster_ChannelConfig spiMasterChannelConfig;             /* Define a Master Channel configuration    */
 
     /* Initialize the configuration with default values */
-    // Bitorder, default pin states, etc. are set in base configuration of SPI Master chanel
+    // Bitorder, default pin states, etc. are set in base configuration of SPI Master channel
     IfxQspi_SpiMaster_initChannelConfig(&spiMasterChannelConfig, &g_qspi2.spiMaster);
 
     spiMasterChannelConfig.base.baudrate = MASTER_CHANNEL_BAUDRATE;     /* Set SCLK frequency                       */
+    // TODO: assert if SpiSlsoLinesEnum < SPI2_SLSO5
 
-    // Set Default to CS2 Slave1
-    spiMasterChannelConfig.sls.output = qspi2Slave10Select;
-
-    /* Select the port pin for the Chip Select signal --> SLSO9 (CS_MASTER) as default*/
-//    switch(spiSlaveSel){
-//        case SPI1_SLSO8:                 /* SLSO8    */
-//            spiMasterChannelConfig.sls.output = qspi1Slave8Select;
-//            break;
-//        case SPI1_SLSO9:                 /* SLSO9   */
-//            spiMasterChannelConfig.sls.output = qspi1Slave9Select;
-//            break;
-//        case SPI1_SLSO5:                 /* SLSO5    */
-//            spiMasterChannelConfig.sls.output = qspi1Slave5Select;
-//            break;
-//        case SPI1_SLSO3:                 /* SLSO3    */
-//            spiMasterChannelConfig.sls.output = qspi1Slave3Select;
-//            break;
-//        case SPI1_SLSO4:                 /* SLSO4    */
-//            spiMasterChannelConfig.sls.output = qspi1Slave4Select;
-//            break;
-//        default:
-//            /* by fdefault use SLSO9, default master    */
-//            spiMasterChannelConfig.sls.output = qspi1Slave9Select;
-//        break;
-//    }
+    /* Select the port pin for the Chip Select signal*/
+    switch(spiSlaveSel){
+        case SPI2_SLSO5:
+            spiMasterChannelConfig.sls.output = qspi2Slave5Select;
+            break;
+        case SPI2_SLSO0:
+            spiMasterChannelConfig.sls.output = qspi2Slave0Select;
+            break;
+        case SPI2_SLSO8:
+            spiMasterChannelConfig.sls.output = qspi2Slave8Select;
+            break;
+        case SPI2_SLSO10:
+            spiMasterChannelConfig.sls.output = qspi2Slave10Select;
+            break;
+        case SPI2_SLSO9:
+            spiMasterChannelConfig.sls.output = qspi2Slave9Select;
+            break;
+        case SPI2_SLSO11:
+            spiMasterChannelConfig.sls.output = qspi2Slave11Select;
+            break;
+        default:
+            /* by fdefault use SLSO9, default master    */
+            spiMasterChannelConfig.sls.output = qspi2Slave10Select;
+        break;
+    }
     /* Initialize the QSPI Master channel */
     IfxQspi_SpiMaster_initChannel(&g_qspi2.spiMasterChannel, &spiMasterChannelConfig);
 }
@@ -396,80 +398,125 @@ void QSPIDeinitPeriphery(void)
 }
 
 // TODO: rename to exchane SPI1 , add SPI2
-void QSPIExchangeData(const uint32 * const dataToSend, uint32 * const dataOut, uint8 length)
+void QSPIExchangeData(uint8 SpiBusNumber, const uint32 * const dataToSend, uint32 * const dataOut, uint8 length)
 {
     // Temporary variables to store data with correct endian for communication
     uint32 dataToSendSwapped = SWAP_ENDIAN(*dataToSend);
     uint32 dataToRecive = 0;
 
-    // TODO: DEBUG
-    uint32 dataToRecive2 = 0;
+    if (SpiBusNumber < SPI_BUS_1) return;
+    if (SpiBusNumber > SPI_BUS_2) return;
 
-
-    sint32 timeout = IfxStm_getTicksFromMilliseconds(BSP_DEFAULT_TIMER, SPI_TIMEOUT);
-    IfxQspi_SpiMaster_exchange(&g_qspi1.spiMasterChannel, &dataToSendSwapped, &dataToRecive, length);
-    IfxQspi_SpiMaster_exchange(&g_qspi2.spiMasterChannel, &dataToSendSwapped, &dataToRecive2, length);
-    while (IfxQspi_SpiMaster_getStatus(&g_qspi1.spiMasterChannel) == SpiIf_Status_busy)
+    //use SpiBusSelectEnum as type would be good.
+    if (SpiBusNumber == SPI_BUS_1)
     {
-        // If SPI timeout elepsed, exit from loop
-        if ((--timeout) <= 0) break;
+        ToggleLED4();
+        sint32 timeout = IfxStm_getTicksFromMilliseconds(BSP_DEFAULT_TIMER, SPI_TIMEOUT);
+        IfxQspi_SpiMaster_exchange(&g_qspi1.spiMasterChannel, &dataToSendSwapped, &dataToRecive, length);
+        while (IfxQspi_SpiMaster_getStatus(&g_qspi1.spiMasterChannel) == SpiIf_Status_busy)
+        {
+            // If SPI timeout elepsed, exit from loop
+            if ((--timeout) <= 0) break;
+        }
+    }
+    if (SpiBusNumber == SPI_BUS_2)
+    {
+        ToggleLED4();
+        sint32 timeout = IfxStm_getTicksFromMilliseconds(BSP_DEFAULT_TIMER, SPI_TIMEOUT);
+        IfxQspi_SpiMaster_exchange(&g_qspi2.spiMasterChannel, &dataToSendSwapped, &dataToRecive, length);
+        while (IfxQspi_SpiMaster_getStatus(&g_qspi2.spiMasterChannel) == SpiIf_Status_busy)
+        {
+            // If SPI timeout elepsed, exit from loop
+            if ((--timeout) <= 0) break;
+        }
     }
     *dataOut = SWAP_ENDIAN(dataToRecive);
-
-    // TODO: DEBUG
-    // sending same on SPI2
-    timeout = IfxStm_getTicksFromMilliseconds(BSP_DEFAULT_TIMER, SPI_TIMEOUT);
-    //IfxQspi_SpiMaster_exchange(&g_qspi2.spiMasterChannel, &dataToSendSwapped, &dataToRecive2, length);
-    while (IfxQspi_SpiMaster_getStatus(&g_qspi2.spiMasterChannel) == SpiIf_Status_busy)
-    {
-        // If SPI timeout elepsed, exit from loop
-        if ((--timeout) <= 0) break;
-    }
-    // TODO: END: DEBUG
 }
 
-boolean QSPIUpdateChannelConfig(uint8 spiChannel)
+uint8 QSPIUpdateChannelConfig(uint8 spiChannel)
 {
     // Validate input
-    if (spiChannel == SPI1_CS_INVALID) return FALSE;
-    if (spiChannel >= SPI1_CS1_ENUM_LAST) return FALSE;
+    if (spiChannel == SPI_CH_INVALID) return FALSE;
+    if (spiChannel >= SPI_CH_ENUM_LAST) return FALSE;
 
     // Initialize variables
-    static Spi1SlaveSelectEnum currectSpiChannelConfig = SPI1_CS1_ENUM_LAST; // force init to correct channel
-    uint8 Spi1SlaveSelectLine;
+    static SpiChSlaveSelectEnum currentSpiChannelConfig = SPI_CH_ENUM_LAST; // force init to correct channel
+    uint8 SpiChSlaveSelectLine;
+    static uint8 SpiBusNumber = SPI_BUS_INVALID;// make SpiBusNumber static in order to return current bus number correct even if no other channel is selected.
 
-    /*translate the spi slaves to the dedicated SLSO lines*/
-    /* TODO: function shall also operate on SPI2. finally it shall route all commands to dedicated SPI devices on dedicated SPI Bus and Slave select line  */
-
-    if (spiChannel != currectSpiChannelConfig)
+    /*if config has changed : reconfigure SPI bus and SLSO lines to selected channel*/
+    if (spiChannel != currentSpiChannelConfig)
     {
-        currectSpiChannelConfig = spiChannel;
+        currentSpiChannelConfig = spiChannel;
         switch(spiChannel)
         {
             case SPI1_CSMON1:                       /* SLSO8    */
-                Spi1SlaveSelectLine = SPI1_SLSO8;
+                SpiChSlaveSelectLine = SPI1_SLSO8;
+                SpiBusNumber = SPI_BUS_1;
                 break;
             case SPI1_CS1MASTER:                    /* SLSO8    */
-                Spi1SlaveSelectLine = SPI1_SLSO9;
+                SpiChSlaveSelectLine = SPI1_SLSO9;
+                SpiBusNumber = SPI_BUS_1;
                 break;
             case SPI1_CS1_SENSOR1:                  /* SLSO8    */
-                Spi1SlaveSelectLine = SPI1_SLSO5;
+                SpiChSlaveSelectLine = SPI1_SLSO5;
+                SpiBusNumber = SPI_BUS_1;
                 break;
             case SPI1_CS1_SENSOR2:                  /* SLSO8    */
-                Spi1SlaveSelectLine = SPI1_SLSO3;
+                SpiChSlaveSelectLine = SPI1_SLSO3;
+                SpiBusNumber = SPI_BUS_1;
                 break;
             case SPI1_CS1_SENSOR3:                  /* SLSO8    */
-                Spi1SlaveSelectLine = SPI1_SLSO4;
+                SpiChSlaveSelectLine = SPI1_SLSO4;
+                SpiBusNumber = SPI_BUS_1;
+                break;
+            /* SPI 2 */
+            case SPI2_CS2_SENSOR1:                  /* SLSO8    */
+                SpiChSlaveSelectLine = SPI2_SLSO5;
+                SpiBusNumber = SPI_BUS_2;
+                break;
+            case SPI2_CS_MON2:                  /* SLSO8    */
+                SpiChSlaveSelectLine = SPI2_SLSO0;
+                SpiBusNumber = SPI_BUS_2;
+                break;
+            case SPI2_CS2_SENSOR2:                  /* SLSO8    */
+                SpiChSlaveSelectLine = SPI2_SLSO8;
+                SpiBusNumber = SPI_BUS_2;
+                break;
+            case SPI2_CS2_SLAVE1:                  /* SLSO8    */
+                SpiChSlaveSelectLine = SPI2_SLSO10;
+                SpiBusNumber = SPI_BUS_2;
+                break;
+            case SPI2_CS2_SLAVE2:                  /* SLSO8    */
+                SpiChSlaveSelectLine = SPI2_SLSO9;
+                SpiBusNumber = SPI_BUS_2;
+                break;
+            case SPI2_CS2_SLAVE3:                  /* SLSO8    */
+                SpiChSlaveSelectLine = SPI2_SLSO11;
+                SpiBusNumber = SPI_BUS_2;
                 break;
             default:
                 /* by default use SLSO9, default master    */
-                Spi1SlaveSelectLine = SPI1_SLSO9;
+                SpiChSlaveSelectLine = SPI1_SLSO9;
+                SpiBusNumber = SPI_BUS_1;
                break;
         }
 
-        // Reconfigure master to use other CS
-        QSPIMaster1ChannelInit(Spi1SlaveSelectLine);
+        switch(SpiBusNumber)
+        {
+            case SPI_BUS_1:                       /* SLSO8    */
+                QSPIMaster1ChannelInit(SpiChSlaveSelectLine);
+                break;
+            case SPI_BUS_2:                    /* SLSO8    */
+                QSPIMaster2ChannelInit(SpiChSlaveSelectLine);
+                break;
+            default:
+                SpiBusNumber = SPI_BUS_INVALID;
+                break;
+        }
+
     }
 
-    return TRUE;
+
+    return SpiBusNumber;
 }
