@@ -114,31 +114,6 @@ const IfxQspi_SpiMaster_Output qspi2Slave11Select = {                /* QSPI2 Ma
         IfxPort_PadDriver_ttl3v3Speed1                               /* Pad driver mode                          */
 };
 
-/*
- * QSPI2
- * SPI2     Slave select output #
-P15_1   CS2_SENSOR1     SLSO5
-P15_2   CS_MON2         SLSO0
-P15_3   SCK_MON2     
-P15_4   SO_MON2  
-P15_5   SI_MON2  
-P20_10  P21_0 P20_6 CS2_SENSOR2 SLSO8
-P33_2   CS2_SLAVE1      SLSO10
-P33_4  P21_3 P20_3  CS2_SLAVE2  SLSO9
-P33_6   CS2_SLAVE3      SLSO11
- *
- *
- * IfxQspi2_SLSO5_P15_1_OUT
- * IfxQspi2_SLSO0_P15_2_OUT
- * IfxQspi2_SLSO8_P20_6_OUT
- * IfxQspi2_SLSO10_P33_2_OUT
- * IfxQspi2_SLSO9_P20_3_OUT
- * IfxQspi2_SLSO11_P33_6_OUT
- *
- *
- */
-
-
 
 /*********************************************************************************************************************/
 /*------------------------------------------------Function Prototypes------------------------------------------------*/
