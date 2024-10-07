@@ -43,8 +43,20 @@ typedef enum
     SPI2_SLSO10         = 9,                  /** \brief  P33_2    SLSO10   */
     SPI2_SLSO9          = 10,                 /** \brief  P20_3    SLSO9    */
     SPI2_SLSO11         = 11,                 /** \brief  P33_6    SLSO11   */
-    SPI_SLSO_ENUM_LAST  = 12,                 /** \brief  enum Last         */
+    SPI_SLSO_ENUM_LAST  = 12                 /** \brief  enum Last         */
 }SpiSlsoLinesEnum;
+
+
+/** \brief SPI BUS ID for SPI bus mapping
+ */
+typedef enum
+{
+    SPI_BUS_INVALID     = 0,                  /** \brief  no bus selected    */
+    SPI_BUS_1           = 1,
+    SPI_BUS_2           = 2,
+    SPI_BUS_LAST        = 3                  /** \brief  enum last    */
+}SpiBusSelectEnum;
+
 
 
 #define SPI1_DEFAULT_CHANNEL SPI1_SLSO9  // CS1 Master
@@ -79,7 +91,7 @@ void QSPIDeinitPeriphery(void);
  * \param length data length in bytes
  * \return Returns nothing.
  */
-void QSPIExchangeData(uint8 spiBus, const uint32 * const dataToSend, uint32 * const dataOut, uint8 length);
+void QSPIExchangeData(SpiBusSelectEnum spiBus, const uint32 * const dataToSend, uint32 * const dataOut, uint8 length);
 
 /** \brief QSPI Master channel CS pin reconfiguration
  * Channel will be reconfigured only if new spiChannel is not the same as previous one

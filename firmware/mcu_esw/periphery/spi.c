@@ -302,7 +302,7 @@ void QSPIMaster1ChannelInit(SpiSlsoLinesEnum spiSlaveSel)
             spiMasterChannelConfig.sls.output = qspi1Slave4Select;
             break;
         default:
-            /* by fdefault use SLSO9, default master    */
+            /* by default use SPI1_DEFAULT_CHANNEL    */
             spiMasterChannelConfig.sls.output = qspi1Slave9Select;
         break;
     }
@@ -343,7 +343,7 @@ void QSPIMaster2ChannelInit(SpiSlsoLinesEnum spiSlaveSel)
             spiMasterChannelConfig.sls.output = qspi2Slave11Select;
             break;
         default:
-            /* by fdefault use SLSO9, default master    */
+            /* by default use SPI2_DEFAULT_CHANNEL  */
             spiMasterChannelConfig.sls.output = qspi2Slave10Select;
         break;
     }
@@ -398,7 +398,7 @@ void QSPIDeinitPeriphery(void)
 }
 
 // TODO: rename to exchane SPI1 , add SPI2
-void QSPIExchangeData(uint8 SpiBusNumber, const uint32 * const dataToSend, uint32 * const dataOut, uint8 length)
+void QSPIExchangeData(SpiBusSelectEnum SpiBusNumber, const uint32 * const dataToSend, uint32 * const dataOut, uint8 length)
 {
     // Temporary variables to store data with correct endian for communication
     uint32 dataToSendSwapped = SWAP_ENDIAN(*dataToSend);

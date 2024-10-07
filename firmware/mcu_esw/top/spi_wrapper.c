@@ -140,7 +140,7 @@ boolean QSPIReadNormal(uint8 spiChannel, uint16 address, uint32 * const p_data)
     dataToTransmit.bf.address = address;
     dataToTransmit.bf.rw = READ;
     dataToTransmit.bf.crc = GetCRC3(&(dataToTransmit.dw));
-    QSPIExchangeData((uint8)SpiBusNumber, &dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
+    QSPIExchangeData(SpiBusNumber, &dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
 
     // Validating input
     isReceivedDataValid = IsCRC3Correct(&(dataToReceive.dw), dataToReceive.bf.crc);
@@ -175,7 +175,7 @@ boolean QSPIWriteNormal(uint8 spiChannel, uint16 address, uint16 data) // TODO:
     dataToTransmit.bf.address = address;
     dataToTransmit.bf.rw = WRITE;
     dataToTransmit.bf.crc = GetCRC3(&(dataToTransmit.dw));
-    QSPIExchangeData((uint8)SpiBusNumber, &dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
+    QSPIExchangeData(SpiBusNumber, &dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
 
     // Validating input
     isReceivedDataValid = IsCRC3Correct(&(dataToReceive.dw), dataToReceive.bf.crc);
@@ -247,7 +247,7 @@ IFX_INLINE boolean QSPIReadWriteSequenceNormalInline(uint8 spiChannel, const uin
         dataToTransmit.bf.crc = GetCRC3(&(dataToTransmit.dw));
 
         // Execute SPI transaction exchange
-        QSPIExchangeData((uint8)SpiBusNumber, &dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
+        QSPIExchangeData(SpiBusNumber, &dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
 
         // Validating input
         isReceivedDataValid = IsCRC3Correct(&(dataToReceive.dw), dataToReceive.bf.crc);
@@ -292,7 +292,7 @@ boolean QSPIReadSensor(uint8 spiChannel, uint16 address, uint32 * const p_data)
     dataToTransmit.bf.sensor_data = TRUE;
     dataToTransmit.bf.address = address;
     dataToTransmit.bf.crc = GetCRC3(&(dataToTransmit.dw));
-    QSPIExchangeData((uint8)SpiBusNumber, &dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
+    QSPIExchangeData(SpiBusNumber, &dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
 
     // Validating input
     isReceivedDataValid = IsCRC3Correct(&(dataToReceive.dw), dataToReceive.bf.crc);
@@ -341,7 +341,7 @@ boolean QSPIReadSequenceSensor(uint8 spiChannel, const uint16 * const p_addressB
         dataToTransmit.bf.crc = GetCRC3(&(dataToTransmit.dw));
 
         // Execute SPI transaction exchange
-        QSPIExchangeData((uint8)SpiBusNumber, &dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
+        QSPIExchangeData(SpiBusNumber, &dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
 
         // Validating input
         isReceivedDataValid = IsCRC3Correct(&(dataToReceive.dw), dataToReceive.bf.crc);

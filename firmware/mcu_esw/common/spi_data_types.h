@@ -74,16 +74,6 @@ typedef enum
     SPI_CH_ENUM_LAST    = 12                  /** \brief  enum Last    */
 } SpiChSlaveSelectEnum;
 
-/** \brief SPI BUS ID for SPI bus mapping
- */
-typedef enum
-{
-    SPI_BUS_INVALID     = 0,                  /** \brief  no bus selected    */
-    SPI_BUS_1           = 1,
-    SPI_BUS_2           = 2,
-    SPI_BUS_LAST        = 3                  /** \brief  enum last    */
-} SpiBusSelectEnum;
-
 
 
 /*********************************************************************************************************************/
