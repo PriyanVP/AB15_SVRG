@@ -16,23 +16,62 @@
 /*------------------------------------------------Function Prototypes------------------------------------------------*/
 /*********************************************************************************************************************/
 
+/** \brief 
+ */
+void InitFLMDiag();
+
+/** \brief 
+ * cyclic test, performed automatically, no need to check FLM_DIAG_START
+ */ 
+void FLMShortDiag();
+
+/** \brief 
+ */
+void FLMVHxDiag();
+
+/** \brief 
+ */
+void FLMSquibDetErrDiag();
+
+/** \brief
+ */
+void FLMLoopResDiag();
+
+/** \brief
+ */
+void GetFLMDiagMode();
+
+/** \brief
+ */
+void SetFLMDiagMode();
+
+/** \brief
+ */
+void SetFLMDiagStart();
+
 /*********************************************************************************************************************/
 /*-------------------------------------------------Global variables--------------------------------------------------*/
 /*********************************************************************************************************************/
 
-flm_VHxMeasStatusEnum FLMVHxMeasStatus = FLM_DIAG_STATUS_VHX_MEAS_SKIPPED;
-flm_LoopResMeasStatusEnum FLMLoopResMeasStatus = FLM_DIAG_STATUS_LOOP_RES_MEAS_SKIPPED;
-flm_SquibDetStatusEnum FLMSquibDetStatus = FLM_DIAG_STATUS_SQUIB_DET_SKIPPED;
-
-FLMCycDiagFaults FLMCycDiagFaultsValues;
-
-bool FLMDiagActive = 0;
+FLMCycDiagFaults FLMCycDiagFaultsStatus;
 
 /*********************************************************************************************************************/
 /*---------------------------------------------Function Implementations----------------------------------------------*/
 /*********************************************************************************************************************/
 
-void FLMShortDiag() // cyclic test, performed automatically, no need to check FLM_DIAG_START
+void InitFLMDiag()
+{
+    static FLMVHxMeasStatus = FLM_DIAG_STATUS_VHX_MEAS_SKIPPED;
+    static flm_LoopResMeasStatusEnum FLMLoopResMeasStatus = FLM_DIAG_STATUS_LOOP_RES_MEAS_SKIPPED;
+    static flm_SquibDetStatusEnum FLMSquibDetStatus = FLM_DIAG_STATUS_SQUIB_DET_SKIPPED;
+
+    bool FLMDiagActive = 0;
+
+    // TODO: do we need to know which FLM channels have squibs from the start (get it from GUI?)?
+    // I've assumed 'Squibs on all channels' for this implementation 
+}
+
+void FLMShortDiag()
 {
     static FLMShortDiagResults FLMShortDiagResultsValues;
 
@@ -41,7 +80,7 @@ void FLMShortDiag() // cyclic test, performed automatically, no need to check FL
     
 }
 
-void FLMVHxDiag() //
+void FLMVHxDiag()
 {
     static FLMVHxDiagResults FLMVHxDiagResultsValues;
 
