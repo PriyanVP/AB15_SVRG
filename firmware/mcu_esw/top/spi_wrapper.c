@@ -170,9 +170,11 @@ boolean QSPIWriteNormal(uint8 spiChannel, uint16 address, uint16 data) // TODO:
     SPIReceiveDataNormal dataToReceive; // data in this variable unused, provides place to store incoming data
 
     // Configure and execute write request
+    dataToTransmit.dw  = 0;
     dataToTransmit.bf.sensor_data = FALSE;
     dataToTransmit.bf.address = address;
     dataToTransmit.bf.rw = WRITE;
+    dataToTransmit.bf.data = data;
     dataToTransmit.bf.crc = GetCRC3(&(dataToTransmit.dw));
     QSPIExchangeData(&dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
 
