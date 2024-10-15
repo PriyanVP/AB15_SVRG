@@ -12,61 +12,31 @@
 
     <Grid Background="{DynamicResource UI.BackGround}">
         
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*"/>
-        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto" MinHeight="100"/>
+            <RowDefinition Height="auto" MinHeight="100"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto" MinWidth="100"/>
+                <ColumnDefinition Width="auto" MinWidth="100"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-        <Grid Grid.Column="0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="5"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="5"/>
-            </Grid.RowDefinitions>
-
-            <!--#region Fire buttons -->
-            <Grid Grid.Row="2" Grid.Column="0">
+            <Grid Grid.Column="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
 
-                <Button Grid.Column="1" Style="{DynamicResource SimpleButton}">
-                    <StackPanel>
-                        <TextBlock Text="Fire" 
-                                   HorizontalAlignment="Center"/>
-                        <TextBlock Text="Sequential" 
-                                   HorizontalAlignment="Center"
-                                   FontSize="18"/>
-                    </StackPanel>
-                </Button>
-
-                <Button Grid.Column="3" Style="{DynamicResource SimpleButton}">
-                    <StackPanel>
-                        <TextBlock Text="Fire" 
-                                   HorizontalAlignment="Center"/>
-                        <TextBlock Text="Simultaneous" 
-                                   HorizontalAlignment="Center"
-                                   FontSize="18"/>
-                    </StackPanel>
-                </Button>
-            </Grid>
-            <!--#endregion-->
-            
-            <!--#region Status -->
-            <Grid Grid.Row="4" Grid.Column="0">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
@@ -74,20 +44,9 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
 
-                <TextBlock HorizontalAlignment="Center" Text="STATUS" 
-                           Style="{DynamicResource CustomTextBlock}" 
-                           Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="4"/>
-
-                <Border Grid.Row="2" Grid.Column="1" BorderThickness="1" 
+                <!--#region Asic buttons -->
+                <Border Grid.Row="0" Grid.Column="1" BorderThickness="1" 
                         BorderBrush="{DynamicResource Animation.Lines}" 
                         CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
                     <!--<Border.Background>
@@ -96,426 +55,216 @@
                             <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
                         </MultiBinding>
                     </Border.Background>-->
-                    <StackPanel Orientation="Vertical">
-                        <TextBlock Text="ASIC 1" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                    <TextBlock Text="ASIC 1" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
                                FontSize="20"/>
-                        <TextBlock Text="ASIC Status" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                </Border>
+
+                <Border Grid.Row="0" Grid.Column="2" BorderThickness="1" 
+                        BorderBrush="{DynamicResource Animation.Lines}" 
+                        CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                    <!--<Border.Background>
+                        <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
+                            <Binding Path = "WD1QAFaultStatus"/>
+                            <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                        </MultiBinding>
+                    </Border.Background>-->
+                    <TextBlock Text="ASIC 2" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
                                FontSize="20"/>
-                    </StackPanel>
+                </Border>
+
+                <Border Grid.Row="0" Grid.Column="3" BorderThickness="1" 
+                        BorderBrush="{DynamicResource Animation.Lines}" 
+                        CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                    <!--<Border.Background>
+                        <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
+                            <Binding Path = "WD1QAFaultStatus"/>
+                            <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                        </MultiBinding>
+                    </Border.Background>-->
+                    <TextBlock Text="ASIC 3" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                               FontSize="20"/>
+                </Border>
+
+                <Border Grid.Row="0" Grid.Column="4" BorderThickness="1" 
+                        BorderBrush="{DynamicResource Animation.Lines}" 
+                        CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                    <!--<Border.Background>
+                        <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
+                            <Binding Path = "WD1QAFaultStatus"/>
+                            <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                        </MultiBinding>
+                    </Border.Background>-->
+                    <TextBlock Text="ASIC 4" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                               FontSize="20"/>
+                </Border>
+                <!--#endregion-->
+
+
+                <TextBlock Grid.Row="1" Grid.Column="0"
+                    Text="VH voltage at 11 nodes"/>
+
+                <TextBlock Grid.Row="1" Grid.Column="1" Text="OK/Error"/>
+                <TextBlock Grid.Row="1" Grid.Column="2" Text="OK/Error"/>
+                <TextBlock Grid.Row="1" Grid.Column="3" Text="OK/Error"/>
+                <TextBlock Grid.Row="1" Grid.Column="4" Text="OK/Error"/>
+                
+                <TextBlock Grid.Row="2" Grid.Column="0"
+                    Text="Junction temp"/>
+
+                <TextBlock Grid.Row="2" Grid.Column="1" Text="OK/Error"/>
+                <TextBlock Grid.Row="2" Grid.Column="2" Text="OK/Error"/>
+                <TextBlock Grid.Row="2" Grid.Column="3" Text="OK/Error"/>
+                <TextBlock Grid.Row="2" Grid.Column="4" Text="OK/Error"/>
+                
+                <TextBlock Grid.Row="3" Grid.Column="0"
+                    Text="Squib/LEA loads connected"/>
+
+                <TextBlock Grid.Row="3" Grid.Column="1" Text="OK/Error"/>
+                <TextBlock Grid.Row="3" Grid.Column="2" Text="OK/Error"/>
+                <TextBlock Grid.Row="3" Grid.Column="3" Text="OK/Error"/>
+                <TextBlock Grid.Row="3" Grid.Column="4" Text="OK/Error"/>
+
+                <TextBox Grid.Row="4" Grid.Column="0"
+                    Text="Error list PLaceholder" FontSize="12"/>
+
+                <TextBlock Grid.Row="4" Grid.Column="1" Text="Pplaceholder" Background="LightGray" Margin="3"/>
+                <TextBlock Grid.Row="4" Grid.Column="2" Text="Pplaceholder" Background="LightGray" Margin="3"/>
+                <TextBlock Grid.Row="4" Grid.Column="3" Text="Pplaceholder" Background="LightGray" Margin="3"/>
+                <TextBlock Grid.Row="4" Grid.Column="4" Text="Pplaceholder" Background="LightGray" Margin="3"/>
+
+            </Grid>
+
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Background="LightBlue">
+                    <TextBlock Text="AUTARKY PLACEHOLDER"/>
+                </Border>
+
+                <StackPanel Grid.Row="0" Grid.Column="3"
+                    Orientation="Vertical" VerticalAlignment="Stretch">
+                    <TextBox Text="CAP VALUE" 
+                             FontSize="12"/>
+                    <TextBox Text="CAP Reference" 
+                             FontSize="12"/>
+                    <Button Content="Run test"/>
+                </StackPanel>
+                
+                <!--#region Additional status -->
+                <Border Grid.Row="1" Grid.Column="0" BorderThickness="1" 
+                        BorderBrush="{DynamicResource Animation.Lines}" 
+                        CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                    <!--<Border.Background>
+                            <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
+                                <Binding Path = "WD1QAFaultStatus"/>
+                                <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                            </MultiBinding>
+                        </Border.Background>-->
+                    <TextBlock Text="Aditional status" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                                FontSize="10"/>
+                </Border>
+
+                <Border Grid.Row="1" Grid.Column="1" BorderThickness="1" 
+                        BorderBrush="{DynamicResource Animation.Lines}" 
+                        CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                    <!--<Border.Background>
+        <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
+            <Binding Path = "WD1QAFaultStatus"/>
+            <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+        </MultiBinding>
+    </Border.Background>-->
+                    <TextBlock Text="Aditional status" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+            FontSize="10"/>
+                </Border>
+
+                <Border Grid.Row="1" Grid.Column="2" BorderThickness="1" 
+                        BorderBrush="{DynamicResource Animation.Lines}" 
+                        CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                    <!--<Border.Background>
+        <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
+            <Binding Path = "WD1QAFaultStatus"/>
+            <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+        </MultiBinding>
+    </Border.Background>-->
+                    <TextBlock Text="Aditional status" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+            FontSize="10"/>
+                </Border>
+
+                <Border Grid.Row="2" Grid.Column="0" BorderThickness="1" 
+                        BorderBrush="{DynamicResource Animation.Lines}" 
+                        CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                    <!--<Border.Background>
+        <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
+            <Binding Path = "WD1QAFaultStatus"/>
+            <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+        </MultiBinding>
+    </Border.Background>-->
+                    <TextBlock Text="Aditional status" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+            FontSize="10"/>
+                </Border>
+
+                <Border Grid.Row="2" Grid.Column="1" BorderThickness="1" 
+                        BorderBrush="{DynamicResource Animation.Lines}" 
+                        CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                    <!--<Border.Background>
+        <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
+            <Binding Path = "WD1QAFaultStatus"/>
+            <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+        </MultiBinding>
+    </Border.Background>-->
+                    <TextBlock Text="Aditional status" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+            FontSize="10"/>
                 </Border>
 
                 <Border Grid.Row="2" Grid.Column="2" BorderThickness="1" 
                         BorderBrush="{DynamicResource Animation.Lines}" 
                         CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
                     <!--<Border.Background>
-                        <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
-                            <Binding Path = "WD1QAFaultStatus"/>
-                            <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
-                        </MultiBinding>
-                    </Border.Background>-->
-                    <StackPanel Orientation="Vertical">
-                        <TextBlock Text="ASIC 2" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-                               FontSize="20"/>
-                        <TextBlock Text="ASIC Status" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-                               FontSize="20"/>
-                    </StackPanel>
+        <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
+            <Binding Path = "WD1QAFaultStatus"/>
+            <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+        </MultiBinding>
+    </Border.Background>-->
+                    <TextBlock Text="Aditional status" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+            FontSize="10"/>
                 </Border>
-
-                <Border Grid.Row="2" Grid.Column="3" BorderThickness="1" 
-                        BorderBrush="{DynamicResource Animation.Lines}" 
-                        CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                    <!--<Border.Background>
-                        <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
-                            <Binding Path = "WD1QAFaultStatus"/>
-                            <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
-                        </MultiBinding>
-                    </Border.Background>-->
-                    <StackPanel Orientation="Vertical">
-                        <TextBlock Text="ASIC 3" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-                               FontSize="20"/>
-                        <TextBlock Text="ASIC Status" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-                               FontSize="20"/>
-                    </StackPanel>
-                </Border>
-
-                <Border Grid.Row="2" Grid.Column="4" BorderThickness="1" 
-                        BorderBrush="{DynamicResource Animation.Lines}" 
-                        CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                    <!--<Border.Background>
-                        <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
-                            <Binding Path = "WD1QAFaultStatus"/>
-                            <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
-                        </MultiBinding>
-                    </Border.Background>-->
-                    <StackPanel Orientation="Vertical">
-                        <TextBlock Text="ASIC 4" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-                               FontSize="20"/>
-                        <TextBlock Text="ASIC Status" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-                               FontSize="20"/>
-                    </StackPanel>
-                </Border>
-
-                <TextBlock HorizontalAlignment="Center" Text="PRECONDITIONS" 
-                           Style="{DynamicResource CustomTextBlock}" 
-                           Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="4"/>
-
-
-                <Border Grid.Row="4" Grid.Column="1" BorderThickness="1" 
-                        BorderBrush="{DynamicResource Animation.Lines}" 
-                        CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                    <!--<Border.Background>
-                        <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
-                            <Binding Path = "WD1QAFaultStatus"/>
-                            <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
-                        </MultiBinding>
-                    </Border.Background>-->
-                    <StackPanel Orientation="Vertical">
-                        <TextBlock Text="VH voltage at" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-                               FontSize="20"/>
-                        <TextBlock Text="11 nodes" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-                               FontSize="20"/>
-                    </StackPanel>
-                </Border>
-
-                <Border Grid.Row="4" Grid.Column="2" BorderThickness="1" 
-                        BorderBrush="{DynamicResource Animation.Lines}" 
-                        CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                    <!--<Border.Background>
-                        <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
-                            <Binding Path = "WD1QAFaultStatus"/>
-                            <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
-                        </MultiBinding>
-                    </Border.Background>-->
-                    <TextBlock Text="CAP Button" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-                               FontSize="20"/>
-                </Border>
-
-                <Border Grid.Row="4" Grid.Column="3" BorderThickness="1" 
-                        BorderBrush="{DynamicResource Animation.Lines}" 
-                        CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                    <!--<Border.Background>
-                        <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
-                            <Binding Path = "WD1QAFaultStatus"/>
-                            <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
-                        </MultiBinding>
-                    </Border.Background>-->
-                    <StackPanel Orientation="Vertical">
-                        <TextBlock Text="Squid/LEA" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-                               FontSize="20"/>
-                        <TextBlock Text="loads" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-                               FontSize="20"/>
-                        <TextBlock Text="connection" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-                               FontSize="20"/>
-                    </StackPanel>
-                </Border>
-
-                <Border Grid.Row="4" Grid.Column="4" BorderThickness="1" 
-                        BorderBrush="{DynamicResource Animation.Lines}" 
-                        CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                    <!--<Border.Background>
-                        <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
-                            <Binding Path = "WD1QAFaultStatus"/>
-                            <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
-                        </MultiBinding>
-                    </Border.Background>-->
-                    <TextBlock Text="Junction temp" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-                               FontSize="20"/>
-                </Border>
-
-            </Grid>
-            <!--#endregion-->
-
-            <!--#region Channel configuration -->
-            <Grid Grid.Row="6" Grid.Column="0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="5"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="5"/>
-                </Grid.ColumnDefinitions>
-
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                </Grid.RowDefinitions>
-
-                <!--<ToggleButton Content="" Background="Red" 
-                              Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2"
-                              Style="{DynamicResource SimpleToggleButton}"/>-->
-                
-                <ToggleButton Style="{DynamicResource MenuToggleButtonTemplate}" IsChecked="True"
-                              Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2">
-
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="ASIC 1" FontSize="20" Grid.Column="1" Style="{DynamicResource TextBlockStyle}"/>
-                    </StackPanel>
-
-                    <ToggleButton.Triggers>
-                        <EventTrigger RoutedEvent="ToggleButton.Unchecked">
-                            <BeginStoryboard>
-                                <Storyboard>
-                                    <DoubleAnimation 
-                                        Storyboard.TargetName="ASIC1ChannelsConfig"
-                                        Storyboard.TargetProperty="Width"
-                                        BeginTime="0:0:0"
-                                        From="200" To="0"
-                                        Duration="0:0:0.2"/>
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </EventTrigger>
-                        <EventTrigger RoutedEvent="ToggleButton.Checked">
-                            <BeginStoryboard>
-                                <Storyboard>
-                                    <DoubleAnimation 
-                                        Storyboard.TargetName="ASIC1ChannelsConfig"
-                                        Storyboard.TargetProperty="Width"
-                                        BeginTime="0:0:0"
-                                        To="200" From="0"
-                                        Duration="0:0:0.2"/>
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </EventTrigger>
-                    </ToggleButton.Triggers>
-                </ToggleButton>
-
-                <ToggleButton Content="ASIC 2" Background="Green" 
-                              Grid.Row="0" Grid.Column="4" Grid.ColumnSpan="2"
-                              Style="{DynamicResource SimpleToggleButton}"/>
-
-                <ToggleButton Content="ASIC 3" Background="Yellow" 
-                              Grid.Row="0" Grid.Column="6" Grid.ColumnSpan="2"
-                              Style="{DynamicResource SimpleToggleButton}"/>
-
-                <ToggleButton Content="ASIC 4" Background="Blue" 
-                              Grid.Row="0" Grid.Column="8" Grid.ColumnSpan="2"
-                              Style="{DynamicResource SimpleToggleButton}"/>
-
-                <!--#region ASIC Channel status boxes -->
-                <Grid Grid.Row="1" Grid.Column="2">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="0" Grid.Column="0"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="1" Grid.Column="0"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="2" Grid.Column="0"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="3" Grid.Column="0"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="4" Grid.Column="0"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="5" Grid.Column="0"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="6" Grid.Column="0"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="7" Grid.Column="0"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="8" Grid.Column="0"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="9" Grid.Column="0"/>
-
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="0" Grid.Column="1"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="1" Grid.Column="1"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="2" Grid.Column="1"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="3" Grid.Column="1"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="4" Grid.Column="1"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="5" Grid.Column="1"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="6" Grid.Column="1"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="7" Grid.Column="1"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="8" Grid.Column="1"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="9" Grid.Column="1"/>
-                </Grid>
-
-                <Grid Grid.Row="1" Grid.Column="4">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="0" Grid.Column="0"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="1" Grid.Column="0"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="2" Grid.Column="0"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="3" Grid.Column="0"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="4" Grid.Column="0"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="5" Grid.Column="0"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="6" Grid.Column="0"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="7" Grid.Column="0"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="8" Grid.Column="0"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="9" Grid.Column="0"/>
-
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="0" Grid.Column="1"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="1" Grid.Column="1"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="2" Grid.Column="1"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="3" Grid.Column="1"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="4" Grid.Column="1"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="5" Grid.Column="1"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="6" Grid.Column="1"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="7" Grid.Column="1"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="8" Grid.Column="1"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="9" Grid.Column="1"/>
-                </Grid>
-
-                <Grid Grid.Row="1" Grid.Column="6">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="0" Grid.Column="0"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="1" Grid.Column="0"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="2" Grid.Column="0"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="3" Grid.Column="0"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="4" Grid.Column="0"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="5" Grid.Column="0"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="6" Grid.Column="0"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="7" Grid.Column="0"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="8" Grid.Column="0"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="9" Grid.Column="0"/>
-
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="0" Grid.Column="1"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="1" Grid.Column="1"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="2" Grid.Column="1"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="3" Grid.Column="1"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="4" Grid.Column="1"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="5" Grid.Column="1"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="6" Grid.Column="1"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="7" Grid.Column="1"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="8" Grid.Column="1"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="9" Grid.Column="1"/>
-                </Grid>
-
-                <Grid Grid.Row="1" Grid.Column="8">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="0" Grid.Column="0"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="1" Grid.Column="0"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="2" Grid.Column="0"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="3" Grid.Column="0"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="4" Grid.Column="0"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="5" Grid.Column="0"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="6" Grid.Column="0"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="7" Grid.Column="0"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="8" Grid.Column="0"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="9" Grid.Column="0"/>
-
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="0" Grid.Column="1"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="1" Grid.Column="1"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="2" Grid.Column="1"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="3" Grid.Column="1"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="4" Grid.Column="1"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="5" Grid.Column="1"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="6" Grid.Column="1"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="7" Grid.Column="1"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="8" Grid.Column="1"/>
-                    <Button Style="{DynamicResource ChannelChooseButton}" Grid.Row="9" Grid.Column="1"/>
-                </Grid>
                 <!--#endregion-->
 
-                <Frame Grid.Column="3" Grid.Row="1" Source="Components/FiringChannelConfig.xaml" x:Name="ASIC1ChannelsConfig"/>
-                <Frame Grid.Column="5" Grid.Row="1" Source="Components/FiringChannelConfig.xaml"/>
-                <Frame Grid.Column="7" Grid.Row="1" Source="Components/FiringChannelConfig.xaml"/>
-                <Frame Grid.Column="9" Grid.Row="1" Source="Components/FiringChannelConfig.xaml"/>
+
+                <StackPanel Grid.Row="3" Grid.Column="0" Orientation="Vertical">
+                    <TextBlock 
+                        Text="Mode" HorizontalAlignment="Left"/>
+                    <Button Grid.Row="1" Grid.RowSpan="2" Grid.Column="0"
+                        Content="ASIC mode"/>
+                </StackPanel>
 
 
+                <StackPanel Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2"  Orientation="Vertical">
+                    <TextBlock Grid.Row="0" Grid.Column="1"
+                        Text="Runtime configuration" HorizontalAlignment="Center"/>
+                    <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
+                        <CheckBox/>
+                        <TextBlock Text="Enable alternative mode" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                    <Button Grid.Row="2" Grid.Column="1"
+                        Content="Apply"/>
+                </StackPanel>
 
             </Grid>
-            <!--#endregion-->
-
-            <!--#region Get/Set/Proceed buttons -->
-            <Grid Grid.Row="8" Grid.Column="0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="5"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="5"/>
-                </Grid.ColumnDefinitions>
-
-                <Button Style="{DynamicResource SimpleButton}" 
-                        Content="Get Config from ASIC"
-                        Grid.Column="2" 
-                        Margin="5"/>
-
-                <Button Style="{DynamicResource SimpleButton}" 
-                        Content="Write Config to ASIC"
-                        Grid.Column="3"
-                        Margin="5"/>
-
-                <Button Style="{DynamicResource SimpleButton}" 
-                        Content="->"
-                        Grid.Column="4"
-                        Margin="5"/>
-
-                <Button Style="{DynamicResource SimpleButton}" 
-                        Content="Proceed to standby state"
-                        Grid.Column="5"
-                        Margin="5"/>
-            </Grid>
-            <!--#endregion-->
             
             
         </Grid>
 
-        
     </Grid>
 </Page>
