@@ -48,6 +48,13 @@ void CmdGetMcuBuildDate(USBReceiveData const * const commandPackage);
  */
 void CmdGetMcuBuildTime(USBReceiveData const * const commandPackage);
 
+/** \brief Handling of command USB_CMD_READ_DEV_ID
+ *
+ * \param commandPackage package with command
+ * \return Nothing
+ */
+void CmdGetDeviceId(USBReceiveData const * const commandPackage);
+
 /** \brief Handling WRITE_REG command from PC
  *
  * \param commandPackage package with command
@@ -55,32 +62,11 @@ void CmdGetMcuBuildTime(USBReceiveData const * const commandPackage);
  */
 void CmdWriteReg(USBReceiveData const * const commandPackage);
 
-/** \brief Handling USB_CMD_SPI_INSTRUCTION command from PC
- *
- * \param commandPackage package with required data to frorm spi_instruction (CRC3 not included)
- * \returns status flags and 16 bit output data
- */
-void CmdSpiInstuction(USBReceiveData const * const commandPackage);
-
-/** \brief Handling of command USB_CMD_READ_DEV_ID
- *
- * \param commandPackage package with command
- * \return Nothing
- */
-void CmdGetDeviceId(USBReceiveData * commandPackage);
-
-/** \brief Handling WRITE_REG_RAW command from PC
- *
- * \param commandPackage package with command
- * \return Nothing
- */
-void CmdWriteRegRaw(USBReceiveData const * const commandPackage);
-
 /** \brief Handling READ_REG_RAW command from PC
  *
  * \param commandPackage package with command
  * \return Nothing
  */
-void CmdReadRegRaw(USBReceiveData const * const commandPackage);
+void CmdReadReg(USBReceiveData const * const commandPackage);
 
 #endif /* GENERAL_CMD_H_ */

@@ -37,7 +37,7 @@ void Watchdog1InterruptRoutine(void)
     // Watchdog serving is an internal command
     static USBReceiveData serveWatchdogCommand = 
     {
-        .asic_id = 1,
+        .device_id = 1,
         .dataLength = 0,
         .command = INT_CMD_ACK_WATCHDOG1
     };
@@ -55,7 +55,7 @@ void Watchdog2InterruptRoutine(void)
     // Watchdog serving is an internal command
     static USBReceiveData serveWatchdogCommand = 
     {
-        .asic_id = 1,
+        .device_id = 1,
         .dataLength = 0,
         .command = INT_CMD_ACK_WATCHDOG2
     };
@@ -73,7 +73,7 @@ void WatchdogStatusReadingInterruptRoutine(void)
     // Watchdog status reading is an internal command
     static USBReceiveData serveWatchdogStatusCommand = 
     {
-        .asic_id = 1,
+        .device_id = 1,
         .dataLength = 0,
         .command = INT_CMD_READ_WD_STATUS
     };
@@ -178,17 +178,15 @@ void core0_main(void)
                 CmdIsAlive(&cmdPackage);
                 break;
 
-            case USB_CMD_SPI_INSTRUCTION:
-                CmdSpiInstuction(&cmdPackage);
-                break;
-
             case USB_CMD_READ_DEV_ID:
                 CmdGetDeviceId(&cmdPackage);
                 break;
-            // case :
-            //     break;
-            // case :
-            //     break;
+            case USB_CMD_READ_REG:
+                CmdReadReg(&cmdPackage);
+                break;
+            case USB_CMD_WRITE_REG:
+                CmdWriteReg(&cmdPackage);
+                break;
             // case :
             //     break;
             // case :
