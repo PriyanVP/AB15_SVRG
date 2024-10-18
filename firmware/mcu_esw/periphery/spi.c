@@ -385,7 +385,6 @@ void QSPIExchangeData(SpiBusSelectEnum SpiBusNumber, const uint32 * const dataTo
     //use SpiBusSelectEnum as type would be good.
     if (SpiBusNumber == SPI_BUS_1)
     {
-        ToggleLED4();
         sint32 timeout = IfxStm_getTicksFromMilliseconds(BSP_DEFAULT_TIMER, SPI_TIMEOUT);
         IfxQspi_SpiMaster_exchange(&g_qspi1.spiMasterChannel, &dataToSendSwapped, &dataToRecive, length);
         while (IfxQspi_SpiMaster_getStatus(&g_qspi1.spiMasterChannel) == SpiIf_Status_busy)
@@ -396,7 +395,6 @@ void QSPIExchangeData(SpiBusSelectEnum SpiBusNumber, const uint32 * const dataTo
     }
     if (SpiBusNumber == SPI_BUS_2)
     {
-        ToggleLED4();
         sint32 timeout = IfxStm_getTicksFromMilliseconds(BSP_DEFAULT_TIMER, SPI_TIMEOUT);
         IfxQspi_SpiMaster_exchange(&g_qspi2.spiMasterChannel, &dataToSendSwapped, &dataToRecive, length);
         while (IfxQspi_SpiMaster_getStatus(&g_qspi2.spiMasterChannel) == SpiIf_Status_busy)

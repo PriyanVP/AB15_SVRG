@@ -44,7 +44,6 @@ void Watchdog1InterruptRoutine(void)
 
     // Add WD serving internal command to command queue
     QueueWriteTail(&serveWatchdogCommand);    // TODO: commented out to have MCU contained WD routine. Uncomment for actual communication with ASIC
-    //ToggleLED2(); // TODO: remove after testing WD
 }
 
 /** \brief Watchdog 2 interrupt routine
@@ -62,7 +61,6 @@ void Watchdog2InterruptRoutine(void)
 
     // Add WD serving internal command to command queue
     QueueWriteTail(&serveWatchdogCommand);    // TODO: commented out to have MCU contained WD routine. Uncomment for actual communication with ASIC
-    //ToggleLED2(); // TODO: remove after testing WD
 }
 
 /** \brief Watchdogs status reading interrupt routine
@@ -140,7 +138,6 @@ void core0_main(void)
     while(1)
     {
 
-        //ToggleLED1();
         Blink_LED1_1Hz();
 
 
