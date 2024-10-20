@@ -43,12 +43,14 @@ typedef enum
 /*********************************************************************************************************************/
 
 static boolean enSPICommunication = FALSE;                 /** \brief Flag indicating if SPI communication enabled   */
-static Spi1SlaveSelectEnum currectSpiChannelConfig = SPI1_CS1_ENUM_LAST; // force init to correct channel
+
 /*********************************************************************************************************************/
 /*------------------------------------------------Function Prototypes------------------------------------------------*/
 /*********************************************************************************************************************/
 
 /** \brief Common implementation of sequence operation on SPI 
+ * 
+ * \param spiChannel SPI Slave to and from which the SPI instruction is executed
  * \param p_addressBuffer pointer to array with register addresses
  * \param p_dataBuffer pointer to array with data that should be written to registers, after execution contains responses from ASIC
  * \param p_rwBuffer pointer to array with flags indicating if read or write operation should be executed
@@ -56,9 +58,13 @@ static Spi1SlaveSelectEnum currectSpiChannelConfig = SPI1_CS1_ENUM_LAST; // forc
  * \param p_length pointer to variable storing length of input buffers, after execution stores length of p_dataBuffer
  * \return Returns TRUE is there were no errors during operation, FALSE otherwise
  */
-IFX_INLINE boolean QSPIReadWriteSequenceNormalInline(const uint16 * const p_addressBuffer, uint32 * const p_dataBuffer, 
-                                                     const RWFlagEnum * const p_rwBuffer, const SequenceTypeEnum SEQ_TYPE, 
-                                                     uint16 * const p_length);
+IFX_INLINE boolean QSPIReadWriteSequenceNormalInline(uint8 spiChannel, const uint16 * const p_addressBuffer, 
+                                                     uint32 * const p_dataBuffer, const RWFlagEnum * const p_rwBuffer, 
+                                                     const SequenceTypeEnum SEQ_TYPE, uint16 * const p_length);
+
+// boolean QSPIReadWriteSequenceNormalInline(uint8 spiChannel, const uint16 * const p_addressBuffer, 
+//                                                      uint32 * const p_dataBuffer, const RWFlagEnum * const p_rwBuffer, 
+//                                                      const SequenceTypeEnum SEQ_TYPE, uint16 * const p_length);
 
 /*********************************************************************************************************************/
 /*---------------------------------------------Function Implementations----------------------------------------------*/
@@ -84,14 +90,14 @@ boolean QSPIExecuteInstruction(uint8 spiChannel, AB12SPIInstructionsEnum instruc
     // Execute only if enabled
     if (enSPICommunication == FALSE) return FALSE;
 
-    if (spiChannel == SPI1_CS_INVALID) return FALSE;
-    if (spiChannel >= SPI1_CS1_ENUM_LAST) return FALSE;
+    // Configure SPI channel for communication and stop execution if unsuccussful
+    boolean isSpiChannelConigOk = QSPIUpdateChannelConfig(spiChannel);
+    if (isSpiChannelConigOk == FALSE) return FALSE;
 
     // Initialize variables
     boolean isReceivedDataValid = FALSE;
     SPITransmitData dataToTransmit;
     SPIReceiveData dataToReceive;
-    uint8 Spi1SlaveSelectLine;
 
     // Configure and execute read request
     dataToTransmit.dw = 0;
@@ -100,35 +106,6 @@ boolean QSPIExecuteInstruction(uint8 spiChannel, AB12SPIInstructionsEnum instruc
     dataToTransmit.bf.data = dataToSend;
     dataToTransmit.bf.crc = GetCRC3(&(dataToTransmit.dw));
 
-    /*translate the spi slaves to the dedicated SLSO lines*/
-    /* TODO: function shall also operate on SPI2. finally it shall route all commands to dedicated SPI devices on dedicated SPI Bus and Slave select line  */
-
-    if (spiChannel != currectSpiChannelConfig){
-        currectSpiChannelConfig = spiChannel;
-        switch(spiChannel){
-            case SPI1_CSMON1:                 /* SLSO8    */
-                Spi1SlaveSelectLine = SPI1_SLSO8;
-                break;
-            case SPI1_CS1MASTER:                 /* SLSO8    */
-                Spi1SlaveSelectLine = SPI1_SLSO9;
-                break;
-            case SPI1_CS1_SENSOR1:                 /* SLSO8    */
-                Spi1SlaveSelectLine = SPI1_SLSO5;
-                break;
-            case SPI1_CS1_SENSOR2:                 /* SLSO8    */
-                Spi1SlaveSelectLine = SPI1_SLSO3;
-                break;
-            case SPI1_CS1_SENSOR3:                 /* SLSO8    */
-                Spi1SlaveSelectLine = SPI1_SLSO4;
-                break;
-            default:
-                /* by fdefault use SLSO9, default master    */
-                Spi1SlaveSelectLine = SPI1_SLSO9;
-               break;
-           }
-        // reconfigure
-        QSPIMasterChannelInit(Spi1SlaveSelectLine);
-    }
     QSPIExchangeData(&dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
 
     // Validating input
@@ -143,10 +120,14 @@ boolean QSPIExecuteInstruction(uint8 spiChannel, AB12SPIInstructionsEnum instruc
 #else
 // AB15 implementations
 
-boolean QSPIReadNormal(uint16 address, uint32 * const p_data)
+boolean QSPIReadNormal(uint8 spiChannel, uint16 address, uint32 * const p_data)
 {
     // Execute only if enabled
     if (enSPICommunication == FALSE) return FALSE;
+
+    // Configure SPI channel for communication and stop execution if unsuccussful
+    boolean isSpiChannelConigOk = QSPIUpdateChannelConfig(spiChannel);
+    if (isSpiChannelConigOk == FALSE) return FALSE;
 
     // Initialize variables
     boolean isReceivedDataValid = FALSE;
@@ -164,6 +145,9 @@ boolean QSPIReadNormal(uint16 address, uint32 * const p_data)
     // Validating input
     isReceivedDataValid = IsCRC3Correct(&(dataToReceive.dw), dataToReceive.bf.crc);
     isReceivedDataValid &= (dataToReceive.bf.asic_error_flag == FALSE);
+    isReceivedDataValid &= (dataToReceive.bf.gs0 == FALSE);
+    isReceivedDataValid &= (dataToReceive.bf.gs2 == FALSE);
+    isReceivedDataValid &= (dataToReceive.bf.gs5 == FALSE);
 
     // Return data
     *p_data = dataToReceive.dw;
@@ -171,10 +155,14 @@ boolean QSPIReadNormal(uint16 address, uint32 * const p_data)
     return (isReceivedDataValid);
 }
 
-boolean QSPIWriteNormal(uint16 address, uint16 data)
+boolean QSPIWriteNormal(uint8 spiChannel, uint16 address, uint16 data) // TODO: 
 {
     // Execute only if enabled
-    if (enSPICommunication == FALSE) return;
+    if (enSPICommunication == FALSE) return FALSE;
+
+    // Configure SPI channel for communication and stop execution if unsuccessful
+    boolean isSpiChannelConigOk = QSPIUpdateChannelConfig(spiChannel);
+    if (isSpiChannelConigOk == FALSE) return FALSE;
 
     // Initialize variables
     boolean isReceivedDataValid = FALSE;
@@ -182,38 +170,47 @@ boolean QSPIWriteNormal(uint16 address, uint16 data)
     SPIReceiveDataNormal dataToReceive; // data in this variable unused, provides place to store incoming data
 
     // Configure and execute write request
+    dataToTransmit.dw  = 0;
     dataToTransmit.bf.sensor_data = FALSE;
     dataToTransmit.bf.address = address;
     dataToTransmit.bf.rw = WRITE;
+    dataToTransmit.bf.data = data;
     dataToTransmit.bf.crc = GetCRC3(&(dataToTransmit.dw));
     QSPIExchangeData(&dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
 
     // Validating input
     isReceivedDataValid = IsCRC3Correct(&(dataToReceive.dw), dataToReceive.bf.crc);
     isReceivedDataValid &= (dataToReceive.bf.asic_error_flag == FALSE);
+    isReceivedDataValid &= (dataToReceive.bf.gs0 == FALSE);
+    isReceivedDataValid &= (dataToReceive.bf.gs2 == FALSE);
+    isReceivedDataValid &= (dataToReceive.bf.gs5 == FALSE);
 
     return isReceivedDataValid;
 }
 
-boolean QSPIReadSequenceNormal(const uint16 * const p_addressBuffer, uint32 * const p_dataBuffer, uint16 * const p_length)
+boolean QSPIReadSequenceNormal(uint8 spiChannel, const uint16 * const p_addressBuffer, uint32 * const p_dataBuffer, uint16 * const p_length)
 {
-    return QSPIReadWriteSequenceNormalInline(p_addressBuffer, p_dataBuffer, NULL_PTR, READ_ONLY, p_length);
+    return QSPIReadWriteSequenceNormalInline(spiChannel, p_addressBuffer, p_dataBuffer, NULL_PTR, READ_ONLY, p_length);
 }
 
-boolean QSPIWriteSequenceNormal(const uint16 * const addressBuffer, const uint16 * const dataBuffer, uint16 * const length)
+boolean QSPIWriteSequenceNormal(uint8 spiChannel, const uint16 * const p_addressBuffer, uint32 * const p_dataBuffer, uint16 * const p_length)
 {
-    return QSPIReadWriteSequenceNormalInline(p_addressBuffer, p_dataBuffer, NULL_PTR, WRITE_ONLY, p_length);
+    return QSPIReadWriteSequenceNormalInline(spiChannel, p_addressBuffer, p_dataBuffer, NULL_PTR, WRITE_ONLY, p_length);
 }
 
-boolean QSPIReadWriteSequenceNormal(const uint16 * const addressBuffer, const uint16 * const dataBuffer, const RWFlagEnum * const p_rwBuffer, uint16 * const length)
+boolean QSPIReadWriteSequenceNormal(uint8 spiChannel, const uint16 * const p_addressBuffer, uint32 * const p_dataBuffer, const RWFlagEnum * const p_rwBuffer, uint16 * const p_length)
 {
-    return QSPIReadWriteSequenceNormalInline(p_addressBuffer, p_dataBuffer, p_rwBuffer, COMBINATION, p_length);
+    return QSPIReadWriteSequenceNormalInline(spiChannel, p_addressBuffer, p_dataBuffer, p_rwBuffer, COMBINATION, p_length);
 }
 
-IFX_INLINE boolean QSPIReadWriteSequenceNormalInline(const uint16 * const p_addressBuffer, uint32 * const p_dataBuffer, const RWFlagEnum * const p_rwBuffer, const SequenceTypeEnum SEQ_TYPE, uint16 * const p_length)
+IFX_INLINE boolean QSPIReadWriteSequenceNormalInline(uint8 spiChannel, const uint16 * const p_addressBuffer, uint32 * const p_dataBuffer, const RWFlagEnum * const p_rwBuffer, const SequenceTypeEnum SEQ_TYPE, uint16 * const p_length)
 {
     // Execute only if enabled
     if (enSPICommunication == FALSE) return FALSE;
+
+    // Configure SPI channel for communication and stop execution if unsuccessful
+    boolean isSpiChannelConigOk = QSPIUpdateChannelConfig(spiChannel);
+    if (isSpiChannelConigOk == FALSE) return FALSE;
 
     // Initialize variables
     boolean isReceivedDataValid = FALSE;
@@ -255,12 +252,15 @@ IFX_INLINE boolean QSPIReadWriteSequenceNormalInline(const uint16 * const p_addr
         // Validating input
         isReceivedDataValid = IsCRC3Correct(&(dataToReceive.dw), dataToReceive.bf.crc);
         isReceivedDataValid &= (dataToReceive.bf.asic_error_flag == FALSE);
+        isReceivedDataValid &= (dataToReceive.bf.gs0 == FALSE);
+        isReceivedDataValid &= (dataToReceive.bf.gs2 == FALSE);
+        isReceivedDataValid &= (dataToReceive.bf.gs5 == FALSE);
 
         // Store received data
-        *length = i; // store number of received frames
+        *p_length = i; // store number of received frames
 
-        // save package to output buffer, -1 to account on first transaction response (not related)
-        p_dataBuffer[i] = dataToReceive.dw;
+        // save package to output buffer only if read option used, otherwise store 0
+        p_dataBuffer[i] = (dataToTransmit.bf.rw == READ) ? (dataToReceive.dw) : (0);
 
         if (isReceivedDataValid == FALSE)
         {
@@ -272,10 +272,14 @@ IFX_INLINE boolean QSPIReadWriteSequenceNormalInline(const uint16 * const p_addr
     return TRUE;
 }
 
-boolean QSPIReadSensor(uint16 address, uint32 * const p_data)
+boolean QSPIReadSensor(uint8 spiChannel, uint16 address, uint32 * const p_data)
 {
     // Execute only if enabled
     if (enSPICommunication == FALSE) return FALSE;
+
+    // Configure SPI channel for communication and stop execution if unsuccessful
+    boolean isSpiChannelConigOk = QSPIUpdateChannelConfig(spiChannel);
+    if (isSpiChannelConigOk == FALSE) return FALSE;
 
     // Initialize variables
     boolean isReceivedDataValid = FALSE;
@@ -299,10 +303,14 @@ boolean QSPIReadSensor(uint16 address, uint32 * const p_data)
     return (isReceivedDataValid);
 }
 
-boolean QSPIReadSequenceSensor(const uint16 * const p_addressBuffer, uint32 * const p_dataBuffer, uint16 * const p_length)
+boolean QSPIReadSequenceSensor(uint8 spiChannel, const uint16 * const p_addressBuffer, uint32 * const p_dataBuffer, uint16 * const p_length)
 {
     // Execute only if enabled
     if (enSPICommunication == FALSE) return FALSE;
+
+    // Configure SPI channel for communication and stop execution if unsuccessful
+    boolean isSpiChannelConigOk = QSPIUpdateChannelConfig(spiChannel);
+    if (isSpiChannelConigOk == FALSE) return FALSE;
 
     // Initialize variables
     boolean isReceivedDataValid = FALSE;
@@ -323,7 +331,6 @@ boolean QSPIReadSequenceSensor(const uint16 * const p_addressBuffer, uint32 * co
     // Configure common parameters of SPI normal frame
     dataToTransmit.dw = 0;
     dataToTransmit.bf.sensor_data = TRUE;
-    dataToTransmit.bf.rw = READ;
 
     // Execute series of SPI transactions
     for (uint16 i = 0; i < numberOfFrames; i++)
@@ -340,7 +347,7 @@ boolean QSPIReadSequenceSensor(const uint16 * const p_addressBuffer, uint32 * co
         isReceivedDataValid &= (dataToReceive.bf.asic_error_flag == FALSE);
 
         // Store received data
-        *length = i; // store number of received frames
+        *p_length = i; // store number of received frames
 
         // save package to output buffer, -1 to account on first transaction response (not related)
         p_dataBuffer[i] = dataToReceive.dw;

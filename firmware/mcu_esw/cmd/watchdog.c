@@ -242,12 +242,13 @@ void CmdConfigureWatchdog(USBReceiveData const * const commandPackage)
     // Write both WD configs to ASIC to ASIC
     for (uint8 i = 0; i < length; i++)
     {
-        isSuccessfulFlag = QSPIWriteSequence(&(address[i]), &(data[i]), &length); // TODO: configuration, not yet implemented; not available for AB12
+        // isSuccessfulFlag = QSPIWriteSequence(SPI1_CS1MASTER, &(address[i]), &(data[i]), &length); // TODO: configuration, not yet implemented; not available for AB12
     }
 
     #endif
 
     // Prepare report for GUI
+    packageToSend.device_id = commandPackage->device_id;
     packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
 
     if (isSuccessfulFlag == FALSE)
@@ -270,7 +271,7 @@ void IntCmdAcknowledgeWatchdog1(void)
 {
     uint16 question;
     uint16 answer = 0;
-    SPIReceiveData data; // TODO: will need type change for AB15
+    SPIReceiveDataNormal data;
 
     // Obtain response word from look-up table
     #ifdef AB12_PLATFORM
@@ -286,14 +287,14 @@ void IntCmdAcknowledgeWatchdog1(void)
     #else
     // AB15 platform
     // Read question from ASIC
-    QSPIReadNormal(SAFETY_LOGIC_SPI_READ_WDQA, &(data.dw));
+    QSPIReadNormal(SPI1_CS1MASTER, SAFETY_LOGIC_SPI_READ_WDQA, &(data.dw));
     question = (data.bf.output_data & SAFETY_LOGIC_SPI_READ_WDQA_QA1_CNT_SPI_MASK) >> SAFETY_LOGIC_SPI_READ_WDQA_QA1_CNT_SPI_SHIFT;
 
     // Get answer from the table
     answer = GetAnswerWordWD1AB15(question);
     
     // Send answer word to ASIC
-    QSPIWriteNormal(SAFETY_LOGIC_SPI_TRIG_WDQA1, answer);
+    QSPIWriteNormal(SPI1_CS1MASTER, SAFETY_LOGIC_SPI_TRIG_WDQA1, answer);
     #endif
 }
 
@@ -301,7 +302,7 @@ void IntCmdAcknowledgeWatchdog2(void)
 {
     uint16 question;
     uint16 answer = 0;
-    SPIReceiveData data; // TODO: will need type change for AB15
+    SPIReceiveDataNormal data;
 
     // Obtain response word from look-up table
     #ifdef AB12_PLATFORM
@@ -317,14 +318,14 @@ void IntCmdAcknowledgeWatchdog2(void)
     #else
     // AB15 platform
     // Read question from ASIC
-    QSPIReadNormal(SAFETY_LOGIC_SPI_READ_WDQA, &(data.dw));
+    QSPIReadNormal(SPI1_CS1MASTER, SAFETY_LOGIC_SPI_READ_WDQA, &(data.dw));
     question = (data.bf.output_data & SAFETY_LOGIC_SPI_READ_WDQA_QA2_CNT_SPI_MASK) >> SAFETY_LOGIC_SPI_READ_WDQA_QA2_CNT_SPI_SHIFT;
 
     // Get answer from the table
     answer = GetAnswerWordWD2AB15(question);
     
     // Send answer word to ASIC
-    QSPIWriteNormal(SAFETY_LOGIC_SPI_TRIG_WDQA2, answer);
+    QSPIWriteNormal(SPI1_CS1MASTER, SAFETY_LOGIC_SPI_TRIG_WDQA2, answer);
     #endif
 }
 
@@ -355,7 +356,7 @@ void CmdStartWatchdog(USBReceiveData const * const commandPackage)
 
     // Lock config for AB15
     // Note: assumed that all other bites in spi_set_wdsettings can be 0
-    QSPIWriteNormal(SAFETY_LOGIC_SPI_SET_WDSETTINGS, SAFETY_LOGIC_SPI_SET_WDSETTINGS_SPI_ON_SL_MASK);
+    QSPIWriteNormal(SPI1_CS1MASTER, SAFETY_LOGIC_SPI_SET_WDSETTINGS, SAFETY_LOGIC_SPI_SET_WDSETTINGS_SPI_ON_SL_MASK);
 
     #endif
 
@@ -393,6 +394,7 @@ void CmdStopWatchdog(USBReceiveData const * const commandPackage)
 
     // Prepare acknowledge message
     USBTransmitData packageToSend;
+    packageToSend.device_id = commandPackage->device_id;
     packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
     packageToSend.status = USB_STATUS_ACK;
     packageToSend.dataLength = 0;
@@ -415,8 +417,9 @@ void CmdSetExtOsc2Mhz(USBReceiveData const * const commandPackage)
 
     // Prepare acknowledge message
     USBTransmitData packageToSend;
+    packageToSend.device_id = commandPackage->device_id;
     packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
-    packageToSend.asic_id = 1;
+    packageToSend.device_id = 1;
     packageToSend.status = USB_STATUS_ACK;
     packageToSend.dataLength = 0;
 
@@ -438,8 +441,9 @@ void CmdSetExtOsc4Mhz(USBReceiveData const * const commandPackage)
 
     // Prepare acknowledge message
     USBTransmitData packageToSend;
+    packageToSend.device_id = commandPackage->device_id;
     packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
-    packageToSend.asic_id = 1;
+    packageToSend.device_id = 1;
     packageToSend.status = USB_STATUS_ACK;
     packageToSend.dataLength = 0;
 
@@ -469,6 +473,7 @@ void CmdStopMonitoringWatchdog(USBReceiveData const * const commandPackage)
 
     // Prepare acknowledge message
     USBTransmitData packageToSend;
+    packageToSend.device_id = commandPackage->device_id;
     packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
     packageToSend.status = USB_STATUS_ACK;
     packageToSend.dataLength = 0;
@@ -506,26 +511,23 @@ void IntCmdMonitorWatchdog(void)
     packageToSend.data[2] = data.bf.wdf;
     #else
     // AB15 platform
-    SPIReceiveData data[WD_STATUS_REGS_COUNT] = {0};
+    SPIReceiveDataNormal data[WD_STATUS_REGS_COUNT] = {0};
 
     // Read WD related registers from ASIC
-    isSuccessfulFlag = QSPIReadSequenceNormal(g_wdStatusMonitoringConfig.wdStatusRegsAddresses, &data.dw, &length);
+    // isSuccessfulFlag = QSPIReadSequenceNormal(SPI1_CS1MASTER, g_wdStatusMonitoringConfig.wdStatusRegsAddresses, &data[0].dw, &length); // TODO: not implemented
 
     packageToSend.dataLength = length << 1; // each data item is send as 2 bytes
 
     for (uint8 i = 0; i < length; i++)
     {
-        // Store SPI response frame to temporary variable for extracting data
-        dataRecived.dw = data[i];
-
-        packageToSend.data[i<<1]     = GetLSB(dataRecived.bf.output_data);
-        packageToSend.data[(i<<1)+1] = GetMSB(dataRecived.bf.output_data);
+        packageToSend.data[i<<1]     = GetLSB(data[i].bf.output_data);
+        packageToSend.data[(i<<1)+1] = GetMSB(data[i].bf.output_data);
     }
     #endif
 
     // Send data
     packageToSend.status = (isSuccessfulFlag) ? USB_STATUS_DATA : USB_STATUS_ERROR;
-    packageToSend.asic_id = 1;
+    packageToSend.device_id = SPI1_CS1MASTER;
     packageToSend.msg_id = g_wdStatusMonitoringConfig.monitoringMessageID;
 
     // Send message to GUI

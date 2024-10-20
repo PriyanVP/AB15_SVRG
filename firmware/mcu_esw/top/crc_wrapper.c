@@ -37,7 +37,7 @@
 #define CRC3_MO_START_IDX       (5)                                                 /** \brief CRC 3 MO start index  */
 #define CRC3_MO_END_IDX         (31)                                                /** \brief CRC 3 MO end index    */
 #define CRC3_MI_START_IDX       (3)                                                 /** \brief CRC 3 MI start index  */
-#define CRC3_MI_END_IDX         (31)                                                /** \brief CRC 3 MI end index    */
+#define CRC3_MI_END_IDX         (26)                                                /** \brief CRC 3 MI end index Changed to match current ASIC implementation   */
 
 #endif
 

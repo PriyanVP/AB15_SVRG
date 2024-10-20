@@ -60,9 +60,9 @@ class Status(Enum):
 class TransmitPackage(): #metaclass=MultipleMeta
     '''Wrapper for packages from PC to MCU'''
 
-    def __init__(self, msg_id:int=0, asic_id:int=0, cmd:Command=Command._MIN, payload: List[int]=[]):
+    def __init__(self, msg_id:int=0, device_id:int=0, cmd:Command=Command._MIN, payload:List[int]=[]):
         self.msg_id = msg_id
-        self.asic_id = asic_id
+        self.device_id = device_id
         self.cmd = cmd.value
         self.payload_len = len(payload)
         self.payload = payload
@@ -70,7 +70,7 @@ class TransmitPackage(): #metaclass=MultipleMeta
     def validate_package(self):
         if ((self.msg_id < 0) or (self.msg_id >= 0x80)):
             raise Exception("MessageID has incorrect value")
-        if ((self.asic_id < 0) or (self.asic_id > 4)):
+        if ((self.device_id < 0) or (self.device_id > 4)):
             raise Exception("ASIC index has incorrect value")
         if (self.payload_len > 0xFF):
             raise Exception("Payload length is too big")
@@ -78,7 +78,7 @@ class TransmitPackage(): #metaclass=MultipleMeta
     def serialize(self) -> bytes:
         '''Get package as list of bytes (ints)'''
         self.validate_package()
-        package_array = [pkg_const.START_BYTE_VALUE, self.msg_id, self.asic_id, self.cmd, self.payload_len, *self.payload]
+        package_array = [pkg_const.START_BYTE_VALUE, self.msg_id, self.device_id, self.cmd, self.payload_len, *self.payload]
         package_array.append(crc8(package_array, pkg_const.MSG_ID_POSITION, (len(package_array)-pkg_const.END_BYTE_LENGTH)))
         package_array.append(pkg_const.END_BYTE_VALUE)
         return bytes(package_array)
@@ -94,7 +94,7 @@ class ReceivePackage():
     def unpack(self):
         self.start_byte  = self.package[pkg_const.START_BYTE_POSITION]
         self.msg_id      = self.package[pkg_const.MSG_ID_POSITION]
-        self.asic_id     = self.package[pkg_const.ASIC_ID_POSITION]
+        self.device_id     = self.package[pkg_const.ASIC_ID_POSITION]
         self.status      = Status(self.package[pkg_const.CMD_STATUS_POSITION])
         self.payload_len = self.package[pkg_const.PAYLOAD_LENGTH_POSITION]
         self.payload     = self.package[pkg_const.PAYLOAD_POSITION : (pkg_const.PAYLOAD_POSITION + self.payload_len)]
@@ -110,7 +110,7 @@ class ReceivePackage():
             raise Exception("CRC value is incorrect")
         if ((self.msg_id < 0x80) or (self.msg_id >= 0xFF)):
             raise Exception("MessageID has incorrect value")
-        if ((self.asic_id < 0) or (self.asic_id > 4)):
+        if ((self.device_id < 0) or (self.device_id > 4)):
             raise Exception("ASIC index has incorrect value")
         if (self.payload_len > 0xFF):
             raise Exception("Payload length is too big")

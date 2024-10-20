@@ -38,6 +38,7 @@ void CmdStartGPIOReading(USBReceiveData const * const commandPackage)
 {
     // Create empty package
     USBTransmitData packageToSend;
+    packageToSend.device_id = commandPackage->device_id;
     packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
 
     // Set main fields to default values
@@ -111,6 +112,7 @@ void CmdStopGPIOReading(USBReceiveData const * const commandPackage)
     DisableGPIOInterrupt();
 
     // Send acknowlege back to MCU
+    packageToSend.device_id = commandPackage->device_id;
     packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
     packageToSend.status = USB_STATUS_ACK;
     packageToSend.dataLength = 0;
@@ -126,5 +128,5 @@ void IntCmdGPIORead(void)
     if (g_GPIOPollingConfigured == FALSE) return;
 
     // Call function to read sequence of registers (addresses to read set during feature configuration)
-    CmdExecuteReadSequence(&g_GPIOReadPackage);
+    // CmdExecuteReadSequence(&g_GPIOReadPackage); TODO: uncomment
 }

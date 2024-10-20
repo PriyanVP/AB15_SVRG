@@ -1,23 +1,20 @@
 /**********************************************************************************************************************
- * \file error_check.h
+ * \file package_helper.c
  * \copyright Copyright (C) RobertBosch GmbH 
  *********************************************************************************************************************/
-
-#ifndef ERROR_CHECK_H_
-#define ERROR_CHECK_H_
 
 /*********************************************************************************************************************/
 /*-----------------------------------------------------Includes------------------------------------------------------*/
 /*********************************************************************************************************************/
-
-#include "top/usb_wrapper.h"
+#include "Ifx_Types.h"
+#include "spi_data_types.h"
 
 /*********************************************************************************************************************/
 /*------------------------------------------------------Macros-------------------------------------------------------*/
 /*********************************************************************************************************************/
 
 /*********************************************************************************************************************/
-/*-------------------------------------------------Data Structures---------------------------------------------------*/
+/*------------------------------------------------Function Prototypes------------------------------------------------*/
 /*********************************************************************************************************************/
 
 /*********************************************************************************************************************/
@@ -25,31 +22,40 @@
 /*********************************************************************************************************************/
 
 /*********************************************************************************************************************/
-/*------------------------------------------------Function Prototypes------------------------------------------------*/
+/*---------------------------------------------Function Implementations----------------------------------------------*/
 /*********************************************************************************************************************/
 
-/** \brief Function to configure and start continuous CS600 error reader
- * Corresponds to USB command USB_CMD_START_READ_ERRORS
- *
- * \param commandPackage package with command
- * \return Returns nothing
- */
-void CmdStartReadErrors(USBReceiveData const * const commandPackage);
+uint8 GetSpiChannelById(uint8 device_id)
+{
+    uint8 spiChannel;
 
-/** \brief Function to stop continuous CS600 error reader
- * Corresponds to USB command USB_CMD_STOP_READ_ERRORS
- *
- * \param commandPackage package with command
- * \return Returns nothing
- */
-void CmdStopReadErrors(USBReceiveData const * const commandPackage);
+    switch (device_id)
+    {
+        case 0:
+            spiChannel = SPI1_CS_INVALID;
+            break;
+        case 1:
+            spiChannel = SPI1_CS1MASTER;
+            break;
+        case 2:
+            spiChannel = SPI1_CSMON1;
+            break;
+        case 3:
+            spiChannel = SPI1_CS1_SENSOR1;
+            break;
+        case 4:
+            spiChannel = SPI1_CS1_SENSOR2;
+            break;
+        case 5:
+            spiChannel = SPI1_CS1_SENSOR3;
+            break;
+        case 6:
+            spiChannel = SPI1_CS1_ENUM_LAST;
+            break;
+        default:
+            spiChannel = SPI1_CS_INVALID;
+            break;
+    }
 
-/** \brief Function that reads all error registers
- * Corresponds to command INT_CMD_CS600_ERR_CHECK
- *
- * \return Returns nothing
- */
-void IntCmdCS600ErrorCheck(void);
-
-#endif /* ERROR_CHECK_H_ */
-
+    return spiChannel;
+}
