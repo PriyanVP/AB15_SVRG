@@ -13,258 +13,198 @@
     <Grid Background="{DynamicResource UI.BackGround}">
         
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="auto" MinHeight="100"/>
-            <RowDefinition Height="auto" MinHeight="100"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="*" MinHeight="100"/>
+            <RowDefinition Height="5"/>
         </Grid.RowDefinitions>
-        
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="auto" MinWidth="100"/>
-                <ColumnDefinition Width="auto" MinWidth="100"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
 
-            <Grid Grid.Column="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="auto"/>
-                </Grid.ColumnDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="5"/>
+            <ColumnDefinition Width="*" MinWidth="100"/>
+            <ColumnDefinition Width="5"/>
+        </Grid.ColumnDefinitions>
 
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-
-
-                <!--#region Asic buttons -->
-                <Border Grid.Row="0" Grid.Column="1" BorderThickness="1" 
-                        BorderBrush="{DynamicResource Animation.Lines}" 
-                        CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                    <!--<Border.Background>
-                        <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
-                            <Binding Path = "WD1QAFaultStatus"/>
-                            <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
-                        </MultiBinding>
-                    </Border.Background>-->
-                    <TextBlock Text="ASIC 1" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-                               FontSize="20"/>
-                </Border>
-
-                <Border Grid.Row="0" Grid.Column="2" BorderThickness="1" 
-                        BorderBrush="{DynamicResource Animation.Lines}" 
-                        CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                    <!--<Border.Background>
-                        <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
-                            <Binding Path = "WD1QAFaultStatus"/>
-                            <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
-                        </MultiBinding>
-                    </Border.Background>-->
-                    <TextBlock Text="ASIC 2" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-                               FontSize="20"/>
-                </Border>
-
-                <Border Grid.Row="0" Grid.Column="3" BorderThickness="1" 
-                        BorderBrush="{DynamicResource Animation.Lines}" 
-                        CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                    <!--<Border.Background>
-                        <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
-                            <Binding Path = "WD1QAFaultStatus"/>
-                            <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
-                        </MultiBinding>
-                    </Border.Background>-->
-                    <TextBlock Text="ASIC 3" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-                               FontSize="20"/>
-                </Border>
-
-                <Border Grid.Row="0" Grid.Column="4" BorderThickness="1" 
-                        BorderBrush="{DynamicResource Animation.Lines}" 
-                        CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                    <!--<Border.Background>
-                        <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
-                            <Binding Path = "WD1QAFaultStatus"/>
-                            <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
-                        </MultiBinding>
-                    </Border.Background>-->
-                    <TextBlock Text="ASIC 4" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-                               FontSize="20"/>
-                </Border>
-                <!--#endregion-->
-
-
-                <TextBlock Grid.Row="1" Grid.Column="0"
-                    Text="VH voltage at 11 nodes"/>
-
-                <TextBlock Grid.Row="1" Grid.Column="1" Text="OK/Error"/>
-                <TextBlock Grid.Row="1" Grid.Column="2" Text="OK/Error"/>
-                <TextBlock Grid.Row="1" Grid.Column="3" Text="OK/Error"/>
-                <TextBlock Grid.Row="1" Grid.Column="4" Text="OK/Error"/>
-                
-                <TextBlock Grid.Row="2" Grid.Column="0"
-                    Text="Junction temp"/>
-
-                <TextBlock Grid.Row="2" Grid.Column="1" Text="OK/Error"/>
-                <TextBlock Grid.Row="2" Grid.Column="2" Text="OK/Error"/>
-                <TextBlock Grid.Row="2" Grid.Column="3" Text="OK/Error"/>
-                <TextBlock Grid.Row="2" Grid.Column="4" Text="OK/Error"/>
-                
-                <TextBlock Grid.Row="3" Grid.Column="0"
-                    Text="Squib/LEA loads connected"/>
-
-                <TextBlock Grid.Row="3" Grid.Column="1" Text="OK/Error"/>
-                <TextBlock Grid.Row="3" Grid.Column="2" Text="OK/Error"/>
-                <TextBlock Grid.Row="3" Grid.Column="3" Text="OK/Error"/>
-                <TextBlock Grid.Row="3" Grid.Column="4" Text="OK/Error"/>
-
-                <TextBox Grid.Row="4" Grid.Column="0"
-                    Text="Error list PLaceholder" FontSize="12"/>
-
-                <TextBlock Grid.Row="4" Grid.Column="1" Text="Pplaceholder" Background="LightGray" Margin="3"/>
-                <TextBlock Grid.Row="4" Grid.Column="2" Text="Pplaceholder" Background="LightGray" Margin="3"/>
-                <TextBlock Grid.Row="4" Grid.Column="3" Text="Pplaceholder" Background="LightGray" Margin="3"/>
-                <TextBlock Grid.Row="4" Grid.Column="4" Text="Pplaceholder" Background="LightGray" Margin="3"/>
-
-            </Grid>
-
-            <Grid Grid.Column="2">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                </Grid.RowDefinitions>
-
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="auto"/>
-                </Grid.ColumnDefinitions>
-
-                <Border Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Background="LightBlue">
-                    <TextBlock Text="AUTARKY PLACEHOLDER"/>
-                </Border>
-
-                <StackPanel Grid.Row="0" Grid.Column="3"
-                    Orientation="Vertical" VerticalAlignment="Stretch">
-                    <TextBox Text="CAP VALUE" 
-                             FontSize="12"/>
-                    <TextBox Text="CAP Reference" 
-                             FontSize="12"/>
-                    <Button Content="Run test"/>
-                </StackPanel>
-                
-                <!--#region Additional status -->
-                <Border Grid.Row="1" Grid.Column="0" BorderThickness="1" 
-                        BorderBrush="{DynamicResource Animation.Lines}" 
-                        CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                    <!--<Border.Background>
-                            <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
-                                <Binding Path = "WD1QAFaultStatus"/>
-                                <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
-                            </MultiBinding>
-                        </Border.Background>-->
-                    <TextBlock Text="Aditional status" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-                                FontSize="10"/>
-                </Border>
-
-                <Border Grid.Row="1" Grid.Column="1" BorderThickness="1" 
-                        BorderBrush="{DynamicResource Animation.Lines}" 
-                        CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                    <!--<Border.Background>
-        <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
-            <Binding Path = "WD1QAFaultStatus"/>
-            <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
-        </MultiBinding>
-    </Border.Background>-->
-                    <TextBlock Text="Aditional status" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-            FontSize="10"/>
-                </Border>
-
-                <Border Grid.Row="1" Grid.Column="2" BorderThickness="1" 
-                        BorderBrush="{DynamicResource Animation.Lines}" 
-                        CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                    <!--<Border.Background>
-        <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
-            <Binding Path = "WD1QAFaultStatus"/>
-            <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
-        </MultiBinding>
-    </Border.Background>-->
-                    <TextBlock Text="Aditional status" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-            FontSize="10"/>
-                </Border>
-
-                <Border Grid.Row="2" Grid.Column="0" BorderThickness="1" 
-                        BorderBrush="{DynamicResource Animation.Lines}" 
-                        CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                    <!--<Border.Background>
-        <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
-            <Binding Path = "WD1QAFaultStatus"/>
-            <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
-        </MultiBinding>
-    </Border.Background>-->
-                    <TextBlock Text="Aditional status" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-            FontSize="10"/>
-                </Border>
-
-                <Border Grid.Row="2" Grid.Column="1" BorderThickness="1" 
-                        BorderBrush="{DynamicResource Animation.Lines}" 
-                        CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                    <!--<Border.Background>
-        <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
-            <Binding Path = "WD1QAFaultStatus"/>
-            <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
-        </MultiBinding>
-    </Border.Background>-->
-                    <TextBlock Text="Aditional status" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-            FontSize="10"/>
-                </Border>
-
-                <Border Grid.Row="2" Grid.Column="2" BorderThickness="1" 
-                        BorderBrush="{DynamicResource Animation.Lines}" 
-                        CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                    <!--<Border.Background>
-        <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
-            <Binding Path = "WD1QAFaultStatus"/>
-            <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
-        </MultiBinding>
-    </Border.Background>-->
-                    <TextBlock Text="Aditional status" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-            FontSize="10"/>
-                </Border>
-                <!--#endregion-->
-
-
-                <StackPanel Grid.Row="3" Grid.Column="0" Orientation="Vertical">
-                    <TextBlock 
-                        Text="Mode" HorizontalAlignment="Left"/>
-                    <Button Grid.Row="1" Grid.RowSpan="2" Grid.Column="0"
-                        Content="ASIC mode"/>
-                </StackPanel>
-
-
-                <StackPanel Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2"  Orientation="Vertical">
-                    <TextBlock Grid.Row="0" Grid.Column="1"
-                        Text="Runtime configuration" HorizontalAlignment="Center"/>
-                    <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
-                        <CheckBox/>
-                        <TextBlock Text="Enable alternative mode" HorizontalAlignment="Center"/>
-                    </StackPanel>
-                    <Button Grid.Row="2" Grid.Column="1"
-                        Content="Apply"/>
-                </StackPanel>
-
-            </Grid>
+        <TabControl Name="WatchdogPageControl" 
+                    Grid.Row="1" Grid.Column="1" 
+                    Background="{DynamicResource UI.BackGround}" BorderThickness="0">
             
-            
-        </Grid>
+            <TabItem Header="Configuration" FontSize="20" Style="{DynamicResource CustomTabItem}">
+
+                <Grid x:Name="FiringConfigurationPage">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="5"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="5"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="5"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="5"/>
+                    </Grid.RowDefinitions>
+
+                    <ComboBox Grid.Column="1" Grid.Row="1">
+                        <ComboBoxItem IsSelected="True">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBox Text="A - 1"/>
+                                <TextBox Text="Firing Loop"/>
+                            </StackPanel>
+                        </ComboBoxItem>
+
+                        <ComboBoxItem>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBox Text="B - 2"/>
+                                <TextBox Text="Firing Loop"/>
+                            </StackPanel>
+                        </ComboBoxItem>
+
+                        <ComboBoxItem>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBox Text="C - 2"/>
+                                <TextBox Text="Firing Loop"/>
+                            </StackPanel>
+                        </ComboBoxItem>
+
+                        <ComboBoxItem>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBox Text="D - 2"/>
+                                <TextBox Text="Firing Loop"/>
+                            </StackPanel>
+                        </ComboBoxItem>
+
+                        <ComboBoxItem>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBox Text="E - 10"/>
+                                <TextBox Text="Firing Loop"/>
+                            </StackPanel>
+                        </ComboBoxItem>
+
+                        <ComboBoxItem>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBox Text="F - 20"/>
+                                <TextBox Text="Firing Loop"/>
+                            </StackPanel>
+                        </ComboBoxItem>
+                    </ComboBox>
+
+                    <TextBlock  Grid.Column="1" Grid.Row="2"
+                                Text="Info placeholder"/>
+
+                    <ScrollViewer Grid.Column="2" Grid.Row="1" Grid.RowSpan="2"
+                                  HorizontalScrollBarVisibility="Visible"
+                                  Height="{Binding ActualHeight, ElementName=FiringConfigurationPage}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Column="0" Grid.Row="1" Text="1.1"/>
+                            <TextBlock Grid.Column="0" Grid.Row="2" Text="1.2"/>
+                            <TextBlock Grid.Column="0" Grid.Row="3" Text="1.3"/>
+                            <TextBlock Grid.Column="0" Grid.Row="4" Text="1.4"/>
+                            <TextBlock Grid.Column="0" Grid.Row="5" Text="1.5"/>
+                            <TextBlock Grid.Column="0" Grid.Row="6" Text="1.6"/>
+                            <TextBlock Grid.Column="0" Grid.Row="7" Text="1.7"/>
+                            <TextBlock Grid.Column="0" Grid.Row="8" Text="1.8"/>
+                            <TextBlock Grid.Column="0" Grid.Row="9" Text="1.9"/>
+                            <TextBlock Grid.Column="0" Grid.Row="10" Text="1.10"/>
+                            <TextBlock Grid.Column="0" Grid.Row="11" Text="1.11"/>
+                            <TextBlock Grid.Column="0" Grid.Row="12" Text="1.12"/>
+                            <TextBlock Grid.Column="0" Grid.Row="13" Text="1.13"/>
+                            <TextBlock Grid.Column="0" Grid.Row="14" Text="1.14"/>
+                            <TextBlock Grid.Column="0" Grid.Row="15" Text="1.15"/>
+                            <TextBlock Grid.Column="0" Grid.Row="16" Text="1.16"/>
+                            <TextBlock Grid.Column="0" Grid.Row="17" Text="1.17"/>
+                            <TextBlock Grid.Column="0" Grid.Row="18" Text="1.18"/>
+                            <TextBlock Grid.Column="0" Grid.Row="19" Text="1.19"/>
+                            <TextBlock Grid.Column="0" Grid.Row="20" Text="1.20"/>
+
+                            <TextBox Grid.Column="1" Grid.Row="1"  Text="Placeholder"/>
+                            <TextBox Grid.Column="1" Grid.Row="2"  Text="Placeholder"/>
+                            <TextBox Grid.Column="1" Grid.Row="3"  Text="Placeholder"/>
+                            <TextBox Grid.Column="1" Grid.Row="4"  Text="Placeholder"/>
+                            <TextBox Grid.Column="1" Grid.Row="5"  Text="Placeholder"/>
+                            <TextBox Grid.Column="1" Grid.Row="6"  Text="Placeholder"/>
+                            <TextBox Grid.Column="1" Grid.Row="7"  Text="Placeholder"/>
+                            <TextBox Grid.Column="1" Grid.Row="8"  Text="Placeholder"/>
+                            <TextBox Grid.Column="1" Grid.Row="9"  Text="Placeholder"/>
+                            <TextBox Grid.Column="1" Grid.Row="10" Text="Placeholder"/>
+                            <TextBox Grid.Column="1" Grid.Row="11" Text="Placeholder"/>
+                            <TextBox Grid.Column="1" Grid.Row="12" Text="Placeholder"/>
+                            <TextBox Grid.Column="1" Grid.Row="13" Text="Placeholder"/>
+                            <TextBox Grid.Column="1" Grid.Row="14" Text="Placeholder"/>
+                            <TextBox Grid.Column="1" Grid.Row="15" Text="Placeholder"/>
+                            <TextBox Grid.Column="1" Grid.Row="16" Text="Placeholder"/>
+                            <TextBox Grid.Column="1" Grid.Row="17" Text="Placeholder"/>
+                            <TextBox Grid.Column="1" Grid.Row="18" Text="Placeholder"/>
+                            <TextBox Grid.Column="1" Grid.Row="19" Text="Placeholder"/>
+                            <TextBox Grid.Column="1" Grid.Row="20" Text="Placeholder"/>
+
+                            <ComboBox Grid.Column="2" Grid.Row="1" Text="Placeholder"/>
+                            <ComboBox Grid.Column="2" Grid.Row="2" />
+                            <ComboBox Grid.Column="2" Grid.Row="3" />
+                            <ComboBox Grid.Column="2" Grid.Row="4" />
+                            <ComboBox Grid.Column="2" Grid.Row="5" />
+                            <ComboBox Grid.Column="2" Grid.Row="6" />
+                            <ComboBox Grid.Column="2" Grid.Row="7" />
+                            <ComboBox Grid.Column="2" Grid.Row="8" />
+                            <ComboBox Grid.Column="2" Grid.Row="9" />
+                            <ComboBox Grid.Column="2" Grid.Row="10"/>
+                            <ComboBox Grid.Column="2" Grid.Row="11"/>
+                            <ComboBox Grid.Column="2" Grid.Row="12"/>
+                            <ComboBox Grid.Column="2" Grid.Row="13"/>
+                            <ComboBox Grid.Column="2" Grid.Row="14"/>
+                            <ComboBox Grid.Column="2" Grid.Row="15"/>
+                            <ComboBox Grid.Column="2" Grid.Row="16"/>
+                            <ComboBox Grid.Column="2" Grid.Row="17"/>
+                            <ComboBox Grid.Column="2" Grid.Row="18"/>
+                            <ComboBox Grid.Column="2" Grid.Row="19"/>
+                            <ComboBox Grid.Column="2" Grid.Row="20"/>
+                        </Grid>
+                    </ScrollViewer>
+                </Grid>
+                
+            </TabItem>
+
+            <TabItem Header="Monitoring" FontSize="20" Style="{DynamicResource CustomTabItem}">
+
+
+            </TabItem>
+
+            <TabItem Header="Firing" FontSize="20" Style="{DynamicResource CustomTabItem}">
+
+
+            </TabItem>
+        </TabControl>
+
 
     </Grid>
 </Page>
