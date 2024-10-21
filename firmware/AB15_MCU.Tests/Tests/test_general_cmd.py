@@ -48,7 +48,7 @@ class TestDeviceID:
         assert self.serial.com_port.is_open == True, "COM port is closed, when expected to be open"
 
         # Output to be captured if test passes
-        print("ShieldBuddy is connected sucesfully at port", self.serial.com_port.name)
+        print("ShieldBuddy is connected successfully at port", self.serial.com_port.name)
 
     def test_IsAlive(self):
         ''' Check if "is alive" command is working
@@ -60,7 +60,7 @@ class TestDeviceID:
 
         # Act
         self.serial.com_port.write(packageToSend.serialize())
-        sleep(0.01)
+        sleep(0.1)
         is_response_received = self.serial.extract_packages()
         result = pkg.ReceivePackage(self.serial.packages.pop(0))
 
@@ -107,20 +107,20 @@ class TestDeviceID:
         # Act
         self.serial.com_port.write(packageToSend.serialize())
 
-        sleep(0.01)
+        sleep(0.1)
         is_response_received = self.serial.extract_packages()
         result = pkg.ReceivePackage(self.serial.packages.pop(0))
 
         # Assert
         assert is_response_received, "No response from MCU received"
-        assert (result.payload[0] == DEVICE_ID_AB15), f"Unexpected device ID. Expected {hex(DEVICE_ID_AB15)}, but received {result.payload[0]}"
+        assert (result.payload[0] == self.DEVICE_ID_AB15), f"Unexpected device ID. Expected {hex(DEVICE_ID_AB15)}, but received {result.payload[0]}"
 
         # Output to be captured if test passes
         print(f'MCU response with IC device ID: ', end='') # expected 0xAB 0x8F 0x00 0x80 0x01 0xC4 0xBE 0xBA
         for itm in result.package:
             print(f'{itm:#03x} ', end='')
 
-    @pytest.mark.parametrize("address,expected", [(0x000, 0x0241), (0x001, 0x0096)])
+    @pytest.mark.parametrize("address,data", [(0x000, 0x0241), (0x001, 0x0096)])
     def test_ReadReg(self, address, data):
         '''Checks if reading single register works as expected
         tests:
@@ -135,7 +135,7 @@ class TestDeviceID:
         # Act
         self.serial.com_port.write(packageToSend.serialize())
 
-        sleep(0.01)
+        sleep(0.1)
         is_response_received = self.serial.extract_packages()
         result = pkg.ReceivePackage(self.serial.packages.pop(0))
         received_value = pkg.Bytes2IntConverter(result.payload)
@@ -162,11 +162,11 @@ class TestDeviceID:
         # Act
         self.serial.com_port.write(packageToSend.serialize())
 
-        sleep(0.01)
+        sleep(0.1)
         is_response_received = self.serial.extract_packages()
         result = pkg.ReceivePackage(self.serial.packages.pop(0))
         received_value = pkg.Bytes2IntConverter(result.payload)
-
+        #  Todo convert to int array 
         # Assert
         assert is_response_received, "No response from MCU received"
         assert result.status == pkg.Status.DATA, f"Incorrect status in payload. Expected DATA, but received {result.status}"
