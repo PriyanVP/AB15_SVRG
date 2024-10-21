@@ -117,6 +117,43 @@ class ReceivePackage():
         if (self.stop_byte != pkg_const.END_BYTE_VALUE):
             raise Exception("Stop byte value is wrong")
 
+@typechecked
+class Int2BytesConverter():
+    '''Class to get individual bytes from int'''
+
+    def __init__(self, value:int):
+        # Precondition
+        if ((value > 0xFFFF) or (value < 0x0000)):
+            assert false, "Incorrect input for int to byte converter"
+
+        self.value = value
+
+        # Fields to get individual bytes
+        self.byte0 =  value & 0xFF
+        self.byte1 = (value & 0xFF00) >> 8
+
+        # As array
+        self.bytes = [self.byte0, self.byte1]
+
+@typechecked
+class Bytes2IntConverter():
+    '''Class to get int from individual bytes'''
+
+    def __init__(self, value_list:List[int]):
+        # Precondition
+        for itm in value_list:
+            if ((itm > 0xFF) or (itm < 0x00)):
+                assert false, "Incorrect input for byte to int converter"
+        if len(value_list) != 2:
+            assert false, "Unexpected package length"
+
+        # Main code
+        self.value_list = value_list
+        self.int_value = 0
+
+        for idx, itm in enumerate(value_list):
+            self.int_value |= itm << (idx * 8)
+
 
 # Selftest + usage example
 if __name__ == "__main__":
@@ -126,3 +163,4 @@ if __name__ == "__main__":
     package2 = ReceivePackage([0xAB, 0x80, 0x0, 0x83, 0x3, 0x0, 0x2, 0x0, 0xFE, 0xBA]) # example with GET_MCU_BUILD_VERSION response
 
     package3 = TransmitPackage()
+
