@@ -86,6 +86,7 @@ void QSPIDeinitPeriphery(void);
  * 3) Receives 32 bit package from slave\n
  * 4) Waits for configured time to avoid issues in communication
  *
+ * \param SpiBusSelectEnum defines on which SPI module the SPIt transaction is initiated
  * \param dataToSend pointer to buffer with data to send
  * \param dataToReceive pointer to empty buffer which will be filled with data from slave
  * \param length data length in bytes
@@ -102,6 +103,6 @@ void QSPIExchangeData(SpiBusSelectEnum spiBus, const uint32 * const dataToSend, 
  * \param spiChannel
  * \return SPI bus number.
  */
-uint8 QSPIUpdateChannelConfig(uint8 spiChannel);
+SpiBusSelectEnum QSPIUpdateChannelConfig(uint8 spiChannel);
 
 #endif /* SPI_H_ */

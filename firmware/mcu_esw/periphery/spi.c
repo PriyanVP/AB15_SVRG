@@ -372,18 +372,17 @@ void QSPIDeinitPeriphery(void)
     IfxPort_setPinModeInput(qspi2Slave11Select.pin->pin.port, qspi2Slave11Select.pin->pin.pinIndex, IfxPort_InputMode_noPullDevice);
 }
 
-// TODO: rename to exchane SPI1 , add SPI2
-void QSPIExchangeData(SpiBusSelectEnum SpiBusNumber, const uint32 * const dataToSend, uint32 * const dataOut, uint8 length)
+void QSPIExchangeData(SpiBusSelectEnum spiBusNumber, const uint32 * const dataToSend, uint32 * const dataOut, uint8 length)
 {
     // Temporary variables to store data with correct endian for communication
     uint32 dataToSendSwapped = SWAP_ENDIAN(*dataToSend);
     uint32 dataToRecive = 0;
 
-    if (SpiBusNumber < SPI_BUS_1) return;
-    if (SpiBusNumber > SPI_BUS_2) return;
+    if (spiBusNumber < SPI_BUS_1) return;
+    if (spiBusNumber > SPI_BUS_2) return;
 
     //use SpiBusSelectEnum as type would be good.
-    if (SpiBusNumber == SPI_BUS_1)
+    if (spiBusNumber == SPI_BUS_1)
     {
         sint32 timeout = IfxStm_getTicksFromMilliseconds(BSP_DEFAULT_TIMER, SPI_TIMEOUT);
         IfxQspi_SpiMaster_exchange(&g_qspi1.spiMasterChannel, &dataToSendSwapped, &dataToRecive, length);
@@ -393,7 +392,7 @@ void QSPIExchangeData(SpiBusSelectEnum SpiBusNumber, const uint32 * const dataTo
             if ((--timeout) <= 0) break;
         }
     }
-    if (SpiBusNumber == SPI_BUS_2)
+    if (spiBusNumber == SPI_BUS_2)
     {
         sint32 timeout = IfxStm_getTicksFromMilliseconds(BSP_DEFAULT_TIMER, SPI_TIMEOUT);
         IfxQspi_SpiMaster_exchange(&g_qspi2.spiMasterChannel, &dataToSendSwapped, &dataToRecive, length);
@@ -406,7 +405,7 @@ void QSPIExchangeData(SpiBusSelectEnum SpiBusNumber, const uint32 * const dataTo
     *dataOut = SWAP_ENDIAN(dataToRecive);
 }
 
-uint8 QSPIUpdateChannelConfig(uint8 spiChannel)
+SpiBusSelectEnum QSPIUpdateChannelConfig(uint8 spiChannel)
 {
     // Validate input
     if (spiChannel == SPI_CH_INVALID) return FALSE;
@@ -414,8 +413,8 @@ uint8 QSPIUpdateChannelConfig(uint8 spiChannel)
 
     // Initialize variables
     static SpiChSlaveSelectEnum currentSpiChannelConfig = SPI_CH_ENUM_LAST; // force init to correct channel
-    uint8 SpiChSlaveSelectLine;
-    static uint8 SpiBusNumber = SPI_BUS_INVALID;// make SpiBusNumber static in order to return current bus number correct even if no other channel is selected.
+    uint8 spiChSlaveSelectLine;
+    static SpiBusSelectEnum spiBusNumber = SPI_BUS_INVALID;// make spiBusNumber static in order to return current bus number correct even if no other channel is selected.
 
     /*if config has changed : reconfigure SPI bus and SLSO lines to selected channel*/
     if (spiChannel != currentSpiChannelConfig)
@@ -424,72 +423,72 @@ uint8 QSPIUpdateChannelConfig(uint8 spiChannel)
         switch(spiChannel)
         {
             case SPI1_CSMON1:                       /* SLSO8    */
-                SpiChSlaveSelectLine = SPI1_SLSO8;
-                SpiBusNumber = SPI_BUS_1;
+                spiChSlaveSelectLine = SPI1_SLSO8;
+                spiBusNumber = SPI_BUS_1;
                 break;
             case SPI1_CS1MASTER:                    /* SLSO8    */
-                SpiChSlaveSelectLine = SPI1_SLSO9;
-                SpiBusNumber = SPI_BUS_1;
+                spiChSlaveSelectLine = SPI1_SLSO9;
+                spiBusNumber = SPI_BUS_1;
                 break;
             case SPI1_CS1_SENSOR1:                  /* SLSO8    */
-                SpiChSlaveSelectLine = SPI1_SLSO5;
-                SpiBusNumber = SPI_BUS_1;
+                spiChSlaveSelectLine = SPI1_SLSO5;
+                spiBusNumber = SPI_BUS_1;
                 break;
             case SPI1_CS1_SENSOR2:                  /* SLSO8    */
-                SpiChSlaveSelectLine = SPI1_SLSO3;
-                SpiBusNumber = SPI_BUS_1;
+                spiChSlaveSelectLine = SPI1_SLSO3;
+                spiBusNumber = SPI_BUS_1;
                 break;
             case SPI1_CS1_SENSOR3:                  /* SLSO8    */
-                SpiChSlaveSelectLine = SPI1_SLSO4;
-                SpiBusNumber = SPI_BUS_1;
+                spiChSlaveSelectLine = SPI1_SLSO4;
+                spiBusNumber = SPI_BUS_1;
                 break;
             /* SPI 2 */
             case SPI2_CS2_SENSOR1:                  /* SLSO8    */
-                SpiChSlaveSelectLine = SPI2_SLSO5;
-                SpiBusNumber = SPI_BUS_2;
+                spiChSlaveSelectLine = SPI2_SLSO5;
+                spiBusNumber = SPI_BUS_2;
                 break;
             case SPI2_CS_MON2:                  /* SLSO8    */
-                SpiChSlaveSelectLine = SPI2_SLSO0;
-                SpiBusNumber = SPI_BUS_2;
+                spiChSlaveSelectLine = SPI2_SLSO0;
+                spiBusNumber = SPI_BUS_2;
                 break;
             case SPI2_CS2_SENSOR2:                  /* SLSO8    */
-                SpiChSlaveSelectLine = SPI2_SLSO8;
-                SpiBusNumber = SPI_BUS_2;
+                spiChSlaveSelectLine = SPI2_SLSO8;
+                spiBusNumber = SPI_BUS_2;
                 break;
             case SPI2_CS2_SLAVE1:                  /* SLSO8    */
-                SpiChSlaveSelectLine = SPI2_SLSO10;
-                SpiBusNumber = SPI_BUS_2;
+                spiChSlaveSelectLine = SPI2_SLSO10;
+                spiBusNumber = SPI_BUS_2;
                 break;
             case SPI2_CS2_SLAVE2:                  /* SLSO8    */
-                SpiChSlaveSelectLine = SPI2_SLSO9;
-                SpiBusNumber = SPI_BUS_2;
+                spiChSlaveSelectLine = SPI2_SLSO9;
+                spiBusNumber = SPI_BUS_2;
                 break;
             case SPI2_CS2_SLAVE3:                  /* SLSO8    */
-                SpiChSlaveSelectLine = SPI2_SLSO11;
-                SpiBusNumber = SPI_BUS_2;
+                spiChSlaveSelectLine = SPI2_SLSO11;
+                spiBusNumber = SPI_BUS_2;
                 break;
             default:
                 /* by default use SLSO9, default master    */
-                SpiChSlaveSelectLine = SPI1_SLSO9;
-                SpiBusNumber = SPI_BUS_1;
+                spiChSlaveSelectLine = SPI1_SLSO9;
+                spiBusNumber = SPI_BUS_1;
                break;
         }
 
-        switch(SpiBusNumber)
+        switch(spiBusNumber)
         {
             case SPI_BUS_1:                       /* SLSO8    */
-                QSPIMaster1ChannelInit(SpiChSlaveSelectLine);
+                QSPIMaster1ChannelInit(spiChSlaveSelectLine);
                 break;
             case SPI_BUS_2:                    /* SLSO8    */
-                QSPIMaster2ChannelInit(SpiChSlaveSelectLine);
+                QSPIMaster2ChannelInit(spiChSlaveSelectLine);
                 break;
             default:
-                SpiBusNumber = SPI_BUS_INVALID;
+                spiBusNumber = SPI_BUS_INVALID;
                 break;
         }
 
     }
 
 
-    return SpiBusNumber;
+    return spiBusNumber;
 }
