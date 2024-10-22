@@ -8,7 +8,7 @@
     <stringAttribute key="com.tasking.debug.cdt.core.FSS_ROOT" value="${project_loc}\${build_config}"/>
     <booleanAttribute key="com.tasking.debug.cdt.core.GOTO_MAIN" value="true"/>
     <booleanAttribute key="com.tasking.debug.cdt.core.INIT_TARGET" value="false"/>
-    <booleanAttribute key="com.tasking.debug.cdt.core.INTERRUPT_AWARE_STEPPING" value="false"/>
+    <booleanAttribute key="com.tasking.debug.cdt.core.INTERRUPT_AWARE_STEPPING" value="true"/>
     <booleanAttribute key="com.tasking.debug.cdt.core.PROGRAM_FLASH" value="true"/>
     <booleanAttribute key="com.tasking.debug.cdt.core.RESET_TARGET" value="true"/>
     <stringAttribute key="com.tasking.debug.cdt.core.TARGET" value="Generic Infineon AURIX Board"/>

@@ -12,6 +12,7 @@
 #include "common/spi_data_types.h"
 #include "common/command_queue.h"
 #include "common/bit_manipulation.h"
+#include "common/package_helper.h"
 #include "top/spi_wrapper.h"
 #include "top/usb_wrapper.h"
 
@@ -46,11 +47,13 @@ void CmdExecuteRWSequence(USBReceiveData const * const commandPackage)
     // Parameters for SPI packages and variable to store output data
     USBTransmitData packageToSend;
     uint16 address[rwSeqLength];
-    uint32 data[rwSeqLength];
+    SPIReceiveDataNormal dataReceived[rwSeqLength]; // will act as data to write to register and as responces from SPI
     RWFlagEnum rwOption[rwSeqLength];
-    SPIReceiveDataNormal dataRecived;
     uint16 length = (commandPackage->dataLength)/RW_ITEM_SIZE;
     boolean isSuccessfulFlag = FALSE;
+    uint8 spiChannel;
+
+    spiChannel = GetSpiChannelById(commandPackage->device_id);
 
     // Unpack received data to variables
     for (uint8 i = 0; i < length; i++)
@@ -59,15 +62,16 @@ void CmdExecuteRWSequence(USBReceiveData const * const commandPackage)
         uint8 dataArrayIdx = i*RW_ITEM_SIZE;
 
         // Unpack byte array item into corresponding variables
-        rwOption[i] = commandPackage->data[dataArrayIdx];
-        address[i]  = ConstructWordFromBytes(commandPackage->data[dataArrayIdx+3], commandPackage->data[dataArrayIdx+2]);
-        data[i]     = ConstructWordFromBytes(commandPackage->data[dataArrayIdx+5], commandPackage->data[dataArrayIdx+4]);
+        rwOption[i]         = commandPackage->data[dataArrayIdx];
+        address[i]          = ConstructWordFromBytes(commandPackage->data[dataArrayIdx+3], commandPackage->data[dataArrayIdx+2]);
+        dataReceived[i].dw  = ConstructWordFromBytes(commandPackage->data[dataArrayIdx+5], commandPackage->data[dataArrayIdx+4]);
     }
 
     // Send data to SPI with waiting for response
-    isSuccessfulFlag = QSPIReadWriteSequenceNormal(&address, &data, &rwOption, &length); // TODO: requires update
+    isSuccessfulFlag = QSPIReadWriteSequenceNormal(spiChannel, address, &(dataReceived[0].dw), rwOption, &length);
 
     // Construct package to PC
+    packageToSend.device_id = commandPackage->device_id;
     packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
 
     // Construct packages based on error status
@@ -76,31 +80,16 @@ void CmdExecuteRWSequence(USBReceiveData const * const commandPackage)
         // Common error frame setup
         packageToSend.status = USB_STATUS_ERROR;
         packageToSend.dataLength = 0;
-
-        // Check if SPI response frame was received
-        if (length > 0)
-        {
-            // Fill data in error frame with invalid response from CS600
-            // length variable holds first error SPI frame index
-            packageToSend.dataLength = 4;
-            packageToSend.data[0] = GetByteByIdx(0, data[length-1]);
-            packageToSend.data[1] = GetByteByIdx(1, data[length-1]);
-            packageToSend.data[2] = GetByteByIdx(2, data[length-1]);
-            packageToSend.data[3] = GetByteByIdx(3, data[length-1]);
-        }
     }
     else
     {
         packageToSend.status = USB_STATUS_DATA;
         packageToSend.dataLength = length << 1; // each data item is send as 2 bytes
 
-        for (uint8 i = 0; i < length; i++)
+        for (uint8 i = 0; i < packageToSend.dataLength; i += 2)
         {
-            // Store SPI response frame to temporary variable for extracting data
-            dataRecived.dw = data[i];
-
-            packageToSend.data[i*2]     = GetLSB(dataRecived.bf.output_data);
-            packageToSend.data[(i*2)+1] = GetMSB(dataRecived.bf.output_data);
+            packageToSend.data[i]   = GetLSB(dataReceived[i >> 1].bf.output_data);
+            packageToSend.data[i+1] = GetMSB(dataReceived[i >> 1].bf.output_data);
         }
     }
 
@@ -113,10 +102,12 @@ void CmdExecuteReadSequence(USBReceiveData const * const commandPackage)
     // Parameters for SPI packages and variable to store output data
     USBTransmitData packageToSend;
     uint16 address[readSeqLength];
-    uint32 data[readSeqLength];
-    SPIReceiveDataNormal dataRecived;
+    SPIReceiveDataNormal dataReceived[readSeqLength];
     uint16 length = (commandPackage->dataLength)/READ_ITEM_SIZE;
     boolean isSuccessfulFlag = FALSE;
+    uint8 spiChannel;
+
+    spiChannel = GetSpiChannelById(commandPackage->device_id);
 
     // Unpack received data to variables
     for (uint8 i = 0; i < length; i++)
@@ -129,9 +120,10 @@ void CmdExecuteReadSequence(USBReceiveData const * const commandPackage)
     }
 
     // Send data to SPI with waiting for response
-    isSuccessfulFlag = QSPIWriteSequenceNormal(&address, &data, &length);
+    isSuccessfulFlag = QSPIReadSequenceNormal(spiChannel, address, &(dataReceived[0].dw), &length);
 
     // Construct package to PC
+    packageToSend.device_id = commandPackage->device_id;
     packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
 
     // Construct packages based on error status
@@ -147,10 +139,10 @@ void CmdExecuteReadSequence(USBReceiveData const * const commandPackage)
             // Fill data in error frame with invalid response from CS600
             // length variable holds first error SPI frame index
             packageToSend.dataLength = 4;
-            packageToSend.data[0] = GetByteByIdx(0, data[length-1]);
-            packageToSend.data[1] = GetByteByIdx(1, data[length-1]);
-            packageToSend.data[2] = GetByteByIdx(2, data[length-1]);
-            packageToSend.data[3] = GetByteByIdx(3, data[length-1]);
+            packageToSend.data[0] = GetByteByIdx(0, dataReceived[length-1].dw);
+            packageToSend.data[1] = GetByteByIdx(1, dataReceived[length-1].dw);
+            packageToSend.data[2] = GetByteByIdx(2, dataReceived[length-1].dw);
+            packageToSend.data[3] = GetByteByIdx(3, dataReceived[length-1].dw);
         }
     }
     else
@@ -158,13 +150,10 @@ void CmdExecuteReadSequence(USBReceiveData const * const commandPackage)
         packageToSend.status = USB_STATUS_DATA;
         packageToSend.dataLength = length << 1; // each data item is send as 2 bytes
 
-        for (uint8 i = 0; i < length; i++)
+        for (uint8 i = 0; i < packageToSend.dataLength; i += 2)
         {
-            // Store SPI response frame to temporary variable for extracting data
-            dataRecived.dw = data[i];
-
-            packageToSend.data[i*2]     = GetLSB(dataRecived.bf.output_data);
-            packageToSend.data[(i*2)+1] = GetMSB(dataRecived.bf.output_data);
+            packageToSend.data[i]   = GetLSB(dataReceived[i >> 1].bf.output_data);
+            packageToSend.data[i+1] = GetMSB(dataReceived[i >> 1].bf.output_data);
         }
     }
 
@@ -177,10 +166,12 @@ void CmdExecuteWriteSequence(USBReceiveData const * const commandPackage)
     // Parameters for SPI packages and variable to store output data
     USBTransmitData packageToSend;
     uint16 address[writeSeqLength];
-    uint32 data[writeSeqLength];
-    SPIReceiveDataNormal dataRecived;
+    uint32 dataToSend[writeSeqLength];
     uint16 length = (commandPackage->dataLength)/WRITE_ITEM_SIZE;
     boolean isSuccessfulFlag = FALSE;
+    uint8 spiChannel;
+
+    spiChannel = GetSpiChannelById(commandPackage->device_id);
 
     // Unpack received data to variables
     for (uint8 i = 0; i < length; i++)
@@ -189,14 +180,15 @@ void CmdExecuteWriteSequence(USBReceiveData const * const commandPackage)
         uint8 dataArrayIdx = i*WRITE_ITEM_SIZE;
 
         // Unpack byte array item into corresponding variables
-        address[i]  = ConstructWordFromBytes(commandPackage->data[dataArrayIdx+1], commandPackage->data[dataArrayIdx+0]);
-        data[i]     = ConstructWordFromBytes(commandPackage->data[dataArrayIdx+3], commandPackage->data[dataArrayIdx+2]);
+        address[i]      = ConstructWordFromBytes(commandPackage->data[dataArrayIdx+1], commandPackage->data[dataArrayIdx+0]);
+        dataToSend[i]   = ConstructWordFromBytes(commandPackage->data[dataArrayIdx+3], commandPackage->data[dataArrayIdx+2]);
     }
 
     // Send data to SPI with waiting for response
-    isSuccessfulFlag = QSPIReadSequenceNormal(&address, &data, &length);
+    isSuccessfulFlag = QSPIWriteSequenceNormal(spiChannel, address, dataToSend, &length);
 
     // Construct package to PC
+    packageToSend.device_id = commandPackage->device_id;
     packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
 
     // Construct packages based on error status
@@ -205,18 +197,6 @@ void CmdExecuteWriteSequence(USBReceiveData const * const commandPackage)
         // Common error frame setup
         packageToSend.status = USB_STATUS_ERROR;
         packageToSend.dataLength = 0;
-
-        // Check if SPI response frame was received
-        if (length > 0)
-        {
-            // Fill data in error frame with invalid response from CS600
-            // length variable holds first error SPI frame index
-            packageToSend.dataLength = 4;
-            packageToSend.data[0] = GetByteByIdx(0, data[length-1]);
-            packageToSend.data[1] = GetByteByIdx(1, data[length-1]);
-            packageToSend.data[2] = GetByteByIdx(2, data[length-1]);
-            packageToSend.data[3] = GetByteByIdx(3, data[length-1]);
-        }
     }
     else
     {
