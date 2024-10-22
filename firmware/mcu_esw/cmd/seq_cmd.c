@@ -40,8 +40,6 @@ const uint8 writeSeqLength = MAX_USB_RECIEVE_PAYLOAD_LENGTH / WRITE_ITEM_SIZE;
 /*---------------------------------------------Function Implementations----------------------------------------------*/
 /*********************************************************************************************************************/
 
-#ifndef AB12_PLATFORM
-
 void CmdExecuteRWSequence(USBReceiveData const * const commandPackage)
 {
     // Parameters for SPI packages and variable to store output data
@@ -207,5 +205,3 @@ void CmdExecuteWriteSequence(USBReceiveData const * const commandPackage)
     // Send data back to MCU
     SendUSBPackage(&packageToSend);
 }
-
-#endif
