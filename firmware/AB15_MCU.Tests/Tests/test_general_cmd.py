@@ -8,7 +8,7 @@ from time import sleep
 from serial_fixtures import SerialWrapper
 import package_helper as pkg
 
-class TestDeviceID:
+class TestGeneralCommands:
     '''General commands tests'''
 
     # MCU firmware version TODO: find a vay to keep up-to-date automatically
