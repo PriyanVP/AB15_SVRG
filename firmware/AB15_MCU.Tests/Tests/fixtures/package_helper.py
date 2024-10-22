@@ -124,7 +124,7 @@ class Int2BytesConverter():
     def __init__(self, value:int):
         # Precondition
         if ((value > 0xFFFF) or (value < 0x0000)):
-            assert false, "Incorrect input for int to byte converter"
+            assert False, "Incorrect input for int to byte converter"
 
         self.value = value
 
@@ -143,9 +143,9 @@ class Bytes2IntConverter():
         # Precondition
         for itm in value_list:
             if ((itm > 0xFF) or (itm < 0x00)):
-                assert false, "Incorrect input for byte to int converter"
+                assert False, "Incorrect input for byte to int converter"
         if len(value_list) != 2:
-            assert false, "Unexpected package length"
+            assert False, "Unexpected package length"
 
         # Main code
         self.value_list = value_list

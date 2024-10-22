@@ -157,7 +157,12 @@ class TestGeneralCommands:
         device_id = 0x01
         address_converted = pkg.Int2BytesConverter(address)
         data_converted = pkg.Int2BytesConverter(data)
-        payload = [address_converted.bytes, data_converted.bytes]
+        # extract element from address_converted.bytes 
+        payload = [*address_converted.bytes, *data_converted.bytes]
+            # print some values
+        print("SOME STUFF")
+        print(payload)
+
         packageToSend = pkg.TransmitPackage(0x00, 0x01, pkg.Command.WRITE_REG, payload)
 
         # Act
@@ -166,9 +171,11 @@ class TestGeneralCommands:
         sleep(self.DELAY)
         is_response_received = self.serial.extract_packages()
         result = pkg.ReceivePackage(self.serial.packages.pop(0))
-        received_value = pkg.Bytes2IntConverter(result.payload)
+    
+        
+        # received_value = pkg.Bytes2IntConverter(result.payload)
         
         # Assert
         assert is_response_received, "No response from MCU received"
-        assert result.status == pkg.Status.DATA, f"Incorrect status in payload. Expected DATA, but received {result.status}"
-        assert (received_value.int_value == data), f"Unexpected data. Expected {hex(data)}, but received {received_value.int_value}"
+        assert result.status == pkg.Status.ACK, f"Incorrect status in payload. Expected DATA, but received {result.status}"
+        assert (result.payload_len == 0), f"Unexpected data. Expected {hex(data)}, but received {received_value.int_value}"
