@@ -97,7 +97,7 @@ class ReceivePackage():
         self.device_id     = self.package[pkg_const.ASIC_ID_POSITION]
         self.status      = Status(self.package[pkg_const.CMD_STATUS_POSITION])
         self.payload_len = self.package[pkg_const.PAYLOAD_LENGTH_POSITION]
-        self.payload     = self.package[pkg_const.PAYLOAD_POSITION : (pkg_const.PAYLOAD_POSITION + self.payload_len)]
+        self.payload     = list(self.package[pkg_const.PAYLOAD_POSITION : (pkg_const.PAYLOAD_POSITION + self.payload_len)])
         self.crc         = self.package[pkg_const.PAYLOAD_POSITION+self.payload_len]
         self.stop_byte   = self.package[pkg_const.PAYLOAD_POSITION+self.payload_len+pkg_const.CRC_LENGTH]
 

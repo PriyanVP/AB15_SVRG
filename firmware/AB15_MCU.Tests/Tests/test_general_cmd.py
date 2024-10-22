@@ -19,6 +19,9 @@ class TestDeviceID:
     # AB12/15 IC device ID
     DEVICE_ID_AB12 = 0xC4
     DEVICE_ID_AB15 = 0x04 # TODO: what is correct value?
+
+    # Delay for recieving MCU response
+    DELAY = 0.1
     
     @classmethod
     def setup_class(cls):
@@ -37,8 +40,6 @@ class TestDeviceID:
         '''group `basic` tests
         tests:
         - ShieldBuddy's serial connection to PC'''
-
-        # TODO: check if approach works
 
         # Arrange
 
@@ -60,7 +61,7 @@ class TestDeviceID:
 
         # Act
         self.serial.com_port.write(packageToSend.serialize())
-        sleep(0.1)
+        sleep(self.DELAY)
         is_response_received = self.serial.extract_packages()
         result = pkg.ReceivePackage(self.serial.packages.pop(0))
 
@@ -83,7 +84,7 @@ class TestDeviceID:
 
         # Act
         self.serial.com_port.write(packageToSend.serialize())
-        sleep(0.1)
+        sleep(self.DELAY)
         is_response_received = self.serial.extract_packages()
         result = pkg.ReceivePackage(self.serial.packages.pop(0))
 
@@ -107,7 +108,7 @@ class TestDeviceID:
         # Act
         self.serial.com_port.write(packageToSend.serialize())
 
-        sleep(0.1)
+        sleep(self.DELAY)
         is_response_received = self.serial.extract_packages()
         result = pkg.ReceivePackage(self.serial.packages.pop(0))
 
@@ -135,7 +136,7 @@ class TestDeviceID:
         # Act
         self.serial.com_port.write(packageToSend.serialize())
 
-        sleep(0.1)
+        sleep(self.DELAY)
         is_response_received = self.serial.extract_packages()
         result = pkg.ReceivePackage(self.serial.packages.pop(0))
         received_value = pkg.Bytes2IntConverter(result.payload)
@@ -162,11 +163,11 @@ class TestDeviceID:
         # Act
         self.serial.com_port.write(packageToSend.serialize())
 
-        sleep(0.1)
+        sleep(self.DELAY)
         is_response_received = self.serial.extract_packages()
         result = pkg.ReceivePackage(self.serial.packages.pop(0))
         received_value = pkg.Bytes2IntConverter(result.payload)
-        #  Todo convert to int array 
+        
         # Assert
         assert is_response_received, "No response from MCU received"
         assert result.status == pkg.Status.DATA, f"Incorrect status in payload. Expected DATA, but received {result.status}"
