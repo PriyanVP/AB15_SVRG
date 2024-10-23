@@ -39,6 +39,7 @@ void CmdConfigureReading(USBReceiveData const * const commandPackage)
 {
     // Create empty package
     USBTransmitData packageToSend;
+    packageToSend.device_id = commandPackage->device_id;
     packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
 
     // Set main fields to default values
@@ -117,6 +118,7 @@ void CmdStopReading(USBReceiveData const * const commandPackage)
     DisableContinuousReadInterrupt();
 
     // Send acknowlege back to MCU
+    packageToSend.device_id = commandPackage->device_id;
     packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
     packageToSend.status = USB_STATUS_ACK;
     packageToSend.dataLength = 2;
@@ -134,5 +136,5 @@ void IntCmdContRead(void)
     if (g_continuousReadConfigured == FALSE) return;
 
     // Call function to read sequence of registers (addresses to read set during feature configuration)
-    CmdExecuteReadSequence(&g_continuousReadPackage);
+    // CmdExecuteReadSequence(&g_continuousReadPackage); // TODO: uncomment
 }

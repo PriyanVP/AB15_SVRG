@@ -10,6 +10,7 @@
 #include "IfxAsclin_Asc.h"
 #include "_Utilities/Ifx_Assert.h"
 #include "common/usb_data_types.h"
+#include "common/global_defines.h"
 #include "top/crc_wrapper.h"
 #include "periphery/usb.h"
 #include "top/usb_wrapper.h"
@@ -59,7 +60,7 @@ boolean SendUSBPackage(const USBTransmitData * data)
     buffer[USB_MSG_ID_POS] = data->msg_id;
     itemCounter++;
 
-    buffer[USB_ASIC_ID_POS] = data->asic_id;
+    buffer[USB_ASIC_ID_POS] = data->device_id;
     itemCounter++;
 
     buffer[USB_CMD_STAT_POS] = data->status;
@@ -194,13 +195,15 @@ boolean ReceiveUSBPackage(USBReceiveData * const data)
     expectedCrc = buffer[messageLength - (USB_CRC_LENGTH + USB_STOPBYTE_LENGTH)];
     if (IsCRC8Correct(&(buffer[USB_MSG_ID_POS]), crcLength, expectedCrc) == FALSE)
     {
+        #ifndef BYPASS_CRC8_FOR_USB
         IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, FALSE);
         return FALSE;
+        #endif
     }
 
     // Unpack data from buffer to struct
     data->msg_id     = buffer[USB_MSG_ID_POS];
-    data->asic_id    = buffer[USB_ASIC_ID_POS];
+    data->device_id    = buffer[USB_ASIC_ID_POS];
     data->command    = (USBCommandsEnum) buffer[USB_CMD_STAT_POS];
     data->dataLength = buffer[USB_PAYLOAD_LEN_POS];
     for (uint16 i = 0; i < data->dataLength; i++)

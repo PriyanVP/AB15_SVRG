@@ -25,8 +25,13 @@
 #define ISR_PRIORITY_ASCLIN_ER        (12)            /** \brief Priority for interrupt ISR Errors                   */
 
 /* Interrupt Service Routine priorities for Master and Slave SPI communication */
-#define ISR_PRIORITY_MASTER_TX        (50)            /** \brief Priority for interrupt SPI ISR Transmit             */
-#define ISR_PRIORITY_MASTER_RX        (51)            /** \brief Priority for interrupt SPI ISR Receive              */
-#define ISR_PRIORITY_MASTER_ER        (52)            /** \brief Priority for interrupt SPI ISR Error                */
+#define ISR_PRIORITY_MASTER1_TX        (50)            /** \brief Priority for interrupt SPI ISR Transmit             */
+#define ISR_PRIORITY_MASTER1_RX        (51)            /** \brief Priority for interrupt SPI ISR Receive              */
+#define ISR_PRIORITY_MASTER1_ER        (52)            /** \brief Priority for interrupt SPI ISR Error                */
+
+/* Interrupt Service Routine priorities for Master and Slave SPI communication */
+#define ISR_PRIORITY_MASTER2_TX        (53)            /** \brief Priority for interrupt SPI ISR Transmit             */
+#define ISR_PRIORITY_MASTER2_RX        (54)            /** \brief Priority for interrupt SPI ISR Receive              */
+#define ISR_PRIORITY_MASTER2_ER        (55)            /** \brief Priority for interrupt SPI ISR Error                */
 
 #endif /* IFX_INTPRIODEF_H_ */
