@@ -21,7 +21,7 @@ class TestGeneralCommands:
     DEVICE_ID_AB15 = (0x0241 << 16) | 0x0096
 
     # Delay for recieving MCU response
-    DELAY = 0.1
+    DELAY = 0.1 # TODO: verify that duration is sufficient for all testcases
     
     @classmethod
     def setup_class(cls):
