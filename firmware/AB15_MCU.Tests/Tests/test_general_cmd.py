@@ -8,7 +8,7 @@ from time import sleep
 from serial_fixtures import SerialWrapper
 import package_helper as pkg
 
-class TestDeviceID:
+class TestGeneralCommands:
     '''General commands tests'''
 
     # MCU firmware version TODO: find a vay to keep up-to-date automatically
@@ -18,7 +18,10 @@ class TestDeviceID:
 
     # AB12/15 IC device ID
     DEVICE_ID_AB12 = 0xC4
-    DEVICE_ID_AB15 = 0xC4 # TODO: what is correct value?
+    DEVICE_ID_AB15 = 0x04 # TODO: what is correct value?
+
+    # Delay for recieving MCU response
+    DELAY = 0.1
     
     @classmethod
     def setup_class(cls):
@@ -38,8 +41,6 @@ class TestDeviceID:
         tests:
         - ShieldBuddy's serial connection to PC'''
 
-        # TODO: check if approach works
-
         # Arrange
 
         # Act
@@ -48,7 +49,7 @@ class TestDeviceID:
         assert self.serial.com_port.is_open == True, "COM port is closed, when expected to be open"
 
         # Output to be captured if test passes
-        print("ShieldBuddy is connected sucesfully at port", self.serial.com_port.name)
+        print("ShieldBuddy is connected successfully at port", self.serial.com_port.name)
 
     def test_IsAlive(self):
         ''' Check if "is alive" command is working
@@ -60,7 +61,7 @@ class TestDeviceID:
 
         # Act
         self.serial.com_port.write(packageToSend.serialize())
-        sleep(0.01)
+        sleep(self.DELAY)
         is_response_received = self.serial.extract_packages()
         result = pkg.ReceivePackage(self.serial.packages.pop(0))
 
@@ -83,7 +84,7 @@ class TestDeviceID:
 
         # Act
         self.serial.com_port.write(packageToSend.serialize())
-        sleep(0.1)
+        sleep(self.DELAY)
         is_response_received = self.serial.extract_packages()
         result = pkg.ReceivePackage(self.serial.packages.pop(0))
 
@@ -107,57 +108,67 @@ class TestDeviceID:
         # Act
         self.serial.com_port.write(packageToSend.serialize())
 
-        sleep(0.01)
+        sleep(self.DELAY)
         is_response_received = self.serial.extract_packages()
         result = pkg.ReceivePackage(self.serial.packages.pop(0))
 
         # Assert
         assert is_response_received, "No response from MCU received"
-        assert (result.payload[0] == DEVICE_ID_AB15), f"Unexpected device ID. Expected {hex(DEVICE_ID_AB15)}, but received {result.payload[0]}"
+        assert (result.payload[0] == self.DEVICE_ID_AB15), f"Unexpected device ID. Expected {hex(DEVICE_ID_AB15)}, but received {result.payload[0]}"
 
         # Output to be captured if test passes
         print(f'MCU response with IC device ID: ', end='') # expected 0xAB 0x8F 0x00 0x80 0x01 0xC4 0xBE 0xBA
         for itm in result.package:
             print(f'{itm:#03x} ', end='')
 
-    @pytest.mark.parametrize("address,expected", [(0x000, 0x0241), (0x001, 0x0096)])
-    def test_ReadReg(self, address):
+    @pytest.mark.parametrize("address,data", [(0x000, 0x0241), (0x001, 0x0096)])
+    def test_ReadReg(self, address, data):
         '''Checks if reading single register works as expected
         tests:
         - READ_REG'''
 
         # Arrange
-        packageToSend = pkg.TransmitPackage(0x00, 0x01, pkg.Command.READ_REG, )
+        msg_id = 0x00
+        device_id = 0x01
+        address_converted = pkg.Int2BytesConverter(address)
+        packageToSend = pkg.TransmitPackage(msg_id, device_id, pkg.Command.READ_REG, address_converted.bytes)
 
         # Act
         self.serial.com_port.write(packageToSend.serialize())
 
-        sleep(0.01)
+        sleep(self.DELAY)
         is_response_received = self.serial.extract_packages()
         result = pkg.ReceivePackage(self.serial.packages.pop(0))
+        received_value = pkg.Bytes2IntConverter(result.payload)
 
         # Assert
         assert is_response_received, "No response from MCU received"
         assert result.status == pkg.Status.DATA, f"Incorrect status in payload. Expected DATA, but received {result.status}"
-        assert (result.payload[0] == DEVICE_ID_AB15), f"Unexpected device ID. Expected {hex(DEVICE_ID_AB15)}, but received {result.payload[0]}"
+        assert (received_value.int_value == data), f"Unexpected data. Expected {hex(data)}, but received {received_value.int_value}"
 
-    # @pytest.mark.parametrize("address,data, expected", [(0x000, 0x, 0x), (0x001, 0x)])
-    # def test_WriteReg(self, address):
-    #     '''Checks if writing single register works as expected
-    #     tests:
-    #     - WRITE_REG'''
+    @pytest.mark.parametrize("address,data,expected", [(0x030, 0x006, 0x006)])
+    def test_WriteReg(self, address, data, expected):
+        '''Checks if writing single register works as expected
+        tests:
+        - WRITE_REG'''
 
-    #     # Arrange
-    #     packageToSend = pkg.TransmitPackage(0x00, 0x01, pkg.Command.WRITE_REG, )
+        # Arrange
+        msg_id = 0x00
+        device_id = 0x01
+        address_converted = pkg.Int2BytesConverter(address)
+        data_converted = pkg.Int2BytesConverter(data)
+        payload = [*address_converted.bytes, *data_converted.bytes]
 
-    #     # Act
-    #     self.serial.com_port.write(packageToSend.serialize())
+        packageToSend = pkg.TransmitPackage(0x00, 0x01, pkg.Command.WRITE_REG, payload)
 
-    #     sleep(0.01)
-    #     is_response_received = self.serial.extract_packages()
-    #     result = pkg.ReceivePackage(self.serial.packages.pop(0))
+        # Act
+        self.serial.com_port.write(packageToSend.serialize())
 
-    #     # Assert
-    #     assert is_response_received, "No response from MCU received"
-    #     assert result.status == pkg.Status.DATA, f"Incorrect status in payload. Expected DATA, but received {result.status}"
-    #     assert (result.payload[0] == DEVICE_ID_AB15), f"Unexpected device ID. Expected {hex(DEVICE_ID_AB15)}, but received {result.payload[0]}"
+        sleep(self.DELAY)
+        is_response_received = self.serial.extract_packages()
+        result = pkg.ReceivePackage(self.serial.packages.pop(0))
+        
+        # Assert
+        assert is_response_received, "No response from MCU received"
+        assert result.status == pkg.Status.ACK, f"Incorrect status in payload. Expected ACK, but received {result.status}"
+        assert (result.payload_len == 0), f"Unexpected data. Expected empty payload, but received {result.payload}"
