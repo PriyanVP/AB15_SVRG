@@ -111,11 +111,11 @@ class TestGeneralCommands:
         sleep(self.DELAY)
         is_response_received = self.serial.extract_packages()
         result = pkg.ReceivePackage(self.serial.packages.pop(0))
-        received_value = pkg.Bytes2IntConverter(result.payload)
+        received_value = (result.payload[0] & 0xFF ) | ((result.payload[1] << 8) & 0xFF00 ) | ((result.payload[2] << 16) & 0xFF0000)  | ((result.payload[3] << 24) & 0xFF000000)
 
         # Assert
         assert is_response_received, "No response from MCU received"
-        assert (received_value.int_value == self.DEVICE_ID_AB15), f"Unexpected device ID. Expected {hex(self.DEVICE_ID_AB15)}, but received {received_value.int_value}"
+        assert (received_value == self.DEVICE_ID_AB15), f"Unexpected device ID. Expected {hex(self.DEVICE_ID_AB15)}, but received {received_value}"
 
         # Output to be captured if test passes
         print(f'MCU response with IC device ID: ', end='')
