@@ -33,7 +33,7 @@
                 <Grid x:Name="FiringConfigurationPage">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="5"/>
-                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto" MinWidth="250"/>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="5"/>
                     </Grid.ColumnDefinitions>
@@ -45,8 +45,8 @@
                         <RowDefinition Height="5"/>
                     </Grid.RowDefinitions>
 
-                    <ComboBox Grid.Column="1" Grid.Row="1">
-                        <ComboBoxItem IsSelected="True">
+                    <ComboBox Grid.Column="1" Grid.Row="1" Margin="5" SelectionChanged="ComboBox_SelectionChanged" SelectedItem="1">
+                        <ComboBoxItem>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="A - 1"/>
                                 <TextBlock Text=" - Firing Loop"/>
@@ -89,108 +89,136 @@
                         </ComboBoxItem>
                     </ComboBox>
 
-                    <TextBlock  Grid.Column="1" Grid.Row="2"
-                                Text="Info placeholder"/>
+                    <TextBox  Grid.Column="1" Grid.Row="2" Margin="5" FontSize="20"
+                                Text="Info placeholder" TextWrapping="Wrap" TextAlignment="Left"/>
 
                     <Border Grid.Column="2" Grid.Row="1" Grid.RowSpan="2" BorderThickness="1" BorderBrush="Black">
-                        <ScrollViewer Margin="2"
-                                  HorizontalScrollBarVisibility="Visible"
-                                  Height="{Binding ActualHeight, ElementName=FiringConfigurationPage}">
+                        <StackPanel Orientation="Vertical">
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="auto"/>
-                                    <ColumnDefinition Width="auto"/>
-                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="5" />
+                                    <ColumnDefinition Width="40" MinWidth="80"/>
+                                    <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition Width="100"/>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="5" />
                                 </Grid.ColumnDefinitions>
 
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="auto"/>
-                                    <RowDefinition Height="auto"/>
-                                    <RowDefinition Height="auto"/>
-                                    <RowDefinition Height="auto"/>
-                                    <RowDefinition Height="auto"/>
-                                    <RowDefinition Height="auto"/>
-                                    <RowDefinition Height="auto"/>
-                                    <RowDefinition Height="auto"/>
-                                    <RowDefinition Height="auto"/>
-                                    <RowDefinition Height="auto"/>
-                                    <RowDefinition Height="auto"/>
-                                    <RowDefinition Height="auto"/>
-                                    <RowDefinition Height="auto"/>
-                                    <RowDefinition Height="auto"/>
-                                    <RowDefinition Height="auto"/>
-                                    <RowDefinition Height="auto"/>
-                                    <RowDefinition Height="auto"/>
-                                    <RowDefinition Height="auto"/>
-                                    <RowDefinition Height="auto"/>
-                                    <RowDefinition Height="auto"/>
-                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="2"/>
+                                    <RowDefinition Height="1"/>
                                 </Grid.RowDefinitions>
 
-                                <TextBlock Margin="3" Grid.Column="0" Grid.Row="1"  Text="1.1"/>
-                                <TextBlock Margin="3" Grid.Column="0" Grid.Row="2"  Text="1.2"/>
-                                <TextBlock Margin="3" Grid.Column="0" Grid.Row="3"  Text="1.3"/>
-                                <TextBlock Margin="3" Grid.Column="0" Grid.Row="4"  Text="1.4"/>
-                                <TextBlock Margin="3" Grid.Column="0" Grid.Row="5"  Text="1.5"/>
-                                <TextBlock Margin="3" Grid.Column="0" Grid.Row="6"  Text="1.6"/>
-                                <TextBlock Margin="3" Grid.Column="0" Grid.Row="7"  Text="1.7"/>
-                                <TextBlock Margin="3" Grid.Column="0" Grid.Row="8"  Text="1.8"/>
-                                <TextBlock Margin="3" Grid.Column="0" Grid.Row="9"  Text="1.9"/>
-                                <TextBlock Margin="3" Grid.Column="0" Grid.Row="10" Text="1.10"/>
-                                <TextBlock Margin="3" Grid.Column="0" Grid.Row="11" Text="1.11"/>
-                                <TextBlock Margin="3" Grid.Column="0" Grid.Row="12" Text="1.12"/>
-                                <TextBlock Margin="3" Grid.Column="0" Grid.Row="13" Text="1.13"/>
-                                <TextBlock Margin="3" Grid.Column="0" Grid.Row="14" Text="1.14"/>
-                                <TextBlock Margin="3" Grid.Column="0" Grid.Row="15" Text="1.15"/>
-                                <TextBlock Margin="3" Grid.Column="0" Grid.Row="16" Text="1.16"/>
-                                <TextBlock Margin="3" Grid.Column="0" Grid.Row="17" Text="1.17"/>
-                                <TextBlock Margin="3" Grid.Column="0" Grid.Row="18" Text="1.18"/>
-                                <TextBlock Margin="3" Grid.Column="0" Grid.Row="19" Text="1.19"/>
-                                <TextBlock Margin="3" Grid.Column="0" Grid.Row="20" Text="1.20"/>
+                                <Canvas Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="4" Background="{DynamicResource UI.SeparateLine}"/>
 
-                                <TextBox Margin="3" Grid.Column="1" Grid.Row="1"  Text="Placeholder"/>
-                                <TextBox Margin="3" Grid.Column="1" Grid.Row="2"  Text="Placeholder"/>
-                                <TextBox Margin="3" Grid.Column="1" Grid.Row="3"  Text="Placeholder"/>
-                                <TextBox Margin="3" Grid.Column="1" Grid.Row="4"  Text="Placeholder"/>
-                                <TextBox Margin="3" Grid.Column="1" Grid.Row="5"  Text="Placeholder"/>
-                                <TextBox Margin="3" Grid.Column="1" Grid.Row="6"  Text="Placeholder"/>
-                                <TextBox Margin="3" Grid.Column="1" Grid.Row="7"  Text="Placeholder"/>
-                                <TextBox Margin="3" Grid.Column="1" Grid.Row="8"  Text="Placeholder"/>
-                                <TextBox Margin="3" Grid.Column="1" Grid.Row="9"  Text="Placeholder"/>
-                                <TextBox Margin="3" Grid.Column="1" Grid.Row="10" Text="Placeholder"/>
-                                <TextBox Margin="3" Grid.Column="1" Grid.Row="11" Text="Placeholder"/>
-                                <TextBox Margin="3" Grid.Column="1" Grid.Row="12" Text="Placeholder"/>
-                                <TextBox Margin="3" Grid.Column="1" Grid.Row="13" Text="Placeholder"/>
-                                <TextBox Margin="3" Grid.Column="1" Grid.Row="14" Text="Placeholder"/>
-                                <TextBox Margin="3" Grid.Column="1" Grid.Row="15" Text="Placeholder"/>
-                                <TextBox Margin="3" Grid.Column="1" Grid.Row="16" Text="Placeholder"/>
-                                <TextBox Margin="3" Grid.Column="1" Grid.Row="17" Text="Placeholder"/>
-                                <TextBox Margin="3" Grid.Column="1" Grid.Row="18" Text="Placeholder"/>
-                                <TextBox Margin="3" Grid.Column="1" Grid.Row="19" Text="Placeholder"/>
-                                <TextBox Margin="3" Grid.Column="1" Grid.Row="20" Text="Placeholder"/>
+                                <TextBlock  Grid.Column="1" Margin="0,0,5,0" FontSize="20"
+                                            Text="#" HorizontalAlignment="Center">
 
-                                <ComboBox Margin="3" Grid.Column="2" Grid.Row="1" />
-                                <ComboBox Margin="3" Grid.Column="2" Grid.Row="2" />
-                                <ComboBox Margin="3" Grid.Column="2" Grid.Row="3" />
-                                <ComboBox Margin="3" Grid.Column="2" Grid.Row="4" />
-                                <ComboBox Margin="3" Grid.Column="2" Grid.Row="5" />
-                                <ComboBox Margin="3" Grid.Column="2" Grid.Row="6" />
-                                <ComboBox Margin="3" Grid.Column="2" Grid.Row="7" />
-                                <ComboBox Margin="3" Grid.Column="2" Grid.Row="8" />
-                                <ComboBox Margin="3" Grid.Column="2" Grid.Row="9" />
-                                <ComboBox Margin="3" Grid.Column="2" Grid.Row="10"/>
-                                <ComboBox Margin="3" Grid.Column="2" Grid.Row="11"/>
-                                <ComboBox Margin="3" Grid.Column="2" Grid.Row="12"/>
-                                <ComboBox Margin="3" Grid.Column="2" Grid.Row="13"/>
-                                <ComboBox Margin="3" Grid.Column="2" Grid.Row="14"/>
-                                <ComboBox Margin="3" Grid.Column="2" Grid.Row="15"/>
-                                <ComboBox Margin="3" Grid.Column="2" Grid.Row="16"/>
-                                <ComboBox Margin="3" Grid.Column="2" Grid.Row="17"/>
-                                <ComboBox Margin="3" Grid.Column="2" Grid.Row="18"/>
-                                <ComboBox Margin="3" Grid.Column="2" Grid.Row="19"/>
-                                <ComboBox Margin="3" Grid.Column="2" Grid.Row="20"/>
+                                </TextBlock>
+
+                                <TextBlock Grid.Column="2" Margin="0,0,5,0" FontSize="20"
+                                               Text="Identifier" HorizontalAlignment="Center">
+                                </TextBlock>
+
+                                <TextBlock Grid.Column="3" Margin="0,0,5,0" FontSize="20"
+                                               Text="Mode" HorizontalAlignment="Center">
+                                </TextBlock>
+
                             </Grid>
-                        </ScrollViewer>
+                            <ListView   Grid.Row="1" Grid.Column="1" Name="ConfigChannelsTableView" 
+                                    ItemsSource="{Binding ConfigChannelsTable}"
+                                    ItemContainerStyle="{DynamicResource ListViewItemStyle}" 
+                                    FontSize="20">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="5" />
+                                                <ColumnDefinition Width="40" MinWidth="80"/>
+                                                <ColumnDefinition Width="120"/>
+                                                <ColumnDefinition Width="100"/>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="5" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="auto"/>
+                                                <RowDefinition Height="2"/>
+                                                <RowDefinition Height="1"/>
+                                            </Grid.RowDefinitions>
+
+                                            <Canvas Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="4" Background="{DynamicResource UI.SeparateLine}"/>
+
+                                            <TextBlock  Grid.Column="1" Margin="0,0,5,0" FontSize="20" HorizontalAlignment="Center">
+                                                <TextBlock.Text>
+                                                    <MultiBinding StringFormat="{}{0}.{1}">
+                                                        <Binding Path="ASICID" />
+                                                        <Binding Path="ChannelID" />
+                                                    </MultiBinding>
+                                                </TextBlock.Text>
+                                            </TextBlock>
+
+                                            <TextBox    Grid.Column="2" Margin="0,0,5,0" FontSize="20"
+                                                        Text="{Binding IdentifierName, Mode=TwoWay}">
+                                            </TextBox>
+
+                                            <ComboBox   Grid.Column="3" Margin="0,0,5,0" SelectedItem="{Binding IndexMode, Mode=TwoWay}">
+                                                <ComboBoxItem Tag="0">
+                                                    <TextBlock Text="OFF"/>
+                                                </ComboBoxItem>
+                                                <ComboBoxItem Tag="1" IsEnabled="False">
+                                                    <TextBlock Text="Mode 1"/>
+                                                </ComboBoxItem>
+                                                <ComboBoxItem Tag="2">
+                                                    <TextBlock Text="Mode 1a"/>
+                                                </ComboBoxItem>
+                                                <ComboBoxItem Tag="3">
+                                                    <TextBlock Text="Mode 2"/>
+                                                </ComboBoxItem>
+                                                <ComboBoxItem Tag="4">
+                                                    <TextBlock Text="Mode 2a"/>
+                                                </ComboBoxItem>
+                                                <ComboBoxItem Tag="5">
+                                                    <TextBlock Text="Mode 3"/>
+                                                </ComboBoxItem>
+                                                <ComboBoxItem Tag="6">
+                                                    <TextBlock Text="Mode 4"/>
+                                                </ComboBoxItem>
+                                                <ComboBoxItem Tag="7">
+                                                    <TextBlock Text="Mode 4a"/>
+                                                </ComboBoxItem>
+                                                <ComboBoxItem Tag="8">
+                                                    <TextBlock Text="Mode 5"/>
+                                                </ComboBoxItem>
+                                                <ComboBoxItem Tag="9">
+                                                    <TextBlock Text="Mode 5a"/>
+                                                </ComboBoxItem>
+                                                <ComboBoxItem Tag="10">
+                                                    <TextBlock Text="Mode 6"/>
+                                                </ComboBoxItem>
+                                                <ComboBoxItem Tag="11">
+                                                    <TextBlock Text="Mode 6a"/>
+                                                </ComboBoxItem>
+                                                <ComboBoxItem Tag="12">
+                                                    <TextBlock Text="Mode 7"/>
+                                                </ComboBoxItem>
+                                                <ComboBoxItem Tag="13">
+                                                    <TextBlock Text="Mode 7a"/>
+                                                </ComboBoxItem>
+                                                <ComboBoxItem Tag="14">
+                                                    <TextBlock Text="Mode 8"/>
+                                                </ComboBoxItem>
+                                                <ComboBoxItem Tag="15">
+                                                    <TextBlock Text="Mode 9"/>
+                                                </ComboBoxItem>
+                                            </ComboBox>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </StackPanel>
+                        
                     </Border>
                 </Grid>
                 
@@ -206,7 +234,6 @@
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="5"/>
-                        <ColumnDefinition Width="auto"/>
                         <ColumnDefinition Width="auto"/>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="5"/>
@@ -319,51 +346,99 @@
                         </ComboBox>
                     </StackPanel>
 
-                    <ListView   Grid.Row="1" Grid.Column="1" Name="LogTable" 
-                                ItemsSource="{Binding LoggerRecords}"
+                    <Border Grid.Row="1" Grid.RowSpan="2" Grid.Column="2" BorderThickness="1" BorderBrush="Black" Margin="5">
+                        <StackPanel Orientation="Vertical">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="5" />
+                                    <ColumnDefinition Width="40"/>
+                                    <ColumnDefinition Width="120" MinWidth="80"/>
+                                    <ColumnDefinition Width="100" MinWidth="80"/>
+                                    <ColumnDefinition Width="100" MinWidth="80"/>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="5" />
+                                </Grid.ColumnDefinitions>
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="2"/>
+                                    <RowDefinition Height="1"/>
+                                </Grid.RowDefinitions>
+
+                                <Canvas Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="5" Background="{DynamicResource UI.SeparateLine}"/>
+
+                                <TextBlock  Grid.Column="1" Margin="0,0,5,0" FontSize="20"
+                                            Text="#" HorizontalAlignment="Center">
+                                 
+                                </TextBlock>
+
+                                <TextBlock Grid.Column="2" Margin="0,0,5,0" FontSize="20"
+                                               Text="Identifier" HorizontalAlignment="Center">
+                                </TextBlock>
+
+                                <TextBlock Grid.Column="3" Margin="0,0,5,0" FontSize="20"
+                                               Text="ToFire" HorizontalAlignment="Center">
+                                </TextBlock>
+
+                                <TextBlock Grid.Column="4" Margin="0,0,5,0" FontSize="20"
+                                               Text="WasFired" HorizontalAlignment="Center">
+                                </TextBlock>
+                            </Grid>
+                            <ListView   Name="FiringResultTableView" 
+                                ItemsSource="{Binding FiringResultTable}"
                                 ItemContainerStyle="{DynamicResource ListViewItemStyle}" 
-                                FontSize="{Binding LogTableFontSize, RelativeSource={RelativeSource AncestorType={x:Type local:LoggerView}}}">
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="5" />
-                                        <ColumnDefinition Width="auto"/>
-                                        <ColumnDefinition Width="auto" MinWidth="80"/>
-                                        <ColumnDefinition Width="auto"/>
-                                        <ColumnDefinition Width="auto"/>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="5" />
-                                    </Grid.ColumnDefinitions>
+                                FontSize="20">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="5" />
+                                                <ColumnDefinition Width="40"/>
+                                                <ColumnDefinition Width="120" MinWidth="80"/>
+                                                <ColumnDefinition Width="100" MinWidth="80"/>
+                                                <ColumnDefinition Width="100" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="5" />
+                                            </Grid.ColumnDefinitions>
 
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="auto"/>
-                                        <RowDefinition Height="2"/>
-                                        <RowDefinition Height="1"/>
-                                    </Grid.RowDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="auto"/>
+                                                <RowDefinition Height="2"/>
+                                                <RowDefinition Height="1"/>
+                                            </Grid.RowDefinitions>
 
-                                    <Canvas Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="4" Background="{DynamicResource UI.SeparateLine}"/>
+                                            <Canvas Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="5" Background="{DynamicResource UI.SeparateLine}"/>
 
-                                    <TextBlock Grid.Column="1" Margin="0,0,5,0"
-                                               Text="{Binding Number}">
-                                    </TextBlock>
+                                            <TextBlock  Grid.Column="1" Margin="0,0,5,0" FontSize="20">
+                                                <TextBlock.Text>
+                                                    <MultiBinding StringFormat="{}{0}.{1}">
+                                                        <Binding Path="ASICID" />
+                                                        <Binding Path="ChannelID" />
+                                                    </MultiBinding>
+                                                </TextBlock.Text>
+                                            </TextBlock>
 
-                                    <TextBlock Grid.Column="2" Margin="0,0,5,0"
-                                               Text="{Binding Identifier}">
-                                    </TextBlock>
+                                            <TextBlock Grid.Column="2" Margin="0,0,5,0" FontSize="20"
+                                               Text="{Binding IdentifierName}"
+                                                       HorizontalAlignment="Center">
+                                            </TextBlock>
 
-                                    <TextBlock Grid.Column="3" Margin="0,0,5,0"
-                                               Text="{Binding ToFire}">
-                                    </TextBlock>
+                                            <TextBlock Grid.Column="3" Margin="0,0,5,0" FontSize="20"
+                                               Text="{Binding ToFire}"
+                                                       HorizontalAlignment="Center">
+                                            </TextBlock>
 
-                                    <TextBlock Grid.Column="4" Margin="0,0,5,0"
-                                               Text="{Binding WasFired}">
-                                    </TextBlock>
+                                            <TextBlock Grid.Column="4" Margin="0,0,5,0" FontSize="20"
+                                               Text="{Binding WasFired}"
+                                                       HorizontalAlignment="Center">
+                                            </TextBlock>
 
-                                </Grid>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </StackPanel>
+                    </Border>
 
 
 
