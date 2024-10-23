@@ -18,7 +18,7 @@ class TestGeneralCommands:
 
     # AB12/15 IC device ID
     DEVICE_ID_AB12 = 0xC4
-    DEVICE_ID_AB15 = 0x04 # TODO: what is correct value?
+    DEVICE_ID_AB15 = (0x0241 << 16) | 0x0096
 
     # Delay for recieving MCU response
     DELAY = 0.1
@@ -111,13 +111,14 @@ class TestGeneralCommands:
         sleep(self.DELAY)
         is_response_received = self.serial.extract_packages()
         result = pkg.ReceivePackage(self.serial.packages.pop(0))
+        received_value = pkg.Bytes2IntConverter(result.payload)
 
         # Assert
         assert is_response_received, "No response from MCU received"
-        assert (result.payload[0] == self.DEVICE_ID_AB15), f"Unexpected device ID. Expected {hex(DEVICE_ID_AB15)}, but received {result.payload[0]}"
+        assert (received_value.int_value == self.DEVICE_ID_AB15), f"Unexpected device ID. Expected {hex(self.DEVICE_ID_AB15)}, but received {received_value.int_value}"
 
         # Output to be captured if test passes
-        print(f'MCU response with IC device ID: ', end='') # expected 0xAB 0x8F 0x00 0x80 0x01 0xC4 0xBE 0xBA
+        print(f'MCU response with IC device ID: ', end='')
         for itm in result.package:
             print(f'{itm:#03x} ', end='')
 
