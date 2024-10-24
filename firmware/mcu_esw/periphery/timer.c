@@ -324,5 +324,4 @@ void ServiceTimerRoutineWrapper(void)
     // Call interrupt routine function from other file
     //TODO. Inhibited
     //ServiceInterruptRoutine();
-    ToggleLED2();
 }

@@ -64,7 +64,7 @@ class SerialWrapper():
         is_package_found = False
         tmp_package = []
 
-        while (self.com_port.in_waiting > pkg_const.MIN_PACKAGE_LENGTH):
+        while (self.com_port.in_waiting >= pkg_const.MIN_PACKAGE_LENGTH):
             # Read first byte
             tmp = self.com_port.read(pkg_const.START_BYTE_LENGTH) 
             tmp_package.extend([byte for byte in tmp]) # append bytes from buffer as individual int values
