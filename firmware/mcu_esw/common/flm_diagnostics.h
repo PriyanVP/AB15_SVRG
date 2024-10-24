@@ -61,7 +61,9 @@ typedef enum
 /*-------------------------------------------------Data Structures-------------------------------------------------------*/
 /*************************************************************************************************************************/
 
-/** \brief Structure to store FLM cyclic diagnostics fault flags  
+// TODO: transfer FLM Diag - specific type declarations to .c file to reduce visibility scope
+
+/** \brief Structure to store fault flags of FLM cyclic diagnostics  
  */
 typedef struct
 {
@@ -71,6 +73,16 @@ typedef struct
     bool    FLM_SquibDetErr_fault;                          /** \brief  */
     
 } FLMCycDiagFaults;
+
+/** \brief Structure to store execution status of FLM cyclic diagnostic
+*/
+typedef struct
+{
+    flm_VHxMeasStatusEnum       flm_VHxMeasStatus;      /** \brief  */
+    flm_LoopResMeasStatusEnum   flm_LoopResMeasStatus;  /** \brief  */
+    flm_SquibDetStatusEnum      flm_SquibDetStatus;     /** \brief  */
+
+} FLMCycDiagStatus;
 
 /** \brief Structure to store results of cyclic tests  
  */
@@ -95,88 +107,22 @@ typedef struct
 
 } FLMShortDiagResults;
 
-/** \brief Structure to store results of FLM channel VH voltages diagnostic
- */
-typedef struct
-{
-    uint16 FLM_Read_Diag_VH1a_voltage_value;          /** \brief  */
-    uint16 FLM_Read_Diag_VH1b_voltage_value;          /** \brief  */
-    uint16 FLM_Read_Diag_VH2_voltage_value;           /** \brief  */
-    uint16 FLM_Read_Diag_VH3_voltage_value;           /** \brief  */
-    uint16 FLM_Read_Diag_VH4_voltage_value;           /** \brief  */
-    uint16 FLM_Read_Diag_VH5_voltage_value;           /** \brief  */
-    uint16 FLM_Read_Diag_VH6_voltage_value;           /** \brief  */
-    uint16 FLM_Read_Diag_VH7_voltage_value;           /** \brief  */
-    uint16 FLM_Read_Diag_VH8_voltage_value;           /** \brief  */
-    uint16 FLM_Read_Diag_VH9_voltage_value;           /** \brief  */
-    uint16 FLM_Read_Diag_VH10_voltage_value;          /** \brief  */
-    bool FLM_Read_Diag_VH1a_voltage_valid;            /** \brief  */
-    bool FLM_Read_Diag_VH1b_voltage_valid;            /** \brief  */
-    bool FLM_Read_Diag_VH2_voltage_valid;             /** \brief  */
-    bool FLM_Read_Diag_VH3_voltage_valid;             /** \brief  */
-    bool FLM_Read_Diag_VH4_voltage_valid;             /** \brief  */
-    bool FLM_Read_Diag_VH5_voltage_valid;             /** \brief  */
-    bool FLM_Read_Diag_VH6_voltage_valid;             /** \brief  */
-    bool FLM_Read_Diag_VH7_voltage_valid;             /** \brief  */
-    bool FLM_Read_Diag_VH8_voltage_valid;             /** \brief  */
-    bool FLM_Read_Diag_VH9_voltage_valid;             /** \brief  */
-    bool FLM_Read_Diag_VH10_voltage_valid;            /** \brief  */
-
-} FLMVHxDiagResults;
-
-/** \brief Structure to store results of FLM Squib detection (Squib detection error)
- */
-typedef struct
-{
-    bool          FLM_Squib_det_err_ch1;                    /** \brief  */
-    bool          FLM_Squib_det_err_ch2;                    /** \brief  */
-    bool          FLM_Squib_det_err_ch3;                    /** \brief  */
-    bool          FLM_Squib_det_err_ch4;                    /** \brief  */
-    bool          FLM_Squib_det_err_ch5;                    /** \brief  */
-    bool          FLM_Squib_det_err_ch6;                    /** \brief  */
-    bool          FLM_Squib_det_err_ch7;                    /** \brief  */
-    bool          FLM_Squib_det_err_ch8;                    /** \brief  */
-    bool          FLM_Squib_det_err_ch9;                    /** \brief  */
-    bool          FLM_Squib_det_err_ch10;                   /** \brief  */
-    bool          FLM_Squib_det_err_ch11;                   /** \brief  */
-    bool          FLM_Squib_det_err_ch12;                   /** \brief  */
-    bool          FLM_Squib_det_err_ch13;                   /** \brief  */
-    bool          FLM_Squib_det_err_ch14;                   /** \brief  */
-    bool          FLM_Squib_det_err_ch15;                   /** \brief  */
-    bool          FLM_Squib_det_err_ch16;                   /** \brief  */
-    bool          FLM_Squib_det_err_ch17;                   /** \brief  */
-    bool          FLM_Squib_det_err_ch18;                   /** \brief  */
-    bool          FLM_Squib_det_err_ch19;                   /** \brief  */
-    bool          FLM_Squib_det_err_ch20;                   /** \brief  */
-
-} FLMSquibErrorDiagResults;
-
-/** \brief Structure to store results of FLM all Loops resistanse diagnostic
- */
+/** \brief Structure to store results of one FLM channel VH voltage diagnostic
+ */ 
 typedef struct 
 {
-    struct FLMReadSquibRes FLM_Squib_Res_ch1;               /** \brief  */
-    struct FLMReadSquibRes FLM_Squib_Res_ch2;               /** \brief  */
-    struct FLMReadSquibRes FLM_Squib_Res_ch3;               /** \brief  */
-    struct FLMReadSquibRes FLM_Squib_Res_ch4;               /** \brief  */
-    struct FLMReadSquibRes FLM_Squib_Res_ch5;               /** \brief  */
-    struct FLMReadSquibRes FLM_Squib_Res_ch6;               /** \brief  */
-    struct FLMReadSquibRes FLM_Squib_Res_ch7;               /** \brief  */
-    struct FLMReadSquibRes FLM_Squib_Res_ch8;               /** \brief  */
-    struct FLMReadSquibRes FLM_Squib_Res_ch9;               /** \brief  */
-    struct FLMReadSquibRes FLM_Squib_Res_ch10;              /** \brief  */
-    struct FLMReadSquibRes FLM_Squib_Res_ch11;              /** \brief  */
-    struct FLMReadSquibRes FLM_Squib_Res_ch12;              /** \brief  */
-    struct FLMReadSquibRes FLM_Squib_Res_ch13;              /** \brief  */
-    struct FLMReadSquibRes FLM_Squib_Res_ch14;              /** \brief  */
-    struct FLMReadSquibRes FLM_Squib_Res_ch15;              /** \brief  */
-    struct FLMReadSquibRes FLM_Squib_Res_ch16;              /** \brief  */
-    struct FLMReadSquibRes FLM_Squib_Res_ch17;              /** \brief  */
-    struct FLMReadSquibRes FLM_Squib_Res_ch18;              /** \brief  */
-    struct FLMReadSquibRes FLM_Squib_Res_ch19;              /** \brief  */
-    struct FLMReadSquibRes FLM_Squib_Res_ch20;              /** \brief  */    
+    uint16 FLM_Read_Diag_VH1a_voltage_value;          /** \brief  */
+    bool FLM_Read_Diag_VH1a_voltage_valid;            /** \brief  */
 
-} FLMLoopResDiagResults;
+}FLM_Read_Diag_VHx;
+
+/** \brief Array to store results of all FLM channel VH voltages diagnostic
+ */ 
+FLM_Read_Diag_VHx FLMVHxDiagResults[11];
+
+/** \brief Structure to store results of FLM Squib detection (Squib detection error, FLM_Squib_det_err_ch1...ch20)
+ */
+bool FLMSquibErrorDiagResults[20];
 
 /** \brief Structure to store results of FLM Loop resistanse diagnostic
  */
@@ -188,6 +134,10 @@ typedef struct
     bool flm_squib_res_pgndx_loss;                          /** \brief  */
 
 } FLMReadSquibRes;
+
+/** \brief Structure to store results of FLM all Loops resistanse diagnostic
+ */
+struct FLMReadSquibRes FLMLoopResDiagResults[20];
 
 /*************************************************************************************************************************/
 /*------------------------------------------------Function Prototypes----------------------------------------------------*/
