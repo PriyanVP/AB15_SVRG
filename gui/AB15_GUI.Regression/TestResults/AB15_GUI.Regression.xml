@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
-<test-run id="0" name="AB15_GUI.Regression.dll" fullname="C:\Users\DUO7KV\Projects\ab15_sw\gui\AB15_GUI.Regression\bin\Debug\net8.0-windows\AB15_GUI.Regression.dll" runstate="Runnable" testcasecount="3" result="Passed" total="3" passed="3" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="46" engine-version="3.15.4.0" clr-version="8.0.8" start-time="2024-09-19 10:16:15Z" end-time="2024-09-19 10:16:27Z" duration="11.942616">
-  <command-line><![CDATA[C:\Users\DUO7KV\Projects\ab15_sw\gui\AB15_GUI.Regression\bin\Debug\net8.0-windows\testhost.dll --port 58094 --endpoint 127.0.0.1:058094 --role client --parentprocessid 36548 --telemetryoptedin true]]></command-line>
+<test-run id="0" name="AB15_GUI.Regression.dll" fullname="C:\Users\DUO7KV\Projects\ab15_sw\gui\AB15_GUI.Regression\bin\Debug\net8.0-windows\AB15_GUI.Regression.dll" runstate="Runnable" testcasecount="3" result="Passed" total="3" passed="3" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="46" engine-version="3.15.4.0" clr-version="8.0.10" start-time="2024-10-24 07:24:36Z" end-time="2024-10-24 07:24:46Z" duration="9.548492">
+  <command-line><![CDATA[C:\Users\DUO7KV\Projects\ab15_sw\gui\AB15_GUI.Regression\bin\Debug\net8.0-windows\testhost.dll --port 61281 --endpoint 127.0.0.1:061281 --role client --parentprocessid 30340 --telemetryoptedin true]]></command-line>
   <filter>
     <or>
       <test>AB15_GUI.Regression.Bugs.Tests_tmp2.Test1</test>
@@ -8,12 +8,12 @@
       <test>AB15_GUI.Regression.Requirements.Logger_Tests.WhenMessagesArePresent_ThenItemFormatIsExpected</test>
     </or>
   </filter>
-  <test-suite type="Assembly" id="0-1005" name="AB15_GUI.Regression.dll" fullname="C:\Users\DUO7KV\Projects\ab15_sw\gui\AB15_GUI.Regression\bin\Debug\net8.0-windows\AB15_GUI.Regression.dll" runstate="Runnable" testcasecount="3" result="Passed" start-time="2024-09-19T10:16:15.8998018Z" end-time="2024-09-19T10:16:27.8302062Z" duration="11.930413" total="3" passed="3" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="46">
-    <environment framework-version="4.0.1.0" clr-version="8.0.8" os-version="Microsoft Windows 10.0.22631" platform="Win32NT" cwd="C:\Users\DUO7KV\Projects\ab15_sw\gui\AB15_GUI.Regression\TestResults" machine-name="KV5-C-0004C" user="DUO7KV" user-domain="EMEA" culture="en-GB" uiculture="en-US" os-architecture="x64" />
+  <test-suite type="Assembly" id="0-1005" name="AB15_GUI.Regression.dll" fullname="C:\Users\DUO7KV\Projects\ab15_sw\gui\AB15_GUI.Regression\bin\Debug\net8.0-windows\AB15_GUI.Regression.dll" runstate="Runnable" testcasecount="3" result="Passed" start-time="2024-10-24T07:24:36.7349891Z" end-time="2024-10-24T07:24:46.2554850Z" duration="9.520080" total="3" passed="3" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="46">
+    <environment framework-version="4.0.1.0" clr-version="8.0.10" os-version="Microsoft Windows 10.0.22631" platform="Win32NT" cwd="C:\Users\DUO7KV\Projects\ab15_sw\gui\AB15_GUI.Regression\TestResults" machine-name="KV5-C-0004C" user="DUO7KV" user-domain="EMEA" culture="en-GB" uiculture="en-US" os-architecture="x64" />
     <settings>
       <setting name="SynchronousEvents" value="False" />
       <setting name="InternalTraceLevel" value="Off" />
-      <setting name="RandomSeed" value="2086526066" />
+      <setting name="RandomSeed" value="1388486470" />
       <setting name="SkipNonTestAssemblies" value="True" />
       <setting name="ProcessModel" value="InProcess" />
       <setting name="DomainUsage" value="Single" />
@@ -22,31 +22,31 @@
       <setting name="NumberOfTestWorkers" value="12" />
     </settings>
     <properties>
-      <property name="_PID" value="5588" />
+      <property name="_PID" value="13136" />
       <property name="_APPDOMAIN" value="testhost" />
     </properties>
-    <test-suite type="TestSuite" id="0-1006" name="AB15_GUI" fullname="AB15_GUI" runstate="Runnable" testcasecount="3" result="Passed" start-time="2024-09-19T10:16:15.9028590Z" end-time="2024-09-19T10:16:27.8302016Z" duration="11.927370" total="3" passed="3" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="46">
-      <test-suite type="TestSuite" id="0-1007" name="Regression" fullname="AB15_GUI.Regression" runstate="Runnable" testcasecount="3" result="Passed" start-time="2024-09-19T10:16:15.9030644Z" end-time="2024-09-19T10:16:27.8301978Z" duration="11.927161" total="3" passed="3" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="46">
-        <test-suite type="TestSuite" id="0-1009" name="Bugs" fullname="AB15_GUI.Regression.Bugs" runstate="Runnable" testcasecount="1" result="Passed" start-time="2024-09-19T10:16:15.9030732Z" end-time="2024-09-19T10:16:15.9269576Z" duration="0.023885" total="1" passed="1" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="0">
-          <test-suite type="TestFixture" id="0-1003" name="Tests_tmp2" fullname="AB15_GUI.Regression.Bugs.Tests_tmp2" classname="AB15_GUI.Regression.Bugs.Tests_tmp2" runstate="Runnable" testcasecount="1" result="Passed" start-time="2024-09-19T10:16:15.9037717Z" end-time="2024-09-19T10:16:15.9265660Z" duration="0.022795" total="1" passed="1" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="0">
-            <test-case id="0-1004" name="Test1" fullname="AB15_GUI.Regression.Bugs.Tests_tmp2.Test1" methodname="Test1" classname="AB15_GUI.Regression.Bugs.Tests_tmp2" runstate="Runnable" seed="551998118" result="Passed" start-time="2024-09-19T10:16:15.9055495Z" end-time="2024-09-19T10:16:15.9249065Z" duration="0.019395" asserts="0" />
+    <test-suite type="TestSuite" id="0-1006" name="AB15_GUI" fullname="AB15_GUI" runstate="Runnable" testcasecount="3" result="Passed" start-time="2024-10-24T07:24:36.7435157Z" end-time="2024-10-24T07:24:46.2554748Z" duration="9.511594" total="3" passed="3" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="46">
+      <test-suite type="TestSuite" id="0-1007" name="Regression" fullname="AB15_GUI.Regression" runstate="Runnable" testcasecount="3" result="Passed" start-time="2024-10-24T07:24:36.7440833Z" end-time="2024-10-24T07:24:46.2554652Z" duration="9.511017" total="3" passed="3" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="46">
+        <test-suite type="TestSuite" id="0-1009" name="Bugs" fullname="AB15_GUI.Regression.Bugs" runstate="Runnable" testcasecount="1" result="Passed" start-time="2024-10-24T07:24:36.7441135Z" end-time="2024-10-24T07:24:36.8223476Z" duration="0.078232" total="1" passed="1" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="0">
+          <test-suite type="TestFixture" id="0-1003" name="Tests_tmp2" fullname="AB15_GUI.Regression.Bugs.Tests_tmp2" classname="AB15_GUI.Regression.Bugs.Tests_tmp2" runstate="Runnable" testcasecount="1" result="Passed" start-time="2024-10-24T07:24:36.7455956Z" end-time="2024-10-24T07:24:36.8215984Z" duration="0.076000" total="1" passed="1" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="0">
+            <test-case id="0-1004" name="Test1" fullname="AB15_GUI.Regression.Bugs.Tests_tmp2.Test1" methodname="Test1" classname="AB15_GUI.Regression.Bugs.Tests_tmp2" runstate="Runnable" seed="691498580" result="Passed" start-time="2024-10-24T07:24:36.7560309Z" end-time="2024-10-24T07:24:36.8170386Z" duration="0.061147" asserts="0" />
           </test-suite>
         </test-suite>
-        <test-suite type="TestSuite" id="0-1008" name="Requirements" fullname="AB15_GUI.Regression.Requirements" runstate="Runnable" testcasecount="2" result="Passed" start-time="2024-09-19T10:16:15.9030790Z" end-time="2024-09-19T10:16:27.8301893Z" duration="11.927138" total="2" passed="2" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="46">
-          <test-suite type="TestFixture" id="0-1000" name="Logger_Tests" fullname="AB15_GUI.Regression.Requirements.Logger_Tests" classname="AB15_GUI.Regression.Requirements.Logger_Tests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2024-09-19T10:16:15.9278555Z" end-time="2024-09-19T10:16:27.8301374Z" duration="11.902310" total="2" passed="2" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="46">
+        <test-suite type="TestSuite" id="0-1008" name="Requirements" fullname="AB15_GUI.Regression.Requirements" runstate="Runnable" testcasecount="2" result="Passed" start-time="2024-10-24T07:24:36.7441255Z" end-time="2024-10-24T07:24:46.2554513Z" duration="9.510962" total="2" passed="2" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="46">
+          <test-suite type="TestFixture" id="0-1000" name="Logger_Tests" fullname="AB15_GUI.Regression.Requirements.Logger_Tests" classname="AB15_GUI.Regression.Requirements.Logger_Tests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2024-10-24T07:24:36.8245826Z" end-time="2024-10-24T07:24:46.2553891Z" duration="9.430446" total="2" passed="2" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="46">
             <properties>
               <property name="ParallelScope" value="None" />
               <property name="Order" value="1" />
             </properties>
             <output><![CDATA[Application failed to exit
 ]]></output>
-            <test-case id="0-1001" name="WhenLoggerIsPromptedToOpen_ThenLoggerOpensSuccessfully" fullname="AB15_GUI.Regression.Requirements.Logger_Tests.WhenLoggerIsPromptedToOpen_ThenLoggerOpensSuccessfully" methodname="WhenLoggerIsPromptedToOpen_ThenLoggerOpensSuccessfully" classname="AB15_GUI.Regression.Requirements.Logger_Tests" runstate="Runnable" seed="932352232" result="Passed" start-time="2024-09-19T10:16:20.9832013Z" end-time="2024-09-19T10:16:22.5052551Z" duration="1.522057" asserts="1">
+            <test-case id="0-1001" name="WhenLoggerIsPromptedToOpen_ThenLoggerOpensSuccessfully" fullname="AB15_GUI.Regression.Requirements.Logger_Tests.WhenLoggerIsPromptedToOpen_ThenLoggerOpensSuccessfully" methodname="WhenLoggerIsPromptedToOpen_ThenLoggerOpensSuccessfully" classname="AB15_GUI.Regression.Requirements.Logger_Tests" runstate="Runnable" seed="990553149" result="Passed" start-time="2024-10-24T07:24:39.7201113Z" end-time="2024-10-24T07:24:40.9580576Z" duration="1.237898" asserts="1">
               <properties>
                 <property name="Order" value="1" />
                 <property name="ParallelScope" value="None" />
               </properties>
             </test-case>
-            <test-case id="0-1002" name="WhenMessagesArePresent_ThenItemFormatIsExpected" fullname="AB15_GUI.Regression.Requirements.Logger_Tests.WhenMessagesArePresent_ThenItemFormatIsExpected" methodname="WhenMessagesArePresent_ThenItemFormatIsExpected" classname="AB15_GUI.Regression.Requirements.Logger_Tests" runstate="Runnable" seed="284294798" result="Passed" start-time="2024-09-19T10:16:22.5053220Z" end-time="2024-09-19T10:16:22.6787918Z" duration="0.173471" asserts="45">
+            <test-case id="0-1002" name="WhenMessagesArePresent_ThenItemFormatIsExpected" fullname="AB15_GUI.Regression.Requirements.Logger_Tests.WhenMessagesArePresent_ThenItemFormatIsExpected" methodname="WhenMessagesArePresent_ThenItemFormatIsExpected" classname="AB15_GUI.Regression.Requirements.Logger_Tests" runstate="Runnable" seed="1348123896" result="Passed" start-time="2024-10-24T07:24:40.9581189Z" end-time="2024-10-24T07:24:41.0984772Z" duration="0.140354" asserts="45">
               <properties>
                 <property name="Order" value="2" />
                 <property name="ParallelScope" value="None" />
