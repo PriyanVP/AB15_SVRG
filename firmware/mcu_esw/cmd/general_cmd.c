@@ -100,14 +100,16 @@ void CmdGetMcuBuildTime(USBReceiveData const * const commandPackage)
 void CmdGetDeviceId(USBReceiveData const * const commandPackage)
 {
     USBTransmitData packageToSend;
-    SPIReceiveDataNormal data;
-    boolean isSuccessfulFlag;
+    SPIReceiveDataNormal data_high;
+    SPIReceiveDataNormal data_low;
+    boolean isSuccessfulFlag = TRUE;
     uint8 spiChannel;
 
     spiChannel = GetSpiChannelById(commandPackage->device_id);
 
-    // SPI instruction for get device ID
-    isSuccessfulFlag = QSPIReadNormal(spiChannel, DEVICE_ID_DEVICE_ID, &data.dw);
+    // SPI instruction for get device ID (constructed from ident_high and ident low registers, NOT from DEVICE_ID register)
+    isSuccessfulFlag &= QSPIReadNormal(spiChannel, DEVICE_ID_IDENT_LOW, &data_low.dw);
+    isSuccessfulFlag &= QSPIReadNormal(spiChannel, DEVICE_ID_IDENT_HIGH, &data_high.dw);
 
     // Construct package to PC
     packageToSend.device_id = commandPackage->device_id;
@@ -116,8 +118,11 @@ void CmdGetDeviceId(USBReceiveData const * const commandPackage)
     if (isSuccessfulFlag)
     {
         packageToSend.status = USB_STATUS_DATA;
-        packageToSend.dataLength = 1;
-        packageToSend.data[0] = GetLSB(data.bf.output_data);
+        packageToSend.dataLength = 4;
+        packageToSend.data[0] = GetLSB(data_low.bf.output_data);
+        packageToSend.data[1] = GetMSB(data_low.bf.output_data);
+        packageToSend.data[2] = GetLSB(data_high.bf.output_data);
+        packageToSend.data[3] = GetMSB(data_high.bf.output_data);
     }
     else
     {
