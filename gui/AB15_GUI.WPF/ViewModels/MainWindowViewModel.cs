@@ -1,5 +1,5 @@
 ﻿using AB15_GUI.WPF.Views;
-using NLog;
+using AB15_GUI.WPF.NLog;
 using System;
 
 namespace AB15_GUI.WPF.ViewModels
@@ -74,7 +74,7 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// Local logger instance
         /// </summary>
-        private readonly Logger logger;
+        private readonly ILoggingService logger;
 
         /// <summary>
         /// Logger window instance
@@ -89,7 +89,7 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// Constructor
         /// </summary>
-        public MainViewModel(Logger logger, LoggerViewModel loggerViewModel, LoggerView loggerWindowView, WatchdogViewModel watchdogViewModel)
+        public MainViewModel(ILoggingService logger, LoggerViewModel loggerViewModel, LoggerView loggerWindowView, WatchdogViewModel watchdogViewModel)
         {
             // Init Logger and logger view model
             this.logger = logger;
