@@ -27,7 +27,7 @@ namespace AB15_GUI.Tests.Services
         /// <summary>
         /// Logger reference with custom configuration
         /// </summary>
-        private Logger logger;
+        private ILoggingService loggerMock;
 
         /// <summary>
         /// Set up test environment
@@ -35,16 +35,7 @@ namespace AB15_GUI.Tests.Services
         [OneTimeSetUp]
         public void SetUp()
         {
-            logger = LogManager.Setup()
-                    .SetupExtensions(ext => ext.RegisterLayoutRenderer<BuildConfigurationLayoutRenderer>("build-configuration"))
-                    .SetupExtensions(ext => ext.RegisterTarget<LogMemoryRecordTarget>("MemoryRecord"))
-                    .GetCurrentClassLogger(); // Same logger will be used across all tests
-
-            // Workaround for thread sync to work correctly TODO: refactor approach to remove close coupling
-            if (Application.Current == null)
-            { 
-                new Application { ShutdownMode = ShutdownMode.OnExplicitShutdown }; 
-            }
+            loggerMock = new LoggerMock();
         }
 
         /// <summary>
@@ -63,7 +54,7 @@ namespace AB15_GUI.Tests.Services
             TransmitPackageMock package = new TransmitPackageMock();
             WaitlistMock waitlist = new WaitlistMock();
             SerialCommMock serialCommMock = new SerialCommMock();
-            SerialWrapper serialWrapper = new SerialWrapper(logger, serialCommMock, waitlist);
+            SerialWrapper serialWrapper = new SerialWrapper(loggerMock, serialCommMock, waitlist);
             Action<IReceiveCommunicationPackage>? deleg = (package) => {};
           
             // Act
@@ -92,7 +83,7 @@ namespace AB15_GUI.Tests.Services
             ReceiveCommunicationPackage<ByteListSeializableMock> packageGlobal = null;
             WaitlistMock waitlist = new WaitlistMock();
             SerialCommMock serialCommMock = new SerialCommMock();
-            SerialWrapper serialWrapper = new SerialWrapper(logger, serialCommMock, waitlist);           
+            SerialWrapper serialWrapper = new SerialWrapper(loggerMock, serialCommMock, waitlist);           
             Action<IReceiveCommunicationPackage>? deleg = (package) => 
                 {
                     packageGlobal = (ReceiveCommunicationPackage<ByteListSeializableMock>) package;
@@ -126,37 +117,36 @@ namespace AB15_GUI.Tests.Services
             Assert.That(packageGlobal.Payload.ReceivedData, Is.EqualTo(expectedPackage.Slice(SerialPackageConstants.PayloadPosition, expectedPackage[SerialPackageConstants.PayloadLengthPosition])));
         }
 
-        // // TODO: investigate. Current test is failing if logger is invoked. Issue seems to be in App.Current.Dispatcher usage. Manual tests work fine
-        // [TestCaseSource(nameof(InvalidReceiveTestCases)), Description("Checking that invalid responses are not invoked")]
-        // [NonParallelizable]
-        // public async Task WhenInvalidPackageIsReceived_ThenItNotPassesValidation(List<byte> inPackage)
-        // {
-        //     // Arrange
-        //     ManualResetEvent timerEventFinished = new ManualResetEvent(false);
-        //     ReceiveCommunicationPackage<ByteListSeializableMock> packageGlobal = null;
-        //     WaitlistMock waitlist = new WaitlistMock();
-        //     SerialCommMock serialCommMock = new SerialCommMock();
-        //     SerialWrapper serialWrapper = new SerialWrapper(logger, serialCommMock, waitlist);           
-        //     Action<IReceiveCommunicationPackage>? deleg = (package) => 
-        //         {
-        //             packageGlobal = (ReceiveCommunicationPackage<ByteListSeializableMock>) package;
-        //         };
+        [TestCaseSource(nameof(InvalidReceiveTestCases)), Description("Checking that invalid responses are not invoked")]
+        [NonParallelizable]
+        public async Task WhenInvalidPackageIsReceived_ThenItNotPassesValidation(List<byte> inPackage)
+        {
+            // Arrange
+            ManualResetEvent timerEventFinished = new ManualResetEvent(false);
+            ReceiveCommunicationPackage<ByteListSeializableMock> packageGlobal = null;
+            WaitlistMock waitlist = new WaitlistMock();
+            SerialCommMock serialCommMock = new SerialCommMock();
+            SerialWrapper serialWrapper = new SerialWrapper(loggerMock, serialCommMock, waitlist);           
+            Action<IReceiveCommunicationPackage>? deleg = (package) => 
+                {
+                    packageGlobal = (ReceiveCommunicationPackage<ByteListSeializableMock>) package;
+                };
           
-        //     // Act
-        //     waitlist.AddItemToWaitlist(deleg, typeof(ByteListSeializableMock));
-        //     foreach(byte itm in inPackage)
-        //     {
-        //         serialCommMock.ReceiveBuffer.Enqueue(itm);
-        //     }
-        //     await Task.Delay(1000);
+            // Act
+            waitlist.AddItemToWaitlist(deleg, typeof(ByteListSeializableMock));
+            foreach(byte itm in inPackage)
+            {
+                serialCommMock.ReceiveBuffer.Enqueue(itm);
+            }
+            await Task.Delay(1000);
 
-        //     // Assert
-        //     // Package was removed from SerialComm
-        //     Assert.That(serialCommMock.ReceiveBuffer.Count, Is.LessThan(SerialPackageConstants.MinPackageLength));
+            // Assert
+            // Package was removed from SerialComm
+            Assert.That(serialCommMock.ReceiveBuffer.Count, Is.LessThan(SerialPackageConstants.MinPackageLength));
 
-        //     // No delegate was called
-        //     Assert.That(packageGlobal, Is.Null);
-        // }
+            // No delegate was called
+            Assert.That(packageGlobal, Is.Null);
+        }
 
         /// <summary>
         /// List of test cases data (valid TransmitCommunicationPackage scenarios)
@@ -315,6 +305,95 @@ namespace AB15_GUI.Tests.Services
             {
                 // Unused
                 throw new NotImplementedException();
+            }
+        }
+
+        public class LoggerMock : ILoggingService
+        {
+            public bool IsDebugEnabled => throw new NotImplementedException();
+
+            public bool IsErrorEnabled => throw new NotImplementedException();
+
+            public bool IsFatalEnabled => throw new NotImplementedException();
+
+            public bool IsInfoEnabled => throw new NotImplementedException();
+
+            public bool IsTraceEnabled => throw new NotImplementedException();
+
+            public bool IsWarnEnabled => throw new NotImplementedException();
+
+            public string Name => throw new NotImplementedException();
+
+            public void Debug(string format, params object[] args)
+            {
+                // Do nothing
+                return;
+            }
+
+            public void Debug(Exception exception, string format, params object[] args)
+            {
+                // Do nothing
+                return;
+            }
+
+            public void Error(string format, params object[] args)
+            {
+                // Do nothing
+                return;
+            }
+
+            public void Error(Exception exception, string format, params object[] args)
+            {
+                // Do nothing
+                return;
+            }
+
+            public void Fatal(string format, params object[] args)
+            {
+                // Do nothing
+                return;
+            }
+
+            public void Fatal(Exception exception, string format, params object[] args)
+            {
+                // Do nothing
+                return;
+            }
+
+            public void Info(string format, params object[] args)
+            {
+                // Do nothing
+                return;
+            }
+
+            public void Info(Exception exception, string format, params object[] args)
+            {
+                // Do nothing
+                return;
+            }
+
+            public void Trace(string format, params object[] args)
+            {
+                // Do nothing
+                return;
+            }
+
+            public void Trace(Exception exception, string format, params object[] args)
+            {
+                // Do nothing
+                return;
+            }
+
+            public void Warn(string format, params object[] args)
+            {
+                // Do nothing
+                return;
+            }
+
+            public void Warn(Exception exception, string format, params object[] args)
+            {
+                // Do nothing
+                return;
             }
         }
 

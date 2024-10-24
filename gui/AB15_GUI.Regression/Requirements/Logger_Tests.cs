@@ -58,7 +58,7 @@ namespace AB15_GUI.Regression.Requirements
         [OneTimeSetUp]
         public void SetUp()
         {
-            // Get build type of Regression project - will be used for determinig what WPF build type to test
+            // Get build type of Regression project - will be used for determining what WPF build type to test
             string buildType;
             #if DEBUG
                 buildType = "Debug";
