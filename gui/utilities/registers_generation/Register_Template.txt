@@ -1,7 +1,7 @@
 using System;
 using AB15_GUI.WPF.Models.Interfaces;
 
-namespace AB15_GUI.WPF.Models.Genereted.Registers
+namespace AB15_GUI.WPF.Models.Generated.Registers
 {
     /// <summary>
     /// Class for working with {{register_name}} register
@@ -138,7 +138,7 @@ namespace AB15_GUI.WPF.Models.Genereted.Registers
                     return bitWidth;
                 }
             }
-            
+
 
             {#- Add EnumeratedValues property only if field contains enumerated values definitions -#}
             {%- if field.enumerated_values -%}
