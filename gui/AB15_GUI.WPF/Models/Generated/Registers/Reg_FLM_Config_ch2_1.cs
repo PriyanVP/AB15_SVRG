@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using AB15_GUI.WPF.Models.Interfaces;
 
 namespace AB15_GUI.WPF.Models.Generated.Registers
@@ -188,7 +189,7 @@ namespace AB15_GUI.WPF.Models.Generated.Registers
                 
                 { "switch_off", 1} 
                 
-            }
+            };
             
 
             /// <summary>
@@ -318,7 +319,7 @@ namespace AB15_GUI.WPF.Models.Generated.Registers
                 
                 { "Mode8", 16} 
                 
-            }
+            };
             
 
             /// <summary>
@@ -538,7 +539,7 @@ namespace AB15_GUI.WPF.Models.Generated.Registers
                 
                 { "disable", 1} 
                 
-            }
+            };
             
 
             /// <summary>
@@ -654,7 +655,7 @@ namespace AB15_GUI.WPF.Models.Generated.Registers
                 
                 { "disable", 1} 
                 
-            }
+            };
             
 
             /// <summary>
@@ -784,7 +785,7 @@ namespace AB15_GUI.WPF.Models.Generated.Registers
                 
                 { "Mode8", 16} 
                 
-            }
+            };
             
 
             /// <summary>

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using AB15_GUI.WPF.Models.Interfaces;
 
 namespace AB15_GUI.WPF.Models.Generated.Registers
@@ -192,7 +193,7 @@ namespace AB15_GUI.WPF.Models.Generated.Registers
                 
                 { "Mode9", 17} 
                 
-            }
+            };
             
 
             /// <summary>
@@ -440,7 +441,7 @@ namespace AB15_GUI.WPF.Models.Generated.Registers
                 
                 { "Mode9", 17} 
                 
-            }
+            };
             
 
             /// <summary>

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using AB15_GUI.WPF.Models.Interfaces;
 
 namespace AB15_GUI.WPF.Models.Generated.Registers
@@ -234,7 +235,7 @@ namespace AB15_GUI.WPF.Models.Generated.Registers
                 
                 { "val3", 3} 
                 
-            }
+            };
             
 
             /// <summary>
