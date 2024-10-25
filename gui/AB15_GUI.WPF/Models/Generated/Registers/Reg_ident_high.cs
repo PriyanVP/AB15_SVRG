@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using AB15_GUI.WPF.Models.Interfaces;
 
 namespace AB15_GUI.WPF.Models.Generated.Registers
 {
@@ -6,7 +8,7 @@ namespace AB15_GUI.WPF.Models.Generated.Registers
     /// Class for working with ident_high register
     /// WARNING: this class is generated, do not modify manually!
     /// </summary>
-    public class Reg_ident_high
+    public class Reg_ident_high : IRegister
     {
         /// <summary>
         /// Reset value for register

@@ -5,9 +5,8 @@ using System.Threading;
 using System.Linq;
 using System.IO.Ports;
 using System.Management;
-using NLog;
-using System.Diagnostics.Contracts;
 using AB15_GUI.WPF.Services.Interfaces;
+using AB15_GUI.WPF.NLog;
 
 namespace AB15_GUI.WPF.Services;
 
@@ -24,7 +23,7 @@ public class SerialComm : ISerialComm
     /// <summary>
     /// Logger reference with custom configuration
     /// </summary>
-    private readonly Logger logger;
+    private readonly ILoggingService logger;
 
     /// <summary>
     /// COM port handle
@@ -51,7 +50,7 @@ public class SerialComm : ISerialComm
     /// Initialization of virtual COM port
     /// </summary>
     /// <param name="guiReference">Ensures operation of StatusPanel updates</param>
-    public SerialComm(Logger logger)
+    public SerialComm(ILoggingService logger)
     {
         // Init logger reference
         this.logger = logger;

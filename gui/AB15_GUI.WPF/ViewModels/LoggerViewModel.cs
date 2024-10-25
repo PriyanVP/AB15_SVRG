@@ -11,7 +11,7 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// Logger reference with custom configuration
         /// </summary>
-        private readonly Logger logger;
+        private readonly ILoggingService logger;
 
         /// <summary>
         /// Property that can be used to bind logger data to UI
@@ -22,7 +22,7 @@ namespace AB15_GUI.WPF.ViewModels
         /// Constructor for creating LoggerViewModel. Data connection to observable property is done there
         /// </summary>
         /// <param name="logger">logger reference</param>
-        public LoggerViewModel(Logger logger, LogMemoryRecordTarget target)
+        public LoggerViewModel(ILoggingService logger, LogMemoryRecordTarget target)
         {
             this.logger = logger;
 
