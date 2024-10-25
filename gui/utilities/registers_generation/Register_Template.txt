@@ -138,6 +138,7 @@ namespace AB15_GUI.WPF.Models.Genereted.Registers
                     return bitWidth;
                 }
             }
+            
 
             {#- Add EnumeratedValues property only if field contains enumerated values definitions -#}
             {%- if field.enumerated_values -%}

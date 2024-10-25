@@ -171,12 +171,12 @@ def generate_register_files(path_to_regmap: str, register_list: list, path_to_ou
                               .find(".//spirit:value", namespaces=xml_spirit_namespaces).text
         
         # Get description
-        reg_rescription = register.find(".//spirit:description", namespaces=xml_spirit_namespaces).text
+        reg_description = register.find(".//spirit:description", namespaces=xml_spirit_namespaces).text
 
         # Handle description
-        reg_rescription = reg_rescription.replace('"', "'")     # " -> '
-        reg_rescription = reg_rescription.replace('\n', " ")    # \n -> spavce
-        reg_rescription = reg_rescription.replace('\t', " ")    # \t -> spavce
+        reg_description = reg_description.replace('"', "'")     # " -> '
+        reg_description = reg_description.replace('\n', " ")    # \n -> space
+        reg_description = reg_description.replace('\t', " ")    # \t -> space
 
         # Get fields data
         fields_parameters = []
@@ -190,8 +190,8 @@ def generate_register_files(path_to_regmap: str, register_list: list, path_to_ou
 
             # Handle description
             description = description.replace('"', "'")     # " -> '
-            description = description.replace('\n', " ")    # \n -> spavce
-            description = description.replace('\t', " ")    # \t -> spavce
+            description = description.replace('\n', " ")    # \n -> space
+            description = description.replace('\t', " ")    # \t -> space
 
             # Get enumerated values
             enumerated_values_tag = field.find(".//spirit:enumeratedValues", namespaces=xml_spirit_namespaces)
@@ -200,8 +200,8 @@ def generate_register_files(path_to_regmap: str, register_list: list, path_to_ou
             if (enumerated_values_tag is not None):
                 # Loop through enum values and store them to dictionary
                 for enum_value in enumerated_values_tag.iter(f"{{{xml_spirit_namespaces['spirit']}}}enumeratedValue"):
-                    key = enum_value.find(".//spirit:name", namespaces=xml_spirit_namespaces)
-                    value = enum_value.find(".//spirit:value", namespaces=xml_spirit_namespaces)
+                    key = enum_value.find(".//spirit:name", namespaces=xml_spirit_namespaces).text
+                    value = enum_value.find(".//spirit:value", namespaces=xml_spirit_namespaces).text
                     enumerated_values.append({"key" : key, "value" : value})
 
             # Store data to dictionary
@@ -233,7 +233,7 @@ def generate_register_files(path_to_regmap: str, register_list: list, path_to_ou
             "register_name" : reg_name,
             "reset_value" : reset_value,
             "register_address" : abs_address,
-            "register_description" : reg_rescription,
+            "register_description" : reg_description,
             "register_access" : access,
             "fields" : fields_parameters
         }
