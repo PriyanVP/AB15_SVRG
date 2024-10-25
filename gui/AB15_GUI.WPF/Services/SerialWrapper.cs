@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Timers;
-using NLog;
+using AB15_GUI.WPF.NLog;
 using AB15_GUI.WPF.Models;
 using AB15_GUI.WPF.Models.Interfaces;
 using AB15_GUI.WPF.Services.Interfaces;
@@ -55,7 +55,7 @@ public class SerialWrapper : IDisposable, ISerialWrapper
     /// <summary>
     /// Local reference to logger
     /// </summary>
-    private Logger logger;
+    private ILoggingService logger;
 
     /// <summary>
     /// Lock object for handling multithreading
@@ -94,7 +94,7 @@ public class SerialWrapper : IDisposable, ISerialWrapper
     /// <param name="logger">logger reference</param>
     /// <param name="serialPort">reference to low level object for managing</param>
     /// <param name="responseWaitlist">waitlist that stores data for handling received packages</param>
-    public SerialWrapper(Logger logger, ISerialComm serialPort, IWaitlist responseWaitlist)
+    public SerialWrapper(ILoggingService logger, ISerialComm serialPort, IWaitlist responseWaitlist)
     {
         // Init reference to logger
         this.logger = logger;
