@@ -790,7 +790,7 @@ namespace AB15_GUI.WPF.ViewModels
             // Create package to MCU
             TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
             packageToSend.ASICID = 1;
-            // packageToSend.Cmd = MCUCommand. // TODO: add
+            packageToSend.Cmd = MCUCommand.EXECUTE_READ_SEQUENCE;
             packageToSend.PayloadType = typeof(AddressDataPayload);
             packageToSend.Payload.Address.Add(_spi_config_wd1.Address);
             packageToSend.Payload.Address.Add(_spi_config_wd2.Address);
