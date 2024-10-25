@@ -1,12 +1,13 @@
 using System;
+using AB15_GUI.WPF.Models.Interfaces;
 
-namespace AB15_GUI.WPF.Models.Genereted.Registers
+namespace AB15_GUI.WPF.Models.Generated.Registers
 {
     /// <summary>
     /// Class for working with spi_trig_wdqa2 register
     /// WARNING: this class is generated, do not modify manually!
     /// </summary>
-    public class Reg_spi_trig_wdqa2
+    public class Reg_spi_trig_wdqa2 : IRegister
     {
         /// <summary>
         /// Reset value for register
