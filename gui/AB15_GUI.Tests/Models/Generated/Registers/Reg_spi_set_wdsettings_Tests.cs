@@ -1,7 +1,7 @@
 using System;
-using AB15_GUI.WPF.Models.Genereted.Registers;
+using AB15_GUI.WPF.Models.Generated.Registers;
 
-namespace AB15_GUI.Tests.Models.Genereted.Registers
+namespace AB15_GUI.Tests.Models.Generated.Registers
 {
     /// <summary>
     /// Checking that spi_set_wdsettings register class was generated expectedly

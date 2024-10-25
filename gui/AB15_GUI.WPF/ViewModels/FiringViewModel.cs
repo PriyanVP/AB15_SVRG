@@ -7,7 +7,7 @@
 // using AB15_GUI.WPF.ViewModels.Commands;
 // using AB15_GUI.WPF.Models.Interfaces;
 // using AB15_GUI.WPF.Models;
-// using AB15_GUI.WPF.Models.Genereted.Registers;
+// using AB15_GUI.WPF.Models.Generated.Registers;
 // using AB15_GUI.WPF.Services.Interfaces;
 
 // namespace AB15_GUI.WPF.ViewModels

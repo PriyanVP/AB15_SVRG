@@ -1,6 +1,6 @@
 using System;
 
-namespace AB15_GUI.WPF.Models.Genereted.Registers
+namespace AB15_GUI.WPF.Models.Generated.Registers
 {
     /// <summary>
     /// Class for working with spi_trig_wdqa1 register
