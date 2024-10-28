@@ -1,12 +1,14 @@
 using System;
+using System.Collections.Generic;
+using AB15_GUI.WPF.Models.Interfaces;
 
-namespace AB15_GUI.WPF.Models.Genereted.Registers
+namespace AB15_GUI.WPF.Models.Generated.Registers
 {
     /// <summary>
     /// Class for working with revision register
     /// WARNING: this class is generated, do not modify manually!
     /// </summary>
-    public class Reg_revision
+    public class Reg_revision : IRegister
     {
         /// <summary>
         /// Reset value for register

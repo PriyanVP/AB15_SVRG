@@ -1,7 +1,7 @@
 using AB15_GUI.WPF.Models.Interfaces;
 using System;
 using System.Collections.Generic;
-using AB15_GUI.WPF.Models.Genereted.Registers;
+using AB15_GUI.WPF.Models.Generated.Registers;
 using System.Diagnostics;
 
 namespace AB15_GUI.WPF.Models

@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using NLog;
+using AB15_GUI.WPF.NLog;
 using Stateless;
 using Stateless.Graph;
 using System.Windows.Input;
 using AB15_GUI.WPF.ViewModels.Commands;
 using AB15_GUI.WPF.Models.Interfaces;
 using AB15_GUI.WPF.Models;
-using AB15_GUI.WPF.Models.Genereted.Registers;
+using AB15_GUI.WPF.Models.Generated.Registers;
 using AB15_GUI.WPF.Services.Interfaces;
 
 namespace AB15_GUI.WPF.ViewModels
@@ -27,7 +27,7 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// Local logger instance
         /// </summary>
-        private readonly Logger logger;
+        private readonly ILoggingService logger;
 
         /// <summary>
         /// SerialWrapper reference to perform communication with MCU
@@ -37,7 +37,7 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// Constructor
         /// </summary>
-        public WatchdogViewModel(Logger logger, ISerialWrapper serialWrapper)
+        public WatchdogViewModel(ILoggingService logger, ISerialWrapper serialWrapper)
         {
             this.logger = logger;
             this.serialWrapper = serialWrapper;
