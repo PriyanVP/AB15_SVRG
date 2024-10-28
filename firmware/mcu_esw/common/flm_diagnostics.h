@@ -25,6 +25,16 @@
  */
 typedef enum 
 {
+    FLM_DIAG_EXEC_STATUS_IDLE           = 0,   /** \brief  */
+    FLM_DIAG_EXEC_STATUS_ONGOING        = 1,   /** \brief  */
+    FLM_DIAG_EXEC_STATUS_FINISHED       = 2    /** \brief  */
+
+} flm_DiagExecStatusEnum;
+
+/** \brief
+ */
+typedef enum 
+{
     FLM_DIAG_STATUS_VHX_MEAS_SKIPPED    = 0,    /** \brief  */
     FLM_DIAG_STATUS_VHX_MEAS_INITIATED  = 1,    /** \brief  */
     FLM_DIAG_STATUS_VHX_MEAS_ONGOING    = 2,    /** \brief  */
