@@ -50,7 +50,7 @@ void SetFLMDiagMode();
 
 /** \brief
  */
-void SetFLMDiagStart();
+void StartFLMDiag();
 
 /** \brief
  * Measure Battery voltage, normal range to perform diagnostics
@@ -132,9 +132,22 @@ void GetFLMDiagMode(void)
     // 
 }
 
-void SetFLMDiagStart(void)
+void StartFLMDiag(void)
 {
-    // 
+    SPIReceiveDataNormal data;
+    boolean isSuccessfulFlag = TRUE;
+    flm_flm_diag_start_ut tmpFLMDiagStartfRegister;
+    
+    // Get value from ASIC
+    // TODO: check whether diags can be run on slaves (spiChannel selection)
+    isSuccessfulFlag &= QSPIReadNormal(SPI1_CS1MASTER, FLM_FLM_DIAG_START, &data.dw);
+    tmpFLMDiagStartfRegister.as_uint16 = data.output_data
+    
+    // flm_diag_start = 1 starts selected diagnostic
+    tmpFLMDiagStartfRegister.as_s.FlmDiagStart_u1 = 1;
+
+    // Write
+    QSPIWriteNormal(SPI1_CS1MASTER, FLM_FLM_DIAG_START, tmpFLMDiagStartfRegister.as_uint16);
 }
 
 void SetFLMDiagMode(void)
