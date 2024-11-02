@@ -25,10 +25,10 @@
  */
 typedef enum 
 {
-    FLM_DIAG_ORDER_VHX_MEAS         = 1,    /** \brief  */
-    FLM_DIAG_ORDER_LOOP_RES_MEAS    = 2,    /** \brief  */
-    FLM_DIAG_ORDER_SQUIB_DET        = 3,    /** \brief  */
-    FLM_DIAG_ORDER_SHORT_DET        = 4     /** \brief  */
+    FLM_DIAG_ORDER_SHORT_DET        = 1     /** \brief  */
+    FLM_DIAG_ORDER_VHX_MEAS         = 2,    /** \brief  */
+    FLM_DIAG_ORDER_LOOP_RES_MEAS    = 3,    /** \brief  */
+    FLM_DIAG_ORDER_SQUIB_DET        = 4,    /** \brief  */
 
 } flm_DiagExecOrderEnum;
 
