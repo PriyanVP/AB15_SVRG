@@ -43,7 +43,7 @@ public static class SerialPackageConstants
 /// Constants for certain commands
 /// Note: should match with package format on MCU
 /// </summary>
-public static class CommandsSpecificConstants
+public static class CommandSpecificConstants
 {
     public const int readSequenceMaxItems = 32;
     public const int writeSequenceMaxItems = 16;

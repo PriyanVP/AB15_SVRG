@@ -17,7 +17,7 @@
 //         /// <summary>
 //         /// Local logger instance
 //         /// </summary>
-//         private readonly Logger logger;
+//         private readonly ILoggingService logger;
 
 //         /// <summary>
 //         /// SerialWrapper reference to perform communication with MCU
@@ -27,7 +27,7 @@
 //         /// <summary>
 //         /// Constructor
 //         /// </summary>
-//         public FiringViewModel(Logger logger, ISerialWrapper serialWrapper)
+//         public FiringViewModel(ILoggingService logger, ISerialWrapper serialWrapper)
 //         {
 //             this.logger = logger;
 //             this.serialWrapper = serialWrapper;
