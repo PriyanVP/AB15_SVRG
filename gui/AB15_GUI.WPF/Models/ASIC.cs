@@ -32,6 +32,11 @@ namespace AB15_GUI.WPF.Models
         private Timer? stateReadingTimer = null;
 
         /// <summary>
+        /// Timer to perform periodic INIT mode timeout resets
+        /// </summary>
+        private Timer? initModeResetTimer = null;
+
+        /// <summary>
         /// Number of packages with configuration data that will be written to ASIC
         /// Null corresponds to unset value
         /// </summary>
@@ -276,7 +281,7 @@ namespace AB15_GUI.WPF.Models
 
             // Arm timer
             stateReadingTimer = new Timer();
-            stateReadingTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+            stateReadingTimer.Elapsed += new ElapsedEventHandler(OnAsicStateReadingEvent);
             stateReadingTimer.Interval = timeout;
             stateReadingTimer.Enabled = true;
         }
@@ -291,6 +296,42 @@ namespace AB15_GUI.WPF.Models
             // Stop and dispose timer
             stateReadingTimer.Enabled = false;
             stateReadingTimer.Dispose();
+            stateReadingTimer = null;
+        }
+
+        /// <summary>
+        /// Start timer to enlarge init mode period
+        /// </summary>
+        /// <param name="timeout">timer timeout in ms. Defaults to 2s</param>
+        public void StartInitModeTimeoutResetting(int timeout = 2000)
+        {
+            logger.Debug($"Starting init mode timer reset on ASIC {ID}");
+
+            // Precondition check
+            if (initModeResetTimer != null)
+            {
+                logger.Warn($"Tried to start init mode continuation timer on ASIC{ID} while it was already running");
+                return;
+            }
+
+            // Arm timer
+            initModeResetTimer = new Timer();
+            initModeResetTimer.Elapsed += new ElapsedEventHandler(OnInitModeTimeoutResettingEvent);
+            initModeResetTimer.Interval = timeout;
+            initModeResetTimer.Enabled = true;
+        }
+
+        /// <summary>
+        /// Stop and dispose timer for init mode enlargement
+        /// </summary>
+        public void StopInitModeTimeoutResetting()
+        {
+            logger.Debug($"Stopping init mode timer reset on ASIC {ID}");
+
+            // Stop and dispose timer
+            initModeResetTimer.Enabled = false;
+            initModeResetTimer.Dispose();
+            initModeResetTimer = null;
         }
 
         /// <summary>
@@ -472,7 +513,7 @@ namespace AB15_GUI.WPF.Models
         /// <summary>
         /// Read current ASIC state
         /// </summary>
-        public void GetASICState()
+        private void GetASICState()
         {
             logger.Debug($"Started execution of GetASICState command on ASIC {ID}");
 
@@ -492,19 +533,55 @@ namespace AB15_GUI.WPF.Models
             serialWrapper.SerialWrite(packageToSend);
         }
 
+        /// <summary>
+        /// Reset INIT mode timeout
+        /// </summary>
+        private void ResetInitModeTimeout()
+        {
+            logger.Debug($"Started execution of GetASICState command on ASIC {ID}");
+
+            // Create register content for executing SPI_COLDSTART1
+            Reg_SysStates_Reset_Config _SysStates_Reset_Config = new Reg_SysStates_Reset_Config();
+            _SysStates_Reset_Config.Data = 0x0;
+            _SysStates_Reset_Config.spi_clear_imt.Data = 0x1;
+
+            // Construct command to MCU
+            TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
+            packageToSend.ASICID = ID; // TODO: check for ASICs 2-4
+            packageToSend.Cmd = MCUCommand.WRITE_REG;
+            packageToSend.Deleg = ASICStateDelegate;
+            packageToSend.PayloadType = typeof(ReadRegisterPayload);
+            packageToSend.Payload.Address.Add(_SysStates_Reset_Config.Address);
+            packageToSend.Payload.Data.Add(_SysStates_Reset_Config.Data);
+
+            // Send command to MCU
+            serialWrapper.SerialWrite(packageToSend);
+        }
+
         #endregion // Methods
 
         #region CallbackHandlers
 
         /// <summary>
-        /// Method that will be called periodically by timer
+        /// Method that will be called periodically by timer to read ASIC state
         /// </summary>
         /// <param name="source">unused</param>
         /// <param name="e">unused</param>
-        private void OnTimedEvent(object source, ElapsedEventArgs e)
+        private void OnAsicStateReadingEvent(object source, ElapsedEventArgs e)
         {
             // Execute ASIC state reading
             GetASICState();
+        }
+
+        /// <summary>
+        /// Method that will be called periodically by timer to reset INIT mode timeout
+        /// </summary>
+        /// <param name="source">unused</param>
+        /// <param name="e">unused</param>
+        private void OnInitModeTimeoutResettingEvent(object source, ElapsedEventArgs e)
+        {
+            // Reset INIT mode timeout
+            ResetInitModeTimeout();
         }
 
         /// <summary>
@@ -541,7 +618,11 @@ namespace AB15_GUI.WPF.Models
             // If error received - pass it to error provider
             if (mcuResponse.Payload.Error is not null)
             {
-                IsOnline = false;
+                // Report missing communication
+                if (mcuResponse.Status == MCUStatus.RESPONSE_ABSENT)
+                {
+                    IsOnline = false;
+                }
                 string errorMsg = $"Error response received. Status: {mcuResponse.Status}. Message: {mcuResponse.Payload.Error}";
                 OnErrorCallbackReceived(new CallbackErrorEventArgs() { Error = errorMsg });
                 logger.Error(errorMsg);
@@ -644,8 +725,6 @@ namespace AB15_GUI.WPF.Models
                 return;
             }
         }
-
-
 
         #endregion // CallbackHandlers
 

@@ -100,6 +100,17 @@ namespace AB15_GUI.WPF.Models.Interfaces
         void StopPeriodicStateReading();
 
         /// <summary>
+        /// Start timer to enlarge init mode period
+        /// </summary>
+        /// <param name="timeout">timer timeout in ms. Defaults to 2s</param>
+        void StartInitModeTimeoutResetting(int timeout = 2000);
+
+        /// <summary>
+        /// Stop and dispose timer for init mode enlargement
+        /// </summary>
+        void StopInitModeTimeoutResetting();
+
+        /// <summary>
         /// Write configuration data and apply CRC
         /// </summary>
         void WriteConfigurationWithCRC();
@@ -124,10 +135,5 @@ namespace AB15_GUI.WPF.Models.Interfaces
         /// Execute transition from test mode 2 command
         /// </summary>        
         void ExecuteTestMode2Transition();
-        
-        /// <summary>
-        /// Read current ASIC state
-        /// </summary>        
-        void GetASICState();
     }
 }
