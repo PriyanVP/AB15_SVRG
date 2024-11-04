@@ -175,6 +175,11 @@ namespace AB15_GUI.WPF.Models
         public event EventHandler? NormalModeEntered;
 
         /// <summary>
+        /// Event for requesting configuration data
+        /// </summary>        
+        public event EventHandler? RequestConfiguration;
+
+        /// <summary>
         /// Event for notification if error in any of the callbacks is set
         /// </summary>
         public event EventHandler<CallbackErrorEventArgs>? ErrorCallbackReceived;
@@ -229,6 +234,14 @@ namespace AB15_GUI.WPF.Models
         }
 
         /// <summary>
+        /// Raise event to request configuration
+        /// </summary>
+        public void OnRequestConfiguration()
+        {
+            RequestConfiguration?.Invoke(this, new EventArgs());
+        }
+
+        /// <summary>
         /// Raise event to notify about error in callback
         /// </summary>
         /// <param name="errorMsg">class containing error message received in callback handler</param>
@@ -236,6 +249,8 @@ namespace AB15_GUI.WPF.Models
         {
             ErrorCallbackReceived?.Invoke(this, errorMsg);
         }
+
+        // TODO: request configuration
 
         #endregion // Events
 
@@ -249,13 +264,24 @@ namespace AB15_GUI.WPF.Models
         /// <param name="listToAppend">list that will be appended</param>
         public void AppendConfigRegisters(List<IRegister> listToAppend)
         {
+            // Remove elements if already in list
+            int tmpIdx;
+            foreach (var itm in listToAppend)
+            {
+                tmpIdx = ConfigData.FindIndex(x => x.Address == itm.Address);
+                if (tmpIdx != -1)
+                {
+                    ConfigData.RemoveAt(tmpIdx);
+                }
+            }
+
             // Add new registers to list
             ConfigData.AddRange(listToAppend);
 
             // Sort list (for uniformity and manual analysis)
             ConfigData.Sort((x, y) => x.Address.CompareTo(y.Address));
 
-            // Check if duplicates present
+            // Check if duplicates present TODO: is needed?
             if (ConfigData.DistinctBy(x => x.Address).Count() != ConfigData.Count)
             {
                 string configDataSummary = "";

@@ -81,6 +81,11 @@ namespace AB15_GUI.WPF.Models.Interfaces
 
 
         /// <summary>
+        /// Raise event to request configuration
+        /// </summary>
+        void OnRequestConfiguration();
+        
+        /// <summary>
         /// Method to add list with configuration registers to global list
         /// Values are added as references (2-side modification possible)
         /// Sorting is performed afterwards for ease of analysis
