@@ -17,94 +17,6 @@ namespace AB15_GUI.WPF.Models
     public class WDStatusPayload : IByteListSerializable
     {
         /// <summary>
-        /// Class to hold decoded WD WatchdogStatus information
-        /// </summary>
-        public class WDStatus
-        {
-            /// <summary>
-            /// Indicates locked safety logic configuration
-            /// AB12: null, AB15: spi_on_sl
-            /// </summary>
-            // public bool? slLocked;
-
-            /// <summary>
-            /// Indicates active watchdog safety logic
-            /// AB12: null, AB15: wd_on_spi
-            /// </summary>
-            // public bool? wdActive;
-
-            /// <summary>
-            /// Indicates overall watchdog fault.
-            /// AB12: WDF in GS bits, AB15: slff_set_spi
-            /// </summary>
-            public bool WatchdogFault { get; set; }
-
-            /// <summary>
-            /// Indicates a watchdog timing fault in fast or slow WD
-            /// AB12: wd2 OR wd3, AB15: wd_set_slff_spi
-            /// </summary>
-            // public bool watchdogTimingFault;
-
-            /// <summary>
-            /// Indicates slow watchdog fault
-            /// AB12: WD3, AB15: wd1_set_slff_spi
-            /// </summary>
-            public bool SlowWatchdogFault { get; set; }
-
-            /// <summary>
-            /// Indicates fast watchdog fault
-            /// AB12: WD2, AB15: wd2_set_slff_spi
-            /// </summary>
-            public bool FastWatchdogFault { get; set; }
-
-            /// <summary>
-            /// Indicates oscillator timing fault
-            /// AB12: WD1, AB15: oscfail_set_slff_spi
-            /// </summary>
-            public bool OscillatorFault { get; set; }
-
-            /// <summary>
-            /// Indicates oscillator timing fault Underflow
-            /// AB12: u1, AB15: null
-            /// </summary>
-            public bool OscillatorUnderflow { get; set; }
-
-            /// <summary>
-            /// Indicates oscillator timing fault Underflow
-            /// AB12: o1, AB15: null
-            /// </summary>
-            public bool OscillatorOverflow { get; set; }
-
-            /// <summary>
-            /// Indicates slow watchdog overflow (too slow or missing)
-            /// AB12: o3 in WD_STATUS, AB15: null
-            /// </summary>
-            public bool SlowWatchdogOverflow { get; set; }
-
-            /// <summary>
-            /// AB12: r3 in WD_STATUS, AB15: qa1_set_slff_spi
-            /// </summary>
-            public bool SlowWatchdogQAFault { get; set; }
-
-            /// <summary>
-            /// Indicates a fast watchdog timing underflow (too fast)
-            /// AB12: u2, AB15: null
-            /// </summary>
-            public bool FastWatchdogUnderflow { get; set; }
-
-            /// <summary>
-            /// Indicates a fast watchdog timing overflow (too slow or missing)
-            /// AB12: o2, AB15: null
-            /// </summary>
-            public bool FastWatchdogOverflow { get; set; }
-
-            /// <summary>
-            /// AB12: r2 in WD_STATUS, AB15: qa2_set_slff_spi
-            /// </summary>
-            public bool FastWatchdogQAFault { get; set; }
-        }
-
-        /// <summary>
         /// WD1 status register
         /// </summary>
         public Reg_spi_read_wdstatus1 spi_read_wdstatus1 = new Reg_spi_read_wdstatus1();
@@ -130,13 +42,6 @@ namespace AB15_GUI.WPF.Models
         public string? Error { get; set; } = null;
 
         /// <summary>
-        /// Property to report WD WatchdogStatus information
-        /// Null corresponds to no WatchdogStatus information.
-        /// Error property should be set in such case
-        /// </summary>
-        public WDStatus? WatchdogStatus{ get; private set; } = null;
-
-        /// <summary>
         /// Convert byte list to field values
         /// </summary>
         /// <param name="status">MCU Status field of package</param>
@@ -156,35 +61,18 @@ namespace AB15_GUI.WPF.Models
                     break;
                 case MCUStatus.DATA:
                     // WD Status was received
-                    #if AB12_PLATFORM
-
-                    // Check if correct amount of data in payload present
-                    if (rawData.Count < 3)
-                    {
-                        Error = $"Received package without correct datalength in payload";
-                        break;
-                    }
-
-                    // Based on WD WatchdogStatus code - decode the bitfields of the payload
-                    // TODO Get the rawData bytes and extract the boolean flags as the bitfield is defined
-                    decodeStatus(rawData);
-
-                    #else
-
                     // Check if correct amount of data in payload present
                     if (rawData.Count < 8)
                     {
-                        Error = $"Received package without correct datalength in payload";
+                        Error = $"Received package without correct data length in payload";
                         break;
                     }
 
-                    // Unpack data to properties
-                    spi_read_wdstatus1.Data = ConstructWordFromBytes(rawData[0], rawData[1]);
-                    spi_read_wdstatus2.Data = ConstructWordFromBytes(rawData[2], rawData[3]);
-                    spi_read_enx.Data = ConstructWordFromBytes(rawData[4], rawData[5]);
-                    spi_read_wdqa.Data = ConstructWordFromBytes(rawData[6], rawData[7]);
-
-                    #endif
+                    // Unpack data to fields
+                    spi_read_wdstatus1.Data = BitOperationsExtensions.ConstructWordFromBytes(rawData[1], rawData[0]);
+                    spi_read_wdstatus2.Data = BitOperationsExtensions.ConstructWordFromBytes(rawData[3], rawData[2]);
+                    spi_read_enx.Data = BitOperationsExtensions.ConstructWordFromBytes(rawData[5], rawData[4]);
+                    spi_read_wdqa.Data = BitOperationsExtensions.ConstructWordFromBytes(rawData[7], rawData[6]);
 
                     break;
                 default:
@@ -200,44 +88,6 @@ namespace AB15_GUI.WPF.Models
         public List<byte> Serialize()
         {
             return new List<byte>();
-        }
-
-        /// <summary>
-        /// Decode the bitfield(s) into the WD WatchdogStatus struct elements
-        /// If this method is called, dataBytes is not null and the message did not present an error
-        /// AB12 Payload: WD Status Payload 16 bits (MSB, LSB) + WDF flag as 1 byte
-        /// </summary>
-        /// <param name="dataBytes">Payload bytes from the response to Read WD WatchdogStatus</param>
-        [Conditional("AB12_PLATFORM")]
-        private void decodeStatus(List<byte> dataBytes)
-        {
-            // AB12: 3 bytes
-            WatchdogStatus = new WDStatus();
-
-            byte wdsMSB = dataBytes[0];
-            byte wdsLSB = dataBytes[1];
-            byte wdf    = dataBytes[2];
-
-            // WDF bit from GS bits
-            WatchdogStatus.WatchdogFault = (wdf != 0) ; // true if WDF byte is != 0
-
-            // MSB bits
-            WatchdogStatus.SlowWatchdogFault = (wdsMSB & 0b00010000) != 0;
-            WatchdogStatus.FastWatchdogFault = (wdsMSB & 0b00001000) != 0;
-            WatchdogStatus.OscillatorFault   = (wdsMSB & 0b00000100) != 0;
-
-            // LSB bits
-            WatchdogStatus.OscillatorUnderflow   = (wdsLSB & 0b00000001) != 0;
-            WatchdogStatus.OscillatorOverflow    = (wdsLSB & 0b00000010) != 0;
-
-            WatchdogStatus.FastWatchdogUnderflow = (wdsLSB & 0b00000100) != 0;
-            WatchdogStatus.FastWatchdogOverflow  = (wdsLSB & 0b00001000) != 0;
-            WatchdogStatus.FastWatchdogQAFault   = (wdsLSB & 0b00010000) != 0;
-
-            WatchdogStatus.SlowWatchdogOverflow  = (wdsLSB & 0b00100000) != 0;
-            WatchdogStatus.SlowWatchdogQAFault   = (wdsLSB & 0b01000000) != 0;
-
-            return;
         }
     }
 }
