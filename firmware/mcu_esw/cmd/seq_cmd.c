@@ -20,7 +20,7 @@
 /*------------------------------------------------------Macros-------------------------------------------------------*/
 /*********************************************************************************************************************/
 
-#define RW_ITEM_SIZE        (5)           /** \brief Size of 1 item in RW command package (rw flag - address - data) */
+#define RW_ITEM_SIZE        (6)           /** \brief Size of 1 item in RW command package (rw flag - address - data) */
 #define READ_ITEM_SIZE      (2)           /** \brief Size of 1 item in read command package (address)                */
 #define WRITE_ITEM_SIZE     (4)           /** \brief Size of 1 item in read command package (address - data)         */
 
