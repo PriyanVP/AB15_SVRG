@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -58,7 +59,12 @@ namespace AB15_GUI.WPF.Views
         public string IdentifierName { 
             get; 
             set; }
-        public int IndexMode { get; set; }
+        public int _indexMode;
+        public int IndexMode 
+        { 
+            get; 
+            set; 
+        }
 
         public TestInput()
         {
