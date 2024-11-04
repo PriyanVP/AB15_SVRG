@@ -18,6 +18,11 @@ namespace AB15_GUI.WPF.Models.Interfaces
         /// <summary>
         /// Connect to all available ASICs
         /// </summary>
-        public void EstablishConnection();
+        void EstablishConnection();
+
+        /// <summary>
+        /// Arm ASIC's to reset INIT mode timeout
+        /// </summary>
+        void StartInitModeTimeoutResetting();
     }
 }
