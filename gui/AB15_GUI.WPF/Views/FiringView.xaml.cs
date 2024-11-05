@@ -62,8 +62,14 @@ namespace AB15_GUI.WPF.Views
         public int _indexMode;
         public int IndexMode 
         { 
-            get; 
-            set; 
+            get 
+            { 
+                return _indexMode; 
+            }
+            set 
+            { 
+                _indexMode = value;
+            }
         }
 
         public TestInput()
