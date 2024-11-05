@@ -94,7 +94,7 @@ namespace AB15_GUI.WPF.ViewModels
             _stateMachine.Fire(Triggers.POR);
 
             // TODO: remove temporary code - should be on other page
-            this.asicWrapper.EstablishConnection();
+            // this.asicWrapper.EstablishConnection(); // TODO: uncomment for testing
         }
 
         #region State_Machine
