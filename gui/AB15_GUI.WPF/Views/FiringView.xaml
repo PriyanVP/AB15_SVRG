@@ -34,8 +34,8 @@
                 <Grid x:Name="FiringConfigurationPage">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="5"/>
-                        <ColumnDefinition Width="auto" MinWidth="250"/>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="1*" MinWidth="250"/>
+                        <ColumnDefinition Width="2*"/>
                         <ColumnDefinition Width="5"/>
                     </Grid.ColumnDefinitions>
 
@@ -43,6 +43,7 @@
                         <RowDefinition Height="5"/>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="*"/>
+                        <RowDefinition Height="auto"/>
                         <RowDefinition Height="5"/>
                     </Grid.RowDefinitions>
 
@@ -65,35 +66,35 @@
                         <ComboBoxItem>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="B - 2" MinWidth="50"/>
-                                <TextBlock Text=" - Firing Loop"/>
+                                <TextBlock Text=" - Firing Loop, same module"/>
                             </StackPanel>
                         </ComboBoxItem>
 
                         <ComboBoxItem>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="C - 2" MinWidth="50"/>
-                                <TextBlock Text=" - Firing Loop"/>
+                                <TextBlock Text=" - Firing Loop, same module, 1 soft firing"/>
                             </StackPanel>
                         </ComboBoxItem>
 
                         <ComboBoxItem>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="D - 2" MinWidth="50"/>
-                                <TextBlock Text=" - Firing Loop"/>
+                                <TextBlock Text=" - Firing Loop, different modules"/>
                             </StackPanel>
                         </ComboBoxItem>
 
                         <ComboBoxItem>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="E - 10" MinWidth="50"/>
-                                <TextBlock Text=" - Firing Loop"/>
+                                <TextBlock Text=" - Firing Loop, all 5 modules"/>
                             </StackPanel>
                         </ComboBoxItem>
 
                         <ComboBoxItem>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="F - 20" MinWidth="50"/>
-                                <TextBlock Text=" - Firing Loop"/>
+                                <TextBlock Text="(all) - Firing Loop"/>
                             </StackPanel>
                         </ComboBoxItem>
                     </ComboBox>
@@ -102,14 +103,18 @@
                               Text="{Binding FiringConfigurationTextBox}" 
                               TextWrapping="Wrap" TextAlignment="Left"/>
 
-                    <Border Grid.Column="2" Grid.Row="1" Grid.RowSpan="2" BorderThickness="1" BorderBrush="Black">
+                    <Button   Grid.Column="1" Grid.Row="3" Margin="5" 
+                              Content="Transfer to normal mode"
+                              Style="{DynamicResource SimpleButton}"/>
+
+                    <Border Grid.Column="2" Grid.Row="1" Grid.RowSpan="3" BorderThickness="1" BorderBrush="Black">
                         <StackPanel Orientation="Vertical">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="5" />
                                     <ColumnDefinition Width="40" MinWidth="80"/>
                                     <ColumnDefinition Width="120"/>
-                                    <ColumnDefinition Width="100"/>
+                                    <ColumnDefinition Width="300"/>
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="5" />
                                 </Grid.ColumnDefinitions>
@@ -147,7 +152,7 @@
                                                 <ColumnDefinition Width="5" />
                                                 <ColumnDefinition Width="40" MinWidth="80"/>
                                                 <ColumnDefinition Width="120"/>
-                                                <ColumnDefinition Width="100"/>
+                                                <ColumnDefinition Width="300"/>
                                                 <ColumnDefinition Width="*" />
                                                 <ColumnDefinition Width="5" />
                                             </Grid.ColumnDefinitions>
@@ -254,12 +259,14 @@
                     </Grid.RowDefinitions>
 
                     <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="5" Grid.RowSpan="3">
-                        <Button Command="{Binding ToggleCycleReading}" Style="{DynamicResource SimpleButton}">
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox Style="{DynamicResource ToggleSwitchStyle}"
+                                      Command="{Binding ToggleCycleReading}"/>
                             <StackPanel Orientation="Vertical" Margin="2">
-                                <TextBlock Text="Start/stop" HorizontalAlignment="Center" FontSize="16"/>
+                                <TextBlock Text="Toggle" HorizontalAlignment="Center" FontSize="16"/>
                                 <TextBlock Text="Cycle reading" HorizontalAlignment="Center" FontSize="16"/>
                             </StackPanel>
-                        </Button>
+                        </StackPanel>
                     </StackPanel>
 
                     <TextBlock Text="ASIC 1" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center"/>
@@ -868,6 +875,13 @@
                         <RowDefinition Height="5"/>
                     </Grid.RowDefinitions>
 
+                    <StackPanel VerticalAlignment="Bottom"
+                                Grid.Column="1" Grid.Row="2" Orientation="Vertical">
+                        <Button Command="{Binding FireSimultaniouslyCommand}"
+                                Content="Fire simultanious" Margin="5"
+                                Style="{DynamicResource SimpleButton}"/>
+                    </StackPanel>
+
                     <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1">
 
                         <StackPanel Orientation="Horizontal">
@@ -887,11 +901,15 @@
                         <StackPanel Orientation="Horizontal">
                             <CheckBox Style="{DynamicResource ToggleSwitchStyle}" 
                                       IsChecked="{Binding ReduceCurrentEnable}"/>
-                            <TextBlock Text="Reduced Current (alternative mode)"
-                                       Margin="5"/>
+                            <StackPanel     Orientation="Vertical">
+                                <TextBlock  Text="Reduced Current"
+                                            Margin="5,5,5,0"/>
+                                <TextBlock  Text="alternative mode"
+                                            Margin="5,0,5,5"/>
+                            </StackPanel>
                         </StackPanel>
 
-                        <ComboBox SelectedIndex="{Binding FiringSelectedMode}">
+                        <ComboBox SelectedIndex="{Binding FiringSelectedMode}" Margin="5">
                             <ComboBoxItem IsSelected="True">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="A.1 "/>
@@ -980,6 +998,8 @@
                                     <ColumnDefinition Width="120" MinWidth="80"/>
                                     <ColumnDefinition Width="100" MinWidth="80"/>
                                     <ColumnDefinition Width="100" MinWidth="80"/>
+                                    <ColumnDefinition Width="120" MinWidth="80"/>
+                                    <ColumnDefinition Width="120" MinWidth="80"/>
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="5" />
                                 </Grid.ColumnDefinitions>
@@ -990,7 +1010,7 @@
                                     <RowDefinition Height="1"/>
                                 </Grid.RowDefinitions>
 
-                                <Canvas Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="5" Background="{DynamicResource UI.SeparateLine}"/>
+                                <Canvas Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="7" Background="{DynamicResource UI.SeparateLine}"/>
 
                                 <TextBlock  Grid.Column="1" Margin="0,0,5,0" FontSize="20"
                                             Text="#" HorizontalAlignment="Center">
@@ -1008,6 +1028,14 @@
                                 <TextBlock Grid.Column="4" Margin="0,0,5,0" FontSize="20"
                                                Text="WasFired" HorizontalAlignment="Center">
                                 </TextBlock>
+
+                                <TextBlock Grid.Column="5" Margin="0,0,5,0" FontSize="20"
+                                               Text="Count Hight" HorizontalAlignment="Center">
+                                </TextBlock>
+
+                                <TextBlock Grid.Column="6" Margin="0,0,5,0" FontSize="20"
+                                               Text="Count Low" HorizontalAlignment="Center">
+                                </TextBlock>
                             </Grid>
                             <ListView   Name="FiringResultTableView" 
                                 ItemsSource="{Binding FiringResultTable}"
@@ -1021,7 +1049,9 @@
                                                 <ColumnDefinition Width="40"/>
                                                 <ColumnDefinition Width="120" MinWidth="80"/>
                                                 <ColumnDefinition Width="100" MinWidth="80"/>
-                                                <ColumnDefinition Width="100" />
+                                                <ColumnDefinition Width="100" MinWidth="80"/>
+                                                <ColumnDefinition Width="120" MinWidth="80"/>
+                                                <ColumnDefinition Width="120" MinWidth="80"/>
                                                 <ColumnDefinition Width="*" />
                                                 <ColumnDefinition Width="5" />
                                             </Grid.ColumnDefinitions>
@@ -1032,7 +1062,7 @@
                                                 <RowDefinition Height="1"/>
                                             </Grid.RowDefinitions>
 
-                                            <Canvas Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="5" Background="{DynamicResource UI.SeparateLine}"/>
+                                            <Canvas Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="7" Background="{DynamicResource UI.SeparateLine}"/>
 
                                             <TextBlock  Grid.Column="1" Margin="0,0,5,0" FontSize="20">
                                                 <TextBlock.Text>
@@ -1055,6 +1085,16 @@
 
                                             <TextBlock Grid.Column="4" Margin="0,0,5,0" FontSize="20"
                                                Text="{Binding WasFired}"
+                                                       HorizontalAlignment="Center">
+                                            </TextBlock>
+
+                                            <TextBlock Grid.Column="5" Margin="0,0,5,0" FontSize="20"
+                                               Text="{Binding FiringCntHigh}"
+                                                       HorizontalAlignment="Center">
+                                            </TextBlock>
+
+                                            <TextBlock Grid.Column="6" Margin="0,0,5,0" FontSize="20"
+                                               Text="{Binding FiringCntLow}"
                                                        HorizontalAlignment="Center">
                                             </TextBlock>
 
