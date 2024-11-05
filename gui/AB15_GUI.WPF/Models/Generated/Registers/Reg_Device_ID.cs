@@ -1,12 +1,14 @@
 using System;
+using System.Collections.Generic;
+using AB15_GUI.WPF.Models.Interfaces;
 
-namespace AB15_GUI.WPF.Models.Genereted.Registers
+namespace AB15_GUI.WPF.Models.Generated.Registers
 {
     /// <summary>
     /// Class for working with Device_ID register
     /// WARNING: this class is generated, do not modify manually!
     /// </summary>
-    public class Reg_Device_ID
+    public class Reg_Device_ID : IRegister
     {
         /// <summary>
         /// Reset value for register

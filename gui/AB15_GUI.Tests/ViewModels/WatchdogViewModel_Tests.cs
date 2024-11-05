@@ -20,7 +20,7 @@ namespace AB15_GUI.Tests.ViewModels
     [NonParallelizable]
     public class WatchdogViewModel_Tests
     {
-        private Logger logger;
+        private ILoggingService loggerMock;
         private WatchdogViewModel watchdogVM;
         private SerialWrapperMock serialMock;
 
@@ -30,18 +30,9 @@ namespace AB15_GUI.Tests.ViewModels
         [OneTimeSetUp]
         public void SetUp()
         {
-            // Workaround for thread sync to work correctly TODO: refactor approach to remove close coupling
-            if (Application.Current == null)
-            { 
-                new Application { ShutdownMode = ShutdownMode.OnExplicitShutdown }; 
-            }
-
-            logger = LogManager.Setup()
-                                .SetupExtensions(ext => ext.RegisterLayoutRenderer<BuildConfigurationLayoutRenderer>("build-configuration"))
-                                .SetupExtensions(ext => ext.RegisterTarget<LogMemoryRecordTarget>("MemoryRecord"))
-                                .GetCurrentClassLogger(); // Same logger will be used across all tests
+            loggerMock = new LoggerMock(); // Same logger will be used across all tests
             serialMock = new SerialWrapperMock();
-            watchdogVM = new WatchdogViewModel(logger, serialMock);
+            watchdogVM = new WatchdogViewModel(loggerMock, serialMock);
         }
 
         /// <summary>
@@ -50,7 +41,6 @@ namespace AB15_GUI.Tests.ViewModels
         [OneTimeTearDown]
         public void TearDown()
         {
-            LogManager.Shutdown();
         }
 
         [Test, Order(1), Description("Check parameters in IDLE state")]
@@ -285,6 +275,95 @@ namespace AB15_GUI.Tests.ViewModels
                 }
 
                 return true;
+            }
+        }
+
+        public class LoggerMock : ILoggingService
+        {
+            public bool IsDebugEnabled => throw new NotImplementedException();
+
+            public bool IsErrorEnabled => throw new NotImplementedException();
+
+            public bool IsFatalEnabled => throw new NotImplementedException();
+
+            public bool IsInfoEnabled => throw new NotImplementedException();
+
+            public bool IsTraceEnabled => throw new NotImplementedException();
+
+            public bool IsWarnEnabled => throw new NotImplementedException();
+
+            public string Name => throw new NotImplementedException();
+
+            public void Debug(string format, params object[] args)
+            {
+                // Do nothing
+                return;
+            }
+
+            public void Debug(Exception exception, string format, params object[] args)
+            {
+                // Do nothing
+                return;
+            }
+
+            public void Error(string format, params object[] args)
+            {
+                // Do nothing
+                return;
+            }
+
+            public void Error(Exception exception, string format, params object[] args)
+            {
+                // Do nothing
+                return;
+            }
+
+            public void Fatal(string format, params object[] args)
+            {
+                // Do nothing
+                return;
+            }
+
+            public void Fatal(Exception exception, string format, params object[] args)
+            {
+                // Do nothing
+                return;
+            }
+
+            public void Info(string format, params object[] args)
+            {
+                // Do nothing
+                return;
+            }
+
+            public void Info(Exception exception, string format, params object[] args)
+            {
+                // Do nothing
+                return;
+            }
+
+            public void Trace(string format, params object[] args)
+            {
+                // Do nothing
+                return;
+            }
+
+            public void Trace(Exception exception, string format, params object[] args)
+            {
+                // Do nothing
+                return;
+            }
+
+            public void Warn(string format, params object[] args)
+            {
+                // Do nothing
+                return;
+            }
+
+            public void Warn(Exception exception, string format, params object[] args)
+            {
+                // Do nothing
+                return;
             }
         }
 

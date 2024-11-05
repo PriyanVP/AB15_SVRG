@@ -1,6 +1,8 @@
-﻿using AB15_GUI.WPF.Views;
-using NLog;
-using System;
+﻿using System;
+using AB15_GUI.WPF.Views;
+using AB15_GUI.WPF.NLog;
+using AB15_GUI.WPF.Models;
+using AB15_GUI.WPF.Models.Interfaces;
 
 namespace AB15_GUI.WPF.ViewModels
 {
@@ -74,7 +76,12 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// Local logger instance
         /// </summary>
-        private readonly Logger logger;
+        private readonly ILoggingService logger;
+
+        /// <summary>
+        /// ASIC wrapper holding references to every available ASIC
+        /// </summary>
+        private readonly IASICWrapper asicWrapper;
 
         /// <summary>
         /// Logger window instance
@@ -89,14 +96,18 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// Constructor
         /// </summary>
-        public MainViewModel(Logger logger, LoggerViewModel loggerViewModel, LoggerView loggerWindowView, WatchdogViewModel watchdogViewModel)
+        public MainViewModel(ILoggingService logger, LoggerViewModel loggerViewModel, LoggerView loggerWindowView, WatchdogViewModel watchdogViewModel, IASICWrapper asicWrapper)
         {
             // Init Logger and logger view model
             this.logger = logger;
+            this.asicWrapper = asicWrapper;
 
             // Store references to child view models
             LoggerViewModel = loggerViewModel;
             WatchdogViewModel = watchdogViewModel;
+
+            // Dummy configuration TODO: refactor to final implementation when available
+            var asicConfig = new DummyConfiguration(asicWrapper);
 
             logger.Trace("In MainViewModel");
             loggerWindowView.Show();       

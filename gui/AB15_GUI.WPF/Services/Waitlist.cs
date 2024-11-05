@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
-using NLog;
+using AB15_GUI.WPF.NLog;
 using AB15_GUI.WPF.Models;
 using AB15_GUI.WPF.Models.Interfaces;
 using AB15_GUI.WPF.Services.Interfaces;
-using System.Diagnostics.Contracts;
 
 namespace AB15_GUI.WPF.Services;
 
@@ -21,7 +20,7 @@ public class Waitlist : IWaitlist
     /// <summary>
     /// Local reference to logger
     /// </summary>
-    private Logger logger;
+    private ILoggingService logger;
 
     /// <summary>
     /// Waitlist for storing and handling records for received messages from MCU
@@ -32,7 +31,7 @@ public class Waitlist : IWaitlist
     /// <summary>
     /// Construct waitlist and fill with default items
     /// </summary>
-    public Waitlist(Logger logger)
+    public Waitlist(ILoggingService logger)
     {
         // Init logger
         this.logger = logger;

@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Windows;
+using System.Collections.Generic;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using NLog;
+using NLog.Config;
 using AB15_GUI.WPF.NLog;
 using AB15_GUI.WPF.Views;
 using AB15_GUI.WPF.ViewModels;
 using AB15_GUI.WPF.Services;
 using AB15_GUI.WPF.Services.Interfaces;
-using System.Collections.Generic;
-using NLog.Config;
-using System.Configuration;
+using AB15_GUI.WPF.Models.Interfaces;
+using AB15_GUI.WPF.Models;
 
 namespace AB15_GUI.WPF
 {
@@ -27,7 +28,7 @@ namespace AB15_GUI.WPF
         /// <summary>
         /// Logger reference with custom configuration
         /// </summary>
-        private readonly Logger logger;
+        private readonly ILoggingService logger;
 
         /// <summary>
         /// Command line parameters
@@ -66,10 +67,7 @@ namespace AB15_GUI.WPF
 
                             #region Services
 
-                            services.AddTransient<Logger>(sp => LogManager.Setup()
-                                                 .SetupExtensions(ext => ext.RegisterLayoutRenderer<BuildConfigurationLayoutRenderer>("build-configuration"))
-                                                 .SetupExtensions(ext => ext.RegisterTarget<LogMemoryRecordTarget>("MemoryRecord"))
-                                                 .GetCurrentClassLogger()); // Same logger will be used across all classes - instance always created in App
+                            services.AddTransient<ILoggingService, LoggingService>(); // Same logger will be used across all classes - instance always created in App
 
                             services.AddSingleton<IWaitlist, Waitlist>();
                             services.AddSingleton<ISerialComm, SerialComm>();
@@ -79,13 +77,17 @@ namespace AB15_GUI.WPF
 
                             #region Other
 
+                            services.AddTransient<IASIC, ASIC>();
+
+                            services.AddSingleton<IASICWrapper, ASICWrapper>();
+
                             services.AddSingleton<LogMemoryRecordTarget>(sp => (LogMemoryRecordTarget)LogManager.Configuration.FindTargetByName("memory"));
 
                             #endregion // Other
                         })
                         .Build();
 
-            this.logger = AppHost.Services.GetRequiredService<Logger>();
+            this.logger = AppHost.Services.GetRequiredService<ILoggingService>();
 
             // Overwrite logging levels for Logger regression testing
             if (arguments.ContainsKey("loggerTests"))
