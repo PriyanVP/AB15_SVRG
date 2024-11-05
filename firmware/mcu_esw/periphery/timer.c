@@ -54,6 +54,7 @@ static uint16 g_watchdogStatusCheckReload;        /** \brief Watchdog status che
 static uint16 g_errorCheckReload;                 /** \brief Error check periodicity in T2 timer interrupts          */
 static uint16 g_continuousReadReload;             /** \brief Continuous read periodicity in T2 timer interrupts      */
 static uint16 g_GPIOReload;                       /** \brief GPIO handling periodicity in T2 timer interrupts        */
+static uint16 g_flmDiagReload;                    /** \brief FLM cyclic diagnostic interrupts                        */
 
 static boolean g_watchdog1Enable            = FALSE;    /** \brief Watchdog 1 acknowledge interrupts enable          */
 static boolean g_watchdog2Enable            = FALSE;    /** \brief Watchdog 2 acknowledge interrupts enable          */
@@ -61,6 +62,7 @@ static boolean g_watchdogStatusCheckEnable  = FALSE;    /** \brief Watchdog stat
 static boolean g_errorCheckEnable           = FALSE;    /** \brief Error check interrupts enable                     */
 static boolean g_continuousReadEnable       = FALSE;    /** \brief Continuous read interrupts enable                 */
 static boolean g_GPIOEnable                 = FALSE;    /** \brief GPIO interrupts enable                            */
+static boolean g_flmDiagEnable              = FALSE;    /** \brief FLM cyclic diagnostic interrupts enable           */
 
 /*********************************************************************************************************************/
 /*--------------------------------------------Function Implementations-----------------------------------------------*/
@@ -169,6 +171,11 @@ void EnableGPIOInterrupt(void)
     g_GPIOEnable = TRUE;
 }
 
+void EnableFLMDiagInterrupt(void)
+{
+    g_flmDiagEnable = TRUE;
+}
+
 void DisableWatchdogInterrupt(WatchdogTypeEnum wdType)
 {  
     if ((wdType == WD1) || (wdType == WD12))
@@ -200,6 +207,11 @@ void DisableContinuousReadInterrupt(void)
 void DisableGPIOInterrupt(void)
 {
     g_GPIOEnable = FALSE;
+}
+
+void DisableFLMDiagInterrupt(void)
+{
+    g_flmDiagEnable = FALSE;
 }
 
 boolean GetStateWatchdogInterrupt(WatchdogTypeEnum wdType)
@@ -263,6 +275,7 @@ void UpdateTimersRoutine(void)
     static uint16 errorCheckCounter             = 0;
     static uint16 continuousReadCounter         = 0;
     static uint16 GPIOCounter                   = 0;
+    static uint16 FLMDiagCounter                = 0;
 
     // Increment variables if entered interrupt routine
     watchdog1Counter++;
@@ -271,6 +284,7 @@ void UpdateTimersRoutine(void)
     errorCheckCounter++;
     continuousReadCounter++;
     GPIOCounter++;
+    FLMDiagCounter++;
 
     // Call corresponding functions if enabled and counter reached reload value
     if ((g_watchdog1Enable == TRUE) && (watchdog1Counter >= g_watchdog1Reload))
@@ -316,6 +330,14 @@ void UpdateTimersRoutine(void)
 //        GPIOCounter = 0;
 //        //GPIOInterruptRoutine();
 //    }
+    // Call corresponding functions if enabled and counter reached reload value
+    // TODO: provide getter and setter for g_flmDiagEnable
+    if ((g_flmDiagEnable == TRUE) && (FLMDiagCounter >= g_flmDiagReload))
+    {
+        // Check FLM diagnostics execution results
+        FLMDiagCounter = 0;
+        //FLMDiagInteruptRoutine(); //TODO: Should be in main.c
+        }
 }
 
 
@@ -324,4 +346,56 @@ void ServiceTimerRoutineWrapper(void)
     // Call interrupt routine function from other file
     //TODO. Inhibited
     //ServiceInterruptRoutine();
+}
+
+// TODO: find a proper place to declare
+flm_DiagExecStatusEnum g_flmDiagExecStatus = FLM_DIAG_EXEC_STATUS_FINISHED;
+
+//TODO: transfer into main
+FLMDiagInteruptRoutine()
+{
+    // TODO: find a proper place for declaration
+    static flm_DiagExecOrderEnum FLMDiagExecNumber = FLM_DIAG_ORDER_SHORT_DET;
+
+    // TODO
+    // Read flm_diag_active and FLM_diag_ready
+    // (flm_diag_active ==1 && FLM_diag_ready == 0) -> SPI triggered diag is running)
+    // (flm_diag_active ==0 && flm_diag_ready ==1) -> SPI triggered diag is evaluated, read results)
+    static g_flmDiagExecStatus = FLMReadDiagExecStatus();
+
+    // Start diagnostic and get out
+    // On next entries - check if finished
+    switch (FLMDiagExecNumber)
+    {
+    case FLM_DIAG_ORDER_SHORT_DET:
+        // check status of diag execution, dont enter any diagnostic if status is ONGOING
+        if (GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_FINISHED)
+        {
+            SetFLMDiagExecStatus(FLM_DIAG_EXEC_STATUS_ONGOING); // TODO: move into FLMShortDiag()
+            FLMShortDiag();
+            SetFLMDiagExecStatus(FLM_DIAG_EXEC_STATUS_FINISHED);// TODO: move into FLMShortDiag();
+            FLMDiagExecNumber = FLM_DIAG_ORDER_VHX_MEAS; // TODO: move into FLMShortDiag();
+        }
+        break;
+
+    case FLM_DIAG_ORDER_VHX_MEAS: 
+        FLMVHxDiag();
+        if (GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_FINISHED)
+        {
+            // Move on to next diagnostic
+            FLMDiagExecNumber = FLM_DIAG_ORDER_LOOP_RES_MEAS;
+        }
+        break;
+
+    case FLM_DIAG_ORDER_LOOP_RES_MEAS:
+        /* code */
+        FLMDiagExecNumber = FLM_DIAG_ORDER_SQUIB_DET;
+        break;
+    case FLM_DIAG_ORDER_SQUIB_DET:
+        /* code */
+        FLMDiagExecNumber = FLM_DIAG_ORDER_SHORT_DET;
+        break;
+    default:
+        break;
+    }
 }

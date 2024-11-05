@@ -38,7 +38,8 @@ typedef enum
 {
     FLM_DIAG_EXEC_STATUS_IDLE           = 0,   /** \brief  */
     FLM_DIAG_EXEC_STATUS_ONGOING        = 1,   /** \brief  */
-    FLM_DIAG_EXEC_STATUS_FINISHED       = 2    /** \brief  */
+    FLM_DIAG_EXEC_STATUS_EVALUATED      - 2,   /** \brief  */
+    FLM_DIAG_EXEC_STATUS_FINISHED       = 3    /** \brief  */
 
 } flm_DiagExecStatusEnum;
 
@@ -109,14 +110,15 @@ typedef struct
  */
 typedef struct
 {
-    struct          FLMShortDiagResults;                    /** \brief  */
-    struct          FLMVHxDiagResults;                      /** \brief  */
-    struct          FLMSquibDetErrDiagResults;              /** \brief  */
-    struct          FLMLoopResDiagResults;                  /** \brief  */
+    struct              FLMShortDiagResults;                /** \brief  */
+    FLM_Read_Diag_VHx   FLMVHxDiagResults[11];              /** \brief  */
+    struct              FLMSquibDetErrDiagResults;          /** \brief  */
+    bool                FLMSquibErrorDiagResults[20];       /** \brief  */
     
 } FLMCycDiagResults;
 
 /** \brief Structure to store results of FLM channel short detection (IGH/IGL short to ground/battery)
+ * 10 bytes
  */
 typedef struct
 {
@@ -132,16 +134,18 @@ typedef struct
  */ 
 typedef struct 
 {
-    uint16 FLM_Read_Diag_VH1a_voltage_value;          /** \brief  */
-    bool FLM_Read_Diag_VH1a_voltage_valid;            /** \brief  */
+    uint16 FLM_Read_Diag_VHx_voltage_value;          /** \brief  */
+    bool FLM_Read_Diag_VHx_voltage_valid;            /** \brief  */
 
 }FLM_Read_Diag_VHx;
 
 /** \brief Array to store results of all FLM channel VH voltages diagnostic
+ * 24 bytes
  */ 
 FLM_Read_Diag_VHx FLMVHxDiagResults[11];
 
 /** \brief Structure to store results of FLM Squib detection (Squib detection error, FLM_Squib_det_err_ch1...ch20)
+ * 3 bytes
  */
 bool FLMSquibErrorDiagResults[20];
 
@@ -157,6 +161,7 @@ typedef struct
 } FLMReadSquibRes;
 
 /** \brief Structure to store results of FLM all Loops resistanse diagnostic
+ * 48 bytes
  */
 struct FLMReadSquibRes FLMLoopResDiagResults[20];
 

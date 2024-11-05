@@ -52,6 +52,8 @@ void SetFLMDiagMode();
  */
 void StartFLMDiag();
 
+
+
 /** \brief
  * Measure Battery voltage, normal range to perform diagnostics
  * is 6...18V
@@ -63,7 +65,7 @@ bool CheckBatVoltage();
 /*********************************************************************************************************************/
 
 static FLMCycDiagFaults g_FLMCycDiagFaultsValues;
-static flm_DiagExecStatusEnum g_FLMCycDiagStatus;
+static flm_cycDiagExecStatusEnum g_FLMCycDiagExecStatus;
 static FLMCycDiagResults g_FLMCycDiagResultsValues;
 //bool static g_FLMDiagActive = 0; // similar should be available at top level to see if MCU is busy with FLM diag
 //bool static g_FLMDiagReady = 0;
@@ -95,20 +97,36 @@ void FLMVHxDiag()
 
     if (CheckBatVoltage()==FALSE) 
     {
-        g_FLMCycDiagStatus.flm_VHxMeasStatus = FLM_DIAG_STATUS_VHX_MEAS_SKIPPED;
+        // TODO: re-do to support current logic
+        //g_FLMCycDiagStatus.flm_VHxMeasStatus = FLM_DIAG_STATUS_VHX_MEAS_SKIPPED;
     }
 
-    if (g_FLMDiagActive != 0) && (g_FLMDiagReady != 1)
-    {   
-        // Wait for any previous diagnostic to end
-        // TODO: implement getters for g_FLMDiagActive and g_FLMDiagReady
-        // TODO: implement timeout for 1.5-2 duration of diagnostic -> if timeout then feature error to PC 
+    // TODO: clean up
+    //if (g_FLMDiagActive != 0) && (g_FLMDiagReady != 1)
+    //{   
+    //    // Wait for any previous diagnostic to end
+    //    // TODO: implement getters for g_FLMDiagActive and g_FLMDiagReady
+    //    // TODO: implement timeout for 1.5-2 duration of diagnostic -> if timeout then feature error to PC 
+    //}
+
+    if (GetFLMDiagExecStatus() != FLM_DIAG_EXEC_STATUS_EVALUATED)
+    {
+        g_flmDiagExecStatus = FLM_DIAG_EXEC_STATUS_ONGOING;
+        // TODO: start diagnostic and get out
+        // code
+        return;
+    }
+    else
+    {
+        // TODO: diagnostic was performed, store results
+        // code
+        SetFLMDiagExecStatus(FLM_DIAG_EXEC_STATUS_FINISHED);
     }
 
+    // TODO: update this portion
     g_FLMCycDiagFaultsValues.FLM_VHxMeasErr_fault = 0; // as per Vasant's diagrams; clearing fault here doesn't seem right for me
     g_FLMCycDiagStatus.flm_VHxMeasStatus = FLM_DIAG_STATUS_VHX_MEAS_INITIATED;
-
-
+    return;
 }
 
 void FLMSquibDetErrDiag() //
@@ -148,6 +166,16 @@ void StartFLMDiag(void)
 
     // Write
     QSPIWriteNormal(SPI1_CS1MASTER, FLM_FLM_DIAG_START, tmpFLMDiagStartfRegister.as_uint16);
+}
+
+void SetFLMDiagExecStatus(flm_cycDiagExecStatusEnum FLMCycDiagExecStatus)
+{
+    g_FLMDiagExecStatus = FLMCycDiagExecStatus;
+}
+
+flm_cycDiagExecStatusEnum GetFLMDiagExecStatus(void)
+{
+    return g_FLMDiagExecStatus;
 }
 
 void SetFLMDiagMode(void)
