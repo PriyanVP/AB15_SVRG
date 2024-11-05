@@ -3,6 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
       xmlns:local="clr-namespace:AB15_GUI.WPF.Views"
       xmlns:custom="clr-namespace:AB15_GUI.WPF.Views.Components"
       mc:Ignorable="d" 
@@ -46,46 +47,52 @@
                     </Grid.RowDefinitions>
 
                     <ComboBox Grid.Column="1" Grid.Row="1" Margin="5" 
-                              SelectedIndex="{Binding FiringLoopIndexSelected}"
-                              SelectionChanged="ComboBox_SelectionChanged" SelectedItem="1">
+                              SelectedIndex="0">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding ConfigurationChanged}" 
+                                                       CommandParameter="{Binding Path=SelectedItem.Content.Children[0].Text, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+
                         <ComboBoxItem>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="A - 1"/>
+                                <TextBlock Text="A - 1" MinWidth="50"/>
                                 <TextBlock Text=" - Firing Loop"/>
                             </StackPanel>
                         </ComboBoxItem>
 
                         <ComboBoxItem>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="B - 2"/>
+                                <TextBlock Text="B - 2" MinWidth="50"/>
                                 <TextBlock Text=" - Firing Loop"/>
                             </StackPanel>
                         </ComboBoxItem>
 
                         <ComboBoxItem>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="C - 2"/>
+                                <TextBlock Text="C - 2" MinWidth="50"/>
                                 <TextBlock Text=" - Firing Loop"/>
                             </StackPanel>
                         </ComboBoxItem>
 
                         <ComboBoxItem>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="D - 2"/>
+                                <TextBlock Text="D - 2" MinWidth="50"/>
                                 <TextBlock Text=" - Firing Loop"/>
                             </StackPanel>
                         </ComboBoxItem>
 
                         <ComboBoxItem>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="E - 10"/>
+                                <TextBlock Text="E - 10" MinWidth="50"/>
                                 <TextBlock Text=" - Firing Loop"/>
                             </StackPanel>
                         </ComboBoxItem>
 
                         <ComboBoxItem>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="F - 20"/>
+                                <TextBlock Text="F - 20" MinWidth="50"/>
                                 <TextBlock Text=" - Firing Loop"/>
                             </StackPanel>
                         </ComboBoxItem>
@@ -93,8 +100,7 @@
 
                     <TextBox  Grid.Column="1" Grid.Row="2" Margin="5" FontSize="20"
                               Text="{Binding FiringConfigurationTextBox}" 
-                              TextWrapping="Wrap" TextAlignment="Left"
-                              />
+                              TextWrapping="Wrap" TextAlignment="Left"/>
 
                     <Border Grid.Column="2" Grid.Row="1" Grid.RowSpan="2" BorderThickness="1" BorderBrush="Black">
                         <StackPanel Orientation="Vertical">
@@ -130,10 +136,10 @@
                                 </TextBlock>
 
                             </Grid>
-                            <ListView   Grid.Row="1" Grid.Column="1" Name="ConfigChannelsTableView" 
-                                    ItemsSource="{Binding ConfigChannelsTable}"
-                                    ItemContainerStyle="{DynamicResource ListViewItemStyle}" 
-                                    FontSize="20">
+                            <ListView Grid.Row="1" Grid.Column="1" Name="ConfigChannelsTableView" 
+                                      ItemsSource="{Binding ConfigChannelsTable}"
+                                      ItemContainerStyle="{DynamicResource ListViewItemStyle}" 
+                                      FontSize="20">
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
                                         <Grid>
@@ -167,7 +173,7 @@
                                                         Text="{Binding IdentifierName, Mode=TwoWay}">
                                             </TextBox>
 
-                                            <ComboBox   Grid.Column="3" Margin="0,0,5,0" SelectedItem="{Binding IndexMode, Mode=TwoWay}">
+                                            <ComboBox   Grid.Column="3" Margin="0,0,5,0" SelectedIndex="{Binding IndexMode, Mode=TwoWay}">
                                                 <ComboBoxItem Tag="0">
                                                     <TextBlock Text="OFF"/>
                                                 </ComboBoxItem>
