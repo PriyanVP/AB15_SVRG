@@ -1,21 +1,55 @@
 using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace AB15_GUI.WPF.Models
 {
     /// <summary>
     /// Data record class that holds channel specific firing data
     /// </summary>
-    public class FiringResultRecord
+    public class FiringResultRecord : INotifyPropertyChanged
     {
+        /// <summary>
+        /// <inheritdoc cref="ASICID" path='/summary'/>
+        /// </summary>
+        public int asicID;
+
         /// <summary>
         /// ASIC ID
         /// </summary>
-        public int ASICID { get; set; }
+        public int ASICID 
+        { 
+            get
+            {
+                return asicID;
+            } 
+            set
+            {
+                asicID = value;
+                OnPropertyChanged();
+            } 
+        }
+
+        /// <summary>
+        /// <inheritdoc cref="ChannelID" path='/summary'/>
+        /// </summary>
+        public int channelID;
         
         /// <summary>
         /// Channel ID
         /// </summary>
-        public int ChannelID { get; set; }
+        public int ChannelID 
+        { 
+            get
+            {
+                return channelID;
+            } 
+            set
+            {
+                channelID = value;
+                OnPropertyChanged();
+            } 
+        }
         
         /// <summary>
         /// <inheritdoc cref="Identifier" path='/summary'/>
@@ -37,13 +71,30 @@ namespace AB15_GUI.WPF.Models
                 // Length limitation
                 if (value.Length > 15) return;
                 identifier = value;
+                OnPropertyChanged();
             }
         }
+
+        /// <summary>
+        /// <inheritdoc cref="ToFire" path='/summary'/>
+        /// </summary>
+        private bool toFire;
         
         /// <summary>
         /// Flag indicating if channel is selected for firing
         /// </summary>
-        public bool ToFire { get; set; }
+        public bool ToFire 
+        { 
+            get
+            {
+                return toFire;
+            }
+            set
+            {
+                toFire = value;
+                OnPropertyChanged();
+            }
+        }
         
         /// <summary>
         /// Indicate how many sides of channel were deployed (2 corresponds to firing)
@@ -65,6 +116,7 @@ namespace AB15_GUI.WPF.Models
             {
                 // Any input value will cause counter reset
                 numberOfSidesDeployed = 0;
+                OnPropertyChanged();
             } 
         }
       
@@ -88,9 +140,11 @@ namespace AB15_GUI.WPF.Models
                 if (firingCntHigh != value)
                 {
                     numberOfSidesDeployed++;
+                    OnPropertyChanged(nameof(WasFired));
                 }
 
                 firingCntHigh = value;
+                OnPropertyChanged();
             } 
         }
 
@@ -114,10 +168,33 @@ namespace AB15_GUI.WPF.Models
                 if (firingCntHigh != value)
                 {
                     numberOfSidesDeployed++;
+                    OnPropertyChanged(nameof(WasFired));
                 }
 
                 firingCntLow = value;
+                OnPropertyChanged();
             } 
         }
+
+        #region Services
+
+        /// <summary>
+        /// Event for notification if property has changed
+        /// </summary>
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        /// <summary>
+        /// Raise event to notify about property change
+        /// </summary>
+        /// <param name="propertyName">name of property</param>
+        protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        {
+            // Sanity check
+            if (propertyName == null) throw new ArgumentException("Property name can't be null!");
+
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        #endregion // Services
     }
 }
