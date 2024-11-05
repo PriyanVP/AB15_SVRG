@@ -137,7 +137,7 @@
 
                             </Grid>
                             <ListView Grid.Row="1" Grid.Column="1" Name="ConfigChannelsTableView" 
-                                      ItemsSource="{Binding ConfigChannelsTable}"
+                                      ItemsSource="{Binding FiringConfigurationTable}"
                                       ItemContainerStyle="{DynamicResource ListViewItemStyle}" 
                                       FontSize="20">
                                 <ListView.ItemTemplate>
@@ -170,10 +170,10 @@
                                             </TextBlock>
 
                                             <TextBox    Grid.Column="2" Margin="0,0,5,0" FontSize="20"
-                                                        Text="{Binding IdentifierName, Mode=TwoWay}">
+                                                        Text="{Binding Identifier, Mode=TwoWay}">
                                             </TextBox>
 
-                                            <ComboBox   Grid.Column="3" Margin="0,0,5,0" SelectedIndex="{Binding IndexMode, Mode=TwoWay}">
+                                            <ComboBox   Grid.Column="3" Margin="0,0,5,0" SelectedIndex="{Binding Mode, Mode=TwoWay}">
                                                 <ComboBoxItem Tag="0">
                                                     <TextBlock Text="OFF"/>
                                                 </ComboBoxItem>

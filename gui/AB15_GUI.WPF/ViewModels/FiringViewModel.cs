@@ -58,18 +58,15 @@ namespace AB15_GUI.WPF.ViewModels
             ConfigurationChangedExecute("A - 1");
 
             // TODO: remove
-            this.ConfigChannelsTable = new ObservableCollection<TestInput>();
-            this.FiringResultTable = new ObservableCollection<TestOutput>();
+            FiringConfigurationTable.Add(new FiringChannelConfigurationRecord() { ASICID = 1, ChannelID = 1, Mode = 1 });
+            FiringConfigurationTable.Add(new FiringChannelConfigurationRecord() { ASICID = 1, ChannelID = 2, Mode = 2 });
+            FiringConfigurationTable.Add(new FiringChannelConfigurationRecord() { ASICID = 1, ChannelID = 3, Mode = 3 });
+            FiringConfigurationTable.Add(new FiringChannelConfigurationRecord() { ASICID = 1, ChannelID = 4, Mode = 4 });
 
-            this.ConfigChannelsTable.Add(new TestInput() { ASICID = 1, ChannelID = 1, IndexMode = 1 });
-            this.ConfigChannelsTable.Add(new TestInput() { ASICID = 1, ChannelID = 2, IndexMode = 2 });
-            this.ConfigChannelsTable.Add(new TestInput() { ASICID = 1, ChannelID = 3, IndexMode = 3 });
-            this.ConfigChannelsTable.Add(new TestInput() { ASICID = 1, ChannelID = 4, IndexMode = 4 });
-
-            this.FiringResultTable.Add(new TestOutput() { ASICID = 1, ChannelID = 1, ToFire = false, WasFired = true });
-            this.FiringResultTable.Add(new TestOutput() { ASICID = 1, ChannelID = 2, ToFire = false, WasFired = true });
-            this.FiringResultTable.Add(new TestOutput() { ASICID = 1, ChannelID = 3, ToFire = false, WasFired = true });
-            this.FiringResultTable.Add(new TestOutput() { ASICID = 1, ChannelID = 4, ToFire = false, WasFired = true });
+            FiringResultTable.Add(new FiringResultRecord() { ASICID = 1, ChannelID = 1, ToFire = false, WasFired = true, FiringCntHigh = 0, FiringCntLow = 0 });
+            FiringResultTable.Add(new FiringResultRecord() { ASICID = 1, ChannelID = 2, ToFire = false, WasFired = true, FiringCntHigh = 0, FiringCntLow = 0 });
+            FiringResultTable.Add(new FiringResultRecord() { ASICID = 1, ChannelID = 3, ToFire = false, WasFired = true, FiringCntHigh = 0, FiringCntLow = 0 });
+            FiringResultTable.Add(new FiringResultRecord() { ASICID = 1, ChannelID = 4, ToFire = false, WasFired = true, FiringCntHigh = 0, FiringCntLow = 0 });
 
         }
 
@@ -78,6 +75,13 @@ namespace AB15_GUI.WPF.ViewModels
 
         
         #region Bindable_Properties
+
+        // TODO:  refactor?
+
+        public ObservableCollection<FiringChannelConfigurationRecord> FiringConfigurationTable { get; set; } = new ObservableCollection<FiringChannelConfigurationRecord>();
+
+
+        public ObservableCollection<FiringResultRecord> FiringResultTable { get; set; } = new ObservableCollection<FiringResultRecord>();
 
         /// <summary>
         /// Set messages for help provider on UI
@@ -174,59 +178,6 @@ namespace AB15_GUI.WPF.ViewModels
         #endregion // Commands
 
 
-
-
-
-
-
-
-
-
-
-        // TODO: remove + refactor
-
-        public ObservableCollection<TestInput> ConfigChannelsTable { get; set; }
-        public ObservableCollection<TestOutput> FiringResultTable { get; set; }
-
-        public class TestInput
-        {
-            public int ASICID { get; set; }
-            public int ChannelID { get; set; }
-            public string IdentifierName { 
-                get; 
-                set; }
-            public int _indexMode;
-            public int IndexMode 
-            { 
-                get 
-                { 
-                    return _indexMode; 
-                }
-                set 
-                { 
-                    _indexMode = value;
-                }
-            }
-
-            public TestInput()
-            {
-                IdentifierName = "None";
-            }
-        }
-
-        public class TestOutput
-        {
-            public int ASICID { get; set; }
-            public int ChannelID { get; set; }
-            public string IdentifierName { get; set; }
-
-            public bool ToFire { get; set; }
-            public bool WasFired { get; set; }
-            public TestOutput()
-            {
-                IdentifierName = "None";
-            }
-        }
 
 
     }
