@@ -10,6 +10,8 @@ using AB15_GUI.WPF.Views;
 using AB15_GUI.WPF.ViewModels;
 using AB15_GUI.WPF.Services;
 using AB15_GUI.WPF.Services.Interfaces;
+using AB15_GUI.WPF.Models.Interfaces;
+using AB15_GUI.WPF.Models;
 
 namespace AB15_GUI.WPF
 {
@@ -73,6 +75,10 @@ namespace AB15_GUI.WPF
                             #endregion // Services
 
                             #region Other
+
+                            services.AddTransient<IASIC, ASIC>();
+
+                            services.AddSingleton<IASICWrapper, ASICWrapper>();
 
                             services.AddSingleton<LogMemoryRecordTarget>(sp => (LogMemoryRecordTarget)LogManager.Configuration.FindTargetByName("memory"));
 

@@ -77,6 +77,7 @@ Avoid names that differ only in case, like foo and Foo. Similarly, avoid foobar 
 
 **Variables**: camelCase  
 **Trivial Variables**: i,n,c,etc...  
+**Const Variables**: ALL_CAPS  
 **Enums**: PascalCase  
 **Enum members**: PascalCase  
 **Structs**: PascalCase  

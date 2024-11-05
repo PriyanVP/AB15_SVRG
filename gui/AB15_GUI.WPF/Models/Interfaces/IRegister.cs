@@ -8,9 +8,14 @@ namespace AB15_GUI.WPF.Models.Interfaces
     public interface IRegister
     {
         /// <summary>
-        /// Access level of this register
+        /// Reset value for register
         /// </summary>
-        string Access { get; }
+        ushort ResetValue { get; }
+
+        /// <summary>
+        /// Name of the register
+        /// </summary>
+        string? Name { get; }
 
         /// <summary>
         /// Absolute address of the register
@@ -18,24 +23,19 @@ namespace AB15_GUI.WPF.Models.Interfaces
         ushort Address { get; }
 
         /// <summary>
+        /// Description
+        /// </summary>
+        string? Description { get; }
+
+        /// <summary>
+        /// Access level of this register
+        /// </summary>
+        string? Access { get; }
+
+        /// <summary>
         /// Data property. Constructs register value from fields on get. 
         /// Deconstruct register value by fields on set
         /// </summary>
         ushort Data { get; set; }
-
-        /// <summary>
-        /// Description
-        /// </summary>
-        string Description { get; }
-
-        /// <summary>
-        /// Name of the register
-        /// </summary>
-        string Name { get; }
-
-        /// <summary>
-        /// Reset value for register
-        /// </summary>
-        ushort ResetValue { get; }
     }
 }
