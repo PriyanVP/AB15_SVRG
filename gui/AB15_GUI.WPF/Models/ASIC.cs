@@ -266,7 +266,7 @@ namespace AB15_GUI.WPF.Models
         {
             // Remove elements if already in list
             int tmpIdx;
-            foreach (var itm in listToAppend)
+            foreach (IRegister itm in listToAppend)
             {
                 tmpIdx = ConfigData.FindIndex(x => x.Address == itm.Address);
                 if (tmpIdx != -1)

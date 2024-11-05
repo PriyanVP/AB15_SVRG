@@ -20,7 +20,7 @@ namespace AB15_GUI.WPF.Models.Interfaces
         /// <summary>
         /// Absolute address of the register
         /// </summary>
-        static ushort Address { get; }
+        ushort Address { get; }
 
         /// <summary>
         /// Description

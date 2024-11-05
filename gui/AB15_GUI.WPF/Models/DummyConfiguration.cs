@@ -176,18 +176,6 @@ namespace AB15_GUI.WPF.Models
             ConfigData.Add(new Reg_FLM_Config_ch18_17() { Data = 0x0404 });
             ConfigData.Add(new Reg_FLM_Config_ch20_19() { Data = 0x0404 });
 
-            // Write configuration for FLM registers
-            ConfigData.Add(new Reg_FLM_Config_ch2_1() { Data = 0x808 });
-            ConfigData.Add(new Reg_FLM_Config_ch4_3() { Data = 0x404 });
-            ConfigData.Add(new Reg_FLM_Config_ch6_5() { Data = 0x404 });
-            ConfigData.Add(new Reg_FLM_Config_ch8_7() { Data = 0x404 });
-            ConfigData.Add(new Reg_FLM_Config_ch10_9() { Data = 0x1010 });
-            ConfigData.Add(new Reg_FLM_Config_ch12_11() { Data = 0x404 });
-            ConfigData.Add(new Reg_FLM_Config_ch14_13() { Data = 0x404 });
-            ConfigData.Add(new Reg_FLM_Config_ch16_15() { Data = 0x404 });
-            ConfigData.Add(new Reg_FLM_Config_ch18_17() { Data = 0x404 });
-            ConfigData.Add(new Reg_FLM_Config_ch20_19() { Data = 0x404 });
-
             // Write configuration for SVRG registers
             ConfigData.Add(new Reg_SVRG_Config() { Data = 0x00DA });
 
