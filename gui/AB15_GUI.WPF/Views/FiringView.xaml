@@ -113,7 +113,7 @@
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="5" />
                                     <ColumnDefinition Width="40" MinWidth="80"/>
-                                    <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition Width="240"/>
                                     <ColumnDefinition Width="300"/>
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="5" />
@@ -151,7 +151,7 @@
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="5" />
                                                 <ColumnDefinition Width="40" MinWidth="80"/>
-                                                <ColumnDefinition Width="120"/>
+                                                <ColumnDefinition Width="240"/>
                                                 <ColumnDefinition Width="300"/>
                                                 <ColumnDefinition Width="*" />
                                                 <ColumnDefinition Width="5" />
@@ -877,8 +877,8 @@
 
                     <StackPanel VerticalAlignment="Bottom"
                                 Grid.Column="1" Grid.Row="2" Orientation="Vertical">
-                        <Button Command="{Binding FireSimultaniouslyCommand}"
-                                Content="Fire simultanious" Margin="5"
+                        <Button Command="{Binding FireSimultaneouslyCommand}"
+                                Content="Fire simultaneous" Margin="5"
                                 Style="{DynamicResource SimpleButton}"/>
                     </StackPanel>
 
@@ -902,10 +902,8 @@
                             <CheckBox Style="{DynamicResource ToggleSwitchStyle}" 
                                       IsChecked="{Binding ReduceCurrentEnable}"/>
                             <StackPanel     Orientation="Vertical">
-                                <TextBlock  Text="Reduced Current"
-                                            Margin="5,5,5,0"/>
-                                <TextBlock  Text="alternative mode"
-                                            Margin="5,0,5,5"/>
+                                <TextBlock  Text="Reduced Current alternative mode"
+                                            Margin="5,5,5,5"/>
                             </StackPanel>
                         </StackPanel>
 
@@ -1074,7 +1072,7 @@
                                             </TextBlock>
 
                                             <TextBlock Grid.Column="2" Margin="0,0,5,0" FontSize="20"
-                                               Text="{Binding IdentifierName}"
+                                               Text="{Binding Identifier}"
                                                        HorizontalAlignment="Center">
                                             </TextBlock>
 
