@@ -364,7 +364,9 @@ FLMDiagInteruptRoutine()
     static g_flmDiagExecStatus = FLMReadDiagExecStatus();
 
     // Start diagnostic and get out
-    // On next entries - check if finished
+    // On next entries, check execution status:
+    // evaluated -> diagnostic performed, store results
+    // finished -> results stored, move to a next diagnostic
     switch (FLMDiagExecNumber)
     {
     case FLM_DIAG_ORDER_SHORT_DET:
@@ -388,13 +390,24 @@ FLMDiagInteruptRoutine()
         break;
 
     case FLM_DIAG_ORDER_LOOP_RES_MEAS:
-        /* code */
-        FLMDiagExecNumber = FLM_DIAG_ORDER_SQUIB_DET;
+        FLMLoopResDiag();
+        if (GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_FINISHED)
+        {
+            // Move on to next diagnostic
+            FLMDiagExecNumber = FLM_DIAG_ORDER_SQUIB_DET;
+        }
         break;
+
     case FLM_DIAG_ORDER_SQUIB_DET:
         /* code */
-        FLMDiagExecNumber = FLM_DIAG_ORDER_SHORT_DET;
+        FLMSquibDetErrDiag();
+        if (GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_FINISHED)
+        {
+            // Move on to next diagnostic
+            FLMDiagExecNumber = FLM_DIAG_ORDER_SHORT_DET;
+        }
         break;
+
     default:
         break;
     }
