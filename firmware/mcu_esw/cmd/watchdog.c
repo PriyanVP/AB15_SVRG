@@ -193,7 +193,7 @@ void CmdConfigureWatchdog(USBReceiveData const * const commandPackage)
  
     uint16 address[WD_CFG_PACKAGE_MAX_LEN] = {0};       // Addresses of registers to write
     uint16 data[WD_CFG_PACKAGE_MAX_LEN] = {0};          // Values to write
-    uint16 length = (commandPackage->dataLength) >> 2;  // Number of 32bit SPI words to write into ASIC
+    uint16 length = (commandPackage->dataLength) >> 2;  // Number of 32bit SPI words to write into ASIC (= number of registers to write)
 
     // Parse input
     // Layout: (addr_MSB - addr_LSB - data_MSB - data_LSB) - (...)
@@ -238,11 +238,11 @@ void CmdConfigureWatchdog(USBReceiveData const * const commandPackage)
     #else
 
     // Code for AB15 implementation
-
+    isSuccessfulFlag = TRUE;
     // Write both WD configs to ASIC to ASIC
     for (uint8 i = 0; i < length; i++)
     {
-        // isSuccessfulFlag = QSPIWriteSequence(SPI1_CS1MASTER, &(address[i]), &(data[i]), &length); // TODO: configuration, not yet implemented; not available for AB12
+        isSuccessfulFlag &= QSPIWriteNormal(SPI1_CS1MASTER, address[i], data[i]); // TODO: configuration, not yet implemented; not available for AB12
     }
 
     #endif

@@ -88,7 +88,7 @@ class TestWatchdog:
     def test_IssueColdStart(self):
         '''issues ASIC cold start 
         tests:
-        - none '''
+        - correct ACK only' '''
         # Arrange
         msg_id = 0x00
         device_id = 0x01
@@ -110,3 +110,57 @@ class TestWatchdog:
         assert is_response_received, "No response from MCU received"
         assert result.status == pkg.Status.ACK, f"Incorrect status in payload. Expected ACK, but received {result.status}"
         assert (result.payload_len == 0), f"Unexpected data. Expected empty payload, but received {result.payload}"
+    
+    @pytest.mark.watchdog
+    def test_configureWatchdog(self):
+        '''config Wd in MCU and ASIC  
+        tests:
+        - correct ACK only'''
+        # Arrange
+        msg_id = 0x00
+        device_id = 0x01
+        address = [0x00, 0x30, 0x00, 0x31] # adresse for both registers, spit in byte 
+        # data for relaxed WD: locktime = 1 and Response time = 3E see chapter 1.6.7.3.3.2 --> 0x07e split  in 4 bytes 
+        data = [0x00, 0x7E, 0x00, 0x7E] 
+        payload = [*address[0:2], *data[0:2], *address[2:4], *data[2:4]] # recombine dress and data for the transmit function
+        print("Address: 0x{address:02X}")
+        print("Data: 0x{data:02X}")
+        print("payload: 0x{payload:02X}")
+        packageToSend = pkg.TransmitPackage(0x00, 0x01, pkg.Command.CONFIGURE_WATCHDOG, payload)
+
+        # Act
+        print('MCU config WDT with:  ')
+        self.serial.com_port.write(packageToSend.serialize())
+
+        sleep(self.DELAY)
+        is_response_received = self.serial.extract_packages()
+        result = pkg.ReceivePackage(self.serial.packages.pop(0))
+          # Assert
+        assert is_response_received, "No response from MCU received"
+        assert result.status == pkg.Status.ACK, f"Incorrect status in payload. Expected ACK, but received {result.status}"
+        
+    @pytest.mark.watchdog
+    def test_startWatchdog(self):
+        '''starts watchdog in MCU  
+        tests:
+        - correct ACK only' '''
+        # Arrange
+        packageToSend = pkg.TransmitPackage(0x00, 0x00, pkg.Command.START_WATCHDOG)
+
+        # Act
+        self.serial.com_port.write(packageToSend.serialize())
+        sleep(self.DELAY)
+        is_response_received = self.serial.extract_packages()
+        result = pkg.ReceivePackage(self.serial.packages.pop(0))
+
+        # Assert
+        assert is_response_received, "No response from MCU received"
+        assert result.status == pkg.Status.ACK, f"Incorrect status returned. Expected ACK, but received {result.status}"
+        
+    # 1. issue reset     
+    # 2. configure Watchdog  by 
+    # void CmdConfigureWatchdog(USBReceiveData const * const commandPackage)
+    #  - configures ASIC and 
+    #  - configures MCU WDT triggers 
+
+    # 3. start watchdog 
