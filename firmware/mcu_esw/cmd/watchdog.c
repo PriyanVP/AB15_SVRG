@@ -331,6 +331,13 @@ void IntCmdAcknowledgeWatchdog2(void)
 
 void CmdStartWatchdog(USBReceiveData const * const commandPackage)
 {
+    /*prepare data package*/
+    USBTransmitData packageToSend;
+    packageToSend.device_id = 1;
+    packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
+    packageToSend.status = USB_STATUS_ACK;
+    packageToSend.dataLength = 0;
+
     // Command should not be executed in certain WD feature states
     if ((g_wd1Parameters.state != WD_STATE_CONFIGURED) || 
         (g_wd2Parameters.state != WD_STATE_CONFIGURED))
@@ -338,9 +345,6 @@ void CmdStartWatchdog(USBReceiveData const * const commandPackage)
         // Skip function execution - GUI will see no response
         return;
     }
-
-    // Local variables
-    USBTransmitData packageToSend;
 
     // If any of the watchdogs is not configured do not start
     if ((g_wd1Parameters.isWDConfigured == FALSE) ||
