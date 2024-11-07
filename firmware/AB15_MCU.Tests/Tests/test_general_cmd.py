@@ -173,3 +173,31 @@ class TestGeneralCommands:
         assert is_response_received, "No response from MCU received"
         assert result.status == pkg.Status.ACK, f"Incorrect status in payload. Expected ACK, but received {result.status}"
         assert (result.payload_len == 0), f"Unexpected data. Expected empty payload, but received {result.payload}"
+
+    # @pytest.mark.parametrize("device_id,data", [(0x02, 0xF055BB0F)])
+    # def test_WriteRaw(self, device_id, data, ):
+    def test_WriteRaw(self):
+        '''Checks if writing single register works as expected
+        tests:
+        - WRITE_REG'''
+
+        # Arrange
+        msg_id = 0x00
+        device_id = 0x02
+        # address_converted = pkg.Int2BytesConverter(address)
+        # data_converted = pkg.Int2BytesConverter(data)
+        payload = [0xF0, 0x55, 0xBB, 0x0F]
+
+        packageToSend = pkg.TransmitPackage(0x00, device_id, pkg.Command.WRITE_RAW_DATA_SPI, payload)
+
+        # Act
+        self.serial.com_port.write(packageToSend.serialize())
+
+        sleep(self.DELAY)
+        is_response_received = self.serial.extract_packages()
+        result = pkg.ReceivePackage(self.serial.packages.pop(0))
+        
+        # Assert
+        assert is_response_received, "No response from MCU received"
+        assert result.status == pkg.Status.ACK, f"Incorrect status in payload. Expected ACK, but received {result.status}"
+        assert (result.payload_len == 0), f"Unexpected data. Expected empty payload, but received {result.payload}"
