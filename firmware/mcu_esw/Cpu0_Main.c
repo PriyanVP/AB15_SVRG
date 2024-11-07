@@ -178,16 +178,19 @@ void core0_main(void)
             case USB_CMD_READ_DEV_ID:
                 CmdGetDeviceId(&cmdPackage);
                 break;
+
             case USB_CMD_READ_REG:
                 CmdReadReg(&cmdPackage);
                 break;
+
             case USB_CMD_WRITE_REG:
                 CmdWriteReg(&cmdPackage);
                 break;
-            // case :
-            //     break;
-            // case :
-            //     break;
+
+            case USB_CMD_WRITE_RAW_DATA_SPI:
+                CmdSendRawData(&cmdPackage);
+                break;
+
             case USB_CMD_CONFIGURE_WATCHDOG:
                 CmdConfigureWatchdog(&cmdPackage);
                 break;

@@ -95,6 +95,15 @@ boolean QSPIReadNormal(uint8 spiChannel, uint16 address, uint32 * const p_data);
  */
 boolean QSPIWriteNormal(uint8 spiChannel, uint16 address, uint16 data);
 
+/** \brief Writes 32bit raw data  via QSPI to SPI device
+ * Created for raw command sending.
+ *
+ * \param spiChannel SPI Slave to and from which the SPI instruction is executed
+ * \param data 32bit data to write
+ * \return Returns TRUE
+ */
+boolean QSPIWriteRaw(uint8 spiChannel, uint32 data);
+
 /** \brief Read sequentially data from ASIC via QSPI
  * 
  * \param spiChannel SPI Slave to and from which the SPI instruction is executed

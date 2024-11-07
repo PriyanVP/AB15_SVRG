@@ -156,6 +156,21 @@ typedef union
     uint32 dw;
 } SPIReceiveDataSensor;
 
+/** \brief Structure for transmit SPI data (raw data frame)
+ */
+typedef union
+{
+    struct
+    {
+        uint32 lsb        : 8;    /** \brief   */
+        uint32 byte1      : 8;    /** \brief   */
+        uint32 byte2      : 8;   /** \brief   */
+        uint32 msb        : 8;    /** \brief  */
+    } bf;
+    uint32 dw;
+} SPITransmitDataRaw;
+
+
 #else
 // AB12 SPI data types
 

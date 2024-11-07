@@ -220,3 +220,43 @@ void CmdReadReg(USBReceiveData const * const commandPackage)
     // Send data back to MCU
     SendUSBPackage(&packageToSend);
 }
+
+void CmdSendRawData(USBReceiveData const * const commandPackage)
+{
+    // Parameters for SPI packages and variable to store output data
+    USBTransmitData packageToSend;
+    uint32 rawData;
+    //SPIReceiveDataNormal dataReceived;
+    boolean isSuccessfulFlag = FALSE;
+    uint8 spiChannel;
+
+    spiChannel = GetSpiChannelById(commandPackage->device_id);
+
+    // Unpack received data to variable
+    rawData = 0;
+    rawData = ConstructWordFromBytes(commandPackage->data[3], commandPackage->data[2]);
+    rawData = rawData<<16;
+    rawData |= ConstructWordFromBytes(commandPackage->data[1], commandPackage->data[0]);
+
+    // Send data to SPI with waiting for response
+    isSuccessfulFlag = QSPIWriteRaw(spiChannel, rawData);
+
+    // Construct package to PC
+    packageToSend.device_id = commandPackage->device_id;
+    packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
+
+    // Construct packages based on error status
+    if (isSuccessfulFlag == FALSE)
+    {
+        // Common error frame setup
+        packageToSend.status = USB_STATUS_ERROR;
+    }
+    else
+    {
+        // Store SPI response frame to temporary variable for extracting data
+        packageToSend.status = USB_STATUS_ACK;
+    }
+
+    // Send data back to MCU
+    SendUSBPackage(&packageToSend);
+}
