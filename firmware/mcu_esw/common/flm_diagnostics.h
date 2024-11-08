@@ -108,13 +108,14 @@ typedef struct
 
 /** \brief Structure to store results of cyclic tests  
  */
+// TODO: check and fix naming to comply with naming convention
 typedef struct
 {
-    struct              FLMShortDiagResults;                /** \brief  */
-    FLM_Read_Diag_VHx   FLMVHxDiagResults[11];              /** \brief  */
-    struct              FLMSquibDetErrDiagResults;          /** \brief  */
-    bool                FLMSquibErrorDiagResults[20];       /** \brief  */
-    
+    FLM_Read_Diag_VHx   flmVHxDiagResults[11];              /** \brief  */
+    bool                flmSquibErrorDiagResults[20];       /** \brief  */
+    FLMReadSquibRes     flmLoopResDiagResults[20];          /** \brief  */
+    FLMShortDiagStruct  flmShortDiagResults;                /** \brief  */
+
 } FLMCycDiagResults;
 
 /** \brief Structure to store results of FLM channel short detection (IGH/IGL short to ground/battery)
@@ -128,7 +129,7 @@ typedef struct
     uint16          FLM_Read_Short_ch16_13;                 /** \brief  */
     uint16          FLM_Read_Short_ch20_17;                 /** \brief  */
 
-} FLMShortDiagResults;
+} FLMShortDiagStruct;
 
 /** \brief Structure to store results of one FLM channel VH voltage diagnostic
  */ 
