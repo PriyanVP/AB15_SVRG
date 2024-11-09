@@ -25,10 +25,10 @@
  */
 typedef enum 
 {
-    FLM_DIAG_ORDER_SHORT_DET        = 1     /** \brief  */
-    FLM_DIAG_ORDER_VHX_MEAS         = 2,    /** \brief  */
-    FLM_DIAG_ORDER_LOOP_RES_MEAS    = 3,    /** \brief  */
-    FLM_DIAG_ORDER_SQUIB_DET        = 4,    /** \brief  */
+    FLM_DIAG_ORDER_SHORT_DET        = 1,        /** \brief  */
+    FLM_DIAG_ORDER_VHX_MEAS         = 2,        /** \brief  */
+    FLM_DIAG_ORDER_LOOP_RES_MEAS    = 3,        /** \brief  */
+    FLM_DIAG_ORDER_SQUIB_DET        = 4         /** \brief  */
 
 } flm_DiagExecOrderEnum;
 
@@ -38,7 +38,7 @@ typedef enum
 {
     FLM_DIAG_EXEC_STATUS_IDLE           = 0,   /** \brief  */
     FLM_DIAG_EXEC_STATUS_ONGOING        = 1,   /** \brief  */
-    FLM_DIAG_EXEC_STATUS_EVALUATED      - 2,   /** \brief  */
+    FLM_DIAG_EXEC_STATUS_EVALUATED      = 2,   /** \brief  */
     FLM_DIAG_EXEC_STATUS_FINISHED       = 3    /** \brief  */
 
 } flm_DiagExecStatusEnum;
@@ -51,7 +51,7 @@ typedef enum
     FLM_DIAG_STATUS_VHX_MEAS_INITIATED  = 1,    /** \brief  */
     FLM_DIAG_STATUS_VHX_MEAS_ONGOING    = 2,    /** \brief  */
     FLM_DIAG_STATUS_VHX_MEAS_EVALUATED  = 3,    /** \brief  */
-    FLM_DIAG_STATUS_VHX_MEAS_FINISHED   = 4    /** \brief  */
+    FLM_DIAG_STATUS_VHX_MEAS_FINISHED   = 4     /** \brief  */
 
 } flm_VHxMeasStatusEnum;
 
@@ -59,11 +59,11 @@ typedef enum
  */
 typedef enum 
 {
-    FLM_DIAG_STATUS_LOOP_RES_MEAS_SKIPPED    = 0,    /** \brief  */
-    FLM_DIAG_STATUS_LOOP_RES_MEAS_INITIATED  = 1,    /** \brief  */
-    FLM_DIAG_STATUS_LOOP_RES_MEAS_ONGOING    = 2,    /** \brief  */
-    FLM_DIAG_STATUS_LOOP_RES_MEAS_EVALUATED  = 3,    /** \brief  */
-    FLM_DIAG_STATUS_LOOP_RES_MEAS_FINISHED   = 4    /** \brief  */
+    FLM_DIAG_STATUS_LOOP_RES_MEAS_SKIPPED    = 0,       /** \brief  */
+    FLM_DIAG_STATUS_LOOP_RES_MEAS_INITIATED  = 1,       /** \brief  */
+    FLM_DIAG_STATUS_LOOP_RES_MEAS_ONGOING    = 2,       /** \brief  */
+    FLM_DIAG_STATUS_LOOP_RES_MEAS_EVALUATED  = 3,       /** \brief  */
+    FLM_DIAG_STATUS_LOOP_RES_MEAS_FINISHED   = 4        /** \brief  */
 
 } flm_LoopResMeasStatusEnum;
 
@@ -71,11 +71,11 @@ typedef enum
  */
 typedef enum 
 {
-    FLM_DIAG_STATUS_SQUIB_DET_SKIPPED    = 0,    /** \brief  */
-    FLM_DIAG_STATUS_SQUIB_DET_INITIATED  = 1,    /** \brief  */
-    FLM_DIAG_STATUS_SQUIB_DET_ONGOING    = 2,    /** \brief  */
-    FLM_DIAG_STATUS_SQUIB_DET_EVALUATED  = 3,    /** \brief  */
-    FLM_DIAG_STATUS_SQUIB_DET_FINISHED   = 4    /** \brief  */
+    FLM_DIAG_STATUS_SQUIB_DET_SKIPPED    = 0,       /** \brief  */
+    FLM_DIAG_STATUS_SQUIB_DET_INITIATED  = 1,       /** \brief  */
+    FLM_DIAG_STATUS_SQUIB_DET_ONGOING    = 2,       /** \brief  */
+    FLM_DIAG_STATUS_SQUIB_DET_EVALUATED  = 3,       /** \brief  */
+    FLM_DIAG_STATUS_SQUIB_DET_FINISHED   = 4        /** \brief  */
 
 } flm_SquibDetStatusEnum;
 
