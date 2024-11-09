@@ -10,6 +10,7 @@
 #include "common/tap_addrMap_ExportedMemMap_memoryMap.h"
 #include "common/spi_data_types.h"
 #include "common/flm_diagnostics.h"
+#include "top/spi_wrapper.h"
 
 /*********************************************************************************************************************/
 /*------------------------------------------------------Macros-------------------------------------------------------*/
@@ -17,6 +18,8 @@
 
 #define FLM_DIAG_READ_SHORT_REGS_COUNT      (5)     /** \brief Number of registers with results of IGL/IGH short and 
                                                     leakage to battery or ground detection */
+
+#define FLM_DIAG_READ_SQUIB_REGS_COUNT      (2)     /** \brief Number of registers with results of squib detection */
 
 /*********************************************************************************************************************/
 /*------------------------------------------------Function Prototypes------------------------------------------------*/
@@ -162,26 +165,53 @@ void FLMVHxDiag()
     return;
 }
 
-void FLMSquibDetErrDiag() //
+void FLMSquibDetErrDiag()
 {
+    SPIReceiveDataNormal data[FLM_DIAG_READ_SQUIB_REGS_COUNT] = {0};
+    uint16 length = FLM_DIAG_READ_SQUIB_REGS_COUNT;
+    boolean isSuccessfulFlag = FALSE;
+    uint16 flmDiagSquibRegsAddresses[FLM_DIAG_READ_SQUIB_REGS_COUNT] = {FLM_FLM_READ_SQUIB_CH16_1, FLM_FLM_READ_SQUIB_CH20_17};
+    
     static FLMSquibDetErrDiagResults FLMSquibDetErrDiagResultsValues;
 
-        if (GetFLMDiagExecStatus() != FLM_DIAG_EXEC_STATUS_EVALUATED)
+    if (GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_FINISHED)
     {
-        g_flmDiagExecStatus = FLM_DIAG_EXEC_STATUS_ONGOING;
-        // TODO: start diagnostic and get out
-        // code
+        // Select corresponding mode
+        SetFLMDiagMode(FLM_DIAG_MODE_SQUIB_DET);
+
+        // Start diagnostic
+        StartFLMDiag();
+        g_FLMDiagExecStatus = FLM_DIAG_EXEC_STATUS_ONGOING;
+
+        // Get back out to check results on next interupt
         return;
     }
-    else
+
+    if (GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_EVALUATED)
     {
         // TODO: diagnostic was performed, store results
-        // code
+        // Read FLM_READ_SQUIB_CH16_1, FLM_READ_SQUIB_CH20_17
+        isSuccessfulFlag = QSPIReadSequenceNormal(SPI1_CS1MASTER, flmDiagSquibRegsAddresses, &data[0].dw, &length);
+        // Store results TODO: check order of data
+        for (uint8 i = 0; i < 20 ; i++)
+        {
+            if (i < 16)
+            {
+                // Load results of channels 1-16
+                g_flmCycDiagResultsValues.flmSquibErrorDiagResults[i] = ((data[0].bf.output_data)&(1<<i));
+            }
+            else
+            {
+                // Load results of channels 17-20
+                g_flmCycDiagResultsValues.flmSquibErrorDiagResults[i] = ((data[1].bf.output_data)&(1<<(i-16)));
+            }
+        }
+
         SetFLMDiagExecStatus(FLM_DIAG_EXEC_STATUS_FINISHED);
     }
 
+    // TODO: evaluate wether to implement error status handling
     return;
-    
 }
 
 void FLMLoopResDiag() //
