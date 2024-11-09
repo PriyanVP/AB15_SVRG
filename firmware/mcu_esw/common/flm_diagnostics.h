@@ -34,6 +34,15 @@ typedef enum
 
 /** \brief
  */
+typedef enum
+{
+    FLM_DIAG_MODE_VHX_MEAS          = 9,    /** \brief 01001 */
+    FLM_DIAG_MODE_LOOP_RES_MEAS     = 3,    /** \brief 00011 */
+    FLM_DIAG_MODE_SQUIB_DET         = 5,    /** \brief 00101 */
+} FLMDiagModeEnum;
+
+/** \brief
+ */
 typedef enum 
 {
     FLM_DIAG_EXEC_STATUS_IDLE           = 0,   /** \brief  */

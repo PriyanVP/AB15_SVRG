@@ -52,7 +52,7 @@ void GetFLMDiagMode();
 
 /** \brief
  */
-void SetFLMDiagMode();
+void SetFLMDiagMode(FLMDiagModeEnum diagMode);
 
 /** \brief
  */
@@ -108,7 +108,7 @@ void FLMShortDiag()
 
     // Read related registers from ASIC
     isSuccessfulFlag = QSPIReadSequenceNormal(SPI1_CS1MASTER, flmDiagShortsRegsAddresses, &data[0].dw, &length);
-    
+
     // Store results //TODO: check order of data
     g_flmCycDiagResultsValues.flmShortDiagResults.FLM_Read_Short_ch4_1 = data[0].bf.output_data;
     g_flmCycDiagResultsValues.flmShortDiagResults.FLM_Read_Short_ch8_5 = data[1].bf.output_data;
@@ -247,9 +247,9 @@ flm_cycDiagExecStatusEnum GetFLMDiagExecStatus(void)
     return g_FLMDiagExecStatus;
 }
 
-void SetFLMDiagMode(void)
+void SetFLMDiagMode(FLMDiagModeEnum diagMode)
 {
-    // 
+    // TODO: implement (write diagMode to flm_diag_mode field of FLM_DIAG_START register)
 }
 
 bool CheckBatVoltage(void)
