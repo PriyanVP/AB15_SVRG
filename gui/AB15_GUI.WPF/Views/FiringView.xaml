@@ -3,7 +3,6 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
       xmlns:local="clr-namespace:AB15_GUI.WPF.Views"
       xmlns:custom="clr-namespace:AB15_GUI.WPF.Views.Components"
       xmlns:cnvrt="clr-namespace:AB15_GUI.WPF.Views.Converters"
@@ -53,13 +52,7 @@
                     </Grid.RowDefinitions>
 
                     <ComboBox Grid.Column="1" Grid.Row="1" Margin="5" 
-                              SelectedIndex="0">
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="SelectionChanged">
-                                <i:InvokeCommandAction Command="{Binding ConfigurationChanged}" 
-                                                       CommandParameter="{Binding Path=SelectedItem.Content.Children[0].Text, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}"/>
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
+                              SelectedIndex="{Binding ConfigurationIndex}">
 
                         <ComboBoxItem>
                             <StackPanel Orientation="Horizontal">
