@@ -70,28 +70,28 @@
                         <ComboBoxItem>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="B - 2 " MinWidth="50"/>
-                                <TextBlock Text=" - Firing Loop, same module"/>
+                                <TextBlock Text=" - Firing Loops, same module"/>
                             </StackPanel>
                         </ComboBoxItem>
 
                         <ComboBoxItem>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="C - 2 " MinWidth="50"/>
-                                <TextBlock Text=" - Firing Loop, same module, 1 soft firing"/>
+                                <TextBlock Text=" - Firing Loops, same module, 1 soft firing"/>
                             </StackPanel>
                         </ComboBoxItem>
 
                         <ComboBoxItem>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="D - 2 " MinWidth="50"/>
-                                <TextBlock Text=" - Firing Loop, different modules"/>
+                                <TextBlock Text=" - Firing Loops, different modules"/>
                             </StackPanel>
                         </ComboBoxItem>
 
                         <ComboBoxItem>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="E - 10" MinWidth="50"/>
-                                <TextBlock Text=" - Firing Loop, all 5 modules"/>
+                                <TextBlock Text=" - Firing Loops, all 5 modules"/>
                             </StackPanel>
                         </ComboBoxItem>
 
