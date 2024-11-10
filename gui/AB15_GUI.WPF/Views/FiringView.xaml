@@ -314,7 +314,7 @@
                                       Command="{Binding ToggleCycleReading}"/>
                             <StackPanel Orientation="Vertical" Margin="2">
                                 <TextBlock Text="Enable" HorizontalAlignment="Center" FontSize="16"/>
-                                <TextBlock Text="Cycle reading" HorizontalAlignment="Center" FontSize="16"/>
+                                <TextBlock Text="cyclic reading" HorizontalAlignment="Center" FontSize="16"/>
                             </StackPanel>
                         </StackPanel>
                     </StackPanel>
