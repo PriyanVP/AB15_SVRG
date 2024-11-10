@@ -310,7 +310,7 @@ void StartFLMDiag(void)
     // Get value from ASIC
     // TODO: check whether diags can be run on slaves (spiChannel selection)
     isSuccessfulFlag &= QSPIReadNormal(SPI1_CS1MASTER, FLM_FLM_DIAG_START, &data.dw);
-    tmpFLMDiagStartfRegister.as_uint16 = data.output_data
+    tmpFLMDiagStartfRegister.as_uint16 = data.output_data;
     
     // flm_diag_start = 1 starts selected diagnostic
     tmpFLMDiagStartfRegister.as_s.FlmDiagStart_u1 = 1;
@@ -321,10 +321,25 @@ void StartFLMDiag(void)
 
 flm_cycDiagExecStatusEnum FLMReadDiagExecStatus(void)
 {
-    // TODO
-    // Read flm_diag_active and FLM_diag_ready from ASIC
-    // (flm_diag_active ==1 && FLM_diag_ready == 0) -> SPI triggered diag is running)
-    // (flm_diag_active ==0 && flm_diag_ready ==1) -> SPI triggered diag is evaluated, read results)
+    // TODO FLM_FLM_STATUS2
+    SPIReceiveDataNormal data;
+    boolean isSuccessfulFlag = TRUE;
+    flm_flm_status2_ut tmpFLMDiagStatus2fRegister;
+    
+    // Get value from ASIC
+    isSuccessfulFlag &= QSPIReadNormal(SPI1_CS1MASTER, FLM_FLM_STATUS2, &data.dw);
+    tmpFLMDiagStatus2fRegister.as_uint16 = data.output_data;
+    
+    // Determine FLM diagnostic execution status
+    if ((tmpFLMDiagStatus2fRegister.as_s.FlmDiagActive_u1 == 1) && (tmpFLMDiagStatus2fRegister.as_s.FlmDiagReady_u1 == 0))
+    {
+        SetFLMDiagExecStatus(FLM_DIAG_EXEC_STATUS_ONGOING);
+    }
+
+    if ((tmpFLMDiagStatus2fRegister.as_s.FlmDiagActive_u1 == 0) && (tmpFLMDiagStatus2fRegister.as_s.FlmDiagReady_u1 == 1))
+    {
+        SetFLMDiagExecStatus(FLM_DIAG_EXEC_STATUS_EVALUATED);
+    }
 }
 
 void SetFLMDiagExecStatus(flm_cycDiagExecStatusEnum FLMCycDiagExecStatus)
