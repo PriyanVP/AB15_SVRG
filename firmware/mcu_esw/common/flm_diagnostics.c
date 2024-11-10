@@ -21,8 +21,9 @@
 
 #define FLM_DIAG_READ_SQUIB_REGS_COUNT      (2)     /** \brief Number of registers with results of squib detection */
 
-#define FLM_DIAG_READ_RES_REGS_COUNT        (20)    /** \brief Number of registers with results of squib resistance 
-                                                    measurement */
+#define FLM_DIAG_READ_RES_REGS_COUNT        (21)    /** \brief Number of registers with results of loop resistance 
+                                                    measurement, including SQREF */
+
 /*********************************************************************************************************************/
 /*------------------------------------------------Function Prototypes------------------------------------------------*/
 /*********************************************************************************************************************/
@@ -221,7 +222,17 @@ void FLMLoopResDiag() //
     SPIReceiveDataNormal data[FLM_DIAG_READ_RES_REGS_COUNT] = {0};
     uint16 length = FLM_DIAG_READ_RES_REGS_COUNT;
     boolean isSuccessfulFlag = FALSE;
-    uint16 flmDiagResRegsAddresses[FLM_DIAG_READ_RES_REGS_COUNT] = {};
+    uint16 flmDiagResRegsAddresses[FLM_DIAG_READ_RES_REGS_COUNT] = {FLM_FLM_READ_SQUIB_RES_CH1, FLM_FLM_READ_SQUIB_RES_CH2, 
+                                                                    FLM_FLM_READ_SQUIB_RES_CH3, FLM_FLM_READ_SQUIB_RES_CH4, 
+                                                                    FLM_FLM_READ_SQUIB_RES_CH5, FLM_FLM_READ_SQUIB_RES_CH6, 
+                                                                    FLM_FLM_READ_SQUIB_RES_CH7, FLM_FLM_READ_SQUIB_RES_CH8, 
+                                                                    FLM_FLM_READ_SQUIB_RES_CH9, FLM_FLM_READ_SQUIB_RES_CH10,
+                                                                    FLM_FLM_READ_SQUIB_RES_CH11,FLM_FLM_READ_SQUIB_RES_CH12,
+                                                                    FLM_FLM_READ_SQUIB_RES_CH13,FLM_FLM_READ_SQUIB_RES_CH14,
+                                                                    FLM_FLM_READ_SQUIB_RES_CH15,FLM_FLM_READ_SQUIB_RES_CH16,
+                                                                    FLM_FLM_READ_SQUIB_RES_CH17,FLM_FLM_READ_SQUIB_RES_CH18,
+                                                                    FLM_FLM_READ_SQUIB_RES_CH19,FLM_FLM_READ_SQUIB_RES_CH20,
+                                                                    FLM_FLM_READ_SQUIB_RES_SQREF};
 
     if (GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_FINISHED)
     {
@@ -242,7 +253,7 @@ void FLMLoopResDiag() //
         // Read FLM_READ_SQUIB_RES_CH1...FLM_READ_SQUIB_RES_CH20
         isSuccessfulFlag = QSPIReadSequenceNormal(SPI1_CS1MASTER, flmDiagResRegsAddresses, &data[0].dw, &length);
         // Store results TODO: check order of data
-        for (uint8 i = 0; i < 20 ; i++)
+        for (uint8 i = 0; i < FLM_DIAG_READ_RES_REGS_COUNT ; i++)
         {
             flm_flm_read_squib_res_ch1_ut flmReadSquibResChxTmp = data[i].bf.output_data;
             g_flmCycDiagResultsValues.flmLoopResDiagResults[i].flm_squib_res_value = flmReadSquibResChxTmp.as_s.FlmSquibResValue_u13;
