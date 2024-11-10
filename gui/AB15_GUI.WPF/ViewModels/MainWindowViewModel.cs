@@ -110,7 +110,7 @@ namespace AB15_GUI.WPF.ViewModels
             var asicConfig = new DummyConfiguration(asicWrapper);
 
             logger.Trace("In MainViewModel");
-            loggerWindowView.Show();       
+            loggerWindowView.Show();
         }
     }
 }

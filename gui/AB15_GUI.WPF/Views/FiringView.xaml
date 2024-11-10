@@ -10,8 +10,8 @@
       d:DesignHeight="450" d:DesignWidth="900"
       Title="Firing"
       DataContext="{Binding FiringViewModel, Source={StaticResource ViewModelLocator}}">
-
     <Page.Resources>
+        <cnvrt:BoolToColorConverter x:Key="BoolToColorConverter"/>
         <cnvrt:FiringModeConverter x:Key="FiringModeConverter"/>
     </Page.Resources>
 
@@ -38,7 +38,7 @@
                 <Grid x:Name="FiringConfigurationPage">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="5"/>
-                        <ColumnDefinition Width="1*" MinWidth="250"/>
+                        <ColumnDefinition Width="1.1*" MinWidth="250"/>
                         <ColumnDefinition Width="2*"/>
                         <ColumnDefinition Width="5"/>
                     </Grid.ColumnDefinitions>
@@ -56,86 +56,125 @@
 
                         <ComboBoxItem>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="A - 1" MinWidth="50"/>
+                                <TextBlock Text="A - 1 " MinWidth="50"/>
                                 <TextBlock Text=" - Firing Loop"/>
                             </StackPanel>
                         </ComboBoxItem>
 
                         <ComboBoxItem>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="B - 2" MinWidth="50"/>
-                                <TextBlock Text=" - Firing Loop, same module"/>
+                                <TextBlock Text="B - 2 " MinWidth="50"/>
+                                <TextBlock Text=" - Firing Loops, same module"/>
                             </StackPanel>
                         </ComboBoxItem>
 
                         <ComboBoxItem>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="C - 2" MinWidth="50"/>
-                                <TextBlock Text=" - Firing Loop, same module, 1 soft firing"/>
+                                <TextBlock Text="C - 2 " MinWidth="50"/>
+                                <TextBlock Text=" - Firing Loops, same module, 1 soft firing"/>
                             </StackPanel>
                         </ComboBoxItem>
 
                         <ComboBoxItem>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="D - 2" MinWidth="50"/>
-                                <TextBlock Text=" - Firing Loop, different modules"/>
+                                <TextBlock Text="D - 2 " MinWidth="50"/>
+                                <TextBlock Text=" - Firing Loops, different modules"/>
                             </StackPanel>
                         </ComboBoxItem>
 
                         <ComboBoxItem>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="E - 10" MinWidth="50"/>
-                                <TextBlock Text=" - Firing Loop, all 5 modules"/>
+                                <TextBlock Text=" - Firing Loops, all 5 modules"/>
                             </StackPanel>
                         </ComboBoxItem>
 
                         <ComboBoxItem>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="F - 20" MinWidth="50"/>
-                                <TextBlock Text="(all) - Firing Loop"/>
+                                <TextBlock Text=" - All Firing loops"/>
                             </StackPanel>
                         </ComboBoxItem>
                     </ComboBox>
 
-                    <TextBox  Grid.Column="1" Grid.Row="2" Margin="5" FontSize="20"
+                    <Border Grid.Column="1" Grid.Row="2" 
+                            BorderBrush="{DynamicResource TextBox.Static.Border}"
+                            BorderThickness="1" CornerRadius="5">
+                        <TextBlock  Margin="5" FontSize="20"
                               Text="{Binding FiringConfigurationTextBox}" 
+                              Style="{DynamicResource CustomTextBlock}"
+                                
                               TextWrapping="Wrap" TextAlignment="Left"/>
+                    </Border>
+                    <StackPanel Orientation="Vertical"
+                                Grid.Column="1" Grid.Row="3" >
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox Style="{DynamicResource ToggleSwitchStyle}" 
+                                IsChecked="{Binding VH1aCurrentSinkEnable}"/>
+                            <TextBlock Text="VH1a Current Sink"
+                                Margin="5"/>
+                        </StackPanel>
 
-                    <Button   Grid.Column="1" Grid.Row="3" Margin="5" 
-                              Content="Transfer to normal mode"
-                              Style="{DynamicResource SimpleButton}"/>
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox Style="{DynamicResource ToggleSwitchStyle}" 
+                                IsChecked="{Binding VH2CurrentSinkEnable}"/>
+                            <TextBlock Text="VH2 Current Sink"
+                                Margin="5"/>
+                        </StackPanel>
 
-                    <Border Grid.Column="2" Grid.Row="1" Grid.RowSpan="3" BorderThickness="1" BorderBrush="Black">
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox Style="{DynamicResource ToggleSwitchStyle}" 
+                                IsChecked="{Binding LowsideOvercurrentBehaviorEnable}"/>
+                            <TextBlock Text="Lowside overcurrent behavior"
+                                Margin="5"/>
+                        </StackPanel>
+
+                        <Button Margin="5" 
+                                Content="Write configuration"
+                                Style="{DynamicResource SimpleButton}"
+                                Command="{Binding WriteConfigurationButtonCommand}"/>
+                        <Button Margin="5" 
+                                Content="Transfer to normal mode"
+                                Style="{DynamicResource SimpleButton}"
+                                Command="{Binding NormalModeButtonCommand}"/>
+                    </StackPanel>
+
+                    <Border Grid.Column="2" Grid.Row="1" Grid.RowSpan="3" BorderThickness="0" BorderBrush="Black">
                         <StackPanel Orientation="Vertical">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="5" />
-                                    <ColumnDefinition Width="40" MinWidth="80"/>
-                                    <ColumnDefinition Width="240"/>
-                                    <ColumnDefinition Width="300"/>
+                                    <ColumnDefinition Width="40"/>
+                                    <ColumnDefinition Width="200"/>
+                                    <ColumnDefinition Width="120"/>
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="5" />
                                 </Grid.ColumnDefinitions>
 
                                 <Grid.RowDefinitions>
+                                    <RowDefinition Height="7"/>
                                     <RowDefinition Height="auto"/>
                                     <RowDefinition Height="2"/>
                                     <RowDefinition Height="1"/>
                                 </Grid.RowDefinitions>
 
-                                <Canvas Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="4" Background="{DynamicResource UI.SeparateLine}"/>
+                                <Canvas Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="4" Background="{DynamicResource UI.SeparateLine}"/>
 
-                                <TextBlock  Grid.Column="1" Margin="0,0,5,0" FontSize="20"
+                                <TextBlock Grid.Row="1" Grid.Column="1" FontSize="20"
                                             Text="#" HorizontalAlignment="Center">
 
                                 </TextBlock>
 
-                                <TextBlock Grid.Column="2" Margin="0,0,5,0" FontSize="20"
+                                <TextBlock Grid.Row="1" Grid.Column="2" FontSize="20"
                                                Text="Identifier" HorizontalAlignment="Center">
                                 </TextBlock>
 
-                                <TextBlock Grid.Column="3" Margin="0,0,5,0" FontSize="20"
+                                <TextBlock Grid.Row="1" Grid.Column="3" FontSize="20"
                                                Text="Mode" HorizontalAlignment="Center">
+                                </TextBlock>
+
+                                <TextBlock Grid.Row="1" Grid.Column="4" FontSize="20"
+                                               Text="Description" HorizontalAlignment="Center">
                                 </TextBlock>
 
                             </Grid>
@@ -149,9 +188,9 @@
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="5" />
-                                                <ColumnDefinition Width="40" MinWidth="80"/>
-                                                <ColumnDefinition Width="240"/>
-                                                <ColumnDefinition Width="300"/>
+                                                <ColumnDefinition Width="40"/>
+                                                <ColumnDefinition Width="200"/>
+                                                <ColumnDefinition Width="120"/>
                                                 <ColumnDefinition Width="*" />
                                                 <ColumnDefinition Width="5" />
                                             </Grid.ColumnDefinitions>
@@ -164,7 +203,9 @@
 
                                             <Canvas Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="4" Background="{DynamicResource UI.SeparateLine}"/>
 
-                                            <TextBlock  Grid.Column="1" Margin="0,0,5,0" FontSize="20" HorizontalAlignment="Center">
+                                            <TextBlock  Grid.Column="1" Margin="0,0,5,0" 
+                                                        VerticalAlignment="Center"
+                                                        FontSize="20" HorizontalAlignment="Center">
                                                 <TextBlock.Text>
                                                     <MultiBinding StringFormat="{}{0}.{1}">
                                                         <Binding Path="ASICID" />
@@ -173,11 +214,12 @@
                                                 </TextBlock.Text>
                                             </TextBlock>
 
-                                            <TextBox    Grid.Column="2" Margin="0,0,5,0" FontSize="20"
+                                            <TextBox    Grid.Column="2" FontSize="20"
+                                                        Style="{DynamicResource TextBoxStyle}"
                                                         Text="{Binding Identifier, Mode=TwoWay}">
                                             </TextBox>
 
-                                            <ComboBox   Grid.Column="3" Margin="0,0,5,0" SelectedIndex="{Binding Mode, Converter={StaticResource FiringModeConverter} Mode=TwoWay}">
+                                            <ComboBox   Grid.Column="3" SelectedIndex="{Binding Mode, Converter={StaticResource FiringModeConverter} Mode=TwoWay}">
                                                 <ComboBoxItem Tag="0">
                                                     <TextBlock Text="OFF"/>
                                                 </ComboBoxItem>
@@ -227,6 +269,10 @@
                                                     <TextBlock Text="Mode 9"/>
                                                 </ComboBoxItem>
                                             </ComboBox>
+
+                                            <TextBlock  Grid.Column="4" FontSize="20"
+                                                        Text="{Binding Description}">
+                                            </TextBlock>
                                         </Grid>
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
@@ -262,8 +308,8 @@
                             <CheckBox Style="{DynamicResource ToggleSwitchStyle}"
                                       Command="{Binding ToggleCycleReading}"/>
                             <StackPanel Orientation="Vertical" Margin="2">
-                                <TextBlock Text="Toggle" HorizontalAlignment="Center" FontSize="16"/>
-                                <TextBlock Text="Cycle reading" HorizontalAlignment="Center" FontSize="16"/>
+                                <TextBlock Text="Enable" HorizontalAlignment="Center" FontSize="16"/>
+                                <TextBlock Text="cyclic reading" HorizontalAlignment="Center" FontSize="16"/>
                             </StackPanel>
                         </StackPanel>
                     </StackPanel>
@@ -862,8 +908,8 @@
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="5"/>
-                        <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="2*"/>
                         <ColumnDefinition Width="5"/>
                     </Grid.ColumnDefinitions>
 
@@ -885,23 +931,9 @@
 
                         <StackPanel Orientation="Horizontal">
                             <CheckBox Style="{DynamicResource ToggleSwitchStyle}" 
-                                      IsChecked="{Binding VH1aCurrentSinkEnable}"/>
-                            <TextBlock Text="VH1a Current Sink"
-                                       Margin="5"/>
-                        </StackPanel>
-
-                        <StackPanel Orientation="Horizontal">
-                            <CheckBox Style="{DynamicResource ToggleSwitchStyle}" 
-                                      IsChecked="{Binding VH2CurrentSinkEnable}"/>
-                            <TextBlock Text="VH2 Current Sink"
-                                       Margin="5"/>
-                        </StackPanel>
-
-                        <StackPanel Orientation="Horizontal">
-                            <CheckBox Style="{DynamicResource ToggleSwitchStyle}" 
                                       IsChecked="{Binding ReduceCurrentEnable}"/>
                             <StackPanel     Orientation="Vertical">
-                                <TextBlock  Text="Reduced Current alternative mode"
+                                <TextBlock  Text="Alternative firing mode"
                                             Margin="5,5,5,5"/>
                             </StackPanel>
                         </StackPanel>
@@ -909,78 +941,89 @@
                         <ComboBox SelectedIndex="{Binding FiringSelectedMode}" Margin="5">
                             <ComboBoxItem IsSelected="True">
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="A.1 "/>
+                                    <TextBlock Text="A - 1"
+                                               Width="55"/>
                                     <TextBlock Text=" - Fire 1 (all)"/>
                                 </StackPanel>
                             </ComboBoxItem>
 
                             <ComboBoxItem>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="B.1 "/>
+                                    <TextBlock Text="B - 1"
+                                               Width="55"/>
                                     <TextBlock Text=" - Fire 1"/>
                                 </StackPanel>
                             </ComboBoxItem>
 
                             <ComboBoxItem>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="B.2 "/>
+                                    <TextBlock Text="B - 2"
+                                               Width="55"/>
                                     <TextBlock Text=" - Fire 2 (all)"/>
                                 </StackPanel>
                             </ComboBoxItem>
 
                             <ComboBoxItem>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="C.1 "/>
+                                    <TextBlock Text="C - 1" 
+                                               Width="55"/>
                                     <TextBlock Text=" - Fire 1"/>
                                 </StackPanel>
                             </ComboBoxItem>
 
                             <ComboBoxItem>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="C.1a"/>
+                                    <TextBlock Text="C - 1a"
+                                               Width="55"/>
                                     <TextBlock Text=" - Fire 1, soft firing"/>
                                 </StackPanel>
                             </ComboBoxItem>
 
                             <ComboBoxItem>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="C.2a"/>
+                                    <TextBlock Text="C - 2a"
+                                               Width="55"/>
                                     <TextBlock Text=" - Fire 2 (all), soft firing"/>
                                 </StackPanel>
                             </ComboBoxItem>
 
                             <ComboBoxItem>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="D.1 "/>
+                                    <TextBlock Text="D - 1"
+                                               Width="55"/>
                                     <TextBlock Text=" - Fire 1"/>
                                 </StackPanel>
                             </ComboBoxItem>
 
                             <ComboBoxItem>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="D.2 "/>
+                                    <TextBlock Text="D - 2"
+                                               Width="55"/>
                                     <TextBlock Text=" - FIre 2 (all)"/>
                                 </StackPanel>
                             </ComboBoxItem>
 
                             <ComboBoxItem>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="E.5 "/>
+                                    <TextBlock Text="E - 5"
+                                               Width="55"/>
                                     <TextBlock Text=" - Fire 5 (1 on each module"/>
                                 </StackPanel>
                             </ComboBoxItem>
 
                             <ComboBoxItem>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="E.10"/>
+                                    <TextBlock Text="E - 10"
+                                               Width="55"/>
                                     <TextBlock Text=" - Fire 10 (all, on each module)"/>
                                 </StackPanel>
                             </ComboBoxItem>
 
                             <ComboBoxItem>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="F.20"/>
-                                    <TextBlock Text=" - Fire 20 (all)"/>
+                                    <TextBlock Text="F - 20"
+                                               Width="55"/>
+                                    <TextBlock Text=" - All Firing loops"/>
                                 </StackPanel>
                             </ComboBoxItem>
                         </ComboBox>
@@ -1076,13 +1119,41 @@
                                             </TextBlock>
 
                                             <TextBlock Grid.Column="3" Margin="0,0,5,0" FontSize="20"
-                                               Text="{Binding ToFire}"
                                                        HorizontalAlignment="Center">
+                                                <TextBlock.Style>
+                                                    <Style>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding ToFire}" Value="true">
+                                                                <Setter Property="TextBlock.Foreground" Value="{DynamicResource Foreground.Info}"/>
+                                                                <Setter Property="TextBlock.Text" Value="TRUE"/>
+                                                            </DataTrigger>
+
+                                                            <DataTrigger Binding="{Binding ToFire}" Value="false">
+                                                                <Setter Property="TextBlock.Foreground" Value="{DynamicResource Foreground.Fatal}"/>
+                                                                <Setter Property="TextBlock.Text" Value="FALSE"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
                                             </TextBlock>
 
                                             <TextBlock Grid.Column="4" Margin="0,0,5,0" FontSize="20"
-                                               Text="{Binding WasFired}"
                                                        HorizontalAlignment="Center">
+                                                <TextBlock.Style>
+                                                    <Style>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding WasFired}" Value="true">
+                                                                <Setter Property="TextBlock.Foreground" Value="{DynamicResource Foreground.Info}"/>
+                                                                <Setter Property="TextBlock.Text" Value="TRUE"/>
+                                                            </DataTrigger>
+
+                                                            <DataTrigger Binding="{Binding WasFired}" Value="false">
+                                                                <Setter Property="TextBlock.Foreground" Value="{DynamicResource Foreground.Fatal}"/>
+                                                                <Setter Property="TextBlock.Text" Value="FALSE"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
                                             </TextBlock>
 
                                             <TextBlock Grid.Column="5" Margin="0,0,5,0" FontSize="20"
