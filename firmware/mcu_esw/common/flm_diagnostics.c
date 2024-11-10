@@ -24,6 +24,9 @@
 #define FLM_DIAG_READ_RES_REGS_COUNT        (21)    /** \brief Number of registers with results of loop resistance 
                                                     measurement, including SQREF */
 
+#define FLM_DIAG_READ_VHX_REGS_COUNT        (11)    /** \brief Number of registers with results of VHx measurement 
+                                                    results*/ 
+
 /*********************************************************************************************************************/
 /*------------------------------------------------Function Prototypes------------------------------------------------*/
 /*********************************************************************************************************************/
@@ -132,6 +135,15 @@ void FLMShortDiag()
 
 void FLMVHxDiag()
 {
+    SPIReceiveDataNormal data[FLM_DIAG_READ_VHX_REGS_COUNT] = {0};
+    uint16 length = FLM_DIAG_READ_VHX_REGS_COUNT;
+    boolean isSuccessfulFlag = FALSE;
+    uint16 flmDiagVHxRegsAddresses[FLM_DIAG_READ_VHX_REGS_COUNT] =  { FLM_FLM_READ_DIAG_VH1A, FLM_FLM_READ_DIAG_VH2, 
+                                                                        FLM_FLM_READ_DIAG_VH3, FLM_FLM_READ_DIAG_VH4, 
+                                                                        FLM_FLM_READ_DIAG_VH5, FLM_FLM_READ_DIAG_VH6, 
+                                                                        FLM_FLM_READ_DIAG_VH7, FLM_FLM_READ_DIAG_VH8, 
+                                                                        FLM_FLM_READ_DIAG_VH9, FLM_FLM_READ_DIAG_VH10,
+                                                                        FLM_FLM_READ_DIAG_VH1B };
     static FLMVHxDiagResults FLMVHxDiagResultsValues;
 
     if (CheckBatVoltage()==FALSE) 
@@ -148,23 +160,37 @@ void FLMVHxDiag()
     //    // TODO: implement timeout for 1.5-2 duration of diagnostic -> if timeout then feature error to PC 
     //}
 
-    if (GetFLMDiagExecStatus() != FLM_DIAG_EXEC_STATUS_EVALUATED)
+    if (GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_FINISHED)
     {
-        g_flmDiagExecStatus = FLM_DIAG_EXEC_STATUS_ONGOING;
-        // TODO: start diagnostic and get out
-        // code
+        // Select corresponding mode
+        SetFLMDiagMode(FLM_DIAG_MODE_VHX_MEAS);
+
+        // Start diagnostic
+        StartFLMDiag();
+        g_FLMDiagExecStatus = FLM_DIAG_EXEC_STATUS_ONGOING;
+
+        // Get back out to check results on next interupt
         return;
     }
-    else
+
+    if (GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_EVALUATED)
     {
         // TODO: diagnostic was performed, store results
-        // code
+        // Read FLM_FLM_READ_DIAG_VH1A...FLM_FLM_READ_DIAG_VH10, FLM_FLM_READ_DIAG_VH1B
+        isSuccessfulFlag = QSPIReadSequenceNormal(SPI1_CS1MASTER, flmDiagVHxRegsAddresses, &data[0].dw, &length);
+        // Store results TODO: check order of data
+        for (uint8 i = 0; i < FLM_DIAG_READ_VHX_REGS_COUNT ; i++)
+        {
+            flm_flm_read_diag_vh1a_ut flmReadDiagVHxTmp = data[i].bf.output_data;
+            g_flmCycDiagResultsValues.flmVHxDiagResults[i].FLM_Read_Diag_VHx_voltage_valid = flmReadDiagVHxTmp.as_s.FlmVhVoltageValid_u1;
+            g_flmCycDiagResultsValues.flmVHxDiagResults[i].FLM_Read_Diag_VHx_voltage_value = flmReadDiagVHxTmp.as_s.FlmVhVoltageValue_u12;
+        }
+
         SetFLMDiagExecStatus(FLM_DIAG_EXEC_STATUS_FINISHED);
     }
 
-    // TODO: update this portion
-    g_FLMCycDiagFaultsValues.FLM_VHxMeasErr_fault = 0; // as per Vasant's diagrams; clearing fault here doesn't seem right for me
-    g_FLMCycDiagStatus.flm_VHxMeasStatus = FLM_DIAG_STATUS_VHX_MEAS_INITIATED;
+    // TODO: evaluate wether to implement error status handling
+    // g_FLMCycDiagFaultsValues.FLM_VHxMeasErr_fault = 0; // as per Vasant's diagrams; clearing fault here doesn't seem right for me
     return;
 }
 
