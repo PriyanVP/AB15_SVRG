@@ -21,6 +21,8 @@
 
 #define FLM_DIAG_READ_SQUIB_REGS_COUNT      (2)     /** \brief Number of registers with results of squib detection */
 
+#define FLM_DIAG_READ_RES_REGS_COUNT        (20)    /** \brief Number of registers with results of squib resistance 
+                                                    measurement */
 /*********************************************************************************************************************/
 /*------------------------------------------------Function Prototypes------------------------------------------------*/
 /*********************************************************************************************************************/
@@ -110,7 +112,7 @@ void FLMShortDiag()
     SetFLMDiagExecStatus(FLM_DIAG_EXEC_STATUS_ONGOING);
 
     // Read related registers from ASIC
-    isSuccessfulFlag = QSPIReadSequenceNormal(SPI1_CS1MASTER, flmDiagShortsRegsAddresses, &data[0].dw, &length);
+    isSuccessfulFlag = QSPIReadSequenceNormal(SPI1_CS1MASTER, flmDiagShortsRegsAddresses, &data[0].dw, &length); //TODO: question: should data argument be &data[0].dw not &data[].dw ?
 
     // Store results //TODO: check order of data
     g_flmCycDiagResultsValues.flmShortDiagResults.FLM_Read_Short_ch4_1 = data[0].bf.output_data;
@@ -191,7 +193,7 @@ void FLMSquibDetErrDiag()
     {
         // TODO: diagnostic was performed, store results
         // Read FLM_READ_SQUIB_CH16_1, FLM_READ_SQUIB_CH20_17
-        isSuccessfulFlag = QSPIReadSequenceNormal(SPI1_CS1MASTER, flmDiagSquibRegsAddresses, &data[0].dw, &length);
+        isSuccessfulFlag = QSPIReadSequenceNormal(SPI1_CS1MASTER, flmDiagSquibRegsAddresses, &data[0].dw, &length); //TODO: question: should data argument be &data[0].dw not &data[].dw ?
         // Store results TODO: check order of data
         for (uint8 i = 0; i < 20 ; i++)
         {
@@ -216,24 +218,44 @@ void FLMSquibDetErrDiag()
 
 void FLMLoopResDiag() //
 {
-    static FLMLoopResDiagResults FLMLoopResDiagResultsValues;
+    SPIReceiveDataNormal data[FLM_DIAG_READ_RES_REGS_COUNT] = {0};
+    uint16 length = FLM_DIAG_READ_RES_REGS_COUNT;
+    boolean isSuccessfulFlag = FALSE;
+    uint16 flmDiagResRegsAddresses[FLM_DIAG_READ_RES_REGS_COUNT] = {};
 
-    if (GetFLMDiagExecStatus() != FLM_DIAG_EXEC_STATUS_EVALUATED)
+    if (GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_FINISHED)
     {
-        g_flmDiagExecStatus = FLM_DIAG_EXEC_STATUS_ONGOING;
-        // TODO: start diagnostic and get out
-        // code
+        // Select corresponding mode
+        SetFLMDiagMode(FLM_DIAG_MODE_LOOP_RES_MEAS);
+
+        // Start diagnostic
+        StartFLMDiag();
+        g_FLMDiagExecStatus = FLM_DIAG_EXEC_STATUS_ONGOING;
+
+        // Get back out to check results on next interupt
         return;
     }
-    else
+
+    if (GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_EVALUATED)
     {
         // TODO: diagnostic was performed, store results
-        // code
+        // Read FLM_READ_SQUIB_RES_CH1...FLM_READ_SQUIB_RES_CH20
+        isSuccessfulFlag = QSPIReadSequenceNormal(SPI1_CS1MASTER, flmDiagResRegsAddresses, &data[0].dw, &length);
+        // Store results TODO: check order of data
+        for (uint8 i = 0; i < 20 ; i++)
+        {
+            flm_flm_read_squib_res_ch1_ut flmReadSquibResChxTmp = data[i].bf.output_data;
+            g_flmCycDiagResultsValues.flmLoopResDiagResults[i].flm_squib_res_value = flmReadSquibResChxTmp.as_s.FlmSquibResValue_u13;
+            g_flmCycDiagResultsValues.flmLoopResDiagResults[i].flm_squib_res_err = flmReadSquibResChxTmp.as_s.FlmSquibResErr_u1;
+            g_flmCycDiagResultsValues.flmLoopResDiagResults[i].flm_squib_res_valid = flmReadSquibResChxTmp.as_s.FlmSquibResValid_u1;     
+            g_flmCycDiagResultsValues.flmLoopResDiagResults[i].flm_squib_res_pgndx_loss = flmReadSquibResChxTmp.as_s.FlmSquibResPgndxLoss_u1;
+        }
+
         SetFLMDiagExecStatus(FLM_DIAG_EXEC_STATUS_FINISHED);
     }
 
+    // TODO: evaluate wether to implement error status handling
     return;
-    
 }
 
 void GetFLMDiagMode(void)
