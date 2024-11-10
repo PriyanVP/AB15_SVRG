@@ -59,7 +59,8 @@ void FLMLoopResDiag();
  */
 void GetFLMDiagMode();
 
-/** \brief
+/** \brief Select diagnostic to be run by FLM diag module
+ * write diagMode to flm_diag_mode field of FLM_DIAG_START register
  */
 void SetFLMDiagMode(FLMDiagModeEnum diagMode);
 
@@ -338,7 +339,19 @@ flm_cycDiagExecStatusEnum GetFLMDiagExecStatus(void)
 
 void SetFLMDiagMode(FLMDiagModeEnum diagMode)
 {
-    // TODO: implement (write diagMode to flm_diag_mode field of FLM_DIAG_START register)
+    SPIReceiveDataNormal data;
+    boolean isSuccessfulFlag = TRUE;
+    flm_flm_diag_start_ut tmpFLMDiagStartfRegister;
+    
+    // Get value from ASIC
+    isSuccessfulFlag &= QSPIReadNormal(SPI1_CS1MASTER, FLM_FLM_DIAG_START, &data.dw);
+    tmpFLMDiagStartfRegister.as_uint16 = data.output_data;
+    
+    // flm_diag_start = 1 starts selected diagnostic
+    tmpFLMDiagStartfRegister.as_s.FlmDiagMode_u5 = diagMode;
+
+    // Write
+    QSPIWriteNormal(SPI1_CS1MASTER, FLM_FLM_DIAG_START, tmpFLMDiagStartfRegister.as_uint16);
 }
 
 bool CheckBatVoltage(void)
