@@ -351,19 +351,19 @@
 
                 <!--Text="{Binding GUIVersion}"-->
                 <TextBlock Style="{DynamicResource TextBlockStyle}" MinWidth="20"
-                           Text="0.1a" Margin="0,0,15,0"/>
+                           Text="00.03.00" Margin="0,0,15,0"/>
                 
                 <TextBlock Style="{DynamicResource TextBlockStyle}" Text="MCU:"/>
 
                 <!--Text="{Binding MCUVersion}"-->
                 <TextBlock Style="{DynamicResource TextBlockStyle}" MinWidth="20"
-                           Text="0.1a" Margin="0,0,15,0"/>
+                           Text="00.03.00" Margin="0,0,15,0"/>
                 
                 <TextBlock Style="{DynamicResource TextBlockStyle}" Text="AB15:"/>
 
                 <!--Text="{Binding ASICID}"-->
                 <TextBlock Style="{DynamicResource TextBlockStyle}" MinWidth="20"
-                           Text="1.0a" Margin="0,0,15,0"/>
+                           Text="RA150" Margin="0,0,15,0"/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="2">

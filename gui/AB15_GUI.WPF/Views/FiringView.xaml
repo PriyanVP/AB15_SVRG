@@ -62,28 +62,28 @@
 
                         <ComboBoxItem>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="A - 1" MinWidth="50"/>
+                                <TextBlock Text="A - 1 " MinWidth="50"/>
                                 <TextBlock Text=" - Firing Loop"/>
                             </StackPanel>
                         </ComboBoxItem>
 
                         <ComboBoxItem>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="B - 2" MinWidth="50"/>
+                                <TextBlock Text="B - 2 " MinWidth="50"/>
                                 <TextBlock Text=" - Firing Loop, same module"/>
                             </StackPanel>
                         </ComboBoxItem>
 
                         <ComboBoxItem>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="C - 2" MinWidth="50"/>
+                                <TextBlock Text="C - 2 " MinWidth="50"/>
                                 <TextBlock Text=" - Firing Loop, same module, 1 soft firing"/>
                             </StackPanel>
                         </ComboBoxItem>
 
                         <ComboBoxItem>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="D - 2" MinWidth="50"/>
+                                <TextBlock Text="D - 2 " MinWidth="50"/>
                                 <TextBlock Text=" - Firing Loop, different modules"/>
                             </StackPanel>
                         </ComboBoxItem>
@@ -98,7 +98,7 @@
                         <ComboBoxItem>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="F - 20" MinWidth="50"/>
-                                <TextBlock Text="(all) - Firing Loop"/>
+                                <TextBlock Text=" - All Firing loops"/>
                             </StackPanel>
                         </ComboBoxItem>
                     </ComboBox>
@@ -913,8 +913,8 @@
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="5"/>
-                        <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="2*"/>
                         <ColumnDefinition Width="5"/>
                     </Grid.ColumnDefinitions>
 
@@ -946,78 +946,89 @@
                         <ComboBox SelectedIndex="{Binding FiringSelectedMode}" Margin="5">
                             <ComboBoxItem IsSelected="True">
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="A.1 "/>
+                                    <TextBlock Text="A - 1"
+                                               Width="55"/>
                                     <TextBlock Text=" - Fire 1 (all)"/>
                                 </StackPanel>
                             </ComboBoxItem>
 
                             <ComboBoxItem>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="B.1 "/>
+                                    <TextBlock Text="B - 1"
+                                               Width="55"/>
                                     <TextBlock Text=" - Fire 1"/>
                                 </StackPanel>
                             </ComboBoxItem>
 
                             <ComboBoxItem>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="B.2 "/>
+                                    <TextBlock Text="B - 2"
+                                               Width="55"/>
                                     <TextBlock Text=" - Fire 2 (all)"/>
                                 </StackPanel>
                             </ComboBoxItem>
 
                             <ComboBoxItem>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="C.1 "/>
+                                    <TextBlock Text="C - 1" 
+                                               Width="55"/>
                                     <TextBlock Text=" - Fire 1"/>
                                 </StackPanel>
                             </ComboBoxItem>
 
                             <ComboBoxItem>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="C.1a"/>
+                                    <TextBlock Text="C - 1a"
+                                               Width="55"/>
                                     <TextBlock Text=" - Fire 1, soft firing"/>
                                 </StackPanel>
                             </ComboBoxItem>
 
                             <ComboBoxItem>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="C.2a"/>
+                                    <TextBlock Text="C - 2a"
+                                               Width="55"/>
                                     <TextBlock Text=" - Fire 2 (all), soft firing"/>
                                 </StackPanel>
                             </ComboBoxItem>
 
                             <ComboBoxItem>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="D.1 "/>
+                                    <TextBlock Text="D - 1"
+                                               Width="55"/>
                                     <TextBlock Text=" - Fire 1"/>
                                 </StackPanel>
                             </ComboBoxItem>
 
                             <ComboBoxItem>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="D.2 "/>
+                                    <TextBlock Text="D - 2"
+                                               Width="55"/>
                                     <TextBlock Text=" - FIre 2 (all)"/>
                                 </StackPanel>
                             </ComboBoxItem>
 
                             <ComboBoxItem>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="E.5 "/>
+                                    <TextBlock Text="E - 5"
+                                               Width="55"/>
                                     <TextBlock Text=" - Fire 5 (1 on each module"/>
                                 </StackPanel>
                             </ComboBoxItem>
 
                             <ComboBoxItem>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="E.10"/>
+                                    <TextBlock Text="E - 10"
+                                               Width="55"/>
                                     <TextBlock Text=" - Fire 10 (all, on each module)"/>
                                 </StackPanel>
                             </ComboBoxItem>
 
                             <ComboBoxItem>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="F.20"/>
-                                    <TextBlock Text=" - Fire 20 (all)"/>
+                                    <TextBlock Text="F - 20"
+                                               Width="55"/>
+                                    <TextBlock Text=" - All Firing loops"/>
                                 </StackPanel>
                             </ComboBoxItem>
                         </ComboBox>
