@@ -6,10 +6,15 @@
       xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
       xmlns:local="clr-namespace:AB15_GUI.WPF.Views"
       xmlns:custom="clr-namespace:AB15_GUI.WPF.Views.Components"
+      xmlns:cnvrt="clr-namespace:AB15_GUI.WPF.Views.Converters"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="900"
       Title="Firing"
       DataContext="{Binding FiringViewModel, Source={StaticResource ViewModelLocator}}">
+
+    <Page.Resources>
+        <cnvrt:FiringModeConverter x:Key="FiringModeConverter"/>
+    </Page.Resources>
 
     <Grid Background="{DynamicResource UI.BackGround}">
         
@@ -142,6 +147,7 @@
 
                             </Grid>
                             <ListView Grid.Row="1" Grid.Column="1" Name="ConfigChannelsTableView" 
+                                      IsEnabled="{Binding IsConfigControlsEnabled}"
                                       ItemsSource="{Binding FiringConfigurationTable}"
                                       ItemContainerStyle="{DynamicResource ListViewItemStyle}" 
                                       FontSize="20">
@@ -178,7 +184,7 @@
                                                         Text="{Binding Identifier, Mode=TwoWay}">
                                             </TextBox>
 
-                                            <ComboBox   Grid.Column="3" Margin="0,0,5,0" SelectedIndex="{Binding Mode, Mode=TwoWay}">
+                                            <ComboBox   Grid.Column="3" Margin="0,0,5,0" SelectedIndex="{Binding Mode, Converter={StaticResource FiringModeConverter} Mode=TwoWay}">
                                                 <ComboBoxItem Tag="0">
                                                     <TextBlock Text="OFF"/>
                                                 </ComboBoxItem>
