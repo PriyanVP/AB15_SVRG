@@ -7,6 +7,7 @@
 /*-----------------------------------------------------Includes------------------------------------------------------*/
 /*********************************************************************************************************************/
 #include "Ifx_Types.h"
+#include "common/global_defines.h"
 #include "common/usb_data_types.h"
 #include "common/spi_data_types.h"
 #include "common/command_queue.h"
