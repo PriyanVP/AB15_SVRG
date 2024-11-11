@@ -10,7 +10,9 @@ using System.Collections.ObjectModel;
 using Stateless;
 using Stateless.Graph;
 using System.Collections.Generic;
-
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace AB15_GUI.WPF.ViewModels
 {
@@ -75,13 +77,16 @@ namespace AB15_GUI.WPF.ViewModels
             string graph = UmlDotGraph.Format(_stateMachine.GetInfo());
 
             // Init commands for controls
-            // ConfigurationChanged  = new RelayCommand(ConfigurationChangedExecute);
+            WriteConfiguration      = new RelayCommand(WriteConfigToASICExecute);
+            TransferToNormalMode    = new RelayCommand(TransferToNormalModeExecute);
+            FireSimultaneous        = new RelayCommand(FireSimultaneousCommandExecute);
+            StartStopCyclicReading  = new RelayCommand(StartStopCyclicReadingExecute);
 
             // Fire transition to Idle state
             _stateMachine.Fire(Triggers.POR);
 
             // Events from ASIC // TODO: some of these handlers should be moved out of Firing VM
-            this.asicWrapper.ASICs[0].InitModeEntered += InitModeEnteredHandler;
+            // this.asicWrapper.ASICs[0].InitModeEntered += InitModeEnteredHandler; // TODO: add in future 
             this.asicWrapper.ASICs[0].ConfigurationLoaded += ConfigurationLoadedHandler;
             this.asicWrapper.ASICs[0].ConfigurationLocked += ConfigurationLockedHandler;
             this.asicWrapper.ASICs[0].NormalModeEntered += NormalModeEnteredHandler;
@@ -101,84 +106,6 @@ namespace AB15_GUI.WPF.ViewModels
             FiringResultTable.Add(new FiringResultRecord() { ASICID = 1, ChannelID = 3, ToFire = false, WasFired = true, FiringCntHigh = 0, FiringCntLow = 0 });
             FiringResultTable.Add(new FiringResultRecord() { ASICID = 1, ChannelID = 4, ToFire = false, WasFired = true, FiringCntHigh = 0, FiringCntLow = 0 });
 
-        }
-
-        private void TestMode2EnteredHandler(object? sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void TestMode1EnteredHandler(object? sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Event handler that will be called when before loading configuration to ASIC
-        /// If event raised all subscribers provide configuration to central config storage
-        /// </summary>
-        /// <param name="sender">object that called this event. Must be one of ASIC objects</param>
-        /// <param name="e">unused</param>
-        private void RequestConfigurationHandler(object? sender, EventArgs e)
-        {
-            // Precondition
-            if (sender == null)
-            {
-                throw new ArgumentNullException("Incorrect argument - can't be null!");
-            }
-
-            // Typecast sender to actual type
-            IASIC caller = (IASIC) sender;
-
-            // Append firing configuration to global ASIC configuration
-            caller.AppendConfigRegisters(_firingConfig);
-
-            // Unsubscribe from event - by design can't be used twice
-            caller.RequestConfiguration -= RequestConfigurationHandler;
-        }
-
-        private void NormalModeEnteredHandler(object? sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void InitModeEnteredHandler(object? sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void ConfigurationLockedHandler(object? sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Event handler that will be called when configuration is loaded to ASIC
-        /// </summary>
-        /// <param name="sender">object that called this event. Must be one of ASIC objects</param>
-        /// <param name="e">unused</param>
-        private void ConfigurationLoadedHandler(object? sender, EventArgs e)
-        {
-            // Precondition
-            if (sender == null)
-            {
-                throw new ArgumentNullException("Incorrect argument - can't be null!");
-            }
-            // Typecast sender to actual type
-            IASIC caller = (IASIC) sender;
-
-            // Response received - unlock command usage
-            _writeConfigurationCommand.InProgress = false;
-            OnPropertyChanged(nameof(WriteConfigurationCommandEn));
-
-            // Fire state machine transition to configuration loaded
-            _stateMachine.Fire(Triggers.ConfigurationLoaded);
-
-            // Fill list for table on Firing tab
-            // TODO:
-
-            // Unsubscribe from event - by design can be fired only once
-            caller.ConfigurationLoaded -= ConfigurationLoadedHandler;
         }
 
         #region State_Machine
@@ -230,23 +157,64 @@ namespace AB15_GUI.WPF.ViewModels
             {
                 case State.Idle:
                     // Buttons/commands enable handling
-                    _writeConfigurationCommand.Enable       =
-                    _transferToNormalModeCommand.Enable     =
-                    _fireSimultaneousCommand.Enable         =
-                    _startStopCyclicReadingCommand.Enable   =
+                    _writeConfigurationCommand.Enable       = true;
+                    _transferToNormalModeCommand.Enable     = false;
+                    _fireSimultaneousCommand.Enable         = false;
+                    _startStopCyclicReadingCommand.Enable   = true;
 
                     // Configuration/firing enable handling
                     IsConfigControlsEnabled = true;
                     IsFiringControlsEnabled = false;
                     break;
+
                 case State.InConfiguration:
+                    // Buttons/commands enable handling
+                    _writeConfigurationCommand.Enable       = false;
+                    _transferToNormalModeCommand.Enable     = false;
+                    _fireSimultaneousCommand.Enable         = false;
+                    _startStopCyclicReadingCommand.Enable   = true;
+
+                    // Configuration/firing enable handling
+                    IsConfigControlsEnabled = false;
+                    IsFiringControlsEnabled = false;
                     break;
+
                 case State.Configured:
+                    // Buttons/commands enable handling
+                    _writeConfigurationCommand.Enable       = false;
+                    _transferToNormalModeCommand.Enable     = true;
+                    _fireSimultaneousCommand.Enable         = false;
+                    _startStopCyclicReadingCommand.Enable   = true;
+
+                    // Configuration/firing enable handling
+                    IsConfigControlsEnabled = false;
+                    IsFiringControlsEnabled = false;
                     break;
+
                 case State.Running:
+                    // Buttons/commands enable handling
+                    _writeConfigurationCommand.Enable       = false;
+                    _transferToNormalModeCommand.Enable     = false;
+                    _fireSimultaneousCommand.Enable         = true;
+                    _startStopCyclicReadingCommand.Enable   = true;
+
+                    // Configuration/firing enable handling
+                    IsConfigControlsEnabled = false;
+                    IsFiringControlsEnabled = true;
                     break;
+
                 case State.Error:
+                    // Buttons/commands enable handling
+                    _writeConfigurationCommand.Enable       = false;
+                    _transferToNormalModeCommand.Enable     = false;
+                    _fireSimultaneousCommand.Enable         = false;
+                    _startStopCyclicReadingCommand.Enable   = false;
+
+                    // Configuration/firing enable handling
+                    IsConfigControlsEnabled = false;
+                    IsFiringControlsEnabled = false;
                     break;
+
                 default:
                     throw new ArgumentOutOfRangeException(nameof(_stateMachine.State), $"Unexpected state received {_stateMachine.State}");
             }
@@ -272,8 +240,7 @@ namespace AB15_GUI.WPF.ViewModels
         /// </summary>
         public ObservableCollection<FiringResultRecord> FiringResultTable { get; set; } = new ObservableCollection<FiringResultRecord>();
 
-
-        // TODO: add properties for every needed UI element
+        // TODO: add properties for every needed UI element - monitoring page tables missing (add model)
 
         /// <summary>
         /// <inheritdoc cref="IsConfigControlsEnabled" path='/summary'/>
@@ -403,6 +370,31 @@ namespace AB15_GUI.WPF.ViewModels
         }
 
         /// <summary>
+        /// <inheritdoc cref="FiringConfigurationIndex" path='/summary'/>
+        /// </summary>
+        private int firingConfigurationIndex;
+        
+        /// <summary>
+        /// Index of currently selected firing scenario
+        /// </summary>
+        public int FiringConfigurationIndex
+        {
+            get => firingConfigurationIndex;
+            set 
+            {
+                // Do nothing if value is not changed
+                if (firingConfigurationIndex == value) return;
+
+                // Update property
+                firingConfigurationIndex = value;
+                OnPropertyChanged();
+
+                // Call method to update table
+                ConfigurationChanged();
+            }
+        }
+
+        /// <summary>
         /// <inheritdoc cref="FiringScenarioIndex" path='/summary'/>
         /// </summary>
         private int firingScenarioIndex;
@@ -418,8 +410,68 @@ namespace AB15_GUI.WPF.ViewModels
                 // Do nothing if value is not changed
                 if (firingScenarioIndex == value) return;
 
+                ClearErrors();
+
+                // Validate if selected scenario is applicable
+                switch (value)
+                {
+                    case 0:
+                        if (FiringConfigurationIndex != 0)
+                        {
+                            AddError($"Scenario {value} is not applicable for current configuration", nameof(FiringScenarioIndex));
+                            return;
+                        }
+                        break;
+                    case 1:
+                    case 2:
+                        if (FiringConfigurationIndex != 1)
+                        {
+                            AddError($"Scenario {value} is not applicable for current configuration", nameof(FiringScenarioIndex));
+                            return;
+                        }
+                        break;
+                    case 3:
+                    case 4:
+                    case 5:
+                        if (FiringConfigurationIndex != 2)
+                        {
+                            AddError($"Scenario {value} is not applicable for current configuration", nameof(FiringScenarioIndex));
+                            return;
+                        }
+                        break;
+                    case 6:
+                    case 7:
+                        if (FiringConfigurationIndex != 3)
+                        {
+                            AddError($"Scenario {value} is not applicable for current configuration", nameof(FiringScenarioIndex));
+                            return;
+                        }
+                        break;
+                    case 8:
+                    case 9:
+                        if (FiringConfigurationIndex != 4)
+                        {
+                            AddError($"Scenario {value} is not applicable for current configuration", nameof(FiringScenarioIndex));
+                            return;
+                        }
+                        break;
+                    case 10:
+                        if (FiringConfigurationIndex != 5)
+                        {
+                            AddError($"Scenario {value} is not applicable for current configuration", nameof(FiringScenarioIndex));
+                            return;
+                        }
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException($"Unexpected index value for firing scenario: {value}");
+                }
+
+                // Update property
                 firingScenarioIndex = value;
                 OnPropertyChanged();
+
+                // Call method to update table
+                FiringScenarioChanged();
             }
         }
 
@@ -438,8 +490,6 @@ namespace AB15_GUI.WPF.ViewModels
             // UI elements help messages
         }
 
-
-
         #endregion // Bindable_Properties
 
         #region Internal_configuration
@@ -450,116 +500,158 @@ namespace AB15_GUI.WPF.ViewModels
         /// </summary>
         private List<IRegister> _firingConfig = new List<IRegister>()
         {
-            new Reg_FLM_Config_ch2_1(),
-            new Reg_FLM_Config_ch4_3(),
-            new Reg_FLM_Config_ch6_5(),
-            new Reg_FLM_Config_ch8_7(),
-            new Reg_FLM_Config_ch10_9(),
-            new Reg_FLM_Config_ch12_11(),
-            new Reg_FLM_Config_ch14_13(),
-            new Reg_FLM_Config_ch16_15(),
-            new Reg_FLM_Config_ch18_17(),
-            new Reg_FLM_Config_ch20_19()
+            new Reg_FLM_Config_ch2_1()   { Data = 0x0000 },
+            new Reg_FLM_Config_ch4_3()   { Data = 0x0000 },
+            new Reg_FLM_Config_ch6_5()   { Data = 0x0000 },
+            new Reg_FLM_Config_ch8_7()   { Data = 0x0000 },
+            new Reg_FLM_Config_ch10_9()  { Data = 0x0000 },
+            new Reg_FLM_Config_ch12_11() { Data = 0x0000 },
+            new Reg_FLM_Config_ch14_13() { Data = 0x0000 },
+            new Reg_FLM_Config_ch16_15() { Data = 0x0000 },
+            new Reg_FLM_Config_ch18_17() { Data = 0x0000 },
+            new Reg_FLM_Config_ch20_19() { Data = 0x0000 }
         };
 
-        // private Reg_
-        // private Reg_
-        // private Reg_
-        // private Reg_
-        // private Reg_
-        // private Reg_
-        // private Reg_
-        // private Reg_
-        // private Reg_
-        // private Reg_
-        // private Reg_
-        // private Reg_
+        /// <summary>
+        /// Collects data from UI and fills list with internal configuration
+        /// </summary>
+        private void CollectConfiguration()
+        {
+            // General configuration
+            // Get register for writing general configuration - will modify data in list (reference to reg is used)
+            Reg_FLM_Config_ch2_1 regWithGeneralConfigFields = (Reg_FLM_Config_ch2_1) _firingConfig.Find(x => x.Name == "FLM_Config_ch2_1");
+            regWithGeneralConfigFields.flm_vh1a_source_disable.Data = (IsVH1aCurrentSinkEn) ? ((ushort) 0) : ((ushort) 1);
+            regWithGeneralConfigFields.flm_vh2_source_disable.Data = (IsVH2CurrentSinkEn) ? ((ushort) 0) : ((ushort) 1);
+            regWithGeneralConfigFields.flm_oc_behavior_sel.Data = (IsLowsideOvercurrentSwitchOffEn) ? ((ushort) 1) : ((ushort) 0); // TODO: check mapping to UI
+
+            // Channel configuration
+            foreach (FiringChannelConfigurationRecord channelConfigRecord in FiringConfigurationTable)
+            {
+                // Get reference to correct register // TODO: can be optimized
+                switch (channelConfigRecord.ChannelID)
+                {
+                    case 1:
+                        Reg_FLM_Config_ch2_1 reg_ch1 = (Reg_FLM_Config_ch2_1) _firingConfig.Find(x => x.Name == "FLM_Config_ch2_1");
+                        reg_ch1.flm_mode_ch1.Data = (UInt16) channelConfigRecord.Mode;
+                        reg_ch1.flm_mode_parity_ch1.Data = (UInt16) (reg_ch1.flm_mode_ch1.Data % 2); // TODO: verify approach
+                        break;
+                    case 2:
+                        Reg_FLM_Config_ch2_1 reg_ch2 = (Reg_FLM_Config_ch2_1) _firingConfig.Find(x => x.Name == "FLM_Config_ch2_1");
+                        reg_ch2.flm_mode_ch2.Data = (UInt16) channelConfigRecord.Mode;
+                        reg_ch2.flm_mode_parity_ch2.Data = (UInt16) (reg_ch2.flm_mode_ch2.Data % 2);
+                        break;
+                    case 3:
+                        Reg_FLM_Config_ch4_3 reg_ch3 = (Reg_FLM_Config_ch4_3) _firingConfig.Find(x => x.Name == "FLM_Config_ch4_3");
+                        reg_ch3.flm_mode_ch3.Data = (UInt16) channelConfigRecord.Mode;
+                        reg_ch3.flm_mode_parity_ch3.Data = (UInt16) (reg_ch3.flm_mode_ch3.Data % 2);
+                        break;
+                    case 4:
+                        Reg_FLM_Config_ch4_3 reg_ch4 = (Reg_FLM_Config_ch4_3) _firingConfig.Find(x => x.Name == "FLM_Config_ch4_3");
+                        reg_ch4.flm_mode_ch4.Data = (UInt16) channelConfigRecord.Mode;
+                        reg_ch4.flm_mode_parity_ch4.Data = (UInt16) (reg_ch4.flm_mode_ch4.Data % 2);
+                        break;
+                    case 5:
+                        Reg_FLM_Config_ch6_5 reg_ch5 = (Reg_FLM_Config_ch6_5) _firingConfig.Find(x => x.Name == "FLM_Config_ch6_5");
+                        reg_ch5.flm_mode_ch5.Data = (UInt16) channelConfigRecord.Mode;
+                        reg_ch5.flm_mode_parity_ch5.Data = (UInt16) (reg_ch5.flm_mode_ch5.Data % 2);
+                        break;
+                    case 6:
+                        Reg_FLM_Config_ch6_5 reg_ch6 = (Reg_FLM_Config_ch6_5) _firingConfig.Find(x => x.Name == "FLM_Config_ch6_5");
+                        reg_ch6.flm_mode_ch6.Data = (UInt16) channelConfigRecord.Mode;
+                        reg_ch6.flm_mode_parity_ch6.Data = (UInt16) (reg_ch6.flm_mode_ch6.Data % 2);
+                        break;
+                    case 7:
+                        Reg_FLM_Config_ch8_7 reg_ch7 = (Reg_FLM_Config_ch8_7) _firingConfig.Find(x => x.Name == "FLM_Config_ch8_7");
+                        reg_ch7.flm_mode_ch7.Data = (UInt16) channelConfigRecord.Mode;
+                        reg_ch7.flm_mode_parity_ch7.Data = (UInt16) (reg_ch7.flm_mode_ch7.Data % 2);
+                        break;
+                    case 8:
+                        Reg_FLM_Config_ch8_7 reg_ch8 = (Reg_FLM_Config_ch8_7) _firingConfig.Find(x => x.Name == "FLM_Config_ch8_7");
+                        reg_ch8.flm_mode_ch8.Data = (UInt16) channelConfigRecord.Mode;
+                        reg_ch8.flm_mode_parity_ch8.Data = (UInt16) (reg_ch8.flm_mode_ch8.Data % 2);
+                        break;
+                    case 9:
+                        Reg_FLM_Config_ch10_9 reg_ch9 = (Reg_FLM_Config_ch10_9) _firingConfig.Find(x => x.Name == "FLM_Config_ch10_9");
+                        reg_ch9.flm_mode_ch9.Data = (UInt16) channelConfigRecord.Mode;
+                        reg_ch9.flm_mode_parity_ch9.Data = (UInt16) (reg_ch9.flm_mode_ch9.Data % 2);
+                        break;
+                    case 10:
+                        Reg_FLM_Config_ch10_9 reg_ch10 = (Reg_FLM_Config_ch10_9) _firingConfig.Find(x => x.Name == "FLM_Config_ch10_9");
+                        reg_ch10.flm_mode_ch10.Data = (UInt16) channelConfigRecord.Mode;
+                        reg_ch10.flm_mode_parity_ch10.Data = (UInt16) (reg_ch10.flm_mode_ch10.Data % 2);
+                        break;
+                    case 11:
+                        Reg_FLM_Config_ch12_11 reg_ch11 = (Reg_FLM_Config_ch12_11) _firingConfig.Find(x => x.Name == "FLM_Config_ch12_11");
+                        reg_ch11.flm_mode_ch11.Data = (UInt16) channelConfigRecord.Mode;
+                        reg_ch11.flm_mode_parity_ch11.Data = (UInt16) (reg_ch11.flm_mode_ch11.Data % 2);
+                        break;
+                    case 12:
+                        Reg_FLM_Config_ch12_11 reg_ch12 = (Reg_FLM_Config_ch12_11) _firingConfig.Find(x => x.Name == "FLM_Config_ch12_11");
+                        reg_ch12.flm_mode_ch12.Data = (UInt16) channelConfigRecord.Mode;
+                        reg_ch12.flm_mode_parity_ch12.Data = (UInt16) (reg_ch12.flm_mode_ch12.Data % 2);
+                        break; 
+                    case 13:
+                        Reg_FLM_Config_ch14_13 reg_ch13 = (Reg_FLM_Config_ch14_13) _firingConfig.Find(x => x.Name == "FLM_Config_ch14_13");
+                        reg_ch13.flm_mode_ch13.Data = (UInt16) channelConfigRecord.Mode;
+                        reg_ch13.flm_mode_parity_ch13.Data = (UInt16) (reg_ch13.flm_mode_ch13.Data % 2);
+                        break;
+                    case 14:
+                        Reg_FLM_Config_ch14_13 reg_ch14 = (Reg_FLM_Config_ch14_13) _firingConfig.Find(x => x.Name == "FLM_Config_ch14_13");
+                        reg_ch14.flm_mode_ch14.Data = (UInt16) channelConfigRecord.Mode;
+                        reg_ch14.flm_mode_parity_ch14.Data = (UInt16) (reg_ch14.flm_mode_ch14.Data % 2);
+                        break;
+                    case 15:
+                        Reg_FLM_Config_ch16_15 reg_ch15 = (Reg_FLM_Config_ch16_15) _firingConfig.Find(x => x.Name == "FLM_Config_ch16_15");
+                        reg_ch15.flm_mode_ch15.Data = (UInt16) channelConfigRecord.Mode;
+                        reg_ch15.flm_mode_parity_ch15.Data = (UInt16) (reg_ch15.flm_mode_ch15.Data % 2);
+                        break;
+                    case 16:
+                        Reg_FLM_Config_ch16_15 reg_ch16 = (Reg_FLM_Config_ch16_15) _firingConfig.Find(x => x.Name == "FLM_Config_ch16_15");
+                        reg_ch16.flm_mode_ch16.Data = (UInt16) channelConfigRecord.Mode;
+                        reg_ch16.flm_mode_parity_ch16.Data = (UInt16) (reg_ch16.flm_mode_ch16.Data % 2);
+                        break;  
+                    case 17:
+                        Reg_FLM_Config_ch18_17 reg_ch17 = (Reg_FLM_Config_ch18_17) _firingConfig.Find(x => x.Name == "FLM_Config_ch18_17");
+                        reg_ch17.flm_mode_ch17.Data = (UInt16) channelConfigRecord.Mode;
+                        reg_ch17.flm_mode_parity_ch17.Data = (UInt16) (reg_ch17.flm_mode_ch17.Data % 2);
+                        break;
+                    case 18:
+                        Reg_FLM_Config_ch18_17 reg_ch18 = (Reg_FLM_Config_ch18_17) _firingConfig.Find(x => x.Name == "FLM_Config_ch18_17");
+                        reg_ch18.flm_mode_ch18.Data = (UInt16) channelConfigRecord.Mode;
+                        reg_ch18.flm_mode_parity_ch18.Data = (UInt16) (reg_ch18.flm_mode_ch18.Data % 2);
+                        break;
+                    case 19:
+                        Reg_FLM_Config_ch20_19 reg_ch19 = (Reg_FLM_Config_ch20_19) _firingConfig.Find(x => x.Name == "FLM_Config_ch20_19");
+                        reg_ch19.flm_mode_ch19.Data = (UInt16) channelConfigRecord.Mode;
+                        reg_ch19.flm_mode_parity_ch19.Data = (UInt16) (reg_ch19.flm_mode_ch19.Data % 2);
+                        break;
+                    case 20:
+                        Reg_FLM_Config_ch20_19 reg_ch20 = (Reg_FLM_Config_ch20_19) _firingConfig.Find(x => x.Name == "FLM_Config_ch20_19");
+                        reg_ch20.flm_mode_ch20.Data = (UInt16) channelConfigRecord.Mode;
+                        reg_ch20.flm_mode_parity_ch20.Data = (UInt16) (reg_ch20.flm_mode_ch20.Data % 2);
+                        break; 
+                    default:
+                        throw new ArgumentOutOfRangeException("Unexpected channel ID! Should be in rage 1-20");             
+                }
+            }
+        }
 
         #endregion // Internal_configuration
 
         #region Commands
 
-        // TODO: 2 buttons, 1 toggle switch - create commands and
-        // TODO: enable flag for config
-        // TODO: usage of request configuration, init mode entered, normal mode entered events
-        // TODO: state machine for flags handling
-        // TODO: logic for adding description based on Mode for Config
-        // TODO: logic for Test mode 1, 2
-
-        // /// <summary>
-        // /// Transfer to Normal mode button/command enable state
-        // /// </summary>
-        // private CommandState _configurationChangedCommand        = new CommandState();
-        
-        // /// <summary>
-        // /// Bindable  button/command enable state
-        // /// </summary>
-        // public bool ConfigurationChangedCommandEn => _configurationChangedCommand.IsEnabled;
+        // TODO: 2 buttons, 1 toggle switch - create commands and handlers
+        // TODO: logic for adding description based on Mode for Config -> hard to do, can be done manually (in model)
 
         /// <summary>
-        ///  button/command enable state
+        /// Command handler for executing transferring to Normal mode sequence
         /// </summary>
-        private CommandState _writeConfigurationCommand        = new CommandState();
-        
-        /// <summary>
-        /// Bindable  button/command enable state
-        /// </summary>
-        public bool WriteConfigurationCommandEn => _writeConfigurationCommand.IsEnabled;
-
-        /// <summary>
-        ///  button/command enable state
-        /// </summary>
-        private CommandState _transferToNormalModeCommand        = new CommandState();
-        
-        /// <summary>
-        /// Bindable  button/command enable state
-        /// </summary>
-        public bool TransferToNormalModeCommandEn => _transferToNormalModeCommand.IsEnabled;
-
-        // /// <summary>
-        // ///  button/command enable state
-        // /// </summary>
-        // private CommandState _firingScenarioChangedCommand        = new CommandState();
-        
-        // /// <summary>
-        // /// Bindable  button/command enable state
-        // /// </summary>
-        // public bool FiringScenarioChangedCommandEn => _firingScenarioChangedCommand.IsEnabled;
-
-        /// <summary>
-        ///  button/command enable state
-        /// </summary>
-        private CommandState _fireSimultaneousCommand        = new CommandState();
-        
-        /// <summary>
-        /// Bindable  button/command enable state
-        /// </summary>
-        public bool FireSimultaneousCommandEn => _fireSimultaneousCommand.IsEnabled;
-
-        /// <summary>
-        ///  button/command enable state
-        /// </summary>
-        private CommandState _startStopCyclicReadingCommand        = new CommandState();
-
-        /// <summary>
-        /// Bindable  button/command enable state
-        /// </summary>
-        public bool StartStopCyclicReadingCommandEn => _startStopCyclicReadingCommand.IsEnabled;
-
-        // /// <summary>
-        // /// Command handler for changing configuration
-        // /// </summary>
-        // public ICommand ConfigurationChanged { get; }
+        public ICommand WriteConfiguration { get; }
 
         /// <summary>
         /// Command handler for executing transferring to Normal mode sequence
         /// </summary>
         public ICommand TransferToNormalMode { get; }
-
-        // /// <summary>
-        // /// Command handler for changing firing scenario
-        // /// </summary>
-        // public ICommand FiringScenarioChanged { get; }
 
         /// <summary>
         /// Command handler for executing firing simultaneously
@@ -572,74 +664,178 @@ namespace AB15_GUI.WPF.ViewModels
         public ICommand StartStopCyclicReading { get; }
 
         /// <summary>
-        /// Execute change of configuration
+        /// Write configuration button/command enable state
         /// </summary>
-        private void ConfigurationChanged(object commandParameter)
+        private CommandState _writeConfigurationCommand        = new CommandState();
+        
+        /// <summary>
+        /// Bindable Write configuration button/command enable state
+        /// </summary>
+        public bool WriteConfigurationCommandEn => _writeConfigurationCommand.IsEnabled;
+
+        /// <summary>
+        /// Transfer to normal mode button/command enable state
+        /// </summary>
+        private CommandState _transferToNormalModeCommand        = new CommandState();
+        
+        /// <summary>
+        /// Bindable Transfer to normal mode button/command enable state
+        /// </summary>
+        public bool TransferToNormalModeCommandEn => _transferToNormalModeCommand.IsEnabled;
+
+        /// <summary>
+        /// Fire simultaneous button/command enable state
+        /// </summary>
+        private CommandState _fireSimultaneousCommand        = new CommandState();
+        
+        /// <summary>
+        /// Bindable Fire simultaneous button/command enable state
+        /// </summary>
+        public bool FireSimultaneousCommandEn => _fireSimultaneousCommand.IsEnabled;
+
+        /// <summary>
+        /// Start/stop button/command enable state
+        /// </summary>
+        private CommandState _startStopCyclicReadingCommand        = new CommandState();
+
+        /// <summary>
+        /// Bindable Start/stop button/command enable state
+        /// </summary>
+        public bool StartStopCyclicReadingCommandEn => _startStopCyclicReadingCommand.IsEnabled;
+
+        /// <summary>
+        /// Execute change of configuration // TODO: change approach for more flexible in future (no predefined scenarios, but full customization)
+        /// </summary>
+        private void ConfigurationChanged()
         {
-            // // Handle that command execution can only be done once in a row
-            // if (_readWDConfigCommand.IsEnabled == false) return;
-            // _readWDConfigCommand.InProgress = true;
-            // OnPropertyChanged(nameof(ReadWDConfigCommandEn));
+            logger.Debug($"Changed configuration in drop-down on Configuration tab");
 
-            // logger.Debug($"Pressed read config button");
-
-            // Typecast parameter from View to actual type
-            string selectedScenario = (string) commandParameter;
+            // Clear list
+            FiringConfigurationTable.Clear();
 
             // Choosing preset configuration based on selected option
-            switch (selectedScenario)
+            switch (FiringConfigurationIndex)
             {
-                // TODO: add implementation
-                case "A - 1":
+                case 0:
+                    // Scenario A - 1
+                    FiringConfigurationTable.Add( new FiringChannelConfigurationRecord() { ASICID = 1, ChannelID = 1, Mode = 0x2 } );
                     break;
-                case "B - 2":
+                case 1:
+                    // Scenario B - 2
+                    FiringConfigurationTable.Add( new FiringChannelConfigurationRecord() { ASICID = 1, ChannelID = 1, Mode = 0x2 } );
+                    FiringConfigurationTable.Add( new FiringChannelConfigurationRecord() { ASICID = 1, ChannelID = 2, Mode = 0x2 } );
                     break;
-                case "C - 2":
+                case 2:
+                    // Scenario C - 2
+                    FiringConfigurationTable.Add( new FiringChannelConfigurationRecord() { ASICID = 1, ChannelID = 1, Mode = 0xC } );
+                    FiringConfigurationTable.Add( new FiringChannelConfigurationRecord() { ASICID = 1, ChannelID = 2, Mode = 0xC } );
                     break;
-                case "D - 2":
+                case 3:
+                    // Scenario D - 2
+                    FiringConfigurationTable.Add( new FiringChannelConfigurationRecord() { ASICID = 1, ChannelID = 1, Mode = 0x2 } );
+                    FiringConfigurationTable.Add( new FiringChannelConfigurationRecord() { ASICID = 1, ChannelID = 5, Mode = 0x2 } );
                     break;
-                case "E - 10":
+                case 4:
+                    // Scenario E - 10
+                    FiringConfigurationTable.Add( new FiringChannelConfigurationRecord() { ASICID = 1, ChannelID = 1, Mode = 0x2 } );
+                    FiringConfigurationTable.Add( new FiringChannelConfigurationRecord() { ASICID = 1, ChannelID = 2, Mode = 0x2 } );
+                    FiringConfigurationTable.Add( new FiringChannelConfigurationRecord() { ASICID = 1, ChannelID = 5, Mode = 0x2 } );
+                    FiringConfigurationTable.Add( new FiringChannelConfigurationRecord() { ASICID = 1, ChannelID = 6, Mode = 0x2 } );
+                    FiringConfigurationTable.Add( new FiringChannelConfigurationRecord() { ASICID = 1, ChannelID = 9, Mode = 0x2 } );
+                    FiringConfigurationTable.Add( new FiringChannelConfigurationRecord() { ASICID = 1, ChannelID = 10, Mode = 0x2 } );
+                    FiringConfigurationTable.Add( new FiringChannelConfigurationRecord() { ASICID = 1, ChannelID = 13, Mode = 0x2 } );
+                    FiringConfigurationTable.Add( new FiringChannelConfigurationRecord() { ASICID = 1, ChannelID = 14, Mode = 0x2 } );
+                    FiringConfigurationTable.Add( new FiringChannelConfigurationRecord() { ASICID = 1, ChannelID = 17, Mode = 0x2 } );
+                    FiringConfigurationTable.Add( new FiringChannelConfigurationRecord() { ASICID = 1, ChannelID = 18, Mode = 0x2 } );
                     break;
-                case "F - 20":
+                case 5:
+                    // Scenario F - 20
+                    for (int i = 1; i < 21; i++)
+                    {
+                        FiringConfigurationTable.Add( new FiringChannelConfigurationRecord() { ASICID = 1, ChannelID = i, Mode = 0x2 } );
+                    }
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException($"Unexpected scenario selected: {selectedScenario}");
+                    throw new ArgumentOutOfRangeException($"Unexpected scenario selected: {FiringConfigurationIndex}");
             }
         }
 
         /// <summary>
-        /// Execute change of firing scenario
+        /// Execute change of firing scenario // TODO: add implementation
         /// </summary>
-        private void FiringScenarioChangedExecute(object commandParameter)
+        private void FiringScenarioChanged()
         {
-            // // Handle that command execution can only be done once in a row
-            // if (_readWDConfigCommand.IsEnabled == false) return;
-            // _readWDConfigCommand.InProgress = true;
-            // OnPropertyChanged(nameof(ReadWDConfigCommandEn));
+            logger.Debug($"Changed firing scenario in drop-down on Configuration tab");
 
-            // logger.Debug($"Pressed read config button");
-
-            // Typecast parameter from View to actual type
-            string selectedScenario = (string) commandParameter;
+            // Reset flags
+            for (int i = 0; i < 20; i++)
+            {
+                FiringResultTable[i].WasFired = false;
+                FiringResultTable[i].ToFire = false;
+            }
 
             // Choosing preset configuration based on selected option
-            switch (selectedScenario)
+            switch (FiringScenarioIndex)
             {
-                // TODO: add implementation
-                case "A - 1":
+                case 0:
+                    // A.1
+                    FiringResultTable[0].ToFire = true;
                     break;
-                case "B - 2":
+                case 1:
+                    // B.1
+                    FiringResultTable[0].ToFire = true;
                     break;
-                case "C - 2":
+                case 2:
+                    // B.2
+                    FiringResultTable[0].ToFire = true;
+                    FiringResultTable[1].ToFire = true;
                     break;
-                case "D - 2":
+                case 3:
+                    // C.1
+                    FiringResultTable[0].ToFire = true;
                     break;
-                case "E - 10":
+                case 4:
+                    // C.1a - now requires user to change Alternative firing mode switch
+                    FiringResultTable[0].ToFire = true;
                     break;
-                case "F - 20":
+                case 5:
+                    // C.2a - now requires user to change Alternative firing mode switch
+                    FiringResultTable[0].ToFire = true;
+                    FiringResultTable[1].ToFire = true;
+                    break;
+                case 6:
+                    // D.1
+                    FiringResultTable[0].ToFire = true;
+                    break;
+                case 7:
+                    // D.2
+                    FiringResultTable[0].ToFire = true;
+                    FiringResultTable[1].ToFire = true;
+                    break;
+                case 8:
+                    // E.5
+                    FiringResultTable[0].ToFire = true;
+                    FiringResultTable[2].ToFire = true;
+                    FiringResultTable[4].ToFire = true;
+                    FiringResultTable[6].ToFire = true;
+                    FiringResultTable[8].ToFire = true;
+                    break;
+                case 9:
+                    // E.10
+                    for (int i = 0; i < 10; i++)
+                    {
+                        FiringResultTable[i].ToFire = true;
+                    }
+                    break;
+                case 10:
+                    // F.20
+                    for (int i = 0; i < 20; i++)
+                    {
+                        FiringResultTable[i].ToFire = true;
+                    }
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException($"Unexpected scenario selected: {selectedScenario}");
+                    throw new ArgumentOutOfRangeException($"Unexpected index value for firing scenario: {FiringScenarioIndex}");
             }
         }
 
@@ -659,18 +855,526 @@ namespace AB15_GUI.WPF.ViewModels
             // Fire state machine trigger to lock UI controls
             _stateMachine.Fire(Triggers.ConfigurationSending);
 
+            // Collect configuration from UI
+            CollectConfiguration();
+
             // Call corresponding ASIC methods to write configuration
             asicWrapper.ASICs[0].OnRequestConfiguration();      // Raise event to request configuration from all subscribers TODO: verify if config data is updated
             asicWrapper.ASICs[0].WriteConfigurationWithCRC(); 
         }
 
+        /// <summary>
+        /// Execute Transfer to Normal mode ASIC command // TODO: find better place
+        /// </summary>
+        private void TransferToNormalModeExecute(object obj)
+        {
+            // Handle that command execution can only be done once in a row
+            if (_transferToNormalModeCommand.IsEnabled == false) return;
+            _transferToNormalModeCommand.InProgress = true;
+            OnPropertyChanged(nameof(TransferToNormalModeCommandEn));
 
+            logger.Debug($"Pressed Transfer to Normal mode button");
 
+            // Call corresponding ASIC methods to cause start of transferring to normal mode sequence
+            asicWrapper.ASICs[0].LockConfiguration();      // Raise event to request configuration from all subscribers TODO: verify if config data is updated
+        }
 
+        private TaskCompletionSource<bool>? _taskCompletionSource = null;
 
+        /// <summary>
+        /// Execute Firing simultaneous command
+        /// </summary>
+        private async void FireSimultaneousCommandExecute(object obj)
+        {
+            // Handle that command execution can only be done once in a row
+            if (_fireSimultaneousCommand.IsEnabled == false) return;
+            _fireSimultaneousCommand.InProgress = true;
+            OnPropertyChanged(nameof(FireSimultaneousCommandEn));
 
+            logger.Debug($"Pressed Fire simultaneous button");
 
+            // == Step 1 - unlocking ==
+
+            // Initialize a new TaskCompletionSource instance for each call
+            _taskCompletionSource = new TaskCompletionSource<bool>();
+
+            // Get indexes of configured channels
+            List<int> channelIndexes = FiringResultTable.Where(itm => itm.ToFire)
+                                                        .Select(itm => itm.ChannelID).ToList();
+
+            // Unlock FLM modules if there are channels to fire in these modules
+            Reg_FLM_Unlock reg_FLM_Unlock = new Reg_FLM_Unlock();
+            reg_FLM_Unlock.Data = 0x0000;
+            reg_FLM_Unlock.flm_unlock_hs_module1.Data = Convert.ToUInt16(channelIndexes.Any(itm => ((itm >= 1) && (itm <= 4))));
+            reg_FLM_Unlock.flm_unlock_ls_module1.Data = reg_FLM_Unlock.flm_unlock_hs_module1.Data;
+            reg_FLM_Unlock.flm_unlock_hs_module2.Data = Convert.ToUInt16(channelIndexes.Any(itm => ((itm >= 5) && (itm <= 8))));
+            reg_FLM_Unlock.flm_unlock_ls_module2.Data = reg_FLM_Unlock.flm_unlock_hs_module2.Data;
+            reg_FLM_Unlock.flm_unlock_hs_module3.Data = Convert.ToUInt16(channelIndexes.Any(itm => ((itm >= 9) && (itm <= 12))));
+            reg_FLM_Unlock.flm_unlock_ls_module3.Data = reg_FLM_Unlock.flm_unlock_hs_module3.Data;
+            reg_FLM_Unlock.flm_unlock_hs_module4.Data = Convert.ToUInt16(channelIndexes.Any(itm => ((itm >= 13) && (itm <= 16))));
+            reg_FLM_Unlock.flm_unlock_ls_module4.Data = reg_FLM_Unlock.flm_unlock_hs_module4.Data;
+            reg_FLM_Unlock.flm_unlock_hs_module5.Data = Convert.ToUInt16(channelIndexes.Any(itm => ((itm >= 17) && (itm <= 20))));
+            reg_FLM_Unlock.flm_unlock_ls_module5.Data = reg_FLM_Unlock.flm_unlock_hs_module5.Data;
+
+            // Set alternative mode if enabled
+            reg_FLM_Unlock.flm_fire_mode_sel.Data = Convert.ToUInt16(IsAlternativeFiringModeEn);
+
+            // Set code unlock
+            reg_FLM_Unlock.flm_code_unlock.Data = 0x00;
+
+            // Create package to MCU
+            TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
+            packageToSend.ASICID = 1;
+            packageToSend.Cmd = MCUCommand.WRITE_REG;
+            packageToSend.Deleg = FireSimultaneousDelegate_step1;
+            packageToSend.PayloadType = typeof(AddressDataPayload);
+            packageToSend.Payload.Address.Add(reg_FLM_Unlock.Address);
+            packageToSend.Payload.Data.Add(reg_FLM_Unlock.Data);
+
+            // Send command to MCU
+            serialWrapper.SerialWrite(packageToSend);
+
+            // Wait asynchronously without blocking the main thread for completing step
+            await _taskCompletionSource.Task;  
+
+            // == Step 2 - firing ==
+
+            // Initialize a new TaskCompletionSource instance for each call
+            _taskCompletionSource = new TaskCompletionSource<bool>();
+
+            // Registers for firing
+            Reg_FLM_HS_LS_on_ch7_1   flm_HS_LS_On_Ch7_1   = new Reg_FLM_HS_LS_on_ch7_1();
+            Reg_FLM_HS_LS_on_ch14_8  flm_HS_LS_On_Ch14_8  = new Reg_FLM_HS_LS_on_ch14_8();
+            Reg_FLM_HS_LS_on_ch20_15 flm_HS_LS_On_Ch20_15 = new Reg_FLM_HS_LS_on_ch20_15();
+
+            // Fill registers // TODO: find better way
+            foreach (var channelIdx in channelIndexes)
+            {
+                switch (channelIdx)
+                {
+                    case 1:
+                        flm_HS_LS_On_Ch7_1.flm_hs_on_ch1.Data = 0x1;
+                        flm_HS_LS_On_Ch7_1.flm_ls_on_ch1.Data = 0x1;
+                        break;
+                    case 2:
+                        flm_HS_LS_On_Ch7_1.flm_hs_on_ch2.Data = 0x1;
+                        flm_HS_LS_On_Ch7_1.flm_ls_on_ch2.Data = 0x1;
+                        break;
+                    case 3:
+                        flm_HS_LS_On_Ch7_1.flm_hs_on_ch3.Data = 0x1;
+                        flm_HS_LS_On_Ch7_1.flm_ls_on_ch3.Data = 0x1;
+                        break;
+                    case 4:
+                        flm_HS_LS_On_Ch7_1.flm_hs_on_ch4.Data = 0x1;
+                        flm_HS_LS_On_Ch7_1.flm_ls_on_ch4.Data = 0x1;
+                        break;
+                    case 5:
+                        flm_HS_LS_On_Ch7_1.flm_hs_on_ch5.Data = 0x1;
+                        flm_HS_LS_On_Ch7_1.flm_ls_on_ch5.Data = 0x1;
+                        break;
+                    case 6:
+                        flm_HS_LS_On_Ch7_1.flm_hs_on_ch6.Data = 0x1;
+                        flm_HS_LS_On_Ch7_1.flm_ls_on_ch6.Data = 0x1;
+                        break;
+                    case 7:
+                        flm_HS_LS_On_Ch7_1.flm_hs_on_ch7.Data = 0x1;
+                        flm_HS_LS_On_Ch7_1.flm_ls_on_ch7.Data = 0x1;
+                        break;
+                    case 8:
+                        flm_HS_LS_On_Ch14_8.flm_hs_on_ch8.Data = 0x1;
+                        flm_HS_LS_On_Ch14_8.flm_ls_on_ch8.Data = 0x1;
+                        break;
+                    case 9:
+                        flm_HS_LS_On_Ch14_8.flm_hs_on_ch9.Data = 0x1;
+                        flm_HS_LS_On_Ch14_8.flm_ls_on_ch9.Data = 0x1;
+                        break;
+                    case 10:
+                        flm_HS_LS_On_Ch14_8.flm_hs_on_ch10.Data = 0x1;
+                        flm_HS_LS_On_Ch14_8.flm_ls_on_ch10.Data = 0x1;
+                        break;
+                    case 11:
+                        flm_HS_LS_On_Ch14_8.flm_hs_on_ch11.Data = 0x1;
+                        flm_HS_LS_On_Ch14_8.flm_ls_on_ch11.Data = 0x1;
+                        break;
+                    case 12:
+                        flm_HS_LS_On_Ch14_8.flm_hs_on_ch12.Data = 0x1;
+                        flm_HS_LS_On_Ch14_8.flm_ls_on_ch12.Data = 0x1;
+                        break;
+                    case 13:
+                        flm_HS_LS_On_Ch14_8.flm_hs_on_ch13.Data = 0x1;
+                        flm_HS_LS_On_Ch14_8.flm_ls_on_ch13.Data = 0x1;
+                        break;
+                    case 14:
+                        flm_HS_LS_On_Ch14_8.flm_hs_on_ch14.Data = 0x1;
+                        flm_HS_LS_On_Ch14_8.flm_ls_on_ch14.Data = 0x1;
+                        break;
+                    case 15:
+                        flm_HS_LS_On_Ch20_15.flm_hs_on_ch15.Data = 0x1;
+                        flm_HS_LS_On_Ch20_15.flm_ls_on_ch15.Data = 0x1;
+                        break;
+                    case 16:
+                        flm_HS_LS_On_Ch20_15.flm_hs_on_ch16.Data = 0x1;
+                        flm_HS_LS_On_Ch20_15.flm_ls_on_ch16.Data = 0x1;
+                        break;
+                    case 17:
+                        flm_HS_LS_On_Ch20_15.flm_hs_on_ch17.Data = 0x1;
+                        flm_HS_LS_On_Ch20_15.flm_ls_on_ch17.Data = 0x1;
+                        break;
+                    case 18:
+                        flm_HS_LS_On_Ch20_15.flm_hs_on_ch18.Data = 0x1;
+                        flm_HS_LS_On_Ch20_15.flm_ls_on_ch18.Data = 0x1;
+                        break;
+                    case 19:
+                        flm_HS_LS_On_Ch20_15.flm_hs_on_ch19.Data = 0x1;
+                        flm_HS_LS_On_Ch20_15.flm_ls_on_ch19.Data = 0x1;
+                        break;
+                    case 20:
+                        flm_HS_LS_On_Ch20_15.flm_hs_on_ch20.Data = 0x1;
+                        flm_HS_LS_On_Ch20_15.flm_ls_on_ch20.Data = 0x1;
+                        break;
+                }
+            }
+
+            // Set unlock codes
+            flm_HS_LS_On_Ch7_1.flm_code_ch7_1.Data = 0x01;
+            flm_HS_LS_On_Ch14_8.flm_code_ch14_8.Data = 0x10;
+            flm_HS_LS_On_Ch20_15.flm_code_ch20_15.Data = 0x11;
+
+            // Create package to MCU
+            packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
+            packageToSend.ASICID = 1;
+            packageToSend.Cmd = MCUCommand.EXECUTE_WRITE_SEQUENCE;
+            packageToSend.Deleg = FireSimultaneousDelegate_step2;
+            packageToSend.PayloadType = typeof(AddressDataPayload);
+            packageToSend.Payload.Address.Add(flm_HS_LS_On_Ch7_1.Address);
+            packageToSend.Payload.Data.Add(flm_HS_LS_On_Ch7_1.Data);
+            packageToSend.Payload.Address.Add(flm_HS_LS_On_Ch14_8.Address);
+            packageToSend.Payload.Data.Add(flm_HS_LS_On_Ch14_8.Data);
+            packageToSend.Payload.Address.Add(flm_HS_LS_On_Ch20_15.Address);
+            packageToSend.Payload.Data.Add(flm_HS_LS_On_Ch20_15.Data);
+
+            // Send command to MCU
+            serialWrapper.SerialWrite(packageToSend);    
+
+            // Wait asynchronously without blocking the main thread for completing step
+            await _taskCompletionSource.Task;   
+
+            // == Step 3 - cleaning & locking ==
+
+            _taskCompletionSource = null;
+
+            // Lock all channels
+            reg_FLM_Unlock.Data = 0x0000;
+
+            // Set alternative mode if enabled
+            reg_FLM_Unlock.flm_fire_mode_sel.Data = Convert.ToUInt16(IsAlternativeFiringModeEn);
+
+            // Set code unlock
+            reg_FLM_Unlock.flm_code_unlock.Data = 0x00;
+
+            // Fill registers for finishing firing - all channels disabled
+            flm_HS_LS_On_Ch7_1.Data   = 0x0000;   
+            flm_HS_LS_On_Ch14_8.Data  = 0x0000; 
+            flm_HS_LS_On_Ch20_15.Data = 0x0000;
+
+            // Set unlock codes
+            flm_HS_LS_On_Ch7_1.flm_code_ch7_1.Data = 0x01;
+            flm_HS_LS_On_Ch14_8.flm_code_ch14_8.Data = 0x10;
+            flm_HS_LS_On_Ch20_15.flm_code_ch20_15.Data = 0x11;
+
+            // Create package to MCU
+            packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
+            packageToSend.ASICID = 1;
+            packageToSend.Cmd = MCUCommand.EXECUTE_WRITE_SEQUENCE;
+            packageToSend.Deleg = FireSimultaneousDelegate_step3;
+            packageToSend.PayloadType = typeof(AddressDataPayload);
+            packageToSend.Payload.Address.Add(flm_HS_LS_On_Ch7_1.Address);
+            packageToSend.Payload.Data.Add(flm_HS_LS_On_Ch7_1.Data);
+            packageToSend.Payload.Address.Add(flm_HS_LS_On_Ch14_8.Address);
+            packageToSend.Payload.Data.Add(flm_HS_LS_On_Ch14_8.Data);
+            packageToSend.Payload.Address.Add(flm_HS_LS_On_Ch20_15.Address);
+            packageToSend.Payload.Data.Add(flm_HS_LS_On_Ch20_15.Data);
+            packageToSend.Payload.Address.Add(reg_FLM_Unlock.Address);
+            packageToSend.Payload.Data.Add(reg_FLM_Unlock.Data);
+
+            // Send command to MCU
+            serialWrapper.SerialWrite(packageToSend);   
+        }
+
+        /// <summary>
+        /// Execute start/stop cyclic reading for FLM command
+        /// </summary>
+        private void StartStopCyclicReadingExecute(object obj)
+        {
+            // TODO: should use parameter containing on/off flag
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Method that will initiate TestMode1 diagnostics
+        /// </summary>
+        private void ExecuteTestMode1Diagnostics()
+        {
+            // TODO: add implementation
+            throw new NotImplementedException();
+
+            // TODO: should include trigger for transiting to TestMode2
+            asicWrapper.ASICs[0].ExecuteTestMode1Transition();
+        }
+
+        /// <summary>
+        /// Method that will initiate TestMode2 diagnostics
+        /// </summary>
+        private void ExecuteTestMode2Diagnostics()
+        {
+            // TODO: add implementation
+            throw new NotImplementedException();
+
+            // TODO: should include trigger for transiting to Normal mode
+            asicWrapper.ASICs[0].ExecuteTestMode2Transition();
+        }
 
         #endregion // Commands
+
+        #region Commands_delegates
+
+        /// <summary>
+        /// Delegate for Fire simultaneous command - unlock
+        /// </summary>
+        /// <param name="response">MCU response package</param>
+        private void FireSimultaneousDelegate_step1(IReceiveCommunicationPackage response)
+        {
+            // Ensure there is a valid TaskCompletionSource to complete
+            if (_taskCompletionSource != null && !_taskCompletionSource.Task.IsCompleted)
+            {
+                _taskCompletionSource.SetResult(true); // Completes the task - allow proceeding 
+            }
+
+            // Typecast response to actual type
+            ReceiveCommunicationPackage<AddressDataPayload> mcuResponse = (ReceiveCommunicationPackage<AddressDataPayload>) response;
+
+            // Change state if response received
+            if (mcuResponse.Payload.Error is not null)
+            {
+                AddError(mcuResponse.Payload.Error, nameof(FireSimultaneous));
+                logger.Error($"Error response received. Status: {mcuResponse.Status}");
+                return;
+            }
+
+            // Emulate delay TODO: find better approach
+            Thread.Sleep(1);
+        }
+
+        /// <summary>
+        /// Delegate for Fire simultaneous command - fire
+        /// </summary>
+        /// <param name="response">MCU response package</param>
+        private void FireSimultaneousDelegate_step2(IReceiveCommunicationPackage response)
+        {
+            // Ensure there is a valid TaskCompletionSource to complete
+            if (_taskCompletionSource != null && !_taskCompletionSource.Task.IsCompleted)
+            {
+                _taskCompletionSource.SetResult(true); // Completes the task - allow proceeding 
+            }
+
+            // Typecast response to actual type
+            ReceiveCommunicationPackage<AddressDataPayload> mcuResponse = (ReceiveCommunicationPackage<AddressDataPayload>) response;
+
+            // Change state if response received
+            if (mcuResponse.Payload.Error is not null)
+            {
+                AddError(mcuResponse.Payload.Error, nameof(FireSimultaneous));
+                logger.Error($"Error response received. Status: {mcuResponse.Status}");
+                return;
+            }
+
+            // Emulate delay TODO: find better approach
+            Thread.Sleep(13);
+        }
+
+        /// <summary>
+        /// Delegate for Fire simultaneous command - stop firing and lock
+        /// </summary>
+        /// <param name="response">MCU response package</param>
+        private void FireSimultaneousDelegate_step3(IReceiveCommunicationPackage response)
+        {
+            // Response received - unlock command usage
+            _fireSimultaneousCommand.InProgress = false;
+            OnPropertyChanged(nameof(FireSimultaneousCommandEn));
+
+            // Ensure there is a valid TaskCompletionSource to complete
+            if (_taskCompletionSource != null && !_taskCompletionSource.Task.IsCompleted)
+            {
+                _taskCompletionSource.SetResult(true); // Completes the task - allow proceeding 
+            }
+
+            // Typecast response to actual type
+            ReceiveCommunicationPackage<AddressDataPayload> mcuResponse = (ReceiveCommunicationPackage<AddressDataPayload>) response;
+
+            // Change state if response received
+            if (mcuResponse.Payload.Error is not null)
+            {
+                AddError(mcuResponse.Payload.Error, nameof(FireSimultaneous));
+                logger.Error($"Error response received. Status: {mcuResponse.Status}");
+                return;
+            }
+        }
+
+        #endregion // Commands_delegates
+
+        #region ASIC_events
+
+        /// <summary>
+        /// Event handler that will be called when before loading configuration to ASIC
+        /// If event raised all subscribers provide configuration to central config storage
+        /// </summary>
+        /// <param name="sender">object that called this event. Must be one of ASIC objects</param>
+        /// <param name="e">unused</param>
+        private void RequestConfigurationHandler(object? sender, EventArgs e)
+        {
+            // Precondition
+            if (sender == null)
+            {
+                throw new ArgumentNullException("Incorrect argument - can't be null!");
+            }
+
+            // Typecast sender to actual type
+            IASIC caller = (IASIC) sender;
+
+            // Append firing configuration to global ASIC configuration
+            caller.AppendConfigRegisters(_firingConfig);
+
+            // Unsubscribe from event - by design can't be used twice
+            caller.RequestConfiguration -= RequestConfigurationHandler;
+        }
+
+        /// <summary>
+        /// Event handler that will be called when configuration is loaded to ASIC
+        /// </summary>
+        /// <param name="sender">object that called this event. Must be one of ASIC objects</param>
+        /// <param name="e">unused</param>
+        private void ConfigurationLoadedHandler(object? sender, EventArgs e)
+        {
+            // Precondition
+            if (sender == null)
+            {
+                throw new ArgumentNullException("Incorrect argument - can't be null!");
+            }
+
+            // Typecast sender to actual type
+            IASIC caller = (IASIC) sender;
+
+            // Response received - unlock command usage
+            _writeConfigurationCommand.InProgress = false;
+            OnPropertyChanged(nameof(WriteConfigurationCommandEn));
+
+            // Fire state machine transition to configuration loaded
+            _stateMachine.Fire(Triggers.ConfigurationLoaded);
+
+            // Fill list for table on Firing tab
+            // Fill firing results table with data based on configuration table
+            foreach (FiringChannelConfigurationRecord channelRecord in FiringConfigurationTable)
+            {
+                FiringResultTable.Add(new FiringResultRecord() { ASICID = channelRecord.ASICID, ChannelID = channelRecord.ChannelID, Identifier = channelRecord.Identifier });
+            }
+
+            // Unsubscribe from event - by design can be fired only once
+            caller.ConfigurationLoaded -= ConfigurationLoadedHandler;
+        }
+
+        /// <summary>
+        /// Event handler that will be called when configuration is locked (EOP)
+        /// </summary>
+        /// <param name="sender">object that called this event. Must be one of ASIC objects</param>
+        /// <param name="e">unused</param>
+        private void ConfigurationLockedHandler(object? sender, EventArgs e)
+        {
+            // Precondition
+            if (sender == null)
+            {
+                throw new ArgumentNullException("Incorrect argument - can't be null!");
+            }
+
+            // Typecast sender to actual type
+            IASIC caller = (IASIC) sender;
+
+            // Response received - unlock command usage
+            _transferToNormalModeCommand.InProgress = false;
+            OnPropertyChanged(nameof(TransferToNormalModeCommandEn));
+
+            // Unsubscribe from event - by design can be fired only once
+            caller.ConfigurationLocked -= ConfigurationLockedHandler;
+        }
+
+        /// <summary>
+        /// Event handler that will be called when ASIC enters Test mode 1
+        /// </summary>
+        /// <param name="sender">object that called this event. Must be one of ASIC objects</param>
+        /// <param name="e">unused</param>
+        private void TestMode1EnteredHandler(object? sender, EventArgs e)
+        {
+            // Precondition
+            if (sender == null)
+            {
+                throw new ArgumentNullException("Incorrect argument - can't be null!");
+            }
+
+            // Typecast sender to actual type
+            IASIC caller = (IASIC) sender;
+
+            // TODO: add implementation
+            ExecuteTestMode1Diagnostics();
+
+            // Unsubscribe from event - by design can be fired only once
+            caller.TestMode1Entered -= TestMode1EnteredHandler;
+        }
+
+        /// <summary>
+        /// Event handler that will be called when ASIC enters Test mode 2
+        /// </summary>
+        /// <param name="sender">object that called this event. Must be one of ASIC objects</param>
+        /// <param name="e">unused</param>
+        private void TestMode2EnteredHandler(object? sender, EventArgs e)
+        {
+            // Precondition
+            if (sender == null)
+            {
+                throw new ArgumentNullException("Incorrect argument - can't be null!");
+            }
+
+            // Typecast sender to actual type
+            IASIC caller = (IASIC) sender;
+
+            // TODO: add implementation
+            ExecuteTestMode2Diagnostics();
+
+            // Unsubscribe from event - by design can be fired only once
+            caller.TestMode2Entered -= TestMode2EnteredHandler;
+        }
+
+        /// <summary>
+        /// Event handler that will be called when ASIC enters Normal mode
+        /// </summary>
+        /// <param name="sender">object that called this event. Must be one of ASIC objects</param>
+        /// <param name="e">unused</param>
+        private void NormalModeEnteredHandler(object? sender, EventArgs e)
+        {
+            // Precondition
+            if (sender == null)
+            {
+                throw new ArgumentNullException("Incorrect argument - can't be null!");
+            }
+
+            // Typecast sender to actual type
+            IASIC caller = (IASIC) sender;
+
+            // Fire corresponding state machine trigger
+            _stateMachine.Fire(Triggers.EnteredNormalMode);
+
+            // Unsubscribe from event - by design can be fired only once
+            caller.NormalModeEntered -= NormalModeEnteredHandler;
+        }
+
+        #endregion // ASIC_events
     }
 }
