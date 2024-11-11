@@ -336,7 +336,7 @@ void UpdateTimersRoutine(void)
     {
         // Check FLM diagnostics execution results
         FLMDiagCounter = 0;
-        //FLMDiagInteruptRoutine(); //TODO: Should be in main.c
+        FLMDiagInterruptRoutine();
         }
 }
 
