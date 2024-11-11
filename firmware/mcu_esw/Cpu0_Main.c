@@ -80,6 +80,68 @@ void WatchdogStatusReadingInterruptRoutine(void)
     QueueWrite(&serveWatchdogStatusCommand);
 }
 
+/** \brief FLM module cyclic diagnostics interrupt routine
+ * Starts cyclic diagnostics, stores results to be later sent to GUI
+*/
+void FLMDiagInterruptRoutine(void)
+{
+    // TODO: find a proper place for declaration
+    static flm_DiagExecOrderEnum FLMDiagExecNumber = FLM_DIAG_ORDER_SHORT_DET;
+
+    // Initial FLM Diagnostic execution state is initialised as Idle
+    // and on later rounds updated from ASIC 
+    if (GetFLMDiagExecStatus() != FLM_DIAG_EXEC_STATUS_IDLE)
+    {
+        SetFLMDiagExecStatus(FLMReadDiagExecStatus());
+    }
+
+    // Start diagnostic and get out
+    // On next entries, check execution status:
+    switch (FLMDiagExecNumber)
+    {
+    case FLM_DIAG_ORDER_SHORT_DET:
+        // check status of diag execution, dont enter any diagnostic if status is ONGOING
+        if (GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_FINISHED)||(GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_IDLE)
+        {
+            FLMShortDiag();
+            // Move on to next diagnostic
+            FLMDiagExecNumber = FLM_DIAG_ORDER_VHX_MEAS;
+        }
+        break;
+
+    case FLM_DIAG_ORDER_VHX_MEAS: 
+        FLMVHxDiag();
+        if (GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_FINISHED)
+        {
+            // Move on to next diagnostic
+            FLMDiagExecNumber = FLM_DIAG_ORDER_LOOP_RES_MEAS;
+        }
+        break;
+
+    case FLM_DIAG_ORDER_LOOP_RES_MEAS:
+        FLMLoopResDiag();
+        if (GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_FINISHED)
+        {
+            // Move on to next diagnostic
+            FLMDiagExecNumber = FLM_DIAG_ORDER_SQUIB_DET;
+        }
+        break;
+
+    case FLM_DIAG_ORDER_SQUIB_DET:
+        /* code */
+        FLMSquibDetErrDiag();
+        if (GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_FINISHED)
+        {
+            // Move on to next diagnostic
+            FLMDiagExecNumber = FLM_DIAG_ORDER_SHORT_DET;
+        }
+        break;
+
+    default:
+        break;
+    }
+}
+
 /** \brief Main function
  */
 void core0_main(void)

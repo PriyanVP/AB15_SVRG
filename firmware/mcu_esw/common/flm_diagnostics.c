@@ -85,9 +85,9 @@ bool CheckBatVoltage();
 /*********************************************************************************************************************/
 
 static FLMCycDiagFaults g_FLMCycDiagFaultsValues;
-static flm_cycDiagExecStatusEnum g_FLMCycDiagExecStatus;
 static FLMCycDiagResults g_flmCycDiagResultsValues;
-//bool static g_FLMDiagActive = 0; // similar should be available at top level to see if MCU is busy with FLM diag
+static flm_DiagExecStatusEnum g_FLMDiagExecStatus = FLM_DIAG_EXEC_STATUS_IDLE;
+//bool static g_FLMDiagActive = 0; // TODO similar (maybe more like status) should be available at top level to see if MCU is busy with FLM diag
 //bool static g_FLMDiagReady = 0;
 
 /*********************************************************************************************************************/
