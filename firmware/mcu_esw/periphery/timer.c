@@ -356,27 +356,26 @@ FLMDiagInteruptRoutine()
 {
     // TODO: find a proper place for declaration
     static flm_DiagExecOrderEnum FLMDiagExecNumber = FLM_DIAG_ORDER_SHORT_DET;
+    static g_flmDiagExecStatus = FLM_DIAG_EXEC_STATUS_IDLE;
 
-    // TODO
-    // Read flm_diag_active and FLM_diag_ready
-    // (flm_diag_active ==1 && FLM_diag_ready == 0) -> SPI triggered diag is running)
-    // (flm_diag_active ==0 && flm_diag_ready ==1) -> SPI triggered diag is evaluated, read results)
-    static g_flmDiagExecStatus = FLMReadDiagExecStatus();
+    // Initial FLM Diagnostic execution state is initialised as Idle
+    // and on later rounds updated from ASIC 
+    if (GetFLMDiagExecStatus() != FLM_DIAG_EXEC_STATUS_IDLE)
+    {
+        SetFLMDiagExecStatus(FLMReadDiagExecStatus());
+    }
 
     // Start diagnostic and get out
     // On next entries, check execution status:
-    // evaluated -> diagnostic performed, store results
-    // finished -> results stored, move to a next diagnostic
     switch (FLMDiagExecNumber)
     {
     case FLM_DIAG_ORDER_SHORT_DET:
         // check status of diag execution, dont enter any diagnostic if status is ONGOING
-        if (GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_FINISHED)
+        if (GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_FINISHED)||(GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_IDLE)
         {
-            SetFLMDiagExecStatus(FLM_DIAG_EXEC_STATUS_ONGOING); // TODO: move into FLMShortDiag()
             FLMShortDiag();
-            SetFLMDiagExecStatus(FLM_DIAG_EXEC_STATUS_FINISHED);// TODO: move into FLMShortDiag();
-            FLMDiagExecNumber = FLM_DIAG_ORDER_VHX_MEAS; // TODO: move into FLMShortDiag();
+            // Move on to next diagnostic
+            FLMDiagExecNumber = FLM_DIAG_ORDER_VHX_MEAS;
         }
         break;
 
