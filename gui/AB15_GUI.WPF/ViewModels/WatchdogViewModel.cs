@@ -59,6 +59,8 @@ namespace AB15_GUI.WPF.ViewModels
             _stateMachine.Configure(State.InitialState)
                          .Permit(Triggers.POR, State.Idle);
 
+            // TODO: add locked state to be in before configuration is loaded to ASIC
+
             _stateMachine.Configure(State.Idle)
                          .Permit(Triggers.GotConfiguration, State.InConfiguration);
 
@@ -92,9 +94,6 @@ namespace AB15_GUI.WPF.ViewModels
 
             // Fire transition to Idle state
             _stateMachine.Fire(Triggers.POR);
-
-            // TODO: remove temporary code - should be on other page
-            // this.asicWrapper.EstablishConnection(); // TODO: uncomment for testing
         }
 
         #region State_Machine
@@ -1052,9 +1051,6 @@ namespace AB15_GUI.WPF.ViewModels
             ClearErrors(nameof(StartWatchdog));
 
             _stateMachine.Fire(Triggers.StartedWD);
-
-            // TODO: find better place - tmp code for testing WD
-            asicWrapper.ASICs[0].LockConfiguration();
 
             logger.Debug($"Received start wd delegate");
         }
