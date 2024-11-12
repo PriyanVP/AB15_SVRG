@@ -651,7 +651,7 @@ void SetFLMDiagMode(FLMDiagModeEnum diagMode)
     QSPIWriteNormal(SPI1_CS1MASTER, FLM_FLM_DIAG_START, tmpFLMDiagStartfRegister.as_uint16);
 }
 
-bool CheckBatVoltage(void)
+boolean CheckBatVoltage(void)
 {
     // TODO
     // Mock for first iteration

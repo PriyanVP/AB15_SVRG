@@ -98,10 +98,10 @@ typedef enum
  */
 typedef struct
 {
-    bool    FLM_SC2G_SC2B_fault;                            /** \brief  */
-    bool    FLM_VHxMeasErr_fault;                           /** \brief  */
-    bool    FLM_LoopResErr_fault;                           /** \brief  */
-    bool    FLM_SquibDetErr_fault;                          /** \brief  */
+    boolean    FLM_SC2G_SC2B_fault;                            /** \brief  */
+    boolean    FLM_VHxMeasErr_fault;                           /** \brief  */
+    boolean    FLM_LoopResErr_fault;                           /** \brief  */
+    boolean    FLM_SquibDetErr_fault;                          /** \brief  */
     
 } FLMCycDiagFaults;
 
@@ -121,7 +121,7 @@ typedef struct
 typedef struct
 {
     FLM_Read_Diag_VHx   flmVHxDiagResults[11];              /** \brief  */
-    bool                flmSquibErrorDiagResults[20];       /** \brief  */
+    boolean             flmSquibErrorDiagResults[20];       /** \brief  */
     FLMReadSquibRes     flmLoopResDiagResults[20];          /** \brief  */
     FLMShortDiagStruct  flmShortDiagResults;                /** \brief  */
 
@@ -145,7 +145,7 @@ typedef struct
 typedef struct 
 {
     uint16 FLM_Read_Diag_VHx_voltage_value;          /** \brief  */
-    bool FLM_Read_Diag_VHx_voltage_valid;            /** \brief  */
+    boolean FLM_Read_Diag_VHx_voltage_valid;            /** \brief  */
 
 }FLM_Read_Diag_VHx;
 
@@ -157,16 +157,16 @@ FLM_Read_Diag_VHx FLMVHxDiagResults[11];
 /** \brief Structure to store results of FLM Squib detection (Squib detection error, FLM_Squib_det_err_ch1...ch20)
  * 3 bytes
  */
-bool FLMSquibErrorDiagResults[20];
+boolean FLMSquibErrorDiagResults[20];
 
 /** \brief Structure to store results of FLM Loop resistanse diagnostic
  */
 typedef struct
 {
     uint16 flm_squib_res_value;                             /** \brief  */
-    bool flm_squib_res_err;                                 /** \brief  */
-    bool flm_squib_res_valid;                               /** \brief  */
-    bool flm_squib_res_pgndx_loss;                          /** \brief  */
+    boolean flm_squib_res_err;                                 /** \brief  */
+    boolean flm_squib_res_valid;                               /** \brief  */
+    boolean flm_squib_res_pgndx_loss;                          /** \brief  */
 
 } FLMReadSquibRes;
 
