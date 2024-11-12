@@ -340,7 +340,7 @@
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="5" />
-                                <ColumnDefinition Width="70"/>
+                                <ColumnDefinition Width="120"/>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="5" />
                             </Grid.ColumnDefinitions>
@@ -374,7 +374,7 @@
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="5" />
-                                                <ColumnDefinition Width="70"/>
+                                                <ColumnDefinition Width="120"/>
                                                 <ColumnDefinition Width="*" />
                                                 <ColumnDefinition Width="5" />
                                             </Grid.ColumnDefinitions>
@@ -389,13 +389,14 @@
 
                                             <TextBlock Grid.Column="1" Margin="0,0,5,0" FontSize="16"
                                                         Text="{Binding Criteria}"
-                                                        HorizontalAlignment="Center">
+                                                        HorizontalAlignment="Left">
                                             </TextBlock>
 
-                                            <TextBlock Grid.Column="2" Margin="0,0,5,0" FontSize="16"
-                                                        Text="{Binding Status}"
-                                                        HorizontalAlignment="Center">
-                                            </TextBlock>
+                                            <WrapPanel Grid.Column="2">
+                                                <TextBlock  TextWrapping="Wrap" FontSize="16" Margin="0,0,5,0"
+                                                            Text="{Binding Status}" HorizontalAlignment="Left">
+                                                </TextBlock>
+                                            </WrapPanel>
 
                                         </Grid>
                                     </DataTemplate>
@@ -410,8 +411,8 @@
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="5" />
-                                <ColumnDefinition Width="40"/>
-                                <ColumnDefinition Width="80"/>
+                                <ColumnDefinition Width="30"/>
+                                <ColumnDefinition Width="100"/>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="5" />
                             </Grid.ColumnDefinitions>
@@ -449,8 +450,8 @@
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="5" />
-                                                <ColumnDefinition Width="40"/>
-                                                <ColumnDefinition Width="80"/>
+                                                <ColumnDefinition Width="30"/>
+                                                <ColumnDefinition Width="100"/>
                                                 <ColumnDefinition Width="*" />
                                                 <ColumnDefinition Width="5" />
                                             </Grid.ColumnDefinitions>
@@ -472,11 +473,12 @@
                                                         Text="{Binding Identifier}"
                                                         HorizontalAlignment="Center">
                                             </TextBlock>
-
-                                            <TextBlock Grid.Column="3" Margin="0,0,5,0" FontSize="16"
-                                                        Text="{Binding Status}"
-                                                        HorizontalAlignment="Center">
-                                            </TextBlock>
+                                           
+                                            <WrapPanel Grid.Column="3">
+                                                <TextBlock  TextWrapping="Wrap" FontSize="16" Margin="0,0,5,0"
+                                                            Text="{Binding Status}" HorizontalAlignment="Left">
+                                                </TextBlock>
+                                            </WrapPanel>
 
                                         </Grid>
                                     </DataTemplate>
