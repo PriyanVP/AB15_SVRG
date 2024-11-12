@@ -144,13 +144,8 @@ void CmdReadFLMDiagResults(USBReceiveData const * const commandPackage)
         packageToSend.device_id = 0;
         packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
         packageToSend.status = USB_STATUS_DATA;
-        packageToSend.dataLength = 85;
-        /*
-            FLM_Read_Diag_VHx   flmVHxDiagResults[11];       
-            bool                flmSquibErrorDiagResults[20];
-            FLMReadSquibRes     flmLoopResDiagResults[20];   
-            FLMShortDiagStruct  flmShortDiagResults;         
-        */
+        packageToSend.dataLength = 86;
+
         // Short detection results
         packageToSend.data[0] = GetLSB(g_flmCycDiagResultsValues.flmShortDiagResults.FLM_Read_Short_ch4_1);
         packageToSend.data[1] = GetMSB(g_flmCycDiagResultsValues.flmShortDiagResults.FLM_Read_Short_ch4_1);
@@ -280,11 +275,95 @@ void CmdReadFLMDiagResults(USBReceiveData const * const commandPackage)
         packageToSend.data[75] = GetLSB(g_flmCycDiagResultsValues.flmLoopResDiagResults[19].flm_squib_res_value);
         packageToSend.data[76] = GetMSB(g_flmCycDiagResultsValues.flmLoopResDiagResults[19].flm_squib_res_value);
 
-        
+        uint8_t tmp1SquibResErr, tmp2SquibResErr, tmp3SquibResErr = 0;
+        for (uint8_t i = 0; i<20; i++)
+        {
+            if (i < 8)
+            {
+                if (g_flmCycDiagResultsValues.flmLoopResDiagResults[i].flm_squib_res_err)
+                {
+                    tmp1SquibResErr |= (1 << i);
+                }
+            }
+            else if (i < 16)
+            {
+                if (g_flmCycDiagResultsValues.flmLoopResDiagResults[i].flm_squib_res_err)
+                {
+                    tmp2SquibResErr |= (1 << i);
+                }
+            }
+            else
+            {
+                if (g_flmCycDiagResultsValues.flmLoopResDiagResults[i].flm_squib_res_err)
+                {
+                    tmp3SquibResErr |= (1 << i);
+                }
+            }
+        }
+        packageToSend.data[77] = tmp1SquibResErr;
+        packageToSend.data[78] = tmp2SquibResErr;
+        packageToSend.data[79] = tmp3SquibResErr;
+
+        uint8_t tmp1SquibResValid, tmp2SquibResValid, tmp3SquibResValid = 0;
+        for (uint8_t i = 0; i<20; i++)
+        {
+            if (i < 8)
+            {
+                if (g_flmCycDiagResultsValues.flmLoopResDiagResults[i].flm_squib_res_valid)
+                {
+                    tmp1SquibResValid |= (1 << i);
+                }
+            }
+            else if (i < 16)
+            {
+                if (g_flmCycDiagResultsValues.flmLoopResDiagResults[i].flm_squib_res_valid)
+                {
+                    tmp2SquibResValid |= (1 << i);
+                }
+            }
+            else
+            {
+                if (g_flmCycDiagResultsValues.flmLoopResDiagResults[i].flm_squib_res_valid)
+                {
+                    tmp3SquibResValid |= (1 << i);
+                }
+            }
+        }
+        packageToSend.data[80] = tmp1SquibResValid;
+        packageToSend.data[81] = tmp2SquibResValid;
+        packageToSend.data[82] = tmp3SquibResValid;
+
+        uint8_t tmp1SquibResPgndxLoss, tmp2SquibResPgndxLoss, tmp3SquibResPgndxLoss = 0;
+        for (uint8_t i = 0; i<20; i++)
+        {
+            if (i < 8)
+            {
+                if (g_flmCycDiagResultsValues.flmLoopResDiagResults[i].flm_squib_pgndx_loss)
+                {
+                    tmp1SquibResPgndxLoss |= (1 << i);
+                }
+            }
+            else if (i < 16)
+            {
+                if (g_flmCycDiagResultsValues.flmLoopResDiagResults[i].flm_squib_pgndx_loss)
+                {
+                    tmp2SquibResPgndxLoss |= (1 << i);
+                }
+            }
+            else
+            {
+                if (g_flmCycDiagResultsValues.flmLoopResDiagResults[i].flm_squib_pgndx_loss)
+                {
+                    tmp3SquibResPgndxLoss |= (1 << i);
+                }
+            }
+        }
+        packageToSend.data[83] = tmp1SquibResPgndxLoss;
+        packageToSend.data[84] = tmp2SquibResPgndxLoss;
+        packageToSend.data[85] = tmp3SquibResPgndxLoss;
 
         // Send data back to MCU
         SendUSBPackage(&packageToSend);
-
     }
 
 void InitFLMDiag()
