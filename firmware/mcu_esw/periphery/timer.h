@@ -128,6 +128,13 @@ void ConfigureContinuousReadPeriodicity(uint16 continuousReadPeriodicity);
  */
 void ConfigureGPIOPeriodicity(uint16 gpioPeriodicity);
 
+/** \brief Configure FLM Diagnostics performing periodicity
+ * Periodicity is defined in number of General timer interrupts
+ * \param flmDiagPeriodicity periodicity of starting and checking on execution of FLM diags
+ * \return Returns nothing
+ */
+void ConfigureFLMDiagPeriodicity(uint16 flmDiagPeriodicity);
+
 /** \brief Enable Watchdog interrupt
  * Periodicity has to be configured first!
  *

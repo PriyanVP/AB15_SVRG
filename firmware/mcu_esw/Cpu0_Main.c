@@ -8,6 +8,7 @@
 #include "common/usb_data_types.h"
 #include "common/spi_data_types.h"
 #include "common/command_queue.h"
+#include "common/flm_diagnostics.h"
 #include "cmd/general_cmd.h"
 #include "cmd/seq_cmd.h"
 #include "cmd/bypass_cmd.h"
@@ -85,9 +86,6 @@ void WatchdogStatusReadingInterruptRoutine(void)
 */
 void FLMDiagInterruptRoutine(void)
 {
-    // TODO: find a proper place for declaration
-    static flm_DiagExecOrderEnum FLMDiagExecNumber = FLM_DIAG_ORDER_SHORT_DET;
-
     // Initial FLM Diagnostic execution state is initialised as Idle
     // and on later rounds updated from ASIC 
     if (GetFLMDiagExecStatus() != FLM_DIAG_EXEC_STATUS_IDLE)
@@ -97,7 +95,7 @@ void FLMDiagInterruptRoutine(void)
 
     // Start diagnostic and get out
     // On next entries, check execution status:
-    switch (FLMDiagExecNumber)
+    switch (GetFLMDiagExecOrder())
     {
     case FLM_DIAG_ORDER_SHORT_DET:
         // check status of diag execution, dont enter any diagnostic if status is ONGOING
@@ -105,7 +103,7 @@ void FLMDiagInterruptRoutine(void)
         {
             FLMShortDiag();
             // Move on to next diagnostic
-            FLMDiagExecNumber = FLM_DIAG_ORDER_VHX_MEAS;
+            SetFLMDiagExecOrder(FLM_DIAG_ORDER_VHX_MEAS);
         }
         break;
 
@@ -114,7 +112,7 @@ void FLMDiagInterruptRoutine(void)
         if (GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_FINISHED)
         {
             // Move on to next diagnostic
-            FLMDiagExecNumber = FLM_DIAG_ORDER_LOOP_RES_MEAS;
+            SetFLMDiagExecOrder(FLM_DIAG_ORDER_LOOP_RES_MEAS);
         }
         break;
 
@@ -123,7 +121,7 @@ void FLMDiagInterruptRoutine(void)
         if (GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_FINISHED)
         {
             // Move on to next diagnostic
-            FLMDiagExecNumber = FLM_DIAG_ORDER_SQUIB_DET;
+            SetFLMDiagExecOrder(FLM_DIAG_ORDER_SQUIB_DET);
         }
         break;
 
@@ -133,7 +131,7 @@ void FLMDiagInterruptRoutine(void)
         if (GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_FINISHED)
         {
             // Move on to next diagnostic
-            FLMDiagExecNumber = FLM_DIAG_ORDER_SHORT_DET;
+            SetFLMDiagExecOrder(FLM_DIAG_ORDER_SHORT_DET);
         }
         break;
 
@@ -301,6 +299,13 @@ void core0_main(void)
                 IntCmdMonitorWatchdog();
                 break;
 
+            case USB_CMD_FLM_DIAG_ENABLE:
+                CmdEnableFLMDiag();
+                break;
+
+            case USB_CMD_FLM_DIAG_DISABLE:
+                CmdEnableFLMDiag();
+                break;
 
            case _USB_CMD_MAX:
                 break;

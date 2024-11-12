@@ -16,6 +16,9 @@
 /*------------------------------------------------------Macros-------------------------------------------------------*/
 /*********************************************************************************************************************/
 
+#define FLM_DIAG_INTERRUPT_PERIODICITY      (2000)  /** \brief Periodicity of FLM diagnostic performing interrupt, in 
+                                                    GENERAL_TIMER_PERIODICITY tics (50us) */
+
 #define FLM_DIAG_READ_SHORT_REGS_COUNT      (5)     /** \brief Number of registers with results of IGL/IGH short and 
                                                     leakage to battery or ground detection */
 
@@ -30,6 +33,10 @@
 /*********************************************************************************************************************/
 /*------------------------------------------------Function Prototypes------------------------------------------------*/
 /*********************************************************************************************************************/
+
+/** \brief 
+ */
+void CmdEnableFLMDiag();
 
 /** \brief 
  */
@@ -68,11 +75,22 @@ void SetFLMDiagMode(FLMDiagModeEnum diagMode);
  */
 void StartFLMDiag();
 
+/** \brief
+ */
+void CmdDisableFLMDiag();
+
 // TODO: implement
 /** \brief get FLM diagnostic execution status from ASIC (ongoing/evaluated)
  */
 flm_cycDiagExecStatusEnum FLMReadDiagExecStatus(void);
 
+/** \brief
+ */
+flm_DiagExecOrderEnum GetFLMDiagExecOrder (void);
+
+/** \brief
+ */
+void SetFLMDiagExecOrder(flm_DiagExecOrderEnum execNumber);
 
 /** \brief
  * Measure Battery voltage, normal range to perform diagnostics
@@ -87,12 +105,32 @@ bool CheckBatVoltage();
 static FLMCycDiagFaults g_FLMCycDiagFaultsValues;
 static FLMCycDiagResults g_flmCycDiagResultsValues;
 static flm_DiagExecStatusEnum g_FLMDiagExecStatus = FLM_DIAG_EXEC_STATUS_IDLE;
+static flm_DiagExecOrderEnum g_flmDiagExecNumber = FLM_DIAG_ORDER_SHORT_DET;
 //bool static g_FLMDiagActive = 0; // TODO similar (maybe more like status) should be available at top level to see if MCU is busy with FLM diag
 //bool static g_FLMDiagReady = 0;
 
 /*********************************************************************************************************************/
 /*---------------------------------------------Function Implementations----------------------------------------------*/
 /*********************************************************************************************************************/
+
+void CmdEnableFLMDiag()
+{
+    // Configure periodicity of FLM diagnoscics MCU interrupt
+    ConfigureFLMDiagPeriodicity();
+    // Turn on FLM diagnostics performing interrupt of MCU
+    EnableFLMDiagInterrupt();
+}
+
+void CmdDisableFLMDiag()
+{
+    // Set status and number of diag to init values for proper start
+    // of diagnostics on next enable
+    SetFLMDiagExecStatus(FLM_DIAG_EXEC_STATUS_IDLE);
+    SetFLMDiagExecOrder(FLM_DIAG_ORDER_SHORT_DET);
+
+    // Turn off FLM diagnostics performing interrupt of MCU
+    DisableFLMDiagInterrupt();
+}
 
 void InitFLMDiag()
 {
@@ -221,7 +259,7 @@ void FLMSquibDetErrDiag()
     {
         // TODO: diagnostic was performed, store results
         // Read FLM_READ_SQUIB_CH16_1, FLM_READ_SQUIB_CH20_17
-        isSuccessfulFlag = QSPIReadSequenceNormal(SPI1_CS1MASTER, flmDiagSquibRegsAddresses, &data[0].dw, &length); //TODO: question: should data argument be &data[0].dw not &data[].dw ?
+        isSuccessfulFlag = QSPIReadSequenceNormal(SPI1_CS1MASTER, flmDiagSquibRegsAddresses, &data[0].dw, &length);
         // Store results TODO: check order of data
         for (uint8 i = 0; i < 20 ; i++)
         {
@@ -351,6 +389,16 @@ flm_cycDiagExecStatusEnum GetFLMDiagExecStatus(void)
 {
     return g_FLMDiagExecStatus;
 }
+
+void SetFLMDiagExecOrder (flm_DiagExecOrderEnum execNumber)
+    {
+        g_flmDiagExecNumber = execNumber;
+    }
+
+flm_DiagExecOrderEnum GetFLMDiagExecOrder (void)
+    {
+        return g_flmDiagExecNumber;
+    }
 
 void SetFLMDiagMode(FLMDiagModeEnum diagMode)
 {

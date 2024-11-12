@@ -139,6 +139,11 @@ void ConfigureGPIOPeriodicity(uint16 gpioPeriodicity)
     g_GPIOReload = gpioPeriodicity;
 }
 
+void ConfigureFLMDiagPeriodicity(uint16 flmDiagPeriodicity)
+{
+    g_flmDiagReload = flmDiagPeriodicity;
+}
+
 void EnableWatchdogInterrupt(WatchdogTypeEnum wdType)
 {  
     if (wdType == WD1)
