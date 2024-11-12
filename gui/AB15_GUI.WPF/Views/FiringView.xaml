@@ -15,6 +15,7 @@
         <cnvrt:FiringModeConverter x:Key="FiringModeConverter"/>
     </Page.Resources>
 
+    <!-- Main page grid -->
     <Grid Background="{DynamicResource UI.BackGround}">
         
         <Grid.RowDefinitions>
@@ -29,10 +30,12 @@
             <ColumnDefinition Width="5"/>
         </Grid.ColumnDefinitions>
 
-        <TabControl Name="WatchdogPageControl" 
+        <!-- Tab control -->
+        <TabControl Name="FiringPageTabControl" 
                     Grid.Row="1" Grid.Column="1" 
                     Background="{DynamicResource UI.BackGround}" BorderThickness="0">
             
+            <!-- Configuration tab -->
             <TabItem Header="Configuration" FontSize="20" Style="{DynamicResource CustomTabItem}">
 
                 <Grid x:Name="FiringConfigurationPage">
@@ -51,8 +54,10 @@
                         <RowDefinition Height="5"/>
                     </Grid.RowDefinitions>
 
+                    <!-- #region Left column -->
                     <ComboBox Grid.Column="1" Grid.Row="1" Margin="5" 
-                              SelectedIndex="{Binding ConfigurationIndex}">
+                              SelectedIndex="{Binding FiringConfigurationIndex}"
+                              IsEnabled="{Binding IsConfigControlsEnabled}">
 
                         <ComboBoxItem>
                             <StackPanel Orientation="Horizontal">
@@ -101,88 +106,103 @@
                             BorderBrush="{DynamicResource TextBox.Static.Border}"
                             BorderThickness="1" CornerRadius="5">
                         <TextBlock  Margin="5" FontSize="20"
-                              Text="{Binding FiringConfigurationTextBox}" 
-                              Style="{DynamicResource CustomTextBlock}"
-                                
+                              Text="{Binding FiringConfigurationTextField}" 
+                              Style="{DynamicResource CustomTextBlock}"    
                               TextWrapping="Wrap" TextAlignment="Left"/>
                     </Border>
+
+                    <!-- ASIC-level firing settings & buttons -->
                     <StackPanel Orientation="Vertical"
                                 Grid.Column="1" Grid.Row="3" >
+
+                        <!-- #region ASIC-level firing settings (toggle switches -->
                         <StackPanel Orientation="Horizontal">
                             <CheckBox Style="{DynamicResource ToggleSwitchStyle}" 
-                                IsChecked="{Binding VH1aCurrentSinkEnable}"/>
+                                IsChecked="{Binding IsVH1aCurrentSinkEn}"
+                                IsEnabled="{Binding IsConfigControlsEnabled}"/>
                             <TextBlock Text="VH1a Current Sink"
                                 Margin="5"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal">
                             <CheckBox Style="{DynamicResource ToggleSwitchStyle}" 
-                                IsChecked="{Binding VH2CurrentSinkEnable}"/>
+                                IsChecked="{Binding IsVH2CurrentSinkEn}"
+                                IsEnabled="{Binding IsConfigControlsEnabled}"/>
                             <TextBlock Text="VH2 Current Sink"
                                 Margin="5"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal">
                             <CheckBox Style="{DynamicResource ToggleSwitchStyle}" 
-                                IsChecked="{Binding LowsideOvercurrentBehaviorEnable}"/>
+                                IsChecked="{Binding IsLowsideOvercurrentSwitchOffEn}"
+                                IsEnabled="{Binding IsConfigControlsEnabled}"/>
                             <TextBlock Text="Lowside overcurrent behavior"
                                 Margin="5"/>
                         </StackPanel>
+                        <!-- #endregion -->
 
+                        <!-- #region Buttons for triggering actions -->
                         <Button Margin="5" 
                                 Content="Write configuration"
                                 Style="{DynamicResource SimpleButton}"
-                                Command="{Binding WriteConfigurationButtonCommand}"/>
+                                Command="{Binding WriteConfiguration}"
+                                IsEnabled="{Binding WriteConfigurationCommandEn}"/>
                         <Button Margin="5" 
                                 Content="Transfer to normal mode"
                                 Style="{DynamicResource SimpleButton}"
-                                Command="{Binding NormalModeButtonCommand}"/>
+                                Command="{Binding TransferToNormalMode}"
+                                IsEnabled="{Binding TransferToNormalModeCommandEn}"/>
+                        <!-- #endregion -->
                     </StackPanel>
+                    <!-- #endregion -->
 
+                    <!-- #region Right colum -->
                     <Border Grid.Column="2" Grid.Row="1" Grid.RowSpan="3" BorderThickness="0" BorderBrush="Black">
-                        <StackPanel Orientation="Vertical">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="5" />
-                                    <ColumnDefinition Width="40"/>
-                                    <ColumnDefinition Width="200"/>
-                                    <ColumnDefinition Width="120"/>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="5" />
-                                </Grid.ColumnDefinitions>
+                        <!-- Table -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="5" />
+                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition Width="200"/>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="5" />
+                            </Grid.ColumnDefinitions>
 
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="7"/>
-                                    <RowDefinition Height="auto"/>
-                                    <RowDefinition Height="2"/>
-                                    <RowDefinition Height="1"/>
-                                </Grid.RowDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="7"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="2"/>
+                                <RowDefinition Height="1"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
 
-                                <Canvas Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="4" Background="{DynamicResource UI.SeparateLine}"/>
+                            <!-- #region Table header -->
+                            <Canvas Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="4" Background="{DynamicResource UI.SeparateLine}"/>
 
-                                <TextBlock Grid.Row="1" Grid.Column="1" FontSize="20"
-                                            Text="#" HorizontalAlignment="Center">
+                            <TextBlock Grid.Row="1" Grid.Column="1" FontSize="20"
+                                        Text="#" HorizontalAlignment="Center">
+                            </TextBlock>
 
-                                </TextBlock>
+                            <TextBlock Grid.Row="1" Grid.Column="2" FontSize="20"
+                                           Text="Identifier" HorizontalAlignment="Center">
+                            </TextBlock>
 
-                                <TextBlock Grid.Row="1" Grid.Column="2" FontSize="20"
-                                               Text="Identifier" HorizontalAlignment="Center">
-                                </TextBlock>
+                            <TextBlock Grid.Row="1" Grid.Column="3" FontSize="20"
+                                           Text="Mode" HorizontalAlignment="Center">
+                            </TextBlock>
 
-                                <TextBlock Grid.Row="1" Grid.Column="3" FontSize="20"
-                                               Text="Mode" HorizontalAlignment="Center">
-                                </TextBlock>
+                            <TextBlock Grid.Row="1" Grid.Column="4" FontSize="20"
+                                           Text="Description" HorizontalAlignment="Center">
+                            </TextBlock>
+                            <!-- #endregion -->
 
-                                <TextBlock Grid.Row="1" Grid.Column="4" FontSize="20"
-                                               Text="Description" HorizontalAlignment="Center">
-                                </TextBlock>
-
-                            </Grid>
-                            <ListView Grid.Row="1" Grid.Column="1" Name="ConfigChannelsTableView" 
-                                      IsEnabled="{Binding IsConfigControlsEnabled}"
-                                      ItemsSource="{Binding FiringConfigurationTable}"
-                                      ItemContainerStyle="{DynamicResource ListViewItemStyle}" 
-                                      FontSize="20">
+                            <!-- #region Table content -->
+                            <ListView Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="4" Name="ConfigChannelsTableView" 
+                                    ItemsSource="{Binding FiringConfigurationTable}"
+                                    ItemContainerStyle="{DynamicResource ListViewItemStyle}" 
+                                    IsEnabled="{Binding IsConfigControlsEnabled}"
+                                    FontSize="20">
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
                                         <Grid>
@@ -203,6 +223,7 @@
 
                                             <Canvas Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="4" Background="{DynamicResource UI.SeparateLine}"/>
 
+                                            <!-- Cell with number -->
                                             <TextBlock  Grid.Column="1" Margin="0,0,5,0" 
                                                         VerticalAlignment="Center"
                                                         FontSize="20" HorizontalAlignment="Center">
@@ -214,12 +235,14 @@
                                                 </TextBlock.Text>
                                             </TextBlock>
 
+                                            <!-- Cell with custom identifier -->
                                             <TextBox    Grid.Column="2" FontSize="20"
                                                         Style="{DynamicResource TextBoxStyle}"
                                                         Text="{Binding Identifier, Mode=TwoWay}">
                                             </TextBox>
 
-                                            <ComboBox   Grid.Column="3" SelectedIndex="{Binding Mode, Converter={StaticResource FiringModeConverter} Mode=TwoWay}">
+                                            <!-- Cell with firing mode dropdown -->
+                                            <ComboBox   Grid.Column="3" SelectedIndex="{Binding Mode, Converter={StaticResource FiringModeConverter}, Mode=TwoWay}">
                                                 <ComboBoxItem Tag="0">
                                                     <TextBlock Text="OFF"/>
                                                 </ComboBoxItem>
@@ -270,20 +293,25 @@
                                                 </ComboBoxItem>
                                             </ComboBox>
 
-                                            <TextBlock  Grid.Column="4" FontSize="20"
-                                                        Text="{Binding Description}">
-                                            </TextBlock>
+                                            <!-- Cell with mode description -->
+                                            <WrapPanel Grid.Column="4">
+                                                <TextBlock  TextWrapping="Wrap" FontSize="20" Margin="5,0,0,0"
+                                                            Text="{Binding ModeDescription}">
+                                                </TextBlock>
+                                            </WrapPanel>
                                         </Grid>
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
                             </ListView>
-                        </StackPanel>
-                        
+                            <!-- #endregion -->
+                        </Grid>           
                     </Border>
+                    <!-- #endregion -->
                 </Grid>
                 
             </TabItem>
 
+            <!-- Monitoring tab -->
             <TabItem Header="Monitoring" FontSize="20" Style="{DynamicResource CustomTabItem}">
 
                 <Grid>
@@ -303,49 +331,42 @@
                         <RowDefinition Height="5"/>
                     </Grid.RowDefinitions>
 
-                    <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="5" Grid.RowSpan="3">
-                        <StackPanel Orientation="Horizontal">
-                            <CheckBox Style="{DynamicResource ToggleSwitchStyle}"
-                                      Command="{Binding ToggleCycleReading}"/>
-                            <StackPanel Orientation="Vertical" Margin="2">
-                                <TextBlock Text="Enable" HorizontalAlignment="Center" FontSize="16"/>
-                                <TextBlock Text="cyclic reading" HorizontalAlignment="Center" FontSize="16"/>
-                            </StackPanel>
-                        </StackPanel>
-                    </StackPanel>
-
+                    <!-- #region ASIC 1 column -->
                     <TextBlock Text="ASIC 1" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center"/>
                     
+                    <!-- Status table -->
                     <Border Grid.Row="1" Grid.Column="0" BorderThickness="1" BorderBrush="Black" Margin="5">
-                        <StackPanel Orientation="Vertical">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="5" />
-                                    <ColumnDefinition Width="70"/>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="5" />
-                                </Grid.ColumnDefinitions>
+                        <!-- Table -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="5" />
+                                <ColumnDefinition Width="70"/>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="5" />
+                            </Grid.ColumnDefinitions>
 
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="auto"/>
-                                    <RowDefinition Height="2"/>
-                                    <RowDefinition Height="1"/>
-                                </Grid.RowDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="2"/>
+                                <RowDefinition Height="1"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
 
-                                <Canvas Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Background="{DynamicResource UI.SeparateLine}"/>
+                            <!-- #region Table header -->
+                            <Canvas Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Background="{DynamicResource UI.SeparateLine}"/>
 
-                                <TextBlock  Grid.Column="1" Margin="0,0,5,0" FontSize="16"
-                                            Text="Criteria" HorizontalAlignment="Center">
+                            <TextBlock  Grid.Column="1" Margin="0,0,5,0" FontSize="16"
+                                        Text="Criteria" HorizontalAlignment="Center">
+                            </TextBlock>
 
-                                </TextBlock>
+                            <TextBlock Grid.Column="2" Margin="0,0,5,0" FontSize="16"
+                                        Text="Status" HorizontalAlignment="Center">
+                            </TextBlock>
+                            <!-- #endregion -->
 
-                                <TextBlock Grid.Column="2" Margin="0,0,5,0" FontSize="16"
-                                            Text="Status" HorizontalAlignment="Center">
-                                </TextBlock>
-
-                            </Grid>
-                            <ListView   Name="ASIC1Monitor" 
-                                        ItemsSource="{Binding ASIC1MonitorTable}"
+                            <!-- Table content -->
+                            <ListView   Name="ASIC1Monitor" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2"
+                                        ItemsSource="{Binding FiringMonitoringStatusTable}"
                                         ItemContainerStyle="{DynamicResource ListViewItemStyle}" 
                                         FontSize="20">
                                 <ListView.ItemTemplate>
@@ -366,13 +387,13 @@
 
                                             <Canvas Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Background="{DynamicResource UI.SeparateLine}"/>
 
-                                            <TextBlock Grid.Column="2" Margin="0,0,5,0" FontSize="20"
-                                                        Text="{Binding CriteriaName}"
+                                            <TextBlock Grid.Column="1" Margin="0,0,5,0" FontSize="16"
+                                                        Text="{Binding Criteria}"
                                                         HorizontalAlignment="Center">
                                             </TextBlock>
 
-                                            <TextBlock Grid.Column="3" Margin="0,0,5,0" FontSize="20"
-                                                        Text="{Binding CriteriaStatus}"
+                                            <TextBlock Grid.Column="2" Margin="0,0,5,0" FontSize="16"
+                                                        Text="{Binding Status}"
                                                         HorizontalAlignment="Center">
                                             </TextBlock>
 
@@ -380,43 +401,47 @@
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
                             </ListView>
-                        </StackPanel>
+                        </Grid>
                     </Border>
                     
+                    <!-- Channel errors table -->
                     <Border Grid.Row="2" Grid.Column="0" BorderThickness="1" BorderBrush="Black" Margin="5">
-                        <StackPanel Orientation="Vertical">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="5" />
-                                    <ColumnDefinition Width="40"/>
-                                    <ColumnDefinition Width="80"/>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="5" />
-                                </Grid.ColumnDefinitions>
+                        <!-- Table -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="5" />
+                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition Width="80"/>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="5" />
+                            </Grid.ColumnDefinitions>
 
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="auto"/>
-                                    <RowDefinition Height="2"/>
-                                    <RowDefinition Height="1"/>
-                                </Grid.RowDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="2"/>
+                                <RowDefinition Height="1"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
 
-                                <Canvas Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" Background="{DynamicResource UI.SeparateLine}"/>
+                            <!-- #region Table header -->
+                            <Canvas Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" Background="{DynamicResource UI.SeparateLine}"/>
 
-                                <TextBlock  Grid.Column="1" Margin="0,0,5,0" FontSize="16"
-                                            Text="#" HorizontalAlignment="Center">
-                                </TextBlock>
+                            <TextBlock  Grid.Column="1" Margin="0,0,5,0" FontSize="16"
+                                        Text="#" HorizontalAlignment="Center">
+                            </TextBlock>
                                 
-                                <TextBlock  Grid.Column="2" Margin="0,0,5,0" FontSize="16"
-                                            Text="Identifier" HorizontalAlignment="Center">
-                                </TextBlock>
+                            <TextBlock  Grid.Column="2" Margin="0,0,5,0" FontSize="16"
+                                        Text="Identifier" HorizontalAlignment="Center">
+                            </TextBlock>
 
-                                <TextBlock  Grid.Column="3" Margin="0,0,5,0" FontSize="16"
-                                            Text="Status" HorizontalAlignment="Center">
-                                </TextBlock>
+                            <TextBlock  Grid.Column="3" Margin="0,0,5,0" FontSize="16"
+                                        Text="Status" HorizontalAlignment="Center">
+                            </TextBlock>
+                            <!-- #endregion -->
 
-                            </Grid>
-                            <ListView   Name="ASIC1ChannelMonitor" 
-                                        ItemsSource="{Binding ASIC1ChannelMonitorTable}"
+                            <!-- Table content -->
+                            <ListView   Name="ASIC1ChannelMonitor" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3"
+                                        ItemsSource="{Binding FiringMonitoringErrorTable}"
                                         ItemContainerStyle="{DynamicResource ListViewItemStyle}" 
                                         FontSize="14">
                                 <ListView.ItemTemplate>
@@ -438,17 +463,17 @@
 
                                             <Canvas Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" Background="{DynamicResource UI.SeparateLine}"/>
 
-                                            <TextBlock Grid.Column="1" Margin="0,0,5,0" FontSize="20"
-                                                        Text="{Binding ID}"
+                                            <TextBlock Grid.Column="1" Margin="0,0,5,0" FontSize="16"
+                                                        Text="{Binding ChannelID}"
                                                         HorizontalAlignment="Center">
                                             </TextBlock>
                                             
-                                            <TextBlock Grid.Column="2" Margin="0,0,5,0" FontSize="20"
+                                            <TextBlock Grid.Column="2" Margin="0,0,5,0" FontSize="16"
                                                         Text="{Binding Identifier}"
                                                         HorizontalAlignment="Center">
                                             </TextBlock>
 
-                                            <TextBlock Grid.Column="3" Margin="0,0,5,0" FontSize="20"
+                                            <TextBlock Grid.Column="3" Margin="0,0,5,0" FontSize="16"
                                                         Text="{Binding Status}"
                                                         HorizontalAlignment="Center">
                                             </TextBlock>
@@ -457,10 +482,11 @@
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
                             </ListView>
-                        </StackPanel>
+                        </Grid>
                     </Border>
+                    <!-- #endregion -->
 
-
+                    <!-- #region ASIC 2 column TODO: refactor for enabling scrolling (as ASIC1 1) -->
                     <TextBlock Text="ASIC 2" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center"/>
 
                     <Border Grid.Row="1" Grid.Column="1" BorderThickness="1" BorderBrush="Black" Margin="5">
@@ -606,7 +632,9 @@
                             </ListView>
                         </StackPanel>
                     </Border>
+                    <!-- #endregion -->
 
+                    <!-- #region ASIC 3 column TODO: refactor for enabling scrolling (as ASIC1 1) -->
                     <TextBlock Text="ASIC 3" Grid.Column="2" Grid.Row="0" HorizontalAlignment="Center"/>
 
                     <Border Grid.Row="1" Grid.Column="2" BorderThickness="1" BorderBrush="Black" Margin="5">
@@ -752,7 +780,9 @@
                             </ListView>
                         </StackPanel>
                     </Border>
+                    <!-- #endregion -->
 
+                    <!-- #region ASIC 4 column TODO: refactor for enabling scrolling (as ASIC1 1) -->
                     <TextBlock Text="ASIC 4" Grid.Column="3" Grid.Row="0" HorizontalAlignment="Center"/>
 
                     <Border Grid.Row="1" Grid.Column="3" BorderThickness="1" BorderBrush="Black" Margin="5">
@@ -898,11 +928,28 @@
                             </ListView>
                         </StackPanel>
                     </Border>
+                    <!-- #endregion -->
+
+                    <!-- #region Far right column -->
+                    <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="5" Grid.RowSpan="3">
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox Style="{DynamicResource ToggleSwitchStyle}"
+                                      Command="{Binding StartStopCyclicReading}"
+                                      IsChecked="{Binding IsCyclicDiagnosticsEn}"
+                                      IsEnabled="{Binding StartStopCyclicReadingCommandEn}"/>
+                            <StackPanel Orientation="Vertical" Margin="2">
+                                <TextBlock Text="Enable" HorizontalAlignment="Center" FontSize="16"/>
+                                <TextBlock Text="cyclic reading" HorizontalAlignment="Center" FontSize="16"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                    <!-- #endregion -->
 
                 </Grid>
 
             </TabItem>
 
+            <!-- Firing tab -->
             <TabItem Header="Firing" FontSize="20" Style="{DynamicResource CustomTabItem}">
 
                 <Grid>
@@ -920,25 +967,23 @@
                         <RowDefinition Height="5"/>
                     </Grid.RowDefinitions>
 
-                    <StackPanel VerticalAlignment="Bottom"
-                                Grid.Column="1" Grid.Row="2" Orientation="Vertical">
-                        <Button Command="{Binding FireSimultaneouslyCommand}"
-                                Content="Fire simultaneous" Margin="5"
-                                Style="{DynamicResource SimpleButton}"/>
-                    </StackPanel>
-
+                    <!-- #region Left column -->
                     <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1">
 
+                        <!-- Alternative mode switch -->
                         <StackPanel Orientation="Horizontal">
                             <CheckBox Style="{DynamicResource ToggleSwitchStyle}" 
-                                      IsChecked="{Binding ReduceCurrentEnable}"/>
+                                      IsChecked="{Binding IsAlternativeFiringModeEn}"
+                                      IsEnabled="{Binding IsFiringControlsEnabled}"/>
                             <StackPanel     Orientation="Vertical">
                                 <TextBlock  Text="Alternative firing mode"
                                             Margin="5,5,5,5"/>
                             </StackPanel>
                         </StackPanel>
 
-                        <ComboBox SelectedIndex="{Binding FiringSelectedMode}" Margin="5">
+                        <!-- Firing scenario dropdown -->
+                        <ComboBox SelectedIndex="{Binding FiringScenarioIndex}" Margin="5"
+                                  IsEnabled="{Binding IsFiringControlsEnabled}">
                             <ComboBoxItem IsSelected="True">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="A - 1"
@@ -1029,54 +1074,68 @@
                         </ComboBox>
                     </StackPanel>
 
+                    <!-- Fire simultaneously button -->
+                    <StackPanel VerticalAlignment="Bottom"
+                                Grid.Column="1" Grid.Row="2" Orientation="Vertical">
+                        <Button Command="{Binding FireSimultaneous}"
+                                Content="Fire simultaneous" Margin="5"
+                                Style="{DynamicResource SimpleButton}"
+                                IsEnabled="{Binding FireSimultaneousCommandEn}"/>
+                    </StackPanel>
+                    <!-- #endregion -->
+
+                    <!-- #region Right colum -->
                     <Border Grid.Row="1" Grid.RowSpan="2" Grid.Column="2" BorderThickness="1" BorderBrush="Black" Margin="5">
-                        <StackPanel Orientation="Vertical">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="5" />
-                                    <ColumnDefinition Width="40"/>
-                                    <ColumnDefinition Width="120" MinWidth="80"/>
-                                    <ColumnDefinition Width="100" MinWidth="80"/>
-                                    <ColumnDefinition Width="100" MinWidth="80"/>
-                                    <ColumnDefinition Width="120" MinWidth="80"/>
-                                    <ColumnDefinition Width="120" MinWidth="80"/>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="5" />
-                                </Grid.ColumnDefinitions>
+                        <!-- Table -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="5" />
+                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition Width="120" MinWidth="80"/>
+                                <ColumnDefinition Width="100" MinWidth="80"/>
+                                <ColumnDefinition Width="100" MinWidth="80"/>
+                                <ColumnDefinition Width="120" MinWidth="80"/>
+                                <ColumnDefinition Width="120" MinWidth="80"/>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="5" />
+                            </Grid.ColumnDefinitions>
 
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="auto"/>
-                                    <RowDefinition Height="2"/>
-                                    <RowDefinition Height="1"/>
-                                </Grid.RowDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="2"/>
+                                <RowDefinition Height="1"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
 
-                                <Canvas Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="7" Background="{DynamicResource UI.SeparateLine}"/>
+                            <!-- #region Table header -->
+                            <Canvas Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="7" Background="{DynamicResource UI.SeparateLine}"/>
 
-                                <TextBlock  Grid.Column="1" Margin="0,0,5,0" FontSize="20"
-                                            Text="#" HorizontalAlignment="Center">
-                                 
-                                </TextBlock>
+                            <TextBlock  Grid.Column="1" Margin="0,0,5,0" FontSize="20"
+                                        Text="#" HorizontalAlignment="Center">
+                            </TextBlock>
 
-                                <TextBlock Grid.Column="2" Margin="0,0,5,0" FontSize="20"
-                                               Text="Identifier" HorizontalAlignment="Center">
-                                </TextBlock>
+                            <TextBlock Grid.Column="2" Margin="0,0,5,0" FontSize="20"
+                                           Text="Identifier" HorizontalAlignment="Center">
+                            </TextBlock>
 
-                                <TextBlock Grid.Column="3" Margin="0,0,5,0" FontSize="20"
-                                               Text="ToFire" HorizontalAlignment="Center">
-                                </TextBlock>
+                            <TextBlock Grid.Column="3" Margin="0,0,5,0" FontSize="20"
+                                           Text="ToFire" HorizontalAlignment="Center">
+                            </TextBlock>
 
-                                <TextBlock Grid.Column="4" Margin="0,0,5,0" FontSize="20"
-                                               Text="WasFired" HorizontalAlignment="Center">
-                                </TextBlock>
+                            <TextBlock Grid.Column="4" Margin="0,0,5,0" FontSize="20"
+                                           Text="WasFired" HorizontalAlignment="Center">
+                            </TextBlock>
 
-                                <TextBlock Grid.Column="5" Margin="0,0,5,0" FontSize="20"
-                                               Text="Count Hight" HorizontalAlignment="Center">
-                                </TextBlock>
+                            <TextBlock Grid.Column="5" Margin="0,0,5,0" FontSize="20"
+                                           Text="Count Hight" HorizontalAlignment="Center">
+                            </TextBlock>
 
-                                <TextBlock Grid.Column="6" Margin="0,0,5,0" FontSize="20"
-                                               Text="Count Low" HorizontalAlignment="Center">
-                                </TextBlock>
-                            </Grid>
+                            <TextBlock Grid.Column="6" Margin="0,0,5,0" FontSize="20"
+                                           Text="Count Low" HorizontalAlignment="Center">
+                            </TextBlock>
+                            <!-- #endregion -->
+
+                            <!-- Table content -->
                             <ListView   Name="FiringResultTableView" 
                                 ItemsSource="{Binding FiringResultTable}"
                                 ItemContainerStyle="{DynamicResource ListViewItemStyle}" 
@@ -1170,16 +1229,12 @@
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
                             </ListView>
-                        </StackPanel>
+                        </Grid>
                     </Border>
-
-
-
+                    <!-- #endregion -->
                 </Grid>
 
             </TabItem>
         </TabControl>
-
-
     </Grid>
 </Page>
