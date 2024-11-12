@@ -6,7 +6,8 @@ using AB15_GUI.WPF.Models;
 namespace AB15_GUI.WPF.Models
 {
     /// <summary>
-    /// Class that used for commands without payload
+    /// Generic class that used for commands requiring address and data payload
+    /// Note: read/write sequence commands, read/write commands, etc.
     /// </summary>
     public class AddressDataPayload : IByteListSerializable
     {
