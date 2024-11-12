@@ -78,7 +78,7 @@ namespace AB15_GUI.WPF.Models
         /// <summary>
         /// <inheritdoc cref="ToFire" path='/summary'/>
         /// </summary>
-        private bool toFire;
+        private bool toFire = false;
         
         /// <summary>
         /// Flag indicating if channel is selected for firing
