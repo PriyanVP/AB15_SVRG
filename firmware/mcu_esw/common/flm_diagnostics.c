@@ -9,12 +9,17 @@
 #include "Ifx_Types.h"
 #include "common/tap_addrMap_ExportedMemMap_memoryMap.h"
 #include "common/spi_data_types.h"
+#include "common/usb_data_types.h"
 #include "common/flm_diagnostics.h"
+#include "common/bit_manipulation.h"
 #include "top/spi_wrapper.h"
 
 /*********************************************************************************************************************/
 /*------------------------------------------------------Macros-------------------------------------------------------*/
 /*********************************************************************************************************************/
+#define LOW(x)                              ((x) & 0xff)
+
+#define HIGH(x) ((x) >> 8)
 
 #define FLM_DIAG_INTERRUPT_PERIODICITY      (2000)  /** \brief Periodicity of FLM diagnostic performing interrupt, in 
                                                     GENERAL_TIMER_PERIODICITY tics (50us) */
@@ -131,6 +136,156 @@ void CmdDisableFLMDiag()
     // Turn off FLM diagnostics performing interrupt of MCU
     DisableFLMDiagInterrupt();
 }
+
+void CmdReadFLMDiagResults(USBReceiveData const * const commandPackage)
+    {
+        USBTransmitData packageToSend;
+
+        packageToSend.device_id = 0;
+        packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
+        packageToSend.status = USB_STATUS_DATA;
+        packageToSend.dataLength = 85;
+        /*
+            FLM_Read_Diag_VHx   flmVHxDiagResults[11];       
+            bool                flmSquibErrorDiagResults[20];
+            FLMReadSquibRes     flmLoopResDiagResults[20];   
+            FLMShortDiagStruct  flmShortDiagResults;         
+        */
+        // Short detection results
+        packageToSend.data[0] = GetLSB(g_flmCycDiagResultsValues.flmShortDiagResults.FLM_Read_Short_ch4_1);
+        packageToSend.data[1] = GetMSB(g_flmCycDiagResultsValues.flmShortDiagResults.FLM_Read_Short_ch4_1);
+        packageToSend.data[2] = GetLSB(g_flmCycDiagResultsValues.flmShortDiagResults.FLM_Read_Short_ch8_5);
+        packageToSend.data[3] = GetMSB(g_flmCycDiagResultsValues.flmShortDiagResults.FLM_Read_Short_ch8_5);
+        packageToSend.data[4] = GetLSB(g_flmCycDiagResultsValues.flmShortDiagResults.FLM_Read_Short_ch12_9);
+        packageToSend.data[5] = GetMSB(g_flmCycDiagResultsValues.flmShortDiagResults.FLM_Read_Short_ch12_9);
+        packageToSend.data[6] = GetLSB(g_flmCycDiagResultsValues.flmShortDiagResults.FLM_Read_Short_ch16_13);
+        packageToSend.data[7] = GetMSB(g_flmCycDiagResultsValues.flmShortDiagResults.FLM_Read_Short_ch16_13);
+        packageToSend.data[8] = GetLSB(g_flmCycDiagResultsValues.flmShortDiagResults.FLM_Read_Short_ch20_17);
+        packageToSend.data[9] = GetMSB(g_flmCycDiagResultsValues.flmShortDiagResults.FLM_Read_Short_ch20_17);
+        
+        // VHx diagnostic results flmVHxDiagResults[]
+        packageToSend.data[10] = GetLSB(g_flmCycDiagResultsValues.flmVHxDiagResults[0].FLM_Read_Diag_VHx_voltage_value);
+        packageToSend.data[11] = GetMSB(g_flmCycDiagResultsValues.flmVHxDiagResults[0].FLM_Read_Diag_VHx_voltage_value);
+        packageToSend.data[12] = GetLSB(g_flmCycDiagResultsValues.flmVHxDiagResults[1].FLM_Read_Diag_VHx_voltage_value);
+        packageToSend.data[13] = GetMSB(g_flmCycDiagResultsValues.flmVHxDiagResults[1].FLM_Read_Diag_VHx_voltage_value);
+        packageToSend.data[14] = GetLSB(g_flmCycDiagResultsValues.flmVHxDiagResults[2].FLM_Read_Diag_VHx_voltage_value);
+        packageToSend.data[15] = GetMSB(g_flmCycDiagResultsValues.flmVHxDiagResults[2].FLM_Read_Diag_VHx_voltage_value);
+        packageToSend.data[16] = GetLSB(g_flmCycDiagResultsValues.flmVHxDiagResults[3].FLM_Read_Diag_VHx_voltage_value);
+        packageToSend.data[17] = GetMSB(g_flmCycDiagResultsValues.flmVHxDiagResults[3].FLM_Read_Diag_VHx_voltage_value);
+        packageToSend.data[18] = GetLSB(g_flmCycDiagResultsValues.flmVHxDiagResults[4].FLM_Read_Diag_VHx_voltage_value);
+        packageToSend.data[19] = GetMSB(g_flmCycDiagResultsValues.flmVHxDiagResults[4].FLM_Read_Diag_VHx_voltage_value);
+        packageToSend.data[20] = GetLSB(g_flmCycDiagResultsValues.flmVHxDiagResults[5].FLM_Read_Diag_VHx_voltage_value);
+        packageToSend.data[21] = GetMSB(g_flmCycDiagResultsValues.flmVHxDiagResults[5].FLM_Read_Diag_VHx_voltage_value);
+        packageToSend.data[22] = GetLSB(g_flmCycDiagResultsValues.flmVHxDiagResults[6].FLM_Read_Diag_VHx_voltage_value);
+        packageToSend.data[23] = GetMSB(g_flmCycDiagResultsValues.flmVHxDiagResults[6].FLM_Read_Diag_VHx_voltage_value);
+        packageToSend.data[24] = GetLSB(g_flmCycDiagResultsValues.flmVHxDiagResults[7].FLM_Read_Diag_VHx_voltage_value);
+        packageToSend.data[25] = GetMSB(g_flmCycDiagResultsValues.flmVHxDiagResults[7].FLM_Read_Diag_VHx_voltage_value);
+        packageToSend.data[26] = GetLSB(g_flmCycDiagResultsValues.flmVHxDiagResults[8].FLM_Read_Diag_VHx_voltage_value);
+        packageToSend.data[27] = GetMSB(g_flmCycDiagResultsValues.flmVHxDiagResults[8].FLM_Read_Diag_VHx_voltage_value);
+        packageToSend.data[28] = GetLSB(g_flmCycDiagResultsValues.flmVHxDiagResults[9].FLM_Read_Diag_VHx_voltage_value);
+        packageToSend.data[29] = GetMSB(g_flmCycDiagResultsValues.flmVHxDiagResults[9].FLM_Read_Diag_VHx_voltage_value);
+        packageToSend.data[30] = GetLSB(g_flmCycDiagResultsValues.flmVHxDiagResults[10].FLM_Read_Diag_VHx_voltage_value);
+        packageToSend.data[31] = GetMSB(g_flmCycDiagResultsValues.flmVHxDiagResults[10].FLM_Read_Diag_VHx_voltage_value);
+        
+        uint8_t tmp1VHxVoltageValid, tmp2VHxVoltageValid = 0;
+        for (uint8_t i = 0; i<11; i++)
+        {
+            if (i < 8)
+            {
+                if (g_flmCycDiagResultsValues.flmVHxDiagResults[i].FLM_Read_Diag_VHx_voltage_valid)
+                {
+                    tmp1VHxVoltageValid |= (1 << i);
+                }
+            }
+            else
+            {
+                if (g_flmCycDiagResultsValues.flmVHxDiagResults[i].FLM_Read_Diag_VHx_voltage_valid)
+                {
+                    tmp2VHxVoltageValid |= (1 << (i-8));
+                }
+            }
+        }
+        packageToSend.data[32] = tmp1VHxVoltageValid;
+        packageToSend.data[33] = tmp2VHxVoltageValid;
+
+        // Squib detection error results
+        uint8_t tmp1SquibDetErr, tmp2SquibDetErr, tmp3SquibDetErr = 0;
+        for (uint8_t i = 0; i<20; i++)
+        {
+            if (i < 8)
+            {
+                if (g_flmCycDiagResultsValues.flmSquibErrorDiagResults[i])
+                {
+                    tmp1SquibDetErr |= (1 << i);
+                }
+            }
+            else if (i < 16)
+            {
+                if (g_flmCycDiagResultsValues.flmSquibErrorDiagResults[i])
+                {
+                    tmp2SquibDetErr |= (1 << i);
+                }
+            }
+            else
+            {
+                if (g_flmCycDiagResultsValues.flmSquibErrorDiagResults[i])
+                {
+                    tmp3SquibDetErr |= (1 << i);
+                }
+            }
+        }
+        packageToSend.data[34] = tmp1SquibDetErr;
+        packageToSend.data[35] = tmp2SquibDetErr;
+        packageToSend.data[36] = tmp3SquibDetErr;
+
+        // Loop resistance diagnostics results
+        packageToSend.data[37] = GetLSB(g_flmCycDiagResultsValues.flmLoopResDiagResults[0].flm_squib_res_value);
+        packageToSend.data[38] = GetMSB(g_flmCycDiagResultsValues.flmLoopResDiagResults[0].flm_squib_res_value);
+        packageToSend.data[39] = GetLSB(g_flmCycDiagResultsValues.flmLoopResDiagResults[1].flm_squib_res_value);
+        packageToSend.data[40] = GetMSB(g_flmCycDiagResultsValues.flmLoopResDiagResults[1].flm_squib_res_value);
+        packageToSend.data[41] = GetLSB(g_flmCycDiagResultsValues.flmLoopResDiagResults[2].flm_squib_res_value);
+        packageToSend.data[42] = GetMSB(g_flmCycDiagResultsValues.flmLoopResDiagResults[2].flm_squib_res_value);
+        packageToSend.data[43] = GetLSB(g_flmCycDiagResultsValues.flmLoopResDiagResults[3].flm_squib_res_value);
+        packageToSend.data[44] = GetMSB(g_flmCycDiagResultsValues.flmLoopResDiagResults[3].flm_squib_res_value);
+        packageToSend.data[45] = GetLSB(g_flmCycDiagResultsValues.flmLoopResDiagResults[4].flm_squib_res_value);
+        packageToSend.data[46] = GetMSB(g_flmCycDiagResultsValues.flmLoopResDiagResults[4].flm_squib_res_value);
+        packageToSend.data[47] = GetLSB(g_flmCycDiagResultsValues.flmLoopResDiagResults[5].flm_squib_res_value);
+        packageToSend.data[48] = GetMSB(g_flmCycDiagResultsValues.flmLoopResDiagResults[5].flm_squib_res_value);
+        packageToSend.data[49] = GetLSB(g_flmCycDiagResultsValues.flmLoopResDiagResults[6].flm_squib_res_value);
+        packageToSend.data[50] = GetMSB(g_flmCycDiagResultsValues.flmLoopResDiagResults[6].flm_squib_res_value);
+        packageToSend.data[51] = GetLSB(g_flmCycDiagResultsValues.flmLoopResDiagResults[7].flm_squib_res_value);
+        packageToSend.data[52] = GetMSB(g_flmCycDiagResultsValues.flmLoopResDiagResults[7].flm_squib_res_value);
+        packageToSend.data[53] = GetLSB(g_flmCycDiagResultsValues.flmLoopResDiagResults[8].flm_squib_res_value);
+        packageToSend.data[54] = GetMSB(g_flmCycDiagResultsValues.flmLoopResDiagResults[8].flm_squib_res_value);
+        packageToSend.data[55] = GetLSB(g_flmCycDiagResultsValues.flmLoopResDiagResults[9].flm_squib_res_value);
+        packageToSend.data[56] = GetMSB(g_flmCycDiagResultsValues.flmLoopResDiagResults[9].flm_squib_res_value);
+        packageToSend.data[57] = GetLSB(g_flmCycDiagResultsValues.flmLoopResDiagResults[10].flm_squib_res_value);
+        packageToSend.data[58] = GetMSB(g_flmCycDiagResultsValues.flmLoopResDiagResults[10].flm_squib_res_value);
+        packageToSend.data[59] = GetLSB(g_flmCycDiagResultsValues.flmLoopResDiagResults[11].flm_squib_res_value);
+        packageToSend.data[60] = GetMSB(g_flmCycDiagResultsValues.flmLoopResDiagResults[11].flm_squib_res_value);
+        packageToSend.data[61] = GetLSB(g_flmCycDiagResultsValues.flmLoopResDiagResults[12].flm_squib_res_value);
+        packageToSend.data[62] = GetMSB(g_flmCycDiagResultsValues.flmLoopResDiagResults[12].flm_squib_res_value);
+        packageToSend.data[63] = GetLSB(g_flmCycDiagResultsValues.flmLoopResDiagResults[13].flm_squib_res_value);
+        packageToSend.data[64] = GetMSB(g_flmCycDiagResultsValues.flmLoopResDiagResults[13].flm_squib_res_value);
+        packageToSend.data[65] = GetLSB(g_flmCycDiagResultsValues.flmLoopResDiagResults[14].flm_squib_res_value);
+        packageToSend.data[66] = GetMSB(g_flmCycDiagResultsValues.flmLoopResDiagResults[14].flm_squib_res_value);
+        packageToSend.data[67] = GetLSB(g_flmCycDiagResultsValues.flmLoopResDiagResults[15].flm_squib_res_value);
+        packageToSend.data[68] = GetMSB(g_flmCycDiagResultsValues.flmLoopResDiagResults[15].flm_squib_res_value);
+        packageToSend.data[69] = GetLSB(g_flmCycDiagResultsValues.flmLoopResDiagResults[16].flm_squib_res_value);
+        packageToSend.data[70] = GetMSB(g_flmCycDiagResultsValues.flmLoopResDiagResults[16].flm_squib_res_value);
+        packageToSend.data[71] = GetLSB(g_flmCycDiagResultsValues.flmLoopResDiagResults[17].flm_squib_res_value);
+        packageToSend.data[72] = GetMSB(g_flmCycDiagResultsValues.flmLoopResDiagResults[17].flm_squib_res_value);
+        packageToSend.data[73] = GetLSB(g_flmCycDiagResultsValues.flmLoopResDiagResults[18].flm_squib_res_value);
+        packageToSend.data[74] = GetMSB(g_flmCycDiagResultsValues.flmLoopResDiagResults[18].flm_squib_res_value);
+        packageToSend.data[75] = GetLSB(g_flmCycDiagResultsValues.flmLoopResDiagResults[19].flm_squib_res_value);
+        packageToSend.data[76] = GetMSB(g_flmCycDiagResultsValues.flmLoopResDiagResults[19].flm_squib_res_value);
+
+        
+
+        // Send data back to MCU
+        SendUSBPackage(&packageToSend);
+
+    }
 
 void InitFLMDiag()
 {

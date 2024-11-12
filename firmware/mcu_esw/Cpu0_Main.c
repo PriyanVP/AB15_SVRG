@@ -307,6 +307,9 @@ void core0_main(void)
                 CmdDisableFLMDiag();
                 break;
 
+            case USB_CMD_FLM_DIAG_READ_RESULTS:
+                CmdReadFLMDiagResults(&cmdPackage);
+
            case _USB_CMD_MAX:
                 break;
 
