@@ -124,16 +124,6 @@ typedef struct
 
 } FLMCycDiagStatus;
 
-/** \brief Structure to store results of cyclic tests  
- */
-typedef struct
-{
-    FLM_Read_Diag_VHx   flmVHxDiagResults[11];              /** \brief  */
-    boolean             flmSquibErrorDiagResults[20];       /** \brief  */
-    FLMReadSquibRes     flmLoopResDiagResults[20];          /** \brief  */
-    FLMShortDiagStruct  flmShortDiagResults;                /** \brief  */
-
-} FLMCycDiagResults;
 
 /** \brief Structure to store results of FLM channel short detection (IGH/IGL short to ground/battery)
  * 10 bytes
@@ -168,6 +158,7 @@ FLM_Read_Diag_VHx FLMVHxDiagResults[11];
 boolean FLMSquibErrorDiagResults[20];
 
 /** \brief Structure to store results of FLM Loop resistanse diagnostic
+ * 20 loops, 48 bytes
  */
 typedef struct
 {
@@ -178,10 +169,17 @@ typedef struct
 
 } FLMReadSquibRes;
 
-/** \brief Structure to store results of FLM all Loops resistanse diagnostic
- * 48 bytes
+/** \brief Structure to store results of cyclic tests
+ * 86 bytes
  */
-struct FLMReadSquibRes FLMLoopResDiagResults[20];
+typedef struct
+{
+    FLM_Read_Diag_VHx   flmVHxDiagResults[11];              /** \brief  */
+    boolean             flmSquibErrorDiagResults[20];       /** \brief  */
+    FLMReadSquibRes     flmLoopResDiagResults[20];          /** \brief  */
+    FLMShortDiagStruct  flmShortDiagResults;                /** \brief  */
+
+} FLMCycDiagResults;
 
 /*************************************************************************************************************************/
 /*------------------------------------------------Function Prototypes----------------------------------------------------*/

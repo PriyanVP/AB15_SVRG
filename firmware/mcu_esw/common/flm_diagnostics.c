@@ -10,7 +10,7 @@
 #include "common/tap_addrMap_ExportedMemMap_memoryMap.h"
 #include "common/spi_data_types.h"
 #include "common/usb_data_types.h"
-#include "common/flm_diagnostics.h"
+#include "flm_diagnostics.h"
 #include "common/bit_manipulation.h"
 #include "top/spi_wrapper.h"
 
@@ -84,6 +84,14 @@ void StartFLMDiag();
  */
 void CmdDisableFLMDiag();
 
+/** \brief
+ */
+void SetFLMDiagExecStatus(flm_DiagExecStatusEnum FLMCycDiagExecStatus);
+
+/** \brief
+ */
+flm_DiagExecStatusEnum GetFLMDiagExecStatus(void);
+
 // TODO: implement
 /** \brief get FLM diagnostic execution status from ASIC (ongoing/evaluated)
  */
@@ -101,7 +109,7 @@ void SetFLMDiagExecOrder(flm_DiagExecOrderEnum execNumber);
  * Measure Battery voltage, normal range to perform diagnostics
  * is 6...18V
  */
-bool CheckBatVoltage();
+boolean CheckBatVoltage();
 
 /*********************************************************************************************************************/
 /*-------------------------------------------------Global variables--------------------------------------------------*/
@@ -373,21 +381,21 @@ void CmdReadFLMDiagResults(USBReceiveData const * const commandPackage)
         {
             if (i < 8)
             {
-                if (g_flmCycDiagResultsValues.flmLoopResDiagResults[i].flm_squib_pgndx_loss)
+                if (g_flmCycDiagResultsValues.flmLoopResDiagResults[i].flm_squib_res_pgndx_loss)
                 {
                     tmp1SquibResPgndxLoss |= (1 << i);
                 }
             }
             else if (i < 16)
             {
-                if (g_flmCycDiagResultsValues.flmLoopResDiagResults[i].flm_squib_pgndx_loss)
+                if (g_flmCycDiagResultsValues.flmLoopResDiagResults[i].flm_squib_res_pgndx_loss)
                 {
                     tmp2SquibResPgndxLoss |= (1 << i);
                 }
             }
             else
             {
-                if (g_flmCycDiagResultsValues.flmLoopResDiagResults[i].flm_squib_pgndx_loss)
+                if (g_flmCycDiagResultsValues.flmLoopResDiagResults[i].flm_squib_res_pgndx_loss)
                 {
                     tmp3SquibResPgndxLoss |= (1 << i);
                 }
@@ -403,9 +411,9 @@ void CmdReadFLMDiagResults(USBReceiveData const * const commandPackage)
 
 void InitFLMDiag()
 {
-    g_FLMCycDiagStatus.flm_VHxMeasStatus     = FLM_DIAG_STATUS_VHX_MEAS_SKIPPED;
-    g_FLMCycDiagStatus.flm_LoopResMeasStatus = FLM_DIAG_STATUS_LOOP_RES_MEAS_SKIPPED;
-    g_FLMCycDiagStatus.flm_SquibDetStatus    = FLM_DIAG_STATUS_SQUIB_DET_SKIPPED;
+    //g_FLMCycDiagStatus.flm_VHxMeasStatus     = FLM_DIAG_STATUS_VHX_MEAS_SKIPPED;
+    //g_FLMCycDiagStatus.flm_LoopResMeasStatus = FLM_DIAG_STATUS_LOOP_RES_MEAS_SKIPPED;
+    //g_FLMCycDiagStatus.flm_SquibDetStatus    = FLM_DIAG_STATUS_SQUIB_DET_SKIPPED;
 
     // 'Squibs on all channels' for this implementation 
 }
@@ -416,7 +424,7 @@ void FLMShortDiag()
     SPIReceiveDataNormal data[FLM_DIAG_READ_SHORT_REGS_COUNT] = {0};
     uint16 length = FLM_DIAG_READ_SHORT_REGS_COUNT;
     boolean isSuccessfulFlag = FALSE;
-    uint16 flmDiagShortsRegsAddresses = {FLM_FLM_READ_SHORT_CH4_1, FLM_FLM_READ_SHORT_CH8_5, 
+    uint16 flmDiagShortsRegsAddresses[FLM_DIAG_READ_SHORT_REGS_COUNT] = {FLM_FLM_READ_SHORT_CH4_1, FLM_FLM_READ_SHORT_CH8_5,
                                          FLM_FLM_READ_SHORT_CH12_9, FLM_FLM_READ_SHORT_CH16_13, 
                                          FLM_FLM_READ_SHORT_CH20_17};
     
@@ -452,7 +460,6 @@ void FLMVHxDiag()
                                                                         FLM_FLM_READ_DIAG_VH7, FLM_FLM_READ_DIAG_VH8, 
                                                                         FLM_FLM_READ_DIAG_VH9, FLM_FLM_READ_DIAG_VH10,
                                                                         FLM_FLM_READ_DIAG_VH1B };
-    static FLMVHxDiagResults FLMVHxDiagResultsValues;
 
     if (CheckBatVoltage()==FALSE) 
     {
@@ -460,13 +467,7 @@ void FLMVHxDiag()
         //g_FLMCycDiagStatus.flm_VHxMeasStatus = FLM_DIAG_STATUS_VHX_MEAS_SKIPPED;
     }
 
-    // TODO: clean up
-    //if (g_FLMDiagActive != 0) && (g_FLMDiagReady != 1)
-    //{   
-    //    // Wait for any previous diagnostic to end
-    //    // TODO: implement getters for g_FLMDiagActive and g_FLMDiagReady
-    //    // TODO: implement timeout for 1.5-2 duration of diagnostic -> if timeout then feature error to PC 
-    //}
+    // TODO: implement timeout for 1.5-2 duration of diagnostic -> if timeout then feature error to PC 
 
     if (GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_FINISHED)
     {
@@ -489,7 +490,7 @@ void FLMVHxDiag()
         // Store results TODO: check order of data
         for (uint8 i = 0; i < FLM_DIAG_READ_VHX_REGS_COUNT ; i++)
         {
-            flm_flm_read_diag_vh1a_ut flmReadDiagVHxTmp = data[i].bf.output_data;
+            flm_flm_read_diag_vh1a_ut flmReadDiagVHxTmp = (flm_flm_read_diag_vh1a_ut) (data[i].bf.output_data); // TODO: check how to resolve type mismatch
             g_flmCycDiagResultsValues.flmVHxDiagResults[i].FLM_Read_Diag_VHx_voltage_valid = flmReadDiagVHxTmp.as_s.FlmVhVoltageValid_u1;
             g_flmCycDiagResultsValues.flmVHxDiagResults[i].FLM_Read_Diag_VHx_voltage_value = flmReadDiagVHxTmp.as_s.FlmVhVoltageValue_u12;
         }
@@ -508,8 +509,6 @@ void FLMSquibDetErrDiag()
     uint16 length = FLM_DIAG_READ_SQUIB_REGS_COUNT;
     boolean isSuccessfulFlag = FALSE;
     uint16 flmDiagSquibRegsAddresses[FLM_DIAG_READ_SQUIB_REGS_COUNT] = {FLM_FLM_READ_SQUIB_CH16_1, FLM_FLM_READ_SQUIB_CH20_17};
-    
-    static FLMSquibDetErrDiagResults FLMSquibDetErrDiagResultsValues;
 
     if (GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_FINISHED)
     {
@@ -617,7 +616,7 @@ void StartFLMDiag(void)
     // Get value from ASIC
     // TODO: check whether diags can be run on slaves (spiChannel selection)
     isSuccessfulFlag &= QSPIReadNormal(SPI1_CS1MASTER, FLM_FLM_DIAG_START, &data.dw);
-    tmpFLMDiagStartfRegister.as_uint16 = data.output_data;
+    tmpFLMDiagStartfRegister.as_uint16 = data.bf.output_data;
     
     // flm_diag_start = 1 starts selected diagnostic
     tmpFLMDiagStartfRegister.as_s.FlmDiagStart_u1 = 1;
@@ -635,7 +634,7 @@ flm_DiagExecStatusEnum FLMReadDiagExecStatus(void)
     
     // Get value from ASIC
     isSuccessfulFlag &= QSPIReadNormal(SPI1_CS1MASTER, FLM_FLM_STATUS2, &data.dw);
-    tmpFLMDiagStatus2fRegister.as_uint16 = data.output_data;
+    tmpFLMDiagStatus2fRegister.as_uint16 = data.bf.output_data;
     
     // Determine FLM diagnostic execution status
     if ((tmpFLMDiagStatus2fRegister.as_s.FlmDiagActive_u1 == 1) && (tmpFLMDiagStatus2fRegister.as_s.FlmDiagReady_u1 == 0))
@@ -677,7 +676,7 @@ void SetFLMDiagMode(FLMDiagModeEnum diagMode)
     
     // Get value from ASIC
     isSuccessfulFlag &= QSPIReadNormal(SPI1_CS1MASTER, FLM_FLM_DIAG_START, &data.dw);
-    tmpFLMDiagStartfRegister.as_uint16 = data.output_data;
+    tmpFLMDiagStartfRegister.as_uint16 = data.bf.output_data;
     
     // flm_diag_start = 1 starts selected diagnostic
     tmpFLMDiagStartfRegister.as_s.FlmDiagMode_u5 = diagMode;
