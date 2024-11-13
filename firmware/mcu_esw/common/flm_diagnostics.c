@@ -217,8 +217,8 @@ void CmdReadFLMDiagResults(USBReceiveData const * const commandPackage)
         packageToSend.data[30] = GetLSB(g_flmCycDiagResultsValues.flmVHxDiagResults[10].FLM_Read_Diag_VHx_voltage_value);
         packageToSend.data[31] = GetMSB(g_flmCycDiagResultsValues.flmVHxDiagResults[10].FLM_Read_Diag_VHx_voltage_value);
         
-        uint8_t tmp1VHxVoltageValid, tmp2VHxVoltageValid = 0;
-        for (uint8_t i = 0; i<11; i++)
+        uint8 tmp1VHxVoltageValid, tmp2VHxVoltageValid = 0;
+        for (uint8 i = 0; i<11; i++)
         {
             if (i < 8)
             {
@@ -239,8 +239,8 @@ void CmdReadFLMDiagResults(USBReceiveData const * const commandPackage)
         packageToSend.data[33] = tmp2VHxVoltageValid;
 
         // Squib detection error results
-        uint8_t tmp1SquibDetErr, tmp2SquibDetErr, tmp3SquibDetErr = 0;
-        for (uint8_t i = 0; i<20; i++)
+        uint8 tmp1SquibDetErr, tmp2SquibDetErr, tmp3SquibDetErr = 0;
+        for (uint8 i = 0; i<20; i++)
         {
             if (i < 8)
             {
@@ -310,8 +310,8 @@ void CmdReadFLMDiagResults(USBReceiveData const * const commandPackage)
         packageToSend.data[75] = GetLSB(g_flmCycDiagResultsValues.flmLoopResDiagResults[19].flm_squib_res_value);
         packageToSend.data[76] = GetMSB(g_flmCycDiagResultsValues.flmLoopResDiagResults[19].flm_squib_res_value);
 
-        uint8_t tmp1SquibResErr, tmp2SquibResErr, tmp3SquibResErr = 0;
-        for (uint8_t i = 0; i<20; i++)
+        uint8 tmp1SquibResErr, tmp2SquibResErr, tmp3SquibResErr = 0;
+        for (uint8 i = 0; i<20; i++)
         {
             if (i < 8)
             {
@@ -339,8 +339,8 @@ void CmdReadFLMDiagResults(USBReceiveData const * const commandPackage)
         packageToSend.data[78] = tmp2SquibResErr;
         packageToSend.data[79] = tmp3SquibResErr;
 
-        uint8_t tmp1SquibResValid, tmp2SquibResValid, tmp3SquibResValid = 0;
-        for (uint8_t i = 0; i<20; i++)
+        uint8 tmp1SquibResValid, tmp2SquibResValid, tmp3SquibResValid = 0;
+        for (uint8 i = 0; i<20; i++)
         {
             if (i < 8)
             {
@@ -368,8 +368,8 @@ void CmdReadFLMDiagResults(USBReceiveData const * const commandPackage)
         packageToSend.data[81] = tmp2SquibResValid;
         packageToSend.data[82] = tmp3SquibResValid;
 
-        uint8_t tmp1SquibResPgndxLoss, tmp2SquibResPgndxLoss, tmp3SquibResPgndxLoss = 0;
-        for (uint8_t i = 0; i<20; i++)
+        uint8 tmp1SquibResPgndxLoss, tmp2SquibResPgndxLoss, tmp3SquibResPgndxLoss = 0;
+        for (uint8 i = 0; i<20; i++)
         {
             if (i < 8)
             {
