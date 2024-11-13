@@ -29,6 +29,7 @@
 IFX_ALIGN(4) IfxCpu_syncEvent g_cpuSyncEvent = 0;
 
 #define WAIT_TIME 25   /*useconds */
+#define FLM_DIAG_DEBUG 1
 
 /** \brief Watchdog 1 interrupt routine
  * Arms single acknowledgement of ASIC watchdog
@@ -86,6 +87,11 @@ void WatchdogStatusReadingInterruptRoutine(void)
 */
 void FLMDiagInterruptRoutine(void)
 {
+    #ifdef FLM_DIAG_DEBUG
+        OnLED4();
+        ToggleLED2();
+    #endif
+
     // Initial FLM Diagnostic execution state is initialised as Idle
     // and on later rounds updated from ASIC 
     if (GetFLMDiagExecStatus() != FLM_DIAG_EXEC_STATUS_IDLE)
