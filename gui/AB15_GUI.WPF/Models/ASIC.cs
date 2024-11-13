@@ -729,7 +729,7 @@ namespace AB15_GUI.WPF.Models
                 return;
             }
 
-            // Check if this is the last expected response
+            // Raise configuration locked event
             OnConfigurationLocked();
         }
 
