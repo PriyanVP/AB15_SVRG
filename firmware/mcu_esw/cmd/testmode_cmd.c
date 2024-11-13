@@ -222,6 +222,12 @@ void CmdStopTestMode12(USBReceiveData const * const commandPackage) // TODO: not
     SendUSBPackage(&packageToSend);
 }
 
+void CmdStartTestMode2(USBReceiveData const * const commandPackage)
+{
+    // empty for now
+    return;
+}
+
 void IntCmdExecutePowerstageTest(void)
 {
     // TODO: check if ready
