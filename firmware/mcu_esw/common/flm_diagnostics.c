@@ -87,7 +87,7 @@ void CmdDisableFLMDiag();
 // TODO: implement
 /** \brief get FLM diagnostic execution status from ASIC (ongoing/evaluated)
  */
-flm_cycDiagExecStatusEnum FLMReadDiagExecStatus(void);
+flm_DiagExecStatusEnum FLMReadDiagExecStatus(void);
 
 /** \brief
  */
@@ -591,7 +591,7 @@ void StartFLMDiag(void)
     QSPIWriteNormal(SPI1_CS1MASTER, FLM_FLM_DIAG_START, tmpFLMDiagStartfRegister.as_uint16);
 }
 
-flm_cycDiagExecStatusEnum FLMReadDiagExecStatus(void)
+flm_DiagExecStatusEnum FLMReadDiagExecStatus(void)
 {
     // TODO FLM_FLM_STATUS2
     SPIReceiveDataNormal data;
@@ -614,12 +614,12 @@ flm_cycDiagExecStatusEnum FLMReadDiagExecStatus(void)
     }
 }
 
-void SetFLMDiagExecStatus(flm_cycDiagExecStatusEnum FLMCycDiagExecStatus)
+void SetFLMDiagExecStatus(flm_DiagExecStatusEnum FLMCycDiagExecStatus)
 {
     g_FLMDiagExecStatus = FLMCycDiagExecStatus;
 }
 
-flm_cycDiagExecStatusEnum GetFLMDiagExecStatus(void)
+flm_DiagExecStatusEnum GetFLMDiagExecStatus(void)
 {
     return g_FLMDiagExecStatus;
 }

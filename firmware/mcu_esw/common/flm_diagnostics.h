@@ -117,7 +117,6 @@ typedef struct
 
 /** \brief Structure to store results of cyclic tests  
  */
-// TODO: check and fix naming to comply with naming convention
 typedef struct
 {
     FLM_Read_Diag_VHx   flmVHxDiagResults[11];              /** \brief  */
