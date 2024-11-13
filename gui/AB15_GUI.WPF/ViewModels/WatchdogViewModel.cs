@@ -837,7 +837,7 @@ namespace AB15_GUI.WPF.ViewModels
             packageToSend.Payload.spi_config_wd1.Data = _spi_config_wd1.Data;
             packageToSend.Payload.spi_config_wd2.Data = _spi_config_wd2.Data;
             packageToSend.Payload.spi_config_wd_decouple.Data = _spi_config_wd_decouple.Data;
-            packageToSend.Payload.spi_config_wd_thres0.Data = _spi_config_wd_thres0.Data;
+            packageToSend.Payload.spi_config_wd_thres0.Data = 0x3F3F; // TODO: hardcoded for now - has to be non 0
 
             // Modify some fields based on UI input
             packageToSend.Payload.spi_config_wd1.spi_set_locktime_wd1.Data = (UInt16) WD1LockTime;
