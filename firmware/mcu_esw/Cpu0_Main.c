@@ -41,7 +41,7 @@ void Watchdog1InterruptRoutine(void)
         .dataLength = 0,
         .command = INT_CMD_ACK_WATCHDOG1
     };
-
+    ToggleLED4();
     // Add WD serving internal command to command queue
     QueueWriteTail(&serveWatchdogCommand);    // TODO: commented out to have MCU contained WD routine. Uncomment for actual communication with ASIC
 }
@@ -58,7 +58,7 @@ void Watchdog2InterruptRoutine(void)
         .dataLength = 0,
         .command = INT_CMD_ACK_WATCHDOG2
     };
-
+    ToggleLED2();
     // Add WD serving internal command to command queue
     QueueWriteTail(&serveWatchdogCommand);    // TODO: commented out to have MCU contained WD routine. Uncomment for actual communication with ASIC
 }
@@ -183,11 +183,12 @@ void core0_main(void)
                 break;
             case USB_CMD_WRITE_REG:
                 CmdWriteReg(&cmdPackage);
+
                 break;
-            // case :
-            //     break;
-            // case :
-            //     break;
+            case USB_CMD_EXECUTE_READ_SEQUENCE:
+                CmdExecuteReadSequence(&cmdPackage);
+                break;
+
             case USB_CMD_CONFIGURE_WATCHDOG:
                 CmdConfigureWatchdog(&cmdPackage);
                 break;

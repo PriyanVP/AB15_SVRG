@@ -9,7 +9,7 @@ def pytest_html_report_title(report):
 def pytest_configure(config):  
     config.stash[metadata_key]["Project"] = "AB15 SW"
     config.stash[metadata_key]["Tester"] = environ.get('USERNAME')
-
+    # TODO: add here sw version of MCU after reading GetDevice id Ident Low and High
 @pytest.hookimpl(optionalhook=True)
 def pytest_html_results_table_header(cells):
     # Add new column header in HTML report
