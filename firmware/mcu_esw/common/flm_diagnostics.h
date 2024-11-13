@@ -25,6 +25,15 @@
  */
 typedef enum 
 {
+    FLM_DIAG_STATE_DISABLED           = 0,   /** \brief  */
+    FLM_DIAG_STATE_ENABLED            = 1   /** \brief  */
+
+} flm_DiagStateEnum;
+
+/** \brief
+ */
+typedef enum 
+{
     FLM_DIAG_ORDER_SHORT_DET        = 1,        /** \brief  */
     FLM_DIAG_ORDER_VHX_MEAS         = 2,        /** \brief  */
     FLM_DIAG_ORDER_LOOP_RES_MEAS    = 3,        /** \brief  */

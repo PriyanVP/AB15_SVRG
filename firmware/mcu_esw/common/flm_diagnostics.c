@@ -107,6 +107,7 @@ bool CheckBatVoltage();
 /*-------------------------------------------------Global variables--------------------------------------------------*/
 /*********************************************************************************************************************/
 
+static flm_DiagStateEnum g_flmDiagState = FLM_DIAG_STATE_DISABLED;
 static FLMCycDiagFaults g_FLMCycDiagFaultsValues;
 static FLMCycDiagResults g_flmCycDiagResultsValues;
 static flm_DiagExecStatusEnum g_FLMDiagExecStatus = FLM_DIAG_EXEC_STATUS_IDLE;
@@ -118,16 +119,50 @@ static flm_DiagExecOrderEnum g_flmDiagExecNumber = FLM_DIAG_ORDER_SHORT_DET;
 /*---------------------------------------------Function Implementations----------------------------------------------*/
 /*********************************************************************************************************************/
 
-void CmdEnableFLMDiag()
+void CmdEnableFLMDiag(USBReceiveData const * const commandPackage)
 {
+    USBTransmitData packageToSend;
+
+    // Enable command should not be executed twice
+    if (g_flmDiagState == FLM_DIAG_STATE_ENABLED)
+    {
+        // Skip further function execution - FLM Diag already is enabled, 
+        // GUI will see no response to repeated USB_CMD_FLM_DIAG_ENABLE command
+        return;
+    }
+
+    // Enable FLM diag functionality
+    // FLM diag state flag is set
+    g_flmDiagState = FLM_DIAG_STATE_ENABLED;
     // Configure periodicity of FLM diagnoscics MCU interrupt
     ConfigureFLMDiagPeriodicity();
     // Turn on FLM diagnostics performing interrupt of MCU
     EnableFLMDiagInterrupt();
+
+    packageToSend.device_id = commandPackage->device_id;
+    packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
+    packageToSend.status = USB_STATUS_ACK;
+    packageToSend.dataLength = 0;
+
+    // Send report to GUI
+    SendUSBPackage(&packageToSend);
 }
 
-void CmdDisableFLMDiag()
+void CmdDisableFLMDiag(USBReceiveData const * const commandPackage)
 {
+    USBTransmitData packageToSend;
+
+    // Disable command should not be executed twice
+    if (g_flmDiagState == FLM_DIAG_STATE_DISABLED)
+    {
+        // Skip further function execution - FLM Diag already is disabled, 
+        // GUI will see no response to repeated USB_CMD_FLM_DIAG_DISABLE command
+        return;
+    }
+
+    // Disable FLM diag functionality
+    // FLM diag state flag is reset
+    g_flmDiagState = FLM_DIAG_STATE_DISABLED;
     // Set status and number of diag to init values for proper start
     // of diagnostics on next enable
     SetFLMDiagExecStatus(FLM_DIAG_EXEC_STATUS_IDLE);

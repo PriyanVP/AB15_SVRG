@@ -99,7 +99,7 @@ void FLMDiagInterruptRoutine(void)
     {
     case FLM_DIAG_ORDER_SHORT_DET:
         // check status of diag execution, dont enter any diagnostic if status is ONGOING
-        if (GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_FINISHED)||(GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_IDLE)
+        if ((GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_FINISHED)||(GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_IDLE))
         {
             FLMShortDiag();
             // Move on to next diagnostic
