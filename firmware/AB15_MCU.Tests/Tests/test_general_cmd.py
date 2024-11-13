@@ -197,7 +197,23 @@ class TestGeneralCommands:
         is_response_received = self.serial.extract_packages()
         result = pkg.ReceivePackage(self.serial.packages.pop(0))
         
+
+        # Arrange
+        msg_id = 0x00
+        device_id = 0x01
+        address = 0x142
+        address_converted = pkg.Int2BytesConverter(address)
+        packageToSend = pkg.TransmitPackage(msg_id, device_id, pkg.Command.READ_REG, address_converted.bytes)
+
+        # Act
+        self.serial.com_port.write(packageToSend.serialize())
+
+        sleep(self.DELAY)
+        is_response_received = self.serial.extract_packages()
+        result = pkg.ReceivePackage(self.serial.packages.pop(0))
+        received_value = pkg.Bytes2IntConverter(result.payload)
+
         # Assert
         assert is_response_received, "No response from MCU received"
-        assert result.status == pkg.Status.ACK, f"Incorrect status in payload. Expected ACK, but received {result.status}"
-        assert (result.payload_len == 0), f"Unexpected data. Expected empty payload, but received {result.payload}"
+        assert result.status == pkg.Status.DATA, f"Incorrect status in payload. Expected DATA, but received {result.status}"
+        assert (received_value.int_value == 0x040), f"Unexpected data. Expected 0x40 , but received {received_value.int_value}"
