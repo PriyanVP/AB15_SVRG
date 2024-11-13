@@ -490,7 +490,8 @@ void FLMVHxDiag()
         // Store results TODO: check order of data
         for (uint8 i = 0; i < FLM_DIAG_READ_VHX_REGS_COUNT ; i++)
         {
-            flm_flm_read_diag_vh1a_ut flmReadDiagVHxTmp = (flm_flm_read_diag_vh1a_ut) (data[i].bf.output_data); // TODO: check how to resolve type mismatch
+            flm_flm_read_diag_vh1a_ut flmReadDiagVHxTmp;
+            flmReadDiagVHxTmp.as_uint16 = (data[i].bf.output_data);
             g_flmCycDiagResultsValues.flmVHxDiagResults[i].FLM_Read_Diag_VHx_voltage_valid = flmReadDiagVHxTmp.as_s.FlmVhVoltageValid_u1;
             g_flmCycDiagResultsValues.flmVHxDiagResults[i].FLM_Read_Diag_VHx_voltage_value = flmReadDiagVHxTmp.as_s.FlmVhVoltageValue_u12;
         }
@@ -588,7 +589,8 @@ void FLMLoopResDiag() //
         // Store results TODO: check order of data
         for (uint8 i = 0; i < FLM_DIAG_READ_RES_REGS_COUNT ; i++)
         {
-            flm_flm_read_squib_res_ch1_ut flmReadSquibResChxTmp = data[i].bf.output_data;
+            flm_flm_read_squib_res_ch1_ut flmReadSquibResChxTmp; 
+            flmReadSquibResChxTmp.as_uint16 = (data[i].bf.output_data);
             g_flmCycDiagResultsValues.flmLoopResDiagResults[i].flm_squib_res_value = flmReadSquibResChxTmp.as_s.FlmSquibResValue_u13;
             g_flmCycDiagResultsValues.flmLoopResDiagResults[i].flm_squib_res_err = flmReadSquibResChxTmp.as_s.FlmSquibResErr_u1;
             g_flmCycDiagResultsValues.flmLoopResDiagResults[i].flm_squib_res_valid = flmReadSquibResChxTmp.as_s.FlmSquibResValid_u1;     
