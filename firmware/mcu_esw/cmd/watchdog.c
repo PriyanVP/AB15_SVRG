@@ -369,8 +369,9 @@ void CmdStartWatchdog(USBReceiveData const * const commandPackage)
     ConfigureWatchdogPeriodicity(WD2, g_wd2Parameters.wdConfig.ackPeriod);
 
     // Turn on Watchdog serving interrupt of MCU
-    EnableWatchdogInterrupt(WD1);
     EnableWatchdogInterrupt(WD2);
+    EnableWatchdogInterrupt(WD1);
+
 
     // Modify state
     g_wd1Parameters.state = WD_STATE_RUNNING_NORMAL;
