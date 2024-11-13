@@ -139,6 +139,7 @@ typedef struct
 } FLMShortDiagStruct;
 
 /** \brief Structure to store results of one FLM channel VH voltage diagnostic
+ * 11 channels, 24 bytes
  */ 
 typedef struct 
 {
@@ -146,16 +147,6 @@ typedef struct
     boolean FLM_Read_Diag_VHx_voltage_valid;            /** \brief  */
 
 }FLM_Read_Diag_VHx;
-
-/** \brief Array to store results of all FLM channel VH voltages diagnostic
- * 24 bytes
- */ 
-FLM_Read_Diag_VHx FLMVHxDiagResults[11];
-
-/** \brief Structure to store results of FLM Squib detection (Squib detection error, FLM_Squib_det_err_ch1...ch20)
- * 3 bytes
- */
-boolean FLMSquibErrorDiagResults[20];
 
 /** \brief Structure to store results of FLM Loop resistanse diagnostic
  * 20 loops, 48 bytes
