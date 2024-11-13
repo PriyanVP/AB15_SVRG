@@ -519,7 +519,7 @@ void IntCmdMonitorWatchdog(void)
     SPIReceiveDataNormal data[WD_STATUS_REGS_COUNT] = {0};
 
     // Read WD related registers from ASIC
-    // isSuccessfulFlag = QSPIReadSequenceNormal(SPI1_CS1MASTER, g_wdStatusMonitoringConfig.wdStatusRegsAddresses, &data[0].dw, &length); // TODO: not implemented
+    isSuccessfulFlag = QSPIReadSequenceNormal(SPI1_CS1MASTER, g_wdStatusMonitoringConfig.wdStatusRegsAddresses, &data[0].dw, &length); // TODO: not implemented
 
     packageToSend.dataLength = length << 1; // each data item is send as 2 bytes
 

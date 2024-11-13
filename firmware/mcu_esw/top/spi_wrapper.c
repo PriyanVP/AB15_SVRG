@@ -259,7 +259,7 @@ IFX_INLINE boolean QSPIReadWriteSequenceNormalInline(uint8 spiChannel, const uin
         isReceivedDataValid &= (dataToReceive.bf.gs5 == FALSE);
 
         // Store received data
-        *p_length = i; // store number of received frames
+        *p_length = i+1; // store number of received frames
 
         // save package to output buffer only if read option used, otherwise store 0
         p_dataBuffer[i] = (dataToTransmit.bf.rw == READ) ? (dataToReceive.dw) : (0);

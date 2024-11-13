@@ -958,10 +958,10 @@ namespace AB15_GUI.WPF.ViewModels
                 logger.Error($"Error response received. Status: {mcuResponse.Status}");
                 return;
             }
-            else if (mcuResponse.Payload.Data.Count < 5)
+            else if (mcuResponse.Payload.Data.Count < 6)
             {
-                AddError($"Unexpected amount of readout data received. Expected 5, but got {mcuResponse.Payload.Data.Count}.", nameof(ReadConfigFromASIC));
-                logger.Error($"Unexpected amount of readout data received. Expected 5, but got {mcuResponse.Payload.Data.Count}.");
+                AddError($"Unexpected amount of readout data received. Expected 6, but got {mcuResponse.Payload.Data.Count}.", nameof(ReadConfigFromASIC));
+                logger.Error($"Unexpected amount of readout data received. Expected 6, but got {mcuResponse.Payload.Data.Count}.");
                 return;
             }
 
