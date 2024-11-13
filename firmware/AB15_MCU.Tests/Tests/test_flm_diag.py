@@ -27,6 +27,25 @@ class TestFLMDiagCommands:
 
     @pytest.mark.firing
     @pytest.mark.serial
+    def test_FLMDiagReadResults(self):
+        '''group `firing` tests
+        tests:
+        - size of USB_CMD_FLM_DIAG_READ_RESULTS payload (should be 86 bytes)'''
+
+        # Arrange
+        packageToSend = pkg.TransmitPackage(0x0F, 0, Command.FLM_DIAG_READ_RESULTS)
+        
+        # Act
+        self.serial.com_port.write(packageToSend.serialize())
+        sleep(self.DELAY)
+        is_response_received = self.serial.extract_packages()
+        result = pkg.ReceivePackage(self.serial.packages.pop(0))
+
+        # Assert
+        assert result.payload_len == 86, f"Length of payload is not 86 bytes! Length received: {result.payload_len}"
+
+    @pytest.mark.firing
+    @pytest.mark.serial
     def test_EnableFLMDiag(self):
         '''group `firing` tests
         tests:
