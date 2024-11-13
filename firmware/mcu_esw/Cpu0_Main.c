@@ -14,6 +14,7 @@
 #include "cmd/cont_read_cmd.h"
 #include "cmd/gpio_cmd.h"
 #include "cmd/watchdog.h"
+#include "cmd/testmode_cmd.h"
 #include "periphery/led.h"
 #include "periphery/usb.h"
 #include "periphery/timer.h"
@@ -78,6 +79,23 @@ void WatchdogStatusReadingInterruptRoutine(void)
 
     // Add WD serving internal command to command queue
     QueueWrite(&serveWatchdogStatusCommand);
+}
+
+/** \brief Test mode 1/2 check interrupt routine
+ * Arms single check of Test mode 1/2 results + arm next test if needed
+ */
+void TestModeInterruptRoutine(void)
+{
+    // Test mode iteration is an internal command
+    static USBReceiveData serveTestModeCommand = 
+    {
+        .device_id = 1,
+        .dataLength = 0,
+        .command = INT_CMD_EXECUTE_TEST_MODE
+    };
+
+    // Add Test mode internal command to command queue
+    QueueWrite(&serveTestModeCommand);
 }
 
 /** \brief Main function
@@ -178,16 +196,27 @@ void core0_main(void)
             case USB_CMD_READ_DEV_ID:
                 CmdGetDeviceId(&cmdPackage);
                 break;
+
             case USB_CMD_READ_REG:
                 CmdReadReg(&cmdPackage);
                 break;
+
             case USB_CMD_WRITE_REG:
                 CmdWriteReg(&cmdPackage);
                 break;
-            // case :
-            //     break;
-            // case :
-            //     break;
+
+            case USB_CMD_EXECUTE_RW_SEQUENCE:
+                CmdExecuteRWSequence(&cmdPackage);
+                break;
+
+            case USB_CMD_EXECUTE_READ_SEQUENCE:
+                CmdExecuteReadSequence(&cmdPackage);
+                break;
+
+            case USB_CMD_EXECUTE_WRITE_SEQUENCE:
+                CmdExecuteWriteSequence(&cmdPackage);
+                break;
+
             case USB_CMD_CONFIGURE_WATCHDOG:
                 CmdConfigureWatchdog(&cmdPackage);
                 break;
@@ -219,6 +248,18 @@ void core0_main(void)
                 CmdGetMcuBuildTime(&cmdPackage);
                 break;
 
+            case USB_CMD_START_TEST_MODE1:
+                CmdStartTestMode1(&cmdPackage);
+                break;
+
+            case USB_CMD_START_TEST_MODE2:
+                CmdStartTestMode2(&cmdPackage);
+                break;
+
+            case USB_CMD_STOP_TEST_MODE12:
+                CmdStopTestMode12(&cmdPackage);
+                break;
+
             case INT_CMD_ACK_WATCHDOG1:
                 IntCmdAcknowledgeWatchdog1();
                 break;
@@ -237,6 +278,9 @@ void core0_main(void)
 
             case INT_CMD_READ_WD_STATUS:
                 IntCmdMonitorWatchdog();
+                break;
+            case INT_CMD_EXECUTE_TEST_MODE:
+                IntCmdExecutePowerstageTest();
                 break;
 
 
