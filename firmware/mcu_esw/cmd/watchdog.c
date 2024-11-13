@@ -193,7 +193,7 @@ void CmdConfigureWatchdog(USBReceiveData const * const commandPackage)
  
     uint16 address[WD_CFG_PACKAGE_MAX_LEN] = {0};       // Addresses of registers to write
     uint16 data[WD_CFG_PACKAGE_MAX_LEN] = {0};          // Values to write
-    uint16 length = (commandPackage->dataLength) >> 2;  // Number of 32bit SPI words to write into ASIC
+    uint16 length = (commandPackage->dataLength) >> 2;  // Number of 32bit SPI words to write into ASIC (= number of registers to write)
 
     // Parse input
     // Layout: (addr_MSB - addr_LSB - data_MSB - data_LSB) - (...)
@@ -238,11 +238,11 @@ void CmdConfigureWatchdog(USBReceiveData const * const commandPackage)
     #else
 
     // Code for AB15 implementation
-
+    isSuccessfulFlag = TRUE;
     // Write both WD configs to ASIC to ASIC
     for (uint8 i = 0; i < length; i++)
     {
-        // isSuccessfulFlag = QSPIWriteSequence(SPI1_CS1MASTER, &(address[i]), &(data[i]), &length); // TODO: configuration, not yet implemented; not available for AB12
+        isSuccessfulFlag &= QSPIWriteNormal(SPI1_CS1MASTER, address[i], data[i]); // TODO: configuration, not yet implemented; not available for AB12
     }
 
     #endif
@@ -331,6 +331,13 @@ void IntCmdAcknowledgeWatchdog2(void)
 
 void CmdStartWatchdog(USBReceiveData const * const commandPackage)
 {
+    /*prepare data package*/
+    USBTransmitData packageToSend;
+    packageToSend.device_id = 1;
+    packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
+    packageToSend.status = USB_STATUS_ACK;
+    packageToSend.dataLength = 0;
+
     // Command should not be executed in certain WD feature states
     if ((g_wd1Parameters.state != WD_STATE_CONFIGURED) || 
         (g_wd2Parameters.state != WD_STATE_CONFIGURED))
@@ -338,9 +345,6 @@ void CmdStartWatchdog(USBReceiveData const * const commandPackage)
         // Skip function execution - GUI will see no response
         return;
     }
-
-    // Local variables
-    USBTransmitData packageToSend;
 
     // If any of the watchdogs is not configured do not start
     if ((g_wd1Parameters.isWDConfigured == FALSE) ||
@@ -365,8 +369,9 @@ void CmdStartWatchdog(USBReceiveData const * const commandPackage)
     ConfigureWatchdogPeriodicity(WD2, g_wd2Parameters.wdConfig.ackPeriod);
 
     // Turn on Watchdog serving interrupt of MCU
-    EnableWatchdogInterrupt(WD1);
     EnableWatchdogInterrupt(WD2);
+    EnableWatchdogInterrupt(WD1);
+
 
     // Modify state
     g_wd1Parameters.state = WD_STATE_RUNNING_NORMAL;

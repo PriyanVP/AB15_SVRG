@@ -293,6 +293,14 @@ void UpdateTimersRoutine(void)
     GPIOCounter++;
 
     // Call corresponding functions if enabled and counter reached reload value
+    if ((g_watchdog2Enable == TRUE) && (watchdog2Counter >= g_watchdog2Reload))
+    {
+        // Watchdog acknowledge
+        watchdog2Counter = 0;
+        Watchdog2InterruptRoutine();
+    }
+
+    // Call corresponding functions if enabled and counter reached reload value
     if ((g_watchdog1Enable == TRUE) && (watchdog1Counter >= g_watchdog1Reload))
     {
         // Watchdog acknowledge
@@ -300,13 +308,7 @@ void UpdateTimersRoutine(void)
         Watchdog1InterruptRoutine();
     }
 
-    // Call corresponding functions if enabled and counter reached reload value
-    if ((g_watchdog2Enable == TRUE) && (watchdog2Counter >= g_watchdog2Reload))
-    {
-        // Watchdog acknowledge
-        watchdog2Counter = 0;
-        Watchdog2InterruptRoutine();
-    }
+
 
     // Call corresponding functions if enabled and counter reached reload value
     if ((g_watchdogStatusCheckEnable == TRUE) && (watchdogStatusCheckCounter >= g_watchdogStatusCheckReload))

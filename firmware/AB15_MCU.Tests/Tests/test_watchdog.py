@@ -1,0 +1,340 @@
+# group watchdog tests
+# expects Asic startup, does basic watchdog config and tests if Watchdog trigger was sucessful
+# shall be started as soon as ASIC enters init mode 
+
+    # steps to progress: 
+    # 1. issue reset
+    # 2. init timer creaet--> clear IMT      
+    # 3. configure Watchdog  by 
+    # void CmdConfigureWatchdog(USBReceiveData const * const commandPackage)
+    #  - configures ASIC and 
+    #  - configures MCU WDT triggers 
+
+    # 4. start watchdog 
+    # 5. get watchdog status
+    # 6 enter EOP
+
+import os
+import pytest
+import serial
+from time import sleep
+from serial_fixtures import SerialWrapper
+import package_helper as pkg
+
+class TestWatchdog:
+    '''Watchdog tests'''
+        # Delay for recieving MCU response
+    DELAY = 0.1 # TODO: verify that duration is sufficient for all testcases
+
+
+    @classmethod
+    def setup_class(cls):
+        # COM port handling; connects to COM port with SW TC375 by default once before executing tests in class
+        cls.serial = SerialWrapper()
+        cls.serial.open_port()
+
+    @classmethod 
+    def teardown_class(cls):
+        # disconnects after test's completion
+        cls.serial.close_port()
+
+    @pytest.mark.watchdog
+    def test_ReadSystemState(self):
+        '''Checks system state  
+        tests:
+        - COMMON_SYSTEM_STATE'''
+        # Arrange
+        address = 0x021
+        data = 0x000
+        msg_id = 0x00
+        device_id = 0x01
+        address_converted = pkg.Int2BytesConverter(address)
+        packageToSend = pkg.TransmitPackage(msg_id, device_id, pkg.Command.READ_REG, address_converted.bytes)
+
+        # Act
+        self.serial.com_port.write(packageToSend.serialize())
+
+        sleep(self.DELAY)
+        is_response_received = self.serial.extract_packages()
+        result = pkg.ReceivePackage(self.serial.packages.pop(0))
+        received_value = pkg.Bytes2IntConverter(result.payload)
+
+        # Assert
+        assert is_response_received, "No response from MCU received"
+        assert result.status == pkg.Status.DATA, f"Incorrect status in payload. Expected DATA, but received {result.status}"
+        # assert (received_value.int_value == data), f"Unexpected data. Expected {hex(data)}, but received {received_value.int_value}"
+        # Output to be captured if test passes
+        print(f'MCU response with Status: ', end='')
+        for itm in result.package:
+            print(f'{itm:#03x} ', end='')
+
+    @pytest.mark.watchdog
+    def test_ReadGeneralStatus2(self):
+        '''Checks general status 
+        tests:
+        - GENERAL STAUS 2'''
+        # Arrange
+        address = 0x01D
+        data = 0x000
+        msg_id = 0x00
+        device_id = 0x01
+        address_converted = pkg.Int2BytesConverter(address)
+        packageToSend = pkg.TransmitPackage(msg_id, device_id, pkg.Command.READ_REG, address_converted.bytes)
+
+        # Act
+        self.serial.com_port.write(packageToSend.serialize())
+
+        sleep(self.DELAY)
+        is_response_received = self.serial.extract_packages()
+        result = pkg.ReceivePackage(self.serial.packages.pop(0))
+        
+        # Assert
+        assert is_response_received, "No response from MCU received"
+        assert result.status == pkg.Status.DATA, f"Incorrect status in payload. Expected DATA, but received {result.status}"
+        # Output to be captured if test passes
+        print(f'MCU response with Status: ', end='')
+        for itm in result.package:
+            print(f'{itm:#03x} ', end='')
+    
+    @pytest.mark.watchdog
+    def test_IssueColdStart(self):
+        '''issues ASIC cold start 
+        tests:
+        - correct ACK only' '''
+        # Arrange
+        msg_id = 0x00
+        device_id = 0x01
+        address = 0x01E # SysStates_Reset_Config
+        data = 0x001 # Bit 0 spi_coldstart1
+        address_converted = pkg.Int2BytesConverter(address)
+        data_converted = pkg.Int2BytesConverter(data)
+        payload = [*address_converted.bytes, *data_converted.bytes]
+        packageToSend = pkg.TransmitPackage(0x00, 0x01, pkg.Command.WRITE_REG, payload)
+
+        # Act
+        self.serial.com_port.write(packageToSend.serialize())
+
+        sleep(self.DELAY)
+        is_response_received = self.serial.extract_packages()
+        result = pkg.ReceivePackage(self.serial.packages.pop(0))
+        
+        # Assert
+        assert is_response_received, "No response from MCU received"
+        assert result.status == pkg.Status.ACK, f"Incorrect status in payload. Expected ACK, but received {result.status}"
+        assert (result.payload_len == 0), f"Unexpected data. Expected empty payload, but received {result.payload}"
+    
+    @pytest.mark.watchdog
+    def test_configureWatchdog(self):
+        '''config Wd in MCU and ASIC  
+        tests:
+        - correct ACK only'''
+        # Arrange
+        msg_id = 0x00
+        device_id = 0x01
+        address = [0x00, 0x30, 0x00, 0x31, 0x00, 0x33] # adresse for both registers, spit in byte 
+        # data for relaxed WD: locktime = 1 and Response time = 3E see chapter 1.6.7.3.3.2 --> 0x07e split  in 4 bytes 
+        data = [0x00, 0x7E, 0x00, 0x7E, 0x3F, 0x3F] 
+        payload = [*address[0:2], *data[0:2], *address[2:4], *data[2:4], *address[4:6], *data[4:6]] # recombine dress and data for the transmit function
+        print("Address:", [hex(itm) for itm in address] )
+        print("Data:  ",[hex(itm) for itm in data])
+        print("payload: ",[hex(itm) for itm in payload])
+        packageToSend = pkg.TransmitPackage(0x00, 0x01, pkg.Command.CONFIGURE_WATCHDOG, payload)
+
+        # Act
+        print('MCU config WDT with:  ')
+        self.serial.com_port.write(packageToSend.serialize())
+
+        sleep(self.DELAY)
+        is_response_received = self.serial.extract_packages()
+        print("\nRead here: is_response_received = ")
+        print(self.serial.extract_packages())
+        result = pkg.ReceivePackage(self.serial.packages.pop(0))
+
+        # now check Wd registers 
+        payload = [0x30, 0x0]
+        print("payload read 1 (addr)  ",[hex(itm) for itm in payload])       
+        packageToSend = pkg.TransmitPackage(0x00, 0x01, pkg.Command.READ_REG, payload)
+        print("return value 1",[hex(itm) for itm in packageToSend.serialize()]) 
+
+        self.serial.com_port.write(packageToSend.serialize())
+        sleep(self.DELAY)
+        is_response_received = self.serial.extract_packages()
+        result = pkg.ReceivePackage(self.serial.packages.pop(0))
+        print("\nWD register1  is: ",[hex(itm) for itm in result.package])
+
+        payload = [0x31, 0x0]   
+        print("payload read2 (addr) ",[hex(itm) for itm in payload])   
+        packageToSend = pkg.TransmitPackage(0x00, 0x01, pkg.Command.READ_REG, payload)
+        print("return value 2",[hex(itm) for itm in packageToSend.serialize()]) 
+
+        self.serial.com_port.write(packageToSend.serialize())
+        sleep(self.DELAY)
+        is_response_received = self.serial.extract_packages()
+        result = pkg.ReceivePackage(self.serial.packages.pop(0))
+        print("\nWD register2 is: ",[hex(itm) for itm in result.package])
+        
+        payload = [0x33, 0x0]   
+        print("payload Thershold  ",[hex(itm) for itm in payload])   
+        packageToSend = pkg.TransmitPackage(0x00, 0x01, pkg.Command.READ_REG, payload)
+        print("return value 2",[hex(itm) for itm in packageToSend.serialize()]) 
+
+        self.serial.com_port.write(packageToSend.serialize())
+        sleep(self.DELAY)
+        is_response_received = self.serial.extract_packages()
+        result = pkg.ReceivePackage(self.serial.packages.pop(0))
+        print("\nWD register3 is: ",[hex(itm) for itm in result.package])
+        
+        # Assert
+        assert is_response_received, "No response from MCU received"
+        #assert result.status == pkg.Status.ACK f"Incorrect status in payload. Expected ACK, but received {result.status}"
+        
+    @pytest.mark.watchdog
+    def test_startWatchdog(self):
+        '''starts watchdog in MCU  
+        tests:
+        - correct ACK only' '''
+        # Arrange
+        packageToSend = pkg.TransmitPackage(0x00, 0x00, pkg.Command.START_WATCHDOG)
+
+        # Act
+        self.serial.com_port.write(packageToSend.serialize())
+        sleep(self.DELAY)
+        is_response_received = self.serial.extract_packages()
+        result = pkg.ReceivePackage(self.serial.packages.pop(0))
+
+        # Assert
+        assert is_response_received, "No response from MCU received"
+        assert result.status == pkg.Status.ACK
+    
+    @pytest.mark.watchdog
+    def test_ReadWatchdogState(self):
+        '''Checks WD state  
+        tests:
+        - spi_read_wdstatus1'''
+        # Arrange
+        address = 0x03E
+        msg_id = 0x00
+        device_id = 0x01
+        wd_status = 0x00
+        address_converted = pkg.Int2BytesConverter(address)
+        packageToSend = pkg.TransmitPackage(msg_id, device_id, pkg.Command.READ_REG, address_converted.bytes)
+
+        # Act
+        self.serial.com_port.write(packageToSend.serialize())
+
+        sleep(self.DELAY)
+        is_response_received = self.serial.extract_packages()
+        result = pkg.ReceivePackage(self.serial.packages.pop(0))
+        received_value = pkg.Bytes2IntConverter(result.payload).int_value
+        
+        #10th bit is wd_on_spi  
+        wd_status = (received_value  >> 10) & 0x01
+        error_cmtr = (received_value  >> 11) & 0x03
+
+        print('\nMCU response with Status: ')
+        print("received_value",received_value,"\n")
+        print("wd_status", wd_status, "\n")
+        
+        # Assert
+        assert is_response_received, "No response from MCU received"
+        assert result.status == pkg.Status.DATA, f"Incorrect status in payload. Expected DATA, but received {result.status}"
+        assert error_cmtr == 0, f"error counter is !=0 , value:   {error_cmtr}" 
+        # assert (received_value.int_value == data), f"Unexpected data. Expected {hex(data)}, but received {received_value.int_value}"
+        # Output to be captured if test passes
+        assert wd_status == 0x01
+
+    @pytest.mark.watchdog
+    def test_ReadWatchdogWdqa(self):
+        '''Checks WD state  
+        tests:
+        - spi_read_wd qa logic'''
+        # Arrange
+        address = 0x03B
+        msg_id = 0x00
+        device_id = 0x01
+        wd_status = 0x00
+        address_converted = pkg.Int2BytesConverter(address)
+        packageToSend = pkg.TransmitPackage(msg_id, device_id, pkg.Command.READ_REG, address_converted.bytes)
+
+        # Act
+        self.serial.com_port.write(packageToSend.serialize())
+
+        sleep(self.DELAY)
+        is_response_received = self.serial.extract_packages()
+        result = pkg.ReceivePackage(self.serial.packages.pop(0))
+        received_value = pkg.Bytes2IntConverter(result.payload).int_value
+        
+        #10th bit is wd_on_spi  
+        qa1_cnt = (received_value ) & 0x1F
+        qa2_cnt = (received_value >> 5) & 0x0F
+        
+        print("qa1_cnt", qa1_cnt,"\n")
+        print("qa2_cnt", qa2_cnt,"\n")
+        
+        # Assert
+        assert is_response_received, "No response from MCU received"
+        assert result.status == pkg.Status.DATA, f"Incorrect status in payload. Expected DATA, but received {result.status}"
+        # assert (received_value.int_value == data), f"Unexpected data. Expected {hex(data)}, but received {received_value.int_value}"
+        # Output to be captured if test passes
+        # assert wd_status == 0x01
+
+ # Act
+        self.serial.com_port.write(packageToSend.serialize())
+
+        sleep(self.DELAY)
+        is_response_received = self.serial.extract_packages()
+        result = pkg.ReceivePackage(self.serial.packages.pop(0))
+        received_value = pkg.Bytes2IntConverter(result.payload).int_value
+        
+        #10th bit is wd_on_spi  
+        qa1_cnt = (received_value ) & 0x1F
+        qa2_cnt = (received_value >> 5) & 0x0F
+        
+        print("qa1_cnt", qa1_cnt,"\n")
+        print("qa2_cnt", qa2_cnt,"\n")
+        
+        # Assert
+        assert is_response_received, "No response from MCU received"
+        assert result.status == pkg.Status.DATA, f"Incorrect status in payload. Expected DATA, but received {result.status}"
+        # assert (received_value.int_value == data), f"Unexpected data. Expected {hex(data)}, but received {received_value.int_value}"
+        # Output to be captured if test passes
+        # assert wd_status == 0x01
+         # Act
+
+        self.serial.com_port.write(packageToSend.serialize())
+
+        sleep(self.DELAY)
+        is_response_received = self.serial.extract_packages()
+        result = pkg.ReceivePackage(self.serial.packages.pop(0))
+        received_value = pkg.Bytes2IntConverter(result.payload).int_value
+        
+        #10th bit is wd_on_spi  
+        qa1_cnt = (received_value ) & 0x1F
+        qa2_cnt = (received_value >> 5) & 0x0F
+        
+        print("qa1_cnt", qa1_cnt,"\n")
+        print("qa2_cnt", qa2_cnt,"\n")
+        
+        # Assert
+        assert is_response_received, "No response from MCU received"
+        assert result.status == pkg.Status.DATA, f"Incorrect status in payload. Expected DATA, but received {result.status}"
+        # assert (received_value.int_value == data), f"Unexpected data. Expected {hex(data)}, but received {received_value.int_value}"
+        # Output to be captured if test passes
+        # assert wd_status == 0x01
+    @pytest.mark.watchdog
+    def test_stopWatchdog(self):
+        '''stops watchdog in MCU  
+        tests:
+        - correct ACK only' '''
+        # Arrange
+        packageToSend = pkg.TransmitPackage(0x00, 0x00, pkg.Command.STOP_WATCHDOG)
+
+        # Act
+        self.serial.com_port.write(packageToSend.serialize())
+        sleep(self.DELAY)
+        is_response_received = self.serial.extract_packages()
+        result = pkg.ReceivePackage(self.serial.packages.pop(0))
+
+        # Assert
+        assert is_response_received, "No response from MCU received"
+        assert result.status == pkg.Status.ACK
