@@ -8,7 +8,6 @@ using AB15_GUI.WPF.Services.Interfaces;
 using AB15_GUI.WPF.Models.Interfaces;
 using AB15_GUI.WPF.Models.Generated.Registers;
 using System.Linq;
-using System.Windows.Threading;
 
 namespace AB15_GUI.WPF.Models
 {
@@ -596,12 +595,8 @@ namespace AB15_GUI.WPF.Models
         /// <param name="e">unused</param>
         private void OnAsicStateReadingEvent(object source, ElapsedEventArgs e)
         {
-            // Ensure main thread
-            App.Current.Dispatcher.BeginInvoke(() =>
-            {
                 // Execute ASIC state reading
                 GetASICState();
-            }, DispatcherPriority.Normal);
         }
 
         /// <summary>
@@ -611,12 +606,8 @@ namespace AB15_GUI.WPF.Models
         /// <param name="e">unused</param>
         private void OnInitModeTimeoutResettingEvent(object source, ElapsedEventArgs e)
         {
-            // Ensure main thread
-            App.Current.Dispatcher.BeginInvoke(() =>
-            {
                 // Reset INIT mode timeout
                 ResetInitModeTimeout();
-            }, DispatcherPriority.Normal);
         }
 
         /// <summary>
