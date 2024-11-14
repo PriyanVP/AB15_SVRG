@@ -29,7 +29,10 @@
 IFX_ALIGN(4) IfxCpu_syncEvent g_cpuSyncEvent = 0;
 
 #define WAIT_TIME 25   /*useconds */
-#define FLM_DIAG_DEBUG 1
+
+
+#define FLM_DIAG_DEBUG TRUE
+#define FLM_DIAG_REDUCED TRUE
 
 /** \brief Watchdog 1 interrupt routine
  * Arms single acknowledgement of ASIC watchdog
@@ -110,6 +113,13 @@ void FLMDiagInterruptRoutine(void)
             FLMShortDiag();
             // Move on to next diagnostic
             SetFLMDiagExecOrder(FLM_DIAG_ORDER_VHX_MEAS);
+
+            #ifdef FLM_DIAG_REDUCED
+                // for reduced mode, perform Short detection Diagnostic only
+                // rewrite FLM Diag order to Short detection value
+                SetFLMDiagExecOrder(FLM_DIAG_ORDER_SHORT_DET);
+                SetFLMDiagExecStatus(FLM_DIAG_EXEC_STATUS_IDLE);
+            #endif
         }
         break;
 
