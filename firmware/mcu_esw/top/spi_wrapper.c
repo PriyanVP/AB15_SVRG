@@ -189,6 +189,33 @@ boolean QSPIWriteNormal(SpiChSlaveSelectEnum spiChannel, uint16 address, uint16 
     return isReceivedDataValid;
 }
 
+boolean QSPIWriteRaw(uint8 spiChannel, uint32 data)
+{
+    // Execute only if enabled
+    if (enSPICommunication == FALSE) return FALSE;
+
+    // Configure SPI channel for communication and stop execution if unsuccessful
+    SpiBusSelectEnum spiBusNumber = QSPIUpdateChannelConfig(spiChannel);
+    if (spiBusNumber == SPI_BUS_INVALID) return FALSE;
+
+    // Initialize variables
+    boolean isReceivedDataValid = FALSE;
+    SPITransmitDataRaw dataToTransmit;
+    SPIReceiveDataNormal dataToReceive; // check if this is correct
+
+    // Configure and execute write request
+    dataToTransmit.dw  = data;
+    QSPIExchangeData(spiBusNumber, &dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
+
+    // Validating input
+    isReceivedDataValid = IsCRC3Correct(&(dataToReceive.dw), dataToReceive.bf.crc);
+    isReceivedDataValid &= (dataToReceive.bf.asic_error_flag == FALSE);
+    isReceivedDataValid &= (dataToReceive.bf.gs0 == FALSE);
+    isReceivedDataValid &= (dataToReceive.bf.gs2 == FALSE);
+    isReceivedDataValid &= (dataToReceive.bf.gs5 == FALSE);
+
+    return isReceivedDataValid;
+}
 boolean QSPIReadSequenceNormal(uint8 spiChannel, const uint16 * const p_addressBuffer, uint32 * const p_dataBuffer, uint16 * const p_length)
 {
     return QSPIReadWriteSequenceNormalInline(spiChannel, p_addressBuffer, p_dataBuffer, NULL_PTR, READ_ONLY, p_length);

@@ -34,7 +34,7 @@ class Command(Enum):
     FLM_DIAG_ENABLE             = 23,            # enables Firing Loop Module cyclic diagnostics TODO: should be verified after feature merging
     FLM_DIAG_READ_RESULTS       = 24,            # returns results of Firing Loop Module cyclic diagnostics TODO: should be verified after feature merging
     INIT_SYNC                   = 25,            # syncs ASIC and GUI: SPI_COLDSTART_1, response to GUI when ASIC in INIT state TODO: should be verified after feature merging
-    WRITE_RAW_DATA_SPI          = 26,            # 0x1A write 32bit raw data to spi TODO: should be verified after feature merging
+    WRITE_RAW_DATA_SPI          = 26,            # 0x1A write 32bit raw data to spi
     FLM_DIAG_DISABLE            = 27,            # enables Firing Loop Module cyclic diagnostics TODO: should be verified after feature merging
     
     START_TEST_MODE1            = 29,            # configure and start Test mode 1 
@@ -80,7 +80,7 @@ class TransmitPackage(): #metaclass=MultipleMeta
     def validate_package(self):
         if ((self.msg_id < 0) or (self.msg_id >= 0x80)):
             raise Exception("MessageID has incorrect value")
-        if ((self.device_id < 0) or (self.device_id > 4)):
+        if ((self.device_id < 0) or (self.device_id > 11)):
             raise Exception("ASIC index has incorrect value")
         if (self.payload_len > 0xFF):
             raise Exception("Payload length is too big")
@@ -120,7 +120,7 @@ class ReceivePackage():
             raise Exception("CRC value is incorrect")
         if ((self.msg_id < 0x80) or (self.msg_id >= 0xFF)):
             raise Exception("MessageID has incorrect value")
-        if ((self.device_id < 0) or (self.device_id > 4)):
+        if ((self.device_id < 0) or (self.device_id > 11)):
             raise Exception("ASIC index has incorrect value")
         if (self.payload_len > 0xFF):
             raise Exception("Payload length is too big")

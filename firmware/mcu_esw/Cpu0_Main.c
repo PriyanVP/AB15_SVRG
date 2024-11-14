@@ -25,6 +25,10 @@
 #include "top/usb_wrapper.h"
 #include "Bsp.h"
 #include "pwm.h"
+#include "spi.h"
+#include "IfxPort.h" // for gpio.h
+#include "IfxPort_PinMap.h" // for gpio.h // TODO: remove dependency to IFxPort stuff
+#include "periphery/gpio.h" // for chip select lines
 
 IFX_ALIGN(4) IfxCpu_syncEvent g_cpuSyncEvent = 0;
 
@@ -120,6 +124,7 @@ void core0_main(void)
     /* Init pins*/
     ConfigureSelectPin();
     InitGPIOPins();
+    InitCSPins();
 
     // Init USB
     USBInit();
@@ -215,6 +220,10 @@ void core0_main(void)
 
             case USB_CMD_EXECUTE_WRITE_SEQUENCE:
                 CmdExecuteWriteSequence(&cmdPackage);
+                break;
+
+            case USB_CMD_WRITE_RAW_DATA_SPI:
+                CmdSendRawData(&cmdPackage);
                 break;
 
             case USB_CMD_CONFIGURE_WATCHDOG:
