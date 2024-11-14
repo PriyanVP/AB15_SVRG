@@ -116,7 +116,7 @@ void CmdStartTestMode2(USBReceiveData const * const commandPackage)
     StartTestMode(FALSE, commandPackage);
 }
 
-void CmdStopTestMode12(USBReceiveData const * const commandPackage) // TODO: not needed? short duration
+void CmdStopTestMode12(USBReceiveData const * const commandPackage)
 {
     // Turn off Test mode interrupt of MCU
     DisableTestModeInterrupt();

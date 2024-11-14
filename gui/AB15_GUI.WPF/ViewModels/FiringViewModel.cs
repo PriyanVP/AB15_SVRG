@@ -1317,11 +1317,27 @@ namespace AB15_GUI.WPF.ViewModels
         /// </summary>
         private void ExecuteTestMode1Diagnostics()
         {
-            // TODO: add implementation - possibly in firmware
-            // TODO: requires handler (callback delegate)
-            throw new NotImplementedException();
+            TransmitCommunicationPackage<TestModePayload> packageToSend = new TransmitCommunicationPackage<TestModePayload>(); // TODO: implement payload
+            packageToSend.ASICID = 1;
+            packageToSend.Cmd = MCUCommand.START_TEST_MODE1;
+            packageToSend.Deleg = TestMode1Delegate;
+            packageToSend.PayloadType = typeof(TestModePayload);
 
-            // TODO: should include trigger for transiting to TestMode2 -> probably in callback?
+            // Send command to MCU
+            serialWrapper.SerialWrite(packageToSend);
+        }
+
+        private void TestMode1Delegate(IReceiveCommunicationPackage package)
+        {
+            // // Change state if response received
+            // if (mcuResponse.Payload.Error is not null)
+            // {
+            //     AddError(mcuResponse.Payload.Error, nameof(FireSimultaneous));
+            //     logger.Error($"Error response received. Status: {mcuResponse.Status}");
+            //     return;
+            // }
+
+            // Trigger for transiting to TestMode2
             asicWrapper.ASICs[0].ExecuteTestMode1Transition();
         }
 
@@ -1330,11 +1346,21 @@ namespace AB15_GUI.WPF.ViewModels
         /// </summary>
         private void ExecuteTestMode2Diagnostics()
         {
-            // TODO: add implementation - possibly in firmware
-            // TODO: requires handler (callback delegate)
+            TransmitCommunicationPackage<TestModePayload> packageToSend = new TransmitCommunicationPackage<TestModePayload>(); // TODO: implement payload
+            packageToSend.ASICID = 1;
+            packageToSend.Cmd = MCUCommand.START_TEST_MODE2;
+            packageToSend.Deleg = TestMode2Delegate;
+            packageToSend.PayloadType = typeof(TestModePayload);
+
+            // Send command to MCU
+            serialWrapper.SerialWrite(packageToSend);
+        }
+
+        private void TestMode2Delegate(IReceiveCommunicationPackage package)
+        {
             throw new NotImplementedException();
 
-            // TODO: should include trigger for transiting to Normal mode -> probably in callback?
+            // Trigger for transiting to Normal mode
             asicWrapper.ASICs[0].ExecuteTestMode2Transition();
         }
 
