@@ -183,7 +183,7 @@ class TestGeneralCommands:
 
         # Arrange
         msg_id = 0x00
-        device_id = 0x02
+        device_id = 0x07
         # address_converted = pkg.Int2BytesConverter(address)
         # data_converted = pkg.Int2BytesConverter(data)
         payload = [0xF0, 0x55, 0xBB, 0x0F]
@@ -211,8 +211,9 @@ class TestGeneralCommands:
         sleep(self.DELAY)
         is_response_received = self.serial.extract_packages()
         result = pkg.ReceivePackage(self.serial.packages.pop(0))
-        received_value = pkg.Bytes2IntConverter(result.payload)
 
+        received_value = (result.payload[0] & 0xFF ) | ((result.payload[1] << 8) & 0xFF00 ) | ((result.payload[2] << 16) & 0xFF0000)  | ((result.payload[3] << 24) & 0xFF000000)
+        print("raw data",received_value)
         # Assert
         assert is_response_received, "No response from MCU received"
         assert result.status == pkg.Status.DATA, f"Incorrect status in payload. Expected DATA, but received {result.status}"

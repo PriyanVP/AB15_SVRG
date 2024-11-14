@@ -24,6 +24,7 @@
 #include "top/usb_wrapper.h"
 #include "Bsp.h"
 #include "pwm.h"
+#include "spi.h"
 #include "IfxPort.h" // for gpio.h
 #include "IfxPort_PinMap.h" // for gpio.h // TODO: remove dependency to IFxPort stuff
 #include "periphery/gpio.h" // for chip select lines

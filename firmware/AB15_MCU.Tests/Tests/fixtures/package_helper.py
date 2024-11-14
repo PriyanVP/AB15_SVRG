@@ -71,7 +71,7 @@ class TransmitPackage(): #metaclass=MultipleMeta
     def validate_package(self):
         if ((self.msg_id < 0) or (self.msg_id >= 0x80)):
             raise Exception("MessageID has incorrect value")
-        if ((self.device_id < 0) or (self.device_id > 4)):
+        if ((self.device_id < 0) or (self.device_id > 11)):
             raise Exception("ASIC index has incorrect value")
         if (self.payload_len > 0xFF):
             raise Exception("Payload length is too big")
@@ -111,7 +111,7 @@ class ReceivePackage():
             raise Exception("CRC value is incorrect")
         if ((self.msg_id < 0x80) or (self.msg_id >= 0xFF)):
             raise Exception("MessageID has incorrect value")
-        if ((self.device_id < 0) or (self.device_id > 4)):
+        if ((self.device_id < 0) or (self.device_id > 11)):
             raise Exception("ASIC index has incorrect value")
         if (self.payload_len > 0xFF):
             raise Exception("Payload length is too big")

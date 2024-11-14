@@ -246,16 +246,16 @@ void CmdSendRawData(USBReceiveData const * const commandPackage)
     if (spiChannel == SPI1_CS_MON1)
     {
         // pull down additional CS Mon pin
-        //IfxPort_setPinState(SPI1_CS_MON1_PIN, IfxPort_State_low);
-        //isSuccessfulFlag = QSPIWriteRaw(spiChannel, rawData);
-        //IfxPort_setPinState(SPI1_CS_MON1_PIN, IfxPort_State_high);
+        IfxPort_setPinState(SPI1_CS_MON1_PIN, IfxPort_State_low);
+        isSuccessfulFlag = QSPIWriteRaw(spiChannel, rawData);
+        IfxPort_setPinState(SPI1_CS_MON1_PIN, IfxPort_State_high);
     }
     else if (spiChannel == SPI2_CS_MON2)
     {
         // pull down additional CS Mon pin
-        //IfxPort_setPinState(SPI2_CS_MON2_PIN, IfxPort_State_low);
-        //isSuccessfulFlag = QSPIWriteRaw(spiChannel, rawData);
-        //IfxPort_setPinState(SPI2_CS_MON2_PIN, IfxPort_State_high);
+        IfxPort_setPinState(SPI2_CS_MON2_PIN, IfxPort_State_low);
+        isSuccessfulFlag = QSPIWriteRaw(spiChannel, rawData);
+        IfxPort_setPinState(SPI2_CS_MON2_PIN, IfxPort_State_high);
     }
     else
     {
