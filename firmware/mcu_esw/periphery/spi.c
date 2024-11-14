@@ -12,6 +12,9 @@
 #include "common/Ifx_IntPrioDef.h"
 #include "common/spi_data_types.h"
 #include "Bsp.h"
+#include "IfxPort.h" // for gpio.h
+#include "IfxPort_PinMap.h" // for gpio.h // TODO: remove dependency to IFxPort stuff
+#include "periphery/gpio.h" // for chip select lines
 /*********************************************************************************************************************/
 /*------------------------------------------------------Macros-------------------------------------------------------*/
 /*********************************************************************************************************************/
@@ -71,10 +74,11 @@ const IfxQspi_SpiMaster_Output qspi1Slave5Select = {                 /* QSPI1 Ma
         IfxPort_PadDriver_ttl3v3Speed1                               /* Pad driver mode                          */
 };
 
-const IfxQspi_SpiMaster_Output qspi1Slave8Select = {                 /* QSPI1 Master selects the QSPI1 Slave     */
-        &IfxQspi1_SLSO8_P10_4_OUT, IfxPort_OutputMode_pushPull,      /* Slave Select port pin (CS_MON1)          */
-        IfxPort_PadDriver_ttl3v3Speed1                               /* Pad driver mode                          */
-};
+// TODO: SLSO 8 shall not be used as an dedicated CS --> monitor line
+//const IfxQspi_SpiMaster_Output qspi1Slave8Select = {                 /* QSPI1 Master selects the QSPI1 Slave     */
+//        &IfxQspi1_SLSO8_P10_4_OUT, IfxPort_OutputMode_pushPull,      /* Slave Select port pin (CS_MON1)          */
+//        IfxPort_PadDriver_ttl3v3Speed1                               /* Pad driver mode                          */
+//};
 
 const IfxQspi_SpiMaster_Output qspi1Slave9Select = {                 /* QSPI1 Master selects the QSPI1 Slave     */
         &IfxQspi1_SLSO9_P10_5_OUT, IfxPort_OutputMode_pushPull,      /* Slave Select port pin (CS1_MASTER)       */
@@ -89,10 +93,11 @@ const IfxQspi_SpiMaster_Output qspi2Slave5Select = {                 /* QSPI2 Ma
         IfxPort_PadDriver_ttl3v3Speed1                               /* Pad driver mode                          */
 };
 
-const IfxQspi_SpiMaster_Output qspi2Slave0Select = {                 /* QSPI2 Master selects the QSPI2 Slave     */
-        &IfxQspi2_SLSO0_P15_2_OUT, IfxPort_OutputMode_pushPull,      /* Slave Select port pin (CS_MON2)          */
-        IfxPort_PadDriver_ttl3v3Speed1                               /* Pad driver mode                          */
-};
+// TODO: SLSO 8 shall not be used as an dedicated CS --> monitor line
+//const IfxQspi_SpiMaster_Output qspi2Slave0Select = {                 /* QSPI2 Master selects the QSPI2 Slave     */
+//        &IfxQspi2_SLSO0_P15_2_OUT, IfxPort_OutputMode_pushPull,      /* Slave Select port pin (CS_MON2)          */
+//        IfxPort_PadDriver_ttl3v3Speed1                               /* Pad driver mode                          */
+//};
 
 const IfxQspi_SpiMaster_Output qspi2Slave8Select = {                 /* QSPI2 Master selects the QSPI2 Slave     */
         &IfxQspi2_SLSO8_P20_6_OUT, IfxPort_OutputMode_pushPull,      /* Slave Select port pin (CS2_SENSOR2)      */
@@ -118,6 +123,7 @@ const IfxQspi_SpiMaster_Output qspi2Slave11Select = {                /* QSPI2 Ma
 /*********************************************************************************************************************/
 /*------------------------------------------------Function Prototypes------------------------------------------------*/
 /*********************************************************************************************************************/
+
 
 /** \brief QSPI Master1 initialization
  * This functions:\n
@@ -160,6 +166,18 @@ void QSPIMaster2ChannelInit(SpiSlsoLinesEnum spiSlaveSel);
 /*----------------------------------------------Function Implementations---------------------------------------------*/
 /*********************************************************************************************************************/
 IFX_INTERRUPT(Master1TxISR, 0, ISR_PRIORITY_MASTER1_TX);                /** \brief SPI1 Master ISR for transmit data    */
+
+void InitCSPins(void)
+{
+    /* Initialize GPIO pins for the LED */
+    IfxPort_setPinMode(SPI1_CS_MON1_PIN, IfxPort_Mode_outputPushPullGeneral);
+    IfxPort_setPinMode(SPI2_CS_MON2_PIN, IfxPort_Mode_outputPushPullGeneral);
+
+    /* Turn off the LED */
+    IfxPort_setPinState(SPI1_CS_MON1_PIN, IfxPort_State_high);
+    IfxPort_setPinState(SPI2_CS_MON2_PIN, IfxPort_State_high);
+
+}
 
 void Master1TxISR()
 {
@@ -207,6 +225,7 @@ void Master2ErISR()
     IfxCpu_enableInterrupts();
     IfxQspi_SpiMaster_isrError(&g_qspi2.spiMaster);
 }
+
 
 void QSPIMaster1ModuleInit(void)
 {
@@ -262,7 +281,8 @@ void QSPIMaster1ChannelInit(SpiSlsoLinesEnum spiSlaveSel)
     /* Select the port pin for the Chip Select signal --> SLSO9 (CS_MASTER) as default*/
     switch(spiSlaveSel){
         case SPI1_SLSO8:
-            spiMasterChannelConfig.sls.output = qspi1Slave8Select;
+            // not selectable
+            //spiMasterChannelConfig.sls.output = qspi1Slave8Select;
             break;
         case SPI1_SLSO9:
             spiMasterChannelConfig.sls.output = qspi1Slave9Select;
@@ -303,7 +323,8 @@ void QSPIMaster2ChannelInit(SpiSlsoLinesEnum spiSlaveSel)
             spiMasterChannelConfig.sls.output = qspi2Slave5Select;
             break;
         case SPI2_SLSO0:
-            spiMasterChannelConfig.sls.output = qspi2Slave0Select;
+            // not selectable
+            //spiMasterChannelConfig.sls.output = qspi2Slave0Select;
             break;
         case SPI2_SLSO8:
             spiMasterChannelConfig.sls.output = qspi2Slave8Select;
@@ -350,7 +371,7 @@ void QSPIDeinitPeriphery(void)
     IfxPort_setPinModeInput(qspi1MasterPins.mtsr->pin.port, qspi1MasterPins.mtsr->pin.pinIndex, IfxPort_InputMode_noPullDevice);
 
     // reset all slave1 select pins
-    IfxPort_setPinModeInput(qspi1Slave8Select.pin->pin.port, qspi1Slave8Select.pin->pin.pinIndex, IfxPort_InputMode_noPullDevice);
+    //IfxPort_setPinModeInput(qspi1Slave8Select.pin->pin.port, qspi1Slave8Select.pin->pin.pinIndex, IfxPort_InputMode_noPullDevice);
     IfxPort_setPinModeInput(qspi1Slave9Select.pin->pin.port, qspi1Slave9Select.pin->pin.pinIndex, IfxPort_InputMode_noPullDevice);
     IfxPort_setPinModeInput(qspi1Slave5Select.pin->pin.port, qspi1Slave5Select.pin->pin.pinIndex, IfxPort_InputMode_noPullDevice);
     IfxPort_setPinModeInput(qspi1Slave3Select.pin->pin.port, qspi1Slave3Select.pin->pin.pinIndex, IfxPort_InputMode_noPullDevice);
@@ -365,7 +386,7 @@ void QSPIDeinitPeriphery(void)
 
     // reset all slave2 select pins
     IfxPort_setPinModeInput(qspi2Slave5Select.pin->pin.port, qspi2Slave5Select.pin->pin.pinIndex, IfxPort_InputMode_noPullDevice);
-    IfxPort_setPinModeInput(qspi2Slave0Select.pin->pin.port, qspi2Slave0Select.pin->pin.pinIndex, IfxPort_InputMode_noPullDevice);
+    //IfxPort_setPinModeInput(qspi2Slave0Select.pin->pin.port, qspi2Slave0Select.pin->pin.pinIndex, IfxPort_InputMode_noPullDevice);
     IfxPort_setPinModeInput(qspi2Slave8Select.pin->pin.port, qspi2Slave8Select.pin->pin.pinIndex, IfxPort_InputMode_noPullDevice);
     IfxPort_setPinModeInput(qspi2Slave10Select.pin->pin.port, qspi2Slave10Select.pin->pin.pinIndex, IfxPort_InputMode_noPullDevice);
     IfxPort_setPinModeInput(qspi2Slave9Select.pin->pin.port, qspi2Slave9Select.pin->pin.pinIndex, IfxPort_InputMode_noPullDevice);
@@ -422,8 +443,9 @@ SpiBusSelectEnum QSPIUpdateChannelConfig(uint8 spiChannel)
         currentSpiChannelConfig = spiChannel;
         switch(spiChannel)
         {
-            case SPI1_CSMON1:                       /* SLSO8    */
-                spiChSlaveSelectLine = SPI1_SLSO8;
+            // special case, we map to Master1 but additionally pull down CS mon 2 low,
+            case SPI1_CS_MON1:                       /* SLSO8    */
+                spiChSlaveSelectLine = SPI1_SLSO9;
                 spiBusNumber = SPI_BUS_1;
                 break;
             case SPI1_CS1MASTER:                    /* SLSO8    */
@@ -448,8 +470,9 @@ SpiBusSelectEnum QSPIUpdateChannelConfig(uint8 spiChannel)
                 spiBusNumber = SPI_BUS_2;
                 break;
             case SPI2_CS_MON2:                  /* SLSO8    */
-                spiChSlaveSelectLine = SPI2_SLSO0;
-                spiBusNumber = SPI_BUS_2;
+                // special case, we map to Master1 but additionally pull down CS mon 2 low,
+                spiChSlaveSelectLine = SPI1_SLSO9;
+                spiBusNumber = SPI_BUS_1; // jes, Master 1 so bus 1 is okay!
                 break;
             case SPI2_CS2_SENSOR2:                  /* SLSO8    */
                 spiChSlaveSelectLine = SPI2_SLSO8;

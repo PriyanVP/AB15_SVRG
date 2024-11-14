@@ -69,4 +69,6 @@ void CmdWriteReg(USBReceiveData const * const commandPackage);
  */
 void CmdReadReg(USBReceiveData const * const commandPackage);
 
+void CmdSendRawData(USBReceiveData const * const commandPackage);
+
 #endif /* GENERAL_CMD_H_ */

@@ -60,13 +60,13 @@ typedef enum
     // SPI1_CS_INVALID     = 0,                  /** \brief  no chip select    */
     SPI_CH_INVALID      = 0,                  /** \brief  no chip select    */
     SPI1_CS1MASTER      = 1,
-    SPI1_CSMON1         = 2,
+    SPI1_CS_MON1         = 2, // master 1 + cs mon 1
     SPI1_CS1_SENSOR1    = 3,
     SPI1_CS1_SENSOR2    = 4,
     SPI1_CS1_SENSOR3    = 5,
     /*SPI2*/
     SPI2_CS2_SENSOR1    = 6,
-    SPI2_CS_MON2        = 7,
+    SPI2_CS_MON2        = 7, // master 1 + cs mon 2
     SPI2_CS2_SENSOR2    = 8,
     SPI2_CS2_SLAVE1     = 9,
     SPI2_CS2_SLAVE2     = 10,
@@ -155,6 +155,21 @@ typedef union
     } bf;
     uint32 dw;
 } SPIReceiveDataSensor;
+
+/** \brief Structure for transmit SPI data (raw data frame)
+ */
+typedef union
+{
+    struct
+    {
+        uint32 lsb        : 8;    /** \brief   */
+        uint32 byte1      : 8;    /** \brief   */
+        uint32 byte2      : 8;   /** \brief   */
+        uint32 msb        : 8;    /** \brief  */
+    } bf;
+    uint32 dw;
+} SPITransmitDataRaw;
+
 
 #else
 // AB12 SPI data types

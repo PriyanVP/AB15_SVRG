@@ -30,15 +30,15 @@ typedef struct
 
 typedef enum
 {
-    SPI_SLSO_NONE      = 0,                  /** \brief  none    */
-    SPI1_SLSO8          = 1,                  /** \brief  P10_4    SLSO8    */
+    SPI_SLSO_NONE       = 0,                  /** \brief  none    */
+    SPI1_SLSO8          = 1,                  /** \brief  P10_4    SLSO8 add. cs line  */
     SPI1_SLSO9          = 2,                  /** \brief  P10_5    SLSO9    */
     SPI1_SLSO5          = 3,                  /** \brief  P11_2    SLSO5    */
     SPI1_SLSO3          = 4,                  /** \brief  P11_10   SLSO3    */
     SPI1_SLSO4          = 5,                  /** \brief  P11_11   SLSO4    */
     /*SPI 2*/
     SPI2_SLSO5          = 6,                  /** \brief  P15_1    SLSO5    */
-    SPI2_SLSO0          = 7,                  /** \brief  P15_2    SLSO0    */
+    SPI2_SLSO0          = 7,                  /** \brief  P15_2    SLSO0 add. CS   */
     SPI2_SLSO8          = 8,                  /** \brief  P20_6    SLS8     */
     SPI2_SLSO10         = 9,                  /** \brief  P33_2    SLSO10   */
     SPI2_SLSO9          = 10,                 /** \brief  P20_3    SLSO9    */
@@ -65,6 +65,9 @@ typedef enum
 /*********************************************************************************************************************/
 /*------------------------------------------------Function Prototypes------------------------------------------------*/
 /*********************************************************************************************************************/
+
+/*init CS pins*/
+void InitCSPins(void);
 
 /** \brief Initialize the QSPI HW and SW handle for operations
  *

@@ -38,7 +38,8 @@ uint8 GetSpiChannelById(uint8 device_id)
             spiChannel = SPI1_CS1MASTER;
             break;
         case 2:
-            spiChannel = SPI1_CSMON1;
+            // special case, mapped to master + pulls down SCMON1
+            spiChannel = SPI1_CS_MON1;
             break;
         case 3:
             spiChannel = SPI1_CS1_SENSOR1;
@@ -53,6 +54,7 @@ uint8 GetSpiChannelById(uint8 device_id)
             spiChannel = SPI2_CS2_SENSOR1;
             break;
         case 7:
+            // special case, mapped to master + pulls down SCMON2
             spiChannel = SPI2_CS_MON2;
             break;
         case 8:

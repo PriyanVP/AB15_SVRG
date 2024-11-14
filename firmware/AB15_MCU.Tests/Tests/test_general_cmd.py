@@ -173,3 +173,49 @@ class TestGeneralCommands:
         assert is_response_received, "No response from MCU received"
         assert result.status == pkg.Status.ACK, f"Incorrect status in payload. Expected ACK, but received {result.status}"
         assert (result.payload_len == 0), f"Unexpected data. Expected empty payload, but received {result.payload}"
+
+    # @pytest.mark.parametrize("device_id,data", [(0x02, 0xF055BB0F)])
+    # def test_WriteRaw(self, device_id, data, ):
+    def test_WriteRaw(self):
+        '''Checks if writing single register works as expected
+        tests:
+        - WRITE_REG'''
+
+        # Arrange
+        msg_id = 0x00
+        device_id = 0x07 # CS MON2 
+        # address_converted = pkg.Int2BytesConverter(address)
+        # data_converted = pkg.Int2BytesConverter(data)
+        # payload = [0x02, 0x00, 0x08, 0x06] correct  order 
+        payload = [0x06, 0x08, 0x00, 0x02] # wrong order, needs to be changed in MCU code 
+
+        packageToSend = pkg.TransmitPackage(0x00, device_id, pkg.Command.WRITE_RAW_DATA_SPI, payload)
+
+        # Act
+        self.serial.com_port.write(packageToSend.serialize())
+
+        sleep(self.DELAY)
+        is_response_received = self.serial.extract_packages()
+        result = pkg.ReceivePackage(self.serial.packages.pop(0))
+        
+        # Arrange
+        msg_id = 0x00
+        device_id = 0x01
+        address = 0x144
+        address_converted = pkg.Int2BytesConverter(address)
+        packageToSend = pkg.TransmitPackage(msg_id, device_id, pkg.Command.READ_REG, address_converted.bytes)
+
+        # Act
+        self.serial.com_port.write(packageToSend.serialize())
+
+        sleep(self.DELAY)
+        is_response_received = self.serial.extract_packages()
+        result = pkg.ReceivePackage(self.serial.packages.pop(0))
+        print("\nFull Package received: ",[hex(itm) for itm in result.package])
+        
+        received_value = pkg.Bytes2IntConverter(result.payload)
+        print("raw data",received_value)
+        # Assert
+        assert is_response_received, "No response from MCU received"
+        assert result.status == pkg.Status.DATA, f"Incorrect status in payload. Expected DATA, but received {result.status}"
+        assert (received_value.int_value == 0x080), f"Unexpected data. Expected 0x80 , but received {received_value.int_value}"
