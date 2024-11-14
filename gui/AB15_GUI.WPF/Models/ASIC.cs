@@ -632,7 +632,7 @@ namespace AB15_GUI.WPF.Models
             }
 
             // No error present - reset ASIC State property
-            State = 0;
+            State = ASICState.npor_release;
         }
 
         /// <summary>

@@ -32,7 +32,7 @@
 /*********************************************************************************************************************/
 /*-------------------------------------------------Global variables--------------------------------------------------*/
 /*********************************************************************************************************************/
-
+uint8 g_msgID;
 /*********************************************************************************************************************/
 /*------------------------------------------------Function Prototypes------------------------------------------------*/
 /*********************************************************************************************************************/
@@ -53,24 +53,13 @@ void StartHackedTimer(USBReceiveData const * const commandPackage)
     // Turn on Test mode interrupt of MCU
     EnableHackedTimerInterrupt();
 
-    // Prepare acknowledge message
-    packageToSend.device_id = commandPackage->device_id;
-    packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
-    packageToSend.status = USB_STATUS_ACK;
-    packageToSend.dataLength = 0;
-
-    // Send acknowledge message to GUI
-    SendUSBPackage(&packageToSend);
+    g_msgID = SetResponseBit(commandPackage->msg_id);
 }
 
 void StopHackedTimer(USBReceiveData const * const commandPackage)
 {
     // Turn off Test mode interrupt of MCU
     DisableHackedTimerInterrupt();
-
-    // Reset internal flags
-    g_pstConfiguration.lsPowerstageEn = FALSE;
-    g_pstConfiguration.hsPowerstageEn = FALSE;
 
     // Prepare acknowledge message
     USBTransmitData packageToSend;
@@ -92,17 +81,16 @@ void IntCmdExecuteHackedTimer(void)
     boolean isSuccessfulFlag = FALSE;
     uint8 spiChannel;
 
-    spiChannel = GetSpiChannelById(commandPackage->device_id);
 
     // Reset INIT mode timer
-    QSPIWriteNormal(spiChannel, COMMON_SYSSTATES_RESET_CONFIG, COMMON_SYSSTATES_RESET_CONFIG_SPI_CLEAR_IMT_MASK);
+    QSPIWriteNormal(SPI1_CS1MASTER, COMMON_SYSSTATES_RESET_CONFIG, COMMON_SYSSTATES_RESET_CONFIG_SPI_CLEAR_IMT_MASK);
 
     // Read register with ASIC state
-    isSuccessfulFlag = QSPIReadNormal(spiChannel, COMMON_SYSTEM_STATE, &dataReceived.dw);
+    isSuccessfulFlag = QSPIReadNormal(SPI1_CS1MASTER, COMMON_SYSTEM_STATE, &dataReceived.dw);
 
     // Construct package to PC
-    packageToSend.device_id = commandPackage->device_id;
-    packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
+    packageToSend.device_id = SPI1_CS1MASTER;
+    packageToSend.msg_id = g_msgID;
 
     // Construct packages based on error status
     if (isSuccessfulFlag == FALSE)
