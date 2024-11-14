@@ -93,7 +93,7 @@ boolean QSPIReadNormal(uint8 spiChannel, uint16 address, uint32 * const p_data);
  * \param data data to write
  * \return Returns TRUE if no errors in received data, FALSE - otherwise
  */
-boolean QSPIWriteNormal(uint8 spiChannel, uint16 address, uint16 data);
+boolean QSPIWriteNormal(SpiChSlaveSelectEnum spiChannel, uint16 address, uint16 data);
 
 /** \brief Writes 32bit raw data  via QSPI to SPI device
  * Created for raw command sending.

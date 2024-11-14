@@ -49,6 +49,9 @@ firmware/mcu_esw/.settings/language.settings.xml
 firmware/TC375_iLLD/Debug/
 firmware/TC375_iLLD/Release/
 
+# Ignore unexpected test results directory
+firmware/TestResults
+
 # Except main library build
 !firmware/TC375_iLLD/Debug/TC375_iLLD.a
 
