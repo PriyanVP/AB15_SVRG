@@ -245,18 +245,18 @@ namespace AB15_GUI.WPF.ViewModels
             }
 
             // Debug mode code - TODO: remove after finalization
-            if (DEBUG_MODE)
-            {
-                // Buttons/commands enable handling
-                _writeConfigurationCommand.Enable       = true;
-                _transferToNormalModeCommand.Enable     = true;
-                _fireSimultaneousCommand.Enable         = true;
-                _startStopCyclicReadingCommand.Enable   = true;
+            //if (DEBUG_MODE)
+            //{
+            //    //// Buttons/commands enable handling
+            //    //_writeConfigurationCommand.Enable       = true;
+            //    //_transferToNormalModeCommand.Enable     = true;
+            //    //_fireSimultaneousCommand.Enable         = true;
+            //    //_startStopCyclicReadingCommand.Enable   = true;
 
-                // Configuration/firing enable handling
-                IsConfigControlsEnabled = true;
-                IsFiringControlsEnabled = true;
-            }
+            //    //// Configuration/firing enable handling
+            //    //IsConfigControlsEnabled = true;
+            //    //IsFiringControlsEnabled = true;
+            //}
 
             // Request update of buttons states
             OnPropertyChanged(nameof(WriteConfigurationCommandEn));
@@ -1360,7 +1360,7 @@ namespace AB15_GUI.WPF.ViewModels
 
         private void TestMode2Delegate(IReceiveCommunicationPackage package)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
 
             // Trigger for transiting to Normal mode
             asicWrapper.ASICs[0].ExecuteTestMode2Transition();
