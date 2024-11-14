@@ -102,6 +102,20 @@ void TestModeInterruptRoutine(void)
     QueueWrite(&serveTestModeCommand);
 }
 
+void HackedTimerInterruptRoutine(void)
+{
+    // Test mode iteration is an internal command
+    static USBReceiveData serveHackedTimerCommand = 
+    {
+        .device_id = 1,
+        .dataLength = 0,
+        .command = INT_CMD_EXECUTE_HACKED_TIMER
+    };
+
+    // Add Test mode internal command to command queue
+    QueueWrite(&serveHackedTimerCommand);
+}
+
 /** \brief Main function
  */
 void core0_main(void)
@@ -269,6 +283,14 @@ void core0_main(void)
                 CmdStopTestMode12(&cmdPackage);
                 break;
 
+            case USB_CMD_START_HACKED_TIMER:
+                StartHackedTimer(&cmdPackage);
+                break;
+
+            case USB_CMD_STOP_HACKED_TIMER:
+                StopHackedTimer(&cmdPackage);
+                break;
+
             case INT_CMD_ACK_WATCHDOG1:
                 IntCmdAcknowledgeWatchdog1();
                 break;
@@ -290,6 +312,9 @@ void core0_main(void)
                 break;
             case INT_CMD_EXECUTE_TEST_MODE:
                 IntCmdExecutePowerstageTest();
+                break;
+            case INT_CMD_EXECUTE_HACKED_TIMER:
+                IntCmdExecuteHackedTimer();
                 break;
 
 

@@ -85,6 +85,8 @@ public enum MCUCommand
     INIT_SYNC                   = 25,                 /** \brief syncs ASIC and GUI: SPI_COLDSTART_1, response to GUI when ASIC in INIT state TODO: should be verified after feature merging */
     WRITE_RAW_DATA_SPI          = 26,                 /** \brief 0x1A write 32bit raw data to spi TODO: should be verified after feature merging */
     FLM_DIAG_DISABLE            = 27,                 /** \brief enables Firing Loop Module cyclic diagnostics TODO: should be verified after feature merging */
+    START_HACKED_TIMER          = 32,                 /** \brief  */
+    STOP_HACKED_TIMER           = 33,                 /** \brief   */
     
     START_TEST_MODE1            = 29,                 /** \brief configure and start Test mode 1  */
     START_TEST_MODE2            = 30,                 /** \brief configure and start Test mode 1  */

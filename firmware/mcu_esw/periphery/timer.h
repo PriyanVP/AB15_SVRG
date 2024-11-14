@@ -52,6 +52,13 @@
 /*------------------------------------------------Function Prototypes------------------------------------------------*/
 /*********************************************************************************************************************/
 
+
+void ConfigureHackedTimerPeriodicity(uint16 hackedTimerPeriodicity);
+void EnableHackedTimerInterrupt(void);
+void DisableHackedTimerInterrupt(void);
+
+
+
 /** \brief Function to initialize the GPT12 Module and configure timers
  * Should be called before starting timers!
  *
