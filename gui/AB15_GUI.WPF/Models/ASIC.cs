@@ -8,6 +8,7 @@ using AB15_GUI.WPF.Services.Interfaces;
 using AB15_GUI.WPF.Models.Interfaces;
 using AB15_GUI.WPF.Models.Generated.Registers;
 using System.Linq;
+using System.Windows.Threading;
 
 namespace AB15_GUI.WPF.Models
 {
@@ -564,7 +565,7 @@ namespace AB15_GUI.WPF.Models
         /// </summary>
         private void ResetInitModeTimeout()
         {
-            logger.Debug($"Started execution of GetASICState command on ASIC {ID}");
+            logger.Debug($"Started execution of Reset ITM command on ASIC {ID}");
 
             // Create register content for executing SPI_COLDSTART1
             Reg_SysStates_Reset_Config _SysStates_Reset_Config = new Reg_SysStates_Reset_Config();
@@ -595,8 +596,12 @@ namespace AB15_GUI.WPF.Models
         /// <param name="e">unused</param>
         private void OnAsicStateReadingEvent(object source, ElapsedEventArgs e)
         {
-            // Execute ASIC state reading
-            GetASICState();
+            // Ensure main thread
+            App.Current.Dispatcher.BeginInvoke(() =>
+            {
+                // Execute ASIC state reading
+                GetASICState();
+            }, DispatcherPriority.Normal);
         }
 
         /// <summary>
@@ -606,8 +611,12 @@ namespace AB15_GUI.WPF.Models
         /// <param name="e">unused</param>
         private void OnInitModeTimeoutResettingEvent(object source, ElapsedEventArgs e)
         {
-            // Reset INIT mode timeout
-            ResetInitModeTimeout();
+            // Ensure main thread
+            App.Current.Dispatcher.BeginInvoke(() =>
+            {
+                // Reset INIT mode timeout
+                ResetInitModeTimeout();
+            }, DispatcherPriority.Normal);
         }
 
         /// <summary>
