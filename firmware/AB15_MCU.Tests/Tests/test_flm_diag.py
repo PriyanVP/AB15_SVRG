@@ -33,14 +33,14 @@ class TestFLMDiagCommands:
         - size of USB_CMD_FLM_DIAG_READ_RESULTS payload (should be 86 bytes)'''
 
         # Arrange
-        packageToSend = pkg.TransmitPackage(0x0F, 0, Command.FLM_DIAG_READ_RESULTS)
+        packageToSend = pkg.TransmitPackage(0x0F, 0, pkg.Command.FLM_DIAG_READ_RESULTS)
         
         # Act
         self.serial.com_port.write(packageToSend.serialize())
         sleep(self.DELAY)
         is_response_received = self.serial.extract_packages()
         result = pkg.ReceivePackage(self.serial.packages.pop(0))
-
+        print("Length of payload, bytes:" + str(result.payload_len))
         # Assert
         assert result.payload_len == 86, f"Length of payload is not 86 bytes! Length received: {result.payload_len}"
 
@@ -52,7 +52,7 @@ class TestFLMDiagCommands:
         - enabling AB15 FLM Diagnostics and manually getting the results of TODO: diagnostic'''
 
         # Arrange
-        packageToSend = pkg.TransmitPackage(0x0F, 0, Command.FLM_DIAG_ENABLE)
+        packageToSend = pkg.TransmitPackage(0x0F, 0, pkg.Command.FLM_DIAG_ENABLE)
 
         # Act
         self.serial.com_port.write(packageToSend.serialize())
