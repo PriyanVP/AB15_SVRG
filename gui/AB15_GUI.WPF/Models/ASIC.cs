@@ -393,7 +393,7 @@ namespace AB15_GUI.WPF.Models
                     packageToSend.Payload.Data.Add(ConfigData[itmIdx].Data);
 
                     // Reached end of sequence or end of loop
-                    if ((itmIdx > ConfigData.Count - 1) || (i == CommandSpecificConstants.writeSequenceMaxItems - 1))
+                    if ((itmIdx >= ConfigData.Count - 1) || (i == CommandSpecificConstants.writeSequenceMaxItems - 1))
                     {
                         offset = itmIdx + 1;
                         break;
@@ -575,8 +575,8 @@ namespace AB15_GUI.WPF.Models
             TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
             packageToSend.ASICID = ID; // TODO: check for ASICs 2-4
             packageToSend.Cmd = MCUCommand.WRITE_REG;
-            packageToSend.Deleg = ASICStateDelegate;
-            packageToSend.PayloadType = typeof(ReadRegisterPayload);
+            packageToSend.Deleg = BasicWriteCommandDelegate;
+            packageToSend.PayloadType = typeof(EmptyPayload);
             packageToSend.Payload.Address.Add(_SysStates_Reset_Config.Address);
             packageToSend.Payload.Data.Add(_SysStates_Reset_Config.Data);
 

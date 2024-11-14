@@ -14,6 +14,8 @@ using AB15_GUI.WPF.Models.Interfaces;
 using AB15_GUI.WPF.Models;
 using AB15_GUI.WPF.Models.Generated.Registers;
 using AB15_GUI.WPF.Services.Interfaces;
+using static System.Reflection.Metadata.BlobBuilder;
+using System.Windows.Threading;
 
 namespace AB15_GUI.WPF.ViewModels
 {
@@ -1551,12 +1553,16 @@ namespace AB15_GUI.WPF.ViewModels
             // Fire state machine transition to configuration loaded
             _stateMachine.Fire(Triggers.ConfigurationLoaded);
 
-            // Fill list for table on Firing tab
-            // Fill firing results table with data based on configuration table
-            foreach (FiringChannelConfigurationRecord channelRecord in FiringConfigurationTable)
+            // Ensure Thread is the one that can access the Table/Collection
+            App.Current.Dispatcher.BeginInvoke(() =>
             {
-                FiringResultTable.Add(new FiringResultRecord() { ASICID = channelRecord.ASICID, ChannelID = channelRecord.ChannelID, Identifier = channelRecord.Identifier });
-            }
+                // Fill list for table on Firing tab
+                // Fill firing results table with data based on configuration table
+                foreach (FiringChannelConfigurationRecord channelRecord in FiringConfigurationTable)
+                {
+                    FiringResultTable.Add(new FiringResultRecord() { ASICID = channelRecord.ASICID, ChannelID = channelRecord.ChannelID, Identifier = channelRecord.Identifier });
+                }
+            }, DispatcherPriority.Normal);
 
             // Unsubscribe from event - by design can be fired only once
             caller.ConfigurationLoaded -= ConfigurationLoadedHandler;
