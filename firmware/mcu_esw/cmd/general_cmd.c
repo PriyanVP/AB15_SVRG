@@ -266,6 +266,7 @@ void CmdSendRawData(USBReceiveData const * const commandPackage)
     // Construct package to PC
     packageToSend.device_id = commandPackage->device_id;
     packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
+    packageToSend.dataLength = 0;
 
     // Construct packages based on error status
     if (isSuccessfulFlag == FALSE)
