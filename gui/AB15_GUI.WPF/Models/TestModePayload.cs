@@ -17,10 +17,10 @@ namespace AB15_GUI.WPF.Models
 
         // TODO: implement unpacking - use different storages
 
-        /// <summary>
-        /// Property to report errors
-        /// </summary>
-        public string? Error { get; set; } = null;
+        ///// <summary>
+        ///// Property to report errors
+        ///// </summary>
+        //public string? Error { get; set; } = null;
       
         /// <summary>
         /// List with register values
