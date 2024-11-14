@@ -24,6 +24,9 @@
 #include "top/usb_wrapper.h"
 #include "Bsp.h"
 #include "pwm.h"
+#include "IfxPort.h" // for gpio.h
+#include "IfxPort_PinMap.h" // for gpio.h // TODO: remove dependency to IFxPort stuff
+#include "periphery/gpio.h" // for chip select lines
 
 IFX_ALIGN(4) IfxCpu_syncEvent g_cpuSyncEvent = 0;
 
@@ -102,6 +105,7 @@ void core0_main(void)
     /* Init pins*/
     ConfigureSelectPin();
     InitGPIOPins();
+    InitCSPins();
 
     // Init USB
     USBInit();
