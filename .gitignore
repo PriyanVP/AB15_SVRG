@@ -10,9 +10,6 @@ gui/.vs/
 # except configuration for PyTest
 !firmware/AB15_MCU.Tests/.vscode/
 
-# Ignore Test results from firmware PyTest
-firmware/AB15_MCU.Tests/TestResults
-
 # Ignore GUI binary folders
 gui/**/[Oo]bj/**
 gui/**/[Bb]in/**
