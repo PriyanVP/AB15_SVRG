@@ -59,6 +59,7 @@ class TestFLMDiagCommands:
         sleep(self.DELAY)
         is_response_received = self.serial.extract_packages()
         result = pkg.ReceivePackage(self.serial.packages.pop(0))
+        print("Status:" + str(result.status))
         # TODO: read LM_READ_SQUIB_RES_SQREF
 
         # Assert
