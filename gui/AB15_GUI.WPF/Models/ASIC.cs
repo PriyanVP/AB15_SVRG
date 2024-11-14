@@ -393,7 +393,7 @@ namespace AB15_GUI.WPF.Models
                     packageToSend.Payload.Data.Add(ConfigData[itmIdx].Data);
 
                     // Reached end of sequence or end of loop
-                    if ((itmIdx > ConfigData.Count - 1) || (i == CommandSpecificConstants.writeSequenceMaxItems - 1))
+                    if ((itmIdx >= ConfigData.Count - 1) || (i == CommandSpecificConstants.writeSequenceMaxItems - 1))
                     {
                         offset = itmIdx + 1;
                         break;
@@ -564,7 +564,7 @@ namespace AB15_GUI.WPF.Models
         /// </summary>
         private void ResetInitModeTimeout()
         {
-            logger.Debug($"Started execution of GetASICState command on ASIC {ID}");
+            logger.Debug($"Started execution of Reset ITM command on ASIC {ID}");
 
             // Create register content for executing SPI_COLDSTART1
             Reg_SysStates_Reset_Config _SysStates_Reset_Config = new Reg_SysStates_Reset_Config();
@@ -575,8 +575,8 @@ namespace AB15_GUI.WPF.Models
             TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
             packageToSend.ASICID = ID; // TODO: check for ASICs 2-4
             packageToSend.Cmd = MCUCommand.WRITE_REG;
-            packageToSend.Deleg = ASICStateDelegate;
-            packageToSend.PayloadType = typeof(ReadRegisterPayload);
+            packageToSend.Deleg = BasicWriteCommandDelegate;
+            packageToSend.PayloadType = typeof(EmptyPayload);
             packageToSend.Payload.Address.Add(_SysStates_Reset_Config.Address);
             packageToSend.Payload.Data.Add(_SysStates_Reset_Config.Data);
 
@@ -595,8 +595,8 @@ namespace AB15_GUI.WPF.Models
         /// <param name="e">unused</param>
         private void OnAsicStateReadingEvent(object source, ElapsedEventArgs e)
         {
-            // Execute ASIC state reading
-            GetASICState();
+                // Execute ASIC state reading
+                GetASICState();
         }
 
         /// <summary>
@@ -606,8 +606,8 @@ namespace AB15_GUI.WPF.Models
         /// <param name="e">unused</param>
         private void OnInitModeTimeoutResettingEvent(object source, ElapsedEventArgs e)
         {
-            // Reset INIT mode timeout
-            ResetInitModeTimeout();
+                // Reset INIT mode timeout
+                ResetInitModeTimeout();
         }
 
         /// <summary>
