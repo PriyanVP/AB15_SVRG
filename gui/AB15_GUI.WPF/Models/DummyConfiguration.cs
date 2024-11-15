@@ -33,7 +33,7 @@ namespace AB15_GUI.WPF.Models
         private void InitListWithDummyValues()
         {
             // Write configuration for common registers
-            //ConfigData.Add(new Reg_Common_Config1() { Data = 0x0007 });
+            ConfigData.Add(new Reg_Common_Config1() { Data = 0x0007 });
             ConfigData.Add(new Reg_SysStates_Reset_Locked_Config() { Data = 0x0019 });
 
             // Write configuration for AIO registers
