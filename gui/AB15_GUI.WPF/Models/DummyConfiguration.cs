@@ -32,6 +32,10 @@ namespace AB15_GUI.WPF.Models
         /// </summary>
         private void InitListWithDummyValues()
         {
+            // Write configuration for common registers
+            ConfigData.Add(new Reg_Common_Config1() { Data = 0x0007 });
+            ConfigData.Add(new Reg_SysStates_Reset_Locked_Config() { Data = 0x0019 });
+
             // Write configuration for AIO registers
             ConfigData.Add(new Reg_AIO_Config_Ch1() { Data = 0x8006 });
             ConfigData.Add(new Reg_AIO_Config_Ch2() { Data = 0x8006 });
@@ -53,6 +57,7 @@ namespace AB15_GUI.WPF.Models
             ConfigData.Add(new Reg_AIN_Config_Auto_Ch8() { Data = 0x0003 });
             ConfigData.Add(new Reg_AIN_Config_Auto_Ch9() { Data = 0x0003 });
             ConfigData.Add(new Reg_AIN_Config_Auto_Ch10() { Data = 0x0003 });
+            ConfigData.Add(new Reg_AIN_CONFIG_UNLOCK() { Data = 0x0000 });
 
             // Write configuration for UART registers
             ConfigData.Add(new Reg_Uart_Sp_Config() { Data = 0x0007 });

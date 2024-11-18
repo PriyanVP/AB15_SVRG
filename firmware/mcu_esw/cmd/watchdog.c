@@ -196,13 +196,13 @@ void CmdConfigureWatchdog(USBReceiveData const * const commandPackage)
     uint16 length = (commandPackage->dataLength) >> 2;  // Number of 32bit SPI words to write into ASIC (= number of registers to write)
 
     // Parse input
-    // Layout: (addr_MSB - addr_LSB - data_MSB - data_LSB) - (...)
+    // Layout: (addr_LSB - addr_MSB - data_LSB - data_MSB) - (...)
     for (uint8 i = 0; i < length; i++)
     {
         indexerForPayload = (i << 2); // One item is 4 bytes
 
-        address[i] = ConstructWordFromBytes(commandPackage->data[indexerForPayload], commandPackage->data[indexerForPayload+1]); // TODO: incorrect, start from 1, not 0
-        data[i] = ConstructWordFromBytes(commandPackage->data[indexerForPayload+2], commandPackage->data[indexerForPayload+3]);
+        address[i] = ConstructWordFromBytes(commandPackage->data[indexerForPayload+1], commandPackage->data[indexerForPayload]);
+        data[i] = ConstructWordFromBytes(commandPackage->data[indexerForPayload+3], commandPackage->data[indexerForPayload+2]);
     }
 
     // Retrieve values for WD timer configuration
@@ -519,7 +519,7 @@ void IntCmdMonitorWatchdog(void)
     SPIReceiveDataNormal data[WD_STATUS_REGS_COUNT] = {0};
 
     // Read WD related registers from ASIC
-    // isSuccessfulFlag = QSPIReadSequenceNormal(SPI1_CS1MASTER, g_wdStatusMonitoringConfig.wdStatusRegsAddresses, &data[0].dw, &length); // TODO: not implemented
+    isSuccessfulFlag = QSPIReadSequenceNormal(SPI1_CS1MASTER, g_wdStatusMonitoringConfig.wdStatusRegsAddresses, &data[0].dw, &length); // TODO: not implemented
 
     packageToSend.dataLength = length << 1; // each data item is send as 2 bytes
 

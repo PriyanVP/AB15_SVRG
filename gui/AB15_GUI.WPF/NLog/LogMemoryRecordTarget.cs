@@ -67,7 +67,7 @@ namespace AB15_GUI.WPF.NLog
                 lock (_lock)
                 {
                     _observableLogs.Clear();
-                    foreach (var item in _logs)
+                    foreach (var item in _logs) // TODO: to fix, causes error if _logs are modified during loop
                     {
                         _observableLogs.Add(item);
                     }

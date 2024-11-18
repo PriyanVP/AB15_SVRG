@@ -131,9 +131,9 @@ class TestWatchdog:
         # Arrange
         msg_id = 0x00
         device_id = 0x01
-        address = [0x00, 0x30, 0x00, 0x31, 0x00, 0x33] # adresse for both registers, spit in byte 
+        address = [0x30, 0x00, 0x31, 0x00, 0x33, 0x00] # adresse for both registers, spit in byte 
         # data for relaxed WD: locktime = 1 and Response time = 3E see chapter 1.6.7.3.3.2 --> 0x07e split  in 4 bytes 
-        data = [0x00, 0x7E, 0x00, 0x7E, 0x3F, 0x3F] 
+        data = [0x7E, 0x00, 0x7E, 0x00, 0x3F, 0x3F] 
         payload = [*address[0:2], *data[0:2], *address[2:4], *data[2:4], *address[4:6], *data[4:6]] # recombine dress and data for the transmit function
         print("Address:", [hex(itm) for itm in address] )
         print("Data:  ",[hex(itm) for itm in data])
@@ -151,7 +151,7 @@ class TestWatchdog:
         result = pkg.ReceivePackage(self.serial.packages.pop(0))
 
         # now check Wd registers 
-        payload = [0x30, 0x0]
+        payload = [0x00, 0x30]
         print("payload read 1 (addr)  ",[hex(itm) for itm in payload])       
         packageToSend = pkg.TransmitPackage(0x00, 0x01, pkg.Command.READ_REG, payload)
         print("return value 1",[hex(itm) for itm in packageToSend.serialize()]) 
@@ -162,7 +162,7 @@ class TestWatchdog:
         result = pkg.ReceivePackage(self.serial.packages.pop(0))
         print("\nWD register1  is: ",[hex(itm) for itm in result.package])
 
-        payload = [0x31, 0x0]   
+        payload = [0x00, 0x31]   
         print("payload read2 (addr) ",[hex(itm) for itm in payload])   
         packageToSend = pkg.TransmitPackage(0x00, 0x01, pkg.Command.READ_REG, payload)
         print("return value 2",[hex(itm) for itm in packageToSend.serialize()]) 
@@ -173,7 +173,7 @@ class TestWatchdog:
         result = pkg.ReceivePackage(self.serial.packages.pop(0))
         print("\nWD register2 is: ",[hex(itm) for itm in result.package])
         
-        payload = [0x33, 0x0]   
+        payload = [0x00, 0x33]   
         print("payload Thershold  ",[hex(itm) for itm in payload])   
         packageToSend = pkg.TransmitPackage(0x00, 0x01, pkg.Command.READ_REG, payload)
         print("return value 2",[hex(itm) for itm in packageToSend.serialize()]) 
