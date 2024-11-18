@@ -30,7 +30,6 @@ class Command(Enum):
     GET_MCU_BUILD_TIME          = 20             # returns MCU SW build time
     SET_EXT_OSC_2MHZ            = 21             # sets external clock output to 2Mhz
     SET_EXT_OSC_4MHZ            = 22             # sets external clock output to 4Mhz  
-    SET_EXT_OSC_4MHZ            = 22,            # sets external clock output to 4Mhz 
     FLM_DIAG_ENABLE             = 23,            # enables Firing Loop Module cyclic diagnostics TODO: should be verified after feature merging
     FLM_DIAG_READ_RESULTS       = 24,            # returns results of Firing Loop Module cyclic diagnostics TODO: should be verified after feature merging
     INIT_SYNC                   = 25,            # syncs ASIC and GUI: SPI_COLDSTART_1, response to GUI when ASIC in INIT state TODO: should be verified after feature merging
