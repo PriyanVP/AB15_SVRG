@@ -390,6 +390,12 @@ namespace AB15_GUI.WPF.Models
                     // Index of register to serialize
                     itmIdx = offset + i;
 
+                    // Skip SysStates_Reset_Locked_Config register (according to ASIC flow)
+                    if (ConfigData[itmIdx].Name == "SysStates_Reset_Locked_Config")
+                    {
+                        continue;
+                    }
+
                     // Add address and data of register
                     packageToSend.Payload.Address.Add(ConfigData[itmIdx].Address);
                     packageToSend.Payload.Data.Add(ConfigData[itmIdx].Data);
@@ -448,6 +454,7 @@ namespace AB15_GUI.WPF.Models
             Reg_SysStates_Reset_Locked_Config _SysStates_Reset_Locked_Config = new Reg_SysStates_Reset_Locked_Config();
             _SysStates_Reset_Locked_Config.Data = 0x0;
             _SysStates_Reset_Locked_Config.end_of_programming.Data = 0x1;
+            _SysStates_Reset_Locked_Config.spi_driver_strength.Data = 0x3; // default value, should match value in config
 
             // Construct command to MCU
             TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();

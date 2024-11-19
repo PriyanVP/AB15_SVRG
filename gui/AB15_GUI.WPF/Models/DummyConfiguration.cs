@@ -34,7 +34,7 @@ namespace AB15_GUI.WPF.Models
         {
             // Write configuration for common registers
             ConfigData.Add(new Reg_Common_Config1() { Data = 0x0007 });
-            ConfigData.Add(new Reg_SysStates_Reset_Locked_Config() { Data = 0x0019 });
+            ConfigData.Add(new Reg_SysStates_Reset_Locked_Config() { Data = 0x0019 }); // Note: due to ASIC specifics this register should be written AFTER CRC data
 
             // Write configuration for AIO registers
             ConfigData.Add(new Reg_AIO_Config_Ch1() { Data = 0x8006 });
