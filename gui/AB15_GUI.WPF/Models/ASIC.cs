@@ -357,9 +357,9 @@ namespace AB15_GUI.WPF.Models
             logger.Debug($"Stopping init mode timer reset on ASIC {ID}");
 
             // Stop and dispose timer
-            initModeResetTimer.Enabled = false;
-            initModeResetTimer.Dispose();
-            initModeResetTimer = null;
+            //initModeResetTimer.Enabled = false;
+            //initModeResetTimer.Dispose();
+            //initModeResetTimer = null;
         }
 
         /// <summary>
@@ -713,8 +713,9 @@ namespace AB15_GUI.WPF.Models
             }
 
             // Check if this is the last expected response
+            logger.Debug($"Remaining number of config packages: {expectedNumberOfConfigPackages}");
             expectedNumberOfConfigPackages--;
-            if (expectedNumberOfConfigPackages <= 0)
+            if (expectedNumberOfConfigPackages <= 0)    // TODO: debug, possibly multithreading issue with counter
             {
                 OnConfigurationLoaded();
                 expectedNumberOfConfigPackages = null;
