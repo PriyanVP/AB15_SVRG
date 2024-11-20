@@ -1516,6 +1516,9 @@ namespace AB15_GUI.WPF.ViewModels
         /// <param name="response">MCU response package</param>
         private void CyclicReadingStartStopDelegate(IReceiveCommunicationPackage response)
         {
+            _startStopCyclicReadingCommand.InProgress = false;
+            OnPropertyChanged(nameof(StartStopCyclicReading));
+
             // Typecast response to actual type
             ReceiveCommunicationPackage<EmptyPayload> mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>) response;
 
