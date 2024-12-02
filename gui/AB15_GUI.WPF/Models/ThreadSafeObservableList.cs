@@ -177,7 +177,7 @@ namespace AB15_GUI.WPF.Models
             {
                 lock (_lock)
                 {
-                    return _list.GetEnumerator();
+                    return _list.GetEnumerator(); // TODO: potential issue in threading
                 }
             }
 
@@ -189,7 +189,7 @@ namespace AB15_GUI.WPF.Models
             {
                 lock (_lock)
                 {
-                    return _list.GetEnumerator();
+                    return _list.GetEnumerator(); // TODO: potential issue in threading
                 }
             }
 
