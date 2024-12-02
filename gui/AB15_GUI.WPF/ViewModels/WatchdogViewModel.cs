@@ -850,8 +850,6 @@ namespace AB15_GUI.WPF.ViewModels
             packageToSend.Payload.spi_config_wd_thres0.spi_set_en0_thre_wd1.Data = (UInt16) WD1EN0DisableThreshold;
             packageToSend.Payload.spi_config_wd_thres0.spi_set_en0_thre_wd2.Data = (UInt16) WD2EN0DisableThreshold;
 
-            packageToSend.Payload.spi_config_wd_thres0.Data = 0x3F3F; // TODO: hardcoded for now - has to be non 0
-
             // Send command to MCU
             serialWrapper.SerialWrite(packageToSend);
         }
@@ -986,6 +984,9 @@ namespace AB15_GUI.WPF.ViewModels
 
             WD1LockTime = (int)_spi_config_wd1.spi_set_locktime_wd1.Data;
             WD2LockTime = (int)_spi_config_wd2.spi_set_locktime_wd2.Data;
+
+            WD1EN0DisableThreshold = _spi_config_wd_thres0.spi_set_en0_thre_wd1.Data;
+            WD2EN0DisableThreshold = _spi_config_wd_thres0.spi_set_en0_thre_wd2.Data;
 
             // Warning: Clear on read ASIC registers
             OscillatorFaultStatus = (_spi_read_res_cause.rc_oscfail_set_slff_spi.Data != 0) ? (FaultStatus.Fault) : (FaultStatus.Good);
