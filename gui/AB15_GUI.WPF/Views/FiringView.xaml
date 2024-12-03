@@ -1138,7 +1138,7 @@
                             <!-- #endregion -->
 
                             <!-- Table content -->
-                            <ListView   Name="FiringResultTableView" 
+                            <ListView Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="7" Name="FiringResultTableView" 
                                 ItemsSource="{Binding FiringResultTable}"
                                 ItemContainerStyle="{DynamicResource ListViewItemStyle}" 
                                 FontSize="20">
