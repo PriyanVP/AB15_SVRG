@@ -5,12 +5,791 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:AB15_GUI.WPF.Views"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      d:DesignHeight="450" d:DesignWidth="900"
       Title="SPILearning"
       DataContext="{Binding SPILearningViewModel, Source={StaticResource ViewModelLocator}}">
 
-    <Grid>
-        <TextBlock Text="SPI learning placeholder"/>
-        
+    <Grid Background="{DynamicResource UI.BackGround}">
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="5"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="5"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="5"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock  Grid.Row="0" Grid.Column="0"
+                        FontSize="20" Margin="3"
+                        HorizontalAlignment="Right"
+                        Text="Address:"/>
+            <TextBlock  Grid.Row="1" Grid.Column="0"
+                        FontSize="20" Margin="3"
+                        HorizontalAlignment="Right"
+                        Text="Data:"/>
+            <TextBlock  Grid.Row="2" Grid.Column="0"
+                        FontSize="20" Margin="3"
+                        HorizontalAlignment="Right"
+                        Text="Read/Write:"/>
+            
+            <!--TODO add converter for data validation-->
+            <TextBox    Grid.Row="0" Grid.Column="1"
+                        Style="{DynamicResource TextBoxStyle}"
+                        Text="{Binding UserAddress}" Background="Red">
+            </TextBox>
+
+            <!--TODO add converter for data validation-->
+            <TextBox    Grid.Row="1" Grid.Column="1"
+                        Style="{DynamicResource TextBoxStyle}"
+                        Text="{Binding UserData}" Background="Red">
+            </TextBox>
+
+            <CheckBox Grid.Row="2" Grid.Column="1" Style="{DynamicResource ToggleSwitchStyle}"
+                      HorizontalAlignment="Center"/>
+
+            <Grid Grid.Row="0" Grid.RowSpan="3" Grid.Column="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Border BorderBrush="{DynamicResource SimpleButton.BorderBrush}"
+                        BorderThickness="2"
+                        Grid.Column="0" Grid.ColumnSpan="10"
+                        Grid.Row="0" Grid.RowSpan="3"/>
+                
+                <Border BorderBrush="{DynamicResource SimpleButton.BorderBrush}"
+                        BorderThickness="1"
+                        Grid.Column="0" Grid.ColumnSpan="10"
+                        Grid.Row="1" Grid.RowSpan="1"/>
+                
+                <Border BorderBrush="{DynamicResource SimpleButton.BorderBrush}"
+                        BorderThickness="2"
+                        Grid.Column="0" Grid.ColumnSpan="10"
+                        Grid.Row="0" Grid.RowSpan="3"/>
+
+                <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="10"
+                           Text="Address" FontSize="20" 
+                           HorizontalAlignment="Center"/>
+
+                <!--#region bit numbers -->
+                <TextBlock  Grid.Row="1" Grid.Column="0" Text="31" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="1" Text="30" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="2" Text="29" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="3" Text="28" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="4" Text="27" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="5" Text="26" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="6" Text="25" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="7" Text="24" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="8" Text="23" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="9" Text="22" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="10" Text="21" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="11" Text="20" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="12" Text="19" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="13" Text="18" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="14" Text="17" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="15" Text="16" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="16" Text="15" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="17" Text="14" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="18" Text="13" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="19" Text="12" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="20" Text="11" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="21" Text="10" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="22" Text="9" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="23" Text="8" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="24" Text="7" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="25" Text="6" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="26" Text="5" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="27" Text="4" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="28" Text="3" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="29" Text="2" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="30" Text="1" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="31" Text="0" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+                <!--#endregion-->
+
+
+                <!--#region bit valuew -->
+                <TextBlock  Grid.Row="2" Grid.Column="0" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="1" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="2" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="3" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="4" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="5" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="6" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="7" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="8" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="9" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="10" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="11" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="12" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="13" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="14" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="15" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="16" FontSize="14"
+                            HorizontalAlignment="Center" VerticalAlignment="Center">
+                    
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="17" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="18" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="19" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="20" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="21" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="22" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="23" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="24" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="25" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="26" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="27" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="28" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="29" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="30" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="31" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+                <!--#endregion-->
+
+
+            </Grid>
+        </Grid>
+
+        <!-- #region MOSI -->
+        <Border BorderThickness="1" Grid.Row="3" Grid.Column="2"
+            BorderBrush="{DynamicResource SimpleButton.BorderBrush}">
+            <!-- Table -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="40"/>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="60"/>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="5" />
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="7"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="2"/>
+                    <RowDefinition Height="1"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- #region Table header -->
+                <Canvas Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="6" 
+                        Background="{DynamicResource UI.SeparateLine}"/>
+
+                <TextBlock Grid.Row="1" Grid.Column="1" FontSize="14"
+                                    Text="#" HorizontalAlignment="Center">
+                </TextBlock>
+
+                <TextBlock Grid.Row="1" Grid.Column="2" FontSize="14"
+                                       Text="Address" HorizontalAlignment="Center">
+                </TextBlock>
+
+                <TextBlock Grid.Row="1" Grid.Column="3" FontSize="14"
+                                       Text="R/W" HorizontalAlignment="Center">
+                </TextBlock>
+
+                <TextBlock Grid.Row="1" Grid.Column="4" FontSize="14"
+                                       Text="Data" HorizontalAlignment="Center">
+                </TextBlock>
+
+                <TextBlock Grid.Row="1" Grid.Column="5" FontSize="14"
+                                       Text="CRC" HorizontalAlignment="Center">
+                </TextBlock>
+
+                <TextBlock Grid.Row="1" Grid.Column="6" FontSize="14"
+                                       Text="RAW" HorizontalAlignment="Center">
+                </TextBlock>
+                <!-- #endregion -->
+
+                <!-- #region Table content -->
+                <ListView Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="6" Name="MOSITableTableView" 
+                                ItemsSource="{Binding MOSITable}"
+                                ItemContainerStyle="{DynamicResource ListViewItemStyle}" 
+                                IsEnabled="{Binding IsConfigControlsEnabled}"
+                                FontSize="20">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="5" />
+                                    <ColumnDefinition Width="20"/>
+                                    <ColumnDefinition Width="80"/>
+                                    <ColumnDefinition Width="40"/>
+                                    <ColumnDefinition Width="80"/>
+                                    <ColumnDefinition Width="60"/>
+                                    <ColumnDefinition Width="100"/>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="5" />
+                                </Grid.ColumnDefinitions>
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="2"/>
+                                    <RowDefinition Height="1"/>
+                                </Grid.RowDefinitions>
+
+                                <Canvas Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="4" Background="{DynamicResource UI.SeparateLine}"/>
+
+                                <!-- Cell with number -->
+                                <TextBlock  Grid.Column="1" Margin="0,0,5,0" 
+                                            VerticalAlignment="Center"
+                                            FontSize="14" HorizontalAlignment="Center"
+                                            Text="{Binding number}">
+                                </TextBlock>
+
+                                <!-- Cell with address -->
+                                <TextBlock  Grid.Column="2"  Margin="0,0,5,0" 
+                                            VerticalAlignment="Center"
+                                            FontSize="14" HorizontalAlignment="Center"
+                                            Text="{Binding address, StringFormat={}{0:x}}">
+                                </TextBlock>
+
+                                <!-- Cell with R/W -->
+                                <TextBlock  Grid.Column="3"  Margin="0,0,5,0" 
+                                            VerticalAlignment="Center"
+                                            FontSize="14" HorizontalAlignment="Center"
+                                            Text="">
+                                    <!--TODO place convertor-->
+                                </TextBlock>
+
+                                <!-- Cell with Data -->
+                                <TextBlock  Grid.Column="1" Margin="0,0,5,0" 
+                                            VerticalAlignment="Center"
+                                            FontSize="14" HorizontalAlignment="Center"
+                                            Text="{Binding data, StringFormat={}{0:x}}">
+                                </TextBlock>
+
+                                <!-- Cell with CRC -->
+                                <TextBlock  Grid.Column="1" Margin="0,0,5,0" 
+                                            VerticalAlignment="Center"
+                                            FontSize="14" HorizontalAlignment="Center"
+                                            Text="{Binding crc, StringFormat={}{0:x}}">
+                                </TextBlock>
+
+                                <!-- Cell with RAW -->
+                                <TextBlock  Grid.Column="1" Margin="0,0,5,0" 
+                                            VerticalAlignment="Center"
+                                            FontSize="14" HorizontalAlignment="Center"
+                                            Text="{Binding raw, StringFormat={}{0:x}}">
+                                </TextBlock>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <!-- #endregion -->
+            </Grid>
+        </Border>
+        <!-- #endregion -->
+
+
+        <!-- #region MISO -->
+        <Border BorderThickness="1" Grid.Row="3" Grid.Column="3" 
+            BorderBrush="{DynamicResource SimpleButton.BorderBrush}">
+            <!-- Table -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="40"/>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="60"/>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="5" />
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="7"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="2"/>
+                    <RowDefinition Height="1"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- #region Table header -->
+                <Canvas Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="6" 
+                        Background="{DynamicResource UI.SeparateLine}"/>
+
+                <TextBlock Grid.Row="1" Grid.Column="1" FontSize="14"
+                                    Text="#" HorizontalAlignment="Center">
+                </TextBlock>
+
+                <TextBlock Grid.Row="1" Grid.Column="2" FontSize="14"
+                                       Text="Address" HorizontalAlignment="Center">
+                </TextBlock>
+
+                <TextBlock Grid.Row="1" Grid.Column="3" FontSize="14"
+                                       Text="R/W" HorizontalAlignment="Center">
+                </TextBlock>
+
+                <TextBlock Grid.Row="1" Grid.Column="4" FontSize="14"
+                                       Text="Data" HorizontalAlignment="Center">
+                </TextBlock>
+
+                <TextBlock Grid.Row="1" Grid.Column="5" FontSize="14"
+                                       Text="CRC" HorizontalAlignment="Center">
+                </TextBlock>
+
+                <TextBlock Grid.Row="1" Grid.Column="6" FontSize="14"
+                                       Text="RAW" HorizontalAlignment="Center">
+                </TextBlock>
+                <!-- #endregion -->
+
+                <!-- #region Table content -->
+                <ListView Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="6" Name="MISOTableTableView" 
+                                ItemsSource="{Binding MISOTable}"
+                                ItemContainerStyle="{DynamicResource ListViewItemStyle}" 
+                                IsEnabled="{Binding IsConfigControlsEnabled}"
+                                FontSize="20">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="5" />
+                                    <ColumnDefinition Width="20"/>
+                                    <ColumnDefinition Width="80"/>
+                                    <ColumnDefinition Width="40"/>
+                                    <ColumnDefinition Width="80"/>
+                                    <ColumnDefinition Width="60"/>
+                                    <ColumnDefinition Width="100"/>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="5" />
+                                </Grid.ColumnDefinitions>
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="2"/>
+                                    <RowDefinition Height="1"/>
+                                </Grid.RowDefinitions>
+
+                                <Canvas Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="4" Background="{DynamicResource UI.SeparateLine}"/>
+
+                                <!-- Cell with number -->
+                                <TextBlock  Grid.Column="1" Margin="0,0,5,0" 
+                                            VerticalAlignment="Center"
+                                            FontSize="14" HorizontalAlignment="Center"
+                                            Text="{Binding number}">
+                                </TextBlock>
+
+                                <!-- Cell with address -->
+                                <TextBlock  Grid.Column="2" Margin="0,0,5,0" 
+                                            VerticalAlignment="Center"
+                                            FontSize="14" HorizontalAlignment="Center"
+                                            Text="{Binding address, StringFormat={}{0:x}}">
+                                </TextBlock>
+
+                                <!-- Cell with R/W -->
+                                <TextBlock  Grid.Column="3"  Margin="0,0,5,0" 
+                                            VerticalAlignment="Center"
+                                            FontSize="14" HorizontalAlignment="Center"
+                                            Text="">
+                                    <!--TODO place convertor-->
+                                </TextBlock>
+
+                                <!-- Cell with Data -->
+                                <TextBlock  Grid.Column="1" Margin="0,0,5,0" 
+                                            VerticalAlignment="Center"
+                                            FontSize="14" HorizontalAlignment="Center"
+                                            Text="{Binding data, StringFormat={}{0:x}}">
+                                </TextBlock>
+
+                                <!-- Cell with CRC -->
+                                <TextBlock  Grid.Column="1" Margin="0,0,5,0" 
+                                            VerticalAlignment="Center"
+                                            FontSize="14" HorizontalAlignment="Center"
+                                            Text="{Binding crc, StringFormat={}{0:x}}">
+                                </TextBlock>
+
+                                <!-- Cell with RAW -->
+                                <TextBlock  Grid.Column="1" Margin="0,0,5,0" 
+                                            VerticalAlignment="Center"
+                                            FontSize="14" HorizontalAlignment="Center"
+                                            Text="{Binding raw, StringFormat={}{0:x}}">
+                                </TextBlock>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <!-- #endregion -->
+            </Grid>
+        </Border>
+        <!-- #endregion -->
+
     </Grid>
 </Page>
