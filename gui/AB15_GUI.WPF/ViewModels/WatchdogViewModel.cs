@@ -72,6 +72,7 @@ namespace AB15_GUI.WPF.ViewModels
             _stateMachine.Configure(State.Configured)
                          .Permit(Triggers.ConfigurationChanged, State.InConfiguration)
                          .Permit(Triggers.StartedWD, State.Running)
+                         .Ignore(Triggers.ConfigurationLoaded)
                          .Ignore(Triggers.GotConfiguration)
                          .Ignore(Triggers.StoppedWD);
 
