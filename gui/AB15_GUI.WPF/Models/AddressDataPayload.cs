@@ -1,7 +1,6 @@
 using AB15_GUI.WPF.Models.Interfaces;
 using System;
 using System.Collections.Generic;
-using AB15_GUI.WPF.Models;
 
 namespace AB15_GUI.WPF.Models
 {
@@ -79,7 +78,7 @@ namespace AB15_GUI.WPF.Models
             {
                 for (int i = 0; i < Address.Count; i++)
                 {
-                    // Layout: Addr_MSB - Addr_LSB - Data_MSB - Data_LSB
+                    // Layout: Addr_LSB - Addr_MSB - Data_LSB - Data_MSB
                     payloadToSend.Add(Address[i].GetLSB());
                     payloadToSend.Add(Address[i].GetMSB());
                     payloadToSend.Add(Data[i].GetLSB());
@@ -90,7 +89,7 @@ namespace AB15_GUI.WPF.Models
             {
                 for (int i = 0; i < Address.Count; i++)
                 {
-                    // Layout: Addr_MSB - Addr_LSB
+                    // Layout: Addr_LSB - Addr_MSB
                     payloadToSend.Add(Address[i].GetLSB());
                     payloadToSend.Add(Address[i].GetMSB());
                 }  
@@ -99,7 +98,7 @@ namespace AB15_GUI.WPF.Models
             {
                 for (int i = 0; i < Address.Count; i++)
                 {
-                    // Layout: Addr_MSB - Addr_LSB
+                    // Layout: Data_LSB - Data_MSB
                     payloadToSend.Add(Data[i].GetLSB());
                     payloadToSend.Add(Data[i].GetMSB());
                 }  
