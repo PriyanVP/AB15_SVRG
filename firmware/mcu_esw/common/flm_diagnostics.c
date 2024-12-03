@@ -40,9 +40,13 @@
  */
 void CmdEnableFLMDiag();
 
-/** \brief 
+/** \brief
  */
-void InitFLMDiag();
+void CmdDisableFLMDiag();
+
+/** \brief
+ */
+void CmdReadFLMDiagResults();
 
 /** \brief 
  * cyclic test performed automatically, no need to set FLM_DIAG_START
@@ -54,19 +58,15 @@ void FLMShortDiag();
  */
 void FLMVHxDiag();
 
-/** \brief 
- * SPI-triggered test, must be set by FLM_diag_mode = Squib_pres_test_all and started FLM_DIAG_START = 1
- */
-void FLMSquibDetErrDiag();
-
 /** \brief
  * SPI-triggered test, must be set by FLM_diag_mode = Loop_res_meas_all_ch and started FLM_DIAG_START = 1
  */
 void FLMLoopResDiag();
 
-/** \brief
+/** \brief 
+ * SPI-triggered test, must be set by FLM_diag_mode = Squib_pres_test_all and started FLM_DIAG_START = 1
  */
-void GetFLMDiagMode();
+void FLMSquibDetErrDiag();
 
 /** \brief Select diagnostic to be run by FLM diag module
  * write diagMode to flm_diag_mode field of FLM_DIAG_START register
@@ -77,9 +77,9 @@ void SetFLMDiagMode(FLMDiagModeEnum diagMode);
  */
 void StartFLMDiag();
 
-/** \brief
+/** \brief get FLM diagnostic execution status from ASIC (ongoing/evaluated)
  */
-void CmdDisableFLMDiag();
+flm_DiagExecStatusEnum FLMReadDiagExecStatus(void);
 
 /** \brief
  */
@@ -89,18 +89,13 @@ void SetFLMDiagExecStatus(flm_DiagExecStatusEnum FLMCycDiagExecStatus);
  */
 flm_DiagExecStatusEnum GetFLMDiagExecStatus(void);
 
-// TODO: implement
-/** \brief get FLM diagnostic execution status from ASIC (ongoing/evaluated)
+/** \brief
  */
-flm_DiagExecStatusEnum FLMReadDiagExecStatus(void);
+void SetFLMDiagExecOrder(flm_DiagExecOrderEnum execNumber);
 
 /** \brief
  */
 flm_DiagExecOrderEnum GetFLMDiagExecOrder (void);
-
-/** \brief
- */
-void SetFLMDiagExecOrder(flm_DiagExecOrderEnum execNumber);
 
 /** \brief
  * Measure Battery voltage, normal range to perform diagnostics
@@ -117,8 +112,6 @@ static FLMCycDiagFaults g_FLMCycDiagFaultsValues;
 static FLMCycDiagResults g_flmCycDiagResultsValues;
 static flm_DiagExecStatusEnum g_FLMDiagExecStatus = FLM_DIAG_EXEC_STATUS_IDLE;
 static flm_DiagExecOrderEnum g_flmDiagExecNumber = FLM_DIAG_ORDER_SHORT_DET;
-//bool static g_FLMDiagActive = 0; // TODO similar (maybe more like status) should be available at top level to see if MCU is busy with FLM diag
-//bool static g_FLMDiagReady = 0;
 
 /*********************************************************************************************************************/
 /*---------------------------------------------Function Implementations----------------------------------------------*/
@@ -406,15 +399,6 @@ void CmdReadFLMDiagResults(USBReceiveData const * const commandPackage)
         SendUSBPackage(&packageToSend);
     }
 
-void InitFLMDiag()
-{
-    //g_FLMCycDiagStatus.flm_VHxMeasStatus     = FLM_DIAG_STATUS_VHX_MEAS_SKIPPED;
-    //g_FLMCycDiagStatus.flm_LoopResMeasStatus = FLM_DIAG_STATUS_LOOP_RES_MEAS_SKIPPED;
-    //g_FLMCycDiagStatus.flm_SquibDetStatus    = FLM_DIAG_STATUS_SQUIB_DET_SKIPPED;
-
-    // 'Squibs on all channels' for this implementation 
-}
-
 // Diagnostic is running automatically by default, just read results
 void FLMShortDiag()
 {
@@ -548,7 +532,7 @@ void FLMSquibDetErrDiag()
     return;
 }
 
-void FLMLoopResDiag() //
+void FLMLoopResDiag()
 {
     SPIReceiveDataNormal data[FLM_DIAG_READ_RES_REGS_COUNT] = {0};
     uint16 length = FLM_DIAG_READ_RES_REGS_COUNT;
@@ -601,9 +585,21 @@ void FLMLoopResDiag() //
     return;
 }
 
-void GetFLMDiagMode(void)
+void SetFLMDiagMode(FLMDiagModeEnum diagMode)
 {
-    // 
+    SPIReceiveDataNormal data;
+    boolean isSuccessfulFlag = TRUE;
+    flm_flm_diag_start_ut tmpFLMDiagStartfRegister;
+    
+    // Get value from ASIC
+    isSuccessfulFlag &= QSPIReadNormal(SPI1_CS1MASTER, FLM_FLM_DIAG_START, &data.dw);
+    tmpFLMDiagStartfRegister.as_uint16 = data.bf.output_data;
+    
+    // flm_diag_start = 1 starts selected diagnostic
+    tmpFLMDiagStartfRegister.as_s.FlmDiagMode_u5 = diagMode;
+
+    // Write
+    QSPIWriteNormal(SPI1_CS1MASTER, FLM_FLM_DIAG_START, tmpFLMDiagStartfRegister.as_uint16);
 }
 
 void StartFLMDiag(void)
@@ -666,23 +662,6 @@ flm_DiagExecOrderEnum GetFLMDiagExecOrder (void)
     {
         return g_flmDiagExecNumber;
     }
-
-void SetFLMDiagMode(FLMDiagModeEnum diagMode)
-{
-    SPIReceiveDataNormal data;
-    boolean isSuccessfulFlag = TRUE;
-    flm_flm_diag_start_ut tmpFLMDiagStartfRegister;
-    
-    // Get value from ASIC
-    isSuccessfulFlag &= QSPIReadNormal(SPI1_CS1MASTER, FLM_FLM_DIAG_START, &data.dw);
-    tmpFLMDiagStartfRegister.as_uint16 = data.bf.output_data;
-    
-    // flm_diag_start = 1 starts selected diagnostic
-    tmpFLMDiagStartfRegister.as_s.FlmDiagMode_u5 = diagMode;
-
-    // Write
-    QSPIWriteNormal(SPI1_CS1MASTER, FLM_FLM_DIAG_START, tmpFLMDiagStartfRegister.as_uint16);
-}
 
 boolean CheckBatVoltage(void)
 {
