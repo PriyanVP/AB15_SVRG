@@ -244,20 +244,6 @@ namespace AB15_GUI.WPF.ViewModels
                     throw new ArgumentOutOfRangeException(nameof(_stateMachine.State), $"Unexpected state received {_stateMachine.State}");
             }
 
-            // Debug mode code - TODO: remove after finalization
-            //if (DEBUG_MODE)
-            //{
-            //    //// Buttons/commands enable handling
-            //    //_writeConfigurationCommand.Enable       = true;
-            //    //_transferToNormalModeCommand.Enable     = true;
-            //    //_fireSimultaneousCommand.Enable         = true;
-            //    //_startStopCyclicReadingCommand.Enable   = true;
-
-            //    //// Configuration/firing enable handling
-            //    //IsConfigControlsEnabled = true;
-            //    //IsFiringControlsEnabled = true;
-            //}
-
             // Request update of buttons states
             OnPropertyChanged(nameof(WriteConfigurationCommandEn));
             OnPropertyChanged(nameof(TransferToNormalModeCommandEn));
@@ -881,10 +867,10 @@ namespace AB15_GUI.WPF.ViewModels
             logger.Debug($"Changed firing scenario in drop-down on Configuration tab");
 
             // Reset flags
-            for (int i = 0; i < 20; i++)
+            foreach (FiringResultRecord channelRecord in FiringResultTable)
             {
-                FiringResultTable[i].WasFired = false;
-                FiringResultTable[i].ToFire = false;
+                channelRecord.WasFired = false;
+                channelRecord.ToFire = false;
             }
 
             // Choosing preset configuration based on selected option
@@ -1017,7 +1003,7 @@ namespace AB15_GUI.WPF.ViewModels
             _taskCompletionSource = new TaskCompletionSource<bool>();
 
             // Raw SPI for unlocking ASIC
-            const uint RAW_SPI_TRANSACTION = 0xF055_BB0F;
+            const uint RAW_SPI_TRANSACTION = 0x0200_0806;
 
             // Create package to MCU
             TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
@@ -1025,8 +1011,8 @@ namespace AB15_GUI.WPF.ViewModels
             packageToSend.Cmd = MCUCommand.WRITE_RAW_DATA_SPI;
             packageToSend.Deleg = FireSimultaneousDelegate_step0;
             packageToSend.PayloadType = typeof(EmptyPayload);
-            packageToSend.Payload.Data.Add((UInt16) (RAW_SPI_TRANSACTION >> 16) & 0xFFFF); // 16 MSB
             packageToSend.Payload.Data.Add((UInt16) (RAW_SPI_TRANSACTION & 0xFFFF));       // 16 LSB
+            packageToSend.Payload.Data.Add((UInt16) (RAW_SPI_TRANSACTION >> 16) & 0xFFFF); // 16 MSB
 
             // Send command to MCU
             serialWrapper.SerialWrite(packageToSend);
@@ -1177,9 +1163,9 @@ namespace AB15_GUI.WPF.ViewModels
             }
 
             // Set unlock codes
-            flm_HS_LS_On_Ch7_1.flm_code_ch7_1.Data = 0x01;
-            flm_HS_LS_On_Ch14_8.flm_code_ch14_8.Data = 0x10;
-            flm_HS_LS_On_Ch20_15.flm_code_ch20_15.Data = 0x11;
+            flm_HS_LS_On_Ch7_1.flm_code_ch7_1.Data = 0x1;
+            flm_HS_LS_On_Ch14_8.flm_code_ch14_8.Data = 0x2;
+            flm_HS_LS_On_Ch20_15.flm_code_ch20_15.Data = 0x3;
 
             // Create package to MCU
             packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
@@ -1230,16 +1216,16 @@ namespace AB15_GUI.WPF.ViewModels
             flm_HS_LS_On_Ch20_15.Data = 0x0000;
 
             // Set unlock codes
-            flm_HS_LS_On_Ch7_1.flm_code_ch7_1.Data = 0x01;
-            flm_HS_LS_On_Ch14_8.flm_code_ch14_8.Data = 0x10;
-            flm_HS_LS_On_Ch20_15.flm_code_ch20_15.Data = 0x11;
+            flm_HS_LS_On_Ch7_1.flm_code_ch7_1.Data = 0x1;
+            flm_HS_LS_On_Ch14_8.flm_code_ch14_8.Data = 0x2;
+            flm_HS_LS_On_Ch20_15.flm_code_ch20_15.Data = 0x3;
 
             // Create package to MCU
             packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
             packageToSend.ASICID = 1;
             packageToSend.Cmd = MCUCommand.EXECUTE_WRITE_SEQUENCE;
             packageToSend.Deleg = FireSimultaneousDelegate_step3;
-            packageToSend.PayloadType = typeof(AddressDataPayload);
+            packageToSend.PayloadType = typeof(EmptyPayload);
             packageToSend.Payload.Address.Add(flm_HS_LS_On_Ch7_1.Address);
             packageToSend.Payload.Data.Add(flm_HS_LS_On_Ch7_1.Data);
             packageToSend.Payload.Address.Add(flm_HS_LS_On_Ch14_8.Address);
@@ -1248,6 +1234,9 @@ namespace AB15_GUI.WPF.ViewModels
             packageToSend.Payload.Data.Add(flm_HS_LS_On_Ch20_15.Data);
             packageToSend.Payload.Address.Add(reg_FLM_Unlock.Address);
             packageToSend.Payload.Data.Add(reg_FLM_Unlock.Data);
+
+            // Send command to MCU
+            serialWrapper.SerialWrite(packageToSend);  
 
             // == Step 4 - getting firing status ==
 
@@ -1301,7 +1290,7 @@ namespace AB15_GUI.WPF.ViewModels
             _startStopCyclicReadingCommand.InProgress = true;
             OnPropertyChanged(nameof(StartStopCyclicReading));
 
-            logger.Debug($"Pressed Fire simultaneous button");
+            logger.Debug($"Pressed Start stop cyclic reading");
 
             // Create package to MCU
             TransmitCommunicationPackage<EmptyPayload> packageToSend = new TransmitCommunicationPackage<EmptyPayload>();
@@ -1338,6 +1327,7 @@ namespace AB15_GUI.WPF.ViewModels
             //     logger.Error($"Error response received. Status: {mcuResponse.Status}");
             //     return;
             // }
+            // TODO: implement handling of data
 
             // Trigger for transiting to TestMode2
             asicWrapper.ASICs[0].ExecuteTestMode1Transition();
@@ -1361,6 +1351,7 @@ namespace AB15_GUI.WPF.ViewModels
         private void TestMode2Delegate(IReceiveCommunicationPackage package)
         {
             //throw new NotImplementedException();
+            // TODO: implement handling of data
 
             // Trigger for transiting to Normal mode
             asicWrapper.ASICs[0].ExecuteTestMode2Transition();
