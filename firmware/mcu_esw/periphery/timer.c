@@ -30,6 +30,8 @@
 extern void Watchdog1InterruptRoutine(void);
 extern void Watchdog2InterruptRoutine(void);
 extern void WatchdogStatusReadingInterruptRoutine(void);
+extern void TestModeInterruptRoutine(void);
+extern void HackedTimerInterruptRoutine(void);
 //extern void ErrorCheckInterruptRoutine(void);
 //extern void ContinuousReadInterruptRoutine(void);
 //extern void GPIOInterruptRoutine(void);
@@ -51,6 +53,8 @@ void UpdateTimersRoutine(void);
 static uint16 g_watchdog1Reload;                  /** \brief Watchdog acknowledge periodicity in T3 timer interrupts */
 static uint16 g_watchdog2Reload;                  /** \brief Watchdog acknowledge periodicity in T3 timer interrupts */
 static uint16 g_watchdogStatusCheckReload;        /** \brief Watchdog status check periodicity in T3 timer interrupts*/
+static uint16 g_testModeReload;                   /** \brief Test mode check periodicity in T3 timer interrupts      */
+static uint16 g_hackedTimerReload;                /** \brief       */
 static uint16 g_errorCheckReload;                 /** \brief Error check periodicity in T2 timer interrupts          */
 static uint16 g_continuousReadReload;             /** \brief Continuous read periodicity in T2 timer interrupts      */
 static uint16 g_GPIOReload;                       /** \brief GPIO handling periodicity in T2 timer interrupts        */
@@ -59,6 +63,8 @@ static uint16 g_flmDiagReload;                    /** \brief FLM cyclic diagnost
 static boolean g_watchdog1Enable            = FALSE;    /** \brief Watchdog 1 acknowledge interrupts enable          */
 static boolean g_watchdog2Enable            = FALSE;    /** \brief Watchdog 2 acknowledge interrupts enable          */
 static boolean g_watchdogStatusCheckEnable  = FALSE;    /** \brief Watchdog status reading interrupts enable         */
+static boolean g_testModeEnable             = FALSE;    /** \brief Test mode check interrupts enable                 */
+static boolean g_hackedTimerEnable          = FALSE;    /** \brief                  */
 static boolean g_errorCheckEnable           = FALSE;    /** \brief Error check interrupts enable                     */
 static boolean g_continuousReadEnable       = FALSE;    /** \brief Continuous read interrupts enable                 */
 static boolean g_GPIOEnable                 = FALSE;    /** \brief GPIO interrupts enable                            */
@@ -124,6 +130,16 @@ void ConfigureWatchdogStatusCheckPeriodicity(uint16 watchdogStatusCheckPeriodici
     g_watchdogStatusCheckReload = watchdogStatusCheckPeriodicity;
 }
 
+void ConfigureTestModePeriodicity(uint16 testModePeriodicity)
+{
+    g_testModeReload = testModePeriodicity;
+}
+
+void ConfigureHackedTimerPeriodicity(uint16 hackedTimerPeriodicity)
+{
+    g_hackedTimerReload = hackedTimerPeriodicity;
+}
+
 void ConfigureErrorCheckPeriodicity(uint16 errorCheckPeriodicity)
 {
     g_errorCheckReload = errorCheckPeriodicity;
@@ -159,6 +175,16 @@ void EnableWatchdogInterrupt(WatchdogTypeEnum wdType)
 void EnableWatchdogStatusCheckInterrupt(void)
 {
     g_watchdogStatusCheckEnable = TRUE;
+}
+
+void EnableTestModeInterrupt(void)
+{
+    g_testModeEnable = TRUE;
+}
+
+void EnableHackedTimerInterrupt(void)
+{
+    g_hackedTimerEnable = TRUE;
 }
 
 void EnableErrorCheckInterrupt(void)
@@ -197,6 +223,16 @@ void DisableWatchdogInterrupt(WatchdogTypeEnum wdType)
 void DisableWatchdogStatusCheckInterrupt(void)
 {
     g_watchdogStatusCheckEnable = FALSE;
+}
+
+void DisableTestModeInterrupt(void)
+{
+    g_testModeEnable = FALSE;
+}
+
+void DisableHackedTimerInterrupt(void)
+{
+    g_hackedTimerEnable = FALSE;
 }
 
 void DisableErrorCheckInterrupt(void)
@@ -277,6 +313,8 @@ void UpdateTimersRoutine(void)
     static uint16 watchdog1Counter              = 0;
     static uint16 watchdog2Counter              = 0;
     static uint16 watchdogStatusCheckCounter    = 0;
+    static uint16 testModeCounter               = 0;
+    static uint16 hackedTimerCounter            = 0;
     static uint16 errorCheckCounter             = 0;
     static uint16 continuousReadCounter         = 0;
     static uint16 GPIOCounter                   = 0;
@@ -286,6 +324,8 @@ void UpdateTimersRoutine(void)
     watchdog1Counter++;
     watchdog2Counter++;
     watchdogStatusCheckCounter++;
+    testModeCounter++;
+    hackedTimerCounter++;
     errorCheckCounter++;
     continuousReadCounter++;
     GPIOCounter++;
@@ -315,6 +355,22 @@ void UpdateTimersRoutine(void)
         // Watchdog acknowledge
         watchdogStatusCheckCounter = 0;
         WatchdogStatusReadingInterruptRoutine(); // TODO: fix naming
+    }
+
+    // Call corresponding functions if enabled and counter reached reload value
+    if ((g_testModeEnable == TRUE) && (testModeCounter >= g_testModeReload))
+    {
+        // Test mode periodic check
+        testModeCounter = 0;
+        TestModeInterruptRoutine();
+    }
+
+    // Call corresponding functions if enabled and counter reached reload value
+    if ((g_hackedTimerEnable == TRUE) && (hackedTimerCounter >= g_hackedTimerReload))
+    {
+        // Test mode periodic check
+        hackedTimerCounter = 0;
+        HackedTimerInterruptRoutine();
     }
 
 //    if ((g_errorCheckEnable == TRUE) && (errorCheckCounter >= g_errorCheckReload))

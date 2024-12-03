@@ -9,7 +9,7 @@
         xmlns:local="clr-namespace:AB15_GUI.WPF.Views"
         mc:Ignorable="d"
         Title="Bosch AB15" 
-        MinHeight="550" MinWidth="1000"
+        MinHeight="550" MinWidth="1200"
         Height="650" Width="1000"
         Icon="Resources/bosch.ico"
         DataContext="{Binding MainViewModel, Source={StaticResource ViewModelLocator}}">
@@ -348,19 +348,22 @@
             <StackPanel Orientation="Horizontal" Grid.Column="0">
                 
                 <TextBlock Style="{DynamicResource TextBlockStyle}" Text="GUI:"/>
-                
+
+                <!--Text="{Binding GUIVersion}"-->
                 <TextBlock Style="{DynamicResource TextBlockStyle}" MinWidth="20"
-                           Text="{Binding GUIVersion}"/>
+                           Text="00.03.00" Margin="0,0,15,0"/>
                 
                 <TextBlock Style="{DynamicResource TextBlockStyle}" Text="MCU:"/>
-                
+
+                <!--Text="{Binding MCUVersion}"-->
                 <TextBlock Style="{DynamicResource TextBlockStyle}" MinWidth="20"
-                           Text="{Binding MCUVersion}"/>
+                           Text="00.03.00" Margin="0,0,15,0"/>
                 
                 <TextBlock Style="{DynamicResource TextBlockStyle}" Text="AB15:"/>
 
+                <!--Text="{Binding ASICID}"-->
                 <TextBlock Style="{DynamicResource TextBlockStyle}" MinWidth="20"
-                           Text="{Binding ASICID}"/>
+                           Text="RA150" Margin="0,0,15,0"/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="2">

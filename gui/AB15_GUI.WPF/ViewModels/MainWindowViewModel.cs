@@ -110,7 +110,12 @@ namespace AB15_GUI.WPF.ViewModels
             var asicConfig = new DummyConfiguration(asicWrapper);
 
             logger.Trace("In MainViewModel");
-            loggerWindowView.Show();       
+            loggerWindowView.Show();
+
+            // TODO: remove temporary code - should be on other page
+            // Trigger ASIC reset + start ASIC state reading
+            this.asicWrapper.EstablishConnection();              // TODO: uncomment for testing
+            this.asicWrapper.StartInitModeTimeoutResetting();
         }
     }
 }

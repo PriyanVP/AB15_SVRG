@@ -1,11 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Collections;
-using AB15_GUI.WPF.Models;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Collections.Specialized;
@@ -177,7 +173,7 @@ namespace AB15_GUI.WPF.Models
             {
                 lock (_lock)
                 {
-                    return _list.GetEnumerator();
+                    return _list.GetEnumerator(); // TODO: potential issue in threading
                 }
             }
 
@@ -189,7 +185,7 @@ namespace AB15_GUI.WPF.Models
             {
                 lock (_lock)
                 {
-                    return _list.GetEnumerator();
+                    return _list.GetEnumerator(); // TODO: potential issue in threading
                 }
             }
 

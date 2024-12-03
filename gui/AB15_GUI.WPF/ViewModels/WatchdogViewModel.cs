@@ -35,12 +35,18 @@ namespace AB15_GUI.WPF.ViewModels
         private readonly ISerialWrapper serialWrapper;
 
         /// <summary>
+        /// ASIC wrapper holding references to every available ASIC
+        /// </summary>
+        private readonly IASICWrapper asicWrapper;
+
+        /// <summary>
         /// Constructor
         /// </summary>
-        public WatchdogViewModel(ILoggingService logger, ISerialWrapper serialWrapper)
+        public WatchdogViewModel(ILoggingService logger, ISerialWrapper serialWrapper, IASICWrapper asicWrapper)
         {
             this.logger = logger;
             this.serialWrapper = serialWrapper;
+            this.asicWrapper = asicWrapper;
             logger.Trace("In WatchdogViewModel");
 
             // Init help messages for UI
@@ -53,6 +59,8 @@ namespace AB15_GUI.WPF.ViewModels
             _stateMachine.Configure(State.InitialState)
                          .Permit(Triggers.POR, State.Idle);
 
+            // TODO: add locked state to be in before configuration is loaded to ASIC
+
             _stateMachine.Configure(State.Idle)
                          .Permit(Triggers.GotConfiguration, State.InConfiguration);
 
@@ -64,6 +72,7 @@ namespace AB15_GUI.WPF.ViewModels
             _stateMachine.Configure(State.Configured)
                          .Permit(Triggers.ConfigurationChanged, State.InConfiguration)
                          .Permit(Triggers.StartedWD, State.Running)
+                         .Ignore(Triggers.ConfigurationLoaded)
                          .Ignore(Triggers.GotConfiguration)
                          .Ignore(Triggers.StoppedWD);
 
@@ -800,21 +809,8 @@ namespace AB15_GUI.WPF.ViewModels
             packageToSend.Payload.Address.Add(_spi_set_wdsettings.Address);
             packageToSend.Payload.Address.Add(_spi_read_res_cause.Address);
 
-            #if AB12_PLATFORM
-
-            // Temporary implementation for AB12, replace by actual on AB15
-            ReceiveCommunicationPackage<AddressDataPayload> placeholderPackage = new ReceiveCommunicationPackage<AddressDataPayload>();
-            placeholderPackage.ASICID = 1;
-            placeholderPackage.Status = MCUStatus.DATA;
-            placeholderPackage.Payload.Data.AddRange(new List<UInt16>() { 0, 0, 0, 0, 0, 0 });
-            ReadConfigDelegate(placeholderPackage);
-
-            #else
-
             // Send command to MCU
             serialWrapper.SerialWrite(packageToSend);
-
-            #endif
         }
 
         /// <summary>
@@ -834,7 +830,7 @@ namespace AB15_GUI.WPF.ViewModels
 
             packageToSend.ASICID = 1;
             packageToSend.Cmd = MCUCommand.CONFIGURE_WATCHDOG;
-            packageToSend.Deleg = WriteConfigDelagate;
+            packageToSend.Deleg = WriteConfigDelegate;
             packageToSend.PayloadType = typeof(EmptyPayload);
 
             // Unpack data from UI to fields of registers
@@ -842,7 +838,6 @@ namespace AB15_GUI.WPF.ViewModels
             packageToSend.Payload.spi_config_wd1.Data = _spi_config_wd1.Data;
             packageToSend.Payload.spi_config_wd2.Data = _spi_config_wd2.Data;
             packageToSend.Payload.spi_config_wd_decouple.Data = _spi_config_wd_decouple.Data;
-            packageToSend.Payload.spi_config_wd_thres0.Data = _spi_config_wd_thres0.Data;
 
             // Modify some fields based on UI input
             packageToSend.Payload.spi_config_wd1.spi_set_locktime_wd1.Data = (UInt16) WD1LockTime;
@@ -888,7 +883,7 @@ namespace AB15_GUI.WPF.ViewModels
             // Configure start watchdog status reading command
             packageToSendStartMonitoringWD.ASICID = 1;
             packageToSendStartMonitoringWD.Cmd = MCUCommand.START_MONITORING_WATCHDOG;
-            packageToSendStartMonitoringWD.Deleg = StatusMonitoringDelagate;
+            packageToSendStartMonitoringWD.Deleg = StatusMonitoringDelegate;
             packageToSendStartMonitoringWD.PayloadType = typeof(WDStatusPayload);
             packageToSendStartMonitoringWD.IsContinuous = true;
        
@@ -963,10 +958,10 @@ namespace AB15_GUI.WPF.ViewModels
                 logger.Error($"Error response received. Status: {mcuResponse.Status}");
                 return;
             }
-            else if (mcuResponse.Payload.Data.Count < 5)
+            else if (mcuResponse.Payload.Data.Count < 6)
             {
-                AddError($"Unexpected amount of readout data received. Expected 5, but got {mcuResponse.Payload.Data.Count}.", nameof(ReadConfigFromASIC));
-                logger.Error($"Unexpected amount of readout data received. Expected 5, but got {mcuResponse.Payload.Data.Count}.");
+                AddError($"Unexpected amount of readout data received. Expected 6, but got {mcuResponse.Payload.Data.Count}.", nameof(ReadConfigFromASIC));
+                logger.Error($"Unexpected amount of readout data received. Expected 6, but got {mcuResponse.Payload.Data.Count}.");
                 return;
             }
 
@@ -991,6 +986,9 @@ namespace AB15_GUI.WPF.ViewModels
             WD1LockTime = (int)_spi_config_wd1.spi_set_locktime_wd1.Data;
             WD2LockTime = (int)_spi_config_wd2.spi_set_locktime_wd2.Data;
 
+            WD1EN0DisableThreshold = _spi_config_wd_thres0.spi_set_en0_thre_wd1.Data;
+            WD2EN0DisableThreshold = _spi_config_wd_thres0.spi_set_en0_thre_wd2.Data;
+
             // Warning: Clear on read ASIC registers
             OscillatorFaultStatus = (_spi_read_res_cause.rc_oscfail_set_slff_spi.Data != 0) ? (FaultStatus.Fault) : (FaultStatus.Good);
             WDResetFaultStatus = (_spi_read_res_cause.rc_sl_req_reset_spi.Data != 0) ? (FaultStatus.Fault) : (FaultStatus.Good);
@@ -999,16 +997,6 @@ namespace AB15_GUI.WPF.ViewModels
             QA1FaultStatus = (_spi_read_res_cause.rc_qa1_set_slff_spi.Data != 0) ? (FaultStatus.Fault) : (FaultStatus.Good);
             QA2FaultStatus = (_spi_read_res_cause.rc_qa2_set_slff_spi.Data != 0) ? (FaultStatus.Fault) : (FaultStatus.Good);
 
-            #if AB12_PLATFORM
-            // AB12 code
-            // Values share same step as AB15 scale
-            WD1ResponseTime = 63; 
-            WD2ResponseTime = 16;
-
-            WD1LockTime = 0;
-            WD2LockTime = 10; // Underflow limit
-            #endif
-
             logger.Debug($"Received read config delegate");
         }
 
@@ -1016,7 +1004,7 @@ namespace AB15_GUI.WPF.ViewModels
         /// Method that will be called when response for write WD config command is received
         /// </summary>
         /// <param name="response">MCU response package</param>
-        private void WriteConfigDelagate(IReceiveCommunicationPackage response)
+        private void WriteConfigDelegate(IReceiveCommunicationPackage response)
         {
             // Response received - unlock command usage
             _writeWDConfigCommand.InProgress = false;
@@ -1103,7 +1091,7 @@ namespace AB15_GUI.WPF.ViewModels
         /// Method that will be called when WD status data will be received from MCU
         /// </summary>
         /// <param name="response">MCU response package</param>
-        private void StatusMonitoringDelagate(IReceiveCommunicationPackage response)
+        private void StatusMonitoringDelegate(IReceiveCommunicationPackage response)
         {
             // Typecast response to actual type
             ReceiveCommunicationPackage<WDStatusPayload> mcuResponse = (ReceiveCommunicationPackage<WDStatusPayload>) response;
@@ -1118,22 +1106,6 @@ namespace AB15_GUI.WPF.ViewModels
 
             // Clear errors 
             ClearErrors(nameof(StartWatchdog));
-
-            #if AB12_PLATFORM
-
-            // Update statuses
-            // Implementation for AB12
-            WDFaultStatus = (mcuResponse.Payload.WatchdogStatus.WatchdogFault) ? (FaultStatus.Fault) : (FaultStatus.Good);
-
-            WD1FaultStatus = (mcuResponse.Payload.WatchdogStatus.SlowWatchdogFault) ? (FaultStatus.Fault) : (FaultStatus.Good);
-            WD2FaultStatus = (mcuResponse.Payload.WatchdogStatus.FastWatchdogFault) ? (FaultStatus.Fault) : (FaultStatus.Good);
-
-            OSCMONFaultStatus = (mcuResponse.Payload.WatchdogStatus.OscillatorFault) ? (FaultStatus.Fault) : (FaultStatus.Good);
-
-            WD1QAFaultStatus = (mcuResponse.Payload.WatchdogStatus.SlowWatchdogQAFault) ? (FaultStatus.Fault) : (FaultStatus.Good);
-            WD2QAFaultStatus = (mcuResponse.Payload.WatchdogStatus.FastWatchdogQAFault) ? (FaultStatus.Fault) : (FaultStatus.Good);
-
-            #else
 
             // Implementation for AB15
             WDFaultStatus = (mcuResponse.Payload.spi_read_wdstatus2.slff_set_spi.Data != 0) ? (FaultStatus.Fault) : (FaultStatus.Good);
@@ -1159,8 +1131,6 @@ namespace AB15_GUI.WPF.ViewModels
             WD2TimingMonitorCounter = mcuResponse.Payload.spi_read_wdstatus2.wd2_tmon_spi.Data;
 
             WD1ErrorEventsCounter = mcuResponse.Payload.spi_read_wdstatus1.error_count_spi.Data;
-            
-            #endif
         }
 
         #endregion // Commands

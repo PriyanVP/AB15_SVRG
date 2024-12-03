@@ -70,6 +70,11 @@ namespace AB15_GUI.WPF.Models.Interfaces
         event EventHandler? NormalModeEntered;
 
         /// <summary>
+        /// Event for requesting configuration data
+        /// </summary>        
+        event EventHandler? RequestConfiguration;
+
+        /// <summary>
         /// Event for notification if error in any of the callbacks is set
         /// </summary>
         event EventHandler<CallbackErrorEventArgs>? ErrorCallbackReceived;

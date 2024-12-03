@@ -304,6 +304,9 @@ public class SerialWrapper : IDisposable, ISerialWrapper
                 package.Add(tmpBufferItm);
             }
 
+            // Command tracer
+            LogPackage(false, package);
+
             // Save package to queue
             _receivedPackages.Enqueue(package);
         }
@@ -342,6 +345,9 @@ public class SerialWrapper : IDisposable, ISerialWrapper
             // Generate package and call serial write function
             List<byte> package = packageToSend.GetPackage();
 
+            // Command tracer
+            LogPackage(true, package);
+
             // Call low level write function
             _serialPort.Write(package.ToArray<byte>(), package.Count);
         }
@@ -370,5 +376,22 @@ public class SerialWrapper : IDisposable, ISerialWrapper
 
         bool isRemovalSuccessful = _responseWaitlist.RemoveItemFromWaitlist(msgID);
         return isRemovalSuccessful;
+    }
+
+    /// <summary>
+    /// Package logger. Intended usage: search log file by [CT IN] or [CT OUT] keywords
+    /// Works only if logger in debug mode. Logs both in and out packages
+    /// </summary>
+    /// <param name="isTransmitPackage">flag indicating if package is transmitted from PC</param>
+    /// <param name="package">full package</param>
+    private void LogPackage(bool isTransmitPackage, List<byte> package)
+    {
+        if (logger.IsDebugEnabled)
+        {
+            string inOut = isTransmitPackage ? "OUT" : "IN";
+            string packageAsString = $"[CT {inOut}] Package:";
+            package.ForEach((x) => packageAsString = $"{packageAsString} 0x{x:X2}");
+            logger.Debug(packageAsString);
+        }
     }
 }
