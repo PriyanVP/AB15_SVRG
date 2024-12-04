@@ -105,6 +105,8 @@ namespace AB15_GUI.Tests.Models
         {
             public List<byte> TransmitData = new List<byte>();
 
+            public string? Error { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
             public void Deserialize(MCUStatus status, List<byte> rawData)
             {
                 // Unused

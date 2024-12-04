@@ -7,6 +7,7 @@ using NLog;
 using System.Collections.Generic;
 using System.Windows;
 using System;
+using System.Collections.ObjectModel;
 
 namespace AB15_GUI.Tests.ViewModels
 {
@@ -23,6 +24,7 @@ namespace AB15_GUI.Tests.ViewModels
         private ILoggingService loggerMock;
         private WatchdogViewModel watchdogVM;
         private SerialWrapperMock serialMock;
+        private ASICWrapperMock asicMock;
 
         /// <summary>
         /// Set up test environment
@@ -32,7 +34,8 @@ namespace AB15_GUI.Tests.ViewModels
         {
             loggerMock = new LoggerMock(); // Same logger will be used across all tests
             serialMock = new SerialWrapperMock();
-            watchdogVM = new WatchdogViewModel(loggerMock, serialMock);
+            asicMock = new ASICWrapperMock();
+            watchdogVM = new WatchdogViewModel(loggerMock, serialMock, asicMock);
         }
 
         /// <summary>
@@ -229,6 +232,21 @@ namespace AB15_GUI.Tests.ViewModels
         }
 
         #region Mocks
+
+        public class ASICWrapperMock : IASICWrapper
+        {
+            public ObservableCollection<IASIC> ASICs => throw new NotImplementedException();
+
+            public void EstablishConnection()
+            {
+                throw new NotImplementedException();
+            }
+
+            public void StartInitModeTimeoutResetting()
+            {
+                throw new NotImplementedException();
+            }
+        }
 
         public class SerialWrapperMock : ISerialWrapper
         {
