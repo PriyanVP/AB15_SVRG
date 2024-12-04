@@ -1319,21 +1319,6 @@ namespace AB15_GUI.WPF.ViewModels
             serialWrapper.SerialWrite(packageToSend);
         }
 
-        private void TestMode1Delegate(IReceiveCommunicationPackage package)
-        {
-            // // Change state if response received
-            // if (mcuResponse.Payload.Error is not null)
-            // {
-            //     AddError(mcuResponse.Payload.Error, nameof(FireSimultaneous));
-            //     logger.Error($"Error response received. Status: {mcuResponse.Status}");
-            //     return;
-            // }
-            // TODO: implement handling of data
-
-            // Trigger for transiting to TestMode2
-            asicWrapper.ASICs[0].ExecuteTestMode1Transition();
-        }
-
         /// <summary>
         /// Method that will initiate TestMode2 diagnostics
         /// </summary>
@@ -1349,7 +1334,35 @@ namespace AB15_GUI.WPF.ViewModels
             serialWrapper.SerialWrite(packageToSend);
         }
 
-        private void TestMode2Delegate(IReceiveCommunicationPackage package)
+        #endregion // Commands
+
+        #region Commands_delegates
+
+        /// <summary>
+        /// Delegate for handling response from executing test mode 1
+        /// </summary>
+        /// <param name="response">MCU response package</param>
+        private void TestMode1Delegate(IReceiveCommunicationPackage response)
+        {
+            // // Change state if response received
+            // if (mcuResponse.Payload.Error is not null)
+            // {
+            //     AddError(mcuResponse.Payload.Error, nameof(FireSimultaneous));
+            //     logger.Error($"Error response received. Status: {mcuResponse.Status}");
+            //     return;
+            // }
+            // TODO: implement handling of data
+
+            // Trigger for transiting to TestMode2
+            asicWrapper.ASICs[0].ExecuteTestMode1Transition();
+        }
+
+
+        /// <summary>
+        /// Delegate for handling response from executing test mode 2
+        /// </summary>
+        /// <param name="response">MCU response package</param>
+        private void TestMode2Delegate(IReceiveCommunicationPackage response)
         {
             //throw new NotImplementedException();
             // TODO: implement handling of data
@@ -1357,10 +1370,6 @@ namespace AB15_GUI.WPF.ViewModels
             // Trigger for transiting to Normal mode
             asicWrapper.ASICs[0].ExecuteTestMode2Transition();
         }
-
-        #endregion // Commands
-
-        #region Commands_delegates
 
         /// <summary>
         /// Delegate for Fire simultaneous command - raw spi
@@ -1517,7 +1526,7 @@ namespace AB15_GUI.WPF.ViewModels
             // Change state if response received
             if (mcuResponse.Payload.Error is not null)
             {
-                AddError(mcuResponse.Payload.Error, nameof(FireSimultaneous));
+                AddError(mcuResponse.Payload.Error, nameof(StartStopCyclicReading));
                 logger.Error($"Error response received. Status: {mcuResponse.Status}");
                 return;
             }
@@ -1766,7 +1775,7 @@ namespace AB15_GUI.WPF.ViewModels
             // Change state if response received
             if (mcuResponse.Payload.Error is not null)
             {
-                AddError(mcuResponse.Payload.Error, nameof(FireSimultaneous));
+                AddError(mcuResponse.Payload.Error, nameof(StartStopCyclicReading));
                 logger.Error($"Error response received. Status: {mcuResponse.Status}");
                 return;
             }
