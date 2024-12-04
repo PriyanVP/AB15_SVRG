@@ -16,6 +16,9 @@
     <Compile Update="Views\Components\ConnectionAnimation.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\Components\FiringChannelConfig.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\Components\WatchdogSlider.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -46,6 +49,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\Components\ConnectionAnimation.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Components\FiringChannelConfig.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\Components\WatchdogSlider.xaml">

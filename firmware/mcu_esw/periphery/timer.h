@@ -52,6 +52,13 @@
 /*------------------------------------------------Function Prototypes------------------------------------------------*/
 /*********************************************************************************************************************/
 
+
+void ConfigureHackedTimerPeriodicity(uint16 hackedTimerPeriodicity);
+void EnableHackedTimerInterrupt(void);
+void DisableHackedTimerInterrupt(void);
+
+
+
 /** \brief Function to initialize the GPT12 Module and configure timers
  * Should be called before starting timers!
  *
@@ -72,8 +79,6 @@ void StartServiceTimer(void);
  * \return Returns nothing
  */
 void StartGeneralTimer(void);
-
-void StartFastTimer(void); // TODO: for removal?
 
 /** \brief Stop service timer interrupts
  *
@@ -104,6 +109,14 @@ void ConfigureWatchdogPeriodicity(WatchdogTypeEnum wdType, uint16 watchdogPeriod
  */
 void ConfigureWatchdogStatusCheckPeriodicity(uint16 watchdogStatusCheckPeriodicity);
 
+/** \brief Configure Test mode 1/2 check periodicity
+ * Periodicity is defined in number of General timer interrupts
+ *
+ * \param testModePeriodicity periodicity of checking test mode results
+ * \return Returns nothing
+ */
+void ConfigureTestModePeriodicity(uint16 testModePeriodicity);
+
 /** \brief Configure error check periodicity
  * Periodicity is defined in number of General timer interrupts
  *
@@ -128,6 +141,13 @@ void ConfigureContinuousReadPeriodicity(uint16 continuousReadPeriodicity);
  */
 void ConfigureGPIOPeriodicity(uint16 gpioPeriodicity);
 
+/** \brief Configure FLM Diagnostics performing periodicity
+ * Periodicity is defined in number of General timer interrupts
+ * \param flmDiagPeriodicity periodicity of starting and checking on execution of FLM diags
+ * \return Returns nothing
+ */
+void ConfigureFLMDiagPeriodicity(uint16 flmDiagPeriodicity);
+
 /** \brief Enable Watchdog interrupt
  * Periodicity has to be configured first!
  *
@@ -142,6 +162,13 @@ void EnableWatchdogInterrupt(WatchdogTypeEnum wdType);
  * \return Returns nothing
  */
 void EnableWatchdogStatusCheckInterrupt(void);
+
+/** \brief Enable Test mode 1/2 check interrupt
+ * Periodicity has to be configured first!
+ *
+ * \return Returns nothing
+ */
+void EnableTestModeInterrupt(void);
 
 /** \brief Enable error check interrupt
  * Periodicity has to be configured first!
@@ -176,6 +203,12 @@ void DisableWatchdogInterrupt(WatchdogTypeEnum wdType);
  * \return Returns nothing
  */
 void DisableWatchdogStatusCheckInterrupt(void);
+
+/** \brief Disable Test mode 1/2 check interrupt
+ *
+ * \return Returns nothing
+ */
+void DisableTestModeInterrupt(void);
 
 /** \brief Disable Fast interrupt
  *

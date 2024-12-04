@@ -53,6 +53,7 @@ namespace AB15_GUI.WPF
                             services.AddSingleton<MainViewModel>();
                             services.AddSingleton<LoggerViewModel>();
                             services.AddSingleton<WatchdogViewModel>();
+                            services.AddSingleton<FiringViewModel>();
 
                             #endregion // ViewModels
 

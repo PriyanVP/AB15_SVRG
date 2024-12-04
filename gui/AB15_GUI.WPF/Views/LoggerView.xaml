@@ -188,9 +188,9 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Text="GUI:" Grid.Column="0" Style="{DynamicResource TextBlockStyle}"/>
-            <TextBlock Text="XXX"  Grid.Column="1" Style="{DynamicResource TextBlockStyle}"/>
+            <TextBlock Text="00.03.00"  Grid.Column="1" Style="{DynamicResource TextBlockStyle}"/>
             <TextBlock Text="MCU:" Grid.Column="2" Style="{DynamicResource TextBlockStyle}"/>
-            <TextBlock Text="YYY"  Grid.Column="3" Style="{DynamicResource TextBlockStyle}"/>
+            <TextBlock Text="00.03.00"  Grid.Column="3" Style="{DynamicResource TextBlockStyle}"/>
 
         </Grid>
     </Grid>

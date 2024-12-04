@@ -22,17 +22,23 @@
 /*------------------------------------------------------Macros-------------------------------------------------------*/
 /*********************************************************************************************************************/
 
-#define WD_CFG_PACKAGE_MAX_LEN  (6)             /** \brief Max number of addr+data items (4 bytes) in package  */
+#define WD_CFG_PACKAGE_MAX_LEN      (6)         /** \brief Max number of addr+data items (4 bytes) in package  */
 
-#define WD_STATUS_REGS_COUNT    (4)             /** \brief Number of WD status registers for periodic reading */
+#define WD_STATUS_REGS_COUNT        (4)         /** \brief Number of WD status registers for periodic reading */
 
-#define AB12_WD2_ACK_PERIOD     (12)            /** \brief Periodicity of acknowledging WD2 on AB12 platform: 600 us/ 50 us
+#define AB12_WD2_ACK_PERIOD         (12)        /** \brief Periodicity of acknowledging WD2 on AB12 platform: 600 us/ 50 us
                                                     where 50 us - timer interrupt periodicity on MCU */
 
-#define AB12_WD3_ACK_PERIOD     (200)           /** \brief Periodicity of acknowledging WD3 on AB12 platform: 10 ms/ 50 us
+#define AB12_WD3_ACK_PERIOD         (200)       /** \brief Periodicity of acknowledging WD3 on AB12 platform: 10 ms/ 50 us
                                                     where 50 us - timer interrupt periodicity on MCU */
 
-#define WD_STATUS_CHECK_PERIOD  (4000)          /** \brief Periodicity of reading status of WD: 200 ms/ 50 us */
+#define WD1_ACK_PERIOD_SCALE_FACTOR (20)        /** \brief Scale factor to convert WD1 ACK period 
+                                                    from register units to timer ticks: 1 ms / 50 us = 20 */
+
+#define WD2_ACK_PERIOD_SCALE_FACTOR (1)         /** \brief Scale factor to convert WD2 ACK period 
+                                                    from register units to timer ticks: 50 us / 50 us = 1 */
+
+#define WD_STATUS_CHECK_PERIOD      (4000)      /** \brief Periodicity of reading status of WD: 200 ms/ 50 us */
 
 /*********************************************************************************************************************/
 /*--------------------------------------------------Enumerations-----------------------------------------------------*/
@@ -152,12 +158,6 @@ static ExtClockStateEnum g_extClState = EXT_CLK_STATE_2MHZ;
 /*------------------------------------------------Function Prototypes------------------------------------------------*/
 /*********************************************************************************************************************/
 
-/** \brief Function to provide a Response word for Challenge of AB12's Watchdog 1 and 2 
- * \param challengeValue value of AB12's Watchdog 1 and 2 Challenge word
- * \return Returns Response word
- */
-uint16 GetResponseWordAB12(uint16 challengeValue);
-
 /** \brief Function to provide an Answer word for Question of AB15's Watchdog 1 
  * \param questionValue value of AB15's Watchdog 1 Question word
  * \return Returns Answer word
@@ -196,19 +196,19 @@ void CmdConfigureWatchdog(USBReceiveData const * const commandPackage)
     uint16 length = (commandPackage->dataLength) >> 2;  // Number of 32bit SPI words to write into ASIC (= number of registers to write)
 
     // Parse input
-    // Layout: (addr_MSB - addr_LSB - data_MSB - data_LSB) - (...)
+    // Layout: (addr_LSB - addr_MSB - data_LSB - data_MSB) - (...)
     for (uint8 i = 0; i < length; i++)
     {
         indexerForPayload = (i << 2); // One item is 4 bytes
 
-        address[i] = ConstructWordFromBytes(commandPackage->data[indexerForPayload], commandPackage->data[indexerForPayload+1]); // TODO: incorrect, start from 1, not 0
-        data[i] = ConstructWordFromBytes(commandPackage->data[indexerForPayload+2], commandPackage->data[indexerForPayload+3]);
+        address[i] = ConstructWordFromBytes(commandPackage->data[indexerForPayload+1], commandPackage->data[indexerForPayload]);
+        data[i] = ConstructWordFromBytes(commandPackage->data[indexerForPayload+3], commandPackage->data[indexerForPayload+2]);
     }
 
     // Retrieve values for WD timer configuration
     safety_logic_spi_config_wd1_ut tmpConfigRegisterWD1;
     tmpConfigRegisterWD1.as_uint16 = data[0];
-    g_wd1Parameters.wdConfig.ackPeriod = tmpConfigRegisterWD1.as_s.SpiSetLocktimeWd1_u6 + (tmpConfigRegisterWD1.as_s.SpiSetResponsetimeWd1_u6 >> 1); // ACK WD at the middle of responce time interval
+    g_wd1Parameters.wdConfig.ackPeriod = WD1_ACK_PERIOD_SCALE_FACTOR * (tmpConfigRegisterWD1.as_s.SpiSetLocktimeWd1_u6 + (tmpConfigRegisterWD1.as_s.SpiSetResponsetimeWd1_u6 >> 1)); // ACK WD at the middle of response time interval
     g_wd1Parameters.wdConfig.wdType = WD1;
     g_wd1Parameters.wdQuestion = 0;
     g_wd1Parameters.isWDConfigured = TRUE;
@@ -216,26 +216,11 @@ void CmdConfigureWatchdog(USBReceiveData const * const commandPackage)
 
     safety_logic_spi_config_wd2_ut tmpConfigRegisterWD2;
     tmpConfigRegisterWD2.as_uint16 = data[1];
-    g_wd2Parameters.wdConfig.ackPeriod = tmpConfigRegisterWD2.as_s.SpiSetLocktimeWd2_u6+ (tmpConfigRegisterWD2.as_s.SpiSetResponsetimeWd2_u6 >> 1); // ACK WD at the middle of responce time interval
+    g_wd2Parameters.wdConfig.ackPeriod = WD2_ACK_PERIOD_SCALE_FACTOR * (tmpConfigRegisterWD2.as_s.SpiSetLocktimeWd2_u6+ (tmpConfigRegisterWD2.as_s.SpiSetResponsetimeWd2_u6 >> 1)); // ACK WD at the middle of response time interval
     g_wd2Parameters.wdConfig.wdType = WD2;
     g_wd2Parameters.wdQuestion = 0;
     g_wd2Parameters.isWDConfigured = TRUE;
     g_wd2Parameters.state = WD_STATE_CONFIGURED;
-
-    #ifdef AB12_PLATFORM
-
-    // Code for AB12 implementation
-    // WD3 in AB12
-    g_wd1Parameters.wdConfig.ackPeriod = AB12_WD3_ACK_PERIOD; // Period: 10 ms
-    g_wd1Parameters.wdQuestion = 0x9B9B;
-
-    // Actual WD2 of AB12
-    g_wd2Parameters.wdConfig.ackPeriod = AB12_WD2_ACK_PERIOD; // Period: 600 us
-    g_wd2Parameters.wdQuestion = 0x9B9B;
-
-    isSuccessfulFlag = TRUE; // no configuration exists fro WD in AB12
-
-    #else
 
     // Code for AB15 implementation
     isSuccessfulFlag = TRUE;
@@ -244,8 +229,6 @@ void CmdConfigureWatchdog(USBReceiveData const * const commandPackage)
     {
         isSuccessfulFlag &= QSPIWriteNormal(SPI1_CS1MASTER, address[i], data[i]); // TODO: configuration, not yet implemented; not available for AB12
     }
-
-    #endif
 
     // Prepare report for GUI
     packageToSend.device_id = commandPackage->device_id;
@@ -274,17 +257,6 @@ void IntCmdAcknowledgeWatchdog1(void)
     SPIReceiveDataNormal data;
 
     // Obtain response word from look-up table
-    #ifdef AB12_PLATFORM
-    // AB12 platform
-    // Get answer from the table (question is stored from previous WD triggering)
-    answer = GetResponseWordAB12(g_wd1Parameters.wdQuestion);
-
-    // Send answer word to ASIC, only CS1MASTER is responsible for Watchdog
-    QSPIExecuteInstruction(SPI1_CS1MASTER, WD3_TRIGGER, FALSE, answer, &data.dw);
-
-    // Store new question
-    g_wd1Parameters.wdQuestion = data.bf.output_data; 
-    #else
     // AB15 platform
     // Read question from ASIC
     QSPIReadNormal(SPI1_CS1MASTER, SAFETY_LOGIC_SPI_READ_WDQA, &(data.dw));
@@ -295,7 +267,6 @@ void IntCmdAcknowledgeWatchdog1(void)
     
     // Send answer word to ASIC
     QSPIWriteNormal(SPI1_CS1MASTER, SAFETY_LOGIC_SPI_TRIG_WDQA1, answer);
-    #endif
 }
 
 void IntCmdAcknowledgeWatchdog2(void)
@@ -305,17 +276,6 @@ void IntCmdAcknowledgeWatchdog2(void)
     SPIReceiveDataNormal data;
 
     // Obtain response word from look-up table
-    #ifdef AB12_PLATFORM
-    // AB12 platform
-    // Get answer from the table (question is stored from previous WD triggering)
-    answer = GetResponseWordAB12(g_wd2Parameters.wdQuestion);
-
-    // Send answer word to ASIC, only CS1MASTER is responsible for Watchdog
-    QSPIExecuteInstruction(SPI1_CS1MASTER, WD2_TRIGGER, FALSE, answer, &data.dw);
-
-    // Store new question
-    g_wd2Parameters.wdQuestion = data.bf.output_data; 
-    #else
     // AB15 platform
     // Read question from ASIC
     QSPIReadNormal(SPI1_CS1MASTER, SAFETY_LOGIC_SPI_READ_WDQA, &(data.dw));
@@ -326,7 +286,6 @@ void IntCmdAcknowledgeWatchdog2(void)
     
     // Send answer word to ASIC
     QSPIWriteNormal(SPI1_CS1MASTER, SAFETY_LOGIC_SPI_TRIG_WDQA2, answer);
-    #endif
 }
 
 void CmdStartWatchdog(USBReceiveData const * const commandPackage)
@@ -356,13 +315,9 @@ void CmdStartWatchdog(USBReceiveData const * const commandPackage)
         return;
     }
 
-    #ifndef AB12_PLATFORM
-
     // Lock config for AB15
     // Note: assumed that all other bites in spi_set_wdsettings can be 0
     QSPIWriteNormal(SPI1_CS1MASTER, SAFETY_LOGIC_SPI_SET_WDSETTINGS, SAFETY_LOGIC_SPI_SET_WDSETTINGS_SPI_ON_SL_MASK);
-
-    #endif
 
     // Configure periodicity of Watchdog serving MCU interrupt
     ConfigureWatchdogPeriodicity(WD1, g_wd1Parameters.wdConfig.ackPeriod);
@@ -502,24 +457,11 @@ void IntCmdMonitorWatchdog(void)
     }
 
     // Read WD status from ASIC
-    #ifdef AB12_PLATFORM
-    // AB12 platform
-    SPIReceiveData data;
-
-    // Read WD status from ASIC
-    isSuccessfulFlag = QSPIExecuteInstruction(SPI1_CS1MASTER, WD_STATUS, FALSE, 0x0, &data.dw);
-
-    // Pack data for sending to PC
-    packageToSend.dataLength = 3;
-    packageToSend.data[0] = GetMSB(data.bf.output_data);
-    packageToSend.data[1] = GetLSB(data.bf.output_data);
-    packageToSend.data[2] = data.bf.wdf;
-    #else
     // AB15 platform
     SPIReceiveDataNormal data[WD_STATUS_REGS_COUNT] = {0};
 
     // Read WD related registers from ASIC
-    // isSuccessfulFlag = QSPIReadSequenceNormal(SPI1_CS1MASTER, g_wdStatusMonitoringConfig.wdStatusRegsAddresses, &data[0].dw, &length); // TODO: not implemented
+    isSuccessfulFlag = QSPIReadSequenceNormal(SPI1_CS1MASTER, g_wdStatusMonitoringConfig.wdStatusRegsAddresses, &data[0].dw, &length); // TODO: not implemented
 
     packageToSend.dataLength = length << 1; // each data item is send as 2 bytes
 
@@ -528,7 +470,6 @@ void IntCmdMonitorWatchdog(void)
         packageToSend.data[i<<1]     = GetLSB(data[i].bf.output_data);
         packageToSend.data[(i<<1)+1] = GetMSB(data[i].bf.output_data);
     }
-    #endif
 
     // Send data
     packageToSend.status = (isSuccessfulFlag) ? USB_STATUS_DATA : USB_STATUS_ERROR;
@@ -537,41 +478,6 @@ void IntCmdMonitorWatchdog(void)
 
     // Send message to GUI
     SendUSBPackage(&packageToSend);
-}
-
-uint16 GetResponseWordAB12(uint16 challengeValue)
-{
-    // Table of Challenge-Response values (according to datasheet AB12)
-    static const uint16 responseWordArray[8] =  {0xE106,
-                                                 0x9671,
-                                                 0x4BAC,
-                                                 0x3CDB,
-                                                 0xD235,
-                                                 0xA542,
-                                                 0x789F,
-                                                 0x0FE8};
-    static const uint16 challengeWordArray[8] = {0x2020,
-                                                 0xFDFD,
-                                                 0x8A8A,
-                                                 0x5757,
-                                                 0xECEC,
-                                                 0x3131,
-                                                 0x4646,
-                                                 0x9B9B};
-    // Using if condition instead of simple array indexing
-    // because it's unclear if order of coming Challenge words
-    // will always be numerical
-    for (uint8 i = 0; i<8; i++)
-    {
-        if (challengeValue == challengeWordArray[i])
-        {
-            // Provide value of requested Response word
-            return (responseWordArray[i]);
-        }
-    }
-
-    // This return should never be reached
-    return responseWordArray[0];
 }
 
 uint16 GetAnswerWordWD1AB15(uint8 questionValue)

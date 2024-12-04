@@ -8,12 +8,14 @@
 #include "common/usb_data_types.h"
 #include "common/spi_data_types.h"
 #include "common/command_queue.h"
+#include "common/flm_diagnostics.h"
 #include "cmd/general_cmd.h"
 #include "cmd/seq_cmd.h"
 #include "cmd/bypass_cmd.h"
 #include "cmd/cont_read_cmd.h"
 #include "cmd/gpio_cmd.h"
 #include "cmd/watchdog.h"
+#include "cmd/testmode_cmd.h"
 #include "periphery/led.h"
 #include "periphery/usb.h"
 #include "periphery/timer.h"
@@ -28,6 +30,8 @@
 #include "IfxPort.h" // for gpio.h
 #include "IfxPort_PinMap.h" // for gpio.h // TODO: remove dependency to IFxPort stuff
 #include "periphery/gpio.h" // for chip select lines
+#include "cmd/hacked_timer_cmd.h"
+
 
 IFX_ALIGN(4) IfxCpu_syncEvent g_cpuSyncEvent = 0;
 
@@ -47,7 +51,7 @@ void Watchdog1InterruptRoutine(void)
     };
     ToggleLED4();
     // Add WD serving internal command to command queue
-    QueueWriteTail(&serveWatchdogCommand);    // TODO: commented out to have MCU contained WD routine. Uncomment for actual communication with ASIC
+    QueueWriteTail(&serveWatchdogCommand);
 }
 
 /** \brief Watchdog 2 interrupt routine
@@ -64,7 +68,7 @@ void Watchdog2InterruptRoutine(void)
     };
     ToggleLED2();
     // Add WD serving internal command to command queue
-    QueueWriteTail(&serveWatchdogCommand);    // TODO: commented out to have MCU contained WD routine. Uncomment for actual communication with ASIC
+    QueueWriteTail(&serveWatchdogCommand);
 }
 
 /** \brief Watchdogs status reading interrupt routine
@@ -82,6 +86,96 @@ void WatchdogStatusReadingInterruptRoutine(void)
 
     // Add WD serving internal command to command queue
     QueueWrite(&serveWatchdogStatusCommand);
+}
+
+/** \brief FLM module cyclic diagnostics interrupt routine
+ * Starts cyclic diagnostics, stores results to be later sent to GUI
+*/
+void FLMDiagInterruptRoutine(void)
+{
+    // Initial FLM Diagnostic execution state is initialised as Idle
+    // and on later rounds updated from ASIC 
+    if (GetFLMDiagExecStatus() != FLM_DIAG_EXEC_STATUS_IDLE)
+    {
+        SetFLMDiagExecStatus(FLMReadDiagExecStatus());
+    }
+
+    // Start diagnostic and get out
+    // On next entries, check execution status:
+    switch (GetFLMDiagExecOrder())
+    {
+    case FLM_DIAG_ORDER_SHORT_DET:
+        // check status of diag execution, dont enter any diagnostic if status is ONGOING
+        if ((GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_FINISHED)||(GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_IDLE))
+        {
+            FLMShortDiag();
+            // Move on to next diagnostic
+            SetFLMDiagExecOrder(FLM_DIAG_ORDER_VHX_MEAS);
+        }
+        break;
+
+    case FLM_DIAG_ORDER_VHX_MEAS: 
+        FLMVHxDiag();
+        if (GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_FINISHED)
+        {
+            // Move on to next diagnostic
+            SetFLMDiagExecOrder(FLM_DIAG_ORDER_LOOP_RES_MEAS);
+        }
+        break;
+
+    case FLM_DIAG_ORDER_LOOP_RES_MEAS:
+        FLMLoopResDiag();
+        if (GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_FINISHED)
+        {
+            // Move on to next diagnostic
+            SetFLMDiagExecOrder(FLM_DIAG_ORDER_SQUIB_DET);
+        }
+        break;
+
+    case FLM_DIAG_ORDER_SQUIB_DET:
+        /* code */
+        FLMSquibDetErrDiag();
+        if (GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_FINISHED)
+        {
+            // Move on to next diagnostic
+            SetFLMDiagExecOrder(FLM_DIAG_ORDER_SHORT_DET);
+        }
+        break;
+
+    default:
+        break;
+    }
+}
+
+/** \brief Test mode 1/2 check interrupt routine
+ * Arms single check of Test mode 1/2 results + arm next test if needed
+ */
+void TestModeInterruptRoutine(void)
+{
+    // Test mode iteration is an internal command
+    static USBReceiveData serveTestModeCommand = 
+    {
+        .device_id = 1,
+        .dataLength = 0,
+        .command = INT_CMD_EXECUTE_TEST_MODE
+    };
+
+    // Add Test mode internal command to command queue
+    QueueWrite(&serveTestModeCommand);
+}
+
+void HackedTimerInterruptRoutine(void)
+{
+    // Test mode iteration is an internal command
+    static USBReceiveData serveHackedTimerCommand = 
+    {
+        .device_id = 1,
+        .dataLength = 0,
+        .command = INT_CMD_EXECUTE_HACKED_TIMER
+    };
+
+    // Add Test mode internal command to command queue
+    QueueWrite(&serveHackedTimerCommand);
 }
 
 /** \brief Main function
@@ -192,6 +286,18 @@ void core0_main(void)
                 CmdWriteReg(&cmdPackage);
                 break;
 
+            case USB_CMD_EXECUTE_RW_SEQUENCE:
+                CmdExecuteRWSequence(&cmdPackage);
+                break;
+
+            case USB_CMD_EXECUTE_READ_SEQUENCE:
+                CmdExecuteReadSequence(&cmdPackage);
+                break;
+
+            case USB_CMD_EXECUTE_WRITE_SEQUENCE:
+                CmdExecuteWriteSequence(&cmdPackage);
+                break;
+
             case USB_CMD_WRITE_RAW_DATA_SPI:
                 CmdSendRawData(&cmdPackage);
                 break;
@@ -227,6 +333,26 @@ void core0_main(void)
                 CmdGetMcuBuildTime(&cmdPackage);
                 break;
 
+            case USB_CMD_START_TEST_MODE1:
+                CmdStartTestMode1(&cmdPackage);
+                break;
+
+            case USB_CMD_START_TEST_MODE2:
+                CmdStartTestMode2(&cmdPackage);
+                break;
+
+            case USB_CMD_STOP_TEST_MODE12:
+                CmdStopTestMode12(&cmdPackage);
+                break;
+
+            case USB_CMD_START_HACKED_TIMER:
+                StartHackedTimer(&cmdPackage);
+                break;
+
+            case USB_CMD_STOP_HACKED_TIMER:
+                StopHackedTimer(&cmdPackage);
+                break;
+
             case INT_CMD_ACK_WATCHDOG1:
                 IntCmdAcknowledgeWatchdog1();
                 break;
@@ -246,7 +372,23 @@ void core0_main(void)
             case INT_CMD_READ_WD_STATUS:
                 IntCmdMonitorWatchdog();
                 break;
+            case INT_CMD_EXECUTE_TEST_MODE:
+                IntCmdExecutePowerstageTest();
+                break;
+            case INT_CMD_EXECUTE_HACKED_TIMER:
+                IntCmdExecuteHackedTimer();
+                break;
 
+            case USB_CMD_FLM_DIAG_ENABLE:
+                CmdEnableFLMDiag();
+                break;
+
+            case USB_CMD_FLM_DIAG_DISABLE:
+                CmdDisableFLMDiag();
+                break;
+
+            case USB_CMD_FLM_DIAG_READ_RESULTS:
+                CmdReadFLMDiagResults(&cmdPackage);
 
            case _USB_CMD_MAX:
                 break;

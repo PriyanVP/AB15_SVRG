@@ -8,6 +8,11 @@ namespace AB15_GUI.WPF.Models.Interfaces
     public interface IByteListSerializable
     {
         /// <summary>
+        /// Property to report errors
+        /// </summary>
+        string? Error { get; set; }
+
+        /// <summary>
         /// Convert information stored in object to List of bytes
         /// </summary>
         /// <returns>object data in form of List of bytes</returns>

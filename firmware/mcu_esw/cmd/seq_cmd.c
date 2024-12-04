@@ -198,7 +198,7 @@ void CmdExecuteWriteSequence(USBReceiveData const * const commandPackage)
     }
     else
     {
-        packageToSend.status = USB_STATUS_DATA;
+        packageToSend.status = USB_STATUS_ACK;
         packageToSend.dataLength = 0;
     }
 

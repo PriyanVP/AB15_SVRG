@@ -1,12 +1,12 @@
 using AB15_GUI.WPF.Models.Interfaces;
 using System;
 using System.Collections.Generic;
-using AB15_GUI.WPF.Models;
 
 namespace AB15_GUI.WPF.Models
 {
     /// <summary>
-    /// Class that used for commands without payload
+    /// Generic class that used for commands requiring address and data payload
+    /// Note: read/write sequence commands, read/write commands, etc.
     /// </summary>
     public class AddressDataPayload : IByteListSerializable
     {
@@ -56,7 +56,7 @@ namespace AB15_GUI.WPF.Models
                     // Layout Data_MSB - Data_LSB
                     for (int i = 0; i < rawData.Count; i += 2)
                     {
-                        Data.Add(BitOperationsExtensions.ConstructWordFromBytes(rawData[i], rawData[i+1]));
+                        Data.Add(BitOperationsExtensions.ConstructWordFromBytes(rawData[i+1], rawData[i]));
                     }
  
                     break;
@@ -78,29 +78,29 @@ namespace AB15_GUI.WPF.Models
             {
                 for (int i = 0; i < Address.Count; i++)
                 {
-                    // Layout: Addr_MSB - Addr_LSB - Data_MSB - Data_LSB
-                    payloadToSend.Add(Address[i].GetMSB());
+                    // Layout: Addr_LSB - Addr_MSB - Data_LSB - Data_MSB
                     payloadToSend.Add(Address[i].GetLSB());
-                    payloadToSend.Add(Data[i].GetMSB());
+                    payloadToSend.Add(Address[i].GetMSB());
                     payloadToSend.Add(Data[i].GetLSB());
+                    payloadToSend.Add(Data[i].GetMSB());
                 }
             }
             else if ((Address.Count != 0) && (Data.Count == 0))
             {
                 for (int i = 0; i < Address.Count; i++)
                 {
-                    // Layout: Addr_MSB - Addr_LSB
-                    payloadToSend.Add(Address[i].GetMSB());
+                    // Layout: Addr_LSB - Addr_MSB
                     payloadToSend.Add(Address[i].GetLSB());
+                    payloadToSend.Add(Address[i].GetMSB());
                 }  
             }
             else if ((Address.Count == 0) && (Data.Count != 0))
             {
                 for (int i = 0; i < Address.Count; i++)
                 {
-                    // Layout: Addr_MSB - Addr_LSB
-                    payloadToSend.Add(Data[i].GetMSB());
+                    // Layout: Data_LSB - Data_MSB
                     payloadToSend.Add(Data[i].GetLSB());
+                    payloadToSend.Add(Data[i].GetMSB());
                 }  
             }
             else
