@@ -1288,7 +1288,7 @@ namespace AB15_GUI.WPF.ViewModels
             // Handle that command execution can only be done once in a row
             if (_startStopCyclicReadingCommand.IsEnabled == false) return;
             _startStopCyclicReadingCommand.InProgress = true;
-            OnPropertyChanged(nameof(StartStopCyclicReading));
+            OnPropertyChanged(nameof(StartStopCyclicReadingCommandEn)); // TODO: StartStopCyclicReadingCommandEn?
 
             logger.Debug($"Pressed Start stop cyclic reading");
 
@@ -1508,7 +1508,7 @@ namespace AB15_GUI.WPF.ViewModels
         private void CyclicReadingStartStopDelegate(IReceiveCommunicationPackage response)
         {
             _startStopCyclicReadingCommand.InProgress = false;
-            OnPropertyChanged(nameof(StartStopCyclicReading));
+            OnPropertyChanged(nameof(StartStopCyclicReadingCommandEn));
 
             // Typecast response to actual type
             ReceiveCommunicationPackage<EmptyPayload> mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>) response;
