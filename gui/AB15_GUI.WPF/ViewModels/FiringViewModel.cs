@@ -1285,22 +1285,23 @@ namespace AB15_GUI.WPF.ViewModels
         /// </summary>
         private void StartStopCyclicReadingExecute(object obj)
         {
-            // Handle that command execution can only be done once in a row
-            if (_startStopCyclicReadingCommand.IsEnabled == false) return;
-            _startStopCyclicReadingCommand.InProgress = true;
-            OnPropertyChanged(nameof(StartStopCyclicReadingCommandEn)); // TODO: StartStopCyclicReadingCommandEn?
+            // TODO: uncomment after MCU feature finalization
+            // // Handle that command execution can only be done once in a row
+            // if (_startStopCyclicReadingCommand.IsEnabled == false) return;
+            // _startStopCyclicReadingCommand.InProgress = true;
+            // OnPropertyChanged(nameof(StartStopCyclicReadingCommandEn));
 
             logger.Debug($"Pressed Start stop cyclic reading");
 
-            // Create package to MCU
-            TransmitCommunicationPackage<EmptyPayload> packageToSend = new TransmitCommunicationPackage<EmptyPayload>();
-            packageToSend.ASICID = 1;
-            packageToSend.Cmd = (IsCyclicDiagnosticsEn) ? (MCUCommand.FLM_DIAG_ENABLE) : (MCUCommand.FLM_DIAG_DISABLE);
-            packageToSend.Deleg = CyclicReadingStartStopDelegate;
-            packageToSend.PayloadType = typeof(EmptyPayload);
+            // // Create package to MCU
+            // TransmitCommunicationPackage<EmptyPayload> packageToSend = new TransmitCommunicationPackage<EmptyPayload>();
+            // packageToSend.ASICID = 1;
+            // packageToSend.Cmd = (IsCyclicDiagnosticsEn) ? (MCUCommand.FLM_DIAG_ENABLE) : (MCUCommand.FLM_DIAG_DISABLE);
+            // packageToSend.Deleg = CyclicReadingStartStopDelegate;
+            // packageToSend.PayloadType = typeof(EmptyPayload);
 
-            // Send command to MCU
-            serialWrapper.SerialWrite(packageToSend);
+            // // Send command to MCU
+            // serialWrapper.SerialWrite(packageToSend);
         }
 
         /// <summary>
