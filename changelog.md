@@ -1,3 +1,50 @@
+# Version 01.00.00 (2024-12-05) 
+MVP. Firing feature release.
+
+### **MCU SW (firmware)**:
+- Implemented device Routing on SPI1 and SPI2 according to EvalBoard requirements
+- SPI Device id 1...11 is now accepted by MCU
+- Special handling for sending SPI command to dev id #2 (CS_MON1):
+    CS for CS_MON1 is activated by sw directly before SPI communication and SPI Command is sent to CS1_MASTER with HW Chip Select. CS_MON1 is deactivated directly after communication.
+- Special handling for sending SPI command to dev id #7 (CS_MON2):
+    CS for CS_MON2 is activated by sw directly before SPI communication and SPI Command is sent to CS1_MASTER with HW Chip Select. CS_MON2 is deactivated directly after communication.
+- Bugfix in Write Register: correct return value
+- Added command for sending raw data
+- Implemented FLM cyclic Diagnostics handling (not fully debugged) 
+- Added read, write register commands
+- Added read, write register sequence commands
+- Added commands for executing test modes (not fully debugged)
+- Added command for periodic status reading and resetting init mode timer
+- Fixed bugs in WD
+- Updated CRC3 calculation to match ASIC implementation
+- Removed code for AB12
+- Added define for bypassing CRC check on MCU (for dev purposes)
+- Refactored existing pytests
+- Added CRC16, WD, general cmd, flm diagnostics tests
+
+### **PC SW (GUI)**:
+#### **UI**:
+- Added firing page with tabs
+#### **Backend**
+- Added firing backend
+- Added ASIC model (handling ASIC level features)
+- Added ASIC wrapper model (handling multi-ASIC features)
+- Added mechanism to collect and write configuration to ASIC
+- Removed unused code and fixed bugs in WD VM
+- Added command tracer feature (logs in and out communication on COM port)
+- Refactored logger to avoid threading issues and to allow using mocks
+- Removed AB12 code
+- Added models for all main configuration registers
+- Refactored Register interface, updated template for generation
+- Fixed bug in register models generator for enumerations
+- Updated payload models
+- Added method for calculating CRC16
+
+#### **Other**
+- Updated naming convention
+- Fixed issue in units for WD response and lock times
+
+
 # Version 00.03.00 (2024-09-19) 
 Watchdog feature release.
 
