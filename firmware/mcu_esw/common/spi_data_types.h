@@ -162,10 +162,10 @@ typedef union
 {
     struct
     {
-        uint32 lsb        : 8;    /** \brief   */
-        uint32 byte1      : 8;    /** \brief   */
-        uint32 byte2      : 8;   /** \brief   */
-        uint32 msb        : 8;    /** \brief  */
+        uint32 lsb        : 8;    /** \brief  least significant byte */
+        uint32 byte1      : 8;    /** \brief  byte with index 1 */
+        uint32 byte2      : 8;    /** \brief  byte with index 2 */
+        uint32 msb        : 8;    /** \brief  most significant byte */
     } bf;
     uint32 dw;
 } SPITransmitDataRaw;
