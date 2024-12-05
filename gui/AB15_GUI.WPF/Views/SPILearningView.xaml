@@ -13,16 +13,16 @@
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="5"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="5"/>
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
             <RowDefinition Height="5"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="2*"/>
             <RowDefinition Height="5"/>
@@ -31,8 +31,9 @@
         <Grid Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto" MinWidth="140"/>
+                <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="3*"/>
             </Grid.ColumnDefinitions>
 
             <Grid.RowDefinitions>
@@ -67,7 +68,7 @@
             </TextBox>
 
             <CheckBox Grid.Row="2" Grid.Column="1" Style="{DynamicResource ToggleSwitchStyle}"
-                      HorizontalAlignment="Center"/>
+                      HorizontalAlignment="Left" Margin="5"/>
 
             <Grid Grid.Row="0" Grid.RowSpan="3" Grid.Column="2">
                 <Grid.ColumnDefinitions>
@@ -118,7 +119,7 @@
                 
                 <Border BorderBrush="{DynamicResource SimpleButton.BorderBrush}"
                         BorderThickness="1"
-                        Grid.Column="0" Grid.ColumnSpan="10"
+                        Grid.Column="0" Grid.ColumnSpan="32"
                         Grid.Row="1" Grid.RowSpan="1"/>
                 
                 <Border BorderBrush="{DynamicResource SimpleButton.BorderBrush}"
@@ -126,8 +127,48 @@
                         Grid.Column="0" Grid.ColumnSpan="10"
                         Grid.Row="0" Grid.RowSpan="3"/>
 
+                <Border BorderBrush="{DynamicResource SimpleButton.BorderBrush}"
+                        BorderThickness="2"
+                        Grid.Column="10" Grid.ColumnSpan="1"
+                        Grid.Row="0" Grid.RowSpan="3"/>
+
+                <Border BorderBrush="{DynamicResource SimpleButton.BorderBrush}"
+                        BorderThickness="2"
+                        Grid.Column="11" Grid.ColumnSpan="16"
+                        Grid.Row="0" Grid.RowSpan="3"/>
+
+                <Border BorderBrush="{DynamicResource SimpleButton.BorderBrush}"
+                        BorderThickness="2"
+                        Grid.Column="27" Grid.ColumnSpan="3"
+                        Grid.Row="0" Grid.RowSpan="3"/>
+
+                <Border BorderBrush="{DynamicResource SimpleButton.BorderBrush}"
+                        BorderThickness="2"
+                        Grid.Column="30" Grid.ColumnSpan="2"
+                        Grid.Row="0" Grid.RowSpan="3"/>
+
                 <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="10"
                            Text="Address" FontSize="20" 
+                           HorizontalAlignment="Center"/>
+
+                <TextBlock Grid.Row="0" Grid.Column="10" Grid.ColumnSpan="1"
+                           Text="R/W" FontSize="14" 
+                           HorizontalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="270"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+
+                <TextBlock Grid.Row="0" Grid.Column="11" Grid.ColumnSpan="16"
+                           Text="Data" FontSize="20" 
+                           HorizontalAlignment="Center"/>
+
+                <TextBlock Grid.Row="0" Grid.Column="27" Grid.ColumnSpan="3"
+                           Text="CRC" FontSize="20" 
+                           HorizontalAlignment="Center"/>
+
+                <TextBlock Grid.Row="0" Grid.Column="30" Grid.ColumnSpan="2"
+                           Text="NA" FontSize="20" 
                            HorizontalAlignment="Center"/>
 
                 <!--#region bit numbers -->
@@ -326,195 +367,164 @@
 
 
                 <!--#region bit valuew -->
-                <TextBlock  Grid.Row="2" Grid.Column="0" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock.LayoutTransform>
-                        <RotateTransform Angle="270"/>
-                    </TextBlock.LayoutTransform>
+                <TextBlock  Grid.Row="2" Grid.Column="0" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_31bit">
                 </TextBlock>
 
-                <TextBlock  Grid.Row="2" Grid.Column="1" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock.LayoutTransform>
-                        <RotateTransform Angle="270"/>
-                    </TextBlock.LayoutTransform>
+                <TextBlock  Grid.Row="2" Grid.Column="1" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_30bit">
                 </TextBlock>
 
-                <TextBlock  Grid.Row="2" Grid.Column="2" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock.LayoutTransform>
-                        <RotateTransform Angle="270"/>
-                    </TextBlock.LayoutTransform>
+                <TextBlock  Grid.Row="2" Grid.Column="2" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_29bit">
                 </TextBlock>
 
-                <TextBlock  Grid.Row="2" Grid.Column="3" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock.LayoutTransform>
-                        <RotateTransform Angle="270"/>
-                    </TextBlock.LayoutTransform>
+                <TextBlock  Grid.Row="2" Grid.Column="3" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_28bit">
                 </TextBlock>
 
-                <TextBlock  Grid.Row="2" Grid.Column="4" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock.LayoutTransform>
-                        <RotateTransform Angle="270"/>
-                    </TextBlock.LayoutTransform>
+                <TextBlock  Grid.Row="2" Grid.Column="4" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_27bit">
                 </TextBlock>
 
-                <TextBlock  Grid.Row="2" Grid.Column="5" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock.LayoutTransform>
-                        <RotateTransform Angle="270"/>
-                    </TextBlock.LayoutTransform>
+                <TextBlock  Grid.Row="2" Grid.Column="5" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_26bit">
                 </TextBlock>
 
-                <TextBlock  Grid.Row="2" Grid.Column="6" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock.LayoutTransform>
-                        <RotateTransform Angle="270"/>
-                    </TextBlock.LayoutTransform>
+                <TextBlock  Grid.Row="2" Grid.Column="6" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_25bit">
                 </TextBlock>
 
-                <TextBlock  Grid.Row="2" Grid.Column="7" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock.LayoutTransform>
-                        <RotateTransform Angle="270"/>
-                    </TextBlock.LayoutTransform>
+                <TextBlock  Grid.Row="2" Grid.Column="7" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_24bit">
                 </TextBlock>
 
-                <TextBlock  Grid.Row="2" Grid.Column="8" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock.LayoutTransform>
-                        <RotateTransform Angle="270"/>
-                    </TextBlock.LayoutTransform>
+                <TextBlock  Grid.Row="2" Grid.Column="8" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_23bit">
                 </TextBlock>
 
-                <TextBlock  Grid.Row="2" Grid.Column="9" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock.LayoutTransform>
-                        <RotateTransform Angle="270"/>
-                    </TextBlock.LayoutTransform>
+                <TextBlock  Grid.Row="2" Grid.Column="9" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_22bit">
                 </TextBlock>
 
-                <TextBlock  Grid.Row="2" Grid.Column="10" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock.LayoutTransform>
-                        <RotateTransform Angle="270"/>
-                    </TextBlock.LayoutTransform>
+                <TextBlock  Grid.Row="2" Grid.Column="10" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_21bit">
                 </TextBlock>
 
-                <TextBlock  Grid.Row="2" Grid.Column="11" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock.LayoutTransform>
-                        <RotateTransform Angle="270"/>
-                    </TextBlock.LayoutTransform>
+                <TextBlock  Grid.Row="2" Grid.Column="11" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_20bit">
                 </TextBlock>
 
-                <TextBlock  Grid.Row="2" Grid.Column="12" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock.LayoutTransform>
-                        <RotateTransform Angle="270"/>
-                    </TextBlock.LayoutTransform>
+                <TextBlock  Grid.Row="2" Grid.Column="12" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_19bit">
                 </TextBlock>
 
-                <TextBlock  Grid.Row="2" Grid.Column="13" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock.LayoutTransform>
-                        <RotateTransform Angle="270"/>
-                    </TextBlock.LayoutTransform>
+                <TextBlock  Grid.Row="2" Grid.Column="13" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_18bit">
                 </TextBlock>
 
-                <TextBlock  Grid.Row="2" Grid.Column="14" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock.LayoutTransform>
-                        <RotateTransform Angle="270"/>
-                    </TextBlock.LayoutTransform>
+                <TextBlock  Grid.Row="2" Grid.Column="14" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_17bit">
                 </TextBlock>
 
-                <TextBlock  Grid.Row="2" Grid.Column="15" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock.LayoutTransform>
-                        <RotateTransform Angle="270"/>
-                    </TextBlock.LayoutTransform>
+                <TextBlock  Grid.Row="2" Grid.Column="15" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_16bit">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="16" FontSize="14"
-                            HorizontalAlignment="Center" VerticalAlignment="Center">
-                    
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_15bit">
                 </TextBlock>
 
-                <TextBlock  Grid.Row="2" Grid.Column="17" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock.LayoutTransform>
-                        <RotateTransform Angle="270"/>
-                    </TextBlock.LayoutTransform>
+                <TextBlock  Grid.Row="2" Grid.Column="17" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_14bit">
                 </TextBlock>
 
-                <TextBlock  Grid.Row="2" Grid.Column="18" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock.LayoutTransform>
-                        <RotateTransform Angle="270"/>
-                    </TextBlock.LayoutTransform>
+                <TextBlock  Grid.Row="2" Grid.Column="18" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_13bit">
                 </TextBlock>
 
-                <TextBlock  Grid.Row="2" Grid.Column="19" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock.LayoutTransform>
-                        <RotateTransform Angle="270"/>
-                    </TextBlock.LayoutTransform>
+                <TextBlock  Grid.Row="2" Grid.Column="19" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_12bit">
                 </TextBlock>
 
-                <TextBlock  Grid.Row="2" Grid.Column="20" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock.LayoutTransform>
-                        <RotateTransform Angle="270"/>
-                    </TextBlock.LayoutTransform>
+                <TextBlock  Grid.Row="2" Grid.Column="20" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_11bit">
                 </TextBlock>
 
-                <TextBlock  Grid.Row="2" Grid.Column="21" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock.LayoutTransform>
-                        <RotateTransform Angle="270"/>
-                    </TextBlock.LayoutTransform>
+                <TextBlock  Grid.Row="2" Grid.Column="21" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_10bit">
                 </TextBlock>
 
-                <TextBlock  Grid.Row="2" Grid.Column="22" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock.LayoutTransform>
-                        <RotateTransform Angle="270"/>
-                    </TextBlock.LayoutTransform>
+                <TextBlock  Grid.Row="2" Grid.Column="22" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_9bit">
                 </TextBlock>
 
-                <TextBlock  Grid.Row="2" Grid.Column="23" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock.LayoutTransform>
-                        <RotateTransform Angle="270"/>
-                    </TextBlock.LayoutTransform>
+                <TextBlock  Grid.Row="2" Grid.Column="23" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_8bit">
                 </TextBlock>
 
-                <TextBlock  Grid.Row="2" Grid.Column="24" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock.LayoutTransform>
-                        <RotateTransform Angle="270"/>
-                    </TextBlock.LayoutTransform>
+                <TextBlock  Grid.Row="2" Grid.Column="24" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_7bit">
                 </TextBlock>
 
-                <TextBlock  Grid.Row="2" Grid.Column="25" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock.LayoutTransform>
-                        <RotateTransform Angle="270"/>
-                    </TextBlock.LayoutTransform>
+                <TextBlock  Grid.Row="2" Grid.Column="25" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_6bit">
                 </TextBlock>
 
-                <TextBlock  Grid.Row="2" Grid.Column="26" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock.LayoutTransform>
-                        <RotateTransform Angle="270"/>
-                    </TextBlock.LayoutTransform>
+                <TextBlock  Grid.Row="2" Grid.Column="26" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_5bit">
                 </TextBlock>
 
-                <TextBlock  Grid.Row="2" Grid.Column="27" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock.LayoutTransform>
-                        <RotateTransform Angle="270"/>
-                    </TextBlock.LayoutTransform>
+                <TextBlock  Grid.Row="2" Grid.Column="27" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_4bit">
                 </TextBlock>
 
-                <TextBlock  Grid.Row="2" Grid.Column="28" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock.LayoutTransform>
-                        <RotateTransform Angle="270"/>
-                    </TextBlock.LayoutTransform>
+                <TextBlock  Grid.Row="2" Grid.Column="28" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_3bit">
                 </TextBlock>
 
-                <TextBlock  Grid.Row="2" Grid.Column="29" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock.LayoutTransform>
-                        <RotateTransform Angle="270"/>
-                    </TextBlock.LayoutTransform>
+                <TextBlock  Grid.Row="2" Grid.Column="29" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_2bit">
                 </TextBlock>
 
-                <TextBlock  Grid.Row="2" Grid.Column="30" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock.LayoutTransform>
-                        <RotateTransform Angle="270"/>
-                    </TextBlock.LayoutTransform>
+                <TextBlock  Grid.Row="2" Grid.Column="30" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_1bit">
                 </TextBlock>
 
-                <TextBlock  Grid.Row="2" Grid.Column="31" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock.LayoutTransform>
-                        <RotateTransform Angle="270"/>
-                    </TextBlock.LayoutTransform>
+                <TextBlock  Grid.Row="2" Grid.Column="31" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_0bit">
                 </TextBlock>
                 <!--#endregion-->
 
@@ -524,16 +534,17 @@
 
         <!-- #region MOSI -->
         <Border BorderThickness="1" Grid.Row="3" Grid.Column="2"
-            BorderBrush="{DynamicResource SimpleButton.BorderBrush}">
+                BorderBrush="{DynamicResource SimpleButton.BorderBrush}"
+                HorizontalAlignment="Center">
             <!-- Table -->
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="5" />
                     <ColumnDefinition Width="20"/>
-                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="100"/>
                     <ColumnDefinition Width="40"/>
+                    <ColumnDefinition Width="100"/>
                     <ColumnDefinition Width="80"/>
-                    <ColumnDefinition Width="60"/>
                     <ColumnDefinition Width="100"/>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="5" />
@@ -588,10 +599,10 @@
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="5" />
                                     <ColumnDefinition Width="20"/>
-                                    <ColumnDefinition Width="80"/>
+                                    <ColumnDefinition Width="100"/>
                                     <ColumnDefinition Width="40"/>
+                                    <ColumnDefinition Width="100"/>
                                     <ColumnDefinition Width="80"/>
-                                    <ColumnDefinition Width="60"/>
                                     <ColumnDefinition Width="100"/>
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="5" />
@@ -659,16 +670,17 @@
 
         <!-- #region MISO -->
         <Border BorderThickness="1" Grid.Row="3" Grid.Column="3" 
-            BorderBrush="{DynamicResource SimpleButton.BorderBrush}">
+                BorderBrush="{DynamicResource SimpleButton.BorderBrush}"
+                HorizontalAlignment="Center">
             <!-- Table -->
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="5" />
                     <ColumnDefinition Width="20"/>
-                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="100"/>
                     <ColumnDefinition Width="40"/>
+                    <ColumnDefinition Width="100"/>
                     <ColumnDefinition Width="80"/>
-                    <ColumnDefinition Width="60"/>
                     <ColumnDefinition Width="100"/>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="5" />
@@ -723,10 +735,10 @@
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="5" />
                                     <ColumnDefinition Width="20"/>
-                                    <ColumnDefinition Width="80"/>
+                                    <ColumnDefinition Width="100"/>
                                     <ColumnDefinition Width="40"/>
+                                    <ColumnDefinition Width="100"/>
                                     <ColumnDefinition Width="80"/>
-                                    <ColumnDefinition Width="60"/>
                                     <ColumnDefinition Width="100"/>
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="5" />
