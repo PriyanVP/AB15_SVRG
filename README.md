@@ -13,7 +13,7 @@
 [![License: BIOSL v4](http://bios.intranet.bosch.com/bioslv4-badge.svg)](#license)
 
 Add a brief description about the contents of this repository here.
-Consider linking to existing documentation.
+[Link to documentation]()
 
 ## Table of Contents  <!-- omit in toc -->
 
@@ -31,13 +31,53 @@ Consider linking to existing documentation.
 
 ## Getting Started <a name="getting-started"></a>
 
-This section should contain information on how to use the content of this
-repository. If it contains SW, consider explaining how it is installed, run or integrated.
+* Request access to repository from [Dudnyk Oleksii](https://connect.bosch.com/profiles/html/profileView.do?key=7a5402e8-f7ce-4dd0-bc62-a9b66e4c6b9a#&tabinst=Updates)
+* Clone this repository \
+	`git clone ssh://git@sourcecode.socialcoding.bosch.com:7999/abevbsw/ab15_sw.git`
+* Install Aurix IDE
+* Launch Aurix IDE workspace in firmware folder
+* Select mcu_esw folder in firmware folder as project in Aurix IDE
+* Make this project as active
+* Rebuild MCU SW via button in Aurix IDE
+* Connect ShieldBuddy TC375 MCU to USB port
+* Flash MCU SW via button in Aurix IDE
+* Launch GUI from application/gui folder (double-click on exe file) 
 
 ## Building and Testing <a name="building-and-testing"></a>
 
-If the repository contains SW, add instructions on how to build it from source
-and test it in this section.
+Building MCU SW:
+* Launch Aurix IDE workspace in firmware folder (Aurix version 1.9.20)
+* Select mcu_esw folder in firmware folder as project in Aurix IDE
+* Make this project as active
+* Rebuild MCU SW via button in Aurix IDE
+
+Building GUI SW:
+* Launch Visual Studio (testes with Microsoft Visual Studio Professional 2022 (SCCMProf22) (64-bit) - 17.10.1)
+* Open Solution file (gui\AB15_GUI.sln)
+* Choose relase or debug build type
+* Build AB15_GUI.WPF project via Run button or context menu
+
+Unit testing GUI SW:
+* Launch Visual Studio (testes with Microsoft Visual Studio Professional 2022 (SCCMProf22) (64-bit) - 17.10.1)
+* Open Solution file (gui\AB15_GUI.sln)
+* Choose relase or debug build type
+* Build AB15_GUI.Tests project via context menu
+* Run tests in Test explorer (group AB15_GUI.Tests)
+
+Regression testing GUI SW:
+* Launch Visual Studio (testes with Microsoft Visual Studio Professional 2022 (SCCMProf22) (64-bit) - 17.10.1)
+* Open Solution file (gui\AB15_GUI.sln)
+* Choose relase or debug build type
+* Build AB15_GUI.Regression project via context menu
+* Run tests in Test explorer (group AB15_GUI.Regression)
+
+Generating register classes for GUI:
+* This step is optional and should be done if xml regmap is changed or if new register is started to be used in SW
+* Launch Python 3.11.9 or higher environment (should contain jinja2, argparse, re, lxlm packages)
+* Run gui\utilities\registers_generation\gen_registers.py (provide -h for help)
+
+Firmware testing:
+* Refer to pytest invironment setup [instructions](firmware/AB15_MCU.Tests/README.md)
 
 ## Contribution Guidelines <a name="contribution-guidelines"></a>
 
@@ -61,7 +101,13 @@ to get in contact with you or provide feedback.
 
 ### Maintainers <a name="maintainers"></a>
 
-List the maintainers of this repository here. Consider linking to their Bosch Connect profile pages. Mention or link to their email as a minimum.
+* Developer (T&R): 				[Brinkmann Matthias](https://connect.bosch.com/profiles/html/profileView.do?key=385a0c29-acbe-4645-a323-dd0f930db781#&tabinst=Updates)
+* Developer (GUI, firmware):	[Dudnyk Oleksii](https://connect.bosch.com/profiles/html/profileView.do?key=7a5402e8-f7ce-4dd0-bc62-a9b66e4c6b9a#&tabinst=Updates)
+* Developer (GUI, UI): 			[Tkachenko Nikita](https://connect.bosch.com/profiles/html/profileView.do?key=60124c2b-b45f-4bb6-a004-9323e6ea1a9a#&tabinst=Updates)
+* Developer (firmware): 		[Salziger Jan](https://connect.bosch.com/profiles/html/profileView.do?key=9a0923e5-6a55-4333-821e-a0001ec3c013#&tabinst=Updates)
+* Developer (firmware): 		[Khudobets Vadym](https://connect.bosch.com/profiles/html/profileView.do?userid=1AA2475F-410A-47F5-8779-3342667C808D#&tabinst=contactInfo)
+* Developer (GUI): 				[Hoefflinger Jens](https://connect.bosch.com/profiles/html/profileView.do?key=64ef3baf-ecf6-4a9c-bc42-4382113200d3#&tabinst=Updates)
+
 
 ### Contributors <a name="contributors"></a>
 
@@ -74,7 +120,12 @@ project here. Example:
 
 | Name | License | Type |
 |------|---------|------|
-| [Apache Felix](http://felix.apache.org/) | [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0.txt) | Dependency
+| [Newtonsoft.Json](https://www.newtonsoft.com/json) | [MIT](https://github.com/JamesNK/Newtonsoft.Json?tab=MIT-1-ov-file) | Dependency
+| [System.IO.Ports](https://dotnet.microsoft.com/en-us/) | [MIT](https://licenses.nuget.org/MIT) | Dependency
+| [System.Management](http://felix.apache.org/) | [MIT](https://dotnet.microsoft.com/en-us/) | Dependency
+| [Stateless](https://github.com/dotnet-state-machine/stateless?tab=readme-ov-file) | [Apache-2.0](https://github.com/dotnet-state-machine/stateless?tab=License-1-ov-file) | Dependency
+| [iLLD](https://www.infineon.com/cms/en/tools/aurix-embedded-sw/aurix-illd-drivers/) | [BSL-1.0](https://softwaretools.infineon.com/tools/com.ifx.tb.tool.tc3xxilld) | Dependency
+
 
 ### Used Encryption <a name="used-encryption"></a>
 

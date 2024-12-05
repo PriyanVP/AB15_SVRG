@@ -1,0 +1,386 @@
+﻿<Window x:Class="AB15_GUI.WPF.Views.MainView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:AB15_GUI.WPF.ViewModels"
+        xmlns:custom="clr-namespace:AB15_GUI.WPF.Views.Components"
+        xmlns:cnvrt="clr-namespace:AB15_GUI.WPF.Views.Converters"
+        xmlns:local="clr-namespace:AB15_GUI.WPF.Views"
+        mc:Ignorable="d"
+        Title="Bosch AB15" 
+        MinHeight="550" MinWidth="1200"
+        Height="650" Width="1000"
+        Icon="Resources/bosch.ico"
+        DataContext="{Binding MainViewModel, Source={StaticResource ViewModelLocator}}">
+    <Window.Resources>
+        <cnvrt:FaultFlagToColorConverter x:Key="FaultFlagToColorConverter"/>
+        <cnvrt:StatusToColorConverter x:Key="StatusToColorConverter"/>
+    </Window.Resources>
+    
+    <Grid Background="{DynamicResource UI.BackGround}">
+        
+        <!--Main panels setup-->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" MinHeight="20"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto" MinHeight="20"/>
+        </Grid.RowDefinitions>
+
+        <!--Top panel group-->
+        <Grid Grid.Row="0" Background="{DynamicResource TopPanel.Background}">
+            <!--Quick action menu control group-->
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="auto" MinWidth="20"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="auto" MinWidth="20"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="auto" MinWidth="20"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto" MinWidth="20"/>
+                <ColumnDefinition Width="5"/>
+            </Grid.ColumnDefinitions>
+            
+            <!--Save/Load menu-->
+            <Menu Grid.Column="1" FontSize="20">
+                <MenuItem Template="{StaticResource VsMenuTop}" Header="File">
+                    <MenuItem Command="{Binding RunLoadRegisterSetting}" Template="{StaticResource MenuSubItem}" Header="Load Register settings"/>
+                    <MenuItem Command="{Binding RunSaveRegisterSetting}" Template="{StaticResource MenuSubItem}" Header="Save Register settings"/>
+                </MenuItem>
+            </Menu>
+            
+            <!--Links menu-->
+            <Menu Grid.Column="3" FontSize="20">
+                <MenuItem Template="{StaticResource VsMenuTop}" Header="More" >
+                    <MenuItem Command="{Binding OpenDocumantation}" 
+                              Template="{StaticResource MenuSubItem}" Header="AB15 Documantation"/>
+                    <MenuItem Command="{Binding OpenUserManual}" 
+                              Template="{StaticResource MenuSubItem}" Header="AB15 GUI User Manual"/>
+                    <MenuItem Command="{Binding OpenTCD}" 
+                              Template="{StaticResource MenuSubItem}" Header="AB15 TCD"/>
+                    <MenuItem Command="{Binding OpenApplicationNote}" 
+                              Template="{StaticResource MenuSubItem}" Header="AB15 Application Note"/>
+                    <MenuItem Command="{Binding OpenRegisterMaps}" 
+                              Template="{StaticResource MenuSubItem}" Header="AB15 Register Maps"/>
+                    <MenuItem Command="{Binding OpenSensorDetails}" 
+                              Template="{StaticResource MenuSubItem}" Header="Sensor details"/>
+                </MenuItem>
+            </Menu>
+        </Grid>
+
+        <!--Middle panel group-->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" MinWidth="20"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <TabControl Grid.Column="1" x:Name="PagesControl" BorderThickness="0" Background="{DynamicResource UI.BackGround}">
+                <TabControl.Resources>
+                    <Style TargetType="TabItem">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                    </Style>
+                </TabControl.Resources>
+                <TabItem>
+                    <Frame Source="HomeView.xaml"/>
+                </TabItem>
+                <TabItem>
+                    <Frame Source="SPILearningView.xaml"/>
+                </TabItem>
+                <TabItem>
+                    <Frame Source="WatchdogView.xaml"/>
+                </TabItem>
+                <TabItem>
+                    <Frame Source="FiringView.xaml"/>
+                </TabItem>
+                <TabItem>
+                    <Frame Source="AB15DataView.xaml"/>
+                </TabItem>
+                <TabItem>
+                    <Frame Source="SensorView.xaml"/>
+                </TabItem>
+                <TabItem>
+                    <Frame Source="DiagnosticsView.xaml"/>
+                </TabItem>
+            </TabControl>
+
+            <Border Grid.Column="0" BorderThickness="0,1,1,1" BorderBrush="{DynamicResource Menu.SeparateLine}"/>
+
+            <!--Subsection-->
+            <Grid Grid.Column="0" x:Name="MenuPanel" Margin="3,3" Background="{DynamicResource Menu.Background}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" MinWidth="40"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" MinHeight="20"/>
+                    <RowDefinition Height="auto" MinHeight="20"/>
+                    <RowDefinition Height="auto" MinHeight="20"/>
+                    <RowDefinition Height="auto" MinHeight="20"/>
+                    <RowDefinition Height="auto" MinHeight="20"/>
+                    <RowDefinition Height="auto" MinHeight="20"/>
+                    <RowDefinition Height="auto" MinHeight="20"/>
+                    <RowDefinition Height="auto" MinHeight="20"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="auto" MinHeight="20"/>
+                </Grid.RowDefinitions>
+                
+                <!--Menu size toggle button-->
+                <ToggleButton Style="{DynamicResource MenuToggleButtonTemplate}" IsChecked="True"
+                              Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+                    
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{DynamicResource Ico.Menu}" 
+                               Width="30" 
+                               RenderTransformOrigin="0.5,0.5" 
+                               HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                               Margin="5,0">
+                            <Image.RenderTransform>
+                                <RotateTransform x:Name="MenuImage" CenterX="0.5" CenterY="0.5"/>
+                            </Image.RenderTransform>
+                        </Image>
+                        <TextBlock Text="Menu" FontSize="20" Grid.Column="1" Style="{DynamicResource TextBlockStyle}"/>
+                    </StackPanel>
+                    
+                    <ToggleButton.Triggers>
+                        <EventTrigger RoutedEvent="ToggleButton.Unchecked">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation 
+                                        Storyboard.TargetName="MenuPanel"
+                                        Storyboard.TargetProperty="Width"
+                                        BeginTime="0:0:0"
+                                        From="160" To="40"
+                                        Duration="0:0:0.2"/>
+                                    <DoubleAnimation
+                                        Storyboard.TargetName="MenuImage"
+                                        Storyboard.TargetProperty="Angle"
+                                        To="90"
+                                        Duration="0:0:0.2"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="ToggleButton.Checked">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation 
+                                        Storyboard.TargetName="MenuPanel"
+                                        Storyboard.TargetProperty="Width"
+                                        BeginTime="0:0:0"
+                                        To="160" From="40"
+                                        Duration="0:0:0.2"/>
+                                    <DoubleAnimation
+                                        Storyboard.TargetName="MenuImage"
+                                        Storyboard.TargetProperty="Angle"
+                                        To="0"
+                                        Duration="0:0:0.2"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </ToggleButton.Triggers>
+                </ToggleButton>
+
+                <!--Home button-->
+                <ToggleButton Name="HomeButton" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                              Style="{DynamicResource MenuToggleButtons}" Command="{Binding GoToHomePage}"
+                              Click="Button_Click">
+                    <StackPanel Orientation="Horizontal">
+
+                        <Image Source="{DynamicResource Ico.Home}" Margin="5,0" Width="30"/>
+                        <TextBlock Text="Home" FontSize="20" Style="{DynamicResource TextBlockStyle}"/>
+
+                    </StackPanel>
+                </ToggleButton>
+
+                <!--SPI Learning button-->
+                <ToggleButton Name="LearningButton" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                              Style="{DynamicResource MenuToggleButtons}" Command="{Binding GoToSPILearningPage}"
+                              Click="Button_Click">
+                    <StackPanel Orientation="Horizontal">
+
+                        <Image Source="{DynamicResource Ico.Zoom}" Margin="5,0" Width="30"/>
+                        <TextBlock Text="SPI Learning" FontSize="20" Style="{DynamicResource TextBlockStyle}"/>
+                        
+                    </StackPanel>
+                </ToggleButton>
+
+                <!--Watchdog button-->
+                <ToggleButton Name="WatchdogButton" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
+                              Style="{DynamicResource MenuToggleButtons}" Command="{Binding GoToWhatchdogPage}"
+                              Click="Button_Click">
+                    <StackPanel Orientation="Horizontal">
+
+                        <Image Source="{DynamicResource Ico.Watchdog}" Margin="5,0" Width="30"/>
+                        <TextBlock Text="Watchdog" FontSize="20" Style="{DynamicResource TextBlockStyle}"/>
+                        
+                    </StackPanel>
+                </ToggleButton>
+
+                <!--Firing button-->
+                <ToggleButton Name="FiringButton" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"
+                              Style="{DynamicResource MenuToggleButtons}" Command="{Binding GoToFiringPage}"
+                              Click="Button_Click">
+                    <StackPanel Orientation="Horizontal">
+
+                        <Image Source="{DynamicResource Ico.Airbag}" Margin="5,0" Width="30"/>
+                        <TextBlock Text="Firing" FontSize="20" Style="{DynamicResource TextBlockStyle}"/>
+                        
+                    </StackPanel>
+                </ToggleButton>
+
+                <!--AB15 Data button-->
+                <ToggleButton Name="AB15DataButton" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"
+                              Style="{DynamicResource MenuToggleButtons}" Command="{Binding GoToAbDataPage}"
+                              Click="Button_Click">
+                    <StackPanel Orientation="Horizontal">
+
+                        <Image Source="{DynamicResource Ico.Chip}" Margin="5,0" Width="30"/>
+                        <TextBlock Text="AB15 Data" FontSize="20" Style="{DynamicResource TextBlockStyle}"/>
+                        
+                    </StackPanel>
+                </ToggleButton>
+
+                <!--Sensors button-->
+                <ToggleButton Name="SensorsButton" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2"
+                              Style="{DynamicResource MenuToggleButtons}" Command="{Binding GoToSensorPage}"
+                              Click="Button_Click">
+                    <StackPanel Orientation="Horizontal">
+
+                        <Image Source="{DynamicResource Ico.Sensor}" Margin="5,0" Width="30"/>
+                        <TextBlock Text="Sensor" FontSize="20" Style="{DynamicResource TextBlockStyle}"/>
+                        
+                    </StackPanel>
+                </ToggleButton>
+
+                <!--Diagnostics button-->
+                <ToggleButton Name="DiagnosticsButton" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2"
+                              Style="{DynamicResource MenuToggleButtons}" Command="{Binding GoToDiagnosticsPage}"
+                              Click="Button_Click">
+                    <StackPanel Orientation="Horizontal">
+
+                        <Image Source="{DynamicResource Ico.Config}" Margin="5,0" Width="30"/>
+                        <TextBlock Text="Diagnostics" FontSize="20" Style="{DynamicResource TextBlockStyle}"/>
+                        
+                    </StackPanel>
+                </ToggleButton>
+
+                <!--Status section-->
+                <Grid Grid.Row="8" VerticalAlignment="Bottom">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="5"/>
+                        </Grid.RowDefinitions>
+
+                        <!--Animation connection for PC - MCU-->
+                        <custom:ConnectionAnimation x:Name="animationTest1" Grid.Row="1" Height="20" 
+                                                    HorizontalAlignment="Left" 
+                                                    ArrowColor="{DynamicResource Animation.Arrow}" 
+                                                    BorderColor="{DynamicResource Animation.Lines}" 
+                                                    IsAnimationEnabled="{Binding MCUConnectionStatus}"/>
+
+                        <!--Animation connection for MCU - AB-->
+                        <custom:ConnectionAnimation x:Name="animationTest2" Grid.Row="3" Height="20" 
+                                                    HorizontalAlignment="Left" 
+                                                    ArrowColor="{DynamicResource Animation.Arrow}" 
+                                                    BorderColor="{DynamicResource Animation.Lines}" 
+                                                    IsAnimationEnabled="{Binding ABConnectionStatus}"/>
+
+                        <!--Status box for PC-->
+                        <Border Grid.Row="0" BorderThickness="1" 
+                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                CornerRadius="5" HorizontalAlignment="Left" 
+                                Width="40">
+                            <Border.Background>
+                                <MultiBinding Converter = "{StaticResource StatusToColorConverter}">
+                                    <Binding Path = "ConnectionStatusPC"/>
+                                    <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                                </MultiBinding>
+                            </Border.Background>
+                            <TextBlock Text="PC" HorizontalAlignment="Center" FontSize="16" Style="{DynamicResource TextBlockStyle}"/>
+                        </Border>
+
+                        <!--Status box for MCU-->
+                        <Border Grid.Row="2" BorderThickness="1" 
+                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                CornerRadius="5" HorizontalAlignment="Left" 
+                                Width="40">
+                            <Border.Background>
+                                <MultiBinding Converter = "{StaticResource StatusToColorConverter}">
+                                    <Binding Path = "ConnectionStatusMCU"/>
+                                    <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                                </MultiBinding>
+                            </Border.Background>
+                            <TextBlock Text="MCU" HorizontalAlignment="Center" FontSize="16" Style="{DynamicResource TextBlockStyle}"/>
+                        </Border>
+
+                        <!--Status box for AB-->
+                        <Border Grid.Row="4" BorderThickness="1" 
+                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                CornerRadius="5" HorizontalAlignment="Left" 
+                                Width="40">
+                            <Border.Background>
+                                <MultiBinding Converter = "{StaticResource StatusToColorConverter}">
+                                    <Binding Path = "ConnectionStatusAB"/>
+                                    <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                                </MultiBinding>
+                            </Border.Background>
+                            <TextBlock Text="AB" HorizontalAlignment="Center" FontSize="16" Style="{DynamicResource TextBlockStyle}"/>
+                        </Border>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Grid>
+
+        <!--Bottom panel group-->
+        <Grid Grid.Row="2" Background="{DynamicResource BottonPanel.Background}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal" Grid.Column="0">
+                
+                <TextBlock Style="{DynamicResource TextBlockStyle}" Text="GUI:"/>
+
+                <!--Text="{Binding GUIVersion}"-->
+                <TextBlock Style="{DynamicResource TextBlockStyle}" MinWidth="20"
+                           Text="01.00.00" Margin="0,0,15,0"/>
+                
+                <TextBlock Style="{DynamicResource TextBlockStyle}" Text="MCU:"/>
+
+                <!--Text="{Binding MCUVersion}"-->
+                <TextBlock Style="{DynamicResource TextBlockStyle}" MinWidth="20"
+                           Text="01.00.00" Margin="0,0,15,0"/>
+                
+                <TextBlock Style="{DynamicResource TextBlockStyle}" Text="AB15:"/>
+
+                <!--Text="{Binding ASICID}"-->
+                <TextBlock Style="{DynamicResource TextBlockStyle}" MinWidth="20"
+                           Text="RA150" Margin="0,0,15,0"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="2">
+                <!--Status box for WD-->
+                <Border BorderThickness="1" 
+                        BorderBrush="{DynamicResource Animation.Lines}" 
+                        CornerRadius="5" HorizontalAlignment="Left" 
+                        Width="50" Margin="2">
+                    <Border.Background>
+                        <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
+                            <Binding Path = "WatchdogViewModel.WDFaultStatus"/>
+                            <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                        </MultiBinding>
+                    </Border.Background>
+                    <TextBlock Text="WD" HorizontalAlignment="Center" FontSize="16" Style="{DynamicResource TextBlockStyle}"/>
+                </Border>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

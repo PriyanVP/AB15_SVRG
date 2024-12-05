@@ -1,0 +1,169 @@
+/**********************************************************************************************************************
+ * \file usb.c
+ * \copyright Copyright (C) RobertBosch GmbH 
+ *********************************************************************************************************************/
+
+/*********************************************************************************************************************/
+/*-----------------------------------------------------Includes------------------------------------------------------*/
+/*********************************************************************************************************************/
+#include "usb.h"
+#include "Ifx_Types.h"
+#include "IfxAsclin_Asc.h"
+#include "common/usb_data_types.h"
+#include "common/Ifx_IntPrioDef.h"
+#include "Bsp.h"
+
+/*********************************************************************************************************************/
+/*------------------------------------------------------Macros-------------------------------------------------------*/
+/*********************************************************************************************************************/
+/* Communication parameters */
+#define ASC_TX_BUFFER_SIZE          (512)                            /** \brief Define the TX buffer size in byte    */
+#define ASC_RX_BUFFER_SIZE          (512)                            /** \brief Define the RX buffer size in byte    */
+#define ASC_BAUDRATE                (115200)                         /** \brief Define the UART baud rate            */
+
+#define USB_TIMEOUT                 (5)                      /** \brief USB timeout, if elapsed - exit from busywait */
+
+/*********************************************************************************************************************/
+/*------------------------------------------------Function Prototypes------------------------------------------------*/
+/*********************************************************************************************************************/
+
+/** \brief Initialize ASCLIN module.
+ * This functions:\n
+ * 1) Initializes pins for UART communication.\n
+ * 2) Setups UART communication parameters.\n
+ * 3) Creates interface for UART usage.\n
+ *
+ * \return Returns nothing.
+ */
+void InitSerialInterface(void);
+
+/*********************************************************************************************************************/
+/*-------------------------------------------------Global variables--------------------------------------------------*/
+/*********************************************************************************************************************/
+static IfxStdIf_DPipe  g_ascStandardInterface;                       /** \brief Standard interface object            */
+static IfxAsclin_Asc   g_asclin;                                     /** \brief ASCLIN module object                 */
+
+/* The transfer buffers allocate memory for the data itself and for FIFO runtime variables.
+ * 8 more bytes have to be added to ensure a proper circular buffer handling independent from
+ * the address to which the buffers have been located.
+ */
+static uint8 g_uartTxBuffer[ASC_TX_BUFFER_SIZE + sizeof(Ifx_Fifo) + 8];
+static uint8 g_uartRxBuffer[ASC_RX_BUFFER_SIZE + sizeof(Ifx_Fifo) + 8];
+
+static sint32 g_timeout;                      /** \brief USB timeout variable, used to store timer ticks for timeout */
+
+/*********************************************************************************************************************/
+/*---------------------------------------------Function Implementations----------------------------------------------*/
+/*********************************************************************************************************************/
+IFX_INTERRUPT(ASC0TxISR, 0, ISR_PRIORITY_ASCLIN_TX);
+
+void ASC0TxISR(void)
+{
+    IfxStdIf_DPipe_onTransmit(&g_ascStandardInterface);
+}
+
+IFX_INTERRUPT(ASC0RxISR, 0, ISR_PRIORITY_ASCLIN_RX);
+
+void ASC0RxISR(void)
+{
+    IfxStdIf_DPipe_onReceive(&g_ascStandardInterface);
+}
+
+IFX_INTERRUPT(ASC0ErrISR, 0, ISR_PRIORITY_ASCLIN_ER);
+
+void ASC0ErrISR(void)
+{
+    IfxStdIf_DPipe_onError(&g_ascStandardInterface);
+}
+
+void InitSerialInterface(void)
+{
+    IfxAsclin_Asc_Config ascConf;
+
+    /* Set default configurations */
+    IfxAsclin_Asc_initModuleConfig(&ascConf, &MODULE_ASCLIN3); /* Initialize the structure with default values      */
+
+    /* Set the desired baud rate */
+    ascConf.baudrate.baudrate = ASC_BAUDRATE;                                   /* Set the baud rate in bit/s       */
+    ascConf.baudrate.oversampling = IfxAsclin_OversamplingFactor_16;            /* Set the oversampling factor      */
+
+    /* Configure the sampling mode */
+    ascConf.bitTiming.medianFilter = IfxAsclin_SamplesPerBit_three;             /* Set the number of samples per bit*/
+    ascConf.bitTiming.samplePointPosition = IfxAsclin_SamplePointPosition_8;    /* Set the first sample position    */
+
+    /* ISR priorities and interrupt target */
+    ascConf.interrupt.txPriority = ISR_PRIORITY_ASCLIN_TX;  /* Set the interrupt priority for TX events             */
+    ascConf.interrupt.rxPriority = ISR_PRIORITY_ASCLIN_RX;  /* Set the interrupt priority for RX events             */
+    ascConf.interrupt.erPriority = ISR_PRIORITY_ASCLIN_ER;  /* Set the interrupt priority for Error events          */
+    ascConf.interrupt.typeOfService = IfxSrc_Tos_cpu0;
+
+    /* Pin configuration */
+    const IfxAsclin_Asc_Pins pins = {
+            .cts        = NULL_PTR,                         /* CTS pin not used                                     */
+            .ctsMode    = IfxPort_InputMode_pullUp,
+            .rx         = &IfxAsclin3_RXD_P32_2_IN ,        /* Select the pin for RX connected to the USB port      */
+            .rxMode     = IfxPort_InputMode_pullUp,         /* RX pin                                               */
+            .rts        = NULL_PTR,                         /* RTS pin not used                                     */
+            .rtsMode    = IfxPort_OutputMode_pushPull,
+            .tx         = &IfxAsclin3_TX_P15_7_OUT,         /* Select the pin for TX connected to the USB port      */
+            .txMode     = IfxPort_OutputMode_pushPull,      /* TX pin                                               */
+            .pinDriver  = IfxPort_PadDriver_cmosAutomotiveSpeed1
+    };
+    ascConf.pins = &pins;
+
+    /* FIFO buffers configuration */
+    ascConf.txBuffer = g_uartTxBuffer;                      /* Set the transmission buffer                          */
+    ascConf.txBufferSize = ASC_TX_BUFFER_SIZE;              /* Set the transmission buffer size                     */
+    ascConf.rxBuffer = g_uartRxBuffer;                      /* Set the receiving buffer                             */
+    ascConf.rxBufferSize = ASC_RX_BUFFER_SIZE;              /* Set the receiving buffer size                        */
+
+    /* Init ASCLIN module */
+    IfxAsclin_Asc_initModule(&g_asclin, &ascConf);          /* Initialize the module with the given configuration   */
+}
+
+void InitUSBInterface(void)
+{
+    /* Initialize the hardware peripherals */
+    InitSerialInterface();
+
+    /* Initialize the Standard Interface */
+    IfxAsclin_Asc_stdIfDPipeInit(&g_ascStandardInterface, &g_asclin);
+
+    // Init timeout for USB communication
+    g_timeout = IfxStm_getTicksFromMilliseconds(BSP_DEFAULT_TIMER, USB_TIMEOUT);
+}
+
+boolean SendUSBData(uint8 *buffer, Ifx_SizeT *count)
+{
+    return IfxStdIf_DPipe_write(&g_ascStandardInterface, (void *)buffer, count, g_timeout);
+}
+
+boolean ReceiveUSBData(uint8 *buffer, Ifx_SizeT *count)
+{
+    return IfxStdIf_DPipe_read(&g_ascStandardInterface, (void *)buffer, count, g_timeout);
+}
+
+sint32 GetWriteBufferLeft()
+{
+    return (IfxStdIf_DPipe_getWriteCount(&g_ascStandardInterface));
+}
+
+sint32 GetReadBufferLeft()
+{
+    return (IfxStdIf_DPipe_getReadCount(&g_ascStandardInterface));
+}
+
+boolean IsInBufferEmpty()
+{
+    return (IfxStdIf_DPipe_getReadCount(&g_ascStandardInterface) < MIN_USB_MSG_LENGTH);
+}
+
+void CleanUSBInputBuffer()
+{
+    IfxStdIf_DPipe_clearRx(&g_ascStandardInterface);
+}
+
+void CleanUSBOutputBuffer()
+{
+    IfxStdIf_DPipe_clearTx(&g_ascStandardInterface);
+}

@@ -1,0 +1,113 @@
+﻿<UserControl x:Class="AB15_GUI.WPF.Views.Components.ConnectionAnimation"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:AB15_GUI.WPF.Views.Components"
+             mc:Ignorable="d" 
+             MinHeight="20" MinWidth="40"
+             d:DesignHeight="40" d:DesignWidth="40"
+             x:Name="AnimationControl">
+    <UserControl.Resources>
+        <!--Animation set-up-->
+        <!--This animation move every arrow by 10 points in one direction
+        arrow 1 move to start point of arrow 2 and then restart
+        with this approach we have continuous moving animation without long move distance
+        Arrows 1x move up and 2x move down--> 
+        <Storyboard  x:Key="Animation" RepeatBehavior="Forever">
+            <DoubleAnimation
+                Storyboard.TargetName="Arrow11"
+                Storyboard.TargetProperty="(Canvas.Top)"
+                From="30" To="20"
+                Duration="0:0:1"
+                AutoReverse="False"/>
+            <DoubleAnimation
+                Storyboard.TargetName="Arrow12"
+                Storyboard.TargetProperty="(Canvas.Top)"
+                From="20" To="10"
+                Duration="0:0:1"
+                AutoReverse="False"/>
+            <DoubleAnimation
+                Storyboard.TargetName="Arrow13"
+                Storyboard.TargetProperty="(Canvas.Top)"
+                From="10" To="0"
+                Duration="0:0:1"
+                AutoReverse="False"/>
+            <DoubleAnimation
+                Storyboard.TargetName="Arrow14"
+                Storyboard.TargetProperty="(Canvas.Top)"
+                From="0" To="-10"
+                Duration="0:0:1"
+                AutoReverse="False"/>
+
+
+            <DoubleAnimation
+                Storyboard.TargetName="Arrow21"
+                Storyboard.TargetProperty="(Canvas.Top)"
+                To="30" From="20"
+                Duration="0:0:1"
+                AutoReverse="False"/>
+            <DoubleAnimation
+                Storyboard.TargetName="Arrow22"
+                Storyboard.TargetProperty="(Canvas.Top)"
+                To="20" From="10"
+                Duration="0:0:1"
+                AutoReverse="False"/>
+            <DoubleAnimation
+                Storyboard.TargetName="Arrow23"
+                Storyboard.TargetProperty="(Canvas.Top)"
+                To="10" From="0"
+                Duration="0:0:1"
+                AutoReverse="False"/>
+            <DoubleAnimation
+                Storyboard.TargetName="Arrow24"
+                Storyboard.TargetProperty="(Canvas.Top)"
+                To="0" From="-10"
+                Duration="0:0:1"
+                AutoReverse="False"/>
+        </Storyboard>
+    </UserControl.Resources>
+
+    <Grid>
+        
+        <!--Define zones for data flow-->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" MinWidth="5"/>
+            <ColumnDefinition Width="10"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="10"/>
+            <ColumnDefinition Width="1*" MinWidth="5"/>
+        </Grid.ColumnDefinitions>
+        
+        <!--Borders for data flow-->
+        <Border Grid.Column="0" BorderThickness="0,0,1,0" BorderBrush="{Binding BorderColor, ElementName=AnimationControl}"/>
+        <Border Grid.Column="2" BorderThickness="1,0,1,0" BorderBrush="{Binding BorderColor, ElementName=AnimationControl}"/>
+        <Border Grid.Column="5" BorderThickness="1,0,0,0" BorderBrush="{Binding BorderColor, ElementName=AnimationControl}"/>
+
+        <!--Arrows that represent data movind upwards, ex. from mcu to pc-->
+        <Canvas Grid.Column="1" x:Name="AnimationCanvas1" Visibility="Hidden">
+            <local:DataArrow x:Name="Arrow11" Canvas.Left="0" Canvas.Top="-10"
+                                    FillColor="{Binding ArrowColor, ElementName=AnimationControl}" HorizontalAlignment="Center"/>
+            <local:DataArrow x:Name="Arrow12" Canvas.Left="0" Canvas.Top="-10"
+                                    FillColor="{Binding ArrowColor, ElementName=AnimationControl}" HorizontalAlignment="Center"/>
+            <local:DataArrow x:Name="Arrow13" Canvas.Left="0" Canvas.Top="-10"
+                                    FillColor="{Binding ArrowColor, ElementName=AnimationControl}" HorizontalAlignment="Center"/>
+            <local:DataArrow x:Name="Arrow14" Canvas.Left="0" Canvas.Top="-10"
+                                    FillColor="{Binding ArrowColor, ElementName=AnimationControl}" HorizontalAlignment="Center"/>
+        </Canvas>
+
+        <!--Arrows that represent data downwards, ex. from pc to mcu-->
+        <Canvas Grid.Column="3" x:Name="AnimationCanvas2" Visibility="Hidden">
+
+            <local:DataArrow x:Name="Arrow21" Canvas.Right="0" Canvas.Top="-10"
+                                    FillColor="{Binding ArrowColor, ElementName=AnimationControl}" HorizontalAlignment="Center" ScaleY="-1"/>
+            <local:DataArrow x:Name="Arrow22" Canvas.Right="0" Canvas.Top="-10"
+                                    FillColor="{Binding ArrowColor, ElementName=AnimationControl}" HorizontalAlignment="Center" ScaleY="-1"/>
+            <local:DataArrow x:Name="Arrow23" Canvas.Right="0" Canvas.Top="-10"
+                                    FillColor="{Binding ArrowColor, ElementName=AnimationControl}" HorizontalAlignment="Center" ScaleY="-1"/>
+            <local:DataArrow x:Name="Arrow24" Canvas.Right="0" Canvas.Top="-10"
+                                    FillColor="{Binding ArrowColor, ElementName=AnimationControl}" HorizontalAlignment="Center" ScaleY="-1"/>
+        </Canvas>
+
+    </Grid>
+</UserControl>

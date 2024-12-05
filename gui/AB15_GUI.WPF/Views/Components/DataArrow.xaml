@@ -1,0 +1,26 @@
+﻿<UserControl x:Class="AB15_GUI.WPF.Views.Components.DataArrow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:AB15_GUI.WPF.Views.Components"
+             mc:Ignorable="d" 
+             MinHeight="8" MinWidth="10"
+             x:Name="ControlRoot">
+    <UserControl.Resources>
+        <!--Rotate arrow-->
+        <ScaleTransform x:Key="ScaleTransform" ScaleX="{Binding ScaleX, ElementName=ControlRoot}" ScaleY="{Binding ScaleY, ElementName=ControlRoot}" />
+    </UserControl.Resources>
+
+    <Grid RenderTransform="{StaticResource ScaleTransform}" RenderTransformOrigin="0.5,0.5">
+        <Canvas>
+
+            <!--Arrow point top-->
+            <Polygon Points="5,0 0,5 5,3 10,5" Fill="{Binding FillColor, ElementName=ControlRoot}"/>
+
+            <!--Arrow tail-->
+            <Polygon Points="2,4 5,1 8,4 5,10" Fill="{Binding FillColor, ElementName=ControlRoot}" Opacity="0.5"/>
+
+        </Canvas>
+    </Grid>
+</UserControl>
