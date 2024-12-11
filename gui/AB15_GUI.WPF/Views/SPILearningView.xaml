@@ -52,10 +52,8 @@
                         HorizontalAlignment="Right"
                         Text="Address:"/>
             
-            <!--TODO add converter for data validation-->
             <TextBox    Grid.Row="0" Grid.Column="1"
                         Style="{DynamicResource TextBoxStyle}"
-                        Text="{Binding UserAddress}" Background="Red"
                         IsEnabled="{Binding IsSPIControlsEnabled}"
                         Name="AddressTextBox">
             </TextBox>
@@ -65,10 +63,8 @@
                         HorizontalAlignment="Right"
                         Text="Data:"/>
 
-            <!--TODO add converter for data validation-->
             <TextBox    Grid.Row="1" Grid.Column="1"
                         Style="{DynamicResource TextBoxStyle}"
-                        Text="{Binding UserData}" Background="Red"
                         IsEnabled="{Binding IsSPIControlsEnabled}"
                         Name="DataTextBox">
             </TextBox>
@@ -506,7 +502,7 @@
                 <TextBlock  Grid.Row="2" Grid.Column="10" FontSize="14" 
                             HorizontalAlignment="Center" VerticalAlignment="Center"
                             Name="_21bit"
-                            Text="F">
+                            Text="{Binding isChecked, ElementName=ReadingCheckBox}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="11" FontSize="14" 
@@ -709,27 +705,27 @@
                         Background="{DynamicResource UI.SeparateLine}"/>
 
                 <TextBlock Grid.Row="1" Grid.Column="1" FontSize="14"
-                                    Text="#" HorizontalAlignment="Center">
+                           Text="#" HorizontalAlignment="Center">
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="2" FontSize="14"
-                                       Text="Address" HorizontalAlignment="Center">
+                           Text="Address" HorizontalAlignment="Center">
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="3" FontSize="14"
-                                       Text="R/W" HorizontalAlignment="Center">
+                           Text="R/W" HorizontalAlignment="Center">
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="4" FontSize="14"
-                                       Text="Data" HorizontalAlignment="Center">
+                           Text="Data" HorizontalAlignment="Center">
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="5" FontSize="14"
-                                       Text="CRC" HorizontalAlignment="Center">
+                           Text="CRC" HorizontalAlignment="Center">
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="6" FontSize="14"
-                                       Text="RAW" HorizontalAlignment="Center">
+                           Text="RAW" HorizontalAlignment="Center">
                 </TextBlock>
                 <!-- #endregion -->
 
@@ -763,47 +759,63 @@
                                 <Canvas Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="4" Background="{DynamicResource UI.SeparateLine}"/>
 
                                 <!-- Cell with number -->
-                                <TextBlock  Grid.Column="1" Margin="0,0,5,0" 
+                                <TextBox    Grid.Column="1" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="14" HorizontalAlignment="Center"
-                                            Text="{Binding number}">
-                                </TextBlock>
+                                            Text="{Binding number}"
+                                            IsReadOnly="True"
+                                            Style="{DynamicResource TextBoxStyle}"
+                                            MouseDoubleClick="MouseDoubleClick">
+                                </TextBox>
 
                                 <!-- Cell with address -->
-                                <TextBlock  Grid.Column="2"  Margin="0,0,5,0" 
+                                <TextBox    Grid.Column="2"  Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="14" HorizontalAlignment="Center"
-                                            Text="{Binding address, StringFormat={}{0:x}}">
-                                </TextBlock>
+                                            Text="{Binding address, StringFormat={}{0:x}}"
+                                            IsReadOnly="True"
+                                            Style="{DynamicResource TextBoxStyle}"
+                                            MouseDoubleClick="MouseDoubleClick">
+                                </TextBox>
 
                                 <!-- Cell with R/W -->
-                                <TextBlock  Grid.Column="3"  Margin="0,0,5,0" 
+                                <TextBox    Grid.Column="3"  Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="14" HorizontalAlignment="Center"
-                                            Text="">
-                                    <!--TODO place convertor-->
-                                </TextBlock>
+                                            Text="{Binding rw, StringFormat={}{0:x}}"
+                                            IsReadOnly="True"
+                                            Style="{DynamicResource TextBoxStyle}"
+                                            MouseDoubleClick="MouseDoubleClick">
+                                </TextBox>
 
                                 <!-- Cell with Data -->
-                                <TextBlock  Grid.Column="1" Margin="0,0,5,0" 
+                                <TextBox    Grid.Column="1" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="14" HorizontalAlignment="Center"
-                                            Text="{Binding data, StringFormat={}{0:x}}">
-                                </TextBlock>
+                                            Text="{Binding data, StringFormat={}{0:x}}"
+                                            IsReadOnly="True"
+                                            MouseDoubleClick="MouseDoubleClick">
+                                </TextBox>
 
                                 <!-- Cell with CRC -->
-                                <TextBlock  Grid.Column="1" Margin="0,0,5,0" 
+                                <TextBox    Grid.Column="1" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="14" HorizontalAlignment="Center"
-                                            Text="{Binding crc, StringFormat={}{0:x}}">
-                                </TextBlock>
+                                            Text="{Binding crc, StringFormat={}{0:x}}"
+                                            IsReadOnly="True"
+                                            Style="{DynamicResource TextBoxStyle}"
+                                            MouseDoubleClick="MouseDoubleClick">
+                                </TextBox>
 
                                 <!-- Cell with RAW -->
-                                <TextBlock  Grid.Column="1" Margin="0,0,5,0" 
+                                <TextBox    Grid.Column="1" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="14" HorizontalAlignment="Center"
-                                            Text="{Binding raw, StringFormat={}{0:x}}">
-                                </TextBlock>
+                                            Text="{Binding raw, StringFormat={}{0:x}}"
+                                            IsReadOnly="True"
+                                            Style="{DynamicResource TextBoxStyle}"
+                                            MouseDoubleClick="MouseDoubleClick">
+                                </TextBox>
                             </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>
@@ -967,95 +979,133 @@
                                 <Canvas Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="4" Background="{DynamicResource UI.SeparateLine}"/>
 
                                 <!-- Cell with number -->
-                                <TextBlock  Grid.Column="1" Margin="0,0,5,0" 
+                                <TextBox    Grid.Column="1" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="14" HorizontalAlignment="Center"
-                                            Text="{Binding number}">
-                                </TextBlock>
+                                            Text="{Binding number}"
+                                            IsReadOnly="True"
+                                            Style="{DynamicResource TextBoxStyle}"
+                                            MouseDoubleClick="MouseDoubleClick">
+                                </TextBox>
 
                                 <!-- Cell with gs5 -->
-                                <TextBlock  Grid.Column="2" Margin="0,0,5,0" 
+                                <TextBox    Grid.Column="2" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="14" HorizontalAlignment="Center"
-                                            Text="{Binding gs5}">
-                                </TextBlock>
+                                            Text="{Binding gs5}"
+                                            IsReadOnly="True"
+                                            Style="{DynamicResource TextBoxStyle}"
+                                            MouseDoubleClick="MouseDoubleClick">
+                                </TextBox>
 
                                 <!-- Cell with gs4 -->
-                                <TextBlock  Grid.Column="3" Margin="0,0,5,0" 
+                                <TextBox    Grid.Column="3" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="14" HorizontalAlignment="Center"
-                                            Text="{Binding gs4}">
-                                </TextBlock>
+                                            Text="{Binding gs4}"
+                                            IsReadOnly="True"
+                                            Style="{DynamicResource TextBoxStyle}"
+                                            MouseDoubleClick="MouseDoubleClick">
+                                </TextBox>
 
                                 <!-- Cell with gs3 -->
-                                <TextBlock  Grid.Column="4" Margin="0,0,5,0" 
+                                <TextBox    Grid.Column="4" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="14" HorizontalAlignment="Center"
-                                            Text="{Binding gs3}">
-                                </TextBlock>
+                                            Text="{Binding gs3}"
+                                            IsReadOnly="True"
+                                            Style="{DynamicResource TextBoxStyle}"
+                                            MouseDoubleClick="MouseDoubleClick">
+                                </TextBox>
 
                                 <!-- Cell with gs2 -->
-                                <TextBlock  Grid.Column="5" Margin="0,0,5,0" 
+                                <TextBox    Grid.Column="5" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="14" HorizontalAlignment="Center"
-                                            Text="{Binding gs2}">
-                                </TextBlock>
+                                            Text="{Binding gs2}"
+                                            IsReadOnly="True"
+                                            Style="{DynamicResource TextBoxStyle}"
+                                            MouseDoubleClick="MouseDoubleClick">
+                                </TextBox>
 
                                 <!-- Cell with gs1 -->
-                                <TextBlock  Grid.Column="6" Margin="0,0,5,0" 
+                                <TextBox    Grid.Column="6" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="14" HorizontalAlignment="Center"
-                                            Text="{Binding gs1}">
-                                </TextBlock>
+                                            Text="{Binding gs1}"
+                                            IsReadOnly="True"
+                                            Style="{DynamicResource TextBoxStyle}"
+                                            MouseDoubleClick="MouseDoubleClick">
+                                </TextBox>
 
                                 <!-- Cell with gs0 -->
-                                <TextBlock  Grid.Column="7" Margin="0,0,5,0" 
+                                <TextBox    Grid.Column="7" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="14" HorizontalAlignment="Center"
-                                            Text="{Binding gs0}">
-                                </TextBlock>
+                                            Text="{Binding gs0}"
+                                            IsReadOnly="True"
+                                            Style="{DynamicResource TextBoxStyle}"
+                                            MouseDoubleClick="MouseDoubleClick">
+                                </TextBox>
 
                                 <!-- Cell with SF -->
-                                <TextBlock  Grid.Column="8"  Margin="0,0,5,0" 
+                                <TextBox    Grid.Column="8"  Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="14" HorizontalAlignment="Center"
-                                            Text="{Binding sf}">
-                                </TextBlock>
+                                            Text="{Binding sf}"
+                                            IsReadOnly="True"
+                                            Style="{DynamicResource TextBoxStyle}"
+                                            MouseDoubleClick="MouseDoubleClick">
+                                </TextBox>
 
                                 <!-- Cell with status -->
-                                <TextBlock  Grid.Column="9" Margin="0,0,5,0" 
+                                <TextBox    Grid.Column="9" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="14" HorizontalAlignment="Center"
-                                            Text="{Binding status, StringFormat={}{0:x}}">
-                                </TextBlock>
+                                            Text="{Binding status, StringFormat={}{0:x}}"
+                                            IsReadOnly="True"
+                                            MouseDoubleClick="MouseDoubleClick">
+                                </TextBox>
 
                                 <!-- Cell with Data -->
-                                <TextBlock  Grid.Column="10" Margin="0,0,5,0" 
+                                <TextBox    Grid.Column="10" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="14" HorizontalAlignment="Center"
-                                            Text="{Binding data, StringFormat={}{0:x}}">
-                                </TextBlock>
+                                            Text="{Binding data, StringFormat={}{0:x}}"
+                                            IsReadOnly="True"
+                                            Style="{DynamicResource TextBoxStyle}"
+                                            MouseDoubleClick="MouseDoubleClick">
+                                </TextBox>
 
                                 <!-- Cell with so -->
-                                <TextBlock  Grid.Column="11" Margin="0,0,5,0" 
+                                <TextBox    Grid.Column="11" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="14" HorizontalAlignment="Center"
-                                            Text="{Binding so}">
-                                </TextBlock>
+                                            Text="{Binding so}"
+                                            IsReadOnly="True"
+                                            Style="{DynamicResource TextBoxStyle}"
+                                            MouseDoubleClick="MouseDoubleClick">
+                                </TextBox>
 
                                 <!-- Cell with crc -->
-                                <TextBlock  Grid.Column="12" Margin="0,0,5,0" 
+                                <TextBox    Grid.Column="12" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="14" HorizontalAlignment="Center"
-                                            Text="{Binding crc, StringFormat={}{0:x}}">
-                                </TextBlock>
+                                            Text="{Binding crc, StringFormat={}{0:x}}"
+                                            IsReadOnly="True"
+                                            Style="{DynamicResource TextBoxStyle}"
+                                            MouseDoubleClick="MouseDoubleClick">
+                                </TextBox>
                                 
                                 <!-- Cell with raw -->
-                                <TextBlock  Grid.Column="13" Margin="0,0,5,0" 
+                                <TextBox    Grid.Column="13" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="14" HorizontalAlignment="Center"
-                                            Text="{Binding raw, StringFormat={}{0:x}}">
-                                </TextBlock>
+                                            Text="{Binding raw, StringFormat={}{0:x}}"
+                                            IsReadOnly="True"
+                                            Style="{DynamicResource TextBoxStyle}"
+                                            MouseDoubleClick="MouseDoubleClick">
+                                </TextBox>
                             </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>

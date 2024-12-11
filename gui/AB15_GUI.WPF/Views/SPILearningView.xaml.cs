@@ -39,5 +39,17 @@ namespace AB15_GUI.WPF.Views
                 ReadingCheckBox.IsChecked = !checkBox.IsChecked;
             }
         }
+
+        private void MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            try
+            {
+                Clipboard.SetText(((TextBox)sender).Text);
+            }
+            catch (Exception ex)
+            {
+                // Do something w/ exception 
+            }
+        }
     }
 }
