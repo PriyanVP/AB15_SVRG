@@ -51,5 +51,17 @@ namespace AB15_GUI.WPF.Views
                 // Do something w/ exception 
             }
         }
+
+        private void isRawFormat_Checked(object sender, RoutedEventArgs e)
+        {
+            ReadWriteChooseField.Visibility = Visibility.Hidden;
+            RawFormatTextBox.Visibility = Visibility.Visible;
+        }
+
+        private void isRawFormat_Unchecked(object sender, RoutedEventArgs e)
+        {
+            ReadWriteChooseField.Visibility = Visibility.Visible;
+            RawFormatTextBox.Visibility = Visibility.Hidden;
+        }
     }
 }

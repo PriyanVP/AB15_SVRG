@@ -20,7 +20,7 @@
             <ColumnDefinition Width="5"/>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="1.5*"/>
+            <ColumnDefinition Width="1.3*"/>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="5"/>
         </Grid.ColumnDefinitions>
@@ -50,7 +50,8 @@
             <TextBlock  Grid.Row="0" Grid.Column="0"
                         FontSize="20" Margin="3"
                         HorizontalAlignment="Right"
-                        Text="Address:"/>
+                        Text="Address:"
+                        Style="{DynamicResource CustomTextBlock}"/>
             
             <TextBox    Grid.Row="0" Grid.Column="1"
                         Style="{DynamicResource TextBoxStyle}"
@@ -61,16 +62,39 @@
             <TextBlock  Grid.Row="1" Grid.Column="0"
                         FontSize="20" Margin="3"
                         HorizontalAlignment="Right"
-                        Text="Data:"/>
+                        Text="Data:"
+                        Style="{DynamicResource CustomTextBlock}"/>
 
             <TextBox    Grid.Row="1" Grid.Column="1"
                         Style="{DynamicResource TextBoxStyle}"
                         IsEnabled="{Binding IsSPIControlsEnabled}"
                         Name="DataTextBox">
             </TextBox>
+            
+            <StackPanel     Orientation="Horizontal"
+                            Grid.Row="2" Grid.Column="0">
+                <TextBlock  Text="RAW: " FontSize="20" Margin="3"
+                            Style="{DynamicResource CustomTextBlock}"/>
+                
+                <CheckBox   x:Name="isRawFormat"
+                            Style="{DynamicResource ToggleSwitchStyle}"
+                            IsEnabled="{Binding IsSPIControlsEnabled}"
+                            IsChecked="{Binding isRawCommandToSend}"
+                            Checked="isRawFormat_Checked"
+                            Unchecked="isRawFormat_Unchecked"/>
+            </StackPanel>
+
+            <TextBox        Grid.Row="2" Grid.Column="1"
+                            x:Name="RawFormatTextBox"
+                            IsEnabled="{Binding IsSPIControlsEnabled}"
+                            Text="{Binding RawCommandToSendTextBox}"
+                            Visibility="Hidden"
+                            Style="{DynamicResource TextBoxStyle}"/>
+
 
             <Grid       Grid.Row="2" Grid.Column="1"
-                        Grid.ColumnSpan="1">
+                        Grid.ColumnSpan="1"
+                        x:Name="ReadWriteChooseField">
 
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -78,11 +102,12 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                
+
                 <TextBlock  Grid.Column="0"
                             FontSize="20" Margin="3"
                             HorizontalAlignment="Right"
-                            Text="Read:"/>
+                            Text="Read:"
+                            Style="{DynamicResource CustomTextBlock}"/>
 
                 <CheckBox   Grid.Column="1"
                             x:Name="ReadingCheckBox"
@@ -96,7 +121,8 @@
                 <TextBlock  Grid.Column="2"
                             FontSize="20" Margin="3"
                             HorizontalAlignment="Right"
-                            Text="Write:"/>
+                            Text="Write:"
+                            Style="{DynamicResource CustomTextBlock}"/>
 
                 <CheckBox   Grid.Column="3"
                             x:Name="WritingCheckBox"
@@ -201,11 +227,13 @@
 
                 <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="10"
                            Text="Address" FontSize="20" 
-                           HorizontalAlignment="Center"/>
+                           HorizontalAlignment="Center"
+                           Style="{DynamicResource CustomTextBlock}"/>
 
                 <TextBlock Grid.Row="0" Grid.Column="10" Grid.ColumnSpan="1"
                            Text="R/W" FontSize="14" 
-                           HorizontalAlignment="Center">
+                           HorizontalAlignment="Center"
+                           Style="{DynamicResource CustomTextBlock}">
                     <TextBlock.LayoutTransform>
                         <RotateTransform Angle="270"/>
                     </TextBlock.LayoutTransform>
@@ -213,204 +241,271 @@
 
                 <TextBlock Grid.Row="0" Grid.Column="11" Grid.ColumnSpan="16"
                            Text="Data" FontSize="20" 
-                           HorizontalAlignment="Center"/>
+                           HorizontalAlignment="Center"
+                           Style="{DynamicResource CustomTextBlock}"/>
 
                 <TextBlock Grid.Row="0" Grid.Column="27" Grid.ColumnSpan="3"
                            Text="CRC" FontSize="20" 
-                           HorizontalAlignment="Center"/>
+                           HorizontalAlignment="Center"
+                           Style="{DynamicResource CustomTextBlock}"/>
 
                 <TextBlock Grid.Row="0" Grid.Column="30" Grid.ColumnSpan="2"
                            Text="NA" FontSize="20" 
-                           HorizontalAlignment="Center"/>
+                           HorizontalAlignment="Center"
+                           Style="{DynamicResource CustomTextBlock}"/>
 
                 <!--#region bit numbers -->
-                <TextBlock  Grid.Row="1" Grid.Column="0" Text="31" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock  Grid.Row="1" Grid.Column="0" Text="31" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
                     <TextBlock.LayoutTransform>
                         <RotateTransform Angle="270"/>
                     </TextBlock.LayoutTransform>
                 </TextBlock>
 
-                <TextBlock  Grid.Row="1" Grid.Column="1" Text="30" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock  Grid.Row="1" Grid.Column="1" Text="30" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
                     <TextBlock.LayoutTransform>
                         <RotateTransform Angle="270"/>
                     </TextBlock.LayoutTransform>
                 </TextBlock>
 
-                <TextBlock  Grid.Row="1" Grid.Column="2" Text="29" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock  Grid.Row="1" Grid.Column="2" Text="29" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
                     <TextBlock.LayoutTransform>
                         <RotateTransform Angle="270"/>
                     </TextBlock.LayoutTransform>
                 </TextBlock>
 
-                <TextBlock  Grid.Row="1" Grid.Column="3" Text="28" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock  Grid.Row="1" Grid.Column="3" Text="28" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
                     <TextBlock.LayoutTransform>
                         <RotateTransform Angle="270"/>
                     </TextBlock.LayoutTransform>
                 </TextBlock>
 
-                <TextBlock  Grid.Row="1" Grid.Column="4" Text="27" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock  Grid.Row="1" Grid.Column="4" Text="27" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
                     <TextBlock.LayoutTransform>
                         <RotateTransform Angle="270"/>
                     </TextBlock.LayoutTransform>
                 </TextBlock>
 
-                <TextBlock  Grid.Row="1" Grid.Column="5" Text="26" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock  Grid.Row="1" Grid.Column="5" Text="26" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
                     <TextBlock.LayoutTransform>
                         <RotateTransform Angle="270"/>
                     </TextBlock.LayoutTransform>
                 </TextBlock>
 
-                <TextBlock  Grid.Row="1" Grid.Column="6" Text="25" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock  Grid.Row="1" Grid.Column="6" Text="25" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
                     <TextBlock.LayoutTransform>
                         <RotateTransform Angle="270"/>
                     </TextBlock.LayoutTransform>
                 </TextBlock>
 
-                <TextBlock  Grid.Row="1" Grid.Column="7" Text="24" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock  Grid.Row="1" Grid.Column="7" Text="24" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
                     <TextBlock.LayoutTransform>
                         <RotateTransform Angle="270"/>
                     </TextBlock.LayoutTransform>
                 </TextBlock>
 
-                <TextBlock  Grid.Row="1" Grid.Column="8" Text="23" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock  Grid.Row="1" Grid.Column="8" Text="23" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
                     <TextBlock.LayoutTransform>
                         <RotateTransform Angle="270"/>
                     </TextBlock.LayoutTransform>
                 </TextBlock>
 
-                <TextBlock  Grid.Row="1" Grid.Column="9" Text="22" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock  Grid.Row="1" Grid.Column="9" Text="22" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
                     <TextBlock.LayoutTransform>
                         <RotateTransform Angle="270"/>
                     </TextBlock.LayoutTransform>
                 </TextBlock>
 
-                <TextBlock  Grid.Row="1" Grid.Column="10" Text="21" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock  Grid.Row="1" Grid.Column="10" Text="21" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
                     <TextBlock.LayoutTransform>
                         <RotateTransform Angle="270"/>
                     </TextBlock.LayoutTransform>
                 </TextBlock>
 
-                <TextBlock  Grid.Row="1" Grid.Column="11" Text="20" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock  Grid.Row="1" Grid.Column="11" Text="20" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
                     <TextBlock.LayoutTransform>
                         <RotateTransform Angle="270"/>
                     </TextBlock.LayoutTransform>
                 </TextBlock>
 
-                <TextBlock  Grid.Row="1" Grid.Column="12" Text="19" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock  Grid.Row="1" Grid.Column="12" Text="19" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
                     <TextBlock.LayoutTransform>
                         <RotateTransform Angle="270"/>
                     </TextBlock.LayoutTransform>
                 </TextBlock>
 
-                <TextBlock  Grid.Row="1" Grid.Column="13" Text="18" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock  Grid.Row="1" Grid.Column="13" Text="18" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
                     <TextBlock.LayoutTransform>
                         <RotateTransform Angle="270"/>
                     </TextBlock.LayoutTransform>
                 </TextBlock>
 
-                <TextBlock  Grid.Row="1" Grid.Column="14" Text="17" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock  Grid.Row="1" Grid.Column="14" Text="17" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
                     <TextBlock.LayoutTransform>
                         <RotateTransform Angle="270"/>
                     </TextBlock.LayoutTransform>
                 </TextBlock>
 
-                <TextBlock  Grid.Row="1" Grid.Column="15" Text="16" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock  Grid.Row="1" Grid.Column="15" Text="16" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
                     <TextBlock.LayoutTransform>
                         <RotateTransform Angle="270"/>
                     </TextBlock.LayoutTransform>
                 </TextBlock>
 
-                <TextBlock  Grid.Row="1" Grid.Column="16" Text="15" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock  Grid.Row="1" Grid.Column="16" Text="15" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
                     <TextBlock.LayoutTransform>
                         <RotateTransform Angle="270"/>
                     </TextBlock.LayoutTransform>
                 </TextBlock>
 
-                <TextBlock  Grid.Row="1" Grid.Column="17" Text="14" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock  Grid.Row="1" Grid.Column="17" Text="14" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
                     <TextBlock.LayoutTransform>
                         <RotateTransform Angle="270"/>
                     </TextBlock.LayoutTransform>
                 </TextBlock>
 
-                <TextBlock  Grid.Row="1" Grid.Column="18" Text="13" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock  Grid.Row="1" Grid.Column="18" Text="13" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
                     <TextBlock.LayoutTransform>
                         <RotateTransform Angle="270"/>
                     </TextBlock.LayoutTransform>
                 </TextBlock>
 
-                <TextBlock  Grid.Row="1" Grid.Column="19" Text="12" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock  Grid.Row="1" Grid.Column="19" Text="12" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
                     <TextBlock.LayoutTransform>
                         <RotateTransform Angle="270"/>
                     </TextBlock.LayoutTransform>
                 </TextBlock>
 
-                <TextBlock  Grid.Row="1" Grid.Column="20" Text="11" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock  Grid.Row="1" Grid.Column="20" Text="11" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
                     <TextBlock.LayoutTransform>
                         <RotateTransform Angle="270"/>
                     </TextBlock.LayoutTransform>
                 </TextBlock>
 
-                <TextBlock  Grid.Row="1" Grid.Column="21" Text="10" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock  Grid.Row="1" Grid.Column="21" Text="10" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
                     <TextBlock.LayoutTransform>
                         <RotateTransform Angle="270"/>
                     </TextBlock.LayoutTransform>
                 </TextBlock>
 
-                <TextBlock  Grid.Row="1" Grid.Column="22" Text="9" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock  Grid.Row="1" Grid.Column="22" Text="9" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
                     <TextBlock.LayoutTransform>
                         <RotateTransform Angle="270"/>
                     </TextBlock.LayoutTransform>
                 </TextBlock>
 
-                <TextBlock  Grid.Row="1" Grid.Column="23" Text="8" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock  Grid.Row="1" Grid.Column="23" Text="8" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
                     <TextBlock.LayoutTransform>
                         <RotateTransform Angle="270"/>
                     </TextBlock.LayoutTransform>
                 </TextBlock>
 
-                <TextBlock  Grid.Row="1" Grid.Column="24" Text="7" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock  Grid.Row="1" Grid.Column="24" Text="7" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
                     <TextBlock.LayoutTransform>
                         <RotateTransform Angle="270"/>
                     </TextBlock.LayoutTransform>
                 </TextBlock>
 
-                <TextBlock  Grid.Row="1" Grid.Column="25" Text="6" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock  Grid.Row="1" Grid.Column="25" Text="6" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
                     <TextBlock.LayoutTransform>
                         <RotateTransform Angle="270"/>
                     </TextBlock.LayoutTransform>
                 </TextBlock>
 
-                <TextBlock  Grid.Row="1" Grid.Column="26" Text="5" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock  Grid.Row="1" Grid.Column="26" Text="5" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
                     <TextBlock.LayoutTransform>
                         <RotateTransform Angle="270"/>
                     </TextBlock.LayoutTransform>
                 </TextBlock>
 
-                <TextBlock  Grid.Row="1" Grid.Column="27" Text="4" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock  Grid.Row="1" Grid.Column="27" Text="4" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
                     <TextBlock.LayoutTransform>
                         <RotateTransform Angle="270"/>
                     </TextBlock.LayoutTransform>
                 </TextBlock>
 
-                <TextBlock  Grid.Row="1" Grid.Column="28" Text="3" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock  Grid.Row="1" Grid.Column="28" Text="3" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
                     <TextBlock.LayoutTransform>
                         <RotateTransform Angle="270"/>
                     </TextBlock.LayoutTransform>
                 </TextBlock>
 
-                <TextBlock  Grid.Row="1" Grid.Column="29" Text="2" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock  Grid.Row="1" Grid.Column="29" Text="2" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
                     <TextBlock.LayoutTransform>
                         <RotateTransform Angle="270"/>
                     </TextBlock.LayoutTransform>
                 </TextBlock>
 
-                <TextBlock  Grid.Row="1" Grid.Column="30" Text="1" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock  Grid.Row="1" Grid.Column="30" Text="1" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
                     <TextBlock.LayoutTransform>
                         <RotateTransform Angle="270"/>
                     </TextBlock.LayoutTransform>
                 </TextBlock>
 
-                <TextBlock  Grid.Row="1" Grid.Column="31" Text="0" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock  Grid.Row="1" Grid.Column="31" Text="0" FontSize="14" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
                     <TextBlock.LayoutTransform>
                         <RotateTransform Angle="270"/>
                     </TextBlock.LayoutTransform>
@@ -424,7 +519,8 @@
                             Name="_31bit"
                             Text="{Binding Text, ElementName=AddressTextBox, 
                             Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=9}">
+                            ConverterParameter=9}"
+                            Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="1" FontSize="14" 
@@ -432,7 +528,8 @@
                             Name="_30bit"
                             Text="{Binding Text, ElementName=AddressTextBox, 
                             Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=8}">
+                            ConverterParameter=8}"
+                            Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="2" FontSize="14" 
@@ -440,7 +537,8 @@
                             Name="_29bit"
                             Text="{Binding Text, ElementName=AddressTextBox, 
                             Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=7}">
+                            ConverterParameter=7}"
+                            Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="3" FontSize="14" 
@@ -448,7 +546,8 @@
                             Name="_28bit"
                             Text="{Binding Text, ElementName=AddressTextBox, 
                             Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=6}">
+                            ConverterParameter=6}"
+                            Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="4" FontSize="14" 
@@ -456,7 +555,8 @@
                             Name="_27bit"
                             Text="{Binding Text, ElementName=AddressTextBox, 
                             Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=5}">
+                            ConverterParameter=5}"
+                            Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="5" FontSize="14" 
@@ -464,7 +564,8 @@
                             Name="_26bit"
                             Text="{Binding Text, ElementName=AddressTextBox, 
                             Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=4}">
+                            ConverterParameter=4}"
+                            Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="6" FontSize="14" 
@@ -472,7 +573,8 @@
                             Name="_25bit"
                             Text="{Binding Text, ElementName=AddressTextBox, 
                             Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=3}">
+                            ConverterParameter=3}"
+                            Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="7" FontSize="14" 
@@ -480,7 +582,8 @@
                             Name="_24bit"
                             Text="{Binding Text, ElementName=AddressTextBox, 
                             Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=2}">
+                            ConverterParameter=2}"
+                            Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="8" FontSize="14" 
@@ -488,7 +591,8 @@
                             Name="_23bit"
                             Text="{Binding Text, ElementName=AddressTextBox, 
                             Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=1}">
+                            ConverterParameter=1}"
+                            Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="9" FontSize="14" 
@@ -496,13 +600,24 @@
                             Name="_22bit"
                             Text="{Binding Text, ElementName=AddressTextBox, 
                             Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=0}">
+                            ConverterParameter=0}"
+                            Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="10" FontSize="14" 
                             HorizontalAlignment="Center" VerticalAlignment="Center"
                             Name="_21bit"
-                            Text="{Binding isChecked, ElementName=ReadingCheckBox}">
+                            Foreground="{DynamicResource Foreground.Default}">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Text" Value="0" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsChecked, ElementName=ReadingCheckBox}" Value="True">
+                                    <Setter Property="Text" Value="1" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="11" FontSize="14" 
@@ -510,7 +625,8 @@
                             Name="_20bit"
                             Text="{Binding Text, ElementName=DataTextBox, 
                             Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=15}">
+                            ConverterParameter=15}"
+                            Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="12" FontSize="14" 
@@ -518,7 +634,8 @@
                             Name="_19bit"
                             Text="{Binding Text, ElementName=DataTextBox, 
                             Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=14}">
+                            ConverterParameter=14}"
+                            Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="13" FontSize="14" 
@@ -526,7 +643,8 @@
                             Name="_18bit"
                             Text="{Binding Text, ElementName=DataTextBox, 
                             Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=13}">
+                            ConverterParameter=13}"
+                            Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="14" FontSize="14" 
@@ -534,7 +652,8 @@
                             Name="_17bit"
                             Text="{Binding Text, ElementName=DataTextBox, 
                             Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=12}">
+                            ConverterParameter=12}"
+                            Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="15" FontSize="14" 
@@ -542,7 +661,8 @@
                             Name="_16bit"
                             Text="{Binding Text, ElementName=DataTextBox, 
                             Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=11}">
+                            ConverterParameter=11}"
+                            Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="16" FontSize="14"
@@ -550,7 +670,8 @@
                             Name="_15bit"
                             Text="{Binding Text, ElementName=DataTextBox, 
                             Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=10}">
+                            ConverterParameter=10}"
+                            Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="17" FontSize="14" 
@@ -558,7 +679,8 @@
                             Name="_14bit"
                             Text="{Binding Text, ElementName=DataTextBox, 
                             Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=9}">
+                            ConverterParameter=9}"
+                            Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="18" FontSize="14" 
@@ -566,7 +688,8 @@
                             Name="_13bit"
                             Text="{Binding Text, ElementName=DataTextBox, 
                             Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=8}">
+                            ConverterParameter=8}"
+                            Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="19" FontSize="14" 
@@ -574,7 +697,8 @@
                             Name="_12bit"
                             Text="{Binding Text, ElementName=DataTextBox, 
                             Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=7}">
+                            ConverterParameter=7}"
+                            Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="20" FontSize="14" 
@@ -582,7 +706,8 @@
                             Name="_11bit"
                             Text="{Binding Text, ElementName=DataTextBox, 
                             Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=6}">
+                            ConverterParameter=6}"
+                            Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="21" FontSize="14" 
@@ -590,7 +715,8 @@
                             Name="_10bit"
                             Text="{Binding Text, ElementName=DataTextBox, 
                             Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=5}">
+                            ConverterParameter=5}"
+                            Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="22" FontSize="14" 
@@ -598,7 +724,8 @@
                             Name="_9bit"
                             Text="{Binding Text, ElementName=DataTextBox, 
                             Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=4}">
+                            ConverterParameter=4}"
+                            Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="23" FontSize="14" 
@@ -606,7 +733,8 @@
                             Name="_8bit"
                             Text="{Binding Text, ElementName=DataTextBox, 
                             Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=3}">
+                            ConverterParameter=3}"
+                            Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="24" FontSize="14" 
@@ -614,7 +742,8 @@
                             Name="_7bit"
                             Text="{Binding Text, ElementName=DataTextBox, 
                             Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=2}">
+                            ConverterParameter=2}"
+                            Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="25" FontSize="14" 
@@ -622,7 +751,8 @@
                             Name="_6bit"
                             Text="{Binding Text, ElementName=DataTextBox, 
                             Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=1}">
+                            ConverterParameter=1}"
+                            Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="26" FontSize="14" 
@@ -630,7 +760,8 @@
                             Name="_5bit"
                             Text="{Binding Text, ElementName=DataTextBox, 
                             Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=0}">
+                            ConverterParameter=0}"
+                            Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="27" FontSize="14" 
@@ -638,7 +769,8 @@
                             Name="_4bit"
                             Text="{Binding CRCValue, 
                             Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=2}">
+                            ConverterParameter=2}"
+                            Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="28" FontSize="14" 
@@ -646,7 +778,8 @@
                             Name="_3bit"
                             Text="{Binding CRCValue, 
                             Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=1}">
+                            ConverterParameter=1}"
+                            Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="29" FontSize="14" 
@@ -654,18 +787,21 @@
                             Name="_2bit"
                             Text="{Binding CRCValue, 
                             Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=0}">
+                            ConverterParameter=0}"
+                            Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="30" FontSize="14" 
                             HorizontalAlignment="Center" VerticalAlignment="Center"
                             Name="_1bit"
+                            Style="{DynamicResource CustomTextBlock}"
                             Text="0">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="31" FontSize="14" 
                             HorizontalAlignment="Center" VerticalAlignment="Center"
                             Name="_0bit"
+                            Style="{DynamicResource CustomTextBlock}"
                             Text="0">
                 </TextBlock>
                 <!--#endregion-->
@@ -677,7 +813,7 @@
         <!-- #region MOSI -->
         <Border BorderThickness="0" Grid.Row="3" Grid.Column="2"
                 BorderBrush="{DynamicResource SimpleButton.BorderBrush}"
-                HorizontalAlignment="Center">
+                HorizontalAlignment="Right">
             <!-- Table -->
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -694,7 +830,7 @@
 
                 <Grid.RowDefinitions>
                     <RowDefinition Height="7"/>
-                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto" MinHeight="30"/>
                     <RowDefinition Height="2"/>
                     <RowDefinition Height="1"/>
                     <RowDefinition Height="*"/>
@@ -705,27 +841,39 @@
                         Background="{DynamicResource UI.SeparateLine}"/>
 
                 <TextBlock Grid.Row="1" Grid.Column="1" FontSize="14"
-                           Text="#" HorizontalAlignment="Center">
+                           Text="#" HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="2" FontSize="14"
-                           Text="Address" HorizontalAlignment="Center">
+                           Text="Address" HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="3" FontSize="14"
-                           Text="R/W" HorizontalAlignment="Center">
+                           Text="R/W" HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="4" FontSize="14"
-                           Text="Data" HorizontalAlignment="Center">
+                           Text="Data" HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="5" FontSize="14"
-                           Text="CRC" HorizontalAlignment="Center">
+                           Text="CRC" HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="6" FontSize="14"
-                           Text="RAW" HorizontalAlignment="Center">
+                           Text="RAW" HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
                 <!-- #endregion -->
 
@@ -829,7 +977,7 @@
         <!-- #region MISO -->
         <Border BorderThickness="0" Grid.Row="3" Grid.Column="3" 
                 BorderBrush="{DynamicResource SimpleButton.BorderBrush}"
-                HorizontalAlignment="Center">
+                HorizontalAlignment="Left">
             <!-- Table -->
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -852,7 +1000,7 @@
 
                 <Grid.RowDefinitions>
                     <RowDefinition Height="7"/>
-                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto" MinHeight="30"/>
                     <RowDefinition Height="2"/>
                     <RowDefinition Height="1"/>
                     <RowDefinition Height="*"/>
@@ -863,12 +1011,15 @@
                         Background="{DynamicResource UI.SeparateLine}"/>
 
                 <TextBlock Grid.Row="1" Grid.Column="1" FontSize="14"
-                                    Text="#" HorizontalAlignment="Center">
+                           Text="#" HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="2" FontSize="14"
                            Text="Gs5" HorizontalAlignment="Center"
-                           VerticalAlignment="Center">
+                           VerticalAlignment="Center"
+                           Style="{DynamicResource CustomTextBlock}">
                     <TextBlock.LayoutTransform>
                         <RotateTransform Angle="270"/>
                     </TextBlock.LayoutTransform>
@@ -876,7 +1027,8 @@
 
                 <TextBlock Grid.Row="1" Grid.Column="3" FontSize="14"
                            Text="Gs4" HorizontalAlignment="Center"
-                           VerticalAlignment="Center">
+                           VerticalAlignment="Center"
+                           Style="{DynamicResource CustomTextBlock}">
                     <TextBlock.LayoutTransform>
                         <RotateTransform Angle="270"/>
                     </TextBlock.LayoutTransform>
@@ -884,7 +1036,8 @@
 
                 <TextBlock Grid.Row="1" Grid.Column="4" FontSize="14"
                            Text="Gs3" HorizontalAlignment="Center"
-                           VerticalAlignment="Center">
+                           VerticalAlignment="Center"
+                           Style="{DynamicResource CustomTextBlock}">
                     <TextBlock.LayoutTransform>
                         <RotateTransform Angle="270"/>
                     </TextBlock.LayoutTransform>
@@ -892,7 +1045,8 @@
 
                 <TextBlock Grid.Row="1" Grid.Column="5" FontSize="14"
                            Text="Gs2" HorizontalAlignment="Center"
-                           VerticalAlignment="Center">
+                           VerticalAlignment="Center"
+                           Style="{DynamicResource CustomTextBlock}">
                     <TextBlock.LayoutTransform>
                         <RotateTransform Angle="270"/>
                     </TextBlock.LayoutTransform>
@@ -900,7 +1054,8 @@
 
                 <TextBlock Grid.Row="1" Grid.Column="6" FontSize="14"
                                        Text="Gs1" HorizontalAlignment="Center"
-                           VerticalAlignment="Center">
+                           VerticalAlignment="Center"
+                           Style="{DynamicResource CustomTextBlock}">
                     <TextBlock.LayoutTransform>
                         <RotateTransform Angle="270"/>
                     </TextBlock.LayoutTransform>
@@ -916,30 +1071,41 @@
 
                 <TextBlock Grid.Row="1" Grid.Column="8" FontSize="14"
                            Text="SF" HorizontalAlignment="Center"
-                           VerticalAlignment="Center">
+                           VerticalAlignment="Center"
+                           Style="{DynamicResource CustomTextBlock}">
                     <TextBlock.LayoutTransform>
                         <RotateTransform Angle="270"/>
                     </TextBlock.LayoutTransform>
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="9" FontSize="14"
-                                       Text="Status" HorizontalAlignment="Center">
+                           Text="Status" HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="10" FontSize="14"
-                                       Text="data" HorizontalAlignment="Center">
+                           Text="data" HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="11" FontSize="14"
-                                       Text="S0" HorizontalAlignment="Center">
+                           Text="S0" HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="12" FontSize="14"
-                                       Text="CRC" HorizontalAlignment="Center">
+                           Text="CRC" HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="13" FontSize="14"
-                                       Text="RAW" HorizontalAlignment="Center">
+                           Text="RAW" HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
                 <!-- #endregion -->
 
