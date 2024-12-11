@@ -97,7 +97,7 @@ public class Waitlist : IWaitlist
     }
 
     /// <summary>
-    /// Removs all items from waitlist
+    /// Remove all items from waitlist
     /// </summary>
     /// <param name="msgID">message ID</param>
     /// <returns>true if removal was successful, false - otherwise</returns>
@@ -168,7 +168,7 @@ public class Waitlist : IWaitlist
     /// <returns>msg ID if unoccupied IDs present, 0xFFFF - otherwise</returns>
     private int GenerateUniqueMsgID()
     {
-        // Init loacal variables
+        // Init local variables
         int msgID = 0x0;
         int maxValueForID = ((int)MsgIDMasks.GeneralPurposeBits);
 
