@@ -298,20 +298,18 @@ namespace AB15_GUI.WPF.Models
         {
             logger.Debug($"Started periodic state reading (timer) on ASIC {ID}");
 
-            GetASICState();
+            // Precondition check
+            if (stateReadingTimer != null)
+            {
+                logger.Warn($"Tried to start timer on ASIC{ID} while it was already running");
+                return;
+            }
 
-            // // Precondition check
-            // if (stateReadingTimer != null)
-            // {
-            //     logger.Warn($"Tried to start timer on ASIC{ID} while it was already running");
-            //     return;
-            // }
-
-            // // Arm timer
-            // stateReadingTimer = new Timer();
-            // stateReadingTimer.Elapsed += new ElapsedEventHandler(OnAsicStateReadingEvent);
-            // stateReadingTimer.Interval = timeout;
-            // stateReadingTimer.Enabled = true;
+            // Arm timer
+            stateReadingTimer = new Timer();
+            stateReadingTimer.Elapsed += new ElapsedEventHandler(OnAsicStateReadingEvent);
+            stateReadingTimer.Interval = timeout;
+            stateReadingTimer.Enabled = true;
         }
 
         /// <summary>
@@ -321,10 +319,10 @@ namespace AB15_GUI.WPF.Models
         {
             logger.Debug($"Stopped periodic state reading (timer) on ASIC {ID}");
 
-            // // Stop and dispose timer
-            // stateReadingTimer.Enabled = false;
-            // stateReadingTimer.Dispose();
-            // stateReadingTimer = null;
+            // Stop and dispose timer
+            stateReadingTimer.Enabled = false;
+            stateReadingTimer.Dispose();
+            stateReadingTimer = null;
         }
 
         /// <summary>
@@ -335,18 +333,18 @@ namespace AB15_GUI.WPF.Models
         {
             logger.Debug($"Starting init mode timer reset on ASIC {ID}");
 
-            // // Precondition check
-            // if (initModeResetTimer != null)
-            // {
-            //     logger.Warn($"Tried to start init mode continuation timer on ASIC{ID} while it was already running");
-            //     return;
-            // }
+            // Precondition check
+            if (initModeResetTimer != null)
+            {
+                logger.Warn($"Tried to start init mode continuation timer on ASIC{ID} while it was already running");
+                return;
+            }
 
-            // // Arm timer
-            // initModeResetTimer = new Timer();
-            // initModeResetTimer.Elapsed += new ElapsedEventHandler(OnInitModeTimeoutResettingEvent);
-            // initModeResetTimer.Interval = timeout;
-            // initModeResetTimer.Enabled = true;
+            // Arm timer
+            initModeResetTimer = new Timer();
+            initModeResetTimer.Elapsed += new ElapsedEventHandler(OnInitModeTimeoutResettingEvent);
+            initModeResetTimer.Interval = timeout;
+            initModeResetTimer.Enabled = true;
         }
 
         /// <summary>
@@ -357,9 +355,9 @@ namespace AB15_GUI.WPF.Models
             logger.Debug($"Stopping init mode timer reset on ASIC {ID}");
 
             // Stop and dispose timer
-            //initModeResetTimer.Enabled = false;
-            //initModeResetTimer.Dispose();
-            //initModeResetTimer = null;
+            initModeResetTimer.Enabled = false;
+            initModeResetTimer.Dispose();
+            initModeResetTimer = null;
         }
 
         /// <summary>
@@ -389,12 +387,6 @@ namespace AB15_GUI.WPF.Models
                 {
                     // Index of register to serialize
                     itmIdx = offset + i;
-
-                    // Skip SysStates_Reset_Locked_Config register (according to ASIC flow)
-                    if (ConfigData[itmIdx].Name == "SysStates_Reset_Locked_Config")
-                    {
-                        continue;
-                    }
 
                     // Add address and data of register
                     packageToSend.Payload.Address.Add(ConfigData[itmIdx].Address);
@@ -454,7 +446,6 @@ namespace AB15_GUI.WPF.Models
             Reg_SysStates_Reset_Locked_Config _SysStates_Reset_Locked_Config = new Reg_SysStates_Reset_Locked_Config();
             _SysStates_Reset_Locked_Config.Data = 0x0;
             _SysStates_Reset_Locked_Config.end_of_programming.Data = 0x1;
-            _SysStates_Reset_Locked_Config.spi_driver_strength.Data = 0x3; // default value, should match value in config
 
             // Construct command to MCU
             TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
@@ -559,9 +550,8 @@ namespace AB15_GUI.WPF.Models
             // Construct command to MCU
             TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
             packageToSend.ASICID = ID; // TODO: check for ASICs 2-4
-            packageToSend.Cmd = MCUCommand.START_HACKED_TIMER;
+            packageToSend.Cmd = MCUCommand.READ_REG;
             packageToSend.Deleg = ASICStateDelegate;
-            packageToSend.IsContinuous = true;
             packageToSend.PayloadType = typeof(ReadRegisterPayload);
             packageToSend.Payload.Address.Add(SYSTEM_STATE.Address);
 
@@ -569,56 +559,56 @@ namespace AB15_GUI.WPF.Models
             serialWrapper.SerialWrite(packageToSend);
         }
 
-        // /// <summary>
-        // /// Reset INIT mode timeout
-        // /// </summary>
-        // private void ResetInitModeTimeout()
-        // {
-        //     logger.Debug($"Started execution of Reset ITM command on ASIC {ID}");
+        /// <summary>
+        /// Reset INIT mode timeout
+        /// </summary>
+        private void ResetInitModeTimeout()
+        {
+            logger.Debug($"Started execution of Reset ITM command on ASIC {ID}");
 
-        //     // Create register content for executing SPI_COLDSTART1
-        //     Reg_SysStates_Reset_Config _SysStates_Reset_Config = new Reg_SysStates_Reset_Config();
-        //     _SysStates_Reset_Config.Data = 0x0;
-        //     _SysStates_Reset_Config.spi_clear_imt.Data = 0x1;
+            // Create register content for executing SPI_COLDSTART1
+            Reg_SysStates_Reset_Config _SysStates_Reset_Config = new Reg_SysStates_Reset_Config();
+            _SysStates_Reset_Config.Data = 0x0;
+            _SysStates_Reset_Config.spi_clear_imt.Data = 0x1;
 
-        //     // Construct command to MCU
-        //     TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
-        //     packageToSend.ASICID = ID; // TODO: check for ASICs 2-4
-        //     packageToSend.Cmd = MCUCommand.WRITE_REG;
-        //     packageToSend.Deleg = BasicWriteCommandDelegate;
-        //     packageToSend.PayloadType = typeof(EmptyPayload);
-        //     packageToSend.Payload.Address.Add(_SysStates_Reset_Config.Address);
-        //     packageToSend.Payload.Data.Add(_SysStates_Reset_Config.Data);
+            // Construct command to MCU
+            TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
+            packageToSend.ASICID = ID; // TODO: check for ASICs 2-4
+            packageToSend.Cmd = MCUCommand.WRITE_REG;
+            packageToSend.Deleg = BasicWriteCommandDelegate;
+            packageToSend.PayloadType = typeof(EmptyPayload);
+            packageToSend.Payload.Address.Add(_SysStates_Reset_Config.Address);
+            packageToSend.Payload.Data.Add(_SysStates_Reset_Config.Data);
 
-        //     // Send command to MCU
-        //     serialWrapper.SerialWrite(packageToSend);
-        // }
+            // Send command to MCU
+            serialWrapper.SerialWrite(packageToSend);
+        }
 
         #endregion // Methods
 
         #region CallbackHandlers
 
-        // /// <summary>
-        // /// Method that will be called periodically by timer to read ASIC state
-        // /// </summary>
-        // /// <param name="source">unused</param>
-        // /// <param name="e">unused</param>
-        // private void OnAsicStateReadingEvent(object source, ElapsedEventArgs e)
-        // {
-        //         // Execute ASIC state reading
-        //         GetASICState();
-        // }
+        /// <summary>
+        /// Method that will be called periodically by timer to read ASIC state
+        /// </summary>
+        /// <param name="source">unused</param>
+        /// <param name="e">unused</param>
+        private void OnAsicStateReadingEvent(object source, ElapsedEventArgs e)
+        {
+                // Execute ASIC state reading
+                GetASICState();
+        }
 
-        // /// <summary>
-        // /// Method that will be called periodically by timer to reset INIT mode timeout
-        // /// </summary>
-        // /// <param name="source">unused</param>
-        // /// <param name="e">unused</param>
-        // private void OnInitModeTimeoutResettingEvent(object source, ElapsedEventArgs e)
-        // {
-        //         // Reset INIT mode timeout
-        //         ResetInitModeTimeout();
-        // }
+        /// <summary>
+        /// Method that will be called periodically by timer to reset INIT mode timeout
+        /// </summary>
+        /// <param name="source">unused</param>
+        /// <param name="e">unused</param>
+        private void OnInitModeTimeoutResettingEvent(object source, ElapsedEventArgs e)
+        {
+                // Reset INIT mode timeout
+                ResetInitModeTimeout();
+        }
 
         /// <summary>
         /// Method that will be called when response for SPIColdstart1 command is received
@@ -639,7 +629,7 @@ namespace AB15_GUI.WPF.Models
             }
 
             // No error present - reset ASIC State property
-            State = ASICState.npor_release;
+            State = 0;
         }
 
         /// <summary>
@@ -713,9 +703,8 @@ namespace AB15_GUI.WPF.Models
             }
 
             // Check if this is the last expected response
-            logger.Debug($"Remaining number of config packages: {expectedNumberOfConfigPackages}");
             expectedNumberOfConfigPackages--;
-            if (expectedNumberOfConfigPackages <= 0)    // TODO: debug, possibly multithreading issue with counter
+            if (expectedNumberOfConfigPackages <= 0)
             {
                 OnConfigurationLoaded();
                 expectedNumberOfConfigPackages = null;
