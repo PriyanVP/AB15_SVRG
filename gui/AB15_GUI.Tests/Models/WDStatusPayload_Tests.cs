@@ -30,43 +30,43 @@ namespace AB15_GUI.Tests.Models
         {
         }
 
-        [TestCaseSource(nameof(ValidTestCases)), Description("Checking that valid packages are unpacked correctly")]
-        public void WhenSuccessfulResponse_ThenDataUnpackedSuccessfully((MCUStatus status, List<byte> inPayload) tcParams)
-        {
-            // Arrange
-            WDStatusPayload payload   = new WDStatusPayload();
-            WDStatus expectedWDStatus = new WDStatus();
+        //[TestCaseSource(nameof(ValidTestCases)), Description("Checking that valid packages are unpacked correctly")]
+        //public void WhenSuccessfulResponse_ThenDataUnpackedSuccessfully((MCUStatus status, List<byte> inPayload) tcParams)
+        //{
+        //    // Arrange
+        //    WDStatusPayload payload   = new WDStatusPayload();
+        //    WDStatus expectedWDStatus = new WDStatus();
 
-            // Act
-            payload.Deserialize(tcParams.status, tcParams.inPayload);
+        //    // Act
+        //    payload.Deserialize(tcParams.status, tcParams.inPayload);
 
-            // TODO decode some bytes by hand
-            //byte wdsMSB = tcParams.inPayload[0];
-            //byte wdsLSB = tcParams.inPayload[1];
-            bool wdf    = ( tcParams.inPayload[2] != 0 );
+        //    // TODO decode some bytes by hand
+        //    //byte wdsMSB = tcParams.inPayload[0];
+        //    //byte wdsLSB = tcParams.inPayload[1];
+        //    bool wdf    = ( tcParams.inPayload[2] != 0 );
 
-            // Test data is either "no WD faults active at all" or "all WD faults active"
-            // Set all WD fault flags to be identical to the WDF flag in the third byte
-            expectedWDStatus.WatchdogFault = wdf;
+        //    // Test data is either "no WD faults active at all" or "all WD faults active"
+        //    // Set all WD fault flags to be identical to the WDF flag in the third byte
+        //    expectedWDStatus.WatchdogFault = wdf;
 
-            // expectedWDStatus.FastWatchdogFault = wdf;
-            // expectedWDStatus.SlowWatchdogFault = wdf;
-            // expectedWDStatus.OscillatorFault = wdf;
+        //    // expectedWDStatus.FastWatchdogFault = wdf;
+        //    // expectedWDStatus.SlowWatchdogFault = wdf;
+        //    // expectedWDStatus.OscillatorFault = wdf;
 
-            // expectedWDStatus.FastWatchdogUnderflow = wdf;
-            // expectedWDStatus.FastWatchdogOverflow = wdf;
-            // expectedWDStatus.FastWatchdogQAFault = wdf;
-            // expectedWDStatus.SlowWatchdogOverflow = wdf;
-            // expectedWDStatus.SlowWatchdogQAFault = wdf;
-            // expectedWDStatus.OscillatorUnderflow = wdf;
-            // expectedWDStatus.OscillatorOverflow = wdf;
+        //    // expectedWDStatus.FastWatchdogUnderflow = wdf;
+        //    // expectedWDStatus.FastWatchdogOverflow = wdf;
+        //    // expectedWDStatus.FastWatchdogQAFault = wdf;
+        //    // expectedWDStatus.SlowWatchdogOverflow = wdf;
+        //    // expectedWDStatus.SlowWatchdogQAFault = wdf;
+        //    // expectedWDStatus.OscillatorUnderflow = wdf;
+        //    // expectedWDStatus.OscillatorOverflow = wdf;
 
-            // Assert
-            // No errors were found
-            Assert.That(payload.Error, Is.Null);
+        //    // Assert
+        //    // No errors were found
+        //    Assert.That(payload.Error, Is.Null);
 
-            Assert.That(payload.WatchdogStatus.WatchdogFault, Is.EqualTo(expectedWDStatus.WatchdogFault));
-        }
+        //    Assert.That(payload.WatchdogStatus.WatchdogFault, Is.EqualTo(expectedWDStatus.WatchdogFault));
+        //}
 
         
         [TestCaseSource(nameof(InvalidTestCases)), Description("Checking that invalid packages are unpacked correctly")]

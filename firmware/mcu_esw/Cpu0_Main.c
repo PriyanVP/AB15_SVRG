@@ -8,6 +8,7 @@
 #include "common/usb_data_types.h"
 #include "common/spi_data_types.h"
 #include "common/command_queue.h"
+#include "common/flm_diagnostics.h"
 #include "cmd/general_cmd.h"
 #include "cmd/seq_cmd.h"
 #include "cmd/bypass_cmd.h"
@@ -85,6 +86,65 @@ void WatchdogStatusReadingInterruptRoutine(void)
 
     // Add WD serving internal command to command queue
     QueueWrite(&serveWatchdogStatusCommand);
+}
+
+/** \brief FLM module cyclic diagnostics interrupt routine
+ * Starts cyclic diagnostics, stores results to be later sent to GUI
+*/
+void FLMDiagInterruptRoutine(void)
+{
+    // Initial FLM Diagnostic execution state is initialised as Idle
+    // and on later rounds updated from ASIC 
+    if (GetFLMDiagExecStatus() != FLM_DIAG_EXEC_STATUS_IDLE)
+    {
+        SetFLMDiagExecStatus(FLMReadDiagExecStatus());
+    }
+
+    // Start diagnostic and get out
+    // On next entries, check execution status:
+    switch (GetFLMDiagExecOrder())
+    {
+    case FLM_DIAG_ORDER_SHORT_DET:
+        // check status of diag execution, dont enter any diagnostic if status is ONGOING
+        if ((GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_FINISHED)||(GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_IDLE))
+        {
+            FLMShortDiag();
+            // Move on to next diagnostic
+            SetFLMDiagExecOrder(FLM_DIAG_ORDER_VHX_MEAS);
+        }
+        break;
+
+    case FLM_DIAG_ORDER_VHX_MEAS: 
+        FLMVHxDiag();
+        if (GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_FINISHED)
+        {
+            // Move on to next diagnostic
+            SetFLMDiagExecOrder(FLM_DIAG_ORDER_LOOP_RES_MEAS);
+        }
+        break;
+
+    case FLM_DIAG_ORDER_LOOP_RES_MEAS:
+        FLMLoopResDiag();
+        if (GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_FINISHED)
+        {
+            // Move on to next diagnostic
+            SetFLMDiagExecOrder(FLM_DIAG_ORDER_SQUIB_DET);
+        }
+        break;
+
+    case FLM_DIAG_ORDER_SQUIB_DET:
+        /* code */
+        FLMSquibDetErrDiag();
+        if (GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_FINISHED)
+        {
+            // Move on to next diagnostic
+            SetFLMDiagExecOrder(FLM_DIAG_ORDER_SHORT_DET);
+        }
+        break;
+
+    default:
+        break;
+    }
 }
 
 /** \brief Test mode 1/2 check interrupt routine
@@ -319,6 +379,16 @@ void core0_main(void)
                 IntCmdExecuteHackedTimer();
                 break;
 
+            case USB_CMD_FLM_DIAG_ENABLE:
+                CmdEnableFLMDiag();
+                break;
+
+            case USB_CMD_FLM_DIAG_DISABLE:
+                CmdDisableFLMDiag();
+                break;
+
+            case USB_CMD_FLM_DIAG_READ_RESULTS:
+                CmdReadFLMDiagResults(&cmdPackage);
 
            case _USB_CMD_MAX:
                 break;

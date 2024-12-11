@@ -296,6 +296,8 @@ namespace AB15_GUI.Tests.Services
         {
             public List<byte> ReceivedData = new List<byte>();
 
+            public string? Error { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
             public void Deserialize(MCUStatus status, List<byte> rawData)
             {
                 ReceivedData = rawData;

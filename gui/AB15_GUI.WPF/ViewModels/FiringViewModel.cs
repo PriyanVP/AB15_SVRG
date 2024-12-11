@@ -1285,22 +1285,23 @@ namespace AB15_GUI.WPF.ViewModels
         /// </summary>
         private void StartStopCyclicReadingExecute(object obj)
         {
-            // Handle that command execution can only be done once in a row
-            if (_startStopCyclicReadingCommand.IsEnabled == false) return;
-            _startStopCyclicReadingCommand.InProgress = true;
-            OnPropertyChanged(nameof(StartStopCyclicReading));
+            // TODO: uncomment after MCU feature finalization
+            // // Handle that command execution can only be done once in a row
+            // if (_startStopCyclicReadingCommand.IsEnabled == false) return;
+            // _startStopCyclicReadingCommand.InProgress = true;
+            // OnPropertyChanged(nameof(StartStopCyclicReadingCommandEn));
 
             logger.Debug($"Pressed Start stop cyclic reading");
 
-            // Create package to MCU
-            TransmitCommunicationPackage<EmptyPayload> packageToSend = new TransmitCommunicationPackage<EmptyPayload>();
-            packageToSend.ASICID = 1;
-            packageToSend.Cmd = (IsCyclicDiagnosticsEn) ? (MCUCommand.FLM_DIAG_ENABLE) : (MCUCommand.FLM_DIAG_DISABLE);
-            packageToSend.Deleg = CyclicReadingStartStopDelegate;
-            packageToSend.PayloadType = typeof(EmptyPayload);
+            // // Create package to MCU
+            // TransmitCommunicationPackage<EmptyPayload> packageToSend = new TransmitCommunicationPackage<EmptyPayload>();
+            // packageToSend.ASICID = 1;
+            // packageToSend.Cmd = (IsCyclicDiagnosticsEn) ? (MCUCommand.FLM_DIAG_ENABLE) : (MCUCommand.FLM_DIAG_DISABLE);
+            // packageToSend.Deleg = CyclicReadingStartStopDelegate;
+            // packageToSend.PayloadType = typeof(EmptyPayload);
 
-            // Send command to MCU
-            serialWrapper.SerialWrite(packageToSend);
+            // // Send command to MCU
+            // serialWrapper.SerialWrite(packageToSend);
         }
 
         /// <summary>
@@ -1318,21 +1319,6 @@ namespace AB15_GUI.WPF.ViewModels
             serialWrapper.SerialWrite(packageToSend);
         }
 
-        private void TestMode1Delegate(IReceiveCommunicationPackage package)
-        {
-            // // Change state if response received
-            // if (mcuResponse.Payload.Error is not null)
-            // {
-            //     AddError(mcuResponse.Payload.Error, nameof(FireSimultaneous));
-            //     logger.Error($"Error response received. Status: {mcuResponse.Status}");
-            //     return;
-            // }
-            // TODO: implement handling of data
-
-            // Trigger for transiting to TestMode2
-            asicWrapper.ASICs[0].ExecuteTestMode1Transition();
-        }
-
         /// <summary>
         /// Method that will initiate TestMode2 diagnostics
         /// </summary>
@@ -1348,7 +1334,35 @@ namespace AB15_GUI.WPF.ViewModels
             serialWrapper.SerialWrite(packageToSend);
         }
 
-        private void TestMode2Delegate(IReceiveCommunicationPackage package)
+        #endregion // Commands
+
+        #region Commands_delegates
+
+        /// <summary>
+        /// Delegate for handling response from executing test mode 1
+        /// </summary>
+        /// <param name="response">MCU response package</param>
+        private void TestMode1Delegate(IReceiveCommunicationPackage response)
+        {
+            // // Change state if response received
+            // if (mcuResponse.Payload.Error is not null)
+            // {
+            //     AddError(mcuResponse.Payload.Error, nameof(FireSimultaneous));
+            //     logger.Error($"Error response received. Status: {mcuResponse.Status}");
+            //     return;
+            // }
+            // TODO: implement handling of data
+
+            // Trigger for transiting to TestMode2
+            asicWrapper.ASICs[0].ExecuteTestMode1Transition();
+        }
+
+
+        /// <summary>
+        /// Delegate for handling response from executing test mode 2
+        /// </summary>
+        /// <param name="response">MCU response package</param>
+        private void TestMode2Delegate(IReceiveCommunicationPackage response)
         {
             //throw new NotImplementedException();
             // TODO: implement handling of data
@@ -1356,10 +1370,6 @@ namespace AB15_GUI.WPF.ViewModels
             // Trigger for transiting to Normal mode
             asicWrapper.ASICs[0].ExecuteTestMode2Transition();
         }
-
-        #endregion // Commands
-
-        #region Commands_delegates
 
         /// <summary>
         /// Delegate for Fire simultaneous command - raw spi
@@ -1508,7 +1518,7 @@ namespace AB15_GUI.WPF.ViewModels
         private void CyclicReadingStartStopDelegate(IReceiveCommunicationPackage response)
         {
             _startStopCyclicReadingCommand.InProgress = false;
-            OnPropertyChanged(nameof(StartStopCyclicReading));
+            OnPropertyChanged(nameof(StartStopCyclicReadingCommandEn));
 
             // Typecast response to actual type
             ReceiveCommunicationPackage<EmptyPayload> mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>) response;
@@ -1516,7 +1526,7 @@ namespace AB15_GUI.WPF.ViewModels
             // Change state if response received
             if (mcuResponse.Payload.Error is not null)
             {
-                AddError(mcuResponse.Payload.Error, nameof(FireSimultaneous));
+                AddError(mcuResponse.Payload.Error, nameof(StartStopCyclicReading));
                 logger.Error($"Error response received. Status: {mcuResponse.Status}");
                 return;
             }
@@ -1765,7 +1775,7 @@ namespace AB15_GUI.WPF.ViewModels
             // Change state if response received
             if (mcuResponse.Payload.Error is not null)
             {
-                AddError(mcuResponse.Payload.Error, nameof(FireSimultaneous));
+                AddError(mcuResponse.Payload.Error, nameof(StartStopCyclicReading));
                 logger.Error($"Error response received. Status: {mcuResponse.Status}");
                 return;
             }
