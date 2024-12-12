@@ -81,14 +81,14 @@ namespace AB15_GUI.Tests.ViewModels
             serialMock.receiveCommunicationPackages.Clear();
 
             // Act
-            // serialMock.receiveCommunicationPackages.Add(receiveCommunicationPackage); // commented for AB12
+            serialMock.receiveCommunicationPackages.Add(receiveCommunicationPackage); // commented for AB12
             commandCanExecuteBefore = watchdogVM.ReadWDConfigCommandEn;
             watchdogVM.ReadConfigFromASIC.Execute(null); // Emulate transition
 
             // Assert
             // Expected data transmitted
-            // Assert.That(serialMock.transmittedPackages.Count, Is.EqualTo(1));
-            // Assert.That(serialMock.transmittedPackages[0].Cmd, Is.EqualTo(MCUCommand.)); // should be read sequence
+            Assert.That(serialMock.transmittedPackages.Count, Is.EqualTo(1));
+            Assert.That(serialMock.transmittedPackages[0].Cmd, Is.EqualTo(MCUCommand.EXECUTE_READ_SEQUENCE)); // should be read sequence
 
             // Expected state after transition
             Assert.That(watchdogVM.StateObservation, Is.EqualTo(WatchdogViewModel.State.InConfiguration));
@@ -100,13 +100,6 @@ namespace AB15_GUI.Tests.ViewModels
             Assert.That(watchdogVM.StartWDCommandEn,      Is.False);
             Assert.That(watchdogVM.StopWDCommandEn,       Is.False);
             Assert.That(watchdogVM.IsConfigEnable,                      Is.True);
-
-            // Observable properties are expected
-            Assert.That(watchdogVM.WD1ResponseTime, Is.EqualTo(63));    // AB12 values
-            Assert.That(watchdogVM.WD2ResponseTime, Is.EqualTo(16));    // AB12 values
-            Assert.That(watchdogVM.WD1LockTime, Is.EqualTo(0));         // AB12 values
-            Assert.That(watchdogVM.WD2LockTime, Is.EqualTo(10));        // AB12 values
-            // More for AB15
         }
 
         [Test, Order(3), Description("Check parameters in Configured state")]
@@ -182,9 +175,6 @@ namespace AB15_GUI.Tests.ViewModels
             Assert.That(watchdogVM.StartWDCommandEn,      Is.False);
             Assert.That(watchdogVM.StopWDCommandEn,       Is.True);
             Assert.That(watchdogVM.IsConfigEnable,                      Is.False);
-
-            // Expected flags (for AB12)
-            Assert.That(watchdogVM.WDFaultStatus, Is.EqualTo(FaultStatus.Fault));
         }
 
         [Test, Order(5), Description("Check parameters after stop")]
