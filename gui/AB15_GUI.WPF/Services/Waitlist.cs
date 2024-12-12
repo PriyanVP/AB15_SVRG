@@ -23,6 +23,11 @@ public class Waitlist : IWaitlist
     private ILoggingService logger;
 
     /// <summary>
+    /// Lock object for handling multithreading
+    /// </summary>
+    private readonly object _lock = new object();
+
+    /// <summary>
     /// Waitlist for storing and handling records for received messages from MCU
     /// </summary>
     /// <typeparam name="WaitlistItem">record in waitlist</typeparam>
@@ -52,19 +57,28 @@ public class Waitlist : IWaitlist
         // TODO: check why Contract usage breaks application if not in debug mode
         // Contract.Requires<ArgumentException>(payloadType.GetInterface(nameof(IByteListSerializable)) != null, "Incorrect payloadType. Should implement IByteListSerializable.");
 
-        // Generate unique message ID
-        int msgID = GenerateUniqueMsgID();
+        int msgID;
+        bool isAddedSuccessfully = false;
 
-        // Check if item with same msgID already exist or if payload type is not correct
-        if (_waitlist.Exists(itm => itm.msgID == msgID) || (payloadType.GetInterface(nameof(IByteListSerializable)) is null))
+        lock (_lock)
         {
-            return (msgID: msgID, isAddedSuccessfully: false);
+            // Generate unique message ID
+            msgID = GenerateUniqueMsgID();
+
+            // Check if item with same msgID already exist or if payload type is not correct
+            if (_waitlist.Exists(itm => itm.msgID == msgID) || (payloadType.GetInterface(nameof(IByteListSerializable)) is null))
+            {
+                isAddedSuccessfully = false;
+            }
+            else
+            {
+                // Add item to list
+                _waitlist.Add(new WaitlistItem(deleg, payloadType, msgID: msgID, isContinuous: isContinuous));
+                isAddedSuccessfully = true;
+            }
         }
 
-        // Add item to list
-        _waitlist.Add(new WaitlistItem(deleg, payloadType, msgID: msgID, isContinuous: isContinuous));
-
-        return (msgID: msgID, isAddedSuccessfully: true);
+        return (msgID: msgID, isAddedSuccessfully: isAddedSuccessfully);
     }
 
     /// <summary>
@@ -93,7 +107,13 @@ public class Waitlist : IWaitlist
         }
 
         // Deletes item and returns true if successful
-        return _waitlist.Remove(itmToDelete);
+        bool isRemovedSuccesfully;
+        lock (_lock)
+        {
+            isRemovedSuccesfully = _waitlist.Remove(itmToDelete);
+        }
+
+        return isRemovedSuccesfully;
     }
 
     /// <summary>
@@ -103,7 +123,10 @@ public class Waitlist : IWaitlist
     /// <returns>true if removal was successful, false - otherwise</returns>
     public void ClearWaitlist()
     {
-        _waitlist.Clear();
+        lock (_lock)
+        {
+            _waitlist.Clear();
+        }
     }
 
     /// <summary>
@@ -115,7 +138,11 @@ public class Waitlist : IWaitlist
     {
         // Create temporary variables
         int tmpMsgID = msgID & (~(int)MsgIDMasks.ResponseBit); // clear response bit; can't be null!
-        WaitlistItem? waitlistItem = _waitlist.Find(itm => itm.msgID == tmpMsgID);
+        WaitlistItem? waitlistItem;
+        lock (_lock)
+        {
+            waitlistItem = _waitlist.Find(itm => itm.msgID == tmpMsgID);
+        }
 
         // Assign delegate and remove item from waitlist if conditions are met
         if (waitlistItem is null)
@@ -143,19 +170,23 @@ public class Waitlist : IWaitlist
         // Create temporary variables
         Action<IReceiveCommunicationPackage>? returnDelegate = null;
         int msgID = receivedPackage.MsgID & (~(int)MsgIDMasks.ResponseBit); // clear response bit; can't be null!
-        WaitlistItem? waitlistItem = _waitlist.Find(itm => itm.msgID == msgID);
 
-        // Assign delegate and remove item from waitlist if conditions are met
-        if (waitlistItem is not null)
+        lock (_lock)
         {
-            // Fill output variable
-            returnDelegate = waitlistItem.deleg;
+            WaitlistItem? waitlistItem = _waitlist.Find(itm => itm.msgID == msgID);
 
-            // Remove item from waitlist, if not continuous
-            // All checks for removal are passed at this point
-            if (waitlistItem.isContinuous == false)
+            // Assign delegate and remove item from waitlist if conditions are met
+            if (waitlistItem is not null)
             {
-                _waitlist.Remove(waitlistItem);
+                // Fill output variable
+                returnDelegate = waitlistItem.deleg;
+
+                // Remove item from waitlist, if not continuous
+                // All checks for removal are passed at this point
+                if (waitlistItem.isContinuous == false)
+                {
+                    _waitlist.Remove(waitlistItem);
+                }
             }
         }
 
