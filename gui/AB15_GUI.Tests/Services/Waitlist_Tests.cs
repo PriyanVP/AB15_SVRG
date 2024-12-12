@@ -95,7 +95,7 @@ namespace AB15_GUI.Tests.Services
 
         public class LoggerMock : ILoggingService
         {
-            public bool IsDebugEnabled => throw new NotImplementedException();
+            public bool IsDebugEnabled => false;
 
             public bool IsErrorEnabled => throw new NotImplementedException();
 

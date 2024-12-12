@@ -8,7 +8,6 @@ using AB15_GUI.WPF.Models;
 using AB15_GUI.WPF.Models.Interfaces;
 using AB15_GUI.WPF.Services.Interfaces;
 using System.Threading.Tasks;
-using System.IO.Packaging;
 
 namespace AB15_GUI.WPF.Services;
 
@@ -185,7 +184,6 @@ public class SerialWrapper : IDisposable, ISerialWrapper
         _serialInputDispatchTimer.Stop();
 
         // Temporary variables
-        Action<IReceiveCommunicationPackage>? msgCallback;
         List<byte> package;
         Type? payloadType;
         bool isPackageValid = false;
@@ -221,7 +219,7 @@ public class SerialWrapper : IDisposable, ISerialWrapper
             }
 
             // Get delegates for package
-            msgCallback = _responseWaitlist.GetDelegate(tmpReceivedPackage);
+            Action<IReceiveCommunicationPackage>? msgCallback = _responseWaitlist.GetDelegate(tmpReceivedPackage);
 
             // Skip iteration if no delegate found
             if (msgCallback is null)
@@ -243,7 +241,7 @@ public class SerialWrapper : IDisposable, ISerialWrapper
     /// </summary>
     private void SelectFullPackages()
     {
-        // Loacal variables
+        // Local variables
         byte tmpBufferItm = 0x00;
         int lastBytePosition;
         int packageLength;
