@@ -185,7 +185,6 @@ public class SerialWrapper : IDisposable, ISerialWrapper
         _serialInputDispatchTimer.Stop();
 
         // Temporary variables
-        Action<IReceiveCommunicationPackage>? msgCallback;
         List<byte> package;
         Type? payloadType;
         bool isPackageValid = false;
@@ -221,7 +220,7 @@ public class SerialWrapper : IDisposable, ISerialWrapper
             }
 
             // Get delegates for package
-            msgCallback = _responseWaitlist.GetDelegate(tmpReceivedPackage);
+            Action<IReceiveCommunicationPackage>? msgCallback = _responseWaitlist.GetDelegate(tmpReceivedPackage);
 
             // Skip iteration if no delegate found
             if (msgCallback is null)
@@ -232,6 +231,7 @@ public class SerialWrapper : IDisposable, ISerialWrapper
 
             // Call delegate function. Call is done in Task to increase performance
             Task.Run(() => msgCallback(tmpReceivedPackage));
+            // msgCallback(tmpReceivedPackage);
         }
 
         // Restart timer
