@@ -8,7 +8,6 @@ using AB15_GUI.WPF.Models;
 using AB15_GUI.WPF.Models.Interfaces;
 using AB15_GUI.WPF.Services.Interfaces;
 using System.Threading.Tasks;
-using System.IO.Packaging;
 
 namespace AB15_GUI.WPF.Services;
 
@@ -231,7 +230,6 @@ public class SerialWrapper : IDisposable, ISerialWrapper
 
             // Call delegate function. Call is done in Task to increase performance
             Task.Run(() => msgCallback(tmpReceivedPackage));
-            // msgCallback(tmpReceivedPackage);
         }
 
         // Restart timer
@@ -243,7 +241,7 @@ public class SerialWrapper : IDisposable, ISerialWrapper
     /// </summary>
     private void SelectFullPackages()
     {
-        // Loacal variables
+        // Local variables
         byte tmpBufferItm = 0x00;
         int lastBytePosition;
         int packageLength;

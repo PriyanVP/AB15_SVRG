@@ -89,7 +89,7 @@ public class ReceiveCommunicationPackage<T> : IReceiveCommunicationPackage where
 
         // Unpack data
         MsgID = (int)receivedPackage[SerialPackageConstants.MsgIDPosition];                                         // Message ID
-        ASICID = (int)receivedPackage[SerialPackageConstants.ASICIDPosition];                                       // ASIC ID
+        ASICID = (int)receivedPackage[SerialPackageConstants.ASICIDPosition];                                       // ASIC ID -> TODO: outdated naming
         Status = (MCUStatus)receivedPackage[SerialPackageConstants.CmdStatusPosition];                              // Status
 
         // If package is not valid - revert Properties to their default state and exit
