@@ -738,7 +738,7 @@
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="5" />
-                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto" MinWidth="100"/>
                     <ColumnDefinition Width="100"/>
                     <ColumnDefinition Width="40"/>
                     <ColumnDefinition Width="100"/>
@@ -790,7 +790,7 @@
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="6" FontSize="16"
-                           Text="RAW" HorizontalAlignment="Center"
+                           Text="RAW MOSI" HorizontalAlignment="Center"
                            VerticalAlignment="Center"
                            Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
@@ -1000,7 +1000,7 @@
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="12" FontSize="16"
-                           Text="RAW" HorizontalAlignment="Center"
+                           Text="RAW MISO" HorizontalAlignment="Center"
                            VerticalAlignment="Center"
                            Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
