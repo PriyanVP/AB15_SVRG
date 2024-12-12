@@ -56,12 +56,14 @@ namespace AB15_GUI.WPF.Views
         {
             ReadWriteChooseField.Visibility = Visibility.Hidden;
             RawFormatTextBox.Visibility = Visibility.Visible;
+            RawHexText.Visibility = Visibility.Visible;
         }
 
         private void isRawFormat_Unchecked(object sender, RoutedEventArgs e)
         {
             ReadWriteChooseField.Visibility = Visibility.Visible;
             RawFormatTextBox.Visibility = Visibility.Hidden;
+            RawHexText.Visibility = Visibility.Hidden;
         }
     }
 }

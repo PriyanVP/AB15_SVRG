@@ -7,6 +7,7 @@
       xmlns:local="clr-namespace:AB15_GUI.WPF.Views"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="1100"
+      MinWidth="1000"
       Title="SPILearning"
       DataContext="{Binding SPILearningViewModel, Source={StaticResource ViewModelLocator}}">
 
@@ -100,6 +101,13 @@
                             Checked="isRawFormat_Checked"
                             Unchecked="isRawFormat_Unchecked"/>
             </StackPanel>
+
+            <TextBlock  Grid.Row="2" Grid.Column="2"
+                        FontSize="16" Margin="3"
+                        VerticalAlignment="Bottom" HorizontalAlignment="Right"
+                        Text="0x"
+                        Style="{DynamicResource CustomTextBlock}"
+                        Name="RawHexText" Visibility="Hidden"/>
 
             <TextBox        Grid.Row="2" Grid.Column="3"
                             x:Name="RawFormatTextBox"
@@ -807,12 +815,11 @@
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="5" />
-                                    <ColumnDefinition Width="20"/>
+                                    <ColumnDefinition Width="auto" MinWidth="100"/>
                                     <ColumnDefinition Width="100"/>
                                     <ColumnDefinition Width="40"/>
                                     <ColumnDefinition Width="100"/>
-                                    <ColumnDefinition Width="80"/>
-                                    <ColumnDefinition Width="100"/>
+                                    <ColumnDefinition Width="40"/>
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="5" />
                                 </Grid.ColumnDefinitions>
@@ -825,11 +832,11 @@
 
                                 <Canvas Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="4" Background="{DynamicResource UI.SeparateLine}"/>
 
-                                <!-- Cell with number -->
+                                <!-- Cell with time -->
                                 <TextBox    Grid.Column="1" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
-                                            Text="{Binding number}"
+                                            Text="{Binding time}"
                                             IsReadOnly="True"
                                             Style="{DynamicResource TextBoxStyle}"
                                             MouseDoubleClick="MouseDoubleClick">
@@ -856,7 +863,7 @@
                                 </TextBox>
 
                                 <!-- Cell with Data -->
-                                <TextBox    Grid.Column="1" Margin="0,0,5,0" 
+                                <TextBox    Grid.Column="4" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
                                             Text="{Binding data, StringFormat={}{0:x}}"
@@ -865,7 +872,7 @@
                                 </TextBox>
 
                                 <!-- Cell with CRC -->
-                                <TextBox    Grid.Column="1" Margin="0,0,5,0" 
+                                <TextBox    Grid.Column="5" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
                                             Text="{Binding crc, StringFormat={}{0:x}}"
@@ -875,7 +882,7 @@
                                 </TextBox>
 
                                 <!-- Cell with RAW -->
-                                <TextBox    Grid.Column="1" Margin="0,0,5,0" 
+                                <TextBox    Grid.Column="6" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
                                             Text="{Binding raw, StringFormat={}{0:x}}"
@@ -900,13 +907,13 @@
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="5" />
-                    <ColumnDefinition Width="25"/>
-                    <ColumnDefinition Width="25"/>
-                    <ColumnDefinition Width="25"/>
-                    <ColumnDefinition Width="25"/>
-                    <ColumnDefinition Width="25"/>
-                    <ColumnDefinition Width="25"/>
-                    <ColumnDefinition Width="25"/>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition Width="30"/>
                     <ColumnDefinition Width="50"/>
                     <ColumnDefinition Width="80"/>
                     <ColumnDefinition Width="25"/>
@@ -1017,18 +1024,17 @@
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="5" />
-                                    <ColumnDefinition Width="25"/>
-                                    <ColumnDefinition Width="25"/>
-                                    <ColumnDefinition Width="25"/>
-                                    <ColumnDefinition Width="25"/>
-                                    <ColumnDefinition Width="25"/>
-                                    <ColumnDefinition Width="25"/>
-                                    <ColumnDefinition Width="25"/>
-                                    <ColumnDefinition Width="25"/>
+                                    <ColumnDefinition Width="30"/>
+                                    <ColumnDefinition Width="30"/>
+                                    <ColumnDefinition Width="30"/>
+                                    <ColumnDefinition Width="30"/>
+                                    <ColumnDefinition Width="30"/>
+                                    <ColumnDefinition Width="30"/>
+                                    <ColumnDefinition Width="30"/>
+                                    <ColumnDefinition Width="50"/>
                                     <ColumnDefinition Width="80"/>
-                                    <ColumnDefinition Width="80"/>
                                     <ColumnDefinition Width="25"/>
-                                    <ColumnDefinition Width="100"/>
+                                    <ColumnDefinition Width="40"/>
                                     <ColumnDefinition Width="*" MinWidth="100"/>
                                     <ColumnDefinition Width="5" />
                                 </Grid.ColumnDefinitions>
@@ -1041,18 +1047,8 @@
 
                                 <Canvas Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="4" Background="{DynamicResource UI.SeparateLine}"/>
 
-                                <!-- Cell with number -->
-                                <TextBox    Grid.Column="1" Margin="0,0,5,0" 
-                                            VerticalAlignment="Center"
-                                            FontSize="16" HorizontalAlignment="Center"
-                                            Text="{Binding number}"
-                                            IsReadOnly="True"
-                                            Style="{DynamicResource TextBoxStyle}"
-                                            MouseDoubleClick="MouseDoubleClick">
-                                </TextBox>
-
                                 <!-- Cell with gs5 -->
-                                <TextBox    Grid.Column="2" Margin="0,0,5,0" 
+                                <TextBox    Grid.Column="1" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
                                             Text="{Binding gs5}"
@@ -1062,7 +1058,7 @@
                                 </TextBox>
 
                                 <!-- Cell with gs4 -->
-                                <TextBox    Grid.Column="3" Margin="0,0,5,0" 
+                                <TextBox    Grid.Column="2" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
                                             Text="{Binding gs4}"
@@ -1072,7 +1068,7 @@
                                 </TextBox>
 
                                 <!-- Cell with gs3 -->
-                                <TextBox    Grid.Column="4" Margin="0,0,5,0" 
+                                <TextBox    Grid.Column="3" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
                                             Text="{Binding gs3}"
@@ -1082,7 +1078,7 @@
                                 </TextBox>
 
                                 <!-- Cell with gs2 -->
-                                <TextBox    Grid.Column="5" Margin="0,0,5,0" 
+                                <TextBox    Grid.Column="4" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
                                             Text="{Binding gs2}"
@@ -1092,7 +1088,7 @@
                                 </TextBox>
 
                                 <!-- Cell with gs1 -->
-                                <TextBox    Grid.Column="6" Margin="0,0,5,0" 
+                                <TextBox    Grid.Column="5" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
                                             Text="{Binding gs1}"
@@ -1102,7 +1098,7 @@
                                 </TextBox>
 
                                 <!-- Cell with gs0 -->
-                                <TextBox    Grid.Column="7" Margin="0,0,5,0" 
+                                <TextBox    Grid.Column="6" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
                                             Text="{Binding gs0}"
@@ -1112,7 +1108,7 @@
                                 </TextBox>
 
                                 <!-- Cell with SF -->
-                                <TextBox    Grid.Column="8"  Margin="0,0,5,0" 
+                                <TextBox    Grid.Column="7"  Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
                                             Text="{Binding sf}"
@@ -1122,7 +1118,7 @@
                                 </TextBox>
 
                                 <!-- Cell with status -->
-                                <TextBox    Grid.Column="9" Margin="0,0,5,0" 
+                                <TextBox    Grid.Column="8" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
                                             Text="{Binding status, StringFormat={}{0:x}}"
@@ -1131,7 +1127,7 @@
                                 </TextBox>
 
                                 <!-- Cell with Data -->
-                                <TextBox    Grid.Column="10" Margin="0,0,5,0" 
+                                <TextBox    Grid.Column="9" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
                                             Text="{Binding data, StringFormat={}{0:x}}"
@@ -1141,7 +1137,7 @@
                                 </TextBox>
 
                                 <!-- Cell with so -->
-                                <TextBox    Grid.Column="11" Margin="0,0,5,0" 
+                                <TextBox    Grid.Column="10" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
                                             Text="{Binding so}"
@@ -1151,7 +1147,7 @@
                                 </TextBox>
 
                                 <!-- Cell with crc -->
-                                <TextBox    Grid.Column="12" Margin="0,0,5,0" 
+                                <TextBox    Grid.Column="11" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
                                             Text="{Binding crc, StringFormat={}{0:x}}"
@@ -1161,7 +1157,7 @@
                                 </TextBox>
                                 
                                 <!-- Cell with raw -->
-                                <TextBox    Grid.Column="13" Margin="0,0,5,0" 
+                                <TextBox    Grid.Column="12" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
                                             Text="{Binding raw, StringFormat={}{0:x}}"
