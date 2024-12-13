@@ -170,7 +170,7 @@ void CmdDisableFLMDiag(USBReceiveData const * const commandPackage)
     // Set status and number of diag to init values for proper start
     // of diagnostics on next enable
     g_FLMDiagExecStatus = FLM_DIAG_EXEC_STATUS_IDLE;
-    SetFLMDiagExecOrder(FLM_DIAG_ORDER_SHORT_DET);
+    g_flmDiagExecNumber = FLM_DIAG_ORDER_SHORT_DET;
 
     // Turn off FLM diagnostics performing interrupt of MCU
     DisableFLMDiagInterrupt();
@@ -424,7 +424,7 @@ void IntCmdExecuteFLMDiag()
         {
             FLMShortDiag();
             // Move on to next diagnostic
-            SetFLMDiagExecOrder(FLM_DIAG_ORDER_VHX_MEAS);
+            g_flmDiagExecNumber = FLM_DIAG_ORDER_VHX_MEAS;
         }
         break;
 
@@ -433,7 +433,7 @@ void IntCmdExecuteFLMDiag()
         if (g_FLMDiagExecStatus == FLM_DIAG_EXEC_STATUS_FINISHED)
         {
             // Move on to next diagnostic
-            SetFLMDiagExecOrder(FLM_DIAG_ORDER_LOOP_RES_MEAS);
+            g_flmDiagExecNumber = FLM_DIAG_ORDER_LOOP_RES_MEAS;
         }
         break;
 
@@ -442,7 +442,7 @@ void IntCmdExecuteFLMDiag()
         if (g_FLMDiagExecStatus == FLM_DIAG_EXEC_STATUS_FINISHED)
         {
             // Move on to next diagnostic
-            SetFLMDiagExecOrder(FLM_DIAG_ORDER_SQUIB_DET);
+            g_flmDiagExecNumber = FLM_DIAG_ORDER_SQUIB_DET;
         }
         break;
 
@@ -451,7 +451,7 @@ void IntCmdExecuteFLMDiag()
         if (g_FLMDiagExecStatus == FLM_DIAG_EXEC_STATUS_FINISHED)
         {
             // Move on to next diagnostic
-            SetFLMDiagExecOrder(FLM_DIAG_ORDER_SHORT_DET);
+            g_flmDiagExecNumber = FLM_DIAG_ORDER_SHORT_DET;
         }
         break;
 
