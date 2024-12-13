@@ -48,6 +48,12 @@ void CmdDisableFLMDiag();
  */
 void CmdReadFLMDiagResults();
 
+/** \brief
+ * FLM module cyclic diagnostics interrupt routine
+ * Starts cyclic diagnostics, stores results to be later sent to GUI
+ */
+void IntCmdExecuteFLMDiag();
+
 /** \brief 
  * cyclic test performed automatically, no need to set FLM_DIAG_START
  */ 
@@ -398,6 +404,61 @@ void CmdReadFLMDiagResults(USBReceiveData const * const commandPackage)
         // Send data back to MCU
         SendUSBPackage(&packageToSend);
     }
+
+void IntCmdExecuteFLMDiag()
+{
+    // Initial FLM Diagnostic execution state is initialised as Idle
+    // and on later rounds updated from ASIC 
+    if (GetFLMDiagExecStatus() != FLM_DIAG_EXEC_STATUS_IDLE)
+    {
+        SetFLMDiagExecStatus(FLMReadDiagExecStatus());
+    }
+
+    // Start diagnostic and get out
+    // On next entries, check execution status:
+    switch (GetFLMDiagExecOrder())
+    {
+    case FLM_DIAG_ORDER_SHORT_DET:
+        // check status of diag execution, dont enter any diagnostic if status is ONGOING
+        if ((GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_FINISHED)||(GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_IDLE))
+        {
+            FLMShortDiag();
+            // Move on to next diagnostic
+            SetFLMDiagExecOrder(FLM_DIAG_ORDER_VHX_MEAS);
+        }
+        break;
+
+    case FLM_DIAG_ORDER_VHX_MEAS: 
+        FLMVHxDiag();
+        if (GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_FINISHED)
+        {
+            // Move on to next diagnostic
+            SetFLMDiagExecOrder(FLM_DIAG_ORDER_LOOP_RES_MEAS);
+        }
+        break;
+
+    case FLM_DIAG_ORDER_LOOP_RES_MEAS:
+        FLMLoopResDiag();
+        if (GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_FINISHED)
+        {
+            // Move on to next diagnostic
+            SetFLMDiagExecOrder(FLM_DIAG_ORDER_SQUIB_DET);
+        }
+        break;
+
+    case FLM_DIAG_ORDER_SQUIB_DET:
+        FLMSquibDetErrDiag();
+        if (GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_FINISHED)
+        {
+            // Move on to next diagnostic
+            SetFLMDiagExecOrder(FLM_DIAG_ORDER_SHORT_DET);
+        }
+        break;
+
+    default:
+        break;
+    }
+}
 
 // Diagnostic is running automatically by default, just read results
 void FLMShortDiag()

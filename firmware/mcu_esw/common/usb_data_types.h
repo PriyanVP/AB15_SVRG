@@ -111,6 +111,7 @@ typedef enum
     INT_CMD_READ_WD_STATUS              = 67,                 /** \brief read watchdogs status registers */
     INT_CMD_EXECUTE_TEST_MODE           = 68,                 /** \brief execute 1 iteration of test mode 1/2  */
     INT_CMD_EXECUTE_HACKED_TIMER        = 69,                 /** \brief   */
+    INT_CMD_EXECUTE_FLM_DIAG            = 70,                 /** \brief execute FLM Cyclic Diag interrupt */
 
     _USB_CMD_MAX                        = 127                 /** \brief maximal value of command (not included) */
 } USBCommandsEnum;
