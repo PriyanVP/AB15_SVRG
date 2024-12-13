@@ -634,12 +634,11 @@ flm_DiagExecStatusEnum FLMReadDiagExecStatus(void)
     // Determine FLM diagnostic execution status
     if ((tmpFLMDiagStatus2fRegister.as_s.FlmDiagActive_u1 == 1) && (tmpFLMDiagStatus2fRegister.as_s.FlmDiagReady_u1 == 0))
     {
-        SetFLMDiagExecStatus(FLM_DIAG_EXEC_STATUS_ONGOING);
+        return FLM_DIAG_EXEC_STATUS_ONGOING;
     }
-
-    if ((tmpFLMDiagStatus2fRegister.as_s.FlmDiagActive_u1 == 0) && (tmpFLMDiagStatus2fRegister.as_s.FlmDiagReady_u1 == 1))
+    else if ((tmpFLMDiagStatus2fRegister.as_s.FlmDiagActive_u1 == 0) && (tmpFLMDiagStatus2fRegister.as_s.FlmDiagReady_u1 == 1))
     {
-        SetFLMDiagExecStatus(FLM_DIAG_EXEC_STATUS_EVALUATED);
+        return FLM_DIAG_EXEC_STATUS_EVALUATED;
     }
 }
 
