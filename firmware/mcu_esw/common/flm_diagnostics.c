@@ -416,7 +416,7 @@ void IntCmdExecuteFLMDiag()
 
     // Start diagnostic and get out
     // On next entries, check execution status:
-    switch (GetFLMDiagExecOrder())
+    switch (g_flmDiagExecNumber)
     {
     case FLM_DIAG_ORDER_SHORT_DET:
         // check status of diag execution, dont enter any diagnostic if status is ONGOING
