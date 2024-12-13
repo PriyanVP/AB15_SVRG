@@ -88,22 +88,6 @@ void StartFLMDiag();
 flm_DiagExecStatusEnum FLMReadDiagExecStatus(void);
 
 /** \brief
- */
-void SetFLMDiagExecStatus(flm_DiagExecStatusEnum FLMCycDiagExecStatus);
-
-/** \brief
- */
-flm_DiagExecStatusEnum GetFLMDiagExecStatus(void);
-
-/** \brief
- */
-void SetFLMDiagExecOrder(flm_DiagExecOrderEnum execNumber);
-
-/** \brief
- */
-flm_DiagExecOrderEnum GetFLMDiagExecOrder (void);
-
-/** \brief
  * Measure Battery voltage, normal range to perform diagnostics
  * is 6...18V
  */
@@ -625,7 +609,6 @@ void FLMLoopResDiag()
 
     if (g_FLMDiagExecStatus == FLM_DIAG_EXEC_STATUS_EVALUATED)
     {
-        // TODO: diagnostic was performed, store results
         // Read FLM_READ_SQUIB_RES_CH1...FLM_READ_SQUIB_RES_CH20
         isSuccessfulFlag = QSPIReadSequenceNormal(SPI1_CS1MASTER, flmDiagResRegsAddresses, &data[0].dw, &length);
         // Store results TODO: check order of data
@@ -702,26 +685,6 @@ flm_DiagExecStatusEnum FLMReadDiagExecStatus(void)
         return FLM_DIAG_EXEC_STATUS_EVALUATED;
     }
 }
-
-void SetFLMDiagExecStatus(flm_DiagExecStatusEnum FLMCycDiagExecStatus)
-{
-    g_FLMDiagExecStatus = FLMCycDiagExecStatus;
-}
-
-flm_DiagExecStatusEnum GetFLMDiagExecStatus(void)
-{
-    return g_FLMDiagExecStatus;
-}
-
-void SetFLMDiagExecOrder (flm_DiagExecOrderEnum execNumber)
-    {
-        g_flmDiagExecNumber = execNumber;
-    }
-
-flm_DiagExecOrderEnum GetFLMDiagExecOrder (void)
-    {
-        return g_flmDiagExecNumber;
-    }
 
 boolean CheckBatVoltage(void)
 {
