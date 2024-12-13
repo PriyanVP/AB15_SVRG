@@ -169,7 +169,7 @@ void CmdDisableFLMDiag(USBReceiveData const * const commandPackage)
     g_flmDiagState = FLM_DIAG_STATE_DISABLED;
     // Set status and number of diag to init values for proper start
     // of diagnostics on next enable
-    SetFLMDiagExecStatus(FLM_DIAG_EXEC_STATUS_IDLE);
+    g_FLMDiagExecStatus = FLM_DIAG_EXEC_STATUS_IDLE;
     SetFLMDiagExecOrder(FLM_DIAG_ORDER_SHORT_DET);
 
     // Turn off FLM diagnostics performing interrupt of MCU
@@ -411,7 +411,7 @@ void IntCmdExecuteFLMDiag()
     // and on later rounds updated from ASIC 
     if (g_FLMDiagExecStatus != FLM_DIAG_EXEC_STATUS_IDLE)
     {
-        SetFLMDiagExecStatus(FLMReadDiagExecStatus());
+        g_FLMDiagExecStatus = FLMReadDiagExecStatus();
     }
 
     // Start diagnostic and get out
@@ -471,7 +471,7 @@ void FLMShortDiag()
                                          FLM_FLM_READ_SHORT_CH20_17};
     
     // read FLM_Read_Short_ch4_1 through FLM_Read_Short_ch20_17, store in FLMShortDiagResults
-    SetFLMDiagExecStatus(FLM_DIAG_EXEC_STATUS_ONGOING);
+    g_FLMDiagExecStatus = FLM_DIAG_EXEC_STATUS_ONGOING;
 
     // Read related registers from ASIC
     isSuccessfulFlag = QSPIReadSequenceNormal(SPI1_CS1MASTER, flmDiagShortsRegsAddresses, &data[0].dw, &length); //TODO: question: should data argument be &data[0].dw not &data[].dw ?
@@ -484,7 +484,7 @@ void FLMShortDiag()
     g_flmCycDiagResultsValues.flmShortDiagResults.FLM_Read_Short_ch20_17 = data[4].bf.output_data;
 
     // results are stored, get back
-    SetFLMDiagExecStatus(FLM_DIAG_EXEC_STATUS_FINISHED);
+    g_FLMDiagExecStatus = FLM_DIAG_EXEC_STATUS_FINISHED;
     
     // TODO: quick result analisys to check for faults
     // if any active, FLMCycDiagFaultsValues.FLM_SC2G_SC2B_fault = TRUE
@@ -538,7 +538,7 @@ void FLMVHxDiag()
             g_flmCycDiagResultsValues.flmVHxDiagResults[i].FLM_Read_Diag_VHx_voltage_value = flmReadDiagVHxTmp.as_s.FlmVhVoltageValue_u12;
         }
 
-        SetFLMDiagExecStatus(FLM_DIAG_EXEC_STATUS_FINISHED);
+        g_FLMDiagExecStatus = FLM_DIAG_EXEC_STATUS_FINISHED;
     }
 
     // TODO: evaluate wether to implement error status handling
@@ -586,7 +586,7 @@ void FLMSquibDetErrDiag()
             }
         }
 
-        SetFLMDiagExecStatus(FLM_DIAG_EXEC_STATUS_FINISHED);
+        g_FLMDiagExecStatus = FLM_DIAG_EXEC_STATUS_FINISHED;
     }
 
     // TODO: evaluate wether to implement error status handling
@@ -639,7 +639,7 @@ void FLMLoopResDiag()
             g_flmCycDiagResultsValues.flmLoopResDiagResults[i].flm_squib_res_pgndx_loss = flmReadSquibResChxTmp.as_s.FlmSquibResPgndxLoss_u1;
         }
 
-        SetFLMDiagExecStatus(FLM_DIAG_EXEC_STATUS_FINISHED);
+        g_FLMDiagExecStatus = FLM_DIAG_EXEC_STATUS_FINISHED;
     }
 
     // TODO: evaluate wether to implement error status handling
