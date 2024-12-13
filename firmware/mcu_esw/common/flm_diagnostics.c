@@ -13,6 +13,7 @@
 #include "flm_diagnostics.h"
 #include "common/bit_manipulation.h"
 #include "top/spi_wrapper.h"
+#include "periphery/timer.h"
 
 /*********************************************************************************************************************/
 /*------------------------------------------------------Macros-------------------------------------------------------*/
@@ -123,7 +124,7 @@ void CmdEnableFLMDiag(USBReceiveData const * const commandPackage)
     // FLM diag state flag is set
     g_flmDiagState = FLM_DIAG_STATE_ENABLED;
     // Configure periodicity of FLM diagnoscics MCU interrupt
-    ConfigureFLMDiagPeriodicity();
+    ConfigureFLMDiagPeriodicity(FLM_DIAG_INTERRUPT_PERIODICITY);
     // Turn on FLM diagnostics performing interrupt of MCU
     EnableFLMDiagInterrupt();
 
