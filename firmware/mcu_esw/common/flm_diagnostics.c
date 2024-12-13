@@ -409,7 +409,7 @@ void IntCmdExecuteFLMDiag()
 {
     // Initial FLM Diagnostic execution state is initialised as Idle
     // and on later rounds updated from ASIC 
-    if (GetFLMDiagExecStatus() != FLM_DIAG_EXEC_STATUS_IDLE)
+    if (g_FLMDiagExecStatus != FLM_DIAG_EXEC_STATUS_IDLE)
     {
         SetFLMDiagExecStatus(FLMReadDiagExecStatus());
     }
@@ -420,7 +420,7 @@ void IntCmdExecuteFLMDiag()
     {
     case FLM_DIAG_ORDER_SHORT_DET:
         // check status of diag execution, dont enter any diagnostic if status is ONGOING
-        if ((GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_FINISHED)||(GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_IDLE))
+        if ((g_FLMDiagExecStatus == FLM_DIAG_EXEC_STATUS_FINISHED)||(g_FLMDiagExecStatus == FLM_DIAG_EXEC_STATUS_IDLE))
         {
             FLMShortDiag();
             // Move on to next diagnostic
@@ -430,7 +430,7 @@ void IntCmdExecuteFLMDiag()
 
     case FLM_DIAG_ORDER_VHX_MEAS: 
         FLMVHxDiag();
-        if (GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_FINISHED)
+        if (g_FLMDiagExecStatus == FLM_DIAG_EXEC_STATUS_FINISHED)
         {
             // Move on to next diagnostic
             SetFLMDiagExecOrder(FLM_DIAG_ORDER_LOOP_RES_MEAS);
@@ -439,7 +439,7 @@ void IntCmdExecuteFLMDiag()
 
     case FLM_DIAG_ORDER_LOOP_RES_MEAS:
         FLMLoopResDiag();
-        if (GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_FINISHED)
+        if (g_FLMDiagExecStatus == FLM_DIAG_EXEC_STATUS_FINISHED)
         {
             // Move on to next diagnostic
             SetFLMDiagExecOrder(FLM_DIAG_ORDER_SQUIB_DET);
@@ -448,7 +448,7 @@ void IntCmdExecuteFLMDiag()
 
     case FLM_DIAG_ORDER_SQUIB_DET:
         FLMSquibDetErrDiag();
-        if (GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_FINISHED)
+        if (g_FLMDiagExecStatus == FLM_DIAG_EXEC_STATUS_FINISHED)
         {
             // Move on to next diagnostic
             SetFLMDiagExecOrder(FLM_DIAG_ORDER_SHORT_DET);
@@ -511,7 +511,7 @@ void FLMVHxDiag()
 
     // TODO: implement timeout for 1.5-2 duration of diagnostic -> if timeout then feature error to PC 
 
-    if (GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_FINISHED)
+    if (g_FLMDiagExecStatus == FLM_DIAG_EXEC_STATUS_FINISHED)
     {
         // Select corresponding mode
         SetFLMDiagMode(FLM_DIAG_MODE_VHX_MEAS);
@@ -524,7 +524,7 @@ void FLMVHxDiag()
         return;
     }
 
-    if (GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_EVALUATED)
+    if (g_FLMDiagExecStatus == FLM_DIAG_EXEC_STATUS_EVALUATED)
     {
         // TODO: diagnostic was performed, store results
         // Read FLM_FLM_READ_DIAG_VH1A...FLM_FLM_READ_DIAG_VH10, FLM_FLM_READ_DIAG_VH1B
@@ -553,7 +553,7 @@ void FLMSquibDetErrDiag()
     boolean isSuccessfulFlag = FALSE;
     uint16 flmDiagSquibRegsAddresses[FLM_DIAG_READ_SQUIB_REGS_COUNT] = {FLM_FLM_READ_SQUIB_CH16_1, FLM_FLM_READ_SQUIB_CH20_17};
 
-    if (GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_FINISHED)
+    if (g_FLMDiagExecStatus == FLM_DIAG_EXEC_STATUS_FINISHED)
     {
         // Select corresponding mode
         SetFLMDiagMode(FLM_DIAG_MODE_SQUIB_DET);
@@ -566,7 +566,7 @@ void FLMSquibDetErrDiag()
         return;
     }
 
-    if (GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_EVALUATED)
+    if (g_FLMDiagExecStatus == FLM_DIAG_EXEC_STATUS_EVALUATED)
     {
         // TODO: diagnostic was performed, store results
         // Read FLM_READ_SQUIB_CH16_1, FLM_READ_SQUIB_CH20_17
@@ -610,7 +610,7 @@ void FLMLoopResDiag()
                                                                     FLM_FLM_READ_SQUIB_RES_CH19,FLM_FLM_READ_SQUIB_RES_CH20,
                                                                     FLM_FLM_READ_SQUIB_RES_SQREF};
 
-    if (GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_FINISHED)
+    if (g_FLMDiagExecStatus == FLM_DIAG_EXEC_STATUS_FINISHED)
     {
         // Select corresponding mode
         SetFLMDiagMode(FLM_DIAG_MODE_LOOP_RES_MEAS);
@@ -623,7 +623,7 @@ void FLMLoopResDiag()
         return;
     }
 
-    if (GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_EVALUATED)
+    if (g_FLMDiagExecStatus == FLM_DIAG_EXEC_STATUS_EVALUATED)
     {
         // TODO: diagnostic was performed, store results
         // Read FLM_READ_SQUIB_RES_CH1...FLM_READ_SQUIB_RES_CH20
