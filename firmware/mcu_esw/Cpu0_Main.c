@@ -337,7 +337,7 @@ void core0_main(void)
                 IntCmdExecuteHackedTimer();
                 break;
             case INT_CMD_EXECUTE_FLM_DIAG:
-                // IntCmdExecuteFLMDiag();
+                IntCmdExecuteFLMDiag();
                 break;
             case USB_CMD_FLM_DIAG_ENABLE:
                 CmdEnableFLMDiag();
