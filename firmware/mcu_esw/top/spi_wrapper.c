@@ -189,7 +189,7 @@ boolean QSPIWriteNormal(SpiChSlaveSelectEnum spiChannel, uint16 address, uint16 
     return isReceivedDataValid;
 }
 
-boolean QSPIWriteRaw(uint8 spiChannel, uint32 data)
+boolean QSPIExecuteRawTransaction(uint8 spiChannel, uint32 * const p_data)
 {
     // Execute only if enabled
     if (enSPICommunication == FALSE) return FALSE;
@@ -204,7 +204,7 @@ boolean QSPIWriteRaw(uint8 spiChannel, uint32 data)
     SPIReceiveDataNormal dataToReceive; // check if this is correct
 
     // Configure and execute write request
-    dataToTransmit.dw  = data;
+    dataToTransmit.dw  = *p_data;
     QSPIExchangeData(spiBusNumber, &dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
 
     // Validating input
@@ -213,6 +213,9 @@ boolean QSPIWriteRaw(uint8 spiChannel, uint32 data)
     isReceivedDataValid &= (dataToReceive.bf.gs0 == FALSE);
     isReceivedDataValid &= (dataToReceive.bf.gs2 == FALSE);
     isReceivedDataValid &= (dataToReceive.bf.gs5 == FALSE);
+
+    // Return data
+    *p_data = dataToReceive.dw;
 
     return isReceivedDataValid;
 }
