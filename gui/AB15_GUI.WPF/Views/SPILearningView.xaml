@@ -12,6 +12,7 @@
 
     <Page.Resources>
         <cnvrt:BitToTextConverter x:Key="BitToTextConverter"/>
+        <cnvrt:BoolToIntConverter x:Key="BoolToIntConverter"/>
     </Page.Resources>
     
     <Grid Background="{DynamicResource UI.BackGround}">
@@ -798,7 +799,7 @@
                 <!-- #endregion -->
 
                 <!-- #region Table content -->
-                <ListView Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="6" Name="MOSITableTableView" 
+                <ListView Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="8" Name="MOSITableTableView" 
                                 ItemsSource="{Binding SPICommunicationTable}"
                                 ItemContainerStyle="{DynamicResource ListViewItemStyle}" 
                                 IsEnabled="{Binding IsSPILearningEn}"
@@ -823,66 +824,56 @@
                                     <RowDefinition Height="1"/>
                                 </Grid.RowDefinitions>
 
-                                <Canvas Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="4" Background="{DynamicResource UI.SeparateLine}"/>
+                                <Canvas Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="8" Background="{DynamicResource UI.SeparateLine}"/>
 
                                 <!-- Cell with time -->
-                                <TextBox    Grid.Column="1" Margin="0,0,5,0" 
+                                <TextBlock  Grid.Column="1" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
-                                            Text="{Binding Time, StringFormat={}{HH:mm:ss.FFF}}"
-                                            IsReadOnly="True"
-                                            Style="{DynamicResource TextBoxStyle}"
-                                            MouseDoubleClick="MouseDoubleClick">
-                                </TextBox>
+                                            Text="{Binding Time, StringFormat={}{0:HH:mm:ss.FFF}}"
+                                            Style="{DynamicResource TextBlockStyle}" 
+                                            MouseLeftButtonDown="MouseDoubleClick"/>
+
 
                                 <!-- Cell with address -->
-                                <TextBox    Grid.Column="2"  Margin="0,0,5,0" 
+                                <TextBlock  Grid.Column="2"  Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
-                                            Text="{Binding Path=MOSI.Address, StringFormat=0x{0:x3}}"
-                                            IsReadOnly="True"
-                                            Style="{DynamicResource TextBoxStyle}"
-                                            MouseDoubleClick="MouseDoubleClick">
-                                </TextBox>
+                                            Text="{Binding Path=MOSI.Address, StringFormat=0x{0:X3}}"
+                                            Style="{DynamicResource TextBlockStyle}" 
+                                            MouseLeftButtonDown="MouseDoubleClick"/>
 
                                 <!-- Cell with R/W -->
-                                <TextBox    Grid.Column="3"  Margin="0,0,5,0" 
+                                <TextBlock  Grid.Column="3"  Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
-                                            Text="{Binding Path=MOSI.RwFlag, StringFormat={}{0:x}}"
-                                            IsReadOnly="True"
-                                            Style="{DynamicResource TextBoxStyle}"
-                                            MouseDoubleClick="MouseDoubleClick">
-                                </TextBox>
+                                            Text="{Binding Path=MOSI.RwFlag, Converter={StaticResource BoolToIntConverter}}"
+                                            Style="{DynamicResource TextBlockStyle}" 
+                                            MouseLeftButtonDown="MouseDoubleClick"/>
 
                                 <!-- Cell with Data -->
-                                <TextBox    Grid.Column="4" Margin="0,0,5,0" 
+                                <TextBlock  Grid.Column="4" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
-                                            Text="{Binding Path=MOSI.Data, StringFormat=0x{0:x4}}"
-                                            IsReadOnly="True"
-                                            MouseDoubleClick="MouseDoubleClick">
-                                </TextBox>
+                                            Text="{Binding Path=MOSI.Data, StringFormat=0x{0:X4}}"
+                                            Style="{DynamicResource TextBlockStyle}"
+                                            MouseLeftButtonDown="MouseDoubleClick"/>
 
                                 <!-- Cell with CRC -->
-                                <TextBox    Grid.Column="5" Margin="0,0,5,0" 
+                                <TextBlock  Grid.Column="5" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
-                                            Text="{Binding Path=MOSI.CRC, StringFormat=0x{0:x}}"
-                                            IsReadOnly="True"
-                                            Style="{DynamicResource TextBoxStyle}"
-                                            MouseDoubleClick="MouseDoubleClick">
-                                </TextBox>
+                                            Text="{Binding Path=MOSI.CRC, StringFormat=0x{0:X}, Mode=OneWay}"
+                                            Style="{DynamicResource TextBlockStyle}" 
+                                            MouseLeftButtonDown="MouseDoubleClick"/>
 
                                 <!-- Cell with RAW -->
-                                <TextBox    Grid.Column="6" Margin="0,0,5,0" 
+                                <TextBlock  Grid.Column="6" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
-                                            Text="{Binding Path=MOSI.RawMOSI, StringFormat=0x{0:x8}}"
-                                            IsReadOnly="True"
-                                            Style="{DynamicResource TextBoxStyle}"
-                                            MouseDoubleClick="MouseDoubleClick">
-                                </TextBox>
+                                            Text="{Binding Path=MOSI.RawMOSI, StringFormat=0x{0:X8}}"
+                                            Style="{DynamicResource TextBlockStyle}" 
+                                            MouseLeftButtonDown="MouseDoubleClick"/>
                             </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>
@@ -907,10 +898,10 @@
                     <ColumnDefinition Width="30"/>
                     <ColumnDefinition Width="30"/>
                     <ColumnDefinition Width="30"/>
-                    <ColumnDefinition Width="50"/>
-                    <ColumnDefinition Width="80"/>
-                    <ColumnDefinition Width="25"/>
                     <ColumnDefinition Width="40"/>
+                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="25"/>
+                    <ColumnDefinition Width="30"/>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="5" />
                 </Grid.ColumnDefinitions>
@@ -931,48 +922,41 @@
                            Text="GS5" HorizontalAlignment="Center"
                            VerticalAlignment="Center"
                            Style="{DynamicResource CustomTextBlock}">
-
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="2" FontSize="16"
                            Text="GS4" HorizontalAlignment="Center"
                            VerticalAlignment="Center"
                            Style="{DynamicResource CustomTextBlock}">
-
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="3" FontSize="16"
                            Text="GS3" HorizontalAlignment="Center"
                            VerticalAlignment="Center"
                            Style="{DynamicResource CustomTextBlock}">
-
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="4" FontSize="16"
                            Text="GS2" HorizontalAlignment="Center"
                            VerticalAlignment="Center"
                            Style="{DynamicResource CustomTextBlock}">
-
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="5" FontSize="16"
-                                       Text="GS1" HorizontalAlignment="Center"
+                           Text="GS1" HorizontalAlignment="Center"
                            VerticalAlignment="Center"
                            Style="{DynamicResource CustomTextBlock}">
-
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="6" FontSize="16"
-                                       Text="GS0" HorizontalAlignment="Center"
+                           Text="GS0" HorizontalAlignment="Center"
                            VerticalAlignment="Center">
-
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="7" FontSize="16"
                            Text="SF" HorizontalAlignment="Center"
                            VerticalAlignment="Center"
                            Style="{DynamicResource CustomTextBlock}">
-
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="8" FontSize="16"
@@ -1007,7 +991,7 @@
                 <!-- #endregion -->
 
                 <!-- #region Table content -->
-                <ListView Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="6" Name="MISOTableTableView" 
+                <ListView Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="14" Name="MISOTableTableView" 
                                 ItemsSource="{Binding SPICommunicationTable}"
                                 ItemContainerStyle="{DynamicResource ListViewItemStyle}" 
                                 IsEnabled="{Binding IsSPILearningEn}"
@@ -1024,11 +1008,11 @@
                                     <ColumnDefinition Width="30"/>
                                     <ColumnDefinition Width="30"/>
                                     <ColumnDefinition Width="30"/>
-                                    <ColumnDefinition Width="50"/>
-                                    <ColumnDefinition Width="80"/>
-                                    <ColumnDefinition Width="25"/>
                                     <ColumnDefinition Width="40"/>
-                                    <ColumnDefinition Width="*" MinWidth="100"/>
+                                    <ColumnDefinition Width="50"/>
+                                    <ColumnDefinition Width="25"/>
+                                    <ColumnDefinition Width="30"/>
+                                    <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="5" />
                                 </Grid.ColumnDefinitions>
 
@@ -1038,126 +1022,103 @@
                                     <RowDefinition Height="1"/>
                                 </Grid.RowDefinitions>
 
-                                <Canvas Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="4" Background="{DynamicResource UI.SeparateLine}"/>
+                                <Canvas Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="14" Background="{DynamicResource UI.SeparateLine}"/>
 
                                 <!-- Cell with gs5 -->
-                                <TextBox    Grid.Column="1" Margin="0,0,5,0" 
+                                <TextBlock  Grid.Column="1" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
-                                            Text="{Binding Path=MISO.GS5}"
-                                            IsReadOnly="True"
-                                            Style="{DynamicResource TextBoxStyle}"
-                                            MouseDoubleClick="MouseDoubleClick">
-                                </TextBox>
+                                            Text="{Binding Path=MISO.GS5, Mode=OneWay, Converter={StaticResource BoolToIntConverter}}"
+                                            Style="{DynamicResource TextBlockStyle}" 
+                                            MouseLeftButtonDown="MouseDoubleClick"/>
 
                                 <!-- Cell with gs4 -->
-                                <TextBox    Grid.Column="2" Margin="0,0,5,0" 
+                                <TextBlock  Grid.Column="2" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
-                                            Text="{Binding Path=MISO.GS4}"
-                                            IsReadOnly="True"
-                                            Style="{DynamicResource TextBoxStyle}"
-                                            MouseDoubleClick="MouseDoubleClick">
-                                </TextBox>
+                                            Text="{Binding Path=MISO.GS4, Mode=OneWay, Converter={StaticResource BoolToIntConverter}}"
+                                            Style="{DynamicResource TextBlockStyle}" 
+                                            MouseLeftButtonDown="MouseDoubleClick"/>
 
                                 <!-- Cell with gs3 -->
-                                <TextBox    Grid.Column="3" Margin="0,0,5,0" 
+                                <TextBlock  Grid.Column="3" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
-                                            Text="{Binding Path=MISO.GS3}"
-                                            IsReadOnly="True"
-                                            Style="{DynamicResource TextBoxStyle}"
-                                            MouseDoubleClick="MouseDoubleClick">
-                                </TextBox>
+                                            Text="{Binding Path=MISO.GS3, Mode=OneWay, Converter={StaticResource BoolToIntConverter}}"
+                                            Style="{DynamicResource TextBlockStyle}" 
+                                            MouseLeftButtonDown="MouseDoubleClick"/>
 
                                 <!-- Cell with gs2 -->
-                                <TextBox    Grid.Column="4" Margin="0,0,5,0" 
+                                <TextBlock  Grid.Column="4" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
-                                            Text="{Binding Path=MISO.GS2}"
-                                            IsReadOnly="True"
-                                            Style="{DynamicResource TextBoxStyle}"
-                                            MouseDoubleClick="MouseDoubleClick">
-                                </TextBox>
+                                            Text="{Binding Path=MISO.GS2, Mode=OneWay, Converter={StaticResource BoolToIntConverter}}"
+                                            Style="{DynamicResource TextBlockStyle}" 
+                                            MouseLeftButtonDown="MouseDoubleClick"/>
 
                                 <!-- Cell with gs1 -->
-                                <TextBox    Grid.Column="5" Margin="0,0,5,0" 
+                                <TextBlock  Grid.Column="5" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
-                                            Text="{Binding Path=MISO.GS1}"
-                                            IsReadOnly="True"
-                                            Style="{DynamicResource TextBoxStyle}"
-                                            MouseDoubleClick="MouseDoubleClick">
-                                </TextBox>
+                                            Text="{Binding Path=MISO.GS1, Mode=OneWay, Converter={StaticResource BoolToIntConverter}}"
+                                            Style="{DynamicResource TextBlockStyle}" 
+                                            MouseLeftButtonDown="MouseDoubleClick"/>
 
                                 <!-- Cell with gs0 -->
-                                <TextBox    Grid.Column="6" Margin="0,0,5,0" 
+                                <TextBlock  Grid.Column="6" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
-                                            Text="{Binding Path=MISO.GS0}"
-                                            IsReadOnly="True"
-                                            Style="{DynamicResource TextBoxStyle}"
-                                            MouseDoubleClick="MouseDoubleClick">
-                                </TextBox>
+                                            Text="{Binding Path=MISO.GS0, Mode=OneWay, Converter={StaticResource BoolToIntConverter}}"
+                                            Style="{DynamicResource TextBlockStyle}" 
+                                            MouseLeftButtonDown="MouseDoubleClick"/>
 
                                 <!-- Cell with SF -->
-                                <TextBox    Grid.Column="7"  Margin="0,0,5,0" 
+                                <TextBlock  Grid.Column="7"  Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
-                                            Text="{Binding Path=MISO.SF}"
-                                            IsReadOnly="True"
-                                            Style="{DynamicResource TextBoxStyle}"
-                                            MouseDoubleClick="MouseDoubleClick">
-                                </TextBox>
+                                            Text="{Binding Path=MISO.SF, Mode=OneWay, Converter={StaticResource BoolToIntConverter}}"
+                                            Style="{DynamicResource TextBlockStyle}" 
+                                            MouseLeftButtonDown="MouseDoubleClick"/>
 
-                                <!-- Cell with status -->
-                                <TextBox    Grid.Column="8" Margin="0,0,5,0" 
+                                <!-- Cell with Additional status -->
+                                <TextBlock  Grid.Column="8" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
-                                            Text="{Binding Path=MISO.AdditionalStatus, StringFormat={}{0:x}}"
-                                            IsReadOnly="True"
-                                            MouseDoubleClick="MouseDoubleClick">
-                                </TextBox>
+                                            Text="{Binding Path=MISO.AdditionalStatus, StringFormat=0x{0:X}, Mode=OneWay}"
+                                            Style="{DynamicResource TextBlockStyle}" 
+                                            MouseLeftButtonDown="MouseDoubleClick"/>
 
                                 <!-- Cell with Data -->
-                                <TextBox    Grid.Column="9" Margin="0,0,5,0" 
+                                <TextBlock  Grid.Column="9" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
-                                            Text="{Binding Path=MISO.Data, StringFormat={}{0:x}}"
-                                            IsReadOnly="True"
-                                            Style="{DynamicResource TextBoxStyle}"
-                                            MouseDoubleClick="MouseDoubleClick">
-                                </TextBox>
+                                            Text="{Binding Path=MISO.Data, StringFormat=0x{0:X}, Mode=OneWay}"
+                                            Style="{DynamicResource TextBlockStyle}" 
+                                            MouseLeftButtonDown="MouseDoubleClick"/>
 
-                                <!-- Cell with so -->
-                                <TextBox    Grid.Column="10" Margin="0,0,5,0" 
+                                <!-- Cell with S0 -->
+                                <TextBlock  Grid.Column="10" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
-                                            Text="{Binding Path=MISO.S0, StringFormat=0x{0:x}}"
-                                            IsReadOnly="True"
-                                            Style="{DynamicResource TextBoxStyle}"
-                                            MouseDoubleClick="MouseDoubleClick">
-                                </TextBox>
+                                            Text="{Binding Path=MISO.S0, Mode=OneWay, Converter={StaticResource BoolToIntConverter}}"
+                                            Style="{DynamicResource TextBlockStyle}"
+                                            MouseLeftButtonDown="MouseDoubleClick"/>
 
                                 <!-- Cell with crc -->
-                                <TextBox    Grid.Column="11" Margin="0,0,5,0" 
+                                <TextBlock  Grid.Column="11" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
-                                            Text="{Binding Path=MISO.CRC, StringFormat=0x{0:x}}"
-                                            IsReadOnly="True"
-                                            Style="{DynamicResource TextBoxStyle}"
-                                            MouseDoubleClick="MouseDoubleClick">
-                                </TextBox>
+                                            Text="{Binding Path=MISO.CRC, StringFormat=0x{0:X}, Mode=OneWay}"
+                                            Style="{DynamicResource TextBlockStyle}" 
+                                            MouseLeftButtonDown="MouseDoubleClick"/>
                                 
                                 <!-- Cell with raw -->
-                                <TextBox    Grid.Column="12" Margin="0,0,5,0" 
+                                <TextBlock  Grid.Column="12" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
-                                            Text="{Binding Path=MISO.RawMISO, StringFormat=0x{0:x8}}"
-                                            IsReadOnly="True"
-                                            Style="{DynamicResource TextBoxStyle}"
-                                            MouseDoubleClick="MouseDoubleClick">
-                                </TextBox>
+                                            Text="{Binding Path=MISO.RawMISO, StringFormat=0x{0:X8}, Mode=OneWay}"
+                                            Style="{DynamicResource TextBlockStyle}" 
+                                            MouseLeftButtonDown="MouseDoubleClick"/>
                             </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>

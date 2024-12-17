@@ -32,6 +32,9 @@ namespace AB15_GUI.WPF.Views
 
         private void MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
+            // Skip if not double click
+            if (e.LeftButton != MouseButtonState.Pressed || e.ClickCount != 2) return;
+            
             try
             {
                 Clipboard.SetText(((TextBox)sender).Text);
