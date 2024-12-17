@@ -12,5 +12,6 @@ namespace AB15_GUI.WPF.ViewModels
         public LoggerViewModel LoggerViewModel => App.AppHost.Services.GetRequiredService<LoggerViewModel>();
         public WatchdogViewModel WatchdogViewModel => App.AppHost.Services.GetRequiredService<WatchdogViewModel>();
         public FiringViewModel FiringViewModel => App.AppHost.Services.GetRequiredService<FiringViewModel>();
+        public SPILearningViewModel SPILearningViewModel => App.AppHost.Services.GetRequiredService<SPILearningViewModel>();
     }
 }
