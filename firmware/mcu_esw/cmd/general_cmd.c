@@ -282,7 +282,7 @@ void CmdSendRawData(USBReceiveData const * const commandPackage)
     }
     else
     {
-        packageToSend.status = USB_STATUS_ACK; // ACK is used for compatibility issues
+        packageToSend.status = USB_STATUS_DATA;
     }
 
     // Send data back to MCU
