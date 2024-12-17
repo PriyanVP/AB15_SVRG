@@ -7,12 +7,11 @@
       xmlns:local="clr-namespace:AB15_GUI.WPF.Views"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="1100"
-      MinWidth="1000"
       Title="SPILearning"
       DataContext="{Binding SPILearningViewModel, Source={StaticResource ViewModelLocator}}">
 
     <Page.Resources>
-        <cnvrt:TextToBitConverter x:Key="TextToBitConverter"/>
+        <cnvrt:BitToTextConverter x:Key="BitToTextConverter"/>
     </Page.Resources>
     
     <Grid Background="{DynamicResource UI.BackGround}">
@@ -66,7 +65,8 @@
 
             <TextBox    Grid.Row="0" Grid.Column="3"
                         Style="{DynamicResource TextBoxStyle}"
-                        IsEnabled="{Binding IsSPIControlsEnabled}"
+                        IsEnabled="{Binding IsSPILearningEn}"
+                        Text="{Binding Path=RefToActiveRecord.MOSI.Address}"
                         Name="AddressTextBox">
             </TextBox>
             
@@ -84,7 +84,8 @@
 
             <TextBox    Grid.Row="1" Grid.Column="3"
                         Style="{DynamicResource TextBoxStyle}"
-                        IsEnabled="{Binding IsSPIControlsEnabled}"
+                        IsEnabled="{Binding IsSPILearningEn}"
+                        Text="{Binding Path=RefToActiveRecord.MOSI.Data}"
                         Name="DataTextBox">
             </TextBox>
             
@@ -96,8 +97,8 @@
                 
                 <CheckBox   x:Name="isRawFormat"
                             Style="{DynamicResource ToggleSwitchStyle}"
-                            IsEnabled="{Binding IsSPIControlsEnabled}"
-                            IsChecked="{Binding isRawCommandToSend}"
+                            IsEnabled="{Binding IsSPILearningEn}"
+                            IsChecked="{Binding IsRawSPISelected}"
                             Checked="isRawFormat_Checked"
                             Unchecked="isRawFormat_Unchecked"/>
             </StackPanel>
@@ -109,12 +110,12 @@
                         Style="{DynamicResource CustomTextBlock}"
                         Name="RawHexText" Visibility="Hidden"/>
 
-            <TextBox        Grid.Row="2" Grid.Column="3"
-                            x:Name="RawFormatTextBox"
-                            IsEnabled="{Binding IsSPIControlsEnabled}"
-                            Text="{Binding RawCommandToSendTextBox}"
-                            Visibility="Hidden"
-                            Style="{DynamicResource TextBoxStyle}"/>
+            <TextBox    Grid.Row="2" Grid.Column="3"
+                        x:Name="RawFormatTextBox"
+                        IsEnabled="{Binding IsSPILearningEn}"
+                        Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI}"
+                        Visibility="Hidden"
+                        Style="{DynamicResource TextBoxStyle}"/>
 
 
             <Grid       Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="1"
@@ -136,8 +137,7 @@
                 <CheckBox   Grid.Column="1"
                             x:Name="ReadingCheckBox"
                             Style="{DynamicResource ToggleSwitchStyle}"
-                            IsChecked="{Binding IsReadingCustomCommand}"
-                            IsEnabled="{Binding IsSPIControlsEnabled}"
+                            IsEnabled="{Binding IsSPILearningEn}"
                             HorizontalAlignment="Left" Margin="3"
                             Checked="CheckBox_Checked"
                             Unchecked="CheckBox_Checked"/>
@@ -151,8 +151,8 @@
                 <CheckBox   Grid.Column="3"
                             x:Name="WritingCheckBox"
                             Style="{DynamicResource ToggleSwitchStyle}"
-                            IsChecked="{Binding IsWritingCustomCommand}"
-                            IsEnabled="{Binding IsSPIControlsEnabled}"
+                            IsChecked="{Binding IsWriteRegisterSelected}"
+                            IsEnabled="{Binding IsSPILearningEn}"
                             HorizontalAlignment="Left" Margin="3"
                             Checked="CheckBox_Checked"
                             Unchecked="CheckBox_Checked"/>
@@ -161,13 +161,13 @@
 
             <ComboBox   Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="1"
                         ItemsSource="{Binding SelectedASICToSend}"
-                        IsEnabled="{Binding IsSPIControlsEnabled}"
+                        IsEnabled="{Binding IsSPILearningEn}"
                         MinWidth="100" Margin="3"/>
 
             <Button     Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="1"
                         Style="{DynamicResource SimpleButton}"
-                        Command="{Binding ExecuteCustomCommand}"
-                        IsEnabled="{Binding IsSPIControlsEnabled}"
+                        Command="{Binding SPICommand}"
+                        IsEnabled="{Binding SPICommandCommandEn}"
                         Content="Execute command" FontSize="16"
                         Margin="2"/>
             <!--#endregion-->
@@ -444,277 +444,270 @@
                 <TextBlock  Grid.Row="2" Grid.Column="0" FontSize="16" 
                             HorizontalAlignment="Center" VerticalAlignment="Center"
                             Name="_31bit"
-                            Text="{Binding Text, ElementName=AddressTextBox, 
-                            Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=9}"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=31}"
                             Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="1" FontSize="16" 
                             HorizontalAlignment="Center" VerticalAlignment="Center"
                             Name="_30bit"
-                            Text="{Binding Text, ElementName=AddressTextBox, 
-                            Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=8}"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI, 
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=30}"
                             Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="2" FontSize="16" 
                             HorizontalAlignment="Center" VerticalAlignment="Center"
                             Name="_29bit"
-                            Text="{Binding Text, ElementName=AddressTextBox, 
-                            Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=7}"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=29}"
                             Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="3" FontSize="16" 
                             HorizontalAlignment="Center" VerticalAlignment="Center"
                             Name="_28bit"
-                            Text="{Binding Text, ElementName=AddressTextBox, 
-                            Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=6}"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=28}"
                             Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="4" FontSize="16" 
                             HorizontalAlignment="Center" VerticalAlignment="Center"
                             Name="_27bit"
-                            Text="{Binding Text, ElementName=AddressTextBox, 
-                            Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=5}"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=27}"
                             Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="5" FontSize="16" 
                             HorizontalAlignment="Center" VerticalAlignment="Center"
                             Name="_26bit"
-                            Text="{Binding Text, ElementName=AddressTextBox, 
-                            Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=4}"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=26}"
                             Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="6" FontSize="16" 
                             HorizontalAlignment="Center" VerticalAlignment="Center"
                             Name="_25bit"
-                            Text="{Binding Text, ElementName=AddressTextBox, 
-                            Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=3}"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=25}"
                             Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="7" FontSize="16" 
                             HorizontalAlignment="Center" VerticalAlignment="Center"
                             Name="_24bit"
-                            Text="{Binding Text, ElementName=AddressTextBox, 
-                            Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=2}"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=24}"
                             Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="8" FontSize="16" 
                             HorizontalAlignment="Center" VerticalAlignment="Center"
                             Name="_23bit"
-                            Text="{Binding Text, ElementName=AddressTextBox, 
-                            Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=1}"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=23}"
                             Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="9" FontSize="16" 
                             HorizontalAlignment="Center" VerticalAlignment="Center"
                             Name="_22bit"
-                            Text="{Binding Text, ElementName=AddressTextBox, 
-                            Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=0}"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=22}"
                             Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="10" FontSize="16" 
                             HorizontalAlignment="Center" VerticalAlignment="Center"
                             Name="_21bit"
-                            Foreground="{DynamicResource Foreground.Default}">
-                    <TextBlock.Style>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="Text" Value="0" />
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding IsChecked, ElementName=ReadingCheckBox}" Value="True">
-                                    <Setter Property="Text" Value="1" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBlock.Style>
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=21}"
+                            Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="11" FontSize="16" 
                             HorizontalAlignment="Center" VerticalAlignment="Center"
                             Name="_20bit"
-                            Text="{Binding Text, ElementName=DataTextBox, 
-                            Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=15}"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=20}"
                             Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="12" FontSize="16" 
                             HorizontalAlignment="Center" VerticalAlignment="Center"
                             Name="_19bit"
-                            Text="{Binding Text, ElementName=DataTextBox, 
-                            Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=14}"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=19}"
                             Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="13" FontSize="16" 
                             HorizontalAlignment="Center" VerticalAlignment="Center"
                             Name="_18bit"
-                            Text="{Binding Text, ElementName=DataTextBox, 
-                            Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=13}"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=18}"
                             Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="14" FontSize="16" 
                             HorizontalAlignment="Center" VerticalAlignment="Center"
                             Name="_17bit"
-                            Text="{Binding Text, ElementName=DataTextBox, 
-                            Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=12}"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=17}"
                             Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="15" FontSize="16" 
                             HorizontalAlignment="Center" VerticalAlignment="Center"
                             Name="_16bit"
-                            Text="{Binding Text, ElementName=DataTextBox, 
-                            Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=11}"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=16}"
                             Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="16" FontSize="16"
                             HorizontalAlignment="Center" VerticalAlignment="Center"
                             Name="_15bit"
-                            Text="{Binding Text, ElementName=DataTextBox, 
-                            Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=10}"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=15}"
                             Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="17" FontSize="16" 
                             HorizontalAlignment="Center" VerticalAlignment="Center"
                             Name="_14bit"
-                            Text="{Binding Text, ElementName=DataTextBox, 
-                            Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=9}"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=14}"
                             Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="18" FontSize="16" 
                             HorizontalAlignment="Center" VerticalAlignment="Center"
                             Name="_13bit"
-                            Text="{Binding Text, ElementName=DataTextBox, 
-                            Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=8}"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=13}"
                             Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="19" FontSize="16" 
                             HorizontalAlignment="Center" VerticalAlignment="Center"
                             Name="_12bit"
-                            Text="{Binding Text, ElementName=DataTextBox, 
-                            Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=7}"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=12}"
                             Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="20" FontSize="16" 
                             HorizontalAlignment="Center" VerticalAlignment="Center"
                             Name="_11bit"
-                            Text="{Binding Text, ElementName=DataTextBox, 
-                            Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=6}"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=11}"
                             Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="21" FontSize="16" 
                             HorizontalAlignment="Center" VerticalAlignment="Center"
                             Name="_10bit"
-                            Text="{Binding Text, ElementName=DataTextBox, 
-                            Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=5}"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=10}"
                             Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="22" FontSize="16" 
                             HorizontalAlignment="Center" VerticalAlignment="Center"
                             Name="_9bit"
-                            Text="{Binding Text, ElementName=DataTextBox, 
-                            Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=4}"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=9}"
                             Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="23" FontSize="16" 
                             HorizontalAlignment="Center" VerticalAlignment="Center"
                             Name="_8bit"
-                            Text="{Binding Text, ElementName=DataTextBox, 
-                            Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=3}"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=8}"
                             Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="24" FontSize="16" 
                             HorizontalAlignment="Center" VerticalAlignment="Center"
                             Name="_7bit"
-                            Text="{Binding Text, ElementName=DataTextBox, 
-                            Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=2}"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=7}"
                             Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="25" FontSize="16" 
                             HorizontalAlignment="Center" VerticalAlignment="Center"
                             Name="_6bit"
-                            Text="{Binding Text, ElementName=DataTextBox, 
-                            Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=1}"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=6}"
                             Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="26" FontSize="16" 
                             HorizontalAlignment="Center" VerticalAlignment="Center"
                             Name="_5bit"
-                            Text="{Binding Text, ElementName=DataTextBox, 
-                            Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=0}"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=5}"
                             Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="27" FontSize="16" 
                             HorizontalAlignment="Center" VerticalAlignment="Center"
                             Name="_4bit"
-                            Text="{Binding CRCValue, 
-                            Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=2}"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI, 
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=4}"
                             Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="28" FontSize="16" 
                             HorizontalAlignment="Center" VerticalAlignment="Center"
                             Name="_3bit"
-                            Text="{Binding CRCValue, 
-                            Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=1}"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI, 
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=3}"
                             Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
                 <TextBlock  Grid.Row="2" Grid.Column="29" FontSize="16" 
                             HorizontalAlignment="Center" VerticalAlignment="Center"
                             Name="_2bit"
-                            Text="{Binding CRCValue, 
-                            Converter={StaticResource TextToBitConverter}, 
-                            ConverterParameter=0}"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI, 
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=2}"
                             Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
 
@@ -806,9 +799,9 @@
 
                 <!-- #region Table content -->
                 <ListView Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="6" Name="MOSITableTableView" 
-                                ItemsSource="{Binding MOSITable}"
+                                ItemsSource="{Binding SPICommunicationTable}"
                                 ItemContainerStyle="{DynamicResource ListViewItemStyle}" 
-                                IsEnabled="{Binding IsConfigControlsEnabled}"
+                                IsEnabled="{Binding IsSPILearningEn}"
                                 FontSize="16">
                     <ListView.ItemTemplate>
                         <DataTemplate>
@@ -836,7 +829,7 @@
                                 <TextBox    Grid.Column="1" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
-                                            Text="{Binding time}"
+                                            Text="{Binding Time, StringFormat={}{HH:mm:ss.FFF}}"
                                             IsReadOnly="True"
                                             Style="{DynamicResource TextBoxStyle}"
                                             MouseDoubleClick="MouseDoubleClick">
@@ -846,7 +839,7 @@
                                 <TextBox    Grid.Column="2"  Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
-                                            Text="{Binding address, StringFormat={}{0:x}}"
+                                            Text="{Binding Path=MOSI.Address, StringFormat=0x{0:x3}}"
                                             IsReadOnly="True"
                                             Style="{DynamicResource TextBoxStyle}"
                                             MouseDoubleClick="MouseDoubleClick">
@@ -856,7 +849,7 @@
                                 <TextBox    Grid.Column="3"  Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
-                                            Text="{Binding rw, StringFormat={}{0:x}}"
+                                            Text="{Binding Path=MOSI.RwFlag, StringFormat={}{0:x}}"
                                             IsReadOnly="True"
                                             Style="{DynamicResource TextBoxStyle}"
                                             MouseDoubleClick="MouseDoubleClick">
@@ -866,7 +859,7 @@
                                 <TextBox    Grid.Column="4" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
-                                            Text="{Binding data, StringFormat={}{0:x}}"
+                                            Text="{Binding Path=MOSI.Data, StringFormat=0x{0:x4}}"
                                             IsReadOnly="True"
                                             MouseDoubleClick="MouseDoubleClick">
                                 </TextBox>
@@ -875,7 +868,7 @@
                                 <TextBox    Grid.Column="5" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
-                                            Text="{Binding crc, StringFormat={}{0:x}}"
+                                            Text="{Binding Path=MOSI.CRC, StringFormat=0x{0:x}}"
                                             IsReadOnly="True"
                                             Style="{DynamicResource TextBoxStyle}"
                                             MouseDoubleClick="MouseDoubleClick">
@@ -885,7 +878,7 @@
                                 <TextBox    Grid.Column="6" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
-                                            Text="{Binding raw, StringFormat={}{0:x}}"
+                                            Text="{Binding Path=MOSI.RawMOSI, StringFormat=0x{0:x8}}"
                                             IsReadOnly="True"
                                             Style="{DynamicResource TextBoxStyle}"
                                             MouseDoubleClick="MouseDoubleClick">
@@ -1015,9 +1008,9 @@
 
                 <!-- #region Table content -->
                 <ListView Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="6" Name="MISOTableTableView" 
-                                ItemsSource="{Binding MISOTable}"
+                                ItemsSource="{Binding SPICommunicationTable}"
                                 ItemContainerStyle="{DynamicResource ListViewItemStyle}" 
-                                IsEnabled="{Binding IsConfigControlsEnabled}"
+                                IsEnabled="{Binding IsSPILearningEn}"
                                 FontSize="16">
                     <ListView.ItemTemplate>
                         <DataTemplate>
@@ -1051,7 +1044,7 @@
                                 <TextBox    Grid.Column="1" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
-                                            Text="{Binding gs5}"
+                                            Text="{Binding Path=MISO.GS5}"
                                             IsReadOnly="True"
                                             Style="{DynamicResource TextBoxStyle}"
                                             MouseDoubleClick="MouseDoubleClick">
@@ -1061,7 +1054,7 @@
                                 <TextBox    Grid.Column="2" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
-                                            Text="{Binding gs4}"
+                                            Text="{Binding Path=MISO.GS4}"
                                             IsReadOnly="True"
                                             Style="{DynamicResource TextBoxStyle}"
                                             MouseDoubleClick="MouseDoubleClick">
@@ -1071,7 +1064,7 @@
                                 <TextBox    Grid.Column="3" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
-                                            Text="{Binding gs3}"
+                                            Text="{Binding Path=MISO.GS3}"
                                             IsReadOnly="True"
                                             Style="{DynamicResource TextBoxStyle}"
                                             MouseDoubleClick="MouseDoubleClick">
@@ -1081,7 +1074,7 @@
                                 <TextBox    Grid.Column="4" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
-                                            Text="{Binding gs2}"
+                                            Text="{Binding Path=MISO.GS2}"
                                             IsReadOnly="True"
                                             Style="{DynamicResource TextBoxStyle}"
                                             MouseDoubleClick="MouseDoubleClick">
@@ -1091,7 +1084,7 @@
                                 <TextBox    Grid.Column="5" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
-                                            Text="{Binding gs1}"
+                                            Text="{Binding Path=MISO.GS1}"
                                             IsReadOnly="True"
                                             Style="{DynamicResource TextBoxStyle}"
                                             MouseDoubleClick="MouseDoubleClick">
@@ -1101,7 +1094,7 @@
                                 <TextBox    Grid.Column="6" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
-                                            Text="{Binding gs0}"
+                                            Text="{Binding Path=MISO.GS0}"
                                             IsReadOnly="True"
                                             Style="{DynamicResource TextBoxStyle}"
                                             MouseDoubleClick="MouseDoubleClick">
@@ -1111,7 +1104,7 @@
                                 <TextBox    Grid.Column="7"  Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
-                                            Text="{Binding sf}"
+                                            Text="{Binding Path=MISO.SF}"
                                             IsReadOnly="True"
                                             Style="{DynamicResource TextBoxStyle}"
                                             MouseDoubleClick="MouseDoubleClick">
@@ -1121,7 +1114,7 @@
                                 <TextBox    Grid.Column="8" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
-                                            Text="{Binding status, StringFormat={}{0:x}}"
+                                            Text="{Binding Path=MISO.AdditionalStatus, StringFormat={}{0:x}}"
                                             IsReadOnly="True"
                                             MouseDoubleClick="MouseDoubleClick">
                                 </TextBox>
@@ -1130,7 +1123,7 @@
                                 <TextBox    Grid.Column="9" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
-                                            Text="{Binding data, StringFormat={}{0:x}}"
+                                            Text="{Binding Path=MISO.Data, StringFormat={}{0:x}}"
                                             IsReadOnly="True"
                                             Style="{DynamicResource TextBoxStyle}"
                                             MouseDoubleClick="MouseDoubleClick">
@@ -1140,7 +1133,7 @@
                                 <TextBox    Grid.Column="10" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
-                                            Text="{Binding so}"
+                                            Text="{Binding Path=MISO.S0, StringFormat=0x{0:x}}"
                                             IsReadOnly="True"
                                             Style="{DynamicResource TextBoxStyle}"
                                             MouseDoubleClick="MouseDoubleClick">
@@ -1150,7 +1143,7 @@
                                 <TextBox    Grid.Column="11" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
-                                            Text="{Binding crc, StringFormat={}{0:x}}"
+                                            Text="{Binding Path=MISO.CRC, StringFormat=0x{0:x}}"
                                             IsReadOnly="True"
                                             Style="{DynamicResource TextBoxStyle}"
                                             MouseDoubleClick="MouseDoubleClick">
@@ -1160,7 +1153,7 @@
                                 <TextBox    Grid.Column="12" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
-                                            Text="{Binding raw, StringFormat={}{0:x}}"
+                                            Text="{Binding Path=MISO.RawMISO, StringFormat=0x{0:x8}}"
                                             IsReadOnly="True"
                                             Style="{DynamicResource TextBoxStyle}"
                                             MouseDoubleClick="MouseDoubleClick">

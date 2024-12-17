@@ -1010,7 +1010,7 @@ namespace AB15_GUI.WPF.ViewModels
             packageToSend.ASICID = 1;
             packageToSend.Cmd = MCUCommand.WRITE_RAW_DATA_SPI;
             packageToSend.Deleg = FireSimultaneousDelegate_step0;
-            packageToSend.PayloadType = typeof(EmptyPayload);
+            packageToSend.PayloadType = typeof(AddressDataPayload);
             packageToSend.Payload.Data.Add((UInt16) (RAW_SPI_TRANSACTION & 0xFFFF));       // 16 LSB
             packageToSend.Payload.Data.Add((UInt16) (RAW_SPI_TRANSACTION >> 16) & 0xFFFF); // 16 MSB
 
@@ -1384,7 +1384,7 @@ namespace AB15_GUI.WPF.ViewModels
             }
 
             // Typecast response to actual type
-            ReceiveCommunicationPackage<EmptyPayload> mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>) response;
+            ReceiveCommunicationPackage<AddressDataPayload> mcuResponse = (ReceiveCommunicationPackage<AddressDataPayload>) response;
 
             // Change state if response received
             if (mcuResponse.Payload.Error is not null)
