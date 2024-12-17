@@ -1,11 +1,13 @@
 using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace AB15_GUI.WPF.Models
 {
     /// <summary>
     /// Data record class that holds SPI transaction MISO frame
     /// </summary>
-    public class MISORecord
+    public class MISORecord : INotifyPropertyChanged
     {       
         /// <summary>
         /// General status 5
@@ -140,9 +142,57 @@ namespace AB15_GUI.WPF.Models
         }
 
         /// <summary>
-        /// MOSI frame raw
+        /// <inheritdoc cref="RawMISO" path='/summary'/>
+        /// </summary>
+        private uint rawMISO;
+
+        /// <summary>
+        /// MISO frame raw
         /// Can be set from outside for raw communication
         /// </summary>
-        public uint RawMISO { get; set; }
+        public uint RawMISO 
+        { 
+            get => rawMISO;
+            set
+            {
+                rawMISO = value;
+                OnPropertyChanged();
+
+                // Also raise event on all other properties
+                OnPropertyChanged(nameof(GS5));
+                OnPropertyChanged(nameof(GS4));
+                OnPropertyChanged(nameof(GS3));
+                OnPropertyChanged(nameof(GS2));
+                OnPropertyChanged(nameof(GS1));
+                OnPropertyChanged(nameof(GS0));
+                OnPropertyChanged(nameof(SF));
+                OnPropertyChanged(nameof(AdditionalStatus));
+                OnPropertyChanged(nameof(Data));
+                OnPropertyChanged(nameof(S0));
+                OnPropertyChanged(nameof(CRC));
+            } 
+        }
+
+
+        #region Services
+
+        /// <summary>
+        /// Event for notification if property has changed
+        /// </summary>
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        /// <summary>
+        /// Raise event to notify about property change
+        /// </summary>
+        /// <param name="propertyName">name of property</param>
+        protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        {
+            // Sanity check
+            if (propertyName == null) throw new ArgumentException("Property name can't be null!");
+
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        #endregion // Services
     }
 }

@@ -6,7 +6,19 @@ namespace AB15_GUI.WPF.Models
     /// Data record class that holds SPI transaction
     /// </summary>
     public class SPITransactionRecord
-    {       
+    {
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="miso">optional MISO frame object</param>
+        /// <param name="mosi">optional MOSI frame object</param>
+        public SPITransactionRecord(MISORecord? miso = null, MOSIRecord? mosi = null)
+        {
+            // Set MOSI and MISO frame if provided for constructor
+            MISO = miso ?? (new MISORecord() { RawMISO = 0xFFFF_FFFF });
+            MOSI = mosi ?? (new MOSIRecord() { RawMOSI = 0xFFFF_FFFF });
+        }
+
         /// <summary>
         /// Time of transaction
         /// </summary>
