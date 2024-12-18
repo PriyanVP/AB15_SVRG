@@ -366,7 +366,7 @@ void GetPSTFiringSPiCommand(uint16 *p_regAddress, uint16 *p_regData)
     // TODO: can be optimised to function, currently implemented as procedure (usage of global variables)
 
     // Construct reg address and data
-    if (g_pstConfiguration.channelIndex =< 7)
+    if (g_pstConfiguration.channelIndex <= 7)
     {
         // Choose address for channels in range
         *p_regAddress = FLM_FLM_HS_LS_ON_CH7_1;
@@ -411,7 +411,7 @@ void GetPSTFiringSPiCommand(uint16 *p_regAddress, uint16 *p_regData)
         // Content of register
         *p_regData = regModel.as_uint16;
     }
-    else if (g_pstConfiguration.channelIndex =< 14)
+    else if (g_pstConfiguration.channelIndex <= 14)
     {
         // Choose address for channels in range
         *p_regAddress = FLM_FLM_HS_LS_ON_CH14_8;
@@ -456,45 +456,41 @@ void GetPSTFiringSPiCommand(uint16 *p_regAddress, uint16 *p_regData)
         // Content of register
         *p_regData = regModel.as_uint16;
     }
-    else if (g_pstConfiguration.channelIndex =< 20)
+    else if (g_pstConfiguration.channelIndex <= 20)
     {
         // Choose address for channels in range
         *p_regAddress = FLM_FLM_HS_LS_ON_CH20_15;
 
         // Create register model
         flm_flm_hs_ls_on_ch20_15_ut regModel = { .as_uint16 = 0 };
-        regModel.as_s.FlmCodeCh20158_u2 = ENUM_FLM_FLM_HS_LS_ON_CH20_15_FLM_CODE_CH20_15_VAL3;
+        regModel.as_s.FlmCodeCh2015_u2 = ENUM_FLM_FLM_HS_LS_ON_CH20_15_FLM_CODE_CH20_15_VAL3;
 
         // Enable required channel
         switch (g_pstConfiguration.channelIndex)
         {
-            case :
-                regModel.as_s.FlmLsOnCh_u1 = g_pstConfiguration.lsPowerstageEn;
-                regModel.as_s.FlmHsOnCh_u1 = g_pstConfiguration.hsPowerstageEn;
+            case 15:
+                regModel.as_s.FlmLsOnCh15_u1 = g_pstConfiguration.lsPowerstageEn;
+                regModel.as_s.FlmHsOnCh15_u1 = g_pstConfiguration.hsPowerstageEn;
                 break;
-            case :
-                regModel.as_s.FlmLsOnCh_u1 = g_pstConfiguration.lsPowerstageEn;
-                regModel.as_s.FlmHsOnCh_u1 = g_pstConfiguration.hsPowerstageEn;
+            case 16:
+                regModel.as_s.FlmLsOnCh16_u1 = g_pstConfiguration.lsPowerstageEn;
+                regModel.as_s.FlmHsOnCh16_u1 = g_pstConfiguration.hsPowerstageEn;
                 break;
-            case :
-                regModel.as_s.FlmLsOnCh_u1 = g_pstConfiguration.lsPowerstageEn;
-                regModel.as_s.FlmHsOnCh_u1 = g_pstConfiguration.hsPowerstageEn;
+            case 17:
+                regModel.as_s.FlmLsOnCh17_u1 = g_pstConfiguration.lsPowerstageEn;
+                regModel.as_s.FlmHsOnCh17_u1 = g_pstConfiguration.hsPowerstageEn;
                 break;
-            case :
-                regModel.as_s.FlmLsOnCh_u1 = g_pstConfiguration.lsPowerstageEn;
-                regModel.as_s.FlmHsOnCh_u1 = g_pstConfiguration.hsPowerstageEn;
+            case 18:
+                regModel.as_s.FlmLsOnCh18_u1 = g_pstConfiguration.lsPowerstageEn;
+                regModel.as_s.FlmHsOnCh18_u1 = g_pstConfiguration.hsPowerstageEn;
                 break;
-            case :
-                regModel.as_s.FlmLsOnCh_u1 = g_pstConfiguration.lsPowerstageEn;
-                regModel.as_s.FlmHsOnCh_u1 = g_pstConfiguration.hsPowerstageEn;
+            case 19:
+                regModel.as_s.FlmLsOnCh19_u1 = g_pstConfiguration.lsPowerstageEn;
+                regModel.as_s.FlmHsOnCh19_u1 = g_pstConfiguration.hsPowerstageEn;
                 break;
-            case :
-                regModel.as_s.FlmLsOnCh_u1 = g_pstConfiguration.lsPowerstageEn;
-                regModel.as_s.FlmHsOnCh_u1 = g_pstConfiguration.hsPowerstageEn;
-                break;
-            case :
-                regModel.as_s.FlmLsOnCh_u1 = g_pstConfiguration.lsPowerstageEn;
-                regModel.as_s.FlmHsOnCh_u1 = g_pstConfiguration.hsPowerstageEn;
+            case 20:
+                regModel.as_s.FlmLsOnCh20_u1 = g_pstConfiguration.lsPowerstageEn;
+                regModel.as_s.FlmHsOnCh20_u1 = g_pstConfiguration.hsPowerstageEn;
                 break;
         }
 
