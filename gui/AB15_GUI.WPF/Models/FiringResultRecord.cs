@@ -99,7 +99,9 @@ namespace AB15_GUI.WPF.Models
         /// <summary>
         /// Indicate how many sides of channel were deployed (2 corresponds to firing)
         /// </summary>
-        private int numberOfSidesDeployed = 0;
+//        private int numberOfSidesDeployed = 0;
+        private bool hsWasFired = false;
+        private bool lsWasFired = false;
 
         /// <summary>
         /// Flag indicating if channel was fired
@@ -110,12 +112,12 @@ namespace AB15_GUI.WPF.Models
             get
             {
                 // Report successful firing only if both sides were deployed
-                return (numberOfSidesDeployed == 2);
+                return (hsWasFired && lsWasFired);
             } 
             set
             {
                 // Any input value will cause counter reset
-                numberOfSidesDeployed = 0;
+//                numberOfSidesDeployed = 0;
                 OnPropertyChanged();
             } 
         }
@@ -137,10 +139,15 @@ namespace AB15_GUI.WPF.Models
             set
             {
                 // Increment counter if firing occurred
-                if (firingCntHigh != value)
+                if (value > 0)
                 {
-                    numberOfSidesDeployed++;
+                    //numberOfSidesDeployed++;
+                    hsWasFired = true;
                     OnPropertyChanged(nameof(WasFired));
+                }
+                else
+                {
+                    hsWasFired = false;
                 }
 
                 firingCntHigh = value;
@@ -165,10 +172,15 @@ namespace AB15_GUI.WPF.Models
             set
             {
                 // Increment counter if firing occurred
-                if (firingCntHigh != value)
+                if (value > 0)
                 {
-                    numberOfSidesDeployed++;
+                    //numberOfSidesDeployed++;
+                    lsWasFired = true;
                     OnPropertyChanged(nameof(WasFired));
+                }
+                else
+                {
+                    lsWasFired = false;
                 }
 
                 firingCntLow = value;
