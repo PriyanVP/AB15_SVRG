@@ -2,15 +2,1131 @@
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:cnvrt="clr-namespace:AB15_GUI.WPF.Views.Converters" 
       xmlns:local="clr-namespace:AB15_GUI.WPF.Views"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      d:DesignHeight="450" d:DesignWidth="1100"
       Title="SPILearning"
       DataContext="{Binding SPILearningViewModel, Source={StaticResource ViewModelLocator}}">
 
-    <Grid>
-        <TextBlock Text="SPI learning placeholder"/>
-        
+    <Page.Resources>
+        <cnvrt:BitToTextConverter x:Key="BitToTextConverter"/>
+        <cnvrt:BoolToIntConverter x:Key="BoolToIntConverter"/>
+    </Page.Resources>
+    
+    <Grid Background="{DynamicResource UI.BackGround}">
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="5"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="5"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="5"/>
+        </Grid.RowDefinitions>
+
+        <!--#region Top section-->
+        <Grid Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto" MinWidth="140"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- #region Controls-->
+            <TextBlock  Grid.Row="0" Grid.Column="1"
+                        FontSize="16" Margin="3"
+                        VerticalAlignment="Bottom" HorizontalAlignment="Left"
+                        Text="Address:"
+                        Style="{DynamicResource CustomTextBlock}"/>
+            
+            <TextBlock  Grid.Row="0" Grid.Column="2"
+                        FontSize="16" Margin="3"
+                        VerticalAlignment="Bottom" HorizontalAlignment="Right"
+                        Text="0x"
+                        Style="{DynamicResource CustomTextBlock}"/>
+
+            <TextBox    Grid.Row="0" Grid.Column="3"
+                        Style="{DynamicResource TextBoxStyle}"
+                        IsEnabled="{Binding IsSPILearningEn}"
+                        Text="{Binding Path=RefToActiveRecord.MOSI.Address}"
+                        Name="AddressTextBox">
+            </TextBox>
+            
+            <TextBlock  Grid.Row="1" Grid.Column="1"
+                        FontSize="16" Margin="3"
+                        VerticalAlignment="Bottom" HorizontalAlignment="Left"
+                        Text="Data:"
+                        Style="{DynamicResource CustomTextBlock}"/>
+
+            <TextBlock  Grid.Row="1" Grid.Column="2"
+                        FontSize="16" Margin="3"
+                        VerticalAlignment="Bottom" HorizontalAlignment="Right"
+                        Text="0x"
+                        Style="{DynamicResource CustomTextBlock}"/>
+
+            <TextBox    Grid.Row="1" Grid.Column="3"
+                        Style="{DynamicResource TextBoxStyle}"
+                        IsEnabled="{Binding IsSPILearningEn}"
+                        Text="{Binding Path=RefToActiveRecord.MOSI.Data}"
+                        Name="DataTextBox">
+            </TextBox>
+            
+            <StackPanel Orientation="Horizontal"
+                        Grid.Row="2" Grid.Column="1">
+                <TextBlock  Text="RAW: " FontSize="16" Margin="3"
+                            VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}"/>
+                
+                <CheckBox   x:Name="isRawFormat"
+                            Style="{DynamicResource ToggleSwitchStyle}"
+                            IsEnabled="{Binding IsSPILearningEn}"
+                            IsChecked="{Binding IsRawSPISelected}"
+                            Checked="isRawFormat_Checked"
+                            Unchecked="isRawFormat_Unchecked"/>
+            </StackPanel>
+
+            <TextBlock  Grid.Row="2" Grid.Column="2"
+                        FontSize="16" Margin="3"
+                        VerticalAlignment="Bottom" HorizontalAlignment="Right"
+                        Text="0x"
+                        Style="{DynamicResource CustomTextBlock}"
+                        Name="RawHexText" Visibility="Hidden"/>
+
+            <TextBox    Grid.Row="2" Grid.Column="3"
+                        x:Name="RawFormatTextBox"
+                        IsEnabled="{Binding IsSPILearningEn}"
+                        Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI}"
+                        Visibility="Hidden"
+                        Style="{DynamicResource TextBoxStyle}"/>
+
+
+            <Grid       Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="1"
+                        x:Name="ReadWriteChooseField">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock  Grid.Column="0"
+                            FontSize="16" Margin="3"
+                            VerticalAlignment="Center" HorizontalAlignment="Right"
+                            Text="Read:"
+                            Style="{DynamicResource CustomTextBlock}"/>
+
+                <CheckBox   Grid.Column="1"
+                            x:Name="ReadingCheckBox"
+                            Style="{DynamicResource ToggleSwitchStyle}"
+                            IsEnabled="{Binding IsSPILearningEn}"
+                            HorizontalAlignment="Left" Margin="3"
+                            Checked="CheckBox_Checked"
+                            Unchecked="CheckBox_Checked"/>
+
+                <TextBlock  Grid.Column="2"
+                            FontSize="16" Margin="3"
+                            VerticalAlignment="Center" HorizontalAlignment="Right"
+                            Text="Write:"
+                            Style="{DynamicResource CustomTextBlock}"/>
+
+                <CheckBox   Grid.Column="3"
+                            x:Name="WritingCheckBox"
+                            Style="{DynamicResource ToggleSwitchStyle}"
+                            IsChecked="{Binding IsWriteRegisterSelected}"
+                            IsEnabled="{Binding IsSPILearningEn}"
+                            HorizontalAlignment="Left" Margin="3"
+                            Checked="CheckBox_Checked"
+                            Unchecked="CheckBox_Checked"/>
+            </Grid>
+
+
+            <ComboBox   Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="1"
+                        ItemsSource="{Binding SelectedASICToSend}"
+                        IsEnabled="{Binding IsSPILearningEn}"
+                        MinWidth="100" Margin="3"/>
+
+            <Button     Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="1"
+                        Style="{DynamicResource SimpleButton}"
+                        Command="{Binding SPICommand}"
+                        IsEnabled="{Binding SPICommandCommandEn}"
+                        Content="Execute command" FontSize="16"
+                        Margin="2"/>
+            <!--#endregion-->
+
+            <!--#region Message decoded-->
+            <Grid Grid.Row="0" Grid.RowSpan="4" Grid.Column="4" 
+                  VerticalAlignment="Center" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Border BorderBrush="{DynamicResource SimpleButton.BorderBrush}"
+                        BorderThickness="2"
+                        Grid.Column="0" Grid.ColumnSpan="10"
+                        Grid.Row="0" Grid.RowSpan="3"/>
+                
+                <Border BorderBrush="{DynamicResource SimpleButton.BorderBrush}"
+                        BorderThickness="1"
+                        Grid.Column="0" Grid.ColumnSpan="32"
+                        Grid.Row="1" Grid.RowSpan="1"/>
+                
+                <Border BorderBrush="{DynamicResource SimpleButton.BorderBrush}"
+                        BorderThickness="2"
+                        Grid.Column="0" Grid.ColumnSpan="10"
+                        Grid.Row="0" Grid.RowSpan="3"/>
+
+                <Border BorderBrush="{DynamicResource SimpleButton.BorderBrush}"
+                        BorderThickness="2"
+                        Grid.Column="10" Grid.ColumnSpan="1"
+                        Grid.Row="0" Grid.RowSpan="3"/>
+
+                <Border BorderBrush="{DynamicResource SimpleButton.BorderBrush}"
+                        BorderThickness="2"
+                        Grid.Column="11" Grid.ColumnSpan="16"
+                        Grid.Row="0" Grid.RowSpan="3"/>
+
+                <Border BorderBrush="{DynamicResource SimpleButton.BorderBrush}"
+                        BorderThickness="2"
+                        Grid.Column="27" Grid.ColumnSpan="3"
+                        Grid.Row="0" Grid.RowSpan="3"/>
+
+                <Border BorderBrush="{DynamicResource SimpleButton.BorderBrush}"
+                        BorderThickness="2"
+                        Grid.Column="30" Grid.ColumnSpan="2"
+                        Grid.Row="0" Grid.RowSpan="3"/>
+
+                <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="10"
+                           Text="Address" FontSize="16" 
+                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                           Style="{DynamicResource CustomTextBlock}"/>
+
+                <TextBlock Grid.Row="0" Grid.Column="10" Grid.ColumnSpan="1"
+                           Text=" R/W " FontSize="16" 
+                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                           Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock Grid.Row="0" Grid.Column="11" Grid.ColumnSpan="16"
+                           Text="Data" FontSize="16" 
+                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                           Style="{DynamicResource CustomTextBlock}"/>
+
+                <TextBlock Grid.Row="0" Grid.Column="27" Grid.ColumnSpan="3"
+                           Text="CRC" FontSize="16" 
+                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                           Style="{DynamicResource CustomTextBlock}"/>
+
+                <TextBlock Grid.Row="0" Grid.Column="30" Grid.ColumnSpan="2" Margin="0,5"
+                           Text="NA" FontSize="16" 
+                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                           Style="{DynamicResource CustomTextBlock}"/>
+
+                <!--#region bit numbers -->
+                <TextBlock  Grid.Row="1" Grid.Column="0" Text=" 31 " FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="1" Text=" 30 " FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="2" Text=" 29 " FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="3" Text=" 28 " FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="4" Text=" 27 " FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="5" Text=" 26 " FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="6" Text=" 25 " FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="7" Text=" 24 " FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="8" Text=" 23 " FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="9" Text=" 22 " FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="10" Text=" 21 " FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="11" Text=" 20 " FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="12" Text=" 19 " FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="13" Text=" 18 " FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="14" Text=" 17 " FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="15" Text=" 16 " FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="16" Text=" 15 " FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="17" Text=" 14 " FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="18" Text=" 13 " FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="19" Text=" 12 " FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="20" Text=" 11 " FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="21" Text=" 10 " FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="22" Text=" 9  " FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="23" Text=" 8  " FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="24" Text=" 7  " FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="25" Text=" 6  " FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="26" Text=" 5  " FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="27" Text=" 4  " FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="28" Text=" 3  " FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="29" Text=" 2  " FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="30" Text=" 1  " FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="1" Grid.Column="31" Text=" 0  " FontSize="16" Margin="0,10,0,10"
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+                <!--#endregion-->
+
+
+                <!--#region bit value -->
+                <TextBlock  Grid.Row="2" Grid.Column="0" FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_31bit"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=31}"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="1" FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_30bit"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI, 
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=30}"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="2" FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_29bit"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=29}"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="3" FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_28bit"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=28}"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="4" FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_27bit"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=27}"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="5" FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_26bit"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=26}"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="6" FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_25bit"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=25}"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="7" FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_24bit"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=24}"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="8" FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_23bit"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=23}"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="9" FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_22bit"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=22}"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="10" FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_21bit"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=21}"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="11" FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_20bit"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=20}"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="12" FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_19bit"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=19}"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="13" FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_18bit"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=18}"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="14" FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_17bit"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=17}"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="15" FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_16bit"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=16}"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="16" FontSize="16"
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_15bit"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=15}"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="17" FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_14bit"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=14}"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="18" FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_13bit"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=13}"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="19" FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_12bit"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=12}"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="20" FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_11bit"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=11}"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="21" FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_10bit"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=10}"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="22" FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_9bit"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=9}"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="23" FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_8bit"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=8}"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="24" FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_7bit"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=7}"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="25" FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_6bit"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=6}"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="26" FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_5bit"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI,
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=5}"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="27" FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_4bit"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI, 
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=4}"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="28" FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_3bit"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI, 
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=3}"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="29" FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_2bit"
+                            Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI, 
+                            Converter={StaticResource BitToTextConverter}, 
+                            Mode=OneWay, ConverterParameter=2}"
+                            Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="30" FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_1bit"
+                            Style="{DynamicResource CustomTextBlock}"
+                            Text="0">
+                </TextBlock>
+
+                <TextBlock  Grid.Row="2" Grid.Column="31" FontSize="16" Margin="0,10,0,10"
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Name="_0bit"
+                            Style="{DynamicResource CustomTextBlock}"
+                            Text="0">
+                </TextBlock>
+                <!--#endregion-->
+
+
+            </Grid>
+            <!--#endregion-->
+        </Grid>
+        <!--#endregion-->
+
+        <!-- #region MOSI -->
+        <Border BorderThickness="0" Grid.Row="3" Grid.Column="2"
+                BorderBrush="{DynamicResource SimpleButton.BorderBrush}">
+            <!-- Table -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="auto" MinWidth="100"/>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="40"/>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="40"/>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="5" />
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="7"/>
+                    <RowDefinition Height="auto" MinHeight="30"/>
+                    <RowDefinition Height="2"/>
+                    <RowDefinition Height="1"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- #region Table header -->
+                <Canvas Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="6" 
+                        Background="{DynamicResource UI.SeparateLine}"/>
+
+                <TextBlock Grid.Row="1" Grid.Column="1" FontSize="16"
+                           Text="Time" HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock Grid.Row="1" Grid.Column="2" FontSize="16"
+                           Text="Address" HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock Grid.Row="1" Grid.Column="3" FontSize="16"
+                           Text="R/W" HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock Grid.Row="1" Grid.Column="4" FontSize="16"
+                           Text="Data" HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock Grid.Row="1" Grid.Column="5" FontSize="16"
+                           Text="CRC" HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock Grid.Row="1" Grid.Column="6" FontSize="16"
+                           Text="RAW MOSI" HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+                <!-- #endregion -->
+
+                <!-- #region Table content -->
+                <ListView Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="8" Name="MOSITableTableView" 
+                                ItemsSource="{Binding SPICommunicationTable}"
+                                ItemContainerStyle="{DynamicResource ListViewItemStyle}" 
+                                IsEnabled="{Binding IsSPILearningEn}"
+                                FontSize="16">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="5" />
+                                    <ColumnDefinition Width="auto" MinWidth="100"/>
+                                    <ColumnDefinition Width="100"/>
+                                    <ColumnDefinition Width="40"/>
+                                    <ColumnDefinition Width="100"/>
+                                    <ColumnDefinition Width="40"/>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="5" />
+                                </Grid.ColumnDefinitions>
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="2"/>
+                                    <RowDefinition Height="1"/>
+                                </Grid.RowDefinitions>
+
+                                <Canvas Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="8" Background="{DynamicResource UI.SeparateLine}"/>
+
+                                <!-- Cell with time -->
+                                <TextBlock  Grid.Column="1" Margin="0,0,5,0" 
+                                            VerticalAlignment="Center"
+                                            FontSize="16" HorizontalAlignment="Center"
+                                            Text="{Binding Time, StringFormat={}{0:HH:mm:ss.FFF}}"
+                                            Style="{DynamicResource TextBlockStyle}" 
+                                            MouseLeftButtonDown="MouseDoubleClick"/>
+
+
+                                <!-- Cell with address -->
+                                <TextBlock  Grid.Column="2"  Margin="0,0,5,0" 
+                                            VerticalAlignment="Center"
+                                            FontSize="16" HorizontalAlignment="Center"
+                                            Text="{Binding Path=MOSI.Address, StringFormat=0x{0:X3}}"
+                                            Style="{DynamicResource TextBlockStyle}" 
+                                            MouseLeftButtonDown="MouseDoubleClick"/>
+
+                                <!-- Cell with R/W -->
+                                <TextBlock  Grid.Column="3"  Margin="0,0,5,0" 
+                                            VerticalAlignment="Center"
+                                            FontSize="16" HorizontalAlignment="Center"
+                                            Text="{Binding Path=MOSI.RwFlag, Converter={StaticResource BoolToIntConverter}}"
+                                            Style="{DynamicResource TextBlockStyle}" 
+                                            MouseLeftButtonDown="MouseDoubleClick"/>
+
+                                <!-- Cell with Data -->
+                                <TextBlock  Grid.Column="4" Margin="0,0,5,0" 
+                                            VerticalAlignment="Center"
+                                            FontSize="16" HorizontalAlignment="Center"
+                                            Text="{Binding Path=MOSI.Data, StringFormat=0x{0:X4}}"
+                                            Style="{DynamicResource TextBlockStyle}"
+                                            MouseLeftButtonDown="MouseDoubleClick"/>
+
+                                <!-- Cell with CRC -->
+                                <TextBlock  Grid.Column="5" Margin="0,0,5,0" 
+                                            VerticalAlignment="Center"
+                                            FontSize="16" HorizontalAlignment="Center"
+                                            Text="{Binding Path=MOSI.CRC, StringFormat=0x{0:X}, Mode=OneWay}"
+                                            Style="{DynamicResource TextBlockStyle}" 
+                                            MouseLeftButtonDown="MouseDoubleClick"/>
+
+                                <!-- Cell with RAW -->
+                                <TextBlock  Grid.Column="6" Margin="0,0,5,0" 
+                                            VerticalAlignment="Center"
+                                            FontSize="16" HorizontalAlignment="Center"
+                                            Text="{Binding Path=MOSI.RawMOSI, StringFormat=0x{0:X8}}"
+                                            Style="{DynamicResource TextBlockStyle}" 
+                                            MouseLeftButtonDown="MouseDoubleClick"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <!-- #endregion -->
+            </Grid>
+        </Border>
+        <!-- #endregion -->
+
+
+        <!-- #region MISO -->
+        <Border BorderThickness="0" Grid.Row="3" Grid.Column="3" 
+                BorderBrush="{DynamicResource SimpleButton.BorderBrush}">
+            <!-- Table -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition Width="40"/>
+                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="25"/>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="5" />
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="7"/>
+                    <RowDefinition Height="auto" MinHeight="30"/>
+                    <RowDefinition Height="2"/>
+                    <RowDefinition Height="1"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- #region Table header -->
+                <Canvas Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="13" 
+                        Background="{DynamicResource UI.SeparateLine}"/>
+
+                <TextBlock Grid.Row="1" Grid.Column="1" FontSize="16"
+                           Text="GS5" HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock Grid.Row="1" Grid.Column="2" FontSize="16"
+                           Text="GS4" HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock Grid.Row="1" Grid.Column="3" FontSize="16"
+                           Text="GS3" HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock Grid.Row="1" Grid.Column="4" FontSize="16"
+                           Text="GS2" HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock Grid.Row="1" Grid.Column="5" FontSize="16"
+                           Text="GS1" HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock Grid.Row="1" Grid.Column="6" FontSize="16"
+                           Text="GS0" HorizontalAlignment="Center"
+                           VerticalAlignment="Center">
+                </TextBlock>
+
+                <TextBlock Grid.Row="1" Grid.Column="7" FontSize="16"
+                           Text="SF" HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock Grid.Row="1" Grid.Column="8" FontSize="16"
+                           Text="Status" HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock Grid.Row="1" Grid.Column="9" FontSize="16"
+                           Text="Data" HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock Grid.Row="1" Grid.Column="10" FontSize="16"
+                           Text="S0" HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock Grid.Row="1" Grid.Column="11" FontSize="16"
+                           Text="CRC" HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+
+                <TextBlock Grid.Row="1" Grid.Column="12" FontSize="16"
+                           Text="RAW MISO" HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Style="{DynamicResource CustomTextBlock}">
+                </TextBlock>
+                <!-- #endregion -->
+
+                <!-- #region Table content -->
+                <ListView Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="14" Name="MISOTableTableView" 
+                                ItemsSource="{Binding SPICommunicationTable}"
+                                ItemContainerStyle="{DynamicResource ListViewItemStyle}" 
+                                IsEnabled="{Binding IsSPILearningEn}"
+                                FontSize="16">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="5" />
+                                    <ColumnDefinition Width="30"/>
+                                    <ColumnDefinition Width="30"/>
+                                    <ColumnDefinition Width="30"/>
+                                    <ColumnDefinition Width="30"/>
+                                    <ColumnDefinition Width="30"/>
+                                    <ColumnDefinition Width="30"/>
+                                    <ColumnDefinition Width="30"/>
+                                    <ColumnDefinition Width="40"/>
+                                    <ColumnDefinition Width="50"/>
+                                    <ColumnDefinition Width="25"/>
+                                    <ColumnDefinition Width="30"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="5" />
+                                </Grid.ColumnDefinitions>
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="2"/>
+                                    <RowDefinition Height="1"/>
+                                </Grid.RowDefinitions>
+
+                                <Canvas Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="14" Background="{DynamicResource UI.SeparateLine}"/>
+
+                                <!-- Cell with gs5 -->
+                                <TextBlock  Grid.Column="1" Margin="0,0,5,0" 
+                                            VerticalAlignment="Center"
+                                            FontSize="16" HorizontalAlignment="Center"
+                                            Text="{Binding Path=MISO.GS5, Mode=OneWay, Converter={StaticResource BoolToIntConverter}}"
+                                            Style="{DynamicResource TextBlockStyle}" 
+                                            MouseLeftButtonDown="MouseDoubleClick"/>
+
+                                <!-- Cell with gs4 -->
+                                <TextBlock  Grid.Column="2" Margin="0,0,5,0" 
+                                            VerticalAlignment="Center"
+                                            FontSize="16" HorizontalAlignment="Center"
+                                            Text="{Binding Path=MISO.GS4, Mode=OneWay, Converter={StaticResource BoolToIntConverter}}"
+                                            Style="{DynamicResource TextBlockStyle}" 
+                                            MouseLeftButtonDown="MouseDoubleClick"/>
+
+                                <!-- Cell with gs3 -->
+                                <TextBlock  Grid.Column="3" Margin="0,0,5,0" 
+                                            VerticalAlignment="Center"
+                                            FontSize="16" HorizontalAlignment="Center"
+                                            Text="{Binding Path=MISO.GS3, Mode=OneWay, Converter={StaticResource BoolToIntConverter}}"
+                                            Style="{DynamicResource TextBlockStyle}" 
+                                            MouseLeftButtonDown="MouseDoubleClick"/>
+
+                                <!-- Cell with gs2 -->
+                                <TextBlock  Grid.Column="4" Margin="0,0,5,0" 
+                                            VerticalAlignment="Center"
+                                            FontSize="16" HorizontalAlignment="Center"
+                                            Text="{Binding Path=MISO.GS2, Mode=OneWay, Converter={StaticResource BoolToIntConverter}}"
+                                            Style="{DynamicResource TextBlockStyle}" 
+                                            MouseLeftButtonDown="MouseDoubleClick"/>
+
+                                <!-- Cell with gs1 -->
+                                <TextBlock  Grid.Column="5" Margin="0,0,5,0" 
+                                            VerticalAlignment="Center"
+                                            FontSize="16" HorizontalAlignment="Center"
+                                            Text="{Binding Path=MISO.GS1, Mode=OneWay, Converter={StaticResource BoolToIntConverter}}"
+                                            Style="{DynamicResource TextBlockStyle}" 
+                                            MouseLeftButtonDown="MouseDoubleClick"/>
+
+                                <!-- Cell with gs0 -->
+                                <TextBlock  Grid.Column="6" Margin="0,0,5,0" 
+                                            VerticalAlignment="Center"
+                                            FontSize="16" HorizontalAlignment="Center"
+                                            Text="{Binding Path=MISO.GS0, Mode=OneWay, Converter={StaticResource BoolToIntConverter}}"
+                                            Style="{DynamicResource TextBlockStyle}" 
+                                            MouseLeftButtonDown="MouseDoubleClick"/>
+
+                                <!-- Cell with SF -->
+                                <TextBlock  Grid.Column="7"  Margin="0,0,5,0" 
+                                            VerticalAlignment="Center"
+                                            FontSize="16" HorizontalAlignment="Center"
+                                            Text="{Binding Path=MISO.SF, Mode=OneWay, Converter={StaticResource BoolToIntConverter}}"
+                                            Style="{DynamicResource TextBlockStyle}" 
+                                            MouseLeftButtonDown="MouseDoubleClick"/>
+
+                                <!-- Cell with Additional status -->
+                                <TextBlock  Grid.Column="8" Margin="0,0,5,0" 
+                                            VerticalAlignment="Center"
+                                            FontSize="16" HorizontalAlignment="Center"
+                                            Text="{Binding Path=MISO.AdditionalStatus, StringFormat=0x{0:X}, Mode=OneWay}"
+                                            Style="{DynamicResource TextBlockStyle}" 
+                                            MouseLeftButtonDown="MouseDoubleClick"/>
+
+                                <!-- Cell with Data -->
+                                <TextBlock  Grid.Column="9" Margin="0,0,5,0" 
+                                            VerticalAlignment="Center"
+                                            FontSize="16" HorizontalAlignment="Center"
+                                            Text="{Binding Path=MISO.Data, StringFormat=0x{0:X}, Mode=OneWay}"
+                                            Style="{DynamicResource TextBlockStyle}" 
+                                            MouseLeftButtonDown="MouseDoubleClick"/>
+
+                                <!-- Cell with S0 -->
+                                <TextBlock  Grid.Column="10" Margin="0,0,5,0" 
+                                            VerticalAlignment="Center"
+                                            FontSize="16" HorizontalAlignment="Center"
+                                            Text="{Binding Path=MISO.S0, Mode=OneWay, Converter={StaticResource BoolToIntConverter}}"
+                                            Style="{DynamicResource TextBlockStyle}"
+                                            MouseLeftButtonDown="MouseDoubleClick"/>
+
+                                <!-- Cell with crc -->
+                                <TextBlock  Grid.Column="11" Margin="0,0,5,0" 
+                                            VerticalAlignment="Center"
+                                            FontSize="16" HorizontalAlignment="Center"
+                                            Text="{Binding Path=MISO.CRC, StringFormat=0x{0:X}, Mode=OneWay}"
+                                            Style="{DynamicResource TextBlockStyle}" 
+                                            MouseLeftButtonDown="MouseDoubleClick"/>
+                                
+                                <!-- Cell with raw -->
+                                <TextBlock  Grid.Column="12" Margin="0,0,5,0" 
+                                            VerticalAlignment="Center"
+                                            FontSize="16" HorizontalAlignment="Center"
+                                            Text="{Binding Path=MISO.RawMISO, StringFormat=0x{0:X8}, Mode=OneWay}"
+                                            Style="{DynamicResource TextBlockStyle}" 
+                                            MouseLeftButtonDown="MouseDoubleClick"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <!-- #endregion -->
+            </Grid>
+        </Border>
+        <!-- #endregion -->
+
     </Grid>
 </Page>

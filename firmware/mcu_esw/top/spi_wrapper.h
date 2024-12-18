@@ -99,10 +99,10 @@ boolean QSPIWriteNormal(SpiChSlaveSelectEnum spiChannel, uint16 address, uint16 
  * Created for raw command sending.
  *
  * \param spiChannel SPI Slave to and from which the SPI instruction is executed
- * \param data 32bit data to write
+ * \param p_data 32bit SPI frame; is also used for sending back raw SPI receive frame
  * \return Returns TRUE
  */
-boolean QSPIWriteRaw(uint8 spiChannel, uint32 data);
+boolean QSPIExecuteRawTransaction(uint8 spiChannel, uint32 * const p_data);
 
 /** \brief Read sequentially data from ASIC via QSPI
  * 

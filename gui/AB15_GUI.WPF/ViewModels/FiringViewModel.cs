@@ -1007,10 +1007,10 @@ namespace AB15_GUI.WPF.ViewModels
 
             // Create package to MCU
             TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
-            packageToSend.ASICID = 1;
+            packageToSend.ASICID = 7; // TODO: replace hardcoded
             packageToSend.Cmd = MCUCommand.WRITE_RAW_DATA_SPI;
             packageToSend.Deleg = FireSimultaneousDelegate_step0;
-            packageToSend.PayloadType = typeof(EmptyPayload);
+            packageToSend.PayloadType = typeof(AddressDataPayload);
             packageToSend.Payload.Data.Add((UInt16) (RAW_SPI_TRANSACTION & 0xFFFF));       // 16 LSB
             packageToSend.Payload.Data.Add((UInt16) (RAW_SPI_TRANSACTION >> 16) & 0xFFFF); // 16 MSB
 
@@ -1019,6 +1019,26 @@ namespace AB15_GUI.WPF.ViewModels
 
             // Wait asynchronously without blocking the main thread for completing step
             await _taskCompletionSource.Task; 
+
+            // == Step 0.2 - disabling monoflop TODO: add register model, replace delegate
+
+            // Initialize a new TaskCompletionSource instance for each call
+            _taskCompletionSource = new TaskCompletionSource<bool>();
+
+            // Create package to MCU
+            packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
+            packageToSend.ASICID = 1;
+            packageToSend.Cmd = MCUCommand.WRITE_REG;
+            packageToSend.Deleg = FireSimultaneousDelegate_step1;
+            packageToSend.PayloadType = typeof(EmptyPayload);
+            packageToSend.Payload.Address.Add(0x0136);
+            packageToSend.Payload.Data.Add(0x0001);
+
+            // Send command to MCU
+            serialWrapper.SerialWrite(packageToSend);
+
+            // Wait asynchronously without blocking the main thread for completing step
+            await _taskCompletionSource.Task;  
 
             // == Step 1 - unlocking ==
 
@@ -1053,7 +1073,7 @@ namespace AB15_GUI.WPF.ViewModels
             packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
             packageToSend.ASICID = 1;
             packageToSend.Cmd = MCUCommand.WRITE_REG;
-            packageToSend.Deleg = FireSimultaneousDelegate_step1;
+            packageToSend.Deleg = FireSimultaneousDelegate_step1; // temporary
             packageToSend.PayloadType = typeof(EmptyPayload);
             packageToSend.Payload.Address.Add(reg_FLM_Unlock.Address);
             packageToSend.Payload.Data.Add(reg_FLM_Unlock.Data);
@@ -1181,18 +1201,18 @@ namespace AB15_GUI.WPF.ViewModels
             packageToSend.Payload.Data.Add(flm_HS_LS_On_Ch20_15.Data);
 
             // Debug mode code - TODO: remove after finalization
-            if (DEBUG_MODE)
-            {
-                // Emulate response - channel firing is not executed but flow continues
-                ReceiveCommunicationPackage<EmptyPayload> mcuResponse = new ReceiveCommunicationPackage<EmptyPayload>();
-                mcuResponse.Payload.Error = null;
-                FireSimultaneousDelegate_step2(mcuResponse);
-            }
-            else
-            {
+            // if (DEBUG_MODE)
+            // {
+            //     // Emulate response - channel firing is not executed but flow continues
+            //     ReceiveCommunicationPackage<EmptyPayload> mcuResponse = new ReceiveCommunicationPackage<EmptyPayload>();
+            //     mcuResponse.Payload.Error = null;
+            //     FireSimultaneousDelegate_step2(mcuResponse);
+            // }
+            // else
+            // {
                 // Send command to MCU
                 serialWrapper.SerialWrite(packageToSend);    
-            }
+            // }
 
             // Wait asynchronously without blocking the main thread for completing step
             await _taskCompletionSource.Task;   
@@ -1384,7 +1404,7 @@ namespace AB15_GUI.WPF.ViewModels
             }
 
             // Typecast response to actual type
-            ReceiveCommunicationPackage<EmptyPayload> mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>) response;
+            ReceiveCommunicationPackage<AddressDataPayload> mcuResponse = (ReceiveCommunicationPackage<AddressDataPayload>) response;
 
             // Change state if response received
             if (mcuResponse.Payload.Error is not null)

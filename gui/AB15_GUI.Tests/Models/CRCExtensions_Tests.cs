@@ -33,7 +33,20 @@ namespace AB15_GUI.Tests.Models
         {
         }
 
-        [TestCaseSource(nameof(CRC8TestCases)), Description("Checking that CRC8 is calculated expetedly")]
+        [TestCaseSource(nameof(CRC3TestCases)), Description("Checking that CRC3 is calculated expectedly")]
+        public void WhenDataIsProvided_ThenCRC8IsCalculatedExpectedly((uint expectedCRC, int startIdx, int endIdx, UInt32 data) testCaseParams)
+        {
+            // Arrange
+            uint calculatedCRC;
+
+            // Act
+            calculatedCRC = testCaseParams.data.GetCRC3(testCaseParams.startIdx, testCaseParams.endIdx);
+
+            // Assert
+            Assert.That(calculatedCRC, Is.EqualTo(testCaseParams.expectedCRC));
+        }
+
+        [TestCaseSource(nameof(CRC8TestCases)), Description("Checking that CRC8 is calculated expectedly")]
         public void WhenDataIsProvided_ThenCRC8IsCalculatedExpectedly((int expectedCRC, int startIdx, List<byte> data) testCaseParams)
         {
             // Arrange
@@ -48,7 +61,7 @@ namespace AB15_GUI.Tests.Models
             Assert.That(calculatedCRC, Is.EqualTo(testCaseParams.expectedCRC));
         }
 
-        [TestCaseSource(nameof(CRC16TestCases)), Description("Checking that CRC16 is calculated expetedly")]
+        [TestCaseSource(nameof(CRC16TestCases)), Description("Checking that CRC16 is calculated expectedly")]
         public void WhenDataIsProvided_ThenCRC16IsCalculatedExpectedly((int expectedCRC, int startIdx, List<UInt16> data) testCaseParams)
         {
             // Arrange
@@ -61,6 +74,15 @@ namespace AB15_GUI.Tests.Models
 
             // Assert
             Assert.That(calculatedCRC, Is.EqualTo(testCaseParams.expectedCRC));
+        }
+
+        /// <summary>
+        /// List of test cases data for CRC3 tests
+        /// </summary>
+        public static IEnumerable<(uint, int, int, UInt32)> CRC3TestCases()
+        {
+            yield return (0x4, 5, 31, 0x00400010);
+            yield return (0x6, 3, 26, 0x30000C46);
         }
 
         /// <summary>
