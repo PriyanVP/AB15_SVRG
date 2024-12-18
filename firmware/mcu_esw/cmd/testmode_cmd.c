@@ -168,7 +168,7 @@ void IntCmdExecutePowerstageTest(void)
         FLM_Read_Powerstage.as_uint16 = data.bf.output_data;
 
         // Save data
-        uint8 currentChannelIdx = g_pstConfiguration.channelIndex - 1
+        uint8 currentChannelIdx = g_pstConfiguration.channelIndex - 1;
         g_pstResults[currentChannelIdx].dw = FLM_Read_Powerstage.as_uint16 & MASK_USED_BITS_FLM_FLM_READ_POWERSTAGE;
         g_pstResults[currentChannelIdx].bf.pst_not_valid ^= 0x1;  // invert values as ASIC register displays valid flag and here used NOT valid flag
         g_pstResults[currentChannelIdx].bf.test_guard_fail = g_pstConfiguration.guardCounter < 0;
