@@ -74,7 +74,7 @@ typedef struct
     uint8   msg_id;                           /** \brief message id for sending response */
     boolean hsPowerstageEn;                   /** \brief highside powerstage test enabled */
     boolean lsPowerstageEn;                   /** \brief lowside powerstage test enabled */
-    boolean isTestRunning;                    /** \brief true if channle test is running */
+    boolean isTestRunning;                    /** \brief true if channel test is running */
     uint8   channelIndex;                     /** \brief index of currently tested channel */
     sint8   guardCounter;                     /** \brief guard variable to check if diagnostics finished in time */
 } PstRuntimeConfiguration;
@@ -145,6 +145,7 @@ void IntCmdExecutePowerstageTest(void)
     flm_flm_status2_ut FLM_Status2 = { .as_uint16 = 0 };
     flm_flm_diag_start_ut FLM_Diag_Start = { .as_uint16 = 0 };
     flm_flm_read_powerstage_ut FLM_Read_Powerstage = { .as_uint16 = 0 };
+    boolean isDiagDataReady = FALSE;
     boolean isSuccessfulFlag;
 
     // Precondition
@@ -154,19 +155,20 @@ void IntCmdExecutePowerstageTest(void)
     }
 
     // Decrement guard - if will become negative test takes to long, skip to the next one
-    g_pstConfiguration.guardCounter--;
+    g_pstConfiguration.guardCounter++;    /* TODO: count up */
 
     // Check if test finished or max test duration elapsed
     isSuccessfulFlag = QSPIReadNormal(SPI1_CS1MASTER, FLM_FLM_STATUS2, &data.dw);
     FLM_Status2.as_uint16 = data.bf.output_data;
-    if ((FLM_Status2.as_s.FlmDiagReady_u1 & FLM_Status2.as_s.FlmDiagPstActive_u1) ||
-        (g_pstConfiguration.guardCounter < 0))
+    isDiagDataReady = FLM_Status2.as_s.FlmDiagReady_u1 & FLM_Status2.as_s.FlmDiagPstActive_u1;
+    if (isDiagDataReady || (g_pstConfiguration.guardCounter > FLM_POWERSTAGE_GUARD_TIMEOUT))
     {
         // Powerstage test results ready
         isSuccessfulFlag = QSPIReadNormal(SPI1_CS1MASTER, RESET_VAL_FLM_FLM_READ_POWERSTAGE, &data.dw);
         FLM_Read_Powerstage.as_uint16 = data.bf.output_data;
 
         // Save data
+        /* TODO: add var for array index */
         g_pstResults[g_pstConfiguration.channelIndex - 1].dw = FLM_Read_Powerstage.as_uint16 & MASK_USED_BITS_FLM_FLM_READ_POWERSTAGE;
         g_pstResults[g_pstConfiguration.channelIndex - 1].bf.pst_not_valid ^= 0x1;  // invert values as ASIC register displays valid flag and here used NOT valid flag
         g_pstResults[g_pstConfiguration.channelIndex - 1].bf.test_guard_fail = g_pstConfiguration.guardCounter < 0;
@@ -243,10 +245,7 @@ IFX_INLINE void StartTestMode(boolean isTestMode1, USBReceiveData const * const 
     }
 
     // Stop running tests
-    isSuccessfulFlag &= QSPIWriteNormal(SPI1_CS1MASTER, FLM_FLM_DIAG_START, RESET_VAL_FLM_FLM_DIAG_START);
-
-    // Send data back to MCU
-    SendUSBPackage(&packageToSend);
+    isSuccessfulFlag &= QSPIWriteNormal(SPI1_CS1MASTER, FLM_FLM_DIAG_START, RESET_VAL_FLM_FLM_DIAG_START); // TODO: may not be needed
 
     // Configure testmode
     g_pstConfiguration.msg_id = commandPackage->msg_id;
@@ -254,7 +253,7 @@ IFX_INLINE void StartTestMode(boolean isTestMode1, USBReceiveData const * const 
     g_pstConfiguration.hsPowerstageEn = !isTestMode1;
     g_pstConfiguration.isTestRunning = FALSE;
     g_pstConfiguration.channelIndex = 1;        // Channels numeration starts from 1
-    g_pstConfiguration.guardCounter = FLM_POWERSTAGE_GUARD_TIMEOUT;
+    g_pstConfiguration.guardCounter = 0;
 
     // Reset results
     for (uint8 i = 0; i < FLM_POWERSTAGE_CHANNELS_COUNT; i++)
