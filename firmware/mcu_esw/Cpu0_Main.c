@@ -93,58 +93,16 @@ void WatchdogStatusReadingInterruptRoutine(void)
 */
 void FLMDiagInterruptRoutine(void)
 {
-    // Initial FLM Diagnostic execution state is initialised as Idle
-    // and on later rounds updated from ASIC 
-    if (GetFLMDiagExecStatus() != FLM_DIAG_EXEC_STATUS_IDLE)
+    // FLM Cyclic Diag iteration is an internal command
+    static USBReceiveData serveFLMDiagCommand = 
     {
-        SetFLMDiagExecStatus(FLMReadDiagExecStatus());
-    }
+        .device_id = 1,
+        .dataLength = 0,
+        .command = INT_CMD_EXECUTE_FLM_DIAG
+    };
 
-    // Start diagnostic and get out
-    // On next entries, check execution status:
-    switch (GetFLMDiagExecOrder())
-    {
-    case FLM_DIAG_ORDER_SHORT_DET:
-        // check status of diag execution, dont enter any diagnostic if status is ONGOING
-        if ((GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_FINISHED)||(GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_IDLE))
-        {
-            FLMShortDiag();
-            // Move on to next diagnostic
-            SetFLMDiagExecOrder(FLM_DIAG_ORDER_VHX_MEAS);
-        }
-        break;
-
-    case FLM_DIAG_ORDER_VHX_MEAS: 
-        FLMVHxDiag();
-        if (GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_FINISHED)
-        {
-            // Move on to next diagnostic
-            SetFLMDiagExecOrder(FLM_DIAG_ORDER_LOOP_RES_MEAS);
-        }
-        break;
-
-    case FLM_DIAG_ORDER_LOOP_RES_MEAS:
-        FLMLoopResDiag();
-        if (GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_FINISHED)
-        {
-            // Move on to next diagnostic
-            SetFLMDiagExecOrder(FLM_DIAG_ORDER_SQUIB_DET);
-        }
-        break;
-
-    case FLM_DIAG_ORDER_SQUIB_DET:
-        /* code */
-        FLMSquibDetErrDiag();
-        if (GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_FINISHED)
-        {
-            // Move on to next diagnostic
-            SetFLMDiagExecOrder(FLM_DIAG_ORDER_SHORT_DET);
-        }
-        break;
-
-    default:
-        break;
-    }
+    // Add Test mode internal command to command queue
+    QueueWrite(&serveFLMDiagCommand);
 }
 
 /** \brief Test mode 1/2 check interrupt routine
@@ -378,7 +336,9 @@ void core0_main(void)
             case INT_CMD_EXECUTE_HACKED_TIMER:
                 IntCmdExecuteHackedTimer();
                 break;
-
+            case INT_CMD_EXECUTE_FLM_DIAG:
+                IntCmdExecuteFLMDiag();
+                break;
             case USB_CMD_FLM_DIAG_ENABLE:
                 CmdEnableFLMDiag();
                 break;

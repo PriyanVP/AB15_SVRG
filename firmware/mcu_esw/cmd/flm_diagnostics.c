@@ -13,6 +13,7 @@
 #include "flm_diagnostics.h"
 #include "common/bit_manipulation.h"
 #include "top/spi_wrapper.h"
+#include "periphery/timer.h"
 
 /*********************************************************************************************************************/
 /*------------------------------------------------------Macros-------------------------------------------------------*/
@@ -48,6 +49,12 @@ void CmdDisableFLMDiag();
  */
 void CmdReadFLMDiagResults();
 
+/** \brief
+ * FLM module cyclic diagnostics interrupt routine
+ * Starts cyclic diagnostics, stores results to be later sent to GUI
+ */
+void IntCmdExecuteFLMDiag();
+
 /** \brief 
  * cyclic test performed automatically, no need to set FLM_DIAG_START
  */ 
@@ -80,22 +87,6 @@ void StartFLMDiag();
 /** \brief get FLM diagnostic execution status from ASIC (ongoing/evaluated)
  */
 flm_DiagExecStatusEnum FLMReadDiagExecStatus(void);
-
-/** \brief
- */
-void SetFLMDiagExecStatus(flm_DiagExecStatusEnum FLMCycDiagExecStatus);
-
-/** \brief
- */
-flm_DiagExecStatusEnum GetFLMDiagExecStatus(void);
-
-/** \brief
- */
-void SetFLMDiagExecOrder(flm_DiagExecOrderEnum execNumber);
-
-/** \brief
- */
-flm_DiagExecOrderEnum GetFLMDiagExecOrder (void);
 
 /** \brief
  * Measure Battery voltage, normal range to perform diagnostics
@@ -133,7 +124,7 @@ void CmdEnableFLMDiag(USBReceiveData const * const commandPackage)
     // FLM diag state flag is set
     g_flmDiagState = FLM_DIAG_STATE_ENABLED;
     // Configure periodicity of FLM diagnoscics MCU interrupt
-    ConfigureFLMDiagPeriodicity();
+    ConfigureFLMDiagPeriodicity(FLM_DIAG_INTERRUPT_PERIODICITY);
     // Turn on FLM diagnostics performing interrupt of MCU
     EnableFLMDiagInterrupt();
 
@@ -163,8 +154,8 @@ void CmdDisableFLMDiag(USBReceiveData const * const commandPackage)
     g_flmDiagState = FLM_DIAG_STATE_DISABLED;
     // Set status and number of diag to init values for proper start
     // of diagnostics on next enable
-    SetFLMDiagExecStatus(FLM_DIAG_EXEC_STATUS_IDLE);
-    SetFLMDiagExecOrder(FLM_DIAG_ORDER_SHORT_DET);
+    g_FLMDiagExecStatus = FLM_DIAG_EXEC_STATUS_IDLE;
+    g_flmDiagExecNumber = FLM_DIAG_ORDER_SHORT_DET;
 
     // Turn off FLM diagnostics performing interrupt of MCU
     DisableFLMDiagInterrupt();
@@ -399,6 +390,61 @@ void CmdReadFLMDiagResults(USBReceiveData const * const commandPackage)
         SendUSBPackage(&packageToSend);
     }
 
+void IntCmdExecuteFLMDiag()
+{
+    // Initial FLM Diagnostic execution state is initialised as Idle
+    // and on later rounds updated from ASIC 
+    if (g_FLMDiagExecStatus != FLM_DIAG_EXEC_STATUS_IDLE)
+    {
+        g_FLMDiagExecStatus = FLMReadDiagExecStatus();
+    }
+
+    // Start diagnostic and get out
+    // On next entries, check execution status:
+    switch (g_flmDiagExecNumber)
+    {
+    case FLM_DIAG_ORDER_SHORT_DET:
+        // check status of diag execution, dont enter any diagnostic if status is ONGOING
+        if ((g_FLMDiagExecStatus == FLM_DIAG_EXEC_STATUS_FINISHED)||(g_FLMDiagExecStatus == FLM_DIAG_EXEC_STATUS_IDLE))
+        {
+            FLMShortDiag();
+            // Move on to next diagnostic
+            g_flmDiagExecNumber = FLM_DIAG_ORDER_VHX_MEAS;
+        }
+        break;
+
+    case FLM_DIAG_ORDER_VHX_MEAS: 
+        FLMVHxDiag();
+        if (g_FLMDiagExecStatus == FLM_DIAG_EXEC_STATUS_FINISHED)
+        {
+            // Move on to next diagnostic
+            g_flmDiagExecNumber = FLM_DIAG_ORDER_LOOP_RES_MEAS;
+        }
+        break;
+
+    case FLM_DIAG_ORDER_LOOP_RES_MEAS:
+        FLMLoopResDiag();
+        if (g_FLMDiagExecStatus == FLM_DIAG_EXEC_STATUS_FINISHED)
+        {
+            // Move on to next diagnostic
+            g_flmDiagExecNumber = FLM_DIAG_ORDER_SQUIB_DET;
+        }
+        break;
+
+    case FLM_DIAG_ORDER_SQUIB_DET:
+        FLMSquibDetErrDiag();
+        if (g_FLMDiagExecStatus == FLM_DIAG_EXEC_STATUS_FINISHED)
+        {
+            // Move on to next diagnostic
+            g_flmDiagExecNumber = FLM_DIAG_ORDER_SHORT_DET;
+        }
+        break;
+
+    default:
+        break;
+    }
+}
+
 // Diagnostic is running automatically by default, just read results
 void FLMShortDiag()
 {
@@ -410,7 +456,7 @@ void FLMShortDiag()
                                          FLM_FLM_READ_SHORT_CH20_17};
     
     // read FLM_Read_Short_ch4_1 through FLM_Read_Short_ch20_17, store in FLMShortDiagResults
-    SetFLMDiagExecStatus(FLM_DIAG_EXEC_STATUS_ONGOING);
+    g_FLMDiagExecStatus = FLM_DIAG_EXEC_STATUS_ONGOING;
 
     // Read related registers from ASIC
     isSuccessfulFlag = QSPIReadSequenceNormal(SPI1_CS1MASTER, flmDiagShortsRegsAddresses, &data[0].dw, &length); //TODO: question: should data argument be &data[0].dw not &data[].dw ?
@@ -423,7 +469,7 @@ void FLMShortDiag()
     g_flmCycDiagResultsValues.flmShortDiagResults.FLM_Read_Short_ch20_17 = data[4].bf.output_data;
 
     // results are stored, get back
-    SetFLMDiagExecStatus(FLM_DIAG_EXEC_STATUS_FINISHED);
+    g_FLMDiagExecStatus = FLM_DIAG_EXEC_STATUS_FINISHED;
     
     // TODO: quick result analisys to check for faults
     // if any active, FLMCycDiagFaultsValues.FLM_SC2G_SC2B_fault = TRUE
@@ -450,7 +496,7 @@ void FLMVHxDiag()
 
     // TODO: implement timeout for 1.5-2 duration of diagnostic -> if timeout then feature error to PC 
 
-    if (GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_FINISHED)
+    if (g_FLMDiagExecStatus == FLM_DIAG_EXEC_STATUS_FINISHED)
     {
         // Select corresponding mode
         SetFLMDiagMode(FLM_DIAG_MODE_VHX_MEAS);
@@ -463,7 +509,7 @@ void FLMVHxDiag()
         return;
     }
 
-    if (GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_EVALUATED)
+    if (g_FLMDiagExecStatus == FLM_DIAG_EXEC_STATUS_EVALUATED)
     {
         // TODO: diagnostic was performed, store results
         // Read FLM_FLM_READ_DIAG_VH1A...FLM_FLM_READ_DIAG_VH10, FLM_FLM_READ_DIAG_VH1B
@@ -477,7 +523,7 @@ void FLMVHxDiag()
             g_flmCycDiagResultsValues.flmVHxDiagResults[i].FLM_Read_Diag_VHx_voltage_value = flmReadDiagVHxTmp.as_s.FlmVhVoltageValue_u12;
         }
 
-        SetFLMDiagExecStatus(FLM_DIAG_EXEC_STATUS_FINISHED);
+        g_FLMDiagExecStatus = FLM_DIAG_EXEC_STATUS_FINISHED;
     }
 
     // TODO: evaluate wether to implement error status handling
@@ -492,7 +538,7 @@ void FLMSquibDetErrDiag()
     boolean isSuccessfulFlag = FALSE;
     uint16 flmDiagSquibRegsAddresses[FLM_DIAG_READ_SQUIB_REGS_COUNT] = {FLM_FLM_READ_SQUIB_CH16_1, FLM_FLM_READ_SQUIB_CH20_17};
 
-    if (GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_FINISHED)
+    if (g_FLMDiagExecStatus == FLM_DIAG_EXEC_STATUS_FINISHED)
     {
         // Select corresponding mode
         SetFLMDiagMode(FLM_DIAG_MODE_SQUIB_DET);
@@ -505,7 +551,7 @@ void FLMSquibDetErrDiag()
         return;
     }
 
-    if (GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_EVALUATED)
+    if (g_FLMDiagExecStatus == FLM_DIAG_EXEC_STATUS_EVALUATED)
     {
         // TODO: diagnostic was performed, store results
         // Read FLM_READ_SQUIB_CH16_1, FLM_READ_SQUIB_CH20_17
@@ -525,7 +571,7 @@ void FLMSquibDetErrDiag()
             }
         }
 
-        SetFLMDiagExecStatus(FLM_DIAG_EXEC_STATUS_FINISHED);
+        g_FLMDiagExecStatus = FLM_DIAG_EXEC_STATUS_FINISHED;
     }
 
     // TODO: evaluate wether to implement error status handling
@@ -549,7 +595,7 @@ void FLMLoopResDiag()
                                                                     FLM_FLM_READ_SQUIB_RES_CH19,FLM_FLM_READ_SQUIB_RES_CH20,
                                                                     FLM_FLM_READ_SQUIB_RES_SQREF};
 
-    if (GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_FINISHED)
+    if (g_FLMDiagExecStatus == FLM_DIAG_EXEC_STATUS_FINISHED)
     {
         // Select corresponding mode
         SetFLMDiagMode(FLM_DIAG_MODE_LOOP_RES_MEAS);
@@ -562,9 +608,8 @@ void FLMLoopResDiag()
         return;
     }
 
-    if (GetFLMDiagExecStatus() == FLM_DIAG_EXEC_STATUS_EVALUATED)
+    if (g_FLMDiagExecStatus == FLM_DIAG_EXEC_STATUS_EVALUATED)
     {
-        // TODO: diagnostic was performed, store results
         // Read FLM_READ_SQUIB_RES_CH1...FLM_READ_SQUIB_RES_CH20
         isSuccessfulFlag = QSPIReadSequenceNormal(SPI1_CS1MASTER, flmDiagResRegsAddresses, &data[0].dw, &length);
         // Store results TODO: check order of data
@@ -578,7 +623,7 @@ void FLMLoopResDiag()
             g_flmCycDiagResultsValues.flmLoopResDiagResults[i].flm_squib_res_pgndx_loss = flmReadSquibResChxTmp.as_s.FlmSquibResPgndxLoss_u1;
         }
 
-        SetFLMDiagExecStatus(FLM_DIAG_EXEC_STATUS_FINISHED);
+        g_FLMDiagExecStatus = FLM_DIAG_EXEC_STATUS_FINISHED;
     }
 
     // TODO: evaluate wether to implement error status handling
@@ -634,34 +679,13 @@ flm_DiagExecStatusEnum FLMReadDiagExecStatus(void)
     // Determine FLM diagnostic execution status
     if ((tmpFLMDiagStatus2fRegister.as_s.FlmDiagActive_u1 == 1) && (tmpFLMDiagStatus2fRegister.as_s.FlmDiagReady_u1 == 0))
     {
-        SetFLMDiagExecStatus(FLM_DIAG_EXEC_STATUS_ONGOING);
+        return FLM_DIAG_EXEC_STATUS_ONGOING;
     }
-
-    if ((tmpFLMDiagStatus2fRegister.as_s.FlmDiagActive_u1 == 0) && (tmpFLMDiagStatus2fRegister.as_s.FlmDiagReady_u1 == 1))
+    else if ((tmpFLMDiagStatus2fRegister.as_s.FlmDiagActive_u1 == 0) && (tmpFLMDiagStatus2fRegister.as_s.FlmDiagReady_u1 == 1))
     {
-        SetFLMDiagExecStatus(FLM_DIAG_EXEC_STATUS_EVALUATED);
+        return FLM_DIAG_EXEC_STATUS_EVALUATED;
     }
 }
-
-void SetFLMDiagExecStatus(flm_DiagExecStatusEnum FLMCycDiagExecStatus)
-{
-    g_FLMDiagExecStatus = FLMCycDiagExecStatus;
-}
-
-flm_DiagExecStatusEnum GetFLMDiagExecStatus(void)
-{
-    return g_FLMDiagExecStatus;
-}
-
-void SetFLMDiagExecOrder (flm_DiagExecOrderEnum execNumber)
-    {
-        g_flmDiagExecNumber = execNumber;
-    }
-
-flm_DiagExecOrderEnum GetFLMDiagExecOrder (void)
-    {
-        return g_flmDiagExecNumber;
-    }
 
 boolean CheckBatVoltage(void)
 {
