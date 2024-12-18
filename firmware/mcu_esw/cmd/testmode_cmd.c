@@ -23,11 +23,11 @@
 /*------------------------------------------------------Macros-------------------------------------------------------*/
 /*********************************************************************************************************************/
 
-#define FLM_POWERSTAGE_GUARD_TIMEOUT     (5)  /** \brief If powerstage test is not finished after 
-                                                      5 expected durations - skip test */
+#define FLM_POWERSTAGE_GUARD_TIMEOUT     (9)   /** \brief If powerstage test is not finished after 
+                                                    3 (3*3) expected durations - skip test */
 
-#define FLM_POWERSTAGE_EXPECTED_DURATION (2)  /** \brief Expected duration of one powerstage test: 85 us/ 50 us
-                                                    where 50 us - timer interrupt periodicity on MCU */
+#define FLM_POWERSTAGE_STEP_DURATION     (1)   /** \brief Expected duration of one step in powerstage test. 
+                                                    Expected to have 3 steps for completion for 1 channel */
 
 #define FLM_POWERSTAGE_CHANNELS_COUNT    (20)  /** \brief Number of channels for powerstage test */
 
@@ -74,7 +74,7 @@ typedef struct
     uint8   msg_id;                           /** \brief message id for sending response */
     boolean hsPowerstageEn;                   /** \brief highside powerstage test enabled */
     boolean lsPowerstageEn;                   /** \brief lowside powerstage test enabled */
-    boolean isTestRunning;                    /** \brief true if channel test is running */
+    boolean isTestSeqFinished;                /** \brief true if channel test sequence was finished */
     uint8   channelIndex;                     /** \brief index of currently tested channel */
     sint8   guardCounter;                     /** \brief guard variable to check if diagnostics finished in time */
 } PstRuntimeConfiguration;
@@ -101,6 +101,13 @@ static PstChannelTestResult g_pstResults[FLM_POWERSTAGE_CHANNELS_COUNT];
  * \return Returns nothing
  */
 IFX_INLINE void StartTestMode(boolean isTestMode1, USBReceiveData const * const commandPackage);
+
+/** \brief Procedure to get address and data for firing in PST
+ * \param p_regAddres pointer to address of register to execute firing
+ * \param p_regData pointer to data for register to execute PST for channel
+ * \return Returns nothing
+ */
+void GetPSTFiringSPiCommand(uint16 *p_regAddress, uint16 *p_regData);
 
 /*********************************************************************************************************************/
 /*---------------------------------------------Function Implementations----------------------------------------------*/
@@ -148,8 +155,8 @@ void IntCmdExecutePowerstageTest(void)
     boolean isDiagDataReady = FALSE;
     boolean isSuccessfulFlag;
 
-    // Precondition
-    if ((g_pstConfiguration.lsPowerstageEn == FALSE) && (g_pstConfiguration.hsPowerstageEn == FALSE))
+    // Precondition (strictly 1 should be enabled)
+    if ((g_pstConfiguration.lsPowerstageEn ^ g_pstConfiguration.hsPowerstageEn) == FALSE)
     {
         return;
     }
@@ -157,15 +164,39 @@ void IntCmdExecutePowerstageTest(void)
     // Decrement guard - if will become negative test takes to long, skip to the next one
     g_pstConfiguration.guardCounter++;
 
-    // Check if test finished or max test duration elapsed
+    // Execute test if preconditions in ASIC are met and configuration was done
+    isSuccessfulFlag = QSPIReadNormal(SPI1_CS1MASTER, FLM_FLM_STATUS2, &data.dw);
+    FLM_Status2.as_uint16 = data.bf.output_data;
+    if (FLM_Status2.as_s.FlmDiagPstActive_u1)
+    {
+        uint16 regAddress;
+        uint16 regData;
+
+        // Execute procedure to define what address and data to use
+        GetPSTFiringSPiCommand(&regAddress, &regData);
+
+        //
+        QSPIWriteNormal(SPI1_CS1MASTER, regAddress, regData);
+
+        // Update flag indicating that test sequence was finished
+        g_pstConfiguration.isTestSeqFinished = TRUE;
+    }
+
     isSuccessfulFlag = QSPIReadNormal(SPI1_CS1MASTER, FLM_FLM_STATUS2, &data.dw);
     FLM_Status2.as_uint16 = data.bf.output_data;
     isDiagDataReady = FLM_Status2.as_s.FlmDiagReady_u1 & FLM_Status2.as_s.FlmDiagPstActive_u1;
+
+    // Check if test finished or max test duration elapsed
     if (isDiagDataReady || (g_pstConfiguration.guardCounter > FLM_POWERSTAGE_GUARD_TIMEOUT))
     {
         // Powerstage test results ready
         isSuccessfulFlag = QSPIReadNormal(SPI1_CS1MASTER, RESET_VAL_FLM_FLM_READ_POWERSTAGE, &data.dw);
         FLM_Read_Powerstage.as_uint16 = data.bf.output_data;
+
+        // Reset firing registers
+        QSPIWriteNormal(SPI1_CS1MASTER, FLM_FLM_HS_LS_ON_CH7_1, (ENUM_FLM_FLM_HS_LS_ON_CH7_1_FLM_CODE_CH7_1_VAL1 << FLM_FLM_HS_LS_ON_CH7_1_FLM_CODE_CH7_1_BITOFFSET));
+        QSPIWriteNormal(SPI1_CS1MASTER, FLM_FLM_HS_LS_ON_CH14_8, (ENUM_FLM_FLM_HS_LS_ON_CH14_8_FLM_CODE_CH14_8_VAL2 << FLM_FLM_HS_LS_ON_CH14_8_FLM_CODE_CH14_8_BITOFFSET));
+        QSPIWriteNormal(SPI1_CS1MASTER, FLM_FLM_HS_LS_ON_CH20_15, (ENUM_FLM_FLM_HS_LS_ON_CH20_15_FLM_CODE_CH20_15_VAL3 << FLM_FLM_HS_LS_ON_CH20_15_FLM_CODE_CH20_15_BITOFFSET));
 
         // Save data
         uint8 currentChannelIdx = g_pstConfiguration.channelIndex - 1;
@@ -176,7 +207,7 @@ void IntCmdExecutePowerstageTest(void)
 
         // Increment channel & reset test running flag & reset guard
         g_pstConfiguration.channelIndex++;
-        g_pstConfiguration.isTestRunning = FALSE;
+        g_pstConfiguration.isTestSeqFinished = FALSE;
         g_pstConfiguration.guardCounter = FLM_POWERSTAGE_GUARD_TIMEOUT;
 
         // Finish test in case last channel data was received
@@ -210,8 +241,8 @@ void IntCmdExecutePowerstageTest(void)
         }
     }
 
-    // Start new test 
-    if (g_pstConfiguration.isTestRunning == FALSE)
+    // Arm new test (after arming can be executed in 20 us)
+    if (g_pstConfiguration.isTestSeqFinished == FALSE)
     {
         // Construct start condition
         FLM_Diag_Start.as_s.FlmDiagStart_u1   = 0x1;
@@ -223,7 +254,6 @@ void IntCmdExecutePowerstageTest(void)
         isSuccessfulFlag = QSPIWriteNormal(SPI1_CS1MASTER, FLM_FLM_DIAG_START, FLM_Diag_Start.as_uint16);
     }
 }
-
 
 IFX_INLINE void StartTestMode(boolean isTestMode1, USBReceiveData const * const commandPackage)
 {
@@ -251,7 +281,7 @@ IFX_INLINE void StartTestMode(boolean isTestMode1, USBReceiveData const * const 
     g_pstConfiguration.msg_id = commandPackage->msg_id;
     g_pstConfiguration.lsPowerstageEn = isTestMode1; 
     g_pstConfiguration.hsPowerstageEn = !isTestMode1;
-    g_pstConfiguration.isTestRunning = FALSE;
+    g_pstConfiguration.isTestSeqFinished = FALSE;
     g_pstConfiguration.channelIndex = 1;        // Channels numeration starts from 1
     g_pstConfiguration.guardCounter = 0;
 
@@ -325,8 +355,150 @@ IFX_INLINE void StartTestMode(boolean isTestMode1, USBReceiveData const * const 
     }
 
     // Configure periodicity of Test mode check interrupt
-    ConfigureTestModePeriodicity(FLM_POWERSTAGE_EXPECTED_DURATION);
+    ConfigureTestModePeriodicity(FLM_POWERSTAGE_STEP_DURATION);
 
     // Turn on Test mode interrupt of MCU
     EnableTestModeInterrupt();
+}
+
+void GetPSTFiringSPiCommand(uint16 *p_regAddress, uint16 *p_regData)
+{
+    // TODO: can be optimised to function, currently implemented as procedure (usage of global variables)
+
+    // Construct reg address and data
+    if (g_pstConfiguration.channelIndex =< 7)
+    {
+        // Choose address for channels in range
+        *p_regAddress = FLM_FLM_HS_LS_ON_CH7_1;
+
+        // Create register model
+        flm_flm_hs_ls_on_ch7_1_ut regModel = { .as_uint16 = 0 };
+        regModel.as_s.FlmCodeCh71_u2 = ENUM_FLM_FLM_HS_LS_ON_CH7_1_FLM_CODE_CH7_1_VAL1;
+
+        // Enable required channel
+        switch (g_pstConfiguration.channelIndex)
+        {
+            case 1:
+                regModel.as_s.FlmLsOnCh1_u1 = g_pstConfiguration.lsPowerstageEn;
+                regModel.as_s.FlmHsOnCh1_u1 = g_pstConfiguration.hsPowerstageEn;
+                break;
+            case 2:
+                regModel.as_s.FlmLsOnCh2_u1 = g_pstConfiguration.lsPowerstageEn;
+                regModel.as_s.FlmHsOnCh2_u1 = g_pstConfiguration.hsPowerstageEn;
+                break;
+            case 3:
+                regModel.as_s.FlmLsOnCh3_u1 = g_pstConfiguration.lsPowerstageEn;
+                regModel.as_s.FlmHsOnCh3_u1 = g_pstConfiguration.hsPowerstageEn;
+                break;
+            case 4:
+                regModel.as_s.FlmLsOnCh4_u1 = g_pstConfiguration.lsPowerstageEn;
+                regModel.as_s.FlmHsOnCh4_u1 = g_pstConfiguration.hsPowerstageEn;
+                break;
+            case 5:
+                regModel.as_s.FlmLsOnCh5_u1 = g_pstConfiguration.lsPowerstageEn;
+                regModel.as_s.FlmHsOnCh5_u1 = g_pstConfiguration.hsPowerstageEn;
+                break;
+            case 6:
+                regModel.as_s.FlmLsOnCh6_u1 = g_pstConfiguration.lsPowerstageEn;
+                regModel.as_s.FlmHsOnCh6_u1 = g_pstConfiguration.hsPowerstageEn;
+                break;
+            case 7:
+                regModel.as_s.FlmLsOnCh7_u1 = g_pstConfiguration.lsPowerstageEn;
+                regModel.as_s.FlmHsOnCh7_u1 = g_pstConfiguration.hsPowerstageEn;
+                break;
+        }
+
+        // Content of register
+        *p_regData = regModel.as_uint16;
+    }
+    else if (g_pstConfiguration.channelIndex =< 14)
+    {
+        // Choose address for channels in range
+        *p_regAddress = FLM_FLM_HS_LS_ON_CH14_8;
+
+        // Create register model
+        flm_flm_hs_ls_on_ch14_8_ut regModel = { .as_uint16 = 0 };
+        regModel.as_s.FlmCodeCh148_u2 = ENUM_FLM_FLM_HS_LS_ON_CH14_8_FLM_CODE_CH14_8_VAL2;
+
+        // Enable required channel
+        switch (g_pstConfiguration.channelIndex)
+        {
+            case 8:
+                regModel.as_s.FlmLsOnCh8_u1 = g_pstConfiguration.lsPowerstageEn;
+                regModel.as_s.FlmHsOnCh8_u1 = g_pstConfiguration.hsPowerstageEn;
+                break;
+            case 9:
+                regModel.as_s.FlmLsOnCh9_u1 = g_pstConfiguration.lsPowerstageEn;
+                regModel.as_s.FlmHsOnCh9_u1 = g_pstConfiguration.hsPowerstageEn;
+                break;
+            case 10:
+                regModel.as_s.FlmLsOnCh10_u1 = g_pstConfiguration.lsPowerstageEn;
+                regModel.as_s.FlmHsOnCh10_u1 = g_pstConfiguration.hsPowerstageEn;
+                break;
+            case 11:
+                regModel.as_s.FlmLsOnCh11_u1 = g_pstConfiguration.lsPowerstageEn;
+                regModel.as_s.FlmHsOnCh11_u1 = g_pstConfiguration.hsPowerstageEn;
+                break;
+            case 12:
+                regModel.as_s.FlmLsOnCh12_u1 = g_pstConfiguration.lsPowerstageEn;
+                regModel.as_s.FlmHsOnCh12_u1 = g_pstConfiguration.hsPowerstageEn;
+                break;
+            case 13:
+                regModel.as_s.FlmLsOnCh13_u1 = g_pstConfiguration.lsPowerstageEn;
+                regModel.as_s.FlmHsOnCh13_u1 = g_pstConfiguration.hsPowerstageEn;
+                break;
+            case 14:
+                regModel.as_s.FlmLsOnCh14_u1 = g_pstConfiguration.lsPowerstageEn;
+                regModel.as_s.FlmHsOnCh14_u1 = g_pstConfiguration.hsPowerstageEn;
+                break;
+        }
+
+        // Content of register
+        *p_regData = regModel.as_uint16;
+    }
+    else if (g_pstConfiguration.channelIndex =< 20)
+    {
+        // Choose address for channels in range
+        *p_regAddress = FLM_FLM_HS_LS_ON_CH20_15;
+
+        // Create register model
+        flm_flm_hs_ls_on_ch20_15_ut regModel = { .as_uint16 = 0 };
+        regModel.as_s.FlmCodeCh20158_u2 = ENUM_FLM_FLM_HS_LS_ON_CH20_15_FLM_CODE_CH20_15_VAL3;
+
+        // Enable required channel
+        switch (g_pstConfiguration.channelIndex)
+        {
+            case :
+                regModel.as_s.FlmLsOnCh_u1 = g_pstConfiguration.lsPowerstageEn;
+                regModel.as_s.FlmHsOnCh_u1 = g_pstConfiguration.hsPowerstageEn;
+                break;
+            case :
+                regModel.as_s.FlmLsOnCh_u1 = g_pstConfiguration.lsPowerstageEn;
+                regModel.as_s.FlmHsOnCh_u1 = g_pstConfiguration.hsPowerstageEn;
+                break;
+            case :
+                regModel.as_s.FlmLsOnCh_u1 = g_pstConfiguration.lsPowerstageEn;
+                regModel.as_s.FlmHsOnCh_u1 = g_pstConfiguration.hsPowerstageEn;
+                break;
+            case :
+                regModel.as_s.FlmLsOnCh_u1 = g_pstConfiguration.lsPowerstageEn;
+                regModel.as_s.FlmHsOnCh_u1 = g_pstConfiguration.hsPowerstageEn;
+                break;
+            case :
+                regModel.as_s.FlmLsOnCh_u1 = g_pstConfiguration.lsPowerstageEn;
+                regModel.as_s.FlmHsOnCh_u1 = g_pstConfiguration.hsPowerstageEn;
+                break;
+            case :
+                regModel.as_s.FlmLsOnCh_u1 = g_pstConfiguration.lsPowerstageEn;
+                regModel.as_s.FlmHsOnCh_u1 = g_pstConfiguration.hsPowerstageEn;
+                break;
+            case :
+                regModel.as_s.FlmLsOnCh_u1 = g_pstConfiguration.lsPowerstageEn;
+                regModel.as_s.FlmHsOnCh_u1 = g_pstConfiguration.hsPowerstageEn;
+                break;
+        }
+
+        // Content of register
+        *p_regData = regModel.as_uint16;
+    }
 }
