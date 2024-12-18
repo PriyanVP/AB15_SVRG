@@ -39,11 +39,12 @@
  */
 typedef enum
 {
-    FLM_PST_ERR_SPI_FAIL    = 0,        /** \brief error during SPI transaction received */
-    FLM_PST_ERR_CH_EN_OFF   = 1,        /** \brief expected channels are not enabled */
-    FLM_PST_ERR_LSENQ_HIGH  = 2,        /** \brief DIS_ALP/LSENQ pin is high */
-    FLM_PST_ERR_DIAG_ACTIVE = 3,        /** \brief flm_diag_active is set for PST test */
-    FLM_PST_ERR_PARITY_FAIL = 4         /** \brief parity fail - configuration issue */
+    FLM_PST_ERR_SPI_FAIL            = 0,  /** \brief error during SPI transaction received */
+    FLM_PST_ERR_CH_EN_OFF           = 1,  /** \brief expected channels are not enabled */
+    FLM_PST_ERR_LSENQ_HIGH          = 2,  /** \brief DIS_ALP/LSENQ pin is high */
+    FLM_PST_ERR_DIAG_ACTIVE         = 3,  /** \brief flm_diag_active is set for PST test */
+    FLM_PST_ERR_PARITY_FAIL         = 4,  /** \brief parity fail - configuration issue */
+    FLM_PST_ERR_INCORRECT_ASIC_MODE = 5   /** \brief incorrect ASIC mode - not test mode 1 or 2 */
 } PstErrStateEnum;
 
 /*********************************************************************************************************************/
@@ -259,8 +260,9 @@ IFX_INLINE void StartTestMode(boolean isTestMode1, USBReceiveData const * const 
 {
     // Local variables
     USBTransmitData packageToSend;
-    SPIReceiveDataNormal dataFLMStatus2;
+    SPIReceiveDataNormal data;
     flm_flm_status2_ut FLM_Status2;
+    common_system_state_ut systemState;
     boolean isSuccessfulFlag = TRUE;
 
     // Construct package to PC
@@ -293,8 +295,12 @@ IFX_INLINE void StartTestMode(boolean isTestMode1, USBReceiveData const * const 
 
     // Preconditions check
     // Channels status
-    isSuccessfulFlag &= QSPIReadNormal(SPI1_CS1MASTER, FLM_FLM_STATUS2, &dataFLMStatus2.dw);
-    FLM_Status2.as_uint16 = dataFLMStatus2.bf.output_data;
+    isSuccessfulFlag &= QSPIReadNormal(SPI1_CS1MASTER, FLM_FLM_STATUS2, &data.dw);
+    FLM_Status2.as_uint16 = data.bf.output_data;
+
+    // Verify if in test mode 1 or 2
+    isSuccessfulFlag &= QSPIReadNormal(SPI1_CS1MASTER, COMMON_SYSTEM_STATE, &data.dw);
+    systemState.as_uint16 = data.bf.output_data;
 
     // Verify if no blocking errors present
     packageToSend.dataLength = 1;
@@ -313,6 +319,11 @@ IFX_INLINE void StartTestMode(boolean isTestMode1, USBReceiveData const * const 
     {
         packageToSend.status = USB_STATUS_ERROR;
         packageToSend.data[0] = FLM_PST_ERR_DIAG_ACTIVE;
+    }
+    else if ((systemState.as_s.TestMode1_u1 || systemState.as_s.TestMode2_u1) == FALSE)
+    {
+        packageToSend.status = USB_STATUS_ERROR;
+        packageToSend.data[0] = FLM_PST_ERR_INCORRECT_ASIC_MODE;
     }
 
     // Construct packages based on error status if present
