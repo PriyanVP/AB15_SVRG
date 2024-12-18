@@ -11,170 +11,37 @@
 /*************************************************************************************************************************/
 
 #include "Ifx_Types.h"
+#include "Platform_Types.h"
+#include "common/usb_data_types.h"
 
 /*************************************************************************************************************************/
 /*------------------------------------------------------Macros-----------------------------------------------------------*/
 /*************************************************************************************************************************/
 
-
-/*************************************************************************************************************************/
-/*--------------------------------------------------Enumerations---------------------------------------------------------*/
-/*************************************************************************************************************************/
-
-/** \brief
- */
-typedef enum 
-{
-    FLM_DIAG_STATE_DISABLED           = 0,   /** \brief  */
-    FLM_DIAG_STATE_ENABLED            = 1   /** \brief  */
-
-} flm_DiagStateEnum;
-
-/** \brief
- */
-typedef enum 
-{
-    FLM_DIAG_ORDER_SHORT_DET        = 1,        /** \brief  */
-    FLM_DIAG_ORDER_VHX_MEAS         = 2,        /** \brief  */
-    FLM_DIAG_ORDER_LOOP_RES_MEAS    = 3,        /** \brief  */
-    FLM_DIAG_ORDER_SQUIB_DET        = 4         /** \brief  */
-
-} flm_DiagExecOrderEnum;
-
-/** \brief
- */
-typedef enum
-{
-    FLM_DIAG_MODE_VHX_MEAS          = 9,    /** \brief 01001 */
-    FLM_DIAG_MODE_LOOP_RES_MEAS     = 3,    /** \brief 00011 */
-    FLM_DIAG_MODE_SQUIB_DET         = 5,    /** \brief 00101 */
-} FLMDiagModeEnum;
-
-/** \brief
- */
-typedef enum 
-{
-    FLM_DIAG_EXEC_STATUS_IDLE           = 0,   /** \brief  */
-    FLM_DIAG_EXEC_STATUS_ONGOING        = 1,   /** \brief  */
-    FLM_DIAG_EXEC_STATUS_EVALUATED      = 2,   /** \brief  */
-    FLM_DIAG_EXEC_STATUS_FINISHED       = 3    /** \brief  */
-
-} flm_DiagExecStatusEnum;
-
-/** \brief
- */
-typedef enum 
-{
-    FLM_DIAG_STATUS_VHX_MEAS_SKIPPED    = 0,    /** \brief  */
-    FLM_DIAG_STATUS_VHX_MEAS_INITIATED  = 1,    /** \brief  */
-    FLM_DIAG_STATUS_VHX_MEAS_ONGOING    = 2,    /** \brief  */
-    FLM_DIAG_STATUS_VHX_MEAS_EVALUATED  = 3,    /** \brief  */
-    FLM_DIAG_STATUS_VHX_MEAS_FINISHED   = 4     /** \brief  */
-
-} flm_VHxMeasStatusEnum;
-
-/** \brief
- */
-typedef enum 
-{
-    FLM_DIAG_STATUS_LOOP_RES_MEAS_SKIPPED    = 0,       /** \brief  */
-    FLM_DIAG_STATUS_LOOP_RES_MEAS_INITIATED  = 1,       /** \brief  */
-    FLM_DIAG_STATUS_LOOP_RES_MEAS_ONGOING    = 2,       /** \brief  */
-    FLM_DIAG_STATUS_LOOP_RES_MEAS_EVALUATED  = 3,       /** \brief  */
-    FLM_DIAG_STATUS_LOOP_RES_MEAS_FINISHED   = 4        /** \brief  */
-
-} flm_LoopResMeasStatusEnum;
-
-/** \brief
- */
-typedef enum 
-{
-    FLM_DIAG_STATUS_SQUIB_DET_SKIPPED    = 0,       /** \brief  */
-    FLM_DIAG_STATUS_SQUIB_DET_INITIATED  = 1,       /** \brief  */
-    FLM_DIAG_STATUS_SQUIB_DET_ONGOING    = 2,       /** \brief  */
-    FLM_DIAG_STATUS_SQUIB_DET_EVALUATED  = 3,       /** \brief  */
-    FLM_DIAG_STATUS_SQUIB_DET_FINISHED   = 4        /** \brief  */
-
-} flm_SquibDetStatusEnum;
-
-/*************************************************************************************************************************/
-/*-------------------------------------------------Data Structures-------------------------------------------------------*/
-/*************************************************************************************************************************/
-
-// TODO: transfer FLM Diag - specific type declarations to .c file to reduce visibility scope
-
-/** \brief Structure to store fault flags of FLM cyclic diagnostics  
- */
-typedef struct
-{
-    boolean    FLM_SC2G_SC2B_fault;                            /** \brief  */
-    boolean    FLM_VHxMeasErr_fault;                           /** \brief  */
-    boolean    FLM_LoopResErr_fault;                           /** \brief  */
-    boolean    FLM_SquibDetErr_fault;                          /** \brief  */
-    
-} FLMCycDiagFaults;
-
-/** \brief Structure to store execution status of FLM cyclic diagnostic
-*/
-typedef struct
-{
-    flm_VHxMeasStatusEnum       flm_VHxMeasStatus;      /** \brief  */
-    flm_LoopResMeasStatusEnum   flm_LoopResMeasStatus;  /** \brief  */
-    flm_SquibDetStatusEnum      flm_SquibDetStatus;     /** \brief  */
-
-} FLMCycDiagStatus;
-
-
-/** \brief Structure to store results of FLM channel short detection (IGH/IGL short to ground/battery)
- * 10 bytes
- */
-typedef struct
-{
-    uint16          FLM_Read_Short_ch4_1;                   /** \brief  */
-    uint16          FLM_Read_Short_ch8_5;                   /** \brief  */
-    uint16          FLM_Read_Short_ch12_9;                  /** \brief  */
-    uint16          FLM_Read_Short_ch16_13;                 /** \brief  */
-    uint16          FLM_Read_Short_ch20_17;                 /** \brief  */
-
-} FLMShortDiagStruct;
-
-/** \brief Structure to store results of one FLM channel VH voltage diagnostic
- * 11 channels, 24 bytes
- */ 
-typedef struct 
-{
-    uint16 FLM_Read_Diag_VHx_voltage_value;          /** \brief  */
-    boolean FLM_Read_Diag_VHx_voltage_valid;            /** \brief  */
-
-}FLM_Read_Diag_VHx;
-
-/** \brief Structure to store results of FLM Loop resistanse diagnostic
- * 20 loops, 48 bytes
- */
-typedef struct
-{
-    uint16 flm_squib_res_value;                             /** \brief  */
-    boolean flm_squib_res_err;                                 /** \brief  */
-    boolean flm_squib_res_valid;                               /** \brief  */
-    boolean flm_squib_res_pgndx_loss;                          /** \brief  */
-
-} FLMReadSquibRes;
-
-/** \brief Structure to store results of cyclic tests
- * 86 bytes
- */
-typedef struct
-{
-    FLM_Read_Diag_VHx   flmVHxDiagResults[11];              /** \brief  */
-    boolean             flmSquibErrorDiagResults[20];       /** \brief  */
-    FLMReadSquibRes     flmLoopResDiagResults[20];          /** \brief  */
-    FLMShortDiagStruct  flmShortDiagResults;                /** \brief  */
-
-} FLMCycDiagResults;
-
 /*************************************************************************************************************************/
 /*------------------------------------------------Function Prototypes----------------------------------------------------*/
 /*************************************************************************************************************************/
+
+// TODO: add comments
+
+/** \brief
+ */
+void CmdEnableFLMDiag(USBReceiveData const * const commandPackage);
+
+/** \brief
+ */
+void CmdDisableFLMDiag(USBReceiveData const * const commandPackage);
+
+/** \brief
+ */
+void CmdReadFLMDiagResults(USBReceiveData const * const commandPackage);
+
+/** \brief
+ * FLM module cyclic diagnostics interrupt routine
+ * Starts cyclic diagnostics, stores results to be later sent to GUI
+ */
+void IntCmdExecuteFLMDiag(void);
+
 
 /*************************************************************************************************************************/
 /*-------------------------------------------------Global variables------------------------------------------------------*/

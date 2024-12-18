@@ -32,6 +32,7 @@ extern void Watchdog2InterruptRoutine(void);
 extern void WatchdogStatusReadingInterruptRoutine(void);
 extern void TestModeInterruptRoutine(void);
 extern void HackedTimerInterruptRoutine(void);
+extern void FLMDiagInterruptRoutine(void);
 //extern void ErrorCheckInterruptRoutine(void);
 //extern void ContinuousReadInterruptRoutine(void);
 //extern void GPIOInterruptRoutine(void);
@@ -59,6 +60,8 @@ static uint16 g_errorCheckReload;                 /** \brief Error check periodi
 static uint16 g_continuousReadReload;             /** \brief Continuous read periodicity in T2 timer interrupts      */
 static uint16 g_GPIOReload;                       /** \brief GPIO handling periodicity in T2 timer interrupts        */
 static uint16 g_flmDiagReload;                    /** \brief FLM cyclic diagnostic interrupts                        */
+
+// TODO: get state and get periodicity are missing for flmDiag
 
 static boolean g_watchdog1Enable            = FALSE;    /** \brief Watchdog 1 acknowledge interrupts enable          */
 static boolean g_watchdog2Enable            = FALSE;    /** \brief Watchdog 2 acknowledge interrupts enable          */
@@ -373,6 +376,14 @@ void UpdateTimersRoutine(void)
         HackedTimerInterruptRoutine();
     }
 
+    // Call corresponding functions if enabled and counter reached reload value
+    if ((g_flmDiagEnable == TRUE) && (FLMDiagCounter >= g_flmDiagReload))
+    {
+        // Check FLM diagnostics execution results
+        FLMDiagCounter = 0;
+        FLMDiagInterruptRoutine();
+    }
+
 //    if ((g_errorCheckEnable == TRUE) && (errorCheckCounter >= g_errorCheckReload))
 //    {
 //        // Continuous ASIC error check
@@ -393,14 +404,6 @@ void UpdateTimersRoutine(void)
 //        GPIOCounter = 0;
 //        //GPIOInterruptRoutine();
 //    }
-    // Call corresponding functions if enabled and counter reached reload value
-    // TODO: provide getter and setter for g_flmDiagEnable
-    if ((g_flmDiagEnable == TRUE) && (FLMDiagCounter >= g_flmDiagReload))
-    {
-        // Check FLM diagnostics execution results
-        FLMDiagCounter = 0;
-        FLMDiagInterruptRoutine();
-        }
 }
 
 

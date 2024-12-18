@@ -10,10 +10,11 @@
 #include "common/tap_addrMap_ExportedMemMap_memoryMap.h"
 #include "common/spi_data_types.h"
 #include "common/usb_data_types.h"
-#include "flm_diagnostics.h"
 #include "common/bit_manipulation.h"
 #include "top/spi_wrapper.h"
+#include "top/usb_wrapper.h"
 #include "periphery/timer.h"
+#include "flm_diagnostics.h"
 
 /*********************************************************************************************************************/
 /*------------------------------------------------------Macros-------------------------------------------------------*/
@@ -33,58 +34,182 @@
 #define FLM_DIAG_READ_VHX_REGS_COUNT        (11)    /** \brief Number of registers with results of VHx measurement 
                                                     results*/ 
 
+/*************************************************************************************************************************/
+/*--------------------------------------------------Enumerations---------------------------------------------------------*/
+/*************************************************************************************************************************/
+
+/** \brief
+ */
+typedef enum 
+{
+    FLM_DIAG_ORDER_SHORT_DET        = 1,        /** \brief  */
+    FLM_DIAG_ORDER_VHX_MEAS         = 2,        /** \brief  */
+    FLM_DIAG_ORDER_LOOP_RES_MEAS    = 3,        /** \brief  */
+    FLM_DIAG_ORDER_SQUIB_DET        = 4         /** \brief  */
+} flm_DiagExecOrderEnum;
+
+/** \brief
+ */
+typedef enum
+{
+    FLM_DIAG_MODE_VHX_MEAS          = 9,    /** \brief 01001 */
+    FLM_DIAG_MODE_LOOP_RES_MEAS     = 3,    /** \brief 00011 */
+    FLM_DIAG_MODE_SQUIB_DET         = 5,    /** \brief 00101 */
+} FLMDiagModeEnum; // TODO: not needed, defines already exist in regmap, better to use them - ENUM_FLM_FLM_DIAG_START_FLM_DIAG_MODE_VH_MEASE_ALL
+
+/** \brief
+ */
+typedef enum 
+{
+    FLM_DIAG_EXEC_STATUS_IDLE           = 0,   /** \brief  */
+    FLM_DIAG_EXEC_STATUS_ONGOING        = 1,   /** \brief  */
+    FLM_DIAG_EXEC_STATUS_EVALUATED      = 2,   /** \brief  */
+    FLM_DIAG_EXEC_STATUS_FINISHED       = 3    /** \brief  */
+} flm_DiagExecStatusEnum;
+
+// TODO: can we use 1 status enum for all diagnostics? (I'm talking about 3 enums below)
+// TODO: is there enough added value in having 3 of them?
+
+/** \brief
+ */
+typedef enum 
+{
+    FLM_DIAG_STATUS_VHX_MEAS_SKIPPED    = 0,    /** \brief  */
+    FLM_DIAG_STATUS_VHX_MEAS_INITIATED  = 1,    /** \brief  */
+    FLM_DIAG_STATUS_VHX_MEAS_ONGOING    = 2,    /** \brief  */
+    FLM_DIAG_STATUS_VHX_MEAS_EVALUATED  = 3,    /** \brief  */
+    FLM_DIAG_STATUS_VHX_MEAS_FINISHED   = 4     /** \brief  */
+} flm_VHxMeasStatusEnum;
+
+/** \brief
+ */
+typedef enum 
+{
+    FLM_DIAG_STATUS_LOOP_RES_MEAS_SKIPPED    = 0,       /** \brief  */
+    FLM_DIAG_STATUS_LOOP_RES_MEAS_INITIATED  = 1,       /** \brief  */
+    FLM_DIAG_STATUS_LOOP_RES_MEAS_ONGOING    = 2,       /** \brief  */
+    FLM_DIAG_STATUS_LOOP_RES_MEAS_EVALUATED  = 3,       /** \brief  */
+    FLM_DIAG_STATUS_LOOP_RES_MEAS_FINISHED   = 4        /** \brief  */
+} flm_LoopResMeasStatusEnum;
+
+/** \brief
+ */
+typedef enum 
+{
+    FLM_DIAG_STATUS_SQUIB_DET_SKIPPED    = 0,       /** \brief  */
+    FLM_DIAG_STATUS_SQUIB_DET_INITIATED  = 1,       /** \brief  */
+    FLM_DIAG_STATUS_SQUIB_DET_ONGOING    = 2,       /** \brief  */
+    FLM_DIAG_STATUS_SQUIB_DET_EVALUATED  = 3,       /** \brief  */
+    FLM_DIAG_STATUS_SQUIB_DET_FINISHED   = 4        /** \brief  */
+} flm_SquibDetStatusEnum;
+
+/*************************************************************************************************************************/
+/*-------------------------------------------------Data Structures-------------------------------------------------------*/
+/*************************************************************************************************************************/
+
+/** \brief Structure to store fault flags of FLM cyclic diagnostics  
+ */
+typedef struct
+{
+    boolean    FLM_SC2G_SC2B_fault;                            /** \brief  */
+    boolean    FLM_VHxMeasErr_fault;                           /** \brief  */
+    boolean    FLM_LoopResErr_fault;                           /** \brief  */
+    boolean    FLM_SquibDetErr_fault;                          /** \brief  */
+    
+} FLMCycDiagFaults;
+
+/** \brief Structure to store execution status of FLM cyclic diagnostic
+*/
+typedef struct
+{
+    flm_VHxMeasStatusEnum       flm_VHxMeasStatus;      /** \brief  */
+    flm_LoopResMeasStatusEnum   flm_LoopResMeasStatus;  /** \brief  */
+    flm_SquibDetStatusEnum      flm_SquibDetStatus;     /** \brief  */
+
+} FLMCycDiagStatus;
+
+
+/** \brief Structure to store results of FLM channel short detection (IGH/IGL short to ground/battery)
+ * 10 bytes
+ */
+typedef struct
+{
+    uint16          FLM_Read_Short_ch4_1;                   /** \brief  */
+    uint16          FLM_Read_Short_ch8_5;                   /** \brief  */
+    uint16          FLM_Read_Short_ch12_9;                  /** \brief  */
+    uint16          FLM_Read_Short_ch16_13;                 /** \brief  */
+    uint16          FLM_Read_Short_ch20_17;                 /** \brief  */
+
+} FLMShortDiagStruct;
+
+/** \brief Structure to store results of one FLM channel VH voltage diagnostic
+ * 11 channels, 24 bytes
+ */ 
+typedef struct 
+{
+    uint16 FLM_Read_Diag_VHx_voltage_value;          /** \brief  */
+    boolean FLM_Read_Diag_VHx_voltage_valid;            /** \brief  */
+
+}FLM_Read_Diag_VHx;
+
+/** \brief Structure to store results of FLM Loop resistanse diagnostic
+ * 20 loops, 48 bytes
+ */
+typedef struct
+{
+    uint16 flm_squib_res_value;                             /** \brief  */
+    boolean flm_squib_res_err;                                 /** \brief  */
+    boolean flm_squib_res_valid;                               /** \brief  */
+    boolean flm_squib_res_pgndx_loss;                          /** \brief  */
+
+} FLMReadSquibRes;
+
+/** \brief Structure to store results of cyclic tests
+ * 86 bytes
+ */
+typedef struct
+{
+    FLM_Read_Diag_VHx   flmVHxDiagResults[11];              /** \brief  */
+    boolean             flmSquibErrorDiagResults[20];       /** \brief  */
+    FLMReadSquibRes     flmLoopResDiagResults[20];          /** \brief  */
+    FLMShortDiagStruct  flmShortDiagResults;                /** \brief  */
+
+} FLMCycDiagResults;
+
 /*********************************************************************************************************************/
 /*------------------------------------------------Function Prototypes------------------------------------------------*/
 /*********************************************************************************************************************/
 
 /** \brief 
- */
-void CmdEnableFLMDiag();
-
-/** \brief
- */
-void CmdDisableFLMDiag();
-
-/** \brief
- */
-void CmdReadFLMDiagResults();
-
-/** \brief
- * FLM module cyclic diagnostics interrupt routine
- * Starts cyclic diagnostics, stores results to be later sent to GUI
- */
-void IntCmdExecuteFLMDiag();
-
-/** \brief 
- * cyclic test performed automatically, no need to set FLM_DIAG_START
+ * Cyclic test performed automatically, no need to set FLM_DIAG_START
  */ 
-void FLMShortDiag();
+void FLMShortDiag(void);
 
 /** \brief 
  * SPI-triggered test, must be set by FLM_diag_mode = VHx_volt_meas_all and started FLM_DIAG_START = 1
  */
-void FLMVHxDiag();
+void FLMVHxDiag(void);
 
 /** \brief
  * SPI-triggered test, must be set by FLM_diag_mode = Loop_res_meas_all_ch and started FLM_DIAG_START = 1
  */
-void FLMLoopResDiag();
+void FLMLoopResDiag(void);
 
 /** \brief 
  * SPI-triggered test, must be set by FLM_diag_mode = Squib_pres_test_all and started FLM_DIAG_START = 1
  */
-void FLMSquibDetErrDiag();
+void FLMSquibDetErrDiag(void);
 
 /** \brief Select diagnostic to be run by FLM diag module
  * write diagMode to flm_diag_mode field of FLM_DIAG_START register
  */
 void SetFLMDiagMode(FLMDiagModeEnum diagMode);
 
-/** \brief
+/** \brief // TODO: add comments
  */
-void StartFLMDiag();
+void StartFLMDiag(void);
 
-/** \brief get FLM diagnostic execution status from ASIC (ongoing/evaluated)
+/** \brief Get FLM diagnostic execution status from ASIC (ongoing/evaluated)
  */
 flm_DiagExecStatusEnum FLMReadDiagExecStatus(void);
 
@@ -92,14 +217,14 @@ flm_DiagExecStatusEnum FLMReadDiagExecStatus(void);
  * Measure Battery voltage, normal range to perform diagnostics
  * is 6...18V
  */
-boolean CheckBatVoltage();
+boolean CheckBatVoltage(void);
 
 /*********************************************************************************************************************/
 /*-------------------------------------------------Global variables--------------------------------------------------*/
 /*********************************************************************************************************************/
 
-static flm_DiagStateEnum g_flmDiagState = FLM_DIAG_STATE_DISABLED;
-static FLMCycDiagFaults g_FLMCycDiagFaultsValues;
+static boolean g_isflmDiagEn = FALSE; // TODO: boolean value + renaming to isFlmDiagsOn would be sufficient
+// static FLMCycDiagFaults g_FLMCycDiagFaultsValues; // TODO: uncomment when starting using
 static FLMCycDiagResults g_flmCycDiagResultsValues;
 static flm_DiagExecStatusEnum g_FLMDiagExecStatus = FLM_DIAG_EXEC_STATUS_IDLE;
 static flm_DiagExecOrderEnum g_flmDiagExecNumber = FLM_DIAG_ORDER_SHORT_DET;
@@ -113,7 +238,7 @@ void CmdEnableFLMDiag(USBReceiveData const * const commandPackage)
     USBTransmitData packageToSend;
 
     // Enable command should not be executed twice
-    if (g_flmDiagState == FLM_DIAG_STATE_ENABLED)
+    if (g_isflmDiagEn == TRUE)
     {
         // Skip further function execution - FLM Diag already is enabled, 
         // GUI will see no response to repeated USB_CMD_FLM_DIAG_ENABLE command
@@ -122,7 +247,7 @@ void CmdEnableFLMDiag(USBReceiveData const * const commandPackage)
 
     // Enable FLM diag functionality
     // FLM diag state flag is set
-    g_flmDiagState = FLM_DIAG_STATE_ENABLED;
+    g_isflmDiagEn = TRUE;
     // Configure periodicity of FLM diagnoscics MCU interrupt
     ConfigureFLMDiagPeriodicity(FLM_DIAG_INTERRUPT_PERIODICITY);
     // Turn on FLM diagnostics performing interrupt of MCU
@@ -142,7 +267,7 @@ void CmdDisableFLMDiag(USBReceiveData const * const commandPackage)
     USBTransmitData packageToSend;
 
     // Disable command should not be executed twice
-    if (g_flmDiagState == FLM_DIAG_STATE_DISABLED)
+    if (g_isflmDiagEn == FALSE)
     {
         // Skip further function execution - FLM Diag already is disabled, 
         // GUI will see no response to repeated USB_CMD_FLM_DIAG_DISABLE command
@@ -151,7 +276,7 @@ void CmdDisableFLMDiag(USBReceiveData const * const commandPackage)
 
     // Disable FLM diag functionality
     // FLM diag state flag is reset
-    g_flmDiagState = FLM_DIAG_STATE_DISABLED;
+    g_isflmDiagEn = FALSE;
     // Set status and number of diag to init values for proper start
     // of diagnostics on next enable
     g_FLMDiagExecStatus = FLM_DIAG_EXEC_STATUS_IDLE;
@@ -159,10 +284,18 @@ void CmdDisableFLMDiag(USBReceiveData const * const commandPackage)
 
     // Turn off FLM diagnostics performing interrupt of MCU
     DisableFLMDiagInterrupt();
+
+    packageToSend.device_id = commandPackage->device_id;
+    packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
+    packageToSend.status = USB_STATUS_ACK;
+    packageToSend.dataLength = 0;
+
+    // Send report to GUI
+    SendUSBPackage(&packageToSend);
 }
 
 void CmdReadFLMDiagResults(USBReceiveData const * const commandPackage)
-    {
+    { // TODO: fix indentation
         USBTransmitData packageToSend;
 
         packageToSend.device_id = 0;
@@ -390,6 +523,7 @@ void CmdReadFLMDiagResults(USBReceiveData const * const commandPackage)
         SendUSBPackage(&packageToSend);
     }
 
+
 void IntCmdExecuteFLMDiag()
 {
     // Initial FLM Diagnostic execution state is initialised as Idle
@@ -448,7 +582,7 @@ void IntCmdExecuteFLMDiag()
 // Diagnostic is running automatically by default, just read results
 void FLMShortDiag()
 {
-    SPIReceiveDataNormal data[FLM_DIAG_READ_SHORT_REGS_COUNT] = {0};
+    SPIReceiveDataNormal data[FLM_DIAG_READ_SHORT_REGS_COUNT] = {0}; // TODO: unclear behavior, array of structs can't be initialized using such syntax
     uint16 length = FLM_DIAG_READ_SHORT_REGS_COUNT;
     boolean isSuccessfulFlag = FALSE;
     uint16 flmDiagShortsRegsAddresses[FLM_DIAG_READ_SHORT_REGS_COUNT] = {FLM_FLM_READ_SHORT_CH4_1, FLM_FLM_READ_SHORT_CH8_5,
@@ -478,7 +612,7 @@ void FLMShortDiag()
 
 void FLMVHxDiag()
 {
-    SPIReceiveDataNormal data[FLM_DIAG_READ_VHX_REGS_COUNT] = {0};
+    SPIReceiveDataNormal data[FLM_DIAG_READ_VHX_REGS_COUNT] = {0}; // TODO: unclear behavior, array of structs can't be initialized using such syntax
     uint16 length = FLM_DIAG_READ_VHX_REGS_COUNT;
     boolean isSuccessfulFlag = FALSE;
     uint16 flmDiagVHxRegsAddresses[FLM_DIAG_READ_VHX_REGS_COUNT] =  { FLM_FLM_READ_DIAG_VH1A, FLM_FLM_READ_DIAG_VH2, 
@@ -533,7 +667,7 @@ void FLMVHxDiag()
 
 void FLMSquibDetErrDiag()
 {
-    SPIReceiveDataNormal data[FLM_DIAG_READ_SQUIB_REGS_COUNT] = {0};
+    SPIReceiveDataNormal data[FLM_DIAG_READ_SQUIB_REGS_COUNT] = {0}; // TODO: unclear behavior, array of structs can't be initialized using such syntax
     uint16 length = FLM_DIAG_READ_SQUIB_REGS_COUNT;
     boolean isSuccessfulFlag = FALSE;
     uint16 flmDiagSquibRegsAddresses[FLM_DIAG_READ_SQUIB_REGS_COUNT] = {FLM_FLM_READ_SQUIB_CH16_1, FLM_FLM_READ_SQUIB_CH20_17};
@@ -580,7 +714,7 @@ void FLMSquibDetErrDiag()
 
 void FLMLoopResDiag()
 {
-    SPIReceiveDataNormal data[FLM_DIAG_READ_RES_REGS_COUNT] = {0};
+    SPIReceiveDataNormal data[FLM_DIAG_READ_RES_REGS_COUNT] = {0}; // TODO: unclear behavior, array of structs can't be initialized using such syntax
     uint16 length = FLM_DIAG_READ_RES_REGS_COUNT;
     boolean isSuccessfulFlag = FALSE;
     uint16 flmDiagResRegsAddresses[FLM_DIAG_READ_RES_REGS_COUNT] = {FLM_FLM_READ_SQUIB_RES_CH1, FLM_FLM_READ_SQUIB_RES_CH2, 
@@ -671,6 +805,7 @@ flm_DiagExecStatusEnum FLMReadDiagExecStatus(void)
     SPIReceiveDataNormal data;
     boolean isSuccessfulFlag = TRUE;
     flm_flm_status2_ut tmpFLMDiagStatus2fRegister;
+    flm_DiagExecStatusEnum flmExecutionStatus; // TODO: what value will be if not updated in if/else. Some potential undefined behavior
     
     // Get value from ASIC
     isSuccessfulFlag &= QSPIReadNormal(SPI1_CS1MASTER, FLM_FLM_STATUS2, &data.dw);
@@ -679,12 +814,14 @@ flm_DiagExecStatusEnum FLMReadDiagExecStatus(void)
     // Determine FLM diagnostic execution status
     if ((tmpFLMDiagStatus2fRegister.as_s.FlmDiagActive_u1 == 1) && (tmpFLMDiagStatus2fRegister.as_s.FlmDiagReady_u1 == 0))
     {
-        return FLM_DIAG_EXEC_STATUS_ONGOING;
+        flmExecutionStatus = FLM_DIAG_EXEC_STATUS_ONGOING;
     }
     else if ((tmpFLMDiagStatus2fRegister.as_s.FlmDiagActive_u1 == 0) && (tmpFLMDiagStatus2fRegister.as_s.FlmDiagReady_u1 == 1))
     {
-        return FLM_DIAG_EXEC_STATUS_EVALUATED;
+        flmExecutionStatus = FLM_DIAG_EXEC_STATUS_EVALUATED;
     }
+
+    return flmExecutionStatus;
 }
 
 boolean CheckBatVoltage(void)
