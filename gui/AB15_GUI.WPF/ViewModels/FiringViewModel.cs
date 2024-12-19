@@ -477,7 +477,8 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// <inheritdoc cref="FiringScenarioIndex" path='/summary'/>
         /// </summary>
-        private int firingScenarioIndex;
+        private int firingScenarioIndex = -1;
+        // DEFAULT -1 should allow the correct initialization upon first calling 
         
         /// <summary>
         /// Index of currently selected firing scenario
@@ -495,6 +496,7 @@ namespace AB15_GUI.WPF.ViewModels
                 // Validate if selected scenario is applicable
                 switch (value)
                 {
+                    // Applicable for Configuration A
                     case 0:
                         if (FiringConfigurationIndex != 0)
                         {
@@ -502,6 +504,7 @@ namespace AB15_GUI.WPF.ViewModels
                             return;
                         }
                         break;
+                    // Applicable for Configuration B
                     case 1:
                     case 2:
                         if (FiringConfigurationIndex != 1)
@@ -510,6 +513,7 @@ namespace AB15_GUI.WPF.ViewModels
                             return;
                         }
                         break;
+                    // Applicable for Configuration C
                     case 3:
                     case 4:
                     case 5:
@@ -519,6 +523,7 @@ namespace AB15_GUI.WPF.ViewModels
                             return;
                         }
                         break;
+                    // Applicable for Configuration D
                     case 6:
                     case 7:
                         if (FiringConfigurationIndex != 3)
@@ -527,6 +532,7 @@ namespace AB15_GUI.WPF.ViewModels
                             return;
                         }
                         break;
+                    // Applicable for Configuration E
                     case 8:
                     case 9:
                         if (FiringConfigurationIndex != 4)
@@ -535,6 +541,7 @@ namespace AB15_GUI.WPF.ViewModels
                             return;
                         }
                         break;
+                    // Applicable for Configuration F
                     case 10:
                         if (FiringConfigurationIndex != 5)
                         {
