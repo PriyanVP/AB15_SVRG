@@ -478,7 +478,7 @@ namespace AB15_GUI.WPF.ViewModels
         /// <inheritdoc cref="FiringScenarioIndex" path='/summary'/>
         /// </summary>
         private int firingScenarioIndex = -1;
-        // DEFAULT -1 should allow the correct initialization upon first calling 
+        // TODO Temporary: DEFAULT -1 should allow the correct initialization upon first calling 
         
         /// <summary>
         /// Index of currently selected firing scenario
@@ -488,6 +488,9 @@ namespace AB15_GUI.WPF.ViewModels
             get => firingScenarioIndex;
             set 
             {
+                // TODO Temporary: Bypass the initial call here to avoid an empty FiringResultsTable
+                if (IsFiringControlsEnabled == false) return;
+
                 // Do nothing if value is not changed
                 if (firingScenarioIndex == value) return;
 
