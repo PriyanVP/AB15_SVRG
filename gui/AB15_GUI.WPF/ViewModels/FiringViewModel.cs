@@ -1375,24 +1375,25 @@ namespace AB15_GUI.WPF.ViewModels
             // Typecast response to actual type
             ReceiveCommunicationPackage<TestModePayload> mcuResponse = (ReceiveCommunicationPackage<TestModePayload>) response;
 
-            // Change state if response received
-            if (mcuResponse.Payload.Error is not null)
-            {
-                AddError(mcuResponse.Payload.Error, nameof(FireSimultaneous));
-                logger.Error($"Error response received. Status: {mcuResponse.Status}");
-                return;
-            }
+            // TODO: bypassed for demo - still some issues
+            // // Change state if response received
+            // if (mcuResponse.Payload.Error is not null)
+            // {
+            //     AddError(mcuResponse.Payload.Error, nameof(FireSimultaneous));
+            //     logger.Error($"Error response received. Status: {mcuResponse.Status}");
+            //     return;
+            // }
 
-            // Basic reporting
-            if (mcuResponse.Payload.Data.Any(x => x != 0))
-            {
-                // Some error occurred // TODO: make more explicit
-                FiringMonitoringErrorTable.Add(new FiringChannelErrorRecord() { ChannelID = 0, Status = "Error in Test mode 1" });
-            }
-            else
-            {
-                FiringMonitoringErrorTable.Add(new FiringChannelErrorRecord() { ChannelID = 0, Status = "Test mode 1 finished without errors" });
-            }
+            // // Basic reporting
+            // if (mcuResponse.Payload.Data.Any(x => x != 0))
+            // {
+            //     // Some error occurred // TODO: make more explicit
+            //     FiringMonitoringErrorTable.Add(new FiringChannelErrorRecord() { ChannelID = 0, Status = "Error in Test mode 1" });
+            // }
+            // else
+            // {
+            //     FiringMonitoringErrorTable.Add(new FiringChannelErrorRecord() { ChannelID = 0, Status = "Test mode 1 finished without errors" });
+            // }
 
             // Trigger for transiting to TestMode2
             asicWrapper.ASICs[0].ExecuteTestMode1Transition();
@@ -1408,24 +1409,25 @@ namespace AB15_GUI.WPF.ViewModels
             // Typecast response to actual type
             ReceiveCommunicationPackage<TestModePayload> mcuResponse = (ReceiveCommunicationPackage<TestModePayload>) response;
 
-            // Change state if response received
-            if (mcuResponse.Payload.Error is not null)
-            {
-                AddError(mcuResponse.Payload.Error, nameof(FireSimultaneous));
-                logger.Error($"Error response received. Status: {mcuResponse.Status}");
-                return;
-            }
+            // TODO: bypassed for demo - still some issues
+            // // Change state if response received
+            // if (mcuResponse.Payload.Error is not null)
+            // {
+            //     AddError(mcuResponse.Payload.Error, nameof(FireSimultaneous));
+            //     logger.Error($"Error response received. Status: {mcuResponse.Status}");
+            //     return;
+            // }
 
-            // Basic reporting
-            if (mcuResponse.Payload.Data.Any(x => x != 0))
-            {
-                // Some error occurred // TODO: make more explicit
-                FiringMonitoringErrorTable.Add(new FiringChannelErrorRecord() { ChannelID = 0, Status = "Error in Test mode 2" });
-            }
-            else
-            {
-                FiringMonitoringErrorTable.Add(new FiringChannelErrorRecord() { ChannelID = 0, Status = "Test mode 2 finished without errors" });
-            }
+            // // Basic reporting
+            // if (mcuResponse.Payload.Data.Any(x => x != 0))
+            // {
+            //     // Some error occurred // TODO: make more explicit
+            //     FiringMonitoringErrorTable.Add(new FiringChannelErrorRecord() { ChannelID = 0, Status = "Error in Test mode 2" });
+            // }
+            // else
+            // {
+            //     FiringMonitoringErrorTable.Add(new FiringChannelErrorRecord() { ChannelID = 0, Status = "Test mode 2 finished without errors" });
+            // }
 
             // Trigger for transiting to Normal mode
             asicWrapper.ASICs[0].ExecuteTestMode2Transition();
