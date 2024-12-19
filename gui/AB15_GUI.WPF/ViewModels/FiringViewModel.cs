@@ -14,8 +14,6 @@ using AB15_GUI.WPF.Models.Interfaces;
 using AB15_GUI.WPF.Models;
 using AB15_GUI.WPF.Models.Generated.Registers;
 using AB15_GUI.WPF.Services.Interfaces;
-using static System.Reflection.Metadata.BlobBuilder;
-using System.Windows.Threading;
 
 namespace AB15_GUI.WPF.ViewModels
 {
@@ -31,6 +29,11 @@ namespace AB15_GUI.WPF.ViewModels
         /// Local logger instance
         /// </summary>
         private readonly ILoggingService logger;
+
+        /// <summary>
+        /// Lock object for thread synchronization
+        /// </summary>
+        private readonly object _lock = new object();
 
         /// <summary>
         /// SerialWrapper reference to perform communication with MCU
@@ -64,7 +67,12 @@ namespace AB15_GUI.WPF.ViewModels
             // Init monitoring tab status table
             InitMonitoringStatusTable();
 
-           // Configure state machine
+            // Enables synchronization for multithread access to observable collection
+            System.Windows.Data.BindingOperations.EnableCollectionSynchronization(FiringMonitoringStatusTable, _lock);
+            System.Windows.Data.BindingOperations.EnableCollectionSynchronization(FiringMonitoringErrorTable, _lock);
+            System.Windows.Data.BindingOperations.EnableCollectionSynchronization(FiringResultTable, _lock);
+
+            // Configure state machine
             _stateMachine = new StateMachine<State, Triggers>(State.InitialState);
 
             // Emulate initial transition after POR
@@ -1364,14 +1372,27 @@ namespace AB15_GUI.WPF.ViewModels
         /// <param name="response">MCU response package</param>
         private void TestMode1Delegate(IReceiveCommunicationPackage response)
         {
-            // // Change state if response received
-            // if (mcuResponse.Payload.Error is not null)
-            // {
-            //     AddError(mcuResponse.Payload.Error, nameof(FireSimultaneous));
-            //     logger.Error($"Error response received. Status: {mcuResponse.Status}");
-            //     return;
-            // }
-            // TODO: implement handling of data
+            // Typecast response to actual type
+            ReceiveCommunicationPackage<TestModePayload> mcuResponse = (ReceiveCommunicationPackage<TestModePayload>) response;
+
+            // Change state if response received
+            if (mcuResponse.Payload.Error is not null)
+            {
+                AddError(mcuResponse.Payload.Error, nameof(FireSimultaneous));
+                logger.Error($"Error response received. Status: {mcuResponse.Status}");
+                return;
+            }
+
+            // Basic reporting
+            if (mcuResponse.Payload.Data.Any(x => x != 0))
+            {
+                // Some error occurred // TODO: make more explicit
+                FiringMonitoringErrorTable.Add(new FiringChannelErrorRecord() { ChannelID = 0, Status = "Error in Test mode 1" });
+            }
+            else
+            {
+                FiringMonitoringErrorTable.Add(new FiringChannelErrorRecord() { ChannelID = 0, Status = "Test mode 1 finished without errors" });
+            }
 
             // Trigger for transiting to TestMode2
             asicWrapper.ASICs[0].ExecuteTestMode1Transition();
@@ -1384,8 +1405,27 @@ namespace AB15_GUI.WPF.ViewModels
         /// <param name="response">MCU response package</param>
         private void TestMode2Delegate(IReceiveCommunicationPackage response)
         {
-            //throw new NotImplementedException();
-            // TODO: implement handling of data
+            // Typecast response to actual type
+            ReceiveCommunicationPackage<TestModePayload> mcuResponse = (ReceiveCommunicationPackage<TestModePayload>) response;
+
+            // Change state if response received
+            if (mcuResponse.Payload.Error is not null)
+            {
+                AddError(mcuResponse.Payload.Error, nameof(FireSimultaneous));
+                logger.Error($"Error response received. Status: {mcuResponse.Status}");
+                return;
+            }
+
+            // Basic reporting
+            if (mcuResponse.Payload.Data.Any(x => x != 0))
+            {
+                // Some error occurred // TODO: make more explicit
+                FiringMonitoringErrorTable.Add(new FiringChannelErrorRecord() { ChannelID = 0, Status = "Error in Test mode 2" });
+            }
+            else
+            {
+                FiringMonitoringErrorTable.Add(new FiringChannelErrorRecord() { ChannelID = 0, Status = "Test mode 2 finished without errors" });
+            }
 
             // Trigger for transiting to Normal mode
             asicWrapper.ASICs[0].ExecuteTestMode2Transition();
@@ -1576,6 +1616,9 @@ namespace AB15_GUI.WPF.ViewModels
             // Append firing configuration to global ASIC configuration
             caller.AppendConfigRegisters(_firingConfig);
 
+            // TODO: temporary approach
+            UpdateMonitoringStatusTable(caller.State, true);
+
             // Unsubscribe from event - by design can't be used twice
             caller.RequestConfiguration -= RequestConfigurationHandler;
         }
@@ -1603,16 +1646,15 @@ namespace AB15_GUI.WPF.ViewModels
             // Fire state machine transition to configuration loaded
             _stateMachine.Fire(Triggers.ConfigurationLoaded);
 
-            // Ensure Thread is the one that can access the Table/Collection
-            App.Current.Dispatcher.BeginInvoke(() =>
+            // Fill list for table on Firing tab
+            // Fill firing results table with data based on configuration table
+            foreach (FiringChannelConfigurationRecord channelRecord in FiringConfigurationTable)
             {
-                // Fill list for table on Firing tab
-                // Fill firing results table with data based on configuration table
-                foreach (FiringChannelConfigurationRecord channelRecord in FiringConfigurationTable)
-                {
-                    FiringResultTable.Add(new FiringResultRecord() { ASICID = channelRecord.ASICID, ChannelID = channelRecord.ChannelID, Identifier = channelRecord.Identifier });
-                }
-            }, DispatcherPriority.Normal);
+                FiringResultTable.Add(new FiringResultRecord() { ASICID = channelRecord.ASICID, ChannelID = channelRecord.ChannelID, Identifier = channelRecord.Identifier });
+            }
+
+            // TODO: temporary approach
+            UpdateMonitoringStatusTable(caller.State, true);
 
             // Unsubscribe from event - by design can be fired only once
             caller.ConfigurationLoaded -= ConfigurationLoadedHandler;
@@ -1641,6 +1683,9 @@ namespace AB15_GUI.WPF.ViewModels
             // Fire corresponding state machine trigger
             _stateMachine.Fire(Triggers.StartedTestModes);
 
+            // TODO: temporary approach
+            UpdateMonitoringStatusTable(caller.State, true);
+
             // Unsubscribe from event - by design can be fired only once
             caller.ConfigurationLocked -= ConfigurationLockedHandler;
         }
@@ -1660,6 +1705,9 @@ namespace AB15_GUI.WPF.ViewModels
 
             // Typecast sender to actual type
             IASIC caller = (IASIC) sender;
+
+            // TODO: temporary approach
+            UpdateMonitoringStatusTable(caller.State, true);
 
             // Execute Test mode 1 diagnostics
             ExecuteTestMode1Diagnostics();
@@ -1684,6 +1732,11 @@ namespace AB15_GUI.WPF.ViewModels
             // Typecast sender to actual type
             IASIC caller = (IASIC) sender;
 
+            // TODO: temporary approach
+            UpdateMonitoringStatusTable(caller.State, true);
+
+            Thread.Sleep(200); // TODO: Test
+
             // Execute Test mode 2 diagnostics
             ExecuteTestMode2Diagnostics();
 
@@ -1706,6 +1759,9 @@ namespace AB15_GUI.WPF.ViewModels
 
             // Typecast sender to actual type
             IASIC caller = (IASIC) sender;
+
+            // TODO: temporary approach
+            UpdateMonitoringStatusTable(caller.State, true);
 
             // Restore cyclic reading for state
             IsCyclicDiagnosticsEn = isCyclicDiagnosticsEn_previous;
