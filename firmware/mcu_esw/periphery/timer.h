@@ -141,6 +141,14 @@ void ConfigureContinuousReadPeriodicity(uint16 continuousReadPeriodicity);
  */
 void ConfigureGPIOPeriodicity(uint16 gpioPeriodicity);
 
+/** \brief Configure FLM diagnostics handling periodicity
+ * Periodicity is defined in number of General timer interrupts
+ *
+ * \param flmDiagPeriodicity periodicity of executing steps in FLM diagnostics
+ * \return Returns nothing
+ */
+void ConfigureFLMDiagPeriodicity(uint16 flmDiagPeriodicity);
+
 /** \brief Configure FLM Diagnostics performing periodicity
  * Periodicity is defined in number of General timer interrupts
  * \param flmDiagPeriodicity periodicity of starting and checking on execution of FLM diags
@@ -191,6 +199,13 @@ void EnableContinuousReadInterrupt(void);
  */
 void EnableGPIOInterrupt(void);
 
+/** \brief Enable FLLM diagnostics handling interrupt
+ * Periodicity has to be configured first!
+ *
+ * \return Returns nothing
+ */
+void EnableFLMDiagInterrupt(void);
+
 /** \brief Disable Watchdog interrupt
  *
  * \param wdType type of WD (valid options WD1 and WD2)
@@ -233,6 +248,12 @@ void DisableContinuousReadInterrupt(void);
  * \return Returns nothing
  */
 void DisableGPIOInterrupt(void);
+
+/** \brief Disable FLM diagnostics handling interrupt
+ *
+ * \return Returns nothing
+ */
+void DisableFLMDiagInterrupt(void);
 
 /** \brief Get watchdog acknowledgement interrupt state
  *

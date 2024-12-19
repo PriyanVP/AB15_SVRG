@@ -53,30 +53,30 @@ boolean ReceiveUSBData(uint8 *buffer, Ifx_SizeT *count);
  *
  * \return Returns number of free bytes
  */
-sint32 GetWriteBufferLeft();
+sint32 GetWriteBufferLeft(void);
 
 /** \brief Gets number of free bytes in UART read buffer (Rx)
  *
  * \return Returns number of free bytes
  */
-sint32 GetReadBufferLeft();
+sint32 GetReadBufferLeft(void);
 
 /** \brief Checks if no full messages in UART read buffer (Rx) present
  *
  * \return Returns TRUE if no full message in input buffer
  */
-boolean IsInBufferEmpty();
+boolean IsInBufferEmpty(void);
 
 /** \brief Clears UART input (Rx) buffer used for USB communication
  *
  * \return Returns nothing
  */
-void CleanUSBInputBuffer();
+void CleanUSBInputBuffer(void);
 
 /** \brief Clears UART output (Tx) buffer used for USB communication
  *
  * \return Returns nothing
  */
-void CleanUSBOutputBuffer();
+void CleanUSBOutputBuffer(void);
 
 #endif /* USB_H_ */

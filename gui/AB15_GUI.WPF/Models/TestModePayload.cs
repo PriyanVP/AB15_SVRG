@@ -54,6 +54,8 @@ namespace AB15_GUI.WPF.Models
                         break;
                     }
 
+                    // TODO: analysis logic for incoming data
+
                     // Store payload as registers data
                     for (int i = 0; i < rawData.Count; i++)
                     {

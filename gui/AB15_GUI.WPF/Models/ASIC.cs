@@ -502,7 +502,7 @@ namespace AB15_GUI.WPF.Models
         {
             logger.Debug($"Started execution of Test mode 1 transition command on ASIC {ID}");
 
-            // Create register content for executing SPI_COLDSTART1
+            // Create register content for executing transition from test mode 1
             Reg_SysStates_Reset_Config _SysStates_Reset_Config = new Reg_SysStates_Reset_Config();
             _SysStates_Reset_Config.Data = 0x0;
             _SysStates_Reset_Config.spi_exit_testmode1.Data = 0x1;
@@ -525,9 +525,9 @@ namespace AB15_GUI.WPF.Models
         /// </summary>
         public void ExecuteTestMode2Transition()
         {
-            logger.Debug($"Started execution of Test mode 1 transition command on ASIC {ID}");
+            logger.Debug($"Started execution of Test mode 2 transition command on ASIC {ID}");
 
-            // Create register content for executing SPI_COLDSTART1
+            // Create register content for executing transition from test mode 2
             Reg_SysStates_Reset_Config _SysStates_Reset_Config = new Reg_SysStates_Reset_Config();
             _SysStates_Reset_Config.Data = 0x0;
             _SysStates_Reset_Config.spi_exit_testmode2.Data = 0x1;

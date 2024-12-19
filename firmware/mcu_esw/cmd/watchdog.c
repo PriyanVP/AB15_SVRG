@@ -458,7 +458,7 @@ void IntCmdMonitorWatchdog(void)
 
     // Read WD status from ASIC
     // AB15 platform
-    SPIReceiveDataNormal data[WD_STATUS_REGS_COUNT] = {0};
+    SPIReceiveDataNormal data[WD_STATUS_REGS_COUNT] = {0}; // TODO: may not work as this type of initializer not intended for array of structs
 
     // Read WD related registers from ASIC
     isSuccessfulFlag = QSPIReadSequenceNormal(SPI1_CS1MASTER, g_wdStatusMonitoringConfig.wdStatusRegsAddresses, &data[0].dw, &length); // TODO: not implemented
