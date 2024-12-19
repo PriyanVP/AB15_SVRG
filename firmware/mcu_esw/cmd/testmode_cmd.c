@@ -44,7 +44,8 @@ typedef enum
     FLM_PST_ERR_LSENQ_HIGH          = 2,  /** \brief DIS_ALP/LSENQ pin is high */
     FLM_PST_ERR_DIAG_ACTIVE         = 3,  /** \brief flm_diag_active is set for PST test */
     FLM_PST_ERR_PARITY_FAIL         = 4,  /** \brief parity fail - configuration issue */
-    FLM_PST_ERR_INCORRECT_ASIC_MODE = 5   /** \brief incorrect ASIC mode - not test mode 1 or 2 */
+    FLM_PST_ERR_INCORRECT_ASIC_MODE = 5,  /** \brief incorrect ASIC mode - not test mode 1 or 2 */
+    FLM_PST_ERR_UNLOCK_FAIL         = 6   /** \brief failed to unlock HS or LS powerstages */
 } PstErrStateEnum;
 
 /*********************************************************************************************************************/
@@ -168,7 +169,7 @@ void IntCmdExecutePowerstageTest(void)
     // Execute test if preconditions in ASIC are met and configuration was done
     isSuccessfulFlag = QSPIReadNormal(SPI1_CS1MASTER, FLM_FLM_STATUS2, &data.dw);
     FLM_Status2.as_uint16 = data.bf.output_data;
-    if (FLM_Status2.as_s.FlmDiagPstActive_u1)
+    if ((FLM_Status2.as_s.FlmDiagReady_u1 == 0) && FLM_Status2.as_s.FlmDiagPstActive_u1)
     {
         uint16 regAddress;
         uint16 regData;
@@ -176,7 +177,7 @@ void IntCmdExecutePowerstageTest(void)
         // Execute procedure to define what address and data to use
         GetPSTFiringSPiCommand(&regAddress, &regData);
 
-        //
+        // Do firing for test with only LS or HS on expected channel
         QSPIWriteNormal(SPI1_CS1MASTER, regAddress, regData);
 
         // Update flag indicating that test sequence was finished
@@ -203,13 +204,13 @@ void IntCmdExecutePowerstageTest(void)
         uint8 currentChannelIdx = g_pstConfiguration.channelIndex - 1;
         g_pstResults[currentChannelIdx].dw = FLM_Read_Powerstage.as_uint16 & MASK_USED_BITS_FLM_FLM_READ_POWERSTAGE;
         g_pstResults[currentChannelIdx].bf.pst_not_valid ^= 0x1;  // invert values as ASIC register displays valid flag and here used NOT valid flag
-        g_pstResults[currentChannelIdx].bf.test_guard_fail = g_pstConfiguration.guardCounter < 0;
+        g_pstResults[currentChannelIdx].bf.test_guard_fail = g_pstConfiguration.guardCounter > FLM_POWERSTAGE_GUARD_TIMEOUT;
         g_pstResults[currentChannelIdx].bf.spi_on_ch_fail = !isSuccessfulFlag;
 
         // Increment channel & reset test running flag & reset guard
         g_pstConfiguration.channelIndex++;
         g_pstConfiguration.isTestSeqFinished = FALSE;
-        g_pstConfiguration.guardCounter = FLM_POWERSTAGE_GUARD_TIMEOUT;
+        g_pstConfiguration.guardCounter = 0;
 
         // Finish test in case last channel data was received
         if (g_pstConfiguration.channelIndex > FLM_POWERSTAGE_CHANNELS_COUNT)
@@ -243,7 +244,7 @@ void IntCmdExecutePowerstageTest(void)
     }
 
     // Arm new test (after arming can be executed in 20 us)
-    if (g_pstConfiguration.isTestSeqFinished == FALSE)
+    if (g_pstConfiguration.isTestSeqFinished == FALSE) // TODO: potential risk of starting test twice
     {
         // Construct start condition
         FLM_Diag_Start.as_s.FlmDiagStart_u1   = 0x1;
@@ -363,6 +364,20 @@ IFX_INLINE void StartTestMode(boolean isTestMode1, USBReceiveData const * const 
         unlockRegContentHS.as_s.FlmUnlockHsModule5_u1 = 0x1;
         unlockRegContentHS.as_s.FlmCodeUnlock_u2      = 0x00;
         isSuccessfulFlag &= QSPIWriteNormal(SPI1_CS1MASTER, FLM_FLM_UNLOCK, unlockRegContentHS.as_uint16);
+    }
+
+    // Report error if was unable to prepare setup
+    if (isSuccessfulFlag == FALSE)
+    {
+        packageToSend.status = USB_STATUS_ERROR;
+        packageToSend.data[0] = FLM_PST_ERR_UNLOCK_FAIL;
+
+        g_pstConfiguration.lsPowerstageEn = FALSE;
+        g_pstConfiguration.hsPowerstageEn = FALSE;
+
+        // Send error frame
+        SendUSBPackage(&packageToSend);
+        return;
     }
 
     // Configure periodicity of Test mode check interrupt
