@@ -95,11 +95,12 @@ namespace AB15_GUI.WPF.Models
                 OnPropertyChanged();
             }
         }
-        
+
         /// <summary>
         /// Indicate how many sides of channel were deployed (2 corresponds to firing)
         /// </summary>
-//        private int numberOfSidesDeployed = 0;
+        // TODO firecnt_translation - Changed strategy from counting number of sides deployed - Cleanup 
+        // private int numberOfSidesDeployed = 0;
         private bool hsWasFired = false;
         private bool lsWasFired = false;
 
@@ -117,7 +118,8 @@ namespace AB15_GUI.WPF.Models
             set
             {
                 // Any input value will cause counter reset
-//                numberOfSidesDeployed = 0;
+                // TODO firecnt_translation - Changed strategy from counting number of sides deployed - Cleanup 
+                // numberOfSidesDeployed = 0;
                 OnPropertyChanged();
             } 
         }
@@ -138,9 +140,11 @@ namespace AB15_GUI.WPF.Models
             } 
             set
             {
+                // TODO firecnt_translation - Changed strategy from counting number of sides deployed - Cleanup 
                 // Increment counter if firing occurred
                 if (value > 0)
                 {
+                    // TODO firecnt_translation - Changed strategy from counting number of sides deployed - Cleanup 
                     //numberOfSidesDeployed++;
                     hsWasFired = true;
                     OnPropertyChanged(nameof(WasFired));
@@ -171,9 +175,11 @@ namespace AB15_GUI.WPF.Models
             } 
             set
             {
+                // TODO firecnt_translation - Changed strategy from counting number of sides deployed - Cleanup 
                 // Increment counter if firing occurred
                 if (value > 0)
                 {
+                    // TODO firecnt_translation - Changed strategy from counting number of sides deployed - Cleanup 
                     //numberOfSidesDeployed++;
                     lsWasFired = true;
                     OnPropertyChanged(nameof(WasFired));
