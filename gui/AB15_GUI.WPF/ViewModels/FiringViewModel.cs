@@ -1066,6 +1066,10 @@ namespace AB15_GUI.WPF.ViewModels
             // Set alternative mode if enabled
             reg_FLM_Unlock.flm_fire_mode_sel.Data = Convert.ToUInt16(IsAlternativeFiringModeEn);
 
+            // TODO firecnt_translation - check on keeping the reset of the fire counters
+            // Clear Fire Counters while still unlocked
+            reg_FLM_Unlock.flm_clear_fire_cnt.Data = 1;
+
             // Set code unlock
             reg_FLM_Unlock.flm_code_unlock.Data = 0x00;
 
