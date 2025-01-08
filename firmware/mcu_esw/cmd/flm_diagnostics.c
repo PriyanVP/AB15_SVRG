@@ -46,7 +46,7 @@ typedef enum
     FLM_DIAG_ORDER_VHX_MEAS         = 2,        /** \brief  */
     FLM_DIAG_ORDER_LOOP_RES_MEAS    = 3,        /** \brief  */
     FLM_DIAG_ORDER_SQUIB_DET        = 4         /** \brief  */
-} flm_DiagExecOrderEnum;
+} FLMDiagExecOrderEnum;
 
 /** \brief
  */
@@ -65,7 +65,7 @@ typedef enum
     FLM_DIAG_EXEC_STATUS_ONGOING        = 1,   /** \brief  */
     FLM_DIAG_EXEC_STATUS_EVALUATED      = 2,   /** \brief  */
     FLM_DIAG_EXEC_STATUS_FINISHED       = 3    /** \brief  */
-} flm_DiagExecStatusEnum;
+} FLMDiagExecStatusEnum;
 
 // TODO: can we use 1 status enum for all diagnostics? (I'm talking about 3 enums below)
 // TODO: is there enough added value in having 3 of them?
@@ -79,7 +79,7 @@ typedef enum
     FLM_DIAG_STATUS_VHX_MEAS_ONGOING    = 2,    /** \brief  */
     FLM_DIAG_STATUS_VHX_MEAS_EVALUATED  = 3,    /** \brief  */
     FLM_DIAG_STATUS_VHX_MEAS_FINISHED   = 4     /** \brief  */
-} flm_VHxMeasStatusEnum;
+} FLMDiagVHxMeasStatusEnum;
 
 /** \brief
  */
@@ -90,7 +90,7 @@ typedef enum
     FLM_DIAG_STATUS_LOOP_RES_MEAS_ONGOING    = 2,       /** \brief  */
     FLM_DIAG_STATUS_LOOP_RES_MEAS_EVALUATED  = 3,       /** \brief  */
     FLM_DIAG_STATUS_LOOP_RES_MEAS_FINISHED   = 4        /** \brief  */
-} flm_LoopResMeasStatusEnum;
+} FLMDiagLoopResMeasStatusEnum;
 
 /** \brief
  */
@@ -101,7 +101,7 @@ typedef enum
     FLM_DIAG_STATUS_SQUIB_DET_ONGOING    = 2,       /** \brief  */
     FLM_DIAG_STATUS_SQUIB_DET_EVALUATED  = 3,       /** \brief  */
     FLM_DIAG_STATUS_SQUIB_DET_FINISHED   = 4        /** \brief  */
-} flm_SquibDetStatusEnum;
+} FLMDiagSquibDetStatusEnum;
 
 /*************************************************************************************************************************/
 /*-------------------------------------------------Data Structures-------------------------------------------------------*/
@@ -116,17 +116,17 @@ typedef struct
     boolean    FLM_LoopResErr_fault;                           /** \brief  */
     boolean    FLM_SquibDetErr_fault;                          /** \brief  */
     
-} FLMCycDiagFaults;
+} FLMDiagCycDiagFaults;
 
 /** \brief Structure to store execution status of FLM cyclic diagnostic
 */
 typedef struct
 {
-    flm_VHxMeasStatusEnum       flm_VHxMeasStatus;      /** \brief  */
-    flm_LoopResMeasStatusEnum   flm_LoopResMeasStatus;  /** \brief  */
-    flm_SquibDetStatusEnum      flm_SquibDetStatus;     /** \brief  */
+    FLMDiagVHxMeasStatusEnum       flm_VHxMeasStatus;      /** \brief  */
+    FLMDiagLoopResMeasStatusEnum   flm_LoopResMeasStatus;  /** \brief  */
+    FLMDiagSquibDetStatusEnum      flm_SquibDetStatus;     /** \brief  */
 
-} FLMCycDiagStatus;
+} FLMDiagStatus;
 
 
 /** \brief Structure to store results of FLM channel short detection (IGH/IGL short to ground/battery)
@@ -150,7 +150,7 @@ typedef struct
     uint16 FLM_Read_Diag_VHx_voltage_value;          /** \brief  */
     boolean FLM_Read_Diag_VHx_voltage_valid;            /** \brief  */
 
-}FLM_Read_Diag_VHx;
+} FLMDiagReadVHx;
 
 /** \brief Structure to store results of FLM Loop resistanse diagnostic
  * 20 loops, 48 bytes
@@ -169,7 +169,7 @@ typedef struct
  */
 typedef struct
 {
-    FLM_Read_Diag_VHx   flmVHxDiagResults[11];              /** \brief  */
+    FLMDiagReadVHx      flmVHxDiagResults[11];              /** \brief  */
     boolean             flmSquibErrorDiagResults[20];       /** \brief  */
     FLMReadSquibRes     flmLoopResDiagResults[20];          /** \brief  */
     FLMShortDiagStruct  flmShortDiagResults;                /** \brief  */
@@ -211,7 +211,7 @@ void StartFLMDiag(void);
 
 /** \brief Get FLM diagnostic execution status from ASIC (ongoing/evaluated)
  */
-flm_DiagExecStatusEnum FLMReadDiagExecStatus(void);
+FLMDiagExecStatusEnum FLMReadDiagExecStatus(void);
 
 /** \brief
  * Measure Battery voltage, normal range to perform diagnostics
@@ -224,10 +224,10 @@ boolean CheckBatVoltage(void);
 /*********************************************************************************************************************/
 
 static boolean g_isflmDiagEn = FALSE; // TODO: boolean value + renaming to isFlmDiagsOn would be sufficient
-// static FLMCycDiagFaults g_FLMCycDiagFaultsValues; // TODO: uncomment when starting using
+// static FLMDiagCycDiagFaults g_FLMCycDiagFaultsValues; // TODO: uncomment when starting using
 static FLMCycDiagResults g_flmCycDiagResultsValues;
-static flm_DiagExecStatusEnum g_FLMDiagExecStatus = FLM_DIAG_EXEC_STATUS_IDLE;
-static flm_DiagExecOrderEnum g_flmDiagExecNumber = FLM_DIAG_ORDER_SHORT_DET;
+static FLMDiagExecStatusEnum g_FLMDiagExecStatus = FLM_DIAG_EXEC_STATUS_IDLE;
+static FLMDiagExecOrderEnum g_flmDiagExecNumber = FLM_DIAG_ORDER_SHORT_DET;
 
 /*********************************************************************************************************************/
 /*---------------------------------------------Function Implementations----------------------------------------------*/
@@ -799,13 +799,13 @@ void StartFLMDiag(void)
     QSPIWriteNormal(SPI1_CS1MASTER, FLM_FLM_DIAG_START, tmpFLMDiagStartfRegister.as_uint16);
 }
 
-flm_DiagExecStatusEnum FLMReadDiagExecStatus(void)
+FLMDiagExecStatusEnum FLMReadDiagExecStatus(void)
 {
     // TODO FLM_FLM_STATUS2
     SPIReceiveDataNormal data;
     boolean isSuccessfulFlag = TRUE;
     flm_flm_status2_ut tmpFLMDiagStatus2fRegister;
-    flm_DiagExecStatusEnum flmExecutionStatus; // TODO: what value will be if not updated in if/else. Some potential undefined behavior
+    FLMDiagExecStatusEnum flmExecutionStatus; // TODO: what value will be if not updated in if/else. Some potential undefined behavior
     
     // Get value from ASIC
     isSuccessfulFlag &= QSPIReadNormal(SPI1_CS1MASTER, FLM_FLM_STATUS2, &data.dw);
