@@ -287,7 +287,7 @@ void UpdateTimersRoutine(void)
     }
 
     // Call corresponding functions if enabled and counter reached reload value
-    if ((g_watchdogStatusCheckEnable == TRUE) && (watchdogStatusCheckCounter >= g_watchdogStatusCheckReload))
+    if (g_watchdogStatusCheckEnable == TRUE)
     {
         watchdogStatusCheckCounter++;
 

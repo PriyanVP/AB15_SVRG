@@ -324,8 +324,8 @@ void CmdStartWatchdog(USBReceiveData const * const commandPackage)
     ConfigureTimerPeriodicity(WATCHDOG2_TIMER, g_wd2Parameters.wdConfig.ackPeriod);
 
     // Turn on Watchdog serving interrupt of MCU
-    EnableTimerInterrupt(WATCHDOG2_TIMER);
     EnableTimerInterrupt(WATCHDOG1_TIMER);
+    EnableTimerInterrupt(WATCHDOG2_TIMER);
 
     // Modify state
     g_wd1Parameters.state = WD_STATE_RUNNING_NORMAL;
