@@ -43,15 +43,11 @@ uint8 g_msgID;
 
 void StartHackedTimer(USBReceiveData const * const commandPackage)
 {
-    // Local variables
-    USBTransmitData packageToSend;
-    boolean isSuccessfulFlag = TRUE;
-
     // Configure periodicity of Test mode check interrupt
-    ConfigureHackedTimerPeriodicity(HACKED_TIMEOUT);
+    ConfigureTimerPeriodicity(HACKED_TIMER, HACKED_TIMEOUT);
 
     // Turn on Test mode interrupt of MCU
-    EnableHackedTimerInterrupt();
+    EnableTimerInterrupt(HACKED_TIMER);
 
     g_msgID = SetResponseBit(commandPackage->msg_id);
 }
@@ -59,7 +55,7 @@ void StartHackedTimer(USBReceiveData const * const commandPackage)
 void StopHackedTimer(USBReceiveData const * const commandPackage)
 {
     // Turn off Test mode interrupt of MCU
-    DisableHackedTimerInterrupt();
+    DisableTimerInterrupt(HACKED_TIMER);
 
     // Prepare acknowledge message
     USBTransmitData packageToSend;
@@ -76,7 +72,6 @@ void IntCmdExecuteHackedTimer(void)
 {
     // Parameters for SPI packages and variable to store output data
     USBTransmitData packageToSend;
-    uint16 address;
     SPIReceiveDataNormal dataReceived;
     boolean isSuccessfulFlag = FALSE;
     uint8 spiChannel;

@@ -8,7 +8,6 @@
 /*********************************************************************************************************************/
 #include "IfxPort.h"
 #include "IfxPort_PinMap.h"
-#include "cmd/bypass_cmd.h"
 #include "control_pins.h"
 
 /*********************************************************************************************************************/
@@ -38,10 +37,4 @@ void ConfigureSelectPin(void)
 
     // Set as input with pull down (active high)
     IfxPort_setPinModeInput(SELECT.port, SELECT.pinIndex, IfxPort_InputMode_pullDown);
-}
-
-boolean IsMCUBypassSelected(void)
-{
-    // Check if bypass requested via GUI or pin
-    return (GetMCUBypassFlag() || IfxPort_getPinState(SELECT.port, SELECT.pinIndex));
 }

@@ -28,9 +28,4 @@
  */
 void ConfigureSelectPin(void);
 
-/** \brief Check if requested to bypass MCU via SELECT pin or via command from GUI
- * \return Returns true if MCU should be bypassed, false - otherwise
- */
-boolean IsMCUBypassSelected(void);
-
 #endif /* CONTROL_PINS_H_ */
