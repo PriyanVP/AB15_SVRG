@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AB15_GUI.WPF.NLog;
 using AB15_GUI.WPF.Models;
 using AB15_GUI.WPF.Models.Interfaces;
@@ -43,42 +44,57 @@ public class Waitlist : IWaitlist
     }
 
     /// <summary>
-    /// Add item to waitlist. Will return message id
+    /// Add item to waitlist. Will return message id and awaitable task
     /// </summary>
     /// <param name="msgID">message ID</param>
-    /// <param name="isAddedSuccessfully">flag to tell if item was added to waitlist</param>
-    /// <param name="deleg">delegate that will be called for received msg</param>
+    /// <param name="task">task to be awaited by sender</param>
     /// <param name="payloadType">payload type</param>
     /// <param name="isContinuous">flag to define if MCU response can be received few times</param>
-    /// <returns>pair of msgID and isAddedSuccessfully</returns>
-    public (int msgID, bool isAddedSuccessfully) AddItemToWaitlist(Action<IReceiveCommunicationPackage> deleg, Type payloadType, bool isContinuous = false)
+    /// <returns>pair of msgID and task; will be nulls if unsuccessful</returns>
+    public (int? msgID, Task<IReceiveCommunicationPackage>? task) AddItemToWaitlist(Type payloadType, bool isContinuous = false)
     {
-        // Check that payloadType is implementing expected interface
-        // TODO: check why Contract usage breaks application if not in debug mode
-        // Contract.Requires<ArgumentException>(payloadType.GetInterface(nameof(IByteListSerializable)) != null, "Incorrect payloadType. Should implement IByteListSerializable.");
+        // Validate input
+        if (payloadType.GetInterface(nameof(IByteListSerializable)) is null)
+        {
+            logger.Error("Tried to add item to waitlist with invalid payload type!");
+            return (msgID: null, task: null);
+        }
 
-        int msgID;
-        bool isAddedSuccessfully = false;
+        // Local variables
+        int? msgID = null;
+        TaskCompletionSource<IReceiveCommunicationPackage>? taskCompletionSource = null;
+        IReceiveCommunicationPackage? receivedPackageObject = null;
 
+        // Avoid possibility of threading issues
         lock (_lock)
         {
-            // Generate unique message ID
             msgID = GenerateUniqueMsgID();
 
-            // Check if item with same msgID already exist or if payload type is not correct
-            if (_waitlist.Exists(itm => itm.msgID == msgID) || (payloadType.GetInterface(nameof(IByteListSerializable)) is null))
+            try
             {
-                isAddedSuccessfully = false;
+                // Create received package instance dynamically based on type
+                Type packageType = typeof(ReceiveCommunicationPackage<>).MakeGenericType(payloadType);
+                receivedPackageObject = (IReceiveCommunicationPackage) Activator.CreateInstance(packageType);
+
+                // Create received package instance dynamically based on type
+                Type taskType =  typeof(TaskCompletionSource<>).MakeGenericType(packageType);
+                taskCompletionSource = (TaskCompletionSource<IReceiveCommunicationPackage>) Activator.CreateInstance(taskType);
             }
-            else
+            catch (Exception ex)
             {
-                // Add item to list
-                _waitlist.Add(new WaitlistItem(deleg, payloadType, msgID: msgID, isContinuous: isContinuous));
-                isAddedSuccessfully = true;
+                logger.Error($"Error while creating task or received package object: {ex.Message}");
+                msgID = null;
+                taskCompletionSource = null;
+            }
+
+            // Skip if any of the required parameters is null
+            if ((msgID is not null) && (receivedPackageObject is not null) && (taskCompletionSource is not null))
+            {
+                _waitlist.Add(new WaitlistItem(receivedPackageObject, taskCompletionSource, msgID: msgID, isContinuous: isContinuous));
             }
         }
 
-        return (msgID: msgID, isAddedSuccessfully: isAddedSuccessfully);
+        return (msgID: msgID, task: taskCompletionSource?.Task);
     }
 
     /// <summary>
@@ -91,8 +107,7 @@ public class Waitlist : IWaitlist
         // Check if deletion can be performed
         if ((_waitlist.Count == 0) || (msgID == null))
         {
-            // Call was incorrect (no valid msgID supplied)
-            // or list is empty
+            // Call was incorrect (no valid msgID supplied) or list is empty
             logger.Error("Tried to remove item from empty waitlist or item ID wasn't provided!");
             return false;
         }
@@ -110,6 +125,13 @@ public class Waitlist : IWaitlist
         bool isRemovedSuccesfully;
         lock (_lock)
         {
+            // Report status // TODO: check
+            itmToDelete.receivedPackage!.UnpackPackage(new List<byte>() { (byte)MCUStatus.RESPONSE_ABSENT });
+
+            // Report response (await finished) and remove item from waitlist if conditions are met
+            itmToDelete.taskCompletionSource.SetResult(itmToDelete.receivedPackage);
+
+            // Perform removal
             isRemovedSuccesfully = _waitlist.Remove(itmToDelete);
         }
 
@@ -130,74 +152,61 @@ public class Waitlist : IWaitlist
     }
 
     /// <summary>
-    /// Gets payload type stored in waitlist item
+    /// 
     /// </summary>
-    /// <param name="msgID">message ID in package from MCU</param>
-    /// <returns>Type of package payload or null if no waitlist item was found</returns>
-    public Type? GetPayloadType(int msgID)
+    /// <param name="package">raw package from MCU</param>
+    /// <returns>Nothing</returns>
+    public void HandleResponse(List<byte> package) 
     {
         // Create temporary variables
-        int tmpMsgID = msgID & (~(int)MsgIDMasks.ResponseBit); // clear response bit; can't be null!
-        WaitlistItem? waitlistItem;
-        lock (_lock)
-        {
-            waitlistItem = _waitlist.Find(itm => itm.msgID == tmpMsgID);
-        }
-
-        // Assign delegate and remove item from waitlist if conditions are met
-        if (waitlistItem is null)
-        {
-            return null;
-        }
-
-        return waitlistItem.payloadType;
-    }
-
-    /// <summary>
-    /// Looks for delegate that will handle package and removes relevant item from waitlist
-    /// </summary>
-    /// <param name="receivedPackage">package from MCU</param>
-    /// <returns>Delegate that should be called for this package or null if delegate is not found</returns>
-    public Action<IReceiveCommunicationPackage>? GetDelegate(IReceiveCommunicationPackage receivedPackage)
-    {
-        // Return empty array if package not valid
-        if (receivedPackage.IsPackageValid != true)
-        {
-            logger.Error($"Invalid package received! Package: {receivedPackage}");
-            return null;
-        }
-
-        // Create temporary variables
-        Action<IReceiveCommunicationPackage>? returnDelegate = null;
-        int msgID = receivedPackage.MsgID & (~(int)MsgIDMasks.ResponseBit); // clear response bit; can't be null!
+        int msgID = package[SerialPackageConstants.MsgIDPosition] & (~(int)MsgIDMasks.ResponseBit); // clear response bit; can't be null!
 
         lock (_lock)
         {
             WaitlistItem? waitlistItem = _waitlist.Find(itm => itm.msgID == msgID);
 
-            // Assign delegate and remove item from waitlist if conditions are met
-            if (waitlistItem is not null)
-            {
-                // Fill output variable
-                returnDelegate = waitlistItem.deleg;
+            // No item found in waitlist
+            if (waitlistItem is null)
+            { 
+                return;
+            }
 
-                // Remove item from waitlist, if not continuous
-                // All checks for removal are passed at this point
-                if (waitlistItem.isContinuous == false)
-                {
-                    _waitlist.Remove(waitlistItem);
-                }
+            // Get response object
+            IReceiveCommunicationPackage tmpReceivedPackage = waitlistItem.receivedPackage;
+
+            // Convert raw package received from MCU to field values
+            bool isPackageValid = tmpReceivedPackage!.UnpackPackage(package);
+
+            // If package is not valid - skip
+            if (isPackageValid == false)
+            {
+                logger.Info("Received invalid message");
+                tmpReceivedPackage!.UnpackPackage(new List<byte>() { (byte)MCUStatus.ERROR });
+            }
+
+            // Report response (await finished) and remove item from waitlist if conditions are met
+            waitlistItem.taskCompletionSource.SetResult(tmpReceivedPackage);
+
+            // Remove item from waitlist, if not continuous
+            // All checks for removal are passed at this point
+            if (waitlistItem.isContinuous == false)
+            {
+                _waitlist.Remove(waitlistItem);
+            }
+            else 
+            {
+                // Continuous item
+                waitlistItem.receivedPackage = (IReceiveCommunicationPackage) Activator.CreateInstance(tmpReceivedPackage.GetType());
+                // TODO: handling periodic communication (TaskCompletionSource<IReceiveCommunicationPackage>) Activator.CreateInstance(taskType);
             }
         }
-
-        return returnDelegate;
     }
 
     /// <summary>
     /// Generate unique MSG ID (not present in current waitlist) for new message to MCU
     /// </summary>
-    /// <returns>msg ID if unoccupied IDs present, 0xFFFF - otherwise</returns>
-    private int GenerateUniqueMsgID()
+    /// <returns>msg ID if unoccupied IDs present, null - otherwise</returns>
+    private int? GenerateUniqueMsgID()
     {
         // Init local variables
         int msgID = 0x0;
@@ -211,27 +220,26 @@ public class Waitlist : IWaitlist
         }
 
         // No available IDs - error situation, communication not possible
-        if (msgID > maxValueForID)
+        if (msgID >= maxValueForID)
         {
-            throw new InvalidOperationException("All msgIDs in waitlist are occupied!");
+            return null;
         }
 
         return msgID;
     }
    
     /// <summary>
-    /// Removes outdated items from waitlist and returns list of their delegates
+    /// Removes outdated items from waitlist
     /// </summary>
-    /// <returns>List with outdated commands delegates and payload types</returns>
-    public List<(Action<IReceiveCommunicationPackage> deleg, Type? payloadType)> RemoveOutdatedItems()
+    /// <returns>Nothing</returns>
+    public void RemoveOutdatedItems()
     {
         DateTime timeNow = DateTime.Now;
-        List<(Action<IReceiveCommunicationPackage> deleg, Type? payloadType)> outdatedItems = new List<(Action<IReceiveCommunicationPackage> deleg, Type? payloadType)>();
         List<WaitlistItem> itemsForRemove = new List<WaitlistItem>();
 
         lock(_waitlist)
         {
-            // Loop through waitlist to check waht items are outdated
+            // Loop through waitlist to check what items are outdated
             foreach(WaitlistItem item in _waitlist)
             {
                 if ((timeNow - item.creationTime).TotalSeconds > ItemTimeOfLife)
@@ -248,8 +256,11 @@ public class Waitlist : IWaitlist
                         // Add item to remove list
                         itemsForRemove.Add(item);
 
-                        // Add package to list
-                        outdatedItems.Add((item.deleg, item.payloadType));
+                        // Report status
+                        item.receivedPackage!.UnpackPackage(new List<byte>() { (byte)MCUStatus.RESPONSE_ABSENT });
+
+                        // Report response (await finished) and remove item from waitlist if conditions are met
+                        item.taskCompletionSource.SetResult(item.receivedPackage);
                     }
                 }
             }
@@ -260,8 +271,6 @@ public class Waitlist : IWaitlist
                 _waitlist.Remove(itm);
             }
         }
-
-        return outdatedItems;
     }
     
     /// <summary>
@@ -272,22 +281,18 @@ public class Waitlist : IWaitlist
         /// <summary>
         /// Assign values to attributes
         /// </summary>
-        /// <param name="deleg">delegate that will be called for received msg</param>
+        /// <param name="receivedPackage">object to use for reporting received package</param>
+        /// <param name="taskCompletionSource">task that will be used for reporting received msg</param>
         /// <param name="msgID">message ID of send (!) transaction. Used to define which consumer will handle response from MCU</param>
         /// <param name="isContinuous">flag to define if MCU response can be received few times</param>
-        public WaitlistItem(Action<IReceiveCommunicationPackage> deleg, Type payloadType, int? msgID = null, bool isContinuous = false)
+        public WaitlistItem(IReceiveCommunicationPackage receivedPackage, TaskCompletionSource<IReceiveCommunicationPackage> taskCompletionSource, int? msgID = null, bool isContinuous = false)
         {
-            this.deleg = deleg;
+            this.receivedPackage = receivedPackage;
+            this.taskCompletionSource = taskCompletionSource;
             this.msgID = msgID;
             this.isContinuous = isContinuous;
-            this.payloadType = payloadType;
             creationTime = DateTime.Now;
         }
-
-        /// <summary>
-        /// Type of payload used in package
-        /// </summary>
-        public Type payloadType;
 
         /// <summary>
         /// Time when item was created or updated (for continuous)
@@ -301,9 +306,14 @@ public class Waitlist : IWaitlist
         public int? msgID;
 
         /// <summary>
-        /// Delegate that will be called for received msg
+        /// Task for handling received package
         /// </summary>
-        public Action<IReceiveCommunicationPackage> deleg;
+        public TaskCompletionSource<IReceiveCommunicationPackage> taskCompletionSource;
+
+        /// <summary>
+        /// Received package object
+        /// </summary>
+        public IReceiveCommunicationPackage receivedPackage;
 
         /// <summary>
         /// Flag to define if MCU response can be received few times

@@ -1,6 +1,7 @@
 ﻿using AB15_GUI.WPF.Models.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace AB15_GUI.WPF.Services.Interfaces
 {
@@ -14,11 +15,11 @@ namespace AB15_GUI.WPF.Services.Interfaces
         /// </summary>
         /// <param name="msgID">message ID</param>
         /// <param name="isAddedSuccessfully">flag to tell if item was added to waitlist</param>
-        /// <param name="deleg">delegate that will be called for received msg</param>
+        /// <param name="task">task that will be used for received msg</param>
         /// <param name="payloadType">payload type</param>
         /// <param name="isContinuous">flag to define if MCU response can be received few times</param>
         /// <returns>pair of msgID and isAddedSuccessfully</returns>
-        (int msgID, bool isAddedSuccessfully) AddItemToWaitlist(Action<IReceiveCommunicationPackage> deleg, Type payloadType, bool isContinuous = false);
+        (int msgID, bool isAddedSuccessfully) AddItemToWaitlist(Task<IReceiveCommunicationPackage> task, Type payloadType, bool isContinuous = false);
         
         /// <summary>
         /// Removs all items from waitlist
@@ -42,10 +43,10 @@ namespace AB15_GUI.WPF.Services.Interfaces
         Type? GetPayloadType(int msgID);
 
         /// <summary>
-        /// Removes outdated items from waitlist and returns list of their delegates
+        /// Removes outdated items from waitlist and returns list of their tasks and payload types
         /// </summary>
         /// <returns>List with outdated commands delegates and payload types</returns>
-        List<(Action<IReceiveCommunicationPackage> deleg, Type? payloadType)> RemoveOutdatedItems();
+        List<(Task<IReceiveCommunicationPackage> task, Type? payloadType)> RemoveOutdatedItems();
         
         /// <summary>
         /// Remove item from waitlist by ID. Intended for removing continuous items

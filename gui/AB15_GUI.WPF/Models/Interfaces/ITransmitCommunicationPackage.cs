@@ -11,7 +11,7 @@ namespace AB15_GUI.WPF.Models.Interfaces
         /// <summary>
         /// Message ID
         /// </summary>
-        int MsgID { get; set; }
+        int? MsgID { get; set; }
 
         /// <summary>
         /// ASIC ID

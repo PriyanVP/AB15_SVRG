@@ -12,7 +12,7 @@ public class TransmitCommunicationPackage<T> : ITransmitCommunicationPackage whe
     /// <summary>
     /// Message ID
     /// </summary>
-    public int MsgID { get; set; }
+    public int? MsgID { get; set; }
 
     /// <summary>
     /// ASIC ID
