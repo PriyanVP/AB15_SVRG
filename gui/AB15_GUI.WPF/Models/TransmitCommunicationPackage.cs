@@ -40,11 +40,6 @@ public class TransmitCommunicationPackage<T> : ITransmitCommunicationPackage whe
     public Type? PayloadType { get; set; } = null;
 
     /// <summary>
-    /// Delegate that will be called for received msg
-    /// </summary>
-    public Action<IReceiveCommunicationPackage>? Deleg { get; set; } = null;
-
-    /// <summary>
     /// Flag to check if package has valid value
     /// </summary>
     public bool IsPackageValid
@@ -54,7 +49,7 @@ public class TransmitCommunicationPackage<T> : ITransmitCommunicationPackage whe
             // Return flag that package is valid only if required fields are set correctly
             return (Cmd > MCUCommand._CMD_MIN) && (Cmd < MCUCommand._EXT_CMD_MAX)
                             && (ASICID >= 0) && (ASICID < 256)
-                            && ((PayloadType is not null) || (Deleg is null));
+                            && ((PayloadType is not null));
         }
     }
 

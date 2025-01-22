@@ -9,6 +9,7 @@ using AB15_GUI.WPF.Models.Interfaces;
 using AB15_GUI.WPF.Models;
 using AB15_GUI.WPF.Models.Generated.Registers;
 using AB15_GUI.WPF.Services.Interfaces;
+using System.Threading.Tasks;
 
 namespace AB15_GUI.WPF.ViewModels
 {
@@ -635,7 +636,7 @@ namespace AB15_GUI.WPF.ViewModels
         }
 
         /// <summary>
-        /// Number of error evants
+        /// Number of error events
         /// </summary>
         private int wd1ErrorEventsCounter;
         public int WD1ErrorEventsCounter
@@ -720,6 +721,11 @@ namespace AB15_GUI.WPF.ViewModels
         #region Commands
 
         /// <summary>
+        /// WD monitoring enable status
+        /// </summary>
+        private bool _wdMonitoringEn = false;
+
+        /// <summary>
         /// Monitoring message ID
         /// </summary>
         private int? _msgIdForMonitoring = null;
@@ -787,7 +793,7 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// Execute Read config from ASIC command
         /// </summary>
-        private void ReadConfigFromASICExecute(object obj)
+        private async void ReadConfigFromASICExecute(object obj)
         {
             // Handle that command execution can only be done once in a row
             if (_readWDConfigCommand.IsEnabled == false) return;
@@ -800,7 +806,6 @@ namespace AB15_GUI.WPF.ViewModels
             TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
             packageToSend.ASICID = 1;
             packageToSend.Cmd = MCUCommand.EXECUTE_READ_SEQUENCE;
-            packageToSend.Deleg = ReadConfigDelegate;
             packageToSend.PayloadType = typeof(AddressDataPayload);
             packageToSend.Payload.Address.Add(_spi_config_wd1.Address);
             packageToSend.Payload.Address.Add(_spi_config_wd2.Address);
@@ -809,147 +814,12 @@ namespace AB15_GUI.WPF.ViewModels
             packageToSend.Payload.Address.Add(_spi_set_wdsettings.Address);
             packageToSend.Payload.Address.Add(_spi_read_res_cause.Address);
 
-            // Send command to MCU
-            serialWrapper.SerialWrite(packageToSend);
-        }
+            // Send command to MCU and wait for response
+            ReceiveCommunicationPackage<AddressDataPayload>? mcuResponse = (ReceiveCommunicationPackage<AddressDataPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
 
-        /// <summary>
-        /// Execute Write config to ASIC command
-        /// </summary>
-        private void WriteConfigToASICExecute(object obj)
-        {
-            // Handle that command execution can only be done once in a row
-            if (_writeWDConfigCommand.IsEnabled == false) return;
-            _writeWDConfigCommand.InProgress = true;
-            OnPropertyChanged(nameof(WriteWDConfigCommandEn));
-
-            logger.Debug($"Pressed write config button");
-            
-            // Create package to MCU
-            TransmitCommunicationPackage<WDConfigurePayload> packageToSend = new TransmitCommunicationPackage<WDConfigurePayload>();
-
-            packageToSend.ASICID = 1;
-            packageToSend.Cmd = MCUCommand.CONFIGURE_WATCHDOG;
-            packageToSend.Deleg = WriteConfigDelegate;
-            packageToSend.PayloadType = typeof(EmptyPayload);
-
-            // Unpack data from UI to fields of registers
-            // Load configs with data from ASIC
-            packageToSend.Payload.spi_config_wd1.Data = _spi_config_wd1.Data;
-            packageToSend.Payload.spi_config_wd2.Data = _spi_config_wd2.Data;
-            packageToSend.Payload.spi_config_wd_decouple.Data = _spi_config_wd_decouple.Data;
-
-            // Modify some fields based on UI input
-            packageToSend.Payload.spi_config_wd1.spi_set_locktime_wd1.Data = (UInt16) WD1LockTime;
-            packageToSend.Payload.spi_config_wd1.spi_set_responsetime_wd1.Data = (UInt16) WD1ResponseTime;
-
-            packageToSend.Payload.spi_config_wd2.spi_set_locktime_wd2.Data = (UInt16) WD2LockTime;
-            packageToSend.Payload.spi_config_wd2.spi_set_responsetime_wd2.Data = (UInt16) WD2ResponseTime;
-
-            packageToSend.Payload.spi_config_wd_decouple.spi_decouple_wd_en0.Data = (UInt16) ((IsEN0Enabled) ? (1) : (0));
-
-            packageToSend.Payload.spi_config_wd_thres0.spi_set_en0_thre_wd1.Data = (UInt16) WD1EN0DisableThreshold;
-            packageToSend.Payload.spi_config_wd_thres0.spi_set_en0_thre_wd2.Data = (UInt16) WD2EN0DisableThreshold;
-
-            // Send command to MCU
-            serialWrapper.SerialWrite(packageToSend);
-        }
-
-        /// <summary>
-        /// Execute Start watchdog command
-        /// </summary>
-        private void StartWatchdogExecute(object obj)
-        {
-            // Handle that command execution can only be done once in a row
-            if (_startWDCommand.IsEnabled == false) return;
-            _startWDCommand.InProgress = true;
-            OnPropertyChanged(nameof(StartWDCommandEn));
-
-            logger.Debug($"Pressed start WD button");
-            
-            // Create package to MCU
-            TransmitCommunicationPackage<EmptyPayload> packageToSendStartWD = new TransmitCommunicationPackage<EmptyPayload>();
-            TransmitCommunicationPackage<EmptyPayload> packageToSendStartMonitoringWD = new TransmitCommunicationPackage<EmptyPayload>();
-
-            // Configure start watchdog command
-            packageToSendStartWD.ASICID = 1;
-            packageToSendStartWD.Cmd = MCUCommand.START_WATCHDOG;
-            packageToSendStartWD.Deleg = StartWatchdogDelegate;
-            packageToSendStartWD.PayloadType = typeof(EmptyPayload);
-       
-            // Send start command to MCU
-            serialWrapper.SerialWrite(packageToSendStartWD);
-
-            // Configure start watchdog status reading command
-            packageToSendStartMonitoringWD.ASICID = 1;
-            packageToSendStartMonitoringWD.Cmd = MCUCommand.START_MONITORING_WATCHDOG;
-            packageToSendStartMonitoringWD.Deleg = StatusMonitoringDelegate;
-            packageToSendStartMonitoringWD.PayloadType = typeof(WDStatusPayload);
-            packageToSendStartMonitoringWD.IsContinuous = true;
-       
-            // Send start status reading command to MCU
-            serialWrapper.SerialWrite(packageToSendStartMonitoringWD);
-
-            // Store message ID for stopping monitoring
-            _msgIdForMonitoring = packageToSendStartMonitoringWD.MsgID;
-        }
-
-        /// <summary>
-        /// Execute Stop watchdog command
-        /// </summary>
-        private void StopWatchdogExecute(object obj)
-        {
-            // Handle that command execution can only be done once in a row
-            if (_stopWDCommand.IsEnabled == false) return;
-            _stopWDCommand.InProgress = true;
-            OnPropertyChanged(nameof(StopWDCommandEn));
-
-            logger.Debug($"Pressed stop WD button");
-            
-            // Create package to MCU
-            TransmitCommunicationPackage<EmptyPayload> packageToSendStopWD = new TransmitCommunicationPackage<EmptyPayload>();
-            TransmitCommunicationPackage<EmptyPayload> packageToSendStopMonitoringWD = new TransmitCommunicationPackage<EmptyPayload>();
-
-            // Configure start watchdog command
-            packageToSendStopWD.ASICID = 1;
-            packageToSendStopWD.Cmd = MCUCommand.STOP_WATCHDOG;
-            packageToSendStopWD.Deleg = StopWatchdogDelegate;
-            packageToSendStopWD.PayloadType = typeof(EmptyPayload);
-       
-            // Send start command to MCU
-            serialWrapper.SerialWrite(packageToSendStopWD);
-
-            // Configure start watchdog status reading command
-            packageToSendStopMonitoringWD.ASICID = 1;
-            packageToSendStopMonitoringWD.Cmd = MCUCommand.STOP_MONITORING_WATCHDOG;
-            packageToSendStopMonitoringWD.Deleg = (package) => 
-                { 
-                    // Remove item for monitoring
-                    if (_msgIdForMonitoring != null)
-                    {
-                        serialWrapper.RemoveWaitlistItem(_msgIdForMonitoring);
-                        _msgIdForMonitoring = null;
-                    }  
-                    return; 
-                };
-            packageToSendStopMonitoringWD.PayloadType = typeof(EmptyPayload);
-       
-            // Send start status reading command to MCU
-            serialWrapper.SerialWrite(packageToSendStopMonitoringWD);
-        }
-
-        /// <summary>
-        /// Method that will be called when response for read WD config command is received
-        /// </summary>
-        /// <param name="response">MCU response package</param>
-        private void ReadConfigDelegate(IReceiveCommunicationPackage response)
-        {
             // Response received - unlock command usage
             _readWDConfigCommand.InProgress = false;
             OnPropertyChanged(nameof(ReadWDConfigCommandEn));
-
-            // Typecast response to actual type
-            ReceiveCommunicationPackage<AddressDataPayload> mcuResponse = (ReceiveCommunicationPackage<AddressDataPayload>) response;
 
             // Change state if response received
             if (mcuResponse.Payload.Error is not null)
@@ -1001,17 +871,50 @@ namespace AB15_GUI.WPF.ViewModels
         }
 
         /// <summary>
-        /// Method that will be called when response for write WD config command is received
+        /// Execute Write config to ASIC command
         /// </summary>
-        /// <param name="response">MCU response package</param>
-        private void WriteConfigDelegate(IReceiveCommunicationPackage response)
+        private async void WriteConfigToASICExecute(object obj)
         {
+            // Handle that command execution can only be done once in a row
+            if (_writeWDConfigCommand.IsEnabled == false) return;
+            _writeWDConfigCommand.InProgress = true;
+            OnPropertyChanged(nameof(WriteWDConfigCommandEn));
+
+            logger.Debug($"Pressed write config button");
+            
+            // Create package to MCU
+            TransmitCommunicationPackage<WDConfigurePayload> packageToSend = new TransmitCommunicationPackage<WDConfigurePayload>();
+
+            packageToSend.ASICID = 1;
+            packageToSend.Cmd = MCUCommand.CONFIGURE_WATCHDOG;
+            packageToSend.PayloadType = typeof(EmptyPayload);
+
+            // Unpack data from UI to fields of registers
+            // Load configs with data from ASIC
+            packageToSend.Payload.spi_config_wd1.Data = _spi_config_wd1.Data;
+            packageToSend.Payload.spi_config_wd2.Data = _spi_config_wd2.Data;
+            packageToSend.Payload.spi_config_wd_decouple.Data = _spi_config_wd_decouple.Data;
+
+            // Modify some fields based on UI input
+            packageToSend.Payload.spi_config_wd1.spi_set_locktime_wd1.Data = (UInt16) WD1LockTime;
+            packageToSend.Payload.spi_config_wd1.spi_set_responsetime_wd1.Data = (UInt16) WD1ResponseTime;
+
+            packageToSend.Payload.spi_config_wd2.spi_set_locktime_wd2.Data = (UInt16) WD2LockTime;
+            packageToSend.Payload.spi_config_wd2.spi_set_responsetime_wd2.Data = (UInt16) WD2ResponseTime;
+
+            packageToSend.Payload.spi_config_wd_decouple.spi_decouple_wd_en0.Data = (UInt16) ((IsEN0Enabled) ? (1) : (0));
+
+            packageToSend.Payload.spi_config_wd_thres0.spi_set_en0_thre_wd1.Data = (UInt16) WD1EN0DisableThreshold;
+            packageToSend.Payload.spi_config_wd_thres0.spi_set_en0_thre_wd2.Data = (UInt16) WD2EN0DisableThreshold;
+
+            // Send command to MCU
+            ReceiveCommunicationPackage<EmptyPayload>? mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
+
+            logger.Debug($"Received write WD config delegate");
+
             // Response received - unlock command usage
             _writeWDConfigCommand.InProgress = false;
             OnPropertyChanged(nameof(WriteWDConfigCommandEn));
-
-            // Typecast response to actual type
-            ReceiveCommunicationPackage<EmptyPayload> mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>) response;
 
             // If error received - pass it to error provider
             if (mcuResponse.Payload.Error is not null)
@@ -1025,57 +928,86 @@ namespace AB15_GUI.WPF.ViewModels
             ClearErrors(nameof(WriteConfigToASIC));
 
             _stateMachine.Fire(Triggers.ConfigurationLoaded);
-
-            logger.Debug($"Received write config delegate");
         }
 
         /// <summary>
-        /// Method that will be called when response for start WD command is received
+        /// Execute Start watchdog command
         /// </summary>
-        /// <param name="response">MCU response package</param>
-        private void StartWatchdogDelegate(IReceiveCommunicationPackage response)
+        private async void StartWatchdogExecute(object obj)
         {
+            // Handle that command execution can only be done once in a row
+            if (_startWDCommand.IsEnabled == false) return;
+            _startWDCommand.InProgress = true;
+            OnPropertyChanged(nameof(StartWDCommandEn));
+
+            logger.Debug($"Pressed start WD button");
+            
+            // Create package to MCU
+            TransmitCommunicationPackage<EmptyPayload> packageToSendStartWD = new TransmitCommunicationPackage<EmptyPayload>();
+
+            // Configure start watchdog command
+            packageToSendStartWD.ASICID = 1;
+            packageToSendStartWD.Cmd = MCUCommand.START_WATCHDOG;
+            packageToSendStartWD.PayloadType = typeof(EmptyPayload);
+       
+            // Send start command to MCU
+            ReceiveCommunicationPackage<EmptyPayload>? mcuResponseStartWD = (ReceiveCommunicationPackage<EmptyPayload>?) await serialWrapper.SerialWriteAsync(packageToSendStartWD);
+
             // Response received - unlock command usage
             _startWDCommand.InProgress = false;
             OnPropertyChanged(nameof(StartWDCommandEn));
-
-            // Typecast response to actual type
-            ReceiveCommunicationPackage<EmptyPayload> mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>) response;
-
-            // If error received - pass it to error provider
-            if (mcuResponse.Payload.Error is not null)
-            {
-                AddError(mcuResponse.Payload.Error, nameof(StartWatchdog));
-                logger.Error($"Error response received. Status: {mcuResponse.Status}");
-                return;
-            }
-
+        
             // Clear errors 
             ClearErrors(nameof(StartWatchdog));
+
+            // If error received - pass it to error provider
+            if (mcuResponseStartWD.Payload.Error is not null)
+            {
+                AddError(mcuResponseStartWD.Payload.Error, nameof(StartWatchdog));
+                logger.Error($"Error response received. Status: {mcuResponseStartWD.Status}");
+                return;
+            }
 
             _stateMachine.Fire(Triggers.StartedWD);
 
             logger.Debug($"Received start wd delegate");
+
+            // Start and execute monitoring - execution will stop here till monitoring is stopped
+            MonitorWDStatus();
         }
 
         /// <summary>
-        /// Method that will be called when response for stop WD command is received
+        /// Execute Stop watchdog command
         /// </summary>
-        /// <param name="response">MCU response package</param>
-        private void StopWatchdogDelegate(IReceiveCommunicationPackage response)
+        private async void StopWatchdogExecute(object obj)
         {
+            // Handle that command execution can only be done once in a row
+            if (_stopWDCommand.IsEnabled == false) return;
+            _stopWDCommand.InProgress = true;
+            OnPropertyChanged(nameof(StopWDCommandEn));
+
+            logger.Debug($"Pressed stop WD button");
+            
+            // Create package to MCU
+            TransmitCommunicationPackage<EmptyPayload> packageToSendStopWD = new TransmitCommunicationPackage<EmptyPayload>();
+
+            // Configure start watchdog command
+            packageToSendStopWD.ASICID = 1;
+            packageToSendStopWD.Cmd = MCUCommand.STOP_WATCHDOG;
+            packageToSendStopWD.PayloadType = typeof(EmptyPayload);
+       
+            // Send start command to MCU
+            ReceiveCommunicationPackage<EmptyPayload>? mcuResponseStopWD = (ReceiveCommunicationPackage<EmptyPayload>?) await serialWrapper.SerialWriteAsync(packageToSendStopWD);
+
             // Response received - unlock command usage
             _stopWDCommand.InProgress = false;
             OnPropertyChanged(nameof(StopWDCommandEn));
 
-            // Typecast response to actual type
-            ReceiveCommunicationPackage<EmptyPayload> mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>) response;
-
             // If error received - pass it to error provider
-            if (mcuResponse.Payload.Error is not null)
+            if (mcuResponseStopWD.Payload.Error is not null)
             {
-                AddError(mcuResponse.Payload.Error, nameof(StopWatchdog));
-                logger.Error($"Error response received. Status: {mcuResponse.Status}");
+                AddError(mcuResponseStopWD.Payload.Error, nameof(StopWatchdog));
+                logger.Error($"Error response received. Status: {mcuResponseStopWD.Status}");
                 return;
             }
 
@@ -1085,52 +1017,116 @@ namespace AB15_GUI.WPF.ViewModels
             _stateMachine.Fire(Triggers.StoppedWD);
 
             logger.Debug($"Received stop wd delegate");
+
+            // Execute stop monitoring
+            StopWDStatusMonitoring();
         }
 
         /// <summary>
-        /// Method that will be called when WD status data will be received from MCU
+        /// Method to start and handle responses from WD monitoring
         /// </summary>
-        /// <param name="response">MCU response package</param>
-        private void StatusMonitoringDelegate(IReceiveCommunicationPackage response)
+        private async void MonitorWDStatus()
         {
-            // Typecast response to actual type
-            ReceiveCommunicationPackage<WDStatusPayload> mcuResponse = (ReceiveCommunicationPackage<WDStatusPayload>) response;
+            TransmitCommunicationPackage<EmptyPayload> packageToSendStartMonitoringWD = new TransmitCommunicationPackage<EmptyPayload>();
+
+           // Configure start watchdog status reading command
+            packageToSendStartMonitoringWD.ASICID = 1;
+            packageToSendStartMonitoringWD.Cmd = MCUCommand.START_MONITORING_WATCHDOG;
+            packageToSendStartMonitoringWD.PayloadType = typeof(WDStatusPayload);
+            packageToSendStartMonitoringWD.IsContinuous = true;
+
+            Task<IReceiveCommunicationPackage?> responseTask = serialWrapper.SerialWriteAsync(packageToSendStartMonitoringWD);
+
+            // Store message ID for monitoring and set it to enabled
+            _msgIdForMonitoring = packageToSendStartMonitoringWD.MsgID;
+            _wdMonitoringEn = true;
+
+            ReceiveCommunicationPackage<WDStatusPayload>? mcuResponseMonitoring;
+            while (_wdMonitoringEn)
+            {
+                // Send start status reading command to MCU
+                mcuResponseMonitoring = (ReceiveCommunicationPackage<WDStatusPayload>?) await responseTask;
+
+                // Arm next iteration
+                responseTask = serialWrapper.GetContinuousTaskInstance((int) _msgIdForMonitoring);
+
+                // Clear errors 
+                ClearErrors(nameof(StartWatchdog));
+
+                // If error received - pass it to error provider
+                if (mcuResponseMonitoring is null)
+                {
+                    AddError("Received null when trying to send start monitoring package", nameof(StartWatchdog));
+                    logger.Error($"Error response received. Status: fault on sending start wd monitoring");
+                    continue;
+                }
+                if (mcuResponseMonitoring.Payload.Error is not null)
+                {
+                    AddError(mcuResponseMonitoring.Payload.Error, nameof(StartWatchdog));
+                    logger.Error($"Error response received. Status: {mcuResponseMonitoring.Status}");
+                    continue;
+                }
+
+                // Unpack received data
+                WDFaultStatus = (mcuResponseMonitoring.Payload.spi_read_wdstatus2.slff_set_spi.Data != 0) ? (FaultStatus.Fault) : (FaultStatus.Good);
+
+                WD1FaultStatus = (mcuResponseMonitoring.Payload.spi_read_wdstatus1.wd1_set_slff_spi.Data != 0) ? (FaultStatus.Fault) : (FaultStatus.Good);
+                WD2FaultStatus = (mcuResponseMonitoring.Payload.spi_read_wdstatus2.wd2_set_slff_spi.Data != 0) ? (FaultStatus.Fault) : (FaultStatus.Good);
+
+                OSCMONFaultStatus = (mcuResponseMonitoring.Payload.spi_read_wdstatus2.oscfail_set_slff_spi.Data != 0) ? (FaultStatus.Fault) : (FaultStatus.Good);
+                // ErrorPinFaultStatus = (mcuResponseMonitoring.Payload != 0) ? (FaultStatus.Fault) : (FaultStatus.Good); // TODO: no field in regmap
+
+                // WD1TimerFaultStatus = (mcuResponseMonitoring.Payload != 0) ? (FaultStatus.Fault) : (FaultStatus.Good); // TODO: no field in regmap
+                // WD2TimerFaultStatus = (mcuResponseMonitoring.Payload != 0) ? (FaultStatus.Fault) : (FaultStatus.Good); // TODO: no field in regmap
+
+                WD1QAFaultStatus = (mcuResponseMonitoring.Payload.spi_read_wdqa.qa1_set_slff_spi.Data != 0) ? (FaultStatus.Fault) : (FaultStatus.Good);
+                WD2QAFaultStatus = (mcuResponseMonitoring.Payload.spi_read_wdqa.qa2_set_slff_spi.Data != 0) ? (FaultStatus.Fault) : (FaultStatus.Good);
+
+                EN0HightStatus = (mcuResponseMonitoring.Payload.spi_read_enx.nen0c_read_spi.Data != 0) ? (FaultStatus.Fault) : (FaultStatus.Good);
+
+                WD1FaultCounter = mcuResponseMonitoring.Payload.spi_read_wdstatus1.wd1_cnt_spi.Data;
+                WD2FaultCounter = mcuResponseMonitoring.Payload.spi_read_wdstatus2.wd2_cnt_spi.Data;
+
+                WD1TimingMonitorCounter = mcuResponseMonitoring.Payload.spi_read_wdstatus1.wd1_tmon_spi.Data;
+                WD2TimingMonitorCounter = mcuResponseMonitoring.Payload.spi_read_wdstatus2.wd2_tmon_spi.Data;
+
+                WD1ErrorEventsCounter = mcuResponseMonitoring.Payload.spi_read_wdstatus1.error_count_spi.Data;
+            }
+        }
+
+        /// <summary>
+        /// Stop WD status monitoring
+        /// </summary>
+        private async void StopWDStatusMonitoring()
+        {
+            TransmitCommunicationPackage<EmptyPayload> packageToSendStopMonitoringWD = new TransmitCommunicationPackage<EmptyPayload>();
+
+            // Configure start watchdog status reading command
+            packageToSendStopMonitoringWD.ASICID = 1;
+            packageToSendStopMonitoringWD.Cmd = MCUCommand.STOP_MONITORING_WATCHDOG;
+            packageToSendStopMonitoringWD.PayloadType = typeof(EmptyPayload);
+       
+            // Send stop monitoring command
+            ReceiveCommunicationPackage<EmptyPayload>? mcuResponseStopMonitoringWD = (ReceiveCommunicationPackage<EmptyPayload>?) await serialWrapper.SerialWriteAsync(packageToSendStopMonitoringWD);
 
             // If error received - pass it to error provider
-            if (mcuResponse.Payload.Error is not null)
+            if (mcuResponseStopMonitoringWD is null)
             {
-                AddError(mcuResponse.Payload.Error, nameof(StartWatchdog));
-                logger.Error($"Error response received. Status: {mcuResponse.Status}");
+                AddError("Received null when trying to send start monitoring package", nameof(StartWatchdog));
+                logger.Error($"Error response received. Status: fault on sending start wd monitoring");
+                return;
+            }
+            if (mcuResponseStopMonitoringWD.Payload.Error is not null)
+            {
+                AddError(mcuResponseStopMonitoringWD.Payload.Error, nameof(StartWatchdog));
+                logger.Error($"Error response received. Status: {mcuResponseStopMonitoringWD.Status}");
                 return;
             }
 
-            // Clear errors 
-            ClearErrors(nameof(StartWatchdog));
-
-            // Implementation for AB15
-            WDFaultStatus = (mcuResponse.Payload.spi_read_wdstatus2.slff_set_spi.Data != 0) ? (FaultStatus.Fault) : (FaultStatus.Good);
-
-            WD1FaultStatus = (mcuResponse.Payload.spi_read_wdstatus1.wd1_set_slff_spi.Data != 0) ? (FaultStatus.Fault) : (FaultStatus.Good);
-            WD2FaultStatus = (mcuResponse.Payload.spi_read_wdstatus2.wd2_set_slff_spi.Data != 0) ? (FaultStatus.Fault) : (FaultStatus.Good);
-
-            OSCMONFaultStatus = (mcuResponse.Payload.spi_read_wdstatus2.oscfail_set_slff_spi.Data != 0) ? (FaultStatus.Fault) : (FaultStatus.Good);
-            // ErrorPinFaultStatus = (mcuResponse.Payload != 0) ? (FaultStatus.Fault) : (FaultStatus.Good); // TODO: no field in regmap
-
-            // WD1TimerFaultStatus = (mcuResponse.Payload != 0) ? (FaultStatus.Fault) : (FaultStatus.Good); // TODO: no field in regmap
-            // WD2TimerFaultStatus = (mcuResponse.Payload != 0) ? (FaultStatus.Fault) : (FaultStatus.Good); // TODO: no field in regmap
-
-            WD1QAFaultStatus = (mcuResponse.Payload.spi_read_wdqa.qa1_set_slff_spi.Data != 0) ? (FaultStatus.Fault) : (FaultStatus.Good);
-            WD2QAFaultStatus = (mcuResponse.Payload.spi_read_wdqa.qa2_set_slff_spi.Data != 0) ? (FaultStatus.Fault) : (FaultStatus.Good);
-
-            EN0HightStatus = (mcuResponse.Payload.spi_read_enx.nen0c_read_spi.Data != 0) ? (FaultStatus.Fault) : (FaultStatus.Good);
-
-            WD1FaultCounter = mcuResponse.Payload.spi_read_wdstatus1.wd1_cnt_spi.Data;
-            WD2FaultCounter = mcuResponse.Payload.spi_read_wdstatus2.wd2_cnt_spi.Data;
-
-            WD1TimingMonitorCounter = mcuResponse.Payload.spi_read_wdstatus1.wd1_tmon_spi.Data;
-            WD2TimingMonitorCounter = mcuResponse.Payload.spi_read_wdstatus2.wd2_tmon_spi.Data;
-
-            WD1ErrorEventsCounter = mcuResponse.Payload.spi_read_wdstatus1.error_count_spi.Data;
+            // Store message ID for monitoring and set it to enabled
+            serialWrapper.RemoveWaitlistItem(_msgIdForMonitoring);
+            _msgIdForMonitoring = null;
+            _wdMonitoringEn = false;
         }
 
         #endregion // Commands

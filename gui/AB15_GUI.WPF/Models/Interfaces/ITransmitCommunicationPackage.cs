@@ -33,11 +33,6 @@ namespace AB15_GUI.WPF.Models.Interfaces
         /// </summary>
         public Type? PayloadType { get; set; }
 
-        /// <summary>
-        /// Delegate that will be called for received msg
-        /// </summary>
-        public Action<IReceiveCommunicationPackage>? Deleg { get; set; }
-
         /// <summary> 
         /// Flag to indicate if package is valid
         /// </summary>

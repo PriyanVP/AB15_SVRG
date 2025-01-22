@@ -66,11 +66,14 @@ namespace AB15_GUI.WPF.ViewModels
         /// Method to add errors to property
         /// </summary>
         /// <param name="errorMessage">error message</param>
-        /// <param name="propertyName">name of property</param>
+        /// <param name="propertyName">name of property; if null - nothing will happen</param>
         protected void AddError(string errorMessage, [CallerMemberName] string? propertyName = null)
         {
             // TODO fix issue when propertyName not null but exeption still going
             //Contract.Requires<ArgumentNullException>((propertyName is not null), "Argument can't be null!");
+
+            // Do nothing if null provided as propertyName
+            if (propertyName == null) return;
 
             // Lock to avoid issues in multithreading
             lock (_baseLock)
