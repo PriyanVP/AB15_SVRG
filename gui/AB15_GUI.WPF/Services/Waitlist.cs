@@ -98,6 +98,76 @@ public class Waitlist : IWaitlist
     }
 
     /// <summary>
+    /// Handle responses from MCU
+    /// </summary>
+    /// <param name="package">raw package from MCU</param>
+    /// <returns>Nothing</returns>
+    public void HandleResponse(List<byte> package) 
+    {
+        // Create temporary variables
+        int msgID = package[SerialPackageConstants.MsgIDPosition] & (~(int)MsgIDMasks.ResponseBit); // clear response bit; can't be null!
+
+        lock (_lock)
+        {
+            WaitlistItem? waitlistItem = _waitlist.Find(itm => itm.msgID == msgID);
+
+            // No item found in waitlist
+            if (waitlistItem is null)
+            { 
+                return;
+            }
+
+            // Get response object
+            IReceiveCommunicationPackage tmpReceivedPackage = waitlistItem.receivedPackage;
+
+            // Convert raw package received from MCU to field values
+            bool isPackageValid = tmpReceivedPackage!.UnpackPackage(package);
+
+            // If package is not valid - skip
+            if (isPackageValid == false)
+            {
+                logger.Info("Received invalid message");
+                return;
+            }
+
+            // Report response (await finished) and remove item from waitlist if conditions are met
+            waitlistItem.taskCompletionSource.SetResult(tmpReceivedPackage);
+
+            // Remove item from waitlist, if not continuous
+            // All checks for removal are passed at this point
+            if (waitlistItem.isContinuous == false)
+            {
+                _waitlist.Remove(waitlistItem);
+            }
+            else 
+            {
+                // Continuous item - create new instances of received package and task
+                waitlistItem.receivedPackage = (IReceiveCommunicationPackage) Activator.CreateInstance(tmpReceivedPackage.GetType());
+                waitlistItem.taskCompletionSource = (TaskCompletionSource<IReceiveCommunicationPackage>) Activator.CreateInstance(waitlistItem.taskCompletionSource.GetType());
+            }
+        }
+    }
+
+    /// <summary>
+    /// Get task instance from waitlist by ID
+    /// To be used for continuous communication (few answers on one request)
+    /// </summary>
+    /// <param name="msgID">message ID</param>
+    /// <returns></returns>
+    public Task<IReceiveCommunicationPackage?> GetContinuousTaskInstance(int msgID)
+    {
+        // Avoid possibility of threading issues
+        lock (_lock)
+        {
+            // Find item in waitlist
+            WaitlistItem? waitlistItem = _waitlist.Find(itm => itm.msgID == msgID);
+
+            // If no item found in waitlist will return null as task result
+            return waitlistItem?.taskCompletionSource.Task ?? Task.FromResult<IReceiveCommunicationPackage?>(null);
+        }
+    }
+
+    /// <summary>
     /// Remove item from waitlist by ID. Intended for removing continuous items
     /// </summary>
     /// <param name="msgID">message ID</param>
@@ -137,97 +207,7 @@ public class Waitlist : IWaitlist
 
         return isRemovedSuccesfully;
     }
-
-    /// <summary>
-    /// Remove all items from waitlist
-    /// </summary>
-    /// <param name="msgID">message ID</param>
-    /// <returns>true if removal was successful, false - otherwise</returns>
-    public void ClearWaitlist()
-    {
-        lock (_lock)
-        {
-            _waitlist.Clear();
-        }
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="package">raw package from MCU</param>
-    /// <returns>Nothing</returns>
-    public void HandleResponse(List<byte> package) 
-    {
-        // Create temporary variables
-        int msgID = package[SerialPackageConstants.MsgIDPosition] & (~(int)MsgIDMasks.ResponseBit); // clear response bit; can't be null!
-
-        lock (_lock)
-        {
-            WaitlistItem? waitlistItem = _waitlist.Find(itm => itm.msgID == msgID);
-
-            // No item found in waitlist
-            if (waitlistItem is null)
-            { 
-                return;
-            }
-
-            // Get response object
-            IReceiveCommunicationPackage tmpReceivedPackage = waitlistItem.receivedPackage;
-
-            // Convert raw package received from MCU to field values
-            bool isPackageValid = tmpReceivedPackage!.UnpackPackage(package);
-
-            // If package is not valid - skip
-            if (isPackageValid == false)
-            {
-                logger.Info("Received invalid message");
-                tmpReceivedPackage!.UnpackPackage(new List<byte>() { (byte)MCUStatus.ERROR });
-            }
-
-            // Report response (await finished) and remove item from waitlist if conditions are met
-            waitlistItem.taskCompletionSource.SetResult(tmpReceivedPackage);
-
-            // Remove item from waitlist, if not continuous
-            // All checks for removal are passed at this point
-            if (waitlistItem.isContinuous == false)
-            {
-                _waitlist.Remove(waitlistItem);
-            }
-            else 
-            {
-                // Continuous item
-                waitlistItem.receivedPackage = (IReceiveCommunicationPackage) Activator.CreateInstance(tmpReceivedPackage.GetType());
-                // TODO: handling periodic communication (TaskCompletionSource<IReceiveCommunicationPackage>) Activator.CreateInstance(taskType);
-            }
-        }
-    }
-
-    /// <summary>
-    /// Generate unique MSG ID (not present in current waitlist) for new message to MCU
-    /// </summary>
-    /// <returns>msg ID if unoccupied IDs present, null - otherwise</returns>
-    private int? GenerateUniqueMsgID()
-    {
-        // Init local variables
-        int msgID = 0x0;
-        int maxValueForID = ((int)MsgIDMasks.GeneralPurposeBits);
-
-        // Loop through available Ids in waitlist till found minimal not occupied
-        for (msgID = 0; msgID <= maxValueForID; msgID++)
-        {
-            // Exit loop if found unoccupied msg ID
-            if (_waitlist.Exists(itm => itm.msgID == msgID) == false) break;
-        }
-
-        // No available IDs - error situation, communication not possible
-        if (msgID >= maxValueForID)
-        {
-            return null;
-        }
-
-        return msgID;
-    }
-   
+ 
     /// <summary>
     /// Removes outdated items from waitlist
     /// </summary>
@@ -271,6 +251,46 @@ public class Waitlist : IWaitlist
                 _waitlist.Remove(itm);
             }
         }
+    }
+
+    /// <summary>
+    /// Remove all items from waitlist
+    /// WARNING: may cause stuck of await operations
+    /// </summary>
+    /// <param name="msgID">message ID</param>
+    /// <returns>true if removal was successful, false - otherwise</returns>
+    public void ClearWaitlist()
+    {
+        lock (_lock)
+        {
+            _waitlist.Clear();
+        }
+    }
+
+    /// <summary>
+    /// Generate unique MSG ID (not present in current waitlist) for new message to MCU
+    /// </summary>
+    /// <returns>msg ID if unoccupied IDs present, null - otherwise</returns>
+    private int? GenerateUniqueMsgID()
+    {
+        // Init local variables
+        int msgID = 0x0;
+        int maxValueForID = ((int)MsgIDMasks.GeneralPurposeBits);
+
+        // Loop through available Ids in waitlist till found minimal not occupied
+        for (msgID = 0; msgID <= maxValueForID; msgID++)
+        {
+            // Exit loop if found unoccupied msg ID
+            if (_waitlist.Exists(itm => itm.msgID == msgID) == false) break;
+        }
+
+        // No available IDs - error situation, communication not possible
+        if (msgID >= maxValueForID)
+        {
+            return null;
+        }
+
+        return msgID;
     }
     
     /// <summary>
