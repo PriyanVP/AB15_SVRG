@@ -62,8 +62,8 @@ public class Waitlist : IWaitlist
 
         // Local variables
         int? msgID = null;
-        TaskCompletionSource<IReceiveCommunicationPackage>? taskCompletionSource = null;
-        IReceiveCommunicationPackage? receivedPackageObject = null;
+        IReceiveCommunicationPackage receivedPackageObject;
+        TaskCompletionSource<IReceiveCommunicationPackage> taskCompletionSource;
 
         // Avoid possibility of threading issues
         lock (_lock)
@@ -77,20 +77,20 @@ public class Waitlist : IWaitlist
                 receivedPackageObject = (IReceiveCommunicationPackage) Activator.CreateInstance(packageType);
 
                 // Create received package instance dynamically based on type
-                Type taskType =  typeof(TaskCompletionSource<>).MakeGenericType(packageType);
+                Type taskType =  typeof(TaskCompletionSource<>).MakeGenericType(typeof(IReceiveCommunicationPackage));
                 taskCompletionSource = (TaskCompletionSource<IReceiveCommunicationPackage>) Activator.CreateInstance(taskType);
+
+                // Skip if any of the required parameters is null
+                if ((msgID is not null) && (receivedPackageObject is not null) && (taskCompletionSource is not null))
+                {
+                    _waitlist.Add(new WaitlistItem(receivedPackageObject, taskCompletionSource, msgID: msgID, isContinuous: isContinuous));
+                }
             }
             catch (Exception ex)
             {
                 logger.Error($"Error while creating task or received package object: {ex.Message}");
                 msgID = null;
                 taskCompletionSource = null;
-            }
-
-            // Skip if any of the required parameters is null
-            if ((msgID is not null) && (receivedPackageObject is not null) && (taskCompletionSource is not null))
-            {
-                _waitlist.Add(new WaitlistItem(receivedPackageObject, taskCompletionSource, msgID: msgID, isContinuous: isContinuous));
             }
         }
 
@@ -153,9 +153,12 @@ public class Waitlist : IWaitlist
     /// To be used for continuous communication (few answers on one request)
     /// </summary>
     /// <param name="msgID">message ID</param>
-    /// <returns></returns>
-    public Task<IReceiveCommunicationPackage?> GetContinuousTaskInstance(int msgID)
+    /// <returns>Task with awaitable response or Task with null response if item not found</returns>
+    public Task<IReceiveCommunicationPackage?> GetContinuousTaskInstance(int? msgID)
     {
+        // Handling null input scenario (valid option)
+        if (msgID is null) return Task.FromResult<IReceiveCommunicationPackage?>(null);
+
         // Avoid possibility of threading issues
         lock (_lock)
         {

@@ -642,13 +642,13 @@ namespace AB15_GUI.WPF.Models
                 mcuResponse = (ReceiveCommunicationPackage<ReadRegisterPayload>?) await task;
 
                 // Arm next iteration
-                task = serialWrapper.GetContinuousTaskInstance((int) responseMsgId);
+                task = serialWrapper.GetContinuousTaskInstance(responseMsgId);
 
                 // If error received - pass it to error provider
                 if (mcuResponse is null)
                 {
                     logger.Error($"Error response received. Status: fault on sending command");
-                    return;
+                    continue;
                 }
                 if (mcuResponse.Payload.Error is not null)
                 {
@@ -660,7 +660,7 @@ namespace AB15_GUI.WPF.Models
                     string errorMsg = $"Error response received. Status: {mcuResponse.Status}. Message: {mcuResponse.Payload.Error}";
                     OnErrorCallbackReceived(new CallbackErrorEventArgs() { Error = errorMsg });
                     logger.Error(errorMsg);
-                    return;
+                    continue;
                 }
 
                 // No error present - update ASIC state

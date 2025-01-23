@@ -309,7 +309,7 @@ public class SerialWrapper : IDisposable, ISerialWrapper
     /// </summary>
     /// <param name="msgID">message ID</param>
     /// <returns></returns>
-    public Task<IReceiveCommunicationPackage?> GetContinuousTaskInstance(int msgID)
+    public Task<IReceiveCommunicationPackage?> GetContinuousTaskInstance(int? msgID)
     {
         return _responseWaitlist.GetContinuousTaskInstance(msgID);
     }

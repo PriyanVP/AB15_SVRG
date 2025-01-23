@@ -1048,7 +1048,7 @@ namespace AB15_GUI.WPF.ViewModels
                 mcuResponseMonitoring = (ReceiveCommunicationPackage<WDStatusPayload>?) await responseTask;
 
                 // Arm next iteration
-                responseTask = serialWrapper.GetContinuousTaskInstance((int) _msgIdForMonitoring);
+                responseTask = serialWrapper.GetContinuousTaskInstance(_msgIdForMonitoring);
 
                 // Clear errors 
                 ClearErrors(nameof(StartWatchdog));

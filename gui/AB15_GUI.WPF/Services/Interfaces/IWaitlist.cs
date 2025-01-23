@@ -43,7 +43,7 @@ namespace AB15_GUI.WPF.Services.Interfaces
         /// </summary>
         /// <param name="msgID">message ID</param>
         /// <returns>Task instance or null if not found</returns>
-        Task<IReceiveCommunicationPackage?> GetContinuousTaskInstance(int msgID);
+        Task<IReceiveCommunicationPackage?> GetContinuousTaskInstance(int? msgID);
 
         /// <summary>
         /// Remove all items from waitlist

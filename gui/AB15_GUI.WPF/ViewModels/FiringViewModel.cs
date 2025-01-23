@@ -1322,9 +1322,13 @@ namespace AB15_GUI.WPF.ViewModels
                 {
                     AddError($"Error in firing occurred! Channel {i+1}, message: {fireCntRegTemplate.flm_fire_sequence_err.Description}", nameof(FireSimultaneous));
                     logger.Error($"Error in firing occurred! Channel {i+1}, message: {fireCntRegTemplate.flm_fire_sequence_err.Description}");
-                    return;
+                    continue;
                 }
             }
+
+            // Unlock firing command
+            _fireSimultaneousCommand.InProgress = false;
+            OnPropertyChanged(nameof(FireSimultaneousCommandEn));
         }
 
         /// <summary>
@@ -1599,8 +1603,11 @@ namespace AB15_GUI.WPF.ViewModels
         {
             bool isValid = true;
 
-            // Clear previous errors
-            ClearErrors(reportingElementName);
+            // Clear previous errors if reporting element was specified
+            if (reportingElementName is not null)
+            {
+                ClearErrors(reportingElementName);
+            }
 
             // Response not received
             if (response is null)
@@ -1626,7 +1633,7 @@ namespace AB15_GUI.WPF.ViewModels
             }
 
             // Apply custom validation if provided
-            if (customValidation is null)
+            if (customValidation is not null)
             {
                 isValid &= customValidation(response);
             }
