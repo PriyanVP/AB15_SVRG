@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using AB15_GUI.WPF.NLog;
 using Stateless;
 using Stateless.Graph;
@@ -43,7 +42,8 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// Constructor
         /// </summary>
-        public WatchdogViewModel(ILoggingService logger, ISerialWrapper serialWrapper, IASICWrapper asicWrapper)
+        public WatchdogViewModel(ILoggingService logger, ISerialWrapper serialWrapper, IASICWrapper asicWrapper) :
+                base(logger)
         {
             this.logger = logger;
             this.serialWrapper = serialWrapper;
@@ -821,22 +821,21 @@ namespace AB15_GUI.WPF.ViewModels
             _readWDConfigCommand.InProgress = false;
             OnPropertyChanged(nameof(ReadWDConfigCommandEn));
 
-            // Change state if response received
-            if (mcuResponse.Payload.Error is not null)
+            if (IsResponseValid(mcuResponse, nameof(ReadConfigFromASIC), 
+                    (response) => 
+                        {
+                            bool isValid = response?.Payload.Data.Count >= 6;
+                            if (isValid == false)
+                            {
+                                AddError($"Unexpected amount of readout data received. Expected 6, but got {response.Payload.Data.Count}", nameof(ReadConfigFromASIC));
+                                logger.Error($"Unexpected amount of readout data received. Expected 6, but got {response.Payload.Data.Count}.");
+                            }
+                            return isValid;
+                        }
+                ) == false) 
             {
-                AddError(mcuResponse.Payload.Error, nameof(ReadConfigFromASIC));
-                logger.Error($"Error response received. Status: {mcuResponse.Status}");
                 return;
             }
-            else if (mcuResponse.Payload.Data.Count < 6)
-            {
-                AddError($"Unexpected amount of readout data received. Expected 6, but got {mcuResponse.Payload.Data.Count}.", nameof(ReadConfigFromASIC));
-                logger.Error($"Unexpected amount of readout data received. Expected 6, but got {mcuResponse.Payload.Data.Count}.");
-                return;
-            }
-
-            // Clear errors 
-            ClearErrors(nameof(ReadConfigFromASIC));
 
             // Fire trigger for state machine
             _stateMachine.Fire(Triggers.GotConfiguration);
@@ -910,22 +909,13 @@ namespace AB15_GUI.WPF.ViewModels
             // Send command to MCU
             ReceiveCommunicationPackage<EmptyPayload>? mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
 
-            logger.Debug($"Received write WD config delegate");
+            logger.Debug($"Received write WD config response");
 
             // Response received - unlock command usage
             _writeWDConfigCommand.InProgress = false;
             OnPropertyChanged(nameof(WriteWDConfigCommandEn));
 
-            // If error received - pass it to error provider
-            if (mcuResponse.Payload.Error is not null)
-            {
-                AddError(mcuResponse.Payload.Error, nameof(WriteConfigToASIC));
-                logger.Error($"Error response received. Status: {mcuResponse.Status}. Message: {mcuResponse.Payload.Error}");
-                return;
-            }
-
-            // Clear errors 
-            ClearErrors(nameof(WriteConfigToASIC));
+            if (IsResponseValid(mcuResponse, nameof(WriteConfigToASIC)) == false) return;
 
             _stateMachine.Fire(Triggers.ConfigurationLoaded);
         }
@@ -956,17 +946,8 @@ namespace AB15_GUI.WPF.ViewModels
             // Response received - unlock command usage
             _startWDCommand.InProgress = false;
             OnPropertyChanged(nameof(StartWDCommandEn));
-        
-            // Clear errors 
-            ClearErrors(nameof(StartWatchdog));
 
-            // If error received - pass it to error provider
-            if (mcuResponseStartWD.Payload.Error is not null)
-            {
-                AddError(mcuResponseStartWD.Payload.Error, nameof(StartWatchdog));
-                logger.Error($"Error response received. Status: {mcuResponseStartWD.Status}");
-                return;
-            }
+            if (IsResponseValid(mcuResponseStartWD, nameof(StartWatchdog)) == false) return;
 
             _stateMachine.Fire(Triggers.StartedWD);
 
@@ -999,20 +980,11 @@ namespace AB15_GUI.WPF.ViewModels
             // Send start command to MCU
             ReceiveCommunicationPackage<EmptyPayload>? mcuResponseStopWD = (ReceiveCommunicationPackage<EmptyPayload>?) await serialWrapper.SerialWriteAsync(packageToSendStopWD);
 
+            if (IsResponseValid(mcuResponseStopWD, nameof(StopWatchdog)) == false) return;
+
             // Response received - unlock command usage
             _stopWDCommand.InProgress = false;
             OnPropertyChanged(nameof(StopWDCommandEn));
-
-            // If error received - pass it to error provider
-            if (mcuResponseStopWD.Payload.Error is not null)
-            {
-                AddError(mcuResponseStopWD.Payload.Error, nameof(StopWatchdog));
-                logger.Error($"Error response received. Status: {mcuResponseStopWD.Status}");
-                return;
-            }
-
-            // Clear errors 
-            ClearErrors(nameof(StopWatchdog));
 
             _stateMachine.Fire(Triggers.StoppedWD);
 
@@ -1050,22 +1022,7 @@ namespace AB15_GUI.WPF.ViewModels
                 // Arm next iteration
                 responseTask = serialWrapper.GetContinuousTaskInstance(_msgIdForMonitoring);
 
-                // Clear errors 
-                ClearErrors(nameof(StartWatchdog));
-
-                // If error received - pass it to error provider
-                if (mcuResponseMonitoring is null)
-                {
-                    AddError("Received null when trying to send start monitoring package", nameof(StartWatchdog));
-                    logger.Error($"Error response received. Status: fault on sending start wd monitoring");
-                    continue;
-                }
-                if (mcuResponseMonitoring.Payload.Error is not null)
-                {
-                    AddError(mcuResponseMonitoring.Payload.Error, nameof(StartWatchdog));
-                    logger.Error($"Error response received. Status: {mcuResponseMonitoring.Status}");
-                    continue;
-                }
+                if (IsResponseValid(mcuResponseMonitoring, nameof(StartWatchdog)) == false) continue;
 
                 // Unpack received data
                 WDFaultStatus = (mcuResponseMonitoring.Payload.spi_read_wdstatus2.slff_set_spi.Data != 0) ? (FaultStatus.Fault) : (FaultStatus.Good);
@@ -1109,19 +1066,7 @@ namespace AB15_GUI.WPF.ViewModels
             // Send stop monitoring command
             ReceiveCommunicationPackage<EmptyPayload>? mcuResponseStopMonitoringWD = (ReceiveCommunicationPackage<EmptyPayload>?) await serialWrapper.SerialWriteAsync(packageToSendStopMonitoringWD);
 
-            // If error received - pass it to error provider
-            if (mcuResponseStopMonitoringWD is null)
-            {
-                AddError("Received null when trying to send start monitoring package", nameof(StartWatchdog));
-                logger.Error($"Error response received. Status: fault on sending start wd monitoring");
-                return;
-            }
-            if (mcuResponseStopMonitoringWD.Payload.Error is not null)
-            {
-                AddError(mcuResponseStopMonitoringWD.Payload.Error, nameof(StartWatchdog));
-                logger.Error($"Error response received. Status: {mcuResponseStopMonitoringWD.Status}");
-                return;
-            }
+            if (IsResponseValid(mcuResponseStopMonitoringWD, nameof(StartWatchdog)) == false) return;
 
             // Store message ID for monitoring and set it to enabled
             serialWrapper.RemoveWaitlistItem(_msgIdForMonitoring);

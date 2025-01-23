@@ -52,7 +52,8 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// Constructor
         /// </summary>
-        public FiringViewModel(ILoggingService logger, ISerialWrapper serialWrapper, IASICWrapper asicWrapper)
+        public FiringViewModel(ILoggingService logger, ISerialWrapper serialWrapper, IASICWrapper asicWrapper) :
+                base(logger)
         {
             // Assign references to objects to local variables
             this.logger = logger;
@@ -1591,54 +1592,5 @@ namespace AB15_GUI.WPF.ViewModels
         }
 
         #endregion // ASIC_events
-
-        /// <summary>
-        /// Generic validation method
-        /// </summary>
-        /// <param name="response">response from MCU</param>
-        /// <param name="reportingElementName">observable element to report errors</param>
-        /// <param name="customValidation">method to do custom validation (response true/false)</param>
-        /// <returns>true if response is valid, false if not valid</returns>
-        private bool IsResponseValid<T>(T response, string? reportingElementName, Predicate<T>? customValidation = null) where T : IReceiveCommunicationPackage
-        {
-            bool isValid = true;
-
-            // Clear previous errors if reporting element was specified
-            if (reportingElementName is not null)
-            {
-                ClearErrors(reportingElementName);
-            }
-
-            // Response not received
-            if (response is null)
-            {
-                logger.Error($"Error response received. Status: fault on sending command");
-                isValid = false;
-            }
-
-            // Error in payload
-            try
-            {
-                dynamic dynamicResponse = response;
-                if (dynamicResponse.Payload.Error is not null)
-                {
-                    AddError(dynamicResponse.Payload.Error, reportingElementName);
-                    logger.Error($"Error response received. Status: {dynamicResponse.Status}");
-                    isValid = false;
-                }
-            }
-            catch
-            {
-                isValid = false;
-            }
-
-            // Apply custom validation if provided
-            if (customValidation is not null)
-            {
-                isValid &= customValidation(response);
-            }
-            
-            return isValid;
-        }
     }
 }

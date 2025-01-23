@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
+using AB15_GUI.WPF.Models.Interfaces;
+using AB15_GUI.WPF.NLog;
 
 namespace AB15_GUI.WPF.ViewModels
 {
@@ -18,6 +20,11 @@ namespace AB15_GUI.WPF.ViewModels
         private readonly object _baseLock = new object();
 
         /// <summary>
+        /// Local logger instance
+        /// </summary>
+        private readonly ILoggingService logger;
+
+        /// <summary>
         /// Dictionary that stores list of errors for each property
         /// </summary>
         private readonly Dictionary<string, List<string>> _propertyNameToErrorsDictionary = new Dictionary<string, List<string>>();
@@ -26,7 +33,16 @@ namespace AB15_GUI.WPF.ViewModels
         /// Dictionary that stores help messages for UI
         /// </summary>
         private readonly Dictionary<string, string> _helpMsgDicitionary = new Dictionary<string, string>();
-       
+
+        /// <summary>
+        /// Constructor for base VM class
+        /// </summary>
+        /// <param name="logger">reference to the logger</param>
+        public ViewModelBase(ILoggingService logger)
+        {
+            this.logger = logger;
+        }
+
         /// <summary>
         /// Observable property for providing help messages for UI
         /// Note: OnPropertyChanged evnt to be called manually after initial set up
@@ -131,6 +147,53 @@ namespace AB15_GUI.WPF.ViewModels
 
             // Raise event to notify that dictionary content has changed
             OnPropertyChanged(nameof(HelpMsgDictionary));
+        }
+
+        /// <summary>
+        /// Generic validation method
+        /// </summary>
+        /// <param name="response">response from MCU</param>
+        /// <param name="reportingElementName">observable element to report errors</param>
+        /// <param name="customValidation">method to do custom validation (response true/false)</param>
+        /// <returns>true if response is valid, false if not valid</returns>
+        protected bool IsResponseValid<T>(T response, string? reportingElementName, Predicate<T>? customValidation = null) where T : IReceiveCommunicationPackage?
+        {
+            // Clear previous errors if reporting element was specified
+            if (reportingElementName is not null)
+            {
+                ClearErrors(reportingElementName);
+            }
+
+            // Response not received
+            if (response is null)
+            {
+                logger.Error($"Error response received. Status: fault on sending command");
+                return false;
+            }
+
+            // Error in payload
+            try
+            {
+                dynamic dynamicResponse = response;
+                if (dynamicResponse.Payload.Error is not null)
+                {
+                    AddError(dynamicResponse.Payload.Error, reportingElementName);
+                    logger.Error($"Error response received. Status: {dynamicResponse.Status}");
+                    return false;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+
+            // Apply custom validation if provided
+            if (customValidation is not null)
+            {
+                return customValidation(response);
+            }
+            
+            return true;
         }
 
         /// <summary>

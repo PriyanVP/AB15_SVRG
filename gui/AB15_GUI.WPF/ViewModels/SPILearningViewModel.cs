@@ -34,7 +34,8 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// Constructor
         /// </summary>
-        public SPILearningViewModel(ILoggingService logger, ISerialWrapper serialWrapper, IASICWrapper asicWrapper)
+        public SPILearningViewModel(ILoggingService logger, ISerialWrapper serialWrapper, IASICWrapper asicWrapper) :
+                base(logger)
         {
             // Assign references to objects to local variables
             this.logger = logger;
@@ -220,7 +221,8 @@ namespace AB15_GUI.WPF.ViewModels
             SPICommandCommandEn = true;
             OnPropertyChanged(nameof(SPICommand));
             IsSPILearningEn = true;
-            ClearErrors(nameof(SPICommand));
+
+            if (IsResponseValid(mcuResponse, nameof(SPICommand)) == false) return;
       
             // Update MISO frame only if data available
             if (mcuResponse.Payload.Data.Count == 2)
@@ -236,14 +238,6 @@ namespace AB15_GUI.WPF.ViewModels
             // Create next record
             MOSIRecord CurrentMOSIRecordCopy = RefToActiveRecord.MOSI.Copy();
             RefToActiveRecord = new SPITransactionRecord(mosi: CurrentMOSIRecordCopy);
-
-            // Change state if response received
-            if (mcuResponse.Payload.Error is not null)
-            {
-                AddError(mcuResponse.Payload.Error, nameof(SPICommand));
-                logger.Error($"Error response received. Status: {mcuResponse.Status}");
-                return;
-            }
         }
 
         #endregion // Commands
