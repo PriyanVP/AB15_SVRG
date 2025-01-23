@@ -22,7 +22,8 @@ namespace AB15_GUI.WPF.ViewModels
         /// Constructor for creating LoggerViewModel. Data connection to observable property is done there
         /// </summary>
         /// <param name="logger">logger reference</param>
-        public LoggerViewModel(ILoggingService logger, LogMemoryRecordTarget target)
+        public LoggerViewModel(ILoggingService logger, LogMemoryRecordTarget target) :
+                base(logger)
         {
             this.logger = logger;
 
