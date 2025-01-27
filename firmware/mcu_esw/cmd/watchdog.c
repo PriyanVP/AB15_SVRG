@@ -252,7 +252,7 @@ void CmdConfigureWatchdog(USBReceiveData const * const commandPackage)
 
 void IntCmdAcknowledgeWatchdog1(void)
 {
-    uint16 question;
+    uint8 question;
     uint16 answer = 0;
     SPIReceiveDataNormal data;
 
@@ -271,7 +271,7 @@ void IntCmdAcknowledgeWatchdog1(void)
 
 void IntCmdAcknowledgeWatchdog2(void)
 {
-    uint16 question;
+    uint8 question;
     uint16 answer = 0;
     SPIReceiveDataNormal data;
 
@@ -320,13 +320,12 @@ void CmdStartWatchdog(USBReceiveData const * const commandPackage)
     QSPIWriteNormal(SPI1_CS1MASTER, SAFETY_LOGIC_SPI_SET_WDSETTINGS, SAFETY_LOGIC_SPI_SET_WDSETTINGS_SPI_ON_SL_MASK);
 
     // Configure periodicity of Watchdog serving MCU interrupt
-    ConfigureWatchdogPeriodicity(WD1, g_wd1Parameters.wdConfig.ackPeriod);
-    ConfigureWatchdogPeriodicity(WD2, g_wd2Parameters.wdConfig.ackPeriod);
+    ConfigureTimerPeriodicity(WATCHDOG1_TIMER, g_wd1Parameters.wdConfig.ackPeriod);
+    ConfigureTimerPeriodicity(WATCHDOG2_TIMER, g_wd2Parameters.wdConfig.ackPeriod);
 
     // Turn on Watchdog serving interrupt of MCU
-    EnableWatchdogInterrupt(WD2);
-    EnableWatchdogInterrupt(WD1);
-
+    EnableTimerInterrupt(WATCHDOG1_TIMER);
+    EnableTimerInterrupt(WATCHDOG2_TIMER);
 
     // Modify state
     g_wd1Parameters.state = WD_STATE_RUNNING_NORMAL;
@@ -342,8 +341,8 @@ void CmdStartWatchdog(USBReceiveData const * const commandPackage)
 void CmdStopWatchdog(USBReceiveData const * const commandPackage)
 {
     // Turn off Watchdog serving interrupt of MCU
-    DisableWatchdogInterrupt(WD1);
-    DisableWatchdogInterrupt(WD2);
+    DisableTimerInterrupt(WATCHDOG1_TIMER);
+    DisableTimerInterrupt(WATCHDOG2_TIMER);
 
     // Modify state and flags for WD
     g_wd1Parameters.isWDConfigured = FALSE;
@@ -419,8 +418,8 @@ void CmdStartMonitoringWatchdog(USBReceiveData const * const commandPackage)
     g_wdStatusMonitoringConfig.enStatusReading = TRUE;
 
     // Arm timer routine
-    ConfigureWatchdogStatusCheckPeriodicity(WD_STATUS_CHECK_PERIOD);
-    EnableWatchdogStatusCheckInterrupt();
+    ConfigureTimerPeriodicity(WATCHDOG_STATUS_CHECK_TIMER, WD_STATUS_CHECK_PERIOD);
+    EnableTimerInterrupt(WATCHDOG_STATUS_CHECK_TIMER);
 }
 
 void CmdStopMonitoringWatchdog(USBReceiveData const * const commandPackage)
@@ -429,7 +428,7 @@ void CmdStopMonitoringWatchdog(USBReceiveData const * const commandPackage)
     g_wdStatusMonitoringConfig.enStatusReading = FALSE;
 
     // Unarm timer routine
-    DisableWatchdogStatusCheckInterrupt();
+    DisableTimerInterrupt(WATCHDOG_STATUS_CHECK_TIMER);
 
     // Prepare acknowledge message
     USBTransmitData packageToSend;
