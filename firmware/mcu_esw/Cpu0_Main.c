@@ -11,7 +11,6 @@
 #include "cmd/flm_diagnostics.h"
 #include "cmd/general_cmd.h"
 #include "cmd/seq_cmd.h"
-#include "cmd/gpio_cmd.h"
 #include "cmd/watchdog.h"
 #include "cmd/testmode_cmd.h"
 #include "cmd/hacked_timer_cmd.h" // TODO: refactor
