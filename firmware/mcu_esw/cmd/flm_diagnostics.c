@@ -248,10 +248,12 @@ void CmdEnableFLMDiag(USBReceiveData const * const commandPackage)
     // Enable FLM diag functionality
     // FLM diag state flag is set
     g_isflmDiagEn = TRUE;
+
     // Configure periodicity of FLM diagnoscics MCU interrupt
-    ConfigureFLMDiagPeriodicity(FLM_DIAG_INTERRUPT_PERIODICITY);
+    ConfigureTimerPeriodicity(FLM_DIAG_TIMER, FLM_DIAG_INTERRUPT_PERIODICITY);
+
     // Turn on FLM diagnostics performing interrupt of MCU
-    EnableFLMDiagInterrupt();
+    EnableTimerInterrupt(FLM_DIAG_TIMER);
 
     packageToSend.device_id = commandPackage->device_id;
     packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
@@ -283,7 +285,7 @@ void CmdDisableFLMDiag(USBReceiveData const * const commandPackage)
     g_flmDiagExecNumber = FLM_DIAG_ORDER_SHORT_DET;
 
     // Turn off FLM diagnostics performing interrupt of MCU
-    DisableFLMDiagInterrupt();
+    DisableTimerInterrupt(FLM_DIAG_TIMER);
 
     packageToSend.device_id = commandPackage->device_id;
     packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
