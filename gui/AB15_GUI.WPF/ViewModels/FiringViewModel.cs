@@ -1034,9 +1034,6 @@ namespace AB15_GUI.WPF.ViewModels
             // Validate response
             if (IsResponseValid(mcuResponse0, nameof(FireSimultaneous)) == false) return;
 
-            // Emulate delay TODO: find better approach
-            Thread.Sleep(1);
-
             // == Step 0.2 - disabling monoflop TODO: add register model, replace delegate
 
             // Create package to MCU
@@ -1052,9 +1049,6 @@ namespace AB15_GUI.WPF.ViewModels
 
             // Validate response
             if (IsResponseValid(mcuResponse02, nameof(FireSimultaneous)) == false) return;
-
-            // Emulate delay TODO: find better approach
-            Thread.Sleep(1);
 
             // == Step 1 - unlocking ==
 
@@ -1222,7 +1216,7 @@ namespace AB15_GUI.WPF.ViewModels
             if (IsResponseValid(mcuResponse2, nameof(FireSimultaneous)) == false) return;
 
             // Emulate delay TODO: find better approach
-            Thread.Sleep(13);
+            await Task.Delay(13);
 
             // == Step 3 - cleaning & locking ==
 
@@ -1552,7 +1546,7 @@ namespace AB15_GUI.WPF.ViewModels
             // TODO: temporary approach
             UpdateMonitoringStatusTable(caller.State, true);
 
-            Thread.Sleep(200); // TODO: Test
+            await Task.Delay(200);
 
             // Execute Test mode 2 diagnostics
             await ExecuteTestMode2DiagnosticsAsync();
