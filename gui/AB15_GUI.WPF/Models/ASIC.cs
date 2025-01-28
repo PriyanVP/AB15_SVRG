@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Timers;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Collections.Generic;
@@ -283,7 +282,7 @@ namespace AB15_GUI.WPF.Models
         {
             logger.Debug($"Started periodic state reading (timer) on ASIC {ID}");
 
-            GetASICState();
+            GetASICStateAsync();
 
             // // Precondition check
             // if (stateReadingTimer != null)
@@ -350,7 +349,7 @@ namespace AB15_GUI.WPF.Models
         /// <summary>
         /// Write configuration data and apply CRC
         /// </summary>
-        public async void WriteConfigurationWithCRC()
+        public async Task WriteConfigurationWithCRCAsync()
         {
             logger.Debug($"Started execution of WriteConfiguration command on ASIC {ID}");
 
@@ -454,7 +453,7 @@ namespace AB15_GUI.WPF.Models
         /// <summary>
         /// Lock configuration (EOP)
         /// </summary>
-        public async void LockConfiguration()
+        public async Task LockConfigurationAsync()
         {
             logger.Debug($"Started execution of EOP command on ASIC {ID}");
 
@@ -497,7 +496,7 @@ namespace AB15_GUI.WPF.Models
         /// Execute SPI_COLDSTART1 command
         /// Will cause ASIC reset (unconditionally)
         /// </summary>
-        public async void ExecuteSPIColdstart1()
+        public async Task ExecuteSPIColdstart1Async()
         {
             logger.Debug($"Started execution of SPIColdstart1 command on ASIC {ID}");
 
@@ -517,7 +516,7 @@ namespace AB15_GUI.WPF.Models
             // Send command to MCU and wait for response
             ReceiveCommunicationPackage<EmptyPayload>? mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
 
-            // If error received - pass it to error provider
+            // If error received - pass it to error provider TODO: optimize
             if (mcuResponse is null)
             {
                 logger.Error($"Error response received. Status: fault on sending command");
@@ -538,7 +537,7 @@ namespace AB15_GUI.WPF.Models
         /// <summary>
         /// Execute transition from test mode 1 command
         /// </summary>
-        public async void ExecuteTestMode1Transition()
+        public async Task ExecuteTestMode1TransitionAsync()
         {
             logger.Debug($"Started execution of Test mode 1 transition command on ASIC {ID}");
 
@@ -576,7 +575,7 @@ namespace AB15_GUI.WPF.Models
         /// <summary>
         /// Execute transition from test mode 2 command
         /// </summary>
-        public async void ExecuteTestMode2Transition()
+        public async Task ExecuteTestMode2TransitionAsync()
         {
             logger.Debug($"Started execution of Test mode 2 transition command on ASIC {ID}");
 
@@ -614,7 +613,7 @@ namespace AB15_GUI.WPF.Models
         /// <summary>
         /// Read current ASIC state + start init mode timeout resetting
         /// </summary>
-        private async void GetASICState()
+        private async Task GetASICStateAsync()
         {
             logger.Debug($"Started execution of GetASICState command on ASIC {ID}");
 
