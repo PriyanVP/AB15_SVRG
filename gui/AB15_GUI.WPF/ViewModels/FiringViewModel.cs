@@ -106,10 +106,10 @@ namespace AB15_GUI.WPF.ViewModels
             string graph = UmlDotGraph.Format(_stateMachine.GetInfo());
 
             // Init commands for controls
-            WriteConfiguration      = new RelayCommand(WriteConfigToASICExecute);
-            TransferToNormalMode    = new RelayCommand(TransferToNormalModeExecute);
-            FireSimultaneous        = new RelayCommand(FireSimultaneousCommandExecute);
-            StartStopCyclicReading  = new RelayCommand(StartStopCyclicReadingExecute);
+            WriteConfiguration      = new RelayCommand(WriteConfigToASICExecuteAsync);
+            TransferToNormalMode    = new RelayCommand(TransferToNormalModeExecuteAsync);
+            FireSimultaneous        = new RelayCommand(FireSimultaneousCommandExecuteAsync);
+            StartStopCyclicReading  = new RelayCommand(StartStopCyclicReadingExecuteAsync);
 
             // Fire transition to Idle state
             _stateMachine.Fire(Triggers.POR);
@@ -962,7 +962,7 @@ namespace AB15_GUI.WPF.ViewModels
         /// Execute Write config to ASIC command
         /// Note: will write ALL configuration and apply cyclic CRC
         /// </summary>
-        private void WriteConfigToASICExecute(object obj)
+        private async void WriteConfigToASICExecuteAsync(object obj)
         {
             // Handle that command execution can only be done once in a row
             if (_writeConfigurationCommand.IsEnabled == false) return;
@@ -979,13 +979,13 @@ namespace AB15_GUI.WPF.ViewModels
 
             // Call corresponding ASIC methods to write configuration
             asicWrapper.ASICs[0].OnRequestConfiguration();      // Raise event to request configuration from all subscribers TODO: verify if config data is updated
-            asicWrapper.ASICs[0].WriteConfigurationWithCRC(); 
+            await asicWrapper.ASICs[0].WriteConfigurationWithCRCAsync(); 
         }
 
         /// <summary>
         /// Execute Transfer to Normal mode ASIC command // TODO: find better place
         /// </summary>
-        private void TransferToNormalModeExecute(object obj)
+        private async void TransferToNormalModeExecuteAsync(object obj)
         {
             // Handle that command execution can only be done once in a row
             if (_transferToNormalModeCommand.IsEnabled == false) return;
@@ -995,18 +995,18 @@ namespace AB15_GUI.WPF.ViewModels
             logger.Debug($"Pressed Transfer to Normal mode button");
 
             // Call corresponding ASIC methods to cause start of transferring to normal mode sequence
-            asicWrapper.ASICs[0].LockConfiguration();      // Raise event to request configuration from all subscribers
+            await asicWrapper.ASICs[0].LockConfigurationAsync();      // Raise event to request configuration from all subscribers
 
             // Temporarily disable  cyclic reading for Test mode
             isCyclicDiagnosticsEn_previous = IsCyclicDiagnosticsEn;
             IsCyclicDiagnosticsEn = false;
-            StartStopCyclicReadingExecute(new object());
+            StartStopCyclicReadingExecuteAsync(new object());
         }
 
         /// <summary>
         /// Execute Firing simultaneous command
         /// </summary>
-        private async void FireSimultaneousCommandExecute(object obj)
+        private async void FireSimultaneousCommandExecuteAsync(object obj)
         {
             // Handle that command execution can only be done once in a row
             if (_fireSimultaneousCommand.IsEnabled == false) return;
@@ -1335,7 +1335,7 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// Execute start/stop cyclic reading for FLM command
         /// </summary>
-        private void StartStopCyclicReadingExecute(object obj)
+        private async void StartStopCyclicReadingExecuteAsync(object obj)
         {
             // TODO: uncomment after MCU feature finalization
             // // Handle that command execution can only be done once in a row
@@ -1372,7 +1372,7 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// Method that will initiate TestMode1 diagnostics
         /// </summary>
-        private async void ExecuteTestMode1Diagnostics()
+        private async Task ExecuteTestMode1DiagnosticsAsync()
         {
             TransmitCommunicationPackage<TestModePayload> packageToSend = new TransmitCommunicationPackage<TestModePayload>(); // TODO: implement payload
             packageToSend.ASICID = 1;
@@ -1386,13 +1386,13 @@ namespace AB15_GUI.WPF.ViewModels
             if (IsResponseValid(mcuResponse, null) == false) return;
 
             // Trigger for transiting to TestMode2
-            asicWrapper.ASICs[0].ExecuteTestMode1Transition();
+            await asicWrapper.ASICs[0].ExecuteTestMode1TransitionAsync();
         }
 
         /// <summary>
         /// Method that will initiate TestMode2 diagnostics
         /// </summary>
-        private async void ExecuteTestMode2Diagnostics()
+        private async Task ExecuteTestMode2DiagnosticsAsync()
         {
             TransmitCommunicationPackage<TestModePayload> packageToSend = new TransmitCommunicationPackage<TestModePayload>(); // TODO: implement payload
             packageToSend.ASICID = 1;
@@ -1406,7 +1406,7 @@ namespace AB15_GUI.WPF.ViewModels
             if (IsResponseValid(mcuResponse, null) == false) return;
 
             // Trigger for transiting to Normal mode
-            asicWrapper.ASICs[0].ExecuteTestMode2Transition();
+            await asicWrapper.ASICs[0].ExecuteTestMode2TransitionAsync();
         }
 
         #endregion // Commands
@@ -1512,7 +1512,7 @@ namespace AB15_GUI.WPF.ViewModels
         /// </summary>
         /// <param name="sender">object that called this event. Must be one of ASIC objects</param>
         /// <param name="e">unused</param>
-        private void TestMode1EnteredHandler(object? sender, EventArgs e)
+        private async void TestMode1EnteredHandler(object? sender, EventArgs e)
         {
             // Precondition
             if (sender == null)
@@ -1527,7 +1527,7 @@ namespace AB15_GUI.WPF.ViewModels
             UpdateMonitoringStatusTable(caller.State, true);
 
             // Execute Test mode 1 diagnostics
-            ExecuteTestMode1Diagnostics();
+            await ExecuteTestMode1DiagnosticsAsync();
 
             // Unsubscribe from event - by design can be fired only once
             caller.TestMode1Entered -= TestMode1EnteredHandler;
@@ -1538,7 +1538,7 @@ namespace AB15_GUI.WPF.ViewModels
         /// </summary>
         /// <param name="sender">object that called this event. Must be one of ASIC objects</param>
         /// <param name="e">unused</param>
-        private void TestMode2EnteredHandler(object? sender, EventArgs e)
+        private async void TestMode2EnteredHandler(object? sender, EventArgs e)
         {
             // Precondition
             if (sender == null)
@@ -1555,7 +1555,7 @@ namespace AB15_GUI.WPF.ViewModels
             Thread.Sleep(200); // TODO: Test
 
             // Execute Test mode 2 diagnostics
-            ExecuteTestMode2Diagnostics();
+            await ExecuteTestMode2DiagnosticsAsync();
 
             // Unsubscribe from event - by design can be fired only once
             caller.TestMode2Entered -= TestMode2EnteredHandler;
@@ -1582,7 +1582,7 @@ namespace AB15_GUI.WPF.ViewModels
 
             // Restore cyclic reading for state
             IsCyclicDiagnosticsEn = isCyclicDiagnosticsEn_previous;
-            StartStopCyclicReadingExecute(new object());
+            StartStopCyclicReadingExecuteAsync(new object());
 
             // Fire corresponding state machine trigger
             _stateMachine.Fire(Triggers.EnteredNormalMode);

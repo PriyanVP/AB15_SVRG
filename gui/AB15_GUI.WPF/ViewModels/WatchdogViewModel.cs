@@ -88,11 +88,11 @@ namespace AB15_GUI.WPF.ViewModels
             string graph = UmlDotGraph.Format(_stateMachine.GetInfo());
 
             // Init commands for buttons
-            ReadConfigFromASIC  = new RelayCommand(ReadConfigFromASICExecute);
-            WriteConfigToASIC   = new RelayCommand(WriteConfigToASICExecute);
+            ReadConfigFromASIC  = new RelayCommand(ReadConfigFromASICExecuteAsync);
+            WriteConfigToASIC   = new RelayCommand(WriteConfigToASICExecuteAsync);
 
-            StartWatchdog       = new RelayCommand(StartWatchdogExecute);
-            StopWatchdog        = new RelayCommand(StopWatchdogExecute);
+            StartWatchdog       = new RelayCommand(StartWatchdogExecuteAsync);
+            StopWatchdog        = new RelayCommand(StopWatchdogExecuteAsync);
 
             // Fire transition to Idle state
             _stateMachine.Fire(Triggers.POR);
@@ -793,7 +793,7 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// Execute Read config from ASIC command
         /// </summary>
-        private async void ReadConfigFromASICExecute(object obj)
+        private async void ReadConfigFromASICExecuteAsync(object obj)
         {
             // Handle that command execution can only be done once in a row
             if (_readWDConfigCommand.IsEnabled == false) return;
@@ -872,7 +872,7 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// Execute Write config to ASIC command
         /// </summary>
-        private async void WriteConfigToASICExecute(object obj)
+        private async void WriteConfigToASICExecuteAsync(object obj)
         {
             // Handle that command execution can only be done once in a row
             if (_writeWDConfigCommand.IsEnabled == false) return;
@@ -923,7 +923,7 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// Execute Start watchdog command
         /// </summary>
-        private async void StartWatchdogExecute(object obj)
+        private async void StartWatchdogExecuteAsync(object obj)
         {
             // Handle that command execution can only be done once in a row
             if (_startWDCommand.IsEnabled == false) return;
@@ -954,13 +954,13 @@ namespace AB15_GUI.WPF.ViewModels
             logger.Debug($"Received start wd delegate");
 
             // Start and execute monitoring - execution will stop here till monitoring is stopped
-            MonitorWDStatus();
+            await MonitorWDStatus();
         }
 
         /// <summary>
         /// Execute Stop watchdog command
         /// </summary>
-        private async void StopWatchdogExecute(object obj)
+        private async void StopWatchdogExecuteAsync(object obj)
         {
             // Handle that command execution can only be done once in a row
             if (_stopWDCommand.IsEnabled == false) return;
@@ -991,13 +991,13 @@ namespace AB15_GUI.WPF.ViewModels
             logger.Debug($"Received stop wd delegate");
 
             // Execute stop monitoring
-            StopWDStatusMonitoring();
+            await StopWDStatusMonitoringAsync();
         }
 
         /// <summary>
         /// Method to start and handle responses from WD monitoring
         /// </summary>
-        private async void MonitorWDStatus()
+        private async Task MonitorWDStatus()
         {
             TransmitCommunicationPackage<EmptyPayload> packageToSendStartMonitoringWD = new TransmitCommunicationPackage<EmptyPayload>();
 
@@ -1054,7 +1054,7 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// Stop WD status monitoring
         /// </summary>
-        private async void StopWDStatusMonitoring()
+        private async Task StopWDStatusMonitoringAsync()
         {
             TransmitCommunicationPackage<EmptyPayload> packageToSendStopMonitoringWD = new TransmitCommunicationPackage<EmptyPayload>();
 

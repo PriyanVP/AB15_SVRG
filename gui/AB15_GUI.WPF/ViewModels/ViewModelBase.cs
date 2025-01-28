@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using AB15_GUI.WPF.Models.Interfaces;
 using AB15_GUI.WPF.NLog;

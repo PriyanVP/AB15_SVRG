@@ -50,7 +50,7 @@ namespace AB15_GUI.WPF.ViewModels
             System.Windows.Data.BindingOperations.EnableCollectionSynchronization(SPICommunicationTable, _lock);
 
             // Init commands for controls
-            SPICommand = new RelayCommand(SPICommandExecute);
+            SPICommand = new RelayCommand(SPICommandExecuteAsync);
 
             // Enable all by default
             IsSPILearningEn = true;
@@ -196,7 +196,7 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// Method that will execute SPI command (read, write or raw)
         /// </summary>
-        private async void SPICommandExecute(object obj)
+        private async void SPICommandExecuteAsync(object obj)
         {
             // Handle that command execution can only be done once in a row
             if (SPICommandCommandEn == false) return;
