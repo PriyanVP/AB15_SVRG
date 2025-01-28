@@ -394,19 +394,7 @@ namespace AB15_GUI.WPF.Models
                 // Send command to MCU and wait for response
                 mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
 
-                // If error received - pass it to error provider
-                if (mcuResponse is null)
-                {
-                    logger.Error($"Error response received. Status: fault on sending command");
-                    return;
-                }
-                if (mcuResponse.Payload.Error is not null)
-                {
-                    string errorMsg = $"Error response received. Status: {mcuResponse.Status}. Message: {mcuResponse.Payload.Error}";
-                    OnErrorCallbackReceived(new CallbackErrorEventArgs() { Error = errorMsg });
-                    logger.Error(errorMsg);
-                    return;
-                }
+                if (IsResponseValid(mcuResponse) == false) return;
             }
 
             // Apply CRC for configuration
@@ -432,19 +420,7 @@ namespace AB15_GUI.WPF.Models
             // Send command to MCU and wait for response
             mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
 
-            // If error received - pass it to error provider
-            if (mcuResponse is null)
-            {
-                logger.Error($"Error response received. Status: fault on sending command");
-                return;
-            }
-            if (mcuResponse.Payload.Error is not null)
-            {
-                string errorMsg = $"Error response received. Status: {mcuResponse.Status}. Message: {mcuResponse.Payload.Error}";
-                OnErrorCallbackReceived(new CallbackErrorEventArgs() { Error = errorMsg });
-                logger.Error(errorMsg);
-                return;
-            }
+            if (IsResponseValid(mcuResponse) == false) return;
 
             // If this point is reached - all configuration was loaded successfully
             OnConfigurationLoaded();
@@ -474,19 +450,7 @@ namespace AB15_GUI.WPF.Models
             // Send command to MCU and wait for response
             ReceiveCommunicationPackage<EmptyPayload>? mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
 
-            // If error received - pass it to error provider
-            if (mcuResponse is null)
-            {
-                logger.Error($"Error response received. Status: fault on sending command");
-                return;
-            }
-            if (mcuResponse.Payload.Error is not null)
-            {
-                string errorMsg = $"Error response received. Status: {mcuResponse.Status}. Message: {mcuResponse.Payload.Error}";
-                OnErrorCallbackReceived(new CallbackErrorEventArgs() { Error = errorMsg });
-                logger.Error(errorMsg);
-                return;
-            }
+            if (IsResponseValid(mcuResponse) == false) return;
 
             // Raise configuration locked event
             OnConfigurationLocked();
@@ -516,19 +480,7 @@ namespace AB15_GUI.WPF.Models
             // Send command to MCU and wait for response
             ReceiveCommunicationPackage<EmptyPayload>? mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
 
-            // If error received - pass it to error provider TODO: optimize
-            if (mcuResponse is null)
-            {
-                logger.Error($"Error response received. Status: fault on sending command");
-                return;
-            }
-            if (mcuResponse.Payload.Error is not null)
-            {
-                string errorMsg = $"Error response received. Status: {mcuResponse.Status}. Message: {mcuResponse.Payload.Error}";
-                OnErrorCallbackReceived(new CallbackErrorEventArgs() { Error = errorMsg });
-                logger.Error(errorMsg);
-                return;
-            }
+            if (IsResponseValid(mcuResponse) == false) return;
 
             // No error present - reset ASIC State property
             State = ASICState.npor_release;
@@ -557,19 +509,7 @@ namespace AB15_GUI.WPF.Models
             // Send command to MCU and wait for response
             ReceiveCommunicationPackage<EmptyPayload>? mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
 
-            // If error received - pass it to error provider
-            if (mcuResponse is null)
-            {
-                logger.Error($"Error response received. Status: fault on sending command");
-                return;
-            }
-            if (mcuResponse.Payload.Error is not null)
-            {
-                string errorMsg = $"Error response received. Status: {mcuResponse.Status}. Message: {mcuResponse.Payload.Error}";
-                OnErrorCallbackReceived(new CallbackErrorEventArgs() { Error = errorMsg });
-                logger.Error(errorMsg);
-                return;
-            }
+            if (IsResponseValid(mcuResponse) == false) return;
         }
 
         /// <summary>
@@ -595,19 +535,7 @@ namespace AB15_GUI.WPF.Models
             // Send command to MCU and wait for response
             ReceiveCommunicationPackage<EmptyPayload>? mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
 
-            // If error received - pass it to error provider
-            if (mcuResponse is null)
-            {
-                logger.Error($"Error response received. Status: fault on sending command");
-                return;
-            }
-            if (mcuResponse.Payload.Error is not null)
-            {
-                string errorMsg = $"Error response received. Status: {mcuResponse.Status}. Message: {mcuResponse.Payload.Error}";
-                OnErrorCallbackReceived(new CallbackErrorEventArgs() { Error = errorMsg });
-                logger.Error(errorMsg);
-                return;
-            }
+            if (IsResponseValid(mcuResponse) == false) return;
         }
 
         /// <summary>
@@ -643,24 +571,13 @@ namespace AB15_GUI.WPF.Models
                 // Arm next iteration
                 task = serialWrapper.GetContinuousTaskInstance(responseMsgId);
 
-                // If error received - pass it to error provider
-                if (mcuResponse is null)
+                // Report missing communication
+                if (mcuResponse.Status == MCUStatus.RESPONSE_ABSENT)
                 {
-                    logger.Error($"Error response received. Status: fault on sending command");
-                    continue;
+                    IsOnline = false;
                 }
-                if (mcuResponse.Payload.Error is not null)
-                {
-                    // Report missing communication
-                    if (mcuResponse.Status == MCUStatus.RESPONSE_ABSENT)
-                    {
-                        IsOnline = false;
-                    }
-                    string errorMsg = $"Error response received. Status: {mcuResponse.Status}. Message: {mcuResponse.Payload.Error}";
-                    OnErrorCallbackReceived(new CallbackErrorEventArgs() { Error = errorMsg });
-                    logger.Error(errorMsg);
-                    continue;
-                }
+
+                if (IsResponseValid(mcuResponse) == false) continue;
 
                 // No error present - update ASIC state
                 ASICState prevState = State;
@@ -711,6 +628,47 @@ namespace AB15_GUI.WPF.Models
             if (propertyName == null) throw new ArgumentException("Property name can't be null!");
 
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        /// <summary>
+        /// Generic validation method
+        /// </summary>
+        /// <param name="response">response from MCU</param>
+        /// <param name="customValidation">method to do custom validation (response true/false)</param>
+        /// <returns>true if response is valid, false if not valid</returns>
+        private bool IsResponseValid<T>(T response, Predicate<T>? customValidation = null) where T : IReceiveCommunicationPackage?
+        {
+            // Response not received
+            if (response is null)
+            {
+                logger.Error($"Error response received. Status: fault on sending command");
+                return false;
+            }
+
+            // Error in payload
+            try
+            {
+                dynamic dynamicResponse = response;
+                if (dynamicResponse.Payload.Error is not null)
+                {
+                    string errorMsg = $"Error response received. Status: {dynamicResponse.Status}. Message: {dynamicResponse.Payload.Error}";
+                    OnErrorCallbackReceived(new CallbackErrorEventArgs() { Error = errorMsg });
+                    logger.Error($"Error response received. Status: {dynamicResponse.Status}");
+                    return false;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+
+            // Apply custom validation if provided
+            if (customValidation is not null)
+            {
+                return customValidation(response);
+            }
+            
+            return true;
         }
 
         #endregion // Services
