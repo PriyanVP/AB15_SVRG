@@ -1,7 +1,8 @@
-using AB15_GUI.WPF.Models.Interfaces;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using AB15_GUI.WPF.Models;
+using AB15_GUI.WPF.Models.Interfaces;
 
 namespace AB15_GUI.WPF.Models
 {
@@ -15,17 +16,10 @@ namespace AB15_GUI.WPF.Models
         /// </summary>
         public string? Error { get; set; } = null;
 
-        // TODO: implement unpacking - use different storages
-
-        ///// <summary>
-        ///// Property to report errors
-        ///// </summary>
-        //public string? Error { get; set; } = null;
-      
         /// <summary>
         /// List with register values
         /// </summary>
-        public List<UInt16> Data { get; set; } = new List<ushort>();
+        public List<PstChannelTestResult> Data { get; set; } = new List<PstChannelTestResult>();
 
         /// <summary>
         /// Convert byte list to field values
@@ -54,15 +48,16 @@ namespace AB15_GUI.WPF.Models
                         break;
                     }
 
-                    // TODO: analysis logic for incoming data
-
-                    // Store payload as registers data
+                    // Deserialize rawData into PstChannelTestResult objects
                     for (int i = 0; i < rawData.Count; i++)
                     {
-                        Data.Add(rawData[i]);
-
+                        Data.Add(new PstChannelTestResult(rawData[i]));
                     }
- 
+
+                    // Construct Error string based on Data
+                    Error = string.Join("\n", 
+                                Data.Select((result, index) => !string.IsNullOrEmpty(result.Error) ? $"Ch{index + 1}. {result.Error}" : null)
+                                    .Where(msg => msg != null));
                     break;
                 default:
                     throw new ArgumentException($"Unexpected status received: {status}");
