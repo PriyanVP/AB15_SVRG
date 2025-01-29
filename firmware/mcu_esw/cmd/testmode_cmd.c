@@ -128,7 +128,7 @@ void CmdStartTestMode2(USBReceiveData const * const commandPackage)
 void CmdStopTestMode12(USBReceiveData const * const commandPackage)
 {
     // Turn off Test mode interrupt of MCU
-    DisableTestModeInterrupt();
+    DisableTimerInterrupt(TEST_MODE_TIMER);
 
     // Reset internal flags
     g_pstConfiguration.lsPowerstageEn = FALSE;
@@ -216,7 +216,7 @@ void IntCmdExecutePowerstageTest(void)
         if (g_pstConfiguration.channelIndex > FLM_POWERSTAGE_CHANNELS_COUNT)
         {
             // Turn off Test mode interrupt of MCU
-            DisableTestModeInterrupt();
+            DisableTimerInterrupt(TEST_MODE_TIMER);
 
             // Reset internal flags
             g_pstConfiguration.lsPowerstageEn = FALSE;
@@ -381,10 +381,10 @@ IFX_INLINE void StartTestMode(boolean isTestMode1, USBReceiveData const * const 
     }
 
     // Configure periodicity of Test mode check interrupt
-    ConfigureTestModePeriodicity(FLM_POWERSTAGE_STEP_DURATION);
+    ConfigureTimerPeriodicity(TEST_MODE_TIMER, FLM_POWERSTAGE_STEP_DURATION);
 
     // Turn on Test mode interrupt of MCU
-    EnableTestModeInterrupt();
+    EnableTimerInterrupt(TEST_MODE_TIMER);
 }
 
 void GetPSTFiringSPiCommand(uint16 *p_regAddress, uint16 *p_regData)

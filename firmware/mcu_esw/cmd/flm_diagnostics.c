@@ -223,7 +223,7 @@ boolean CheckBatVoltage(void);
 /*-------------------------------------------------Global variables--------------------------------------------------*/
 /*********************************************************************************************************************/
 
-static boolean g_isFLMDiagEn = FALSE; // TODO: boolean value + renaming to isFlmDiagsOn would be sufficient
+static boolean g_isflmDiagEn = FALSE; // TODO: boolean value + renaming to isFlmDiagsOn would be sufficient
 // static FLMDiagCycDiagFaults g_FLMCycDiagFaultsValues; // TODO: uncomment when starting using
 static FLMCycDiagResults g_resultsValues;
 static FLMDiagExecStatusEnum g_diagExecStatus = FLM_DIAG_EXEC_STATUS_IDLE;
@@ -238,7 +238,7 @@ void CmdEnableFLMDiag(USBReceiveData const * const commandPackage)
     USBTransmitData packageToSend;
 
     // Enable command should not be executed twice
-    if (g_isFLMDiagEn == TRUE)
+    if (g_isflmDiagEn == TRUE)
     {
         // Skip further function execution - FLM Diag already is enabled, 
         // GUI will see no response to repeated USB_CMD_FLM_DIAG_ENABLE command
@@ -247,11 +247,13 @@ void CmdEnableFLMDiag(USBReceiveData const * const commandPackage)
 
     // Enable FLM diag functionality
     // FLM diag state flag is set
-    g_isFLMDiagEn = TRUE;
+    g_isflmDiagEn = TRUE;
+
     // Configure periodicity of FLM diagnoscics MCU interrupt
-    ConfigureFLMDiagPeriodicity(FLM_DIAG_INTERRUPT_PERIODICITY);
+    ConfigureTimerPeriodicity(FLM_DIAG_TIMER, FLM_DIAG_INTERRUPT_PERIODICITY);
+
     // Turn on FLM diagnostics performing interrupt of MCU
-    EnableFLMDiagInterrupt();
+    EnableTimerInterrupt(FLM_DIAG_TIMER);
 
     packageToSend.device_id = commandPackage->device_id;
     packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
@@ -267,7 +269,7 @@ void CmdDisableFLMDiag(USBReceiveData const * const commandPackage)
     USBTransmitData packageToSend;
 
     // Disable command should not be executed twice
-    if (g_isFLMDiagEn == FALSE)
+    if (g_isflmDiagEn == FALSE)
     {
         // Skip further function execution - FLM Diag already is disabled, 
         // GUI will see no response to repeated USB_CMD_FLM_DIAG_DISABLE command
@@ -276,14 +278,14 @@ void CmdDisableFLMDiag(USBReceiveData const * const commandPackage)
 
     // Disable FLM diag functionality
     // FLM diag state flag is reset
-    g_isFLMDiagEn = FALSE;
+    g_isflmDiagEn = FALSE;
     // Set status and number of diag to init values for proper start
     // of diagnostics on next enable
     g_diagExecStatus = FLM_DIAG_EXEC_STATUS_IDLE;
     g_diagExecNumber = FLM_DIAG_ORDER_SHORT_DET;
 
     // Turn off FLM diagnostics performing interrupt of MCU
-    DisableFLMDiagInterrupt();
+    DisableTimerInterrupt(FLM_DIAG_TIMER);
 
     packageToSend.device_id = commandPackage->device_id;
     packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
