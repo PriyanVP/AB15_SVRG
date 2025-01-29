@@ -52,6 +52,17 @@ class TestFLMDiagCommands:
         - enabling AB15 FLM Diagnostics and manually getting the results of TODO: diagnostic'''
 
         # Arrange
+        # issue ASIC cold start 
+        address = 0x01E # SysStates_Reset_Config
+        data = 0x001 # Bit 0 spi_coldstart1
+        address_converted = pkg.Int2BytesConverter(address)
+        data_converted = pkg.Int2BytesConverter(data)
+        payload = [*address_converted.bytes, *data_converted.bytes]
+        packageToSend = pkg.TransmitPackage(0x00, 0x01, pkg.Command.WRITE_REG, payload)
+        self.serial.com_port.write(packageToSend.serialize())
+
+        sleep(self.DELAY)
+
         packageToSend = pkg.TransmitPackage(0x0F, 0, pkg.Command.FLM_DIAG_ENABLE)
 
         # Act
