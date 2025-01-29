@@ -211,7 +211,7 @@ void StartFLMDiag(void);
 
 /** \brief Get FLM diagnostic execution status from ASIC (ongoing/evaluated)
  */
-FLMDiagExecStatusEnum FLMReadDiagExecStatus(void);
+void FLMUpdateDiagExecStatus(void);
 
 /** \brief
  * Measure Battery voltage, normal range to perform diagnostics
@@ -532,7 +532,7 @@ void IntCmdExecuteFLMDiag()
     // and on later rounds updated from ASIC 
     if (g_diagExecStatus != FLM_DIAG_EXEC_STATUS_IDLE)
     {
-        g_diagExecStatus = FLMReadDiagExecStatus();
+        FLMUpdateDiagExecStatus();
     }
 
     // Start diagnostic and get out
@@ -801,29 +801,26 @@ void StartFLMDiag(void)
     QSPIWriteNormal(SPI1_CS1MASTER, FLM_FLM_DIAG_START, tmpFLMDiagStartfRegister.as_uint16);
 }
 
-FLMDiagExecStatusEnum FLMReadDiagExecStatus(void)
+void FLMUpdateDiagExecStatus(void)
 {
-    // TODO FLM_FLM_STATUS2
-    SPIReceiveDataNormal data;
+    SPIReceiveDataNormal data = {.dw = 0};
     boolean isSuccessfulFlag = TRUE;
     flm_flm_status2_ut tmpFLMDiagStatus2fRegister;
-    FLMDiagExecStatusEnum flmExecutionStatus; // TODO: what value will be if not updated in if/else. Some potential undefined behavior
     
     // Get value from ASIC
     isSuccessfulFlag &= QSPIReadNormal(SPI1_CS1MASTER, FLM_FLM_STATUS2, &data.dw);
     tmpFLMDiagStatus2fRegister.as_uint16 = data.bf.output_data;
     
     // Determine FLM diagnostic execution status
+    // Idle -> (Ongoing -> Evaluated -> Finished -> Ongoing -> ... )
     if ((tmpFLMDiagStatus2fRegister.as_s.FlmDiagActive_u1 == 1) && (tmpFLMDiagStatus2fRegister.as_s.FlmDiagReady_u1 == 0))
     {
-        flmExecutionStatus = FLM_DIAG_EXEC_STATUS_ONGOING;
+        g_diagExecStatus = FLM_DIAG_EXEC_STATUS_ONGOING;
     }
-    else if ((tmpFLMDiagStatus2fRegister.as_s.FlmDiagActive_u1 == 0) && (tmpFLMDiagStatus2fRegister.as_s.FlmDiagReady_u1 == 1))
+    else if ((g_diagExecStatus != FLM_DIAG_EXEC_STATUS_FINISHED) && (tmpFLMDiagStatus2fRegister.as_s.FlmDiagActive_u1 == 0) && (tmpFLMDiagStatus2fRegister.as_s.FlmDiagReady_u1 == 1))
     {
-        flmExecutionStatus = FLM_DIAG_EXEC_STATUS_EVALUATED;
+        g_diagExecStatus = FLM_DIAG_EXEC_STATUS_EVALUATED;
     }
-
-    return flmExecutionStatus;
 }
 
 boolean CheckBatVoltage(void)
