@@ -13,6 +13,8 @@ class TestFLMDiagCommands:
 
     # Delay for recieving MCU response
     DELAY = 0.1 # TODO: verify that duration is sufficient for all testcases
+    # Delay for diagnostics to run on ASIC
+    DELAY_DIAG = 2
     
     @classmethod
     def setup_class(cls):
@@ -27,29 +29,10 @@ class TestFLMDiagCommands:
 
     @pytest.mark.firing
     @pytest.mark.serial
-    def test_FLMDiagReadResults(self):
-        '''group `firing` tests
-        tests:
-        - size of USB_CMD_FLM_DIAG_READ_RESULTS payload (should be 86 bytes)'''
-
-        # Arrange
-        packageToSend = pkg.TransmitPackage(0x0F, 0, pkg.Command.FLM_DIAG_READ_RESULTS)
-        
-        # Act
-        self.serial.com_port.write(packageToSend.serialize())
-        sleep(self.DELAY)
-        is_response_received = self.serial.extract_packages()
-        result = pkg.ReceivePackage(self.serial.packages.pop(0))
-        print("Length of payload, bytes:" + str(result.payload_len))
-        # Assert
-        assert result.payload_len == 86, f"Length of payload is not 86 bytes! Length received: {result.payload_len}"
-
-    @pytest.mark.firing
-    @pytest.mark.serial
     def test_EnableFLMDiag(self):
         '''group `firing` tests
         tests:
-        - enabling AB15 FLM Diagnostics and manually getting the results of TODO: diagnostic'''
+        - enabling AB15 FLM Diagnostics and manually getting the results of diagnostic'''
 
         # Arrange
         # issue ASIC cold start 
@@ -76,3 +59,24 @@ class TestFLMDiagCommands:
         # Assert
         # TODO: add analysis of TODO: diagnostic results (LM_READ_SQUIB_RES_SQREF?)
         assert result.status == pkg.Status.ACK
+
+    @pytest.mark.firing
+    @pytest.mark.serial
+    def test_FLMDiagReadResults(self):
+        '''group `firing` tests
+        tests:
+        - size of USB_CMD_FLM_DIAG_READ_RESULTS payload (should be 86 bytes)'''
+
+        # Arrange
+        packageToSend = pkg.TransmitPackage(0x0F, 0, pkg.Command.FLM_DIAG_READ_RESULTS)
+        sleep(self.DELAY_DIAG)
+        
+        # Act
+        self.serial.com_port.write(packageToSend.serialize())
+        sleep(self.DELAY)
+        is_response_received = self.serial.extract_packages()
+        result = pkg.ReceivePackage(self.serial.packages.pop(0))
+        print("Length of payload, bytes:" + str(result.payload_len))
+        # Assert
+        assert result.payload_len == 86, f"Length of payload is not 86 bytes! Length received: {result.payload_len}"
+        # TODO: analyse and check values of diagnostics results
