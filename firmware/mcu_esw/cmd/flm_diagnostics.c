@@ -207,7 +207,7 @@ void SetFLMDiagMode(FLMDiagModeEnum diagMode);
 
 /** \brief // TODO: add comments
  */
-void StartFLMDiag(void);
+void StartFLMDiag(FLMDiagModeEnum diagMode);
 
 /** \brief Get FLM diagnostic execution status from ASIC (ongoing/evaluated)
  */
@@ -254,6 +254,9 @@ void CmdEnableFLMDiag(USBReceiveData const * const commandPackage)
 
     // Turn on FLM diagnostics performing interrupt of MCU
     EnableTimerInterrupt(FLM_DIAG_TIMER);
+    
+    // Initialise execution status to Idle
+    g_diagExecStatus = FLM_DIAG_EXEC_STATUS_IDLE;
 
     packageToSend.device_id = commandPackage->device_id;
     packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
@@ -591,7 +594,7 @@ void FLMShortDiag()
                                          FLM_FLM_READ_SHORT_CH12_9, FLM_FLM_READ_SHORT_CH16_13, 
                                          FLM_FLM_READ_SHORT_CH20_17};
     
-    // read readShortCh4_1 through readShortCh20_17, store in resultShortDiag
+    // read FLM_Read_Short_ch4_1 through FLM_Read_Short_ch20_17, store in resultShortDiag
     g_diagExecStatus = FLM_DIAG_EXEC_STATUS_ONGOING;
 
     // Read related registers from ASIC
@@ -614,7 +617,7 @@ void FLMShortDiag()
 
 void FLMVHxDiag()
 {
-    SPIReceiveDataNormal data[FLM_DIAG_READ_VHX_REGS_COUNT] = {0}; // TODO: unclear behavior, array of structs can't be initialized using such syntax
+    SPIReceiveDataNormal data[FLM_DIAG_READ_VHX_REGS_COUNT];
     uint16 length = FLM_DIAG_READ_VHX_REGS_COUNT;
     boolean isSuccessfulFlag = FALSE;
     uint16 flmDiagVHxRegsAddresses[FLM_DIAG_READ_VHX_REGS_COUNT] =  { FLM_FLM_READ_DIAG_VH1A, FLM_FLM_READ_DIAG_VH2, 
@@ -634,11 +637,8 @@ void FLMVHxDiag()
 
     if (g_diagExecStatus == FLM_DIAG_EXEC_STATUS_FINISHED)
     {
-        // Select corresponding mode
-        SetFLMDiagMode(FLM_DIAG_MODE_VHX_MEAS);
-
-        // Start diagnostic
-        StartFLMDiag();
+        // Select corresponding mode and start diagnostic
+        StartFLMDiag(FLM_DIAG_MODE_VHX_MEAS);
         g_diagExecStatus = FLM_DIAG_EXEC_STATUS_ONGOING;
 
         // Get back out to check results on next interupt
@@ -669,18 +669,15 @@ void FLMVHxDiag()
 
 void FLMSquibDetErrDiag()
 {
-    SPIReceiveDataNormal data[FLM_DIAG_READ_SQUIB_REGS_COUNT] = {0}; // TODO: unclear behavior, array of structs can't be initialized using such syntax
+    SPIReceiveDataNormal data[FLM_DIAG_READ_SQUIB_REGS_COUNT];
     uint16 length = FLM_DIAG_READ_SQUIB_REGS_COUNT;
     boolean isSuccessfulFlag = FALSE;
     uint16 flmDiagSquibRegsAddresses[FLM_DIAG_READ_SQUIB_REGS_COUNT] = {FLM_FLM_READ_SQUIB_CH16_1, FLM_FLM_READ_SQUIB_CH20_17};
 
     if (g_diagExecStatus == FLM_DIAG_EXEC_STATUS_FINISHED)
     {
-        // Select corresponding mode
-        SetFLMDiagMode(FLM_DIAG_MODE_SQUIB_DET);
-
-        // Start diagnostic
-        StartFLMDiag();
+        // Select corresponding mode and start diagnostic
+        StartFLMDiag(FLM_DIAG_MODE_SQUIB_DET);
         g_diagExecStatus = FLM_DIAG_EXEC_STATUS_ONGOING;
 
         // Get back out to check results on next interupt
@@ -716,7 +713,7 @@ void FLMSquibDetErrDiag()
 
 void FLMLoopResDiag()
 {
-    SPIReceiveDataNormal data[FLM_DIAG_READ_RES_REGS_COUNT] = {0}; // TODO: unclear behavior, array of structs can't be initialized using such syntax
+    SPIReceiveDataNormal data[FLM_DIAG_READ_RES_REGS_COUNT];
     uint16 length = FLM_DIAG_READ_RES_REGS_COUNT;
     boolean isSuccessfulFlag = FALSE;
     uint16 flmDiagResRegsAddresses[FLM_DIAG_READ_RES_REGS_COUNT] = {FLM_FLM_READ_SQUIB_RES_CH1, FLM_FLM_READ_SQUIB_RES_CH2, 
@@ -733,11 +730,8 @@ void FLMLoopResDiag()
 
     if (g_diagExecStatus == FLM_DIAG_EXEC_STATUS_FINISHED)
     {
-        // Select corresponding mode
-        SetFLMDiagMode(FLM_DIAG_MODE_LOOP_RES_MEAS);
-
-        // Start diagnostic
-        StartFLMDiag();
+        // Select corresponding mode and start diagnostic
+        StartFLMDiag(FLM_DIAG_MODE_LOOP_RES_MEAS);
         g_diagExecStatus = FLM_DIAG_EXEC_STATUS_ONGOING;
 
         // Get back out to check results on next interupt
@@ -783,21 +777,19 @@ void SetFLMDiagMode(FLMDiagModeEnum diagMode)
     QSPIWriteNormal(SPI1_CS1MASTER, FLM_FLM_DIAG_START, tmpFLMDiagStartfRegister.as_uint16);
 }
 
-void StartFLMDiag(void)
+void StartFLMDiag(FLMDiagModeEnum diagMode)
 {
     SPIReceiveDataNormal data;
     boolean isSuccessfulFlag = TRUE;
     flm_flm_diag_start_ut tmpFLMDiagStartfRegister;
     
-    // Get value from ASIC
-    // TODO: check whether diags can be run on slaves (spiChannel selection)
-    isSuccessfulFlag &= QSPIReadNormal(SPI1_CS1MASTER, FLM_FLM_DIAG_START, &data.dw);
-    tmpFLMDiagStartfRegister.as_uint16 = data.bf.output_data;
-    
+    // Select Diagnostic to execute
+    tmpFLMDiagStartfRegister.as_s.FlmDiagMode_u5 = diagMode;
     // flm_diag_start = 1 starts selected diagnostic
     tmpFLMDiagStartfRegister.as_s.FlmDiagStart_u1 = 1;
 
-    // Write
+    // Write to ASIC
+    // TODO: check whether diags can be run on slaves (spiChannel selection)
     QSPIWriteNormal(SPI1_CS1MASTER, FLM_FLM_DIAG_START, tmpFLMDiagStartfRegister.as_uint16);
 }
 
