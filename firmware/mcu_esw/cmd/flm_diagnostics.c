@@ -50,15 +50,6 @@ typedef enum
 
 /** \brief
  */
-typedef enum
-{
-    FLM_DIAG_MODE_VHX_MEAS          = 9,    /** \brief 01001 */
-    FLM_DIAG_MODE_LOOP_RES_MEAS     = 3,    /** \brief 00011 */
-    FLM_DIAG_MODE_SQUIB_DET         = 5,    /** \brief 00101 */
-} FLMDiagModeEnum; // TODO: not needed, defines already exist in regmap, better to use them - ENUM_FLM_FLM_DIAG_START_FLM_DIAG_MODE_VH_MEASE_ALL
-
-/** \brief
- */
 typedef enum 
 {
     FLM_DIAG_EXEC_STATUS_IDLE           = 0,   /** \brief  */
@@ -207,7 +198,7 @@ void SetFLMDiagMode(FLMDiagModeEnum diagMode);
 
 /** \brief // TODO: add comments
  */
-void StartFLMDiag(FLMDiagModeEnum diagMode);
+void StartFLMDiag(int diagMode);
 
 /** \brief Get FLM diagnostic execution status from ASIC (ongoing/evaluated)
  */
@@ -638,7 +629,7 @@ void FLMVHxDiag()
     if (g_diagExecStatus == FLM_DIAG_EXEC_STATUS_FINISHED)
     {
         // Select corresponding mode and start diagnostic
-        StartFLMDiag(FLM_DIAG_MODE_VHX_MEAS);
+        StartFLMDiag(ENUM_FLM_FLM_DIAG_START_FLM_DIAG_MODE_VH_MEASE_ALL);
         g_diagExecStatus = FLM_DIAG_EXEC_STATUS_ONGOING;
 
         // Get back out to check results on next interupt
@@ -677,7 +668,7 @@ void FLMSquibDetErrDiag()
     if (g_diagExecStatus == FLM_DIAG_EXEC_STATUS_FINISHED)
     {
         // Select corresponding mode and start diagnostic
-        StartFLMDiag(FLM_DIAG_MODE_SQUIB_DET);
+        StartFLMDiag(ENUM_FLM_FLM_DIAG_START_FLM_DIAG_MODE_SQUIB_PRES_ALL);
         g_diagExecStatus = FLM_DIAG_EXEC_STATUS_ONGOING;
 
         // Get back out to check results on next interupt
@@ -731,7 +722,7 @@ void FLMLoopResDiag()
     if (g_diagExecStatus == FLM_DIAG_EXEC_STATUS_FINISHED)
     {
         // Select corresponding mode and start diagnostic
-        StartFLMDiag(FLM_DIAG_MODE_LOOP_RES_MEAS);
+        StartFLMDiag(ENUM_FLM_FLM_DIAG_START_FLM_DIAG_MODE_SQUIB_RES_ALL);
         g_diagExecStatus = FLM_DIAG_EXEC_STATUS_ONGOING;
 
         // Get back out to check results on next interupt
@@ -777,7 +768,7 @@ void SetFLMDiagMode(FLMDiagModeEnum diagMode)
     QSPIWriteNormal(SPI1_CS1MASTER, FLM_FLM_DIAG_START, tmpFLMDiagStartfRegister.as_uint16);
 }
 
-void StartFLMDiag(FLMDiagModeEnum diagMode)
+void StartFLMDiag(int diagMode)
 {
     SPIReceiveDataNormal data;
     boolean isSuccessfulFlag = TRUE;
