@@ -58,67 +58,9 @@ typedef enum
     FLM_DIAG_EXEC_STATUS_FINISHED       = 3    /** \brief  */
 } FLMDiagExecStatusEnum;
 
-// TODO: can we use 1 status enum for all diagnostics? (I'm talking about 3 enums below)
-// TODO: is there enough added value in having 3 of them?
-
-/** \brief
- */
-typedef enum 
-{
-    FLM_DIAG_STATUS_VHX_MEAS_SKIPPED    = 0,    /** \brief  */
-    FLM_DIAG_STATUS_VHX_MEAS_INITIATED  = 1,    /** \brief  */
-    FLM_DIAG_STATUS_VHX_MEAS_ONGOING    = 2,    /** \brief  */
-    FLM_DIAG_STATUS_VHX_MEAS_EVALUATED  = 3,    /** \brief  */
-    FLM_DIAG_STATUS_VHX_MEAS_FINISHED   = 4     /** \brief  */
-} FLMDiagVHxMeasStatusEnum;
-
-/** \brief
- */
-typedef enum 
-{
-    FLM_DIAG_STATUS_LOOP_RES_MEAS_SKIPPED    = 0,       /** \brief  */
-    FLM_DIAG_STATUS_LOOP_RES_MEAS_INITIATED  = 1,       /** \brief  */
-    FLM_DIAG_STATUS_LOOP_RES_MEAS_ONGOING    = 2,       /** \brief  */
-    FLM_DIAG_STATUS_LOOP_RES_MEAS_EVALUATED  = 3,       /** \brief  */
-    FLM_DIAG_STATUS_LOOP_RES_MEAS_FINISHED   = 4        /** \brief  */
-} FLMDiagLoopResMeasStatusEnum;
-
-/** \brief
- */
-typedef enum 
-{
-    FLM_DIAG_STATUS_SQUIB_DET_SKIPPED    = 0,       /** \brief  */
-    FLM_DIAG_STATUS_SQUIB_DET_INITIATED  = 1,       /** \brief  */
-    FLM_DIAG_STATUS_SQUIB_DET_ONGOING    = 2,       /** \brief  */
-    FLM_DIAG_STATUS_SQUIB_DET_EVALUATED  = 3,       /** \brief  */
-    FLM_DIAG_STATUS_SQUIB_DET_FINISHED   = 4        /** \brief  */
-} FLMDiagSquibDetStatusEnum;
-
 /*************************************************************************************************************************/
 /*-------------------------------------------------Data Structures-------------------------------------------------------*/
 /*************************************************************************************************************************/
-
-/** \brief Structure to store fault flags of FLM cyclic diagnostics  
- */
-typedef struct
-{
-    boolean    faultSC2GSC2B;                           /** \brief  */
-    boolean    faultVHxMeasErr;                         /** \brief  */
-    boolean    faultLoopResErr;                         /** \brief  */
-    boolean    faultSquibDetErr;                        /** \brief  */
-
-} FLMDiagCycDiagFaults;
-
-/** \brief Structure to store execution status of FLM cyclic diagnostic
-*/
-typedef struct
-{
-    FLMDiagVHxMeasStatusEnum       statusVHxMeas;      /** \brief  */
-    FLMDiagLoopResMeasStatusEnum   statusLoopResMeas;  /** \brief  */
-    FLMDiagSquibDetStatusEnum      statusSquibDet;     /** \brief  */
-
-} FLMDiagStatus;
-
 
 /** \brief Structure to store results of FLM channel short detection (IGH/IGL short to ground/battery)
  * 10 bytes
@@ -191,12 +133,7 @@ void FLMLoopResDiag(void);
  */
 void FLMSquibDetErrDiag(void);
 
-/** \brief Select diagnostic to be run by FLM diag module
- * write diagMode to flm_diag_mode field of FLM_DIAG_START register
- */
-void SetFLMDiagMode(FLMDiagModeEnum diagMode);
-
-/** \brief // TODO: add comments
+/** \brief Select diagnostic to be run by FLM diag module and start diagnostic
  */
 void StartFLMDiag(int diagMode);
 
@@ -214,8 +151,7 @@ boolean CheckBatVoltage(void);
 /*-------------------------------------------------Global variables--------------------------------------------------*/
 /*********************************************************************************************************************/
 
-static boolean g_isflmDiagEn = FALSE; // TODO: boolean value + renaming to isFlmDiagsOn would be sufficient
-// static FLMDiagCycDiagFaults g_FLMCycDiagFaultsValues; // TODO: uncomment when starting using
+static boolean g_isflmDiagEn = FALSE;
 static FLMCycDiagResults g_resultsValues;
 static FLMDiagExecStatusEnum g_diagExecStatus = FLM_DIAG_EXEC_STATUS_IDLE;
 static FLMDiagExecOrderEnum g_diagExecNumber = FLM_DIAG_ORDER_SHORT_DET;
@@ -234,6 +170,12 @@ void CmdEnableFLMDiag(USBReceiveData const * const commandPackage)
         // Skip further function execution - FLM Diag already is enabled, 
         // GUI will see no response to repeated USB_CMD_FLM_DIAG_ENABLE command
         return;
+    }
+
+    // Supply voltage must be in normal range to perform FLM diagnostics
+    if (CheckBatVoltage()==FALSE) 
+    {
+        // TODO: don't enable diagnostics, send Error report to GUI
     }
 
     // Enable FLM diag functionality
@@ -291,234 +233,233 @@ void CmdDisableFLMDiag(USBReceiveData const * const commandPackage)
 }
 
 void CmdReadFLMDiagResults(USBReceiveData const * const commandPackage)
-    { // TODO: fix indentation
-        USBTransmitData packageToSend;
+{
+    USBTransmitData packageToSend;
 
-        packageToSend.device_id = 0;
-        packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
-        packageToSend.status = USB_STATUS_DATA;
-        packageToSend.dataLength = 86;
+    packageToSend.device_id = 0;
+    packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
+    packageToSend.status = USB_STATUS_DATA;
+    packageToSend.dataLength = 86;
 
-        // Short detection results
-        packageToSend.data[0] = GetLSB(g_resultsValues.resultShortDiag.readShortCh4_1);
-        packageToSend.data[1] = GetMSB(g_resultsValues.resultShortDiag.readShortCh4_1);
-        packageToSend.data[2] = GetLSB(g_resultsValues.resultShortDiag.readShortCh8_5);
-        packageToSend.data[3] = GetMSB(g_resultsValues.resultShortDiag.readShortCh8_5);
-        packageToSend.data[4] = GetLSB(g_resultsValues.resultShortDiag.readShortCh12_9);
-        packageToSend.data[5] = GetMSB(g_resultsValues.resultShortDiag.readShortCh12_9);
-        packageToSend.data[6] = GetLSB(g_resultsValues.resultShortDiag.readShortCh16_13);
-        packageToSend.data[7] = GetMSB(g_resultsValues.resultShortDiag.readShortCh16_13);
-        packageToSend.data[8] = GetLSB(g_resultsValues.resultShortDiag.readShortCh20_17);
-        packageToSend.data[9] = GetMSB(g_resultsValues.resultShortDiag.readShortCh20_17);
-        
-        // VHx diagnostic results resultVHxDiag[]
-        packageToSend.data[10] = GetLSB(g_resultsValues.resultVHxDiag[0].readVHxVoltageValue);
-        packageToSend.data[11] = GetMSB(g_resultsValues.resultVHxDiag[0].readVHxVoltageValue);
-        packageToSend.data[12] = GetLSB(g_resultsValues.resultVHxDiag[1].readVHxVoltageValue);
-        packageToSend.data[13] = GetMSB(g_resultsValues.resultVHxDiag[1].readVHxVoltageValue);
-        packageToSend.data[14] = GetLSB(g_resultsValues.resultVHxDiag[2].readVHxVoltageValue);
-        packageToSend.data[15] = GetMSB(g_resultsValues.resultVHxDiag[2].readVHxVoltageValue);
-        packageToSend.data[16] = GetLSB(g_resultsValues.resultVHxDiag[3].readVHxVoltageValue);
-        packageToSend.data[17] = GetMSB(g_resultsValues.resultVHxDiag[3].readVHxVoltageValue);
-        packageToSend.data[18] = GetLSB(g_resultsValues.resultVHxDiag[4].readVHxVoltageValue);
-        packageToSend.data[19] = GetMSB(g_resultsValues.resultVHxDiag[4].readVHxVoltageValue);
-        packageToSend.data[20] = GetLSB(g_resultsValues.resultVHxDiag[5].readVHxVoltageValue);
-        packageToSend.data[21] = GetMSB(g_resultsValues.resultVHxDiag[5].readVHxVoltageValue);
-        packageToSend.data[22] = GetLSB(g_resultsValues.resultVHxDiag[6].readVHxVoltageValue);
-        packageToSend.data[23] = GetMSB(g_resultsValues.resultVHxDiag[6].readVHxVoltageValue);
-        packageToSend.data[24] = GetLSB(g_resultsValues.resultVHxDiag[7].readVHxVoltageValue);
-        packageToSend.data[25] = GetMSB(g_resultsValues.resultVHxDiag[7].readVHxVoltageValue);
-        packageToSend.data[26] = GetLSB(g_resultsValues.resultVHxDiag[8].readVHxVoltageValue);
-        packageToSend.data[27] = GetMSB(g_resultsValues.resultVHxDiag[8].readVHxVoltageValue);
-        packageToSend.data[28] = GetLSB(g_resultsValues.resultVHxDiag[9].readVHxVoltageValue);
-        packageToSend.data[29] = GetMSB(g_resultsValues.resultVHxDiag[9].readVHxVoltageValue);
-        packageToSend.data[30] = GetLSB(g_resultsValues.resultVHxDiag[10].readVHxVoltageValue);
-        packageToSend.data[31] = GetMSB(g_resultsValues.resultVHxDiag[10].readVHxVoltageValue);
-        
-        uint8 tmp1VHxVoltageValid, tmp2VHxVoltageValid = 0;
-        for (uint8 i = 0; i<11; i++)
+    // Short detection results
+    packageToSend.data[0] = GetLSB(g_resultsValues.resultShortDiag.readShortCh4_1);
+    packageToSend.data[1] = GetMSB(g_resultsValues.resultShortDiag.readShortCh4_1);
+    packageToSend.data[2] = GetLSB(g_resultsValues.resultShortDiag.readShortCh8_5);
+    packageToSend.data[3] = GetMSB(g_resultsValues.resultShortDiag.readShortCh8_5);
+    packageToSend.data[4] = GetLSB(g_resultsValues.resultShortDiag.readShortCh12_9);
+    packageToSend.data[5] = GetMSB(g_resultsValues.resultShortDiag.readShortCh12_9);
+    packageToSend.data[6] = GetLSB(g_resultsValues.resultShortDiag.readShortCh16_13);
+    packageToSend.data[7] = GetMSB(g_resultsValues.resultShortDiag.readShortCh16_13);
+    packageToSend.data[8] = GetLSB(g_resultsValues.resultShortDiag.readShortCh20_17);
+    packageToSend.data[9] = GetMSB(g_resultsValues.resultShortDiag.readShortCh20_17);
+
+    // VHx diagnostic results resultVHxDiag[]
+    packageToSend.data[10] = GetLSB(g_resultsValues.resultVHxDiag[0].readVHxVoltageValue);
+    packageToSend.data[11] = GetMSB(g_resultsValues.resultVHxDiag[0].readVHxVoltageValue);
+    packageToSend.data[12] = GetLSB(g_resultsValues.resultVHxDiag[1].readVHxVoltageValue);
+    packageToSend.data[13] = GetMSB(g_resultsValues.resultVHxDiag[1].readVHxVoltageValue);
+    packageToSend.data[14] = GetLSB(g_resultsValues.resultVHxDiag[2].readVHxVoltageValue);
+    packageToSend.data[15] = GetMSB(g_resultsValues.resultVHxDiag[2].readVHxVoltageValue);
+    packageToSend.data[16] = GetLSB(g_resultsValues.resultVHxDiag[3].readVHxVoltageValue);
+    packageToSend.data[17] = GetMSB(g_resultsValues.resultVHxDiag[3].readVHxVoltageValue);
+    packageToSend.data[18] = GetLSB(g_resultsValues.resultVHxDiag[4].readVHxVoltageValue);
+    packageToSend.data[19] = GetMSB(g_resultsValues.resultVHxDiag[4].readVHxVoltageValue);
+    packageToSend.data[20] = GetLSB(g_resultsValues.resultVHxDiag[5].readVHxVoltageValue);
+    packageToSend.data[21] = GetMSB(g_resultsValues.resultVHxDiag[5].readVHxVoltageValue);
+    packageToSend.data[22] = GetLSB(g_resultsValues.resultVHxDiag[6].readVHxVoltageValue);
+    packageToSend.data[23] = GetMSB(g_resultsValues.resultVHxDiag[6].readVHxVoltageValue);
+    packageToSend.data[24] = GetLSB(g_resultsValues.resultVHxDiag[7].readVHxVoltageValue);
+    packageToSend.data[25] = GetMSB(g_resultsValues.resultVHxDiag[7].readVHxVoltageValue);
+    packageToSend.data[26] = GetLSB(g_resultsValues.resultVHxDiag[8].readVHxVoltageValue);
+    packageToSend.data[27] = GetMSB(g_resultsValues.resultVHxDiag[8].readVHxVoltageValue);
+    packageToSend.data[28] = GetLSB(g_resultsValues.resultVHxDiag[9].readVHxVoltageValue);
+    packageToSend.data[29] = GetMSB(g_resultsValues.resultVHxDiag[9].readVHxVoltageValue);
+    packageToSend.data[30] = GetLSB(g_resultsValues.resultVHxDiag[10].readVHxVoltageValue);
+    packageToSend.data[31] = GetMSB(g_resultsValues.resultVHxDiag[10].readVHxVoltageValue);
+
+    uint8 tmp1VHxVoltageValid, tmp2VHxVoltageValid = 0;
+    for (uint8 i = 0; i<11; i++)
+    {
+        if (i < 8)
         {
-            if (i < 8)
+            if (g_resultsValues.resultVHxDiag[i].readVHxVoltageValid)
             {
-                if (g_resultsValues.resultVHxDiag[i].readVHxVoltageValid)
-                {
-                    tmp1VHxVoltageValid |= (1 << i);
-                }
-            }
-            else
-            {
-                if (g_resultsValues.resultVHxDiag[i].readVHxVoltageValid)
-                {
-                    tmp2VHxVoltageValid |= (1 << (i-8));
-                }
+                tmp1VHxVoltageValid |= (1 << i);
             }
         }
-        packageToSend.data[32] = tmp1VHxVoltageValid;
-        packageToSend.data[33] = tmp2VHxVoltageValid;
-
-        // Squib detection error results
-        uint8 tmp1SquibDetErr, tmp2SquibDetErr, tmp3SquibDetErr = 0;
-        for (uint8 i = 0; i<20; i++)
+        else
         {
-            if (i < 8)
+            if (g_resultsValues.resultVHxDiag[i].readVHxVoltageValid)
             {
-                if (g_resultsValues.resultSquibErrorDiag[i])
-                {
-                    tmp1SquibDetErr |= (1 << i);
-                }
-            }
-            else if (i < 16)
-            {
-                if (g_resultsValues.resultSquibErrorDiag[i])
-                {
-                    tmp2SquibDetErr |= (1 << i);
-                }
-            }
-            else
-            {
-                if (g_resultsValues.resultSquibErrorDiag[i])
-                {
-                    tmp3SquibDetErr |= (1 << i);
-                }
+                tmp2VHxVoltageValid |= (1 << (i-8));
             }
         }
-        packageToSend.data[34] = tmp1SquibDetErr;
-        packageToSend.data[35] = tmp2SquibDetErr;
-        packageToSend.data[36] = tmp3SquibDetErr;
-
-        // Loop resistance diagnostics results
-        packageToSend.data[37] = GetLSB(g_resultsValues.resultLoopResDiag[0].readSquibResValue);
-        packageToSend.data[38] = GetMSB(g_resultsValues.resultLoopResDiag[0].readSquibResValue);
-        packageToSend.data[39] = GetLSB(g_resultsValues.resultLoopResDiag[1].readSquibResValue);
-        packageToSend.data[40] = GetMSB(g_resultsValues.resultLoopResDiag[1].readSquibResValue);
-        packageToSend.data[41] = GetLSB(g_resultsValues.resultLoopResDiag[2].readSquibResValue);
-        packageToSend.data[42] = GetMSB(g_resultsValues.resultLoopResDiag[2].readSquibResValue);
-        packageToSend.data[43] = GetLSB(g_resultsValues.resultLoopResDiag[3].readSquibResValue);
-        packageToSend.data[44] = GetMSB(g_resultsValues.resultLoopResDiag[3].readSquibResValue);
-        packageToSend.data[45] = GetLSB(g_resultsValues.resultLoopResDiag[4].readSquibResValue);
-        packageToSend.data[46] = GetMSB(g_resultsValues.resultLoopResDiag[4].readSquibResValue);
-        packageToSend.data[47] = GetLSB(g_resultsValues.resultLoopResDiag[5].readSquibResValue);
-        packageToSend.data[48] = GetMSB(g_resultsValues.resultLoopResDiag[5].readSquibResValue);
-        packageToSend.data[49] = GetLSB(g_resultsValues.resultLoopResDiag[6].readSquibResValue);
-        packageToSend.data[50] = GetMSB(g_resultsValues.resultLoopResDiag[6].readSquibResValue);
-        packageToSend.data[51] = GetLSB(g_resultsValues.resultLoopResDiag[7].readSquibResValue);
-        packageToSend.data[52] = GetMSB(g_resultsValues.resultLoopResDiag[7].readSquibResValue);
-        packageToSend.data[53] = GetLSB(g_resultsValues.resultLoopResDiag[8].readSquibResValue);
-        packageToSend.data[54] = GetMSB(g_resultsValues.resultLoopResDiag[8].readSquibResValue);
-        packageToSend.data[55] = GetLSB(g_resultsValues.resultLoopResDiag[9].readSquibResValue);
-        packageToSend.data[56] = GetMSB(g_resultsValues.resultLoopResDiag[9].readSquibResValue);
-        packageToSend.data[57] = GetLSB(g_resultsValues.resultLoopResDiag[10].readSquibResValue);
-        packageToSend.data[58] = GetMSB(g_resultsValues.resultLoopResDiag[10].readSquibResValue);
-        packageToSend.data[59] = GetLSB(g_resultsValues.resultLoopResDiag[11].readSquibResValue);
-        packageToSend.data[60] = GetMSB(g_resultsValues.resultLoopResDiag[11].readSquibResValue);
-        packageToSend.data[61] = GetLSB(g_resultsValues.resultLoopResDiag[12].readSquibResValue);
-        packageToSend.data[62] = GetMSB(g_resultsValues.resultLoopResDiag[12].readSquibResValue);
-        packageToSend.data[63] = GetLSB(g_resultsValues.resultLoopResDiag[13].readSquibResValue);
-        packageToSend.data[64] = GetMSB(g_resultsValues.resultLoopResDiag[13].readSquibResValue);
-        packageToSend.data[65] = GetLSB(g_resultsValues.resultLoopResDiag[14].readSquibResValue);
-        packageToSend.data[66] = GetMSB(g_resultsValues.resultLoopResDiag[14].readSquibResValue);
-        packageToSend.data[67] = GetLSB(g_resultsValues.resultLoopResDiag[15].readSquibResValue);
-        packageToSend.data[68] = GetMSB(g_resultsValues.resultLoopResDiag[15].readSquibResValue);
-        packageToSend.data[69] = GetLSB(g_resultsValues.resultLoopResDiag[16].readSquibResValue);
-        packageToSend.data[70] = GetMSB(g_resultsValues.resultLoopResDiag[16].readSquibResValue);
-        packageToSend.data[71] = GetLSB(g_resultsValues.resultLoopResDiag[17].readSquibResValue);
-        packageToSend.data[72] = GetMSB(g_resultsValues.resultLoopResDiag[17].readSquibResValue);
-        packageToSend.data[73] = GetLSB(g_resultsValues.resultLoopResDiag[18].readSquibResValue);
-        packageToSend.data[74] = GetMSB(g_resultsValues.resultLoopResDiag[18].readSquibResValue);
-        packageToSend.data[75] = GetLSB(g_resultsValues.resultLoopResDiag[19].readSquibResValue);
-        packageToSend.data[76] = GetMSB(g_resultsValues.resultLoopResDiag[19].readSquibResValue);
-
-        uint8 tmp1SquibResErr, tmp2SquibResErr, tmp3SquibResErr = 0;
-        for (uint8 i = 0; i<20; i++)
-        {
-            if (i < 8)
-            {
-                if (g_resultsValues.resultLoopResDiag[i].readSquibResErr)
-                {
-                    tmp1SquibResErr |= (1 << i);
-                }
-            }
-            else if (i < 16)
-            {
-                if (g_resultsValues.resultLoopResDiag[i].readSquibResErr)
-                {
-                    tmp2SquibResErr |= (1 << i);
-                }
-            }
-            else
-            {
-                if (g_resultsValues.resultLoopResDiag[i].readSquibResErr)
-                {
-                    tmp3SquibResErr |= (1 << i);
-                }
-            }
-        }
-        packageToSend.data[77] = tmp1SquibResErr;
-        packageToSend.data[78] = tmp2SquibResErr;
-        packageToSend.data[79] = tmp3SquibResErr;
-
-        uint8 tmp1SquibResValid, tmp2SquibResValid, tmp3SquibResValid = 0;
-        for (uint8 i = 0; i<20; i++)
-        {
-            if (i < 8)
-            {
-                if (g_resultsValues.resultLoopResDiag[i].readSquibResValid)
-                {
-                    tmp1SquibResValid |= (1 << i);
-                }
-            }
-            else if (i < 16)
-            {
-                if (g_resultsValues.resultLoopResDiag[i].readSquibResValid)
-                {
-                    tmp2SquibResValid |= (1 << i);
-                }
-            }
-            else
-            {
-                if (g_resultsValues.resultLoopResDiag[i].readSquibResValid)
-                {
-                    tmp3SquibResValid |= (1 << i);
-                }
-            }
-        }
-        packageToSend.data[80] = tmp1SquibResValid;
-        packageToSend.data[81] = tmp2SquibResValid;
-        packageToSend.data[82] = tmp3SquibResValid;
-
-        uint8 tmp1SquibResPgndxLoss, tmp2SquibResPgndxLoss, tmp3SquibResPgndxLoss = 0;
-        for (uint8 i = 0; i<20; i++)
-        {
-            if (i < 8)
-            {
-                if (g_resultsValues.resultLoopResDiag[i].readSquibResPgndxLoss)
-                {
-                    tmp1SquibResPgndxLoss |= (1 << i);
-                }
-            }
-            else if (i < 16)
-            {
-                if (g_resultsValues.resultLoopResDiag[i].readSquibResPgndxLoss)
-                {
-                    tmp2SquibResPgndxLoss |= (1 << i);
-                }
-            }
-            else
-            {
-                if (g_resultsValues.resultLoopResDiag[i].readSquibResPgndxLoss)
-                {
-                    tmp3SquibResPgndxLoss |= (1 << i);
-                }
-            }
-        }
-        packageToSend.data[83] = tmp1SquibResPgndxLoss;
-        packageToSend.data[84] = tmp2SquibResPgndxLoss;
-        packageToSend.data[85] = tmp3SquibResPgndxLoss;
-
-        // Send data back to MCU
-        SendUSBPackage(&packageToSend);
     }
+    packageToSend.data[32] = tmp1VHxVoltageValid;
+    packageToSend.data[33] = tmp2VHxVoltageValid;
 
+    // Squib detection error results
+    uint8 tmp1SquibDetErr, tmp2SquibDetErr, tmp3SquibDetErr = 0;
+    for (uint8 i = 0; i<20; i++)
+    {
+        if (i < 8)
+        {
+            if (g_resultsValues.resultSquibErrorDiag[i])
+            {
+                tmp1SquibDetErr |= (1 << i);
+            }
+        }
+        else if (i < 16)
+        {
+            if (g_resultsValues.resultSquibErrorDiag[i])
+            {
+                tmp2SquibDetErr |= (1 << i);
+            }
+        }
+        else
+        {
+            if (g_resultsValues.resultSquibErrorDiag[i])
+            {
+                tmp3SquibDetErr |= (1 << i);
+            }
+        }
+    }
+    packageToSend.data[34] = tmp1SquibDetErr;
+    packageToSend.data[35] = tmp2SquibDetErr;
+    packageToSend.data[36] = tmp3SquibDetErr;
+
+    // Loop resistance diagnostics results
+    packageToSend.data[37] = GetLSB(g_resultsValues.resultLoopResDiag[0].readSquibResValue);
+    packageToSend.data[38] = GetMSB(g_resultsValues.resultLoopResDiag[0].readSquibResValue);
+    packageToSend.data[39] = GetLSB(g_resultsValues.resultLoopResDiag[1].readSquibResValue);
+    packageToSend.data[40] = GetMSB(g_resultsValues.resultLoopResDiag[1].readSquibResValue);
+    packageToSend.data[41] = GetLSB(g_resultsValues.resultLoopResDiag[2].readSquibResValue);
+    packageToSend.data[42] = GetMSB(g_resultsValues.resultLoopResDiag[2].readSquibResValue);
+    packageToSend.data[43] = GetLSB(g_resultsValues.resultLoopResDiag[3].readSquibResValue);
+    packageToSend.data[44] = GetMSB(g_resultsValues.resultLoopResDiag[3].readSquibResValue);
+    packageToSend.data[45] = GetLSB(g_resultsValues.resultLoopResDiag[4].readSquibResValue);
+    packageToSend.data[46] = GetMSB(g_resultsValues.resultLoopResDiag[4].readSquibResValue);
+    packageToSend.data[47] = GetLSB(g_resultsValues.resultLoopResDiag[5].readSquibResValue);
+    packageToSend.data[48] = GetMSB(g_resultsValues.resultLoopResDiag[5].readSquibResValue);
+    packageToSend.data[49] = GetLSB(g_resultsValues.resultLoopResDiag[6].readSquibResValue);
+    packageToSend.data[50] = GetMSB(g_resultsValues.resultLoopResDiag[6].readSquibResValue);
+    packageToSend.data[51] = GetLSB(g_resultsValues.resultLoopResDiag[7].readSquibResValue);
+    packageToSend.data[52] = GetMSB(g_resultsValues.resultLoopResDiag[7].readSquibResValue);
+    packageToSend.data[53] = GetLSB(g_resultsValues.resultLoopResDiag[8].readSquibResValue);
+    packageToSend.data[54] = GetMSB(g_resultsValues.resultLoopResDiag[8].readSquibResValue);
+    packageToSend.data[55] = GetLSB(g_resultsValues.resultLoopResDiag[9].readSquibResValue);
+    packageToSend.data[56] = GetMSB(g_resultsValues.resultLoopResDiag[9].readSquibResValue);
+    packageToSend.data[57] = GetLSB(g_resultsValues.resultLoopResDiag[10].readSquibResValue);
+    packageToSend.data[58] = GetMSB(g_resultsValues.resultLoopResDiag[10].readSquibResValue);
+    packageToSend.data[59] = GetLSB(g_resultsValues.resultLoopResDiag[11].readSquibResValue);
+    packageToSend.data[60] = GetMSB(g_resultsValues.resultLoopResDiag[11].readSquibResValue);
+    packageToSend.data[61] = GetLSB(g_resultsValues.resultLoopResDiag[12].readSquibResValue);
+    packageToSend.data[62] = GetMSB(g_resultsValues.resultLoopResDiag[12].readSquibResValue);
+    packageToSend.data[63] = GetLSB(g_resultsValues.resultLoopResDiag[13].readSquibResValue);
+    packageToSend.data[64] = GetMSB(g_resultsValues.resultLoopResDiag[13].readSquibResValue);
+    packageToSend.data[65] = GetLSB(g_resultsValues.resultLoopResDiag[14].readSquibResValue);
+    packageToSend.data[66] = GetMSB(g_resultsValues.resultLoopResDiag[14].readSquibResValue);
+    packageToSend.data[67] = GetLSB(g_resultsValues.resultLoopResDiag[15].readSquibResValue);
+    packageToSend.data[68] = GetMSB(g_resultsValues.resultLoopResDiag[15].readSquibResValue);
+    packageToSend.data[69] = GetLSB(g_resultsValues.resultLoopResDiag[16].readSquibResValue);
+    packageToSend.data[70] = GetMSB(g_resultsValues.resultLoopResDiag[16].readSquibResValue);
+    packageToSend.data[71] = GetLSB(g_resultsValues.resultLoopResDiag[17].readSquibResValue);
+    packageToSend.data[72] = GetMSB(g_resultsValues.resultLoopResDiag[17].readSquibResValue);
+    packageToSend.data[73] = GetLSB(g_resultsValues.resultLoopResDiag[18].readSquibResValue);
+    packageToSend.data[74] = GetMSB(g_resultsValues.resultLoopResDiag[18].readSquibResValue);
+    packageToSend.data[75] = GetLSB(g_resultsValues.resultLoopResDiag[19].readSquibResValue);
+    packageToSend.data[76] = GetMSB(g_resultsValues.resultLoopResDiag[19].readSquibResValue);
+
+    uint8 tmp1SquibResErr, tmp2SquibResErr, tmp3SquibResErr = 0;
+    for (uint8 i = 0; i<20; i++)
+    {
+        if (i < 8)
+        {
+            if (g_resultsValues.resultLoopResDiag[i].readSquibResErr)
+            {
+                tmp1SquibResErr |= (1 << i);
+            }
+        }
+        else if (i < 16)
+        {
+            if (g_resultsValues.resultLoopResDiag[i].readSquibResErr)
+            {
+                tmp2SquibResErr |= (1 << i);
+            }
+        }
+        else
+        {
+            if (g_resultsValues.resultLoopResDiag[i].readSquibResErr)
+            {
+                tmp3SquibResErr |= (1 << i);
+            }
+        }
+    }
+    packageToSend.data[77] = tmp1SquibResErr;
+    packageToSend.data[78] = tmp2SquibResErr;
+    packageToSend.data[79] = tmp3SquibResErr;
+
+    uint8 tmp1SquibResValid, tmp2SquibResValid, tmp3SquibResValid = 0;
+    for (uint8 i = 0; i<20; i++)
+    {
+        if (i < 8)
+        {
+            if (g_resultsValues.resultLoopResDiag[i].readSquibResValid)
+            {
+                tmp1SquibResValid |= (1 << i);
+            }
+        }
+        else if (i < 16)
+        {
+            if (g_resultsValues.resultLoopResDiag[i].readSquibResValid)
+            {
+                tmp2SquibResValid |= (1 << i);
+            }
+        }
+        else
+        {
+            if (g_resultsValues.resultLoopResDiag[i].readSquibResValid)
+            {
+                tmp3SquibResValid |= (1 << i);
+            }
+        }
+    }
+    packageToSend.data[80] = tmp1SquibResValid;
+    packageToSend.data[81] = tmp2SquibResValid;
+    packageToSend.data[82] = tmp3SquibResValid;
+
+    uint8 tmp1SquibResPgndxLoss, tmp2SquibResPgndxLoss, tmp3SquibResPgndxLoss = 0;
+    for (uint8 i = 0; i<20; i++)
+    {
+        if (i < 8)
+        {
+            if (g_resultsValues.resultLoopResDiag[i].readSquibResPgndxLoss)
+            {
+                tmp1SquibResPgndxLoss |= (1 << i);
+            }
+        }
+        else if (i < 16)
+        {
+            if (g_resultsValues.resultLoopResDiag[i].readSquibResPgndxLoss)
+            {
+                tmp2SquibResPgndxLoss |= (1 << i);
+            }
+        }
+        else
+        {
+            if (g_resultsValues.resultLoopResDiag[i].readSquibResPgndxLoss)
+            {
+                tmp3SquibResPgndxLoss |= (1 << i);
+            }
+        }
+    }
+    packageToSend.data[83] = tmp1SquibResPgndxLoss;
+    packageToSend.data[84] = tmp2SquibResPgndxLoss;
+    packageToSend.data[85] = tmp3SquibResPgndxLoss;
+
+    // Send data back to MCU
+    SendUSBPackage(&packageToSend);
+}
 
 void IntCmdExecuteFLMDiag()
 {
@@ -578,7 +519,7 @@ void IntCmdExecuteFLMDiag()
 // Diagnostic is running automatically by default, just read results
 void FLMShortDiag()
 {
-    SPIReceiveDataNormal data[FLM_DIAG_READ_SHORT_REGS_COUNT] = {0}; // TODO: unclear behavior, array of structs can't be initialized using such syntax
+    SPIReceiveDataNormal data[FLM_DIAG_READ_SHORT_REGS_COUNT];
     uint16 length = FLM_DIAG_READ_SHORT_REGS_COUNT;
     boolean isSuccessfulFlag = FALSE;
     uint16 flmDiagShortsRegsAddresses[FLM_DIAG_READ_SHORT_REGS_COUNT] = {FLM_FLM_READ_SHORT_CH4_1, FLM_FLM_READ_SHORT_CH8_5,
@@ -589,9 +530,9 @@ void FLMShortDiag()
     g_diagExecStatus = FLM_DIAG_EXEC_STATUS_ONGOING;
 
     // Read related registers from ASIC
-    isSuccessfulFlag = QSPIReadSequenceNormal(SPI1_CS1MASTER, flmDiagShortsRegsAddresses, &data[0].dw, &length); //TODO: question: should data argument be &data[0].dw not &data[].dw ?
+    isSuccessfulFlag = QSPIReadSequenceNormal(SPI1_CS1MASTER, flmDiagShortsRegsAddresses, &data[0].dw, &length);
 
-    // Store results //TODO: check order of data
+    // Store results
     g_resultsValues.resultShortDiag.readShortCh4_1 = data[0].bf.output_data;
     g_resultsValues.resultShortDiag.readShortCh8_5 = data[1].bf.output_data;
     g_resultsValues.resultShortDiag.readShortCh12_9 = data[2].bf.output_data;
@@ -601,8 +542,6 @@ void FLMShortDiag()
     // results are stored, get back
     g_diagExecStatus = FLM_DIAG_EXEC_STATUS_FINISHED;
     
-    // TODO: quick result analisys to check for faults
-    // if any active, FLMCycDiagFaultsValues.faultSC2GSC2B = TRUE
     return;
 }
 
@@ -618,14 +557,6 @@ void FLMVHxDiag()
                                                                         FLM_FLM_READ_DIAG_VH9, FLM_FLM_READ_DIAG_VH10,
                                                                         FLM_FLM_READ_DIAG_VH1B };
 
-    if (CheckBatVoltage()==FALSE) 
-    {
-        // TODO: re-do to support current logic
-        //g_FLMCycDiagStatus.statusVHxMeas = FLM_DIAG_STATUS_VHX_MEAS_SKIPPED;
-    }
-
-    // TODO: implement timeout for 1.5-2 duration of diagnostic -> if timeout then feature error to PC 
-
     if (g_diagExecStatus == FLM_DIAG_EXEC_STATUS_FINISHED)
     {
         // Select corresponding mode and start diagnostic
@@ -638,10 +569,9 @@ void FLMVHxDiag()
 
     if (g_diagExecStatus == FLM_DIAG_EXEC_STATUS_EVALUATED)
     {
-        // TODO: diagnostic was performed, store results
         // Read FLM_FLM_READ_DIAG_VH1A...FLM_FLM_READ_DIAG_VH10, FLM_FLM_READ_DIAG_VH1B
         isSuccessfulFlag = QSPIReadSequenceNormal(SPI1_CS1MASTER, flmDiagVHxRegsAddresses, &data[0].dw, &length);
-        // Store results TODO: check order of data
+        // Store results
         for (uint8 i = 0; i < FLM_DIAG_READ_VHX_REGS_COUNT ; i++)
         {
             flm_flm_read_diag_vh1a_ut flmReadDiagVHxTmp;
@@ -653,8 +583,6 @@ void FLMVHxDiag()
         g_diagExecStatus = FLM_DIAG_EXEC_STATUS_FINISHED;
     }
 
-    // TODO: evaluate wether to implement error status handling
-    // g_FLMCycDiagFaultsValues.faultVHxMeasErr = 0; // as per Vasant's diagrams; clearing fault here doesn't seem right for me
     return;
 }
 
@@ -677,10 +605,9 @@ void FLMSquibDetErrDiag()
 
     if (g_diagExecStatus == FLM_DIAG_EXEC_STATUS_EVALUATED)
     {
-        // TODO: diagnostic was performed, store results
         // Read FLM_READ_SQUIB_CH16_1, FLM_READ_SQUIB_CH20_17
         isSuccessfulFlag = QSPIReadSequenceNormal(SPI1_CS1MASTER, flmDiagSquibRegsAddresses, &data[0].dw, &length);
-        // Store results TODO: check order of data
+        // Store results
         for (uint8 i = 0; i < 20 ; i++)
         {
             if (i < 16)
@@ -698,7 +625,6 @@ void FLMSquibDetErrDiag()
         g_diagExecStatus = FLM_DIAG_EXEC_STATUS_FINISHED;
     }
 
-    // TODO: evaluate wether to implement error status handling
     return;
 }
 
@@ -733,7 +659,7 @@ void FLMLoopResDiag()
     {
         // Read FLM_READ_SQUIB_RES_CH1...FLM_READ_SQUIB_RES_CH20
         isSuccessfulFlag = QSPIReadSequenceNormal(SPI1_CS1MASTER, flmDiagResRegsAddresses, &data[0].dw, &length);
-        // Store results TODO: check order of data
+        // Store results
         for (uint8 i = 0; i < FLM_DIAG_READ_RES_REGS_COUNT ; i++)
         {
             flm_flm_read_squib_res_ch1_ut flmReadSquibResChxTmp; 
@@ -747,25 +673,7 @@ void FLMLoopResDiag()
         g_diagExecStatus = FLM_DIAG_EXEC_STATUS_FINISHED;
     }
 
-    // TODO: evaluate wether to implement error status handling
     return;
-}
-
-void SetFLMDiagMode(FLMDiagModeEnum diagMode)
-{
-    SPIReceiveDataNormal data;
-    boolean isSuccessfulFlag = TRUE;
-    flm_flm_diag_start_ut tmpFLMDiagStartfRegister;
-    
-    // Get value from ASIC
-    isSuccessfulFlag &= QSPIReadNormal(SPI1_CS1MASTER, FLM_FLM_DIAG_START, &data.dw);
-    tmpFLMDiagStartfRegister.as_uint16 = data.bf.output_data;
-    
-    // flm_diag_start = 1 starts selected diagnostic
-    tmpFLMDiagStartfRegister.as_s.FlmDiagMode_u5 = diagMode;
-
-    // Write
-    QSPIWriteNormal(SPI1_CS1MASTER, FLM_FLM_DIAG_START, tmpFLMDiagStartfRegister.as_uint16);
 }
 
 void StartFLMDiag(int diagMode)
@@ -808,7 +716,7 @@ void FLMUpdateDiagExecStatus(void)
 
 boolean CheckBatVoltage(void)
 {
-    // TODO
-    // Mock for first iteration
+    // Mocked for first iteration
+    // TODO: evaluate whether to implement
     return TRUE;
 }
