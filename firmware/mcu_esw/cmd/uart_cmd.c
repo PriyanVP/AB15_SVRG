@@ -30,7 +30,6 @@
 
 void CmdSendUartData(USBReceiveData const * const commandPackage)
 {
-
     USBTransmitData packageToSend;
 
     // Construct package to PC
@@ -52,5 +51,4 @@ void CmdSendUartData(USBReceiveData const * const commandPackage)
 
     // Send report to GUI
     SendUSBPackage(&packageToSend);
-
 }

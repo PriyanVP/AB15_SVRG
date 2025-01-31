@@ -32,7 +32,7 @@
  *
  * \return Returns nothing.
  */
-void InitUartInterface(void);
+void InitUart(void);
 
 /** \brief Send data via UART
  * Formats and sends data

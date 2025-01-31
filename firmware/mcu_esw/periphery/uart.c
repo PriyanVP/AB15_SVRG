@@ -48,7 +48,7 @@ void asclin2TxISR(void)
     IfxAsclin_Asc_isrTransmit(&g_uart);
 }
 
-void InitUartInterface(void)
+void InitUart(void)
 {
     /* Initialize an instance of IfxAsclin_Asc_Config with default values */
     IfxAsclin_Asc_Config uartConfig;

@@ -95,6 +95,7 @@ typedef enum
     USB_CMD_INIT_SYNC                   = 25,                 /** \brief syncs ASIC and GUI: SPI_COLDSTART_0, response to GUI when ASIC in INIT state */
     USB_CMD_WRITE_RAW_DATA_SPI          = 26,                 /** \brief 0x1A write 32bit raw data to spi */
     USB_CMD_FLM_DIAG_DISABLE            = 27,                 /** \brief disables Firing Loop Module cyclic diagnostics */
+    USB_CMD_WRITE_DATA_UART             = 28,                 /** \brief write data to UART */
     USB_CMD_START_TEST_MODE1            = 29,                 /** \brief configure and start Test mode 1  */
     USB_CMD_START_TEST_MODE2            = 30,                 /** \brief configure and start Test mode 2  */
     USB_CMD_STOP_TEST_MODE12            = 31,                 /** \brief stop Test mode (currently running)  */
