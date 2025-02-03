@@ -45,7 +45,8 @@ typedef enum
     FLM_DIAG_ORDER_SHORT_DET        = 1,        /** \brief IGL/IGH short and leakage to battery/ground (all loops by default) */
     FLM_DIAG_ORDER_VHX_MEAS         = 2,        /** \brief VHx voltage measurement (all loops) */
     FLM_DIAG_ORDER_LOOP_RES_MEAS    = 3,        /** \brief Loop resistance measurement (all loops) */
-    FLM_DIAG_ORDER_SQUIB_DET        = 4         /** \brief Squib presence test (all loops) */
+    FLM_DIAG_ORDER_SQUIB_DET        = 4,        /** \brief Squib presence test (all loops) */
+    FLM_DIAG_ORDER_SAVE_RESULTS     = 5         /** \brief Save results of diagnostics into package for GUI */
 } FLMDiagExecOrderEnum;
 
 /** \brief Execution status of each diagnostic
@@ -130,6 +131,10 @@ void FLMLoopResDiag(void);
  */
 void FLMSquibDetErrDiag(void);
 
+/** \brief Save diag results into package to be sent to GUI
+ */
+void FLMSaveDiagResults(void);
+
 /** \brief Select diagnostic to be run by FLM diag module and start diagnostic
  * \param diagMode configuration to select required diagnostic in ASIC
  */
@@ -151,6 +156,7 @@ static boolean g_isflmDiagEn = FALSE;
 static FLMCycDiagResults g_resultsValues;
 static FLMDiagExecStatusEnum g_diagExecStatus = FLM_DIAG_EXEC_STATUS_IDLE;
 static FLMDiagExecOrderEnum g_diagExecNumber = FLM_DIAG_ORDER_SHORT_DET;
+static USBTransmitData g_resultsToSend;
 
 /*********************************************************************************************************************/
 /*---------------------------------------------Function Implementations----------------------------------------------*/
@@ -230,231 +236,13 @@ void CmdDisableFLMDiag(USBReceiveData const * const commandPackage)
 
 void CmdReadFLMDiagResults(USBReceiveData const * const commandPackage)
 {
-    USBTransmitData packageToSend;
-
-    packageToSend.device_id = 0;
-    packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
-    packageToSend.status = USB_STATUS_DATA;
-    packageToSend.dataLength = 86;
-
-    // Short detection results
-    packageToSend.data[0] = GetLSB(g_resultsValues.resultShortDiag.readShortCh4_1);
-    packageToSend.data[1] = GetMSB(g_resultsValues.resultShortDiag.readShortCh4_1);
-    packageToSend.data[2] = GetLSB(g_resultsValues.resultShortDiag.readShortCh8_5);
-    packageToSend.data[3] = GetMSB(g_resultsValues.resultShortDiag.readShortCh8_5);
-    packageToSend.data[4] = GetLSB(g_resultsValues.resultShortDiag.readShortCh12_9);
-    packageToSend.data[5] = GetMSB(g_resultsValues.resultShortDiag.readShortCh12_9);
-    packageToSend.data[6] = GetLSB(g_resultsValues.resultShortDiag.readShortCh16_13);
-    packageToSend.data[7] = GetMSB(g_resultsValues.resultShortDiag.readShortCh16_13);
-    packageToSend.data[8] = GetLSB(g_resultsValues.resultShortDiag.readShortCh20_17);
-    packageToSend.data[9] = GetMSB(g_resultsValues.resultShortDiag.readShortCh20_17);
-
-    // VHx diagnostic results resultVHxDiag[]
-    packageToSend.data[10] = GetLSB(g_resultsValues.resultVHxDiag[0].readVHxVoltageValue);
-    packageToSend.data[11] = GetMSB(g_resultsValues.resultVHxDiag[0].readVHxVoltageValue);
-    packageToSend.data[12] = GetLSB(g_resultsValues.resultVHxDiag[1].readVHxVoltageValue);
-    packageToSend.data[13] = GetMSB(g_resultsValues.resultVHxDiag[1].readVHxVoltageValue);
-    packageToSend.data[14] = GetLSB(g_resultsValues.resultVHxDiag[2].readVHxVoltageValue);
-    packageToSend.data[15] = GetMSB(g_resultsValues.resultVHxDiag[2].readVHxVoltageValue);
-    packageToSend.data[16] = GetLSB(g_resultsValues.resultVHxDiag[3].readVHxVoltageValue);
-    packageToSend.data[17] = GetMSB(g_resultsValues.resultVHxDiag[3].readVHxVoltageValue);
-    packageToSend.data[18] = GetLSB(g_resultsValues.resultVHxDiag[4].readVHxVoltageValue);
-    packageToSend.data[19] = GetMSB(g_resultsValues.resultVHxDiag[4].readVHxVoltageValue);
-    packageToSend.data[20] = GetLSB(g_resultsValues.resultVHxDiag[5].readVHxVoltageValue);
-    packageToSend.data[21] = GetMSB(g_resultsValues.resultVHxDiag[5].readVHxVoltageValue);
-    packageToSend.data[22] = GetLSB(g_resultsValues.resultVHxDiag[6].readVHxVoltageValue);
-    packageToSend.data[23] = GetMSB(g_resultsValues.resultVHxDiag[6].readVHxVoltageValue);
-    packageToSend.data[24] = GetLSB(g_resultsValues.resultVHxDiag[7].readVHxVoltageValue);
-    packageToSend.data[25] = GetMSB(g_resultsValues.resultVHxDiag[7].readVHxVoltageValue);
-    packageToSend.data[26] = GetLSB(g_resultsValues.resultVHxDiag[8].readVHxVoltageValue);
-    packageToSend.data[27] = GetMSB(g_resultsValues.resultVHxDiag[8].readVHxVoltageValue);
-    packageToSend.data[28] = GetLSB(g_resultsValues.resultVHxDiag[9].readVHxVoltageValue);
-    packageToSend.data[29] = GetMSB(g_resultsValues.resultVHxDiag[9].readVHxVoltageValue);
-    packageToSend.data[30] = GetLSB(g_resultsValues.resultVHxDiag[10].readVHxVoltageValue);
-    packageToSend.data[31] = GetMSB(g_resultsValues.resultVHxDiag[10].readVHxVoltageValue);
-
-    uint8 tmp1VHxVoltageValid, tmp2VHxVoltageValid = 0;
-    for (uint8 i = 0; i<11; i++)
-    {
-        if (i < 8)
-        {
-            if (g_resultsValues.resultVHxDiag[i].readVHxVoltageValid)
-            {
-                tmp1VHxVoltageValid |= (1 << i);
-            }
-        }
-        else
-        {
-            if (g_resultsValues.resultVHxDiag[i].readVHxVoltageValid)
-            {
-                tmp2VHxVoltageValid |= (1 << (i-8));
-            }
-        }
-    }
-    packageToSend.data[32] = tmp1VHxVoltageValid;
-    packageToSend.data[33] = tmp2VHxVoltageValid;
-
-    // Squib detection error results
-    uint8 tmp1SquibDetErr, tmp2SquibDetErr, tmp3SquibDetErr = 0;
-    for (uint8 i = 0; i<20; i++)
-    {
-        if (i < 8)
-        {
-            if (g_resultsValues.resultSquibErrorDiag[i])
-            {
-                tmp1SquibDetErr |= (1 << i);
-            }
-        }
-        else if (i < 16)
-        {
-            if (g_resultsValues.resultSquibErrorDiag[i])
-            {
-                tmp2SquibDetErr |= (1 << i);
-            }
-        }
-        else
-        {
-            if (g_resultsValues.resultSquibErrorDiag[i])
-            {
-                tmp3SquibDetErr |= (1 << i);
-            }
-        }
-    }
-    packageToSend.data[34] = tmp1SquibDetErr;
-    packageToSend.data[35] = tmp2SquibDetErr;
-    packageToSend.data[36] = tmp3SquibDetErr;
-
-    // Loop resistance diagnostics results
-    packageToSend.data[37] = GetLSB(g_resultsValues.resultLoopResDiag[0].readSquibResValue);
-    packageToSend.data[38] = GetMSB(g_resultsValues.resultLoopResDiag[0].readSquibResValue);
-    packageToSend.data[39] = GetLSB(g_resultsValues.resultLoopResDiag[1].readSquibResValue);
-    packageToSend.data[40] = GetMSB(g_resultsValues.resultLoopResDiag[1].readSquibResValue);
-    packageToSend.data[41] = GetLSB(g_resultsValues.resultLoopResDiag[2].readSquibResValue);
-    packageToSend.data[42] = GetMSB(g_resultsValues.resultLoopResDiag[2].readSquibResValue);
-    packageToSend.data[43] = GetLSB(g_resultsValues.resultLoopResDiag[3].readSquibResValue);
-    packageToSend.data[44] = GetMSB(g_resultsValues.resultLoopResDiag[3].readSquibResValue);
-    packageToSend.data[45] = GetLSB(g_resultsValues.resultLoopResDiag[4].readSquibResValue);
-    packageToSend.data[46] = GetMSB(g_resultsValues.resultLoopResDiag[4].readSquibResValue);
-    packageToSend.data[47] = GetLSB(g_resultsValues.resultLoopResDiag[5].readSquibResValue);
-    packageToSend.data[48] = GetMSB(g_resultsValues.resultLoopResDiag[5].readSquibResValue);
-    packageToSend.data[49] = GetLSB(g_resultsValues.resultLoopResDiag[6].readSquibResValue);
-    packageToSend.data[50] = GetMSB(g_resultsValues.resultLoopResDiag[6].readSquibResValue);
-    packageToSend.data[51] = GetLSB(g_resultsValues.resultLoopResDiag[7].readSquibResValue);
-    packageToSend.data[52] = GetMSB(g_resultsValues.resultLoopResDiag[7].readSquibResValue);
-    packageToSend.data[53] = GetLSB(g_resultsValues.resultLoopResDiag[8].readSquibResValue);
-    packageToSend.data[54] = GetMSB(g_resultsValues.resultLoopResDiag[8].readSquibResValue);
-    packageToSend.data[55] = GetLSB(g_resultsValues.resultLoopResDiag[9].readSquibResValue);
-    packageToSend.data[56] = GetMSB(g_resultsValues.resultLoopResDiag[9].readSquibResValue);
-    packageToSend.data[57] = GetLSB(g_resultsValues.resultLoopResDiag[10].readSquibResValue);
-    packageToSend.data[58] = GetMSB(g_resultsValues.resultLoopResDiag[10].readSquibResValue);
-    packageToSend.data[59] = GetLSB(g_resultsValues.resultLoopResDiag[11].readSquibResValue);
-    packageToSend.data[60] = GetMSB(g_resultsValues.resultLoopResDiag[11].readSquibResValue);
-    packageToSend.data[61] = GetLSB(g_resultsValues.resultLoopResDiag[12].readSquibResValue);
-    packageToSend.data[62] = GetMSB(g_resultsValues.resultLoopResDiag[12].readSquibResValue);
-    packageToSend.data[63] = GetLSB(g_resultsValues.resultLoopResDiag[13].readSquibResValue);
-    packageToSend.data[64] = GetMSB(g_resultsValues.resultLoopResDiag[13].readSquibResValue);
-    packageToSend.data[65] = GetLSB(g_resultsValues.resultLoopResDiag[14].readSquibResValue);
-    packageToSend.data[66] = GetMSB(g_resultsValues.resultLoopResDiag[14].readSquibResValue);
-    packageToSend.data[67] = GetLSB(g_resultsValues.resultLoopResDiag[15].readSquibResValue);
-    packageToSend.data[68] = GetMSB(g_resultsValues.resultLoopResDiag[15].readSquibResValue);
-    packageToSend.data[69] = GetLSB(g_resultsValues.resultLoopResDiag[16].readSquibResValue);
-    packageToSend.data[70] = GetMSB(g_resultsValues.resultLoopResDiag[16].readSquibResValue);
-    packageToSend.data[71] = GetLSB(g_resultsValues.resultLoopResDiag[17].readSquibResValue);
-    packageToSend.data[72] = GetMSB(g_resultsValues.resultLoopResDiag[17].readSquibResValue);
-    packageToSend.data[73] = GetLSB(g_resultsValues.resultLoopResDiag[18].readSquibResValue);
-    packageToSend.data[74] = GetMSB(g_resultsValues.resultLoopResDiag[18].readSquibResValue);
-    packageToSend.data[75] = GetLSB(g_resultsValues.resultLoopResDiag[19].readSquibResValue);
-    packageToSend.data[76] = GetMSB(g_resultsValues.resultLoopResDiag[19].readSquibResValue);
-
-    uint8 tmp1SquibResErr, tmp2SquibResErr, tmp3SquibResErr = 0;
-    for (uint8 i = 0; i<20; i++)
-    {
-        if (i < 8)
-        {
-            if (g_resultsValues.resultLoopResDiag[i].readSquibResErr)
-            {
-                tmp1SquibResErr |= (1 << i);
-            }
-        }
-        else if (i < 16)
-        {
-            if (g_resultsValues.resultLoopResDiag[i].readSquibResErr)
-            {
-                tmp2SquibResErr |= (1 << i);
-            }
-        }
-        else
-        {
-            if (g_resultsValues.resultLoopResDiag[i].readSquibResErr)
-            {
-                tmp3SquibResErr |= (1 << i);
-            }
-        }
-    }
-    packageToSend.data[77] = tmp1SquibResErr;
-    packageToSend.data[78] = tmp2SquibResErr;
-    packageToSend.data[79] = tmp3SquibResErr;
-
-    uint8 tmp1SquibResValid, tmp2SquibResValid, tmp3SquibResValid = 0;
-    for (uint8 i = 0; i<20; i++)
-    {
-        if (i < 8)
-        {
-            if (g_resultsValues.resultLoopResDiag[i].readSquibResValid)
-            {
-                tmp1SquibResValid |= (1 << i);
-            }
-        }
-        else if (i < 16)
-        {
-            if (g_resultsValues.resultLoopResDiag[i].readSquibResValid)
-            {
-                tmp2SquibResValid |= (1 << i);
-            }
-        }
-        else
-        {
-            if (g_resultsValues.resultLoopResDiag[i].readSquibResValid)
-            {
-                tmp3SquibResValid |= (1 << i);
-            }
-        }
-    }
-    packageToSend.data[80] = tmp1SquibResValid;
-    packageToSend.data[81] = tmp2SquibResValid;
-    packageToSend.data[82] = tmp3SquibResValid;
-
-    uint8 tmp1SquibResPgndxLoss, tmp2SquibResPgndxLoss, tmp3SquibResPgndxLoss = 0;
-    for (uint8 i = 0; i<20; i++)
-    {
-        if (i < 8)
-        {
-            if (g_resultsValues.resultLoopResDiag[i].readSquibResPgndxLoss)
-            {
-                tmp1SquibResPgndxLoss |= (1 << i);
-            }
-        }
-        else if (i < 16)
-        {
-            if (g_resultsValues.resultLoopResDiag[i].readSquibResPgndxLoss)
-            {
-                tmp2SquibResPgndxLoss |= (1 << i);
-            }
-        }
-        else
-        {
-            if (g_resultsValues.resultLoopResDiag[i].readSquibResPgndxLoss)
-            {
-                tmp3SquibResPgndxLoss |= (1 << i);
-            }
-        }
-    }
-    packageToSend.data[83] = tmp1SquibResPgndxLoss;
-    packageToSend.data[84] = tmp2SquibResPgndxLoss;
-    packageToSend.data[85] = tmp3SquibResPgndxLoss;
+    g_resultsToSend.device_id = 0;
+    g_resultsToSend.msg_id = SetResponseBit(commandPackage->msg_id);
+    g_resultsToSend.status = USB_STATUS_DATA;
+    g_resultsToSend.dataLength = 86;
 
     // Send data back to MCU
-    SendUSBPackage(&packageToSend);
+    SendUSBPackage(&g_resultsToSend);
 }
 
 void IntCmdExecuteFLMDiag()
@@ -500,6 +288,15 @@ void IntCmdExecuteFLMDiag()
 
     case FLM_DIAG_ORDER_SQUIB_DET:
         FLMSquibDetErrDiag();
+        if (g_diagExecStatus == FLM_DIAG_EXEC_STATUS_FINISHED)
+        {
+            // Move on to next diagnostic
+            g_diagExecNumber = FLM_DIAG_ORDER_SAVE_RESULTS;
+        }
+        break;
+    
+    case FLM_DIAG_ORDER_SAVE_RESULTS:
+        FLMSaveDiagResults();
         if (g_diagExecStatus == FLM_DIAG_EXEC_STATUS_FINISHED)
         {
             // Move on to next diagnostic
@@ -667,6 +464,225 @@ void FLMLoopResDiag()
     }
 
     return;
+}
+
+void FLMSaveDiagResults()
+{
+    // Short detection results
+    g_resultsToSend.data[0] = GetLSB(g_resultsValues.resultShortDiag.readShortCh4_1);
+    g_resultsToSend.data[1] = GetMSB(g_resultsValues.resultShortDiag.readShortCh4_1);
+    g_resultsToSend.data[2] = GetLSB(g_resultsValues.resultShortDiag.readShortCh8_5);
+    g_resultsToSend.data[3] = GetMSB(g_resultsValues.resultShortDiag.readShortCh8_5);
+    g_resultsToSend.data[4] = GetLSB(g_resultsValues.resultShortDiag.readShortCh12_9);
+    g_resultsToSend.data[5] = GetMSB(g_resultsValues.resultShortDiag.readShortCh12_9);
+    g_resultsToSend.data[6] = GetLSB(g_resultsValues.resultShortDiag.readShortCh16_13);
+    g_resultsToSend.data[7] = GetMSB(g_resultsValues.resultShortDiag.readShortCh16_13);
+    g_resultsToSend.data[8] = GetLSB(g_resultsValues.resultShortDiag.readShortCh20_17);
+    g_resultsToSend.data[9] = GetMSB(g_resultsValues.resultShortDiag.readShortCh20_17);
+
+    // VHx diagnostic results resultVHxDiag[]
+    g_resultsToSend.data[10] = GetLSB(g_resultsValues.resultVHxDiag[0].readVHxVoltageValue);
+    g_resultsToSend.data[11] = GetMSB(g_resultsValues.resultVHxDiag[0].readVHxVoltageValue);
+    g_resultsToSend.data[12] = GetLSB(g_resultsValues.resultVHxDiag[1].readVHxVoltageValue);
+    g_resultsToSend.data[13] = GetMSB(g_resultsValues.resultVHxDiag[1].readVHxVoltageValue);
+    g_resultsToSend.data[14] = GetLSB(g_resultsValues.resultVHxDiag[2].readVHxVoltageValue);
+    g_resultsToSend.data[15] = GetMSB(g_resultsValues.resultVHxDiag[2].readVHxVoltageValue);
+    g_resultsToSend.data[16] = GetLSB(g_resultsValues.resultVHxDiag[3].readVHxVoltageValue);
+    g_resultsToSend.data[17] = GetMSB(g_resultsValues.resultVHxDiag[3].readVHxVoltageValue);
+    g_resultsToSend.data[18] = GetLSB(g_resultsValues.resultVHxDiag[4].readVHxVoltageValue);
+    g_resultsToSend.data[19] = GetMSB(g_resultsValues.resultVHxDiag[4].readVHxVoltageValue);
+    g_resultsToSend.data[20] = GetLSB(g_resultsValues.resultVHxDiag[5].readVHxVoltageValue);
+    g_resultsToSend.data[21] = GetMSB(g_resultsValues.resultVHxDiag[5].readVHxVoltageValue);
+    g_resultsToSend.data[22] = GetLSB(g_resultsValues.resultVHxDiag[6].readVHxVoltageValue);
+    g_resultsToSend.data[23] = GetMSB(g_resultsValues.resultVHxDiag[6].readVHxVoltageValue);
+    g_resultsToSend.data[24] = GetLSB(g_resultsValues.resultVHxDiag[7].readVHxVoltageValue);
+    g_resultsToSend.data[25] = GetMSB(g_resultsValues.resultVHxDiag[7].readVHxVoltageValue);
+    g_resultsToSend.data[26] = GetLSB(g_resultsValues.resultVHxDiag[8].readVHxVoltageValue);
+    g_resultsToSend.data[27] = GetMSB(g_resultsValues.resultVHxDiag[8].readVHxVoltageValue);
+    g_resultsToSend.data[28] = GetLSB(g_resultsValues.resultVHxDiag[9].readVHxVoltageValue);
+    g_resultsToSend.data[29] = GetMSB(g_resultsValues.resultVHxDiag[9].readVHxVoltageValue);
+    g_resultsToSend.data[30] = GetLSB(g_resultsValues.resultVHxDiag[10].readVHxVoltageValue);
+    g_resultsToSend.data[31] = GetMSB(g_resultsValues.resultVHxDiag[10].readVHxVoltageValue);
+
+    uint8 tmp1VHxVoltageValid, tmp2VHxVoltageValid = 0;
+    for (uint8 i = 0; i<11; i++)
+    {
+        if (i < 8)
+        {
+            if (g_resultsValues.resultVHxDiag[i].readVHxVoltageValid)
+            {
+                tmp1VHxVoltageValid |= (1 << i);
+            }
+        }
+        else
+        {
+            if (g_resultsValues.resultVHxDiag[i].readVHxVoltageValid)
+            {
+                tmp2VHxVoltageValid |= (1 << (i-8));
+            }
+        }
+    }
+    g_resultsToSend.data[32] = tmp1VHxVoltageValid;
+    g_resultsToSend.data[33] = tmp2VHxVoltageValid;
+
+    // Squib detection error results
+    uint8 tmp1SquibDetErr, tmp2SquibDetErr, tmp3SquibDetErr = 0;
+    for (uint8 i = 0; i<20; i++)
+    {
+        if (i < 8)
+        {
+            if (g_resultsValues.resultSquibErrorDiag[i])
+            {
+                tmp1SquibDetErr |= (1 << i);
+            }
+        }
+        else if (i < 16)
+        {
+            if (g_resultsValues.resultSquibErrorDiag[i])
+            {
+                tmp2SquibDetErr |= (1 << i);
+            }
+        }
+        else
+        {
+            if (g_resultsValues.resultSquibErrorDiag[i])
+            {
+                tmp3SquibDetErr |= (1 << i);
+            }
+        }
+    }
+    g_resultsToSend.data[34] = tmp1SquibDetErr;
+    g_resultsToSend.data[35] = tmp2SquibDetErr;
+    g_resultsToSend.data[36] = tmp3SquibDetErr;
+
+    // Loop resistance diagnostics results
+    g_resultsToSend.data[37] = GetLSB(g_resultsValues.resultLoopResDiag[0].readSquibResValue);
+    g_resultsToSend.data[38] = GetMSB(g_resultsValues.resultLoopResDiag[0].readSquibResValue);
+    g_resultsToSend.data[39] = GetLSB(g_resultsValues.resultLoopResDiag[1].readSquibResValue);
+    g_resultsToSend.data[40] = GetMSB(g_resultsValues.resultLoopResDiag[1].readSquibResValue);
+    g_resultsToSend.data[41] = GetLSB(g_resultsValues.resultLoopResDiag[2].readSquibResValue);
+    g_resultsToSend.data[42] = GetMSB(g_resultsValues.resultLoopResDiag[2].readSquibResValue);
+    g_resultsToSend.data[43] = GetLSB(g_resultsValues.resultLoopResDiag[3].readSquibResValue);
+    g_resultsToSend.data[44] = GetMSB(g_resultsValues.resultLoopResDiag[3].readSquibResValue);
+    g_resultsToSend.data[45] = GetLSB(g_resultsValues.resultLoopResDiag[4].readSquibResValue);
+    g_resultsToSend.data[46] = GetMSB(g_resultsValues.resultLoopResDiag[4].readSquibResValue);
+    g_resultsToSend.data[47] = GetLSB(g_resultsValues.resultLoopResDiag[5].readSquibResValue);
+    g_resultsToSend.data[48] = GetMSB(g_resultsValues.resultLoopResDiag[5].readSquibResValue);
+    g_resultsToSend.data[49] = GetLSB(g_resultsValues.resultLoopResDiag[6].readSquibResValue);
+    g_resultsToSend.data[50] = GetMSB(g_resultsValues.resultLoopResDiag[6].readSquibResValue);
+    g_resultsToSend.data[51] = GetLSB(g_resultsValues.resultLoopResDiag[7].readSquibResValue);
+    g_resultsToSend.data[52] = GetMSB(g_resultsValues.resultLoopResDiag[7].readSquibResValue);
+    g_resultsToSend.data[53] = GetLSB(g_resultsValues.resultLoopResDiag[8].readSquibResValue);
+    g_resultsToSend.data[54] = GetMSB(g_resultsValues.resultLoopResDiag[8].readSquibResValue);
+    g_resultsToSend.data[55] = GetLSB(g_resultsValues.resultLoopResDiag[9].readSquibResValue);
+    g_resultsToSend.data[56] = GetMSB(g_resultsValues.resultLoopResDiag[9].readSquibResValue);
+    g_resultsToSend.data[57] = GetLSB(g_resultsValues.resultLoopResDiag[10].readSquibResValue);
+    g_resultsToSend.data[58] = GetMSB(g_resultsValues.resultLoopResDiag[10].readSquibResValue);
+    g_resultsToSend.data[59] = GetLSB(g_resultsValues.resultLoopResDiag[11].readSquibResValue);
+    g_resultsToSend.data[60] = GetMSB(g_resultsValues.resultLoopResDiag[11].readSquibResValue);
+    g_resultsToSend.data[61] = GetLSB(g_resultsValues.resultLoopResDiag[12].readSquibResValue);
+    g_resultsToSend.data[62] = GetMSB(g_resultsValues.resultLoopResDiag[12].readSquibResValue);
+    g_resultsToSend.data[63] = GetLSB(g_resultsValues.resultLoopResDiag[13].readSquibResValue);
+    g_resultsToSend.data[64] = GetMSB(g_resultsValues.resultLoopResDiag[13].readSquibResValue);
+    g_resultsToSend.data[65] = GetLSB(g_resultsValues.resultLoopResDiag[14].readSquibResValue);
+    g_resultsToSend.data[66] = GetMSB(g_resultsValues.resultLoopResDiag[14].readSquibResValue);
+    g_resultsToSend.data[67] = GetLSB(g_resultsValues.resultLoopResDiag[15].readSquibResValue);
+    g_resultsToSend.data[68] = GetMSB(g_resultsValues.resultLoopResDiag[15].readSquibResValue);
+    g_resultsToSend.data[69] = GetLSB(g_resultsValues.resultLoopResDiag[16].readSquibResValue);
+    g_resultsToSend.data[70] = GetMSB(g_resultsValues.resultLoopResDiag[16].readSquibResValue);
+    g_resultsToSend.data[71] = GetLSB(g_resultsValues.resultLoopResDiag[17].readSquibResValue);
+    g_resultsToSend.data[72] = GetMSB(g_resultsValues.resultLoopResDiag[17].readSquibResValue);
+    g_resultsToSend.data[73] = GetLSB(g_resultsValues.resultLoopResDiag[18].readSquibResValue);
+    g_resultsToSend.data[74] = GetMSB(g_resultsValues.resultLoopResDiag[18].readSquibResValue);
+    g_resultsToSend.data[75] = GetLSB(g_resultsValues.resultLoopResDiag[19].readSquibResValue);
+    g_resultsToSend.data[76] = GetMSB(g_resultsValues.resultLoopResDiag[19].readSquibResValue);
+
+    uint8 tmp1SquibResErr, tmp2SquibResErr, tmp3SquibResErr = 0;
+    for (uint8 i = 0; i<20; i++)
+    {
+        if (i < 8)
+        {
+            if (g_resultsValues.resultLoopResDiag[i].readSquibResErr)
+            {
+                tmp1SquibResErr |= (1 << i);
+            }
+        }
+        else if (i < 16)
+        {
+            if (g_resultsValues.resultLoopResDiag[i].readSquibResErr)
+            {
+                tmp2SquibResErr |= (1 << i);
+            }
+        }
+        else
+        {
+            if (g_resultsValues.resultLoopResDiag[i].readSquibResErr)
+            {
+                tmp3SquibResErr |= (1 << i);
+            }
+        }
+    }
+    g_resultsToSend.data[77] = tmp1SquibResErr;
+    g_resultsToSend.data[78] = tmp2SquibResErr;
+    g_resultsToSend.data[79] = tmp3SquibResErr;
+
+    uint8 tmp1SquibResValid, tmp2SquibResValid, tmp3SquibResValid = 0;
+    for (uint8 i = 0; i<20; i++)
+    {
+        if (i < 8)
+        {
+            if (g_resultsValues.resultLoopResDiag[i].readSquibResValid)
+            {
+                tmp1SquibResValid |= (1 << i);
+            }
+        }
+        else if (i < 16)
+        {
+            if (g_resultsValues.resultLoopResDiag[i].readSquibResValid)
+            {
+                tmp2SquibResValid |= (1 << i);
+            }
+        }
+        else
+        {
+            if (g_resultsValues.resultLoopResDiag[i].readSquibResValid)
+            {
+                tmp3SquibResValid |= (1 << i);
+            }
+        }
+    }
+    g_resultsToSend.data[80] = tmp1SquibResValid;
+    g_resultsToSend.data[81] = tmp2SquibResValid;
+    g_resultsToSend.data[82] = tmp3SquibResValid;
+
+    uint8 tmp1SquibResPgndxLoss, tmp2SquibResPgndxLoss, tmp3SquibResPgndxLoss = 0;
+    for (uint8 i = 0; i<20; i++)
+    {
+        if (i < 8)
+        {
+            if (g_resultsValues.resultLoopResDiag[i].readSquibResPgndxLoss)
+            {
+                tmp1SquibResPgndxLoss |= (1 << i);
+            }
+        }
+        else if (i < 16)
+        {
+            if (g_resultsValues.resultLoopResDiag[i].readSquibResPgndxLoss)
+            {
+                tmp2SquibResPgndxLoss |= (1 << i);
+            }
+        }
+        else
+        {
+            if (g_resultsValues.resultLoopResDiag[i].readSquibResPgndxLoss)
+            {
+                tmp3SquibResPgndxLoss |= (1 << i);
+            }
+        }
+    }
+    g_resultsToSend.data[83] = tmp1SquibResPgndxLoss;
+    g_resultsToSend.data[84] = tmp2SquibResPgndxLoss;
+    g_resultsToSend.data[85] = tmp3SquibResPgndxLoss;
 }
 
 void StartFLMDiag(uint8 diagMode)
