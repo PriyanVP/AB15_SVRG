@@ -38,24 +38,25 @@
 /*--------------------------------------------------Enumerations---------------------------------------------------------*/
 /*************************************************************************************************************************/
 
-/** \brief
+/** \brief Order of execution of FLM Cyclic diagnostics
  */
 typedef enum 
 {
-    FLM_DIAG_ORDER_SHORT_DET        = 1,        /** \brief  */
-    FLM_DIAG_ORDER_VHX_MEAS         = 2,        /** \brief  */
-    FLM_DIAG_ORDER_LOOP_RES_MEAS    = 3,        /** \brief  */
-    FLM_DIAG_ORDER_SQUIB_DET        = 4         /** \brief  */
+    FLM_DIAG_ORDER_SHORT_DET        = 1,        /** \brief IGL/IGH short and leakage to battery/ground (all loops by default) */
+    FLM_DIAG_ORDER_VHX_MEAS         = 2,        /** \brief VHx voltage measurement (all loops) */
+    FLM_DIAG_ORDER_LOOP_RES_MEAS    = 3,        /** \brief Loop resistance measurement (all loops) */
+    FLM_DIAG_ORDER_SQUIB_DET        = 4         /** \brief Squib presence test (all loops) */
 } FLMDiagExecOrderEnum;
 
-/** \brief
+/** \brief Execution status of each diagnostic
+ * Idle -> (Ongoing -> Evaluated -> Finished -> Ongoing -> ... )
  */
 typedef enum 
 {
-    FLM_DIAG_EXEC_STATUS_IDLE           = 0,   /** \brief  */
-    FLM_DIAG_EXEC_STATUS_ONGOING        = 1,   /** \brief  */
-    FLM_DIAG_EXEC_STATUS_EVALUATED      = 2,   /** \brief  */
-    FLM_DIAG_EXEC_STATUS_FINISHED       = 3    /** \brief  */
+    FLM_DIAG_EXEC_STATUS_IDLE           = 0,   /** \brief Start of Cyclic diagnostic round after enable start command */
+    FLM_DIAG_EXEC_STATUS_ONGOING        = 1,   /** \brief Diagnostic is started in ASIC */
+    FLM_DIAG_EXEC_STATUS_EVALUATED      = 2,   /** \brief Diagnostic is done in ASIC */
+    FLM_DIAG_EXEC_STATUS_FINISHED       = 3    /** \brief Results are read from ASIC, can proceed to next diagnostic */
 } FLMDiagExecStatusEnum;
 
 /*************************************************************************************************************************/
@@ -67,11 +68,11 @@ typedef enum
  */
 typedef struct
 {
-    uint16          readShortCh4_1;                   /** \brief  */
-    uint16          readShortCh8_5;                   /** \brief  */
-    uint16          readShortCh12_9;                  /** \brief  */
-    uint16          readShortCh16_13;                 /** \brief  */
-    uint16          readShortCh20_17;                 /** \brief  */
+    uint16          readShortCh4_1;
+    uint16          readShortCh8_5;
+    uint16          readShortCh12_9;
+    uint16          readShortCh16_13;
+    uint16          readShortCh20_17;
 
 } FLMShortDiagStruct;
 
@@ -80,8 +81,8 @@ typedef struct
  */ 
 typedef struct 
 {
-    uint16 readVHxVoltageValue;          /** \brief  */
-    boolean readVHxVoltageValid;         /** \brief  */
+    uint16 readVHxVoltageValue;
+    boolean readVHxVoltageValid;
 
 } FLMDiagReadVHx;
 
@@ -90,11 +91,10 @@ typedef struct
  */
 typedef struct
 {
-    uint16 readSquibResValue;                             /** \brief  */
-    boolean readSquibResErr;                                 /** \brief  */
-    boolean readSquibResValid;                               /** \brief  */
-    boolean readSquibResPgndxLoss;                          /** \brief  */
-
+    uint16 readSquibResValue;
+    boolean readSquibResErr;
+    boolean readSquibResValid;
+    boolean readSquibResPgndxLoss;
 } FLMReadSquibRes;
 
 /** \brief Structure to store results of cyclic tests
@@ -102,10 +102,10 @@ typedef struct
  */
 typedef struct
 {
-    FLMDiagReadVHx      resultVHxDiag[11];              /** \brief  */
-    boolean             resultSquibErrorDiag[20];       /** \brief  */
-    FLMReadSquibRes     resultLoopResDiag[20];          /** \brief  */
-    FLMShortDiagStruct  resultShortDiag;                /** \brief  */
+    FLMDiagReadVHx      resultVHxDiag[11];
+    boolean             resultSquibErrorDiag[20];
+    FLMReadSquibRes     resultLoopResDiag[20];
+    FLMShortDiagStruct  resultShortDiag;
 
 } FLMCycDiagResults;
 
@@ -113,23 +113,19 @@ typedef struct
 /*------------------------------------------------Function Prototypes------------------------------------------------*/
 /*********************************************************************************************************************/
 
-/** \brief 
- * Cyclic test performed automatically, no need to set FLM_DIAG_START
+/** \brief Cyclic test performed automatically, no need to set FLM_DIAG_START
  */ 
 void FLMShortDiag(void);
 
-/** \brief 
- * SPI-triggered test, must be set by FLM_diag_mode = VHx_volt_meas_all and started FLM_DIAG_START = 1
+/** \brief SPI-triggered test, must be set by FLM_diag_mode = VHx_volt_meas_all and started FLM_DIAG_START = 1
  */
 void FLMVHxDiag(void);
 
-/** \brief
- * SPI-triggered test, must be set by FLM_diag_mode = Loop_res_meas_all_ch and started FLM_DIAG_START = 1
+/** \brief SPI-triggered test, must be set by FLM_diag_mode = Loop_res_meas_all_ch and started FLM_DIAG_START = 1
  */
 void FLMLoopResDiag(void);
 
-/** \brief 
- * SPI-triggered test, must be set by FLM_diag_mode = Squib_pres_test_all and started FLM_DIAG_START = 1
+/** \brief SPI-triggered test, must be set by FLM_diag_mode = Squib_pres_test_all and started FLM_DIAG_START = 1
  */
 void FLMSquibDetErrDiag(void);
 
@@ -141,9 +137,7 @@ void StartFLMDiag(int diagMode);
  */
 void FLMUpdateDiagExecStatus(void);
 
-/** \brief
- * Measure Battery voltage, normal range to perform diagnostics
- * is 6...18V
+/** \brief Measure Battery voltage, normal range to perform diagnostics is 6...18V
  */
 boolean CheckBatVoltage(void);
 
@@ -703,7 +697,6 @@ void FLMUpdateDiagExecStatus(void)
     tmpFLMDiagStatus2fRegister.as_uint16 = data.bf.output_data;
     
     // Determine FLM diagnostic execution status
-    // Idle -> (Ongoing -> Evaluated -> Finished -> Ongoing -> ... )
     if ((tmpFLMDiagStatus2fRegister.as_s.FlmDiagActive_u1 == 1) && (tmpFLMDiagStatus2fRegister.as_s.FlmDiagReady_u1 == 0))
     {
         g_diagExecStatus = FLM_DIAG_EXEC_STATUS_ONGOING;
