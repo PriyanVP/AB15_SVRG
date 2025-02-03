@@ -23,7 +23,7 @@
 /*------------------------------------------------------Macros-------------------------------------------------------*/
 /*********************************************************************************************************************/
 
-#define FLM_POWERSTAGE_GUARD_TIMEOUT     (9)   /** \brief If powerstage test is not finished after 
+#define FLM_POWERSTAGE_GUARD_TIMEOUT     (20)  /** \brief If powerstage test is not finished after
                                                     3 (3*3) expected durations - skip test */
 
 #define FLM_POWERSTAGE_STEP_DURATION     (1)   /** \brief Expected duration of one step in powerstage test. 
@@ -44,8 +44,7 @@ typedef enum
     FLM_PST_ERR_LSENQ_HIGH          = 2,  /** \brief DIS_ALP/LSENQ pin is high */
     FLM_PST_ERR_DIAG_ACTIVE         = 3,  /** \brief flm_diag_active is set for PST test */
     FLM_PST_ERR_PARITY_FAIL         = 4,  /** \brief parity fail - configuration issue */
-    FLM_PST_ERR_INCORRECT_ASIC_MODE = 5,  /** \brief incorrect ASIC mode - not test mode 1 or 2 */
-    FLM_PST_ERR_UNLOCK_FAIL         = 6   /** \brief failed to unlock HS or LS powerstages */
+    FLM_PST_ERR_INCORRECT_ASIC_MODE = 5   /** \brief incorrect ASIC mode - not test mode 1 or 2 */
 } PstErrStateEnum;
 
 /*********************************************************************************************************************/
@@ -73,12 +72,12 @@ typedef union
  */
 typedef struct
 {
-    uint8   msg_id;                           /** \brief message id for sending response */
-    boolean hsPowerstageEn;                   /** \brief highside powerstage test enabled */
-    boolean lsPowerstageEn;                   /** \brief lowside powerstage test enabled */
-    boolean isTestSeqFinished;                /** \brief true if channel test sequence was finished */
-    uint8   channelIndex;                     /** \brief index of currently tested channel */
-    sint8   guardCounter;                     /** \brief guard variable to check if diagnostics finished in time */
+    uint8   msg_id;                         /** \brief message id for sending response */
+    boolean hsPowerstageEn;                 /** \brief highside powerstage test enabled */
+    boolean lsPowerstageEn;                 /** \brief lowside powerstage test enabled */
+    boolean isTestArmed;                    /** \brief true if channel test sequence was finished */
+    uint8   channelIndex;                   /** \brief index of currently tested channel */
+    sint8   guardCounter;                   /** \brief guard variable to check if diagnostics finished in time */
 } PstRuntimeConfiguration;
 
 /*********************************************************************************************************************/
@@ -109,7 +108,7 @@ IFX_INLINE void StartTestMode(boolean isTestMode1, USBReceiveData const * const 
  * \param p_regData pointer to data for register to execute PST for channel
  * \return Returns nothing
  */
-void GetPSTFiringSPiCommand(uint16 *p_regAddress, uint16 *p_regData);
+void GetPSTFiringSPICommand(uint16 *p_regAddress, uint16 *p_regData);
 
 /*********************************************************************************************************************/
 /*---------------------------------------------Function Implementations----------------------------------------------*/
@@ -169,32 +168,26 @@ void IntCmdExecutePowerstageTest(void)
     // Execute test if preconditions in ASIC are met and configuration was done
     isSuccessfulFlag = QSPIReadNormal(SPI1_CS1MASTER, FLM_FLM_STATUS2, &data.dw);
     FLM_Status2.as_uint16 = data.bf.output_data;
-    if ((FLM_Status2.as_s.FlmDiagReady_u1 == 0) && FLM_Status2.as_s.FlmDiagPstActive_u1)
+    if ((g_pstConfiguration.isTestArmed == TRUE) && 
+        (FLM_Status2.as_s.FlmDiagReady_u1 == 0) && (FLM_Status2.as_s.FlmDiagPstActive_u1 != 0))
     {
         uint16 regAddress;
         uint16 regData;
 
         // Execute procedure to define what address and data to use
-        GetPSTFiringSPiCommand(&regAddress, &regData);
+        GetPSTFiringSPICommand(&regAddress, &regData);
 
         // Do firing for test with only LS or HS on expected channel
         QSPIWriteNormal(SPI1_CS1MASTER, regAddress, regData);
-
-        // Update flag indicating that test sequence was finished
-        g_pstConfiguration.isTestSeqFinished = TRUE;
     }
 
-    isSuccessfulFlag = QSPIReadNormal(SPI1_CS1MASTER, FLM_FLM_STATUS2, &data.dw);
-    FLM_Status2.as_uint16 = data.bf.output_data;
-    isDiagDataReady = FLM_Status2.as_s.FlmDiagReady_u1 & FLM_Status2.as_s.FlmDiagPstActive_u1;
+    isSuccessfulFlag = QSPIReadNormal(SPI1_CS1MASTER, FLM_FLM_READ_POWERSTAGE, &data.dw);
+    FLM_Read_Powerstage.as_uint16 = data.bf.output_data;
+    isDiagDataReady = FLM_Read_Powerstage.as_s.FlmPstValid_u1;
 
     // Check if test finished or max test duration elapsed
     if (isDiagDataReady || (g_pstConfiguration.guardCounter > FLM_POWERSTAGE_GUARD_TIMEOUT))
     {
-        // Powerstage test results ready
-        isSuccessfulFlag = QSPIReadNormal(SPI1_CS1MASTER, RESET_VAL_FLM_FLM_READ_POWERSTAGE, &data.dw);
-        FLM_Read_Powerstage.as_uint16 = data.bf.output_data;
-
         // Reset firing registers
         QSPIWriteNormal(SPI1_CS1MASTER, FLM_FLM_HS_LS_ON_CH7_1, (ENUM_FLM_FLM_HS_LS_ON_CH7_1_FLM_CODE_CH7_1_VAL1 << FLM_FLM_HS_LS_ON_CH7_1_FLM_CODE_CH7_1_BITOFFSET));
         QSPIWriteNormal(SPI1_CS1MASTER, FLM_FLM_HS_LS_ON_CH14_8, (ENUM_FLM_FLM_HS_LS_ON_CH14_8_FLM_CODE_CH14_8_VAL2 << FLM_FLM_HS_LS_ON_CH14_8_FLM_CODE_CH14_8_BITOFFSET));
@@ -209,7 +202,7 @@ void IntCmdExecutePowerstageTest(void)
 
         // Increment channel & reset test running flag & reset guard
         g_pstConfiguration.channelIndex++;
-        g_pstConfiguration.isTestSeqFinished = FALSE;
+        g_pstConfiguration.isTestArmed = FALSE;
         g_pstConfiguration.guardCounter = 0;
 
         // Finish test in case last channel data was received
@@ -244,7 +237,7 @@ void IntCmdExecutePowerstageTest(void)
     }
 
     // Arm new test (after arming can be executed in 20 us)
-    if (g_pstConfiguration.isTestSeqFinished == FALSE) // TODO: potential risk of starting test twice
+    if (g_pstConfiguration.isTestArmed == FALSE)
     {
         // Construct start condition
         FLM_Diag_Start.as_s.FlmDiagStart_u1   = 0x1;
@@ -254,6 +247,37 @@ void IntCmdExecutePowerstageTest(void)
 
         // Arm next test
         isSuccessfulFlag = QSPIWriteNormal(SPI1_CS1MASTER, FLM_FLM_DIAG_START, FLM_Diag_Start.as_uint16);
+
+        // Unlock high or low sides
+        if (g_pstConfiguration.lsPowerstageEn)
+        {
+            // Unlock lowsides
+            flm_flm_unlock_ut unlockRegContentLS;
+            unlockRegContentLS.as_uint16 = 0x0;
+            unlockRegContentLS.as_s.FlmUnlockLsModule1_u1 = 0x1;
+            unlockRegContentLS.as_s.FlmUnlockLsModule2_u1 = 0x1;
+            unlockRegContentLS.as_s.FlmUnlockLsModule3_u1 = 0x1;
+            unlockRegContentLS.as_s.FlmUnlockLsModule4_u1 = 0x1;
+            unlockRegContentLS.as_s.FlmUnlockLsModule5_u1 = 0x1;
+            unlockRegContentLS.as_s.FlmCodeUnlock_u2      = 0x00;
+            QSPIWriteNormal(SPI1_CS1MASTER, FLM_FLM_UNLOCK, unlockRegContentLS.as_uint16);
+        }
+        else
+        {
+            // Unlock highsides
+            flm_flm_unlock_ut unlockRegContentHS;
+            unlockRegContentHS.as_uint16 = 0x0;
+            unlockRegContentHS.as_s.FlmUnlockHsModule1_u1 = 0x1;
+            unlockRegContentHS.as_s.FlmUnlockHsModule2_u1 = 0x1;
+            unlockRegContentHS.as_s.FlmUnlockHsModule3_u1 = 0x1;
+            unlockRegContentHS.as_s.FlmUnlockHsModule4_u1 = 0x1;
+            unlockRegContentHS.as_s.FlmUnlockHsModule5_u1 = 0x1;
+            unlockRegContentHS.as_s.FlmCodeUnlock_u2      = 0x00;
+            QSPIWriteNormal(SPI1_CS1MASTER, FLM_FLM_UNLOCK, unlockRegContentHS.as_uint16);
+        }
+
+        // Update flag
+        g_pstConfiguration.isTestArmed = TRUE;
     }
 }
 
@@ -284,7 +308,7 @@ IFX_INLINE void StartTestMode(boolean isTestMode1, USBReceiveData const * const 
     g_pstConfiguration.msg_id = commandPackage->msg_id;
     g_pstConfiguration.lsPowerstageEn = isTestMode1; 
     g_pstConfiguration.hsPowerstageEn = !isTestMode1;
-    g_pstConfiguration.isTestSeqFinished = FALSE;
+    g_pstConfiguration.isTestArmed = FALSE;
     g_pstConfiguration.channelIndex = 1;        // Channels numeration starts from 1
     g_pstConfiguration.guardCounter = 0;
 
@@ -316,11 +340,11 @@ IFX_INLINE void StartTestMode(boolean isTestMode1, USBReceiveData const * const 
         packageToSend.status = USB_STATUS_ERROR;
         packageToSend.data[0] = FLM_PST_ERR_LSENQ_HIGH;
     }
-    // else if (FLM_Status2.as_s.FlmDiagActive_u1 == 1) // TODO: bypassed for demo
-    // {
-    //     packageToSend.status = USB_STATUS_ERROR;
-    //     packageToSend.data[0] = FLM_PST_ERR_DIAG_ACTIVE;
-    // }
+    else if (FLM_Status2.as_s.FlmDiagActive_u1 == 1) // TODO: bypassed for demo
+    {
+        packageToSend.status = USB_STATUS_ERROR;
+        packageToSend.data[0] = FLM_PST_ERR_DIAG_ACTIVE;
+    }
     else if ((systemState.as_s.TestMode1_u1 || systemState.as_s.TestMode2_u1) == FALSE)
     {
         packageToSend.status = USB_STATUS_ERROR;
@@ -338,48 +362,6 @@ IFX_INLINE void StartTestMode(boolean isTestMode1, USBReceiveData const * const 
         return;
     }
 
-    // Unlock high or low sides
-    if (isTestMode1)
-    {
-        // Unlock lowsides
-        flm_flm_unlock_ut unlockRegContentLS;
-        unlockRegContentLS.as_uint16 = 0x0;
-        unlockRegContentLS.as_s.FlmUnlockLsModule1_u1 = 0x1;
-        unlockRegContentLS.as_s.FlmUnlockLsModule2_u1 = 0x1;
-        unlockRegContentLS.as_s.FlmUnlockLsModule3_u1 = 0x1;
-        unlockRegContentLS.as_s.FlmUnlockLsModule4_u1 = 0x1;
-        unlockRegContentLS.as_s.FlmUnlockLsModule5_u1 = 0x1;
-        unlockRegContentLS.as_s.FlmCodeUnlock_u2      = 0x00;
-        isSuccessfulFlag &= QSPIWriteNormal(SPI1_CS1MASTER, FLM_FLM_UNLOCK, unlockRegContentLS.as_uint16);
-    }
-    else
-    {
-        // Unlock highsides
-        flm_flm_unlock_ut unlockRegContentHS;
-        unlockRegContentHS.as_uint16 = 0x0;
-        unlockRegContentHS.as_s.FlmUnlockHsModule1_u1 = 0x1;
-        unlockRegContentHS.as_s.FlmUnlockHsModule2_u1 = 0x1;
-        unlockRegContentHS.as_s.FlmUnlockHsModule3_u1 = 0x1;
-        unlockRegContentHS.as_s.FlmUnlockHsModule4_u1 = 0x1;
-        unlockRegContentHS.as_s.FlmUnlockHsModule5_u1 = 0x1;
-        unlockRegContentHS.as_s.FlmCodeUnlock_u2      = 0x00;
-        isSuccessfulFlag &= QSPIWriteNormal(SPI1_CS1MASTER, FLM_FLM_UNLOCK, unlockRegContentHS.as_uint16);
-    }
-
-    // Report error if was unable to prepare setup
-    if (isSuccessfulFlag == FALSE)
-    {
-        packageToSend.status = USB_STATUS_ERROR;
-        packageToSend.data[0] = FLM_PST_ERR_UNLOCK_FAIL;
-
-        g_pstConfiguration.lsPowerstageEn = FALSE;
-        g_pstConfiguration.hsPowerstageEn = FALSE;
-
-        // Send error frame
-        SendUSBPackage(&packageToSend);
-        return;
-    }
-
     // Configure periodicity of Test mode check interrupt
     ConfigureTimerPeriodicity(TEST_MODE_TIMER, FLM_POWERSTAGE_STEP_DURATION);
 
@@ -387,9 +369,9 @@ IFX_INLINE void StartTestMode(boolean isTestMode1, USBReceiveData const * const 
     EnableTimerInterrupt(TEST_MODE_TIMER);
 }
 
-void GetPSTFiringSPiCommand(uint16 *p_regAddress, uint16 *p_regData)
+void GetPSTFiringSPICommand(uint16 *p_regAddress, uint16 *p_regData)
 {
-    // TODO: can be optimised to function, currently implemented as procedure (usage of global variables)
+    // TODO: can be optimized to function, currently implemented as procedure (usage of global variables)
 
     // Construct reg address and data
     if (g_pstConfiguration.channelIndex <= 7)
