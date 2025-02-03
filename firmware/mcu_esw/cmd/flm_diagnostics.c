@@ -99,6 +99,7 @@ typedef struct
 
 /** \brief Structure to store results of cyclic tests
  * 86 bytes
+ * TODO: add field/fields to indicate if diagnostics failed on MCU level (i.e., SPI read was unsuccessful)
  */
 typedef struct
 {
@@ -130,8 +131,9 @@ void FLMLoopResDiag(void);
 void FLMSquibDetErrDiag(void);
 
 /** \brief Select diagnostic to be run by FLM diag module and start diagnostic
+ * \param diagMode configuration to select required diagnostic in ASIC
  */
-void StartFLMDiag(int diagMode);
+void StartFLMDiag(uint8 diagMode);
 
 /** \brief Get FLM diagnostic execution status from ASIC (ongoing/evaluated)
  */
@@ -516,9 +518,9 @@ void FLMShortDiag()
     SPIReceiveDataNormal data[FLM_DIAG_READ_SHORT_REGS_COUNT];
     uint16 length = FLM_DIAG_READ_SHORT_REGS_COUNT;
     boolean isSuccessfulFlag = FALSE;
-    uint16 flmDiagShortsRegsAddresses[FLM_DIAG_READ_SHORT_REGS_COUNT] = {FLM_FLM_READ_SHORT_CH4_1, FLM_FLM_READ_SHORT_CH8_5,
-                                         FLM_FLM_READ_SHORT_CH12_9, FLM_FLM_READ_SHORT_CH16_13, 
-                                         FLM_FLM_READ_SHORT_CH20_17};
+    static const uint16 flmDiagShortsRegsAddresses[FLM_DIAG_READ_SHORT_REGS_COUNT] = {
+        FLM_FLM_READ_SHORT_CH4_1, FLM_FLM_READ_SHORT_CH8_5, FLM_FLM_READ_SHORT_CH12_9, 
+        FLM_FLM_READ_SHORT_CH16_13, FLM_FLM_READ_SHORT_CH20_17};
     
     // read FLM_Read_Short_ch4_1 through FLM_Read_Short_ch20_17, store in resultShortDiag
     g_diagExecStatus = FLM_DIAG_EXEC_STATUS_ONGOING;
@@ -544,12 +546,11 @@ void FLMVHxDiag()
     SPIReceiveDataNormal data[FLM_DIAG_READ_VHX_REGS_COUNT];
     uint16 length = FLM_DIAG_READ_VHX_REGS_COUNT;
     boolean isSuccessfulFlag = FALSE;
-    uint16 flmDiagVHxRegsAddresses[FLM_DIAG_READ_VHX_REGS_COUNT] =  { FLM_FLM_READ_DIAG_VH1A, FLM_FLM_READ_DIAG_VH2, 
-                                                                        FLM_FLM_READ_DIAG_VH3, FLM_FLM_READ_DIAG_VH4, 
-                                                                        FLM_FLM_READ_DIAG_VH5, FLM_FLM_READ_DIAG_VH6, 
-                                                                        FLM_FLM_READ_DIAG_VH7, FLM_FLM_READ_DIAG_VH8, 
-                                                                        FLM_FLM_READ_DIAG_VH9, FLM_FLM_READ_DIAG_VH10,
-                                                                        FLM_FLM_READ_DIAG_VH1B };
+    static const uint16 flmDiagVHxRegsAddresses[FLM_DIAG_READ_VHX_REGS_COUNT] =  { 
+        FLM_FLM_READ_DIAG_VH1A, FLM_FLM_READ_DIAG_VH2, FLM_FLM_READ_DIAG_VH3, 
+        FLM_FLM_READ_DIAG_VH4, FLM_FLM_READ_DIAG_VH5, FLM_FLM_READ_DIAG_VH6, 
+        FLM_FLM_READ_DIAG_VH7, FLM_FLM_READ_DIAG_VH8, FLM_FLM_READ_DIAG_VH9, 
+        FLM_FLM_READ_DIAG_VH10, FLM_FLM_READ_DIAG_VH1B};
 
     if (g_diagExecStatus == FLM_DIAG_EXEC_STATUS_FINISHED)
     {
@@ -585,7 +586,8 @@ void FLMSquibDetErrDiag()
     SPIReceiveDataNormal data[FLM_DIAG_READ_SQUIB_REGS_COUNT];
     uint16 length = FLM_DIAG_READ_SQUIB_REGS_COUNT;
     boolean isSuccessfulFlag = FALSE;
-    uint16 flmDiagSquibRegsAddresses[FLM_DIAG_READ_SQUIB_REGS_COUNT] = {FLM_FLM_READ_SQUIB_CH16_1, FLM_FLM_READ_SQUIB_CH20_17};
+    static const uint16 flmDiagSquibRegsAddresses[FLM_DIAG_READ_SQUIB_REGS_COUNT] = {
+        FLM_FLM_READ_SQUIB_CH16_1, FLM_FLM_READ_SQUIB_CH20_17};
 
     if (g_diagExecStatus == FLM_DIAG_EXEC_STATUS_FINISHED)
     {
@@ -627,17 +629,14 @@ void FLMLoopResDiag()
     SPIReceiveDataNormal data[FLM_DIAG_READ_RES_REGS_COUNT];
     uint16 length = FLM_DIAG_READ_RES_REGS_COUNT;
     boolean isSuccessfulFlag = FALSE;
-    uint16 flmDiagResRegsAddresses[FLM_DIAG_READ_RES_REGS_COUNT] = {FLM_FLM_READ_SQUIB_RES_CH1, FLM_FLM_READ_SQUIB_RES_CH2, 
-                                                                    FLM_FLM_READ_SQUIB_RES_CH3, FLM_FLM_READ_SQUIB_RES_CH4, 
-                                                                    FLM_FLM_READ_SQUIB_RES_CH5, FLM_FLM_READ_SQUIB_RES_CH6, 
-                                                                    FLM_FLM_READ_SQUIB_RES_CH7, FLM_FLM_READ_SQUIB_RES_CH8, 
-                                                                    FLM_FLM_READ_SQUIB_RES_CH9, FLM_FLM_READ_SQUIB_RES_CH10,
-                                                                    FLM_FLM_READ_SQUIB_RES_CH11,FLM_FLM_READ_SQUIB_RES_CH12,
-                                                                    FLM_FLM_READ_SQUIB_RES_CH13,FLM_FLM_READ_SQUIB_RES_CH14,
-                                                                    FLM_FLM_READ_SQUIB_RES_CH15,FLM_FLM_READ_SQUIB_RES_CH16,
-                                                                    FLM_FLM_READ_SQUIB_RES_CH17,FLM_FLM_READ_SQUIB_RES_CH18,
-                                                                    FLM_FLM_READ_SQUIB_RES_CH19,FLM_FLM_READ_SQUIB_RES_CH20,
-                                                                    FLM_FLM_READ_SQUIB_RES_SQREF};
+    static const uint16 flmDiagResRegsAddresses[FLM_DIAG_READ_RES_REGS_COUNT] = {
+        FLM_FLM_READ_SQUIB_RES_CH1, FLM_FLM_READ_SQUIB_RES_CH2, FLM_FLM_READ_SQUIB_RES_CH3, 
+        FLM_FLM_READ_SQUIB_RES_CH4, FLM_FLM_READ_SQUIB_RES_CH5, FLM_FLM_READ_SQUIB_RES_CH6, 
+        FLM_FLM_READ_SQUIB_RES_CH7, FLM_FLM_READ_SQUIB_RES_CH8, FLM_FLM_READ_SQUIB_RES_CH9, 
+        FLM_FLM_READ_SQUIB_RES_CH10, FLM_FLM_READ_SQUIB_RES_CH11, FLM_FLM_READ_SQUIB_RES_CH12,
+        FLM_FLM_READ_SQUIB_RES_CH13, FLM_FLM_READ_SQUIB_RES_CH14, FLM_FLM_READ_SQUIB_RES_CH15, 
+        FLM_FLM_READ_SQUIB_RES_CH16, FLM_FLM_READ_SQUIB_RES_CH17, FLM_FLM_READ_SQUIB_RES_CH18,
+        FLM_FLM_READ_SQUIB_RES_CH19, FLM_FLM_READ_SQUIB_RES_CH20, FLM_FLM_READ_SQUIB_RES_SQREF};
 
     if (g_diagExecStatus == FLM_DIAG_EXEC_STATUS_FINISHED)
     {
@@ -670,10 +669,8 @@ void FLMLoopResDiag()
     return;
 }
 
-void StartFLMDiag(int diagMode)
+void StartFLMDiag(uint8 diagMode)
 {
-    SPIReceiveDataNormal data;
-    boolean isSuccessfulFlag = TRUE;
     flm_flm_diag_start_ut tmpFLMDiagStartfRegister;
     
     // Select Diagnostic to execute
