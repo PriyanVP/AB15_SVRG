@@ -1,8 +1,3 @@
-using AB15_GUI.WPF.Models.Interfaces;
-using System;
-using System.Collections.Generic;
-using AB15_GUI.WPF.Models;
-
 namespace AB15_GUI.WPF.Models
 {
     /// <summary>

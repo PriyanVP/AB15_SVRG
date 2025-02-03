@@ -44,7 +44,7 @@ namespace AB15_GUI.WPF.Models
                     // Check if data in payload is expected
                     if (rawData.Count != 20)
                     {
-                        Error = $"Received package with unexpected number of bytes in payload. Expected 86, but got {rawData.Count}";
+                        Error = $"Received package with unexpected number of bytes in payload. Expected 20, but got {rawData.Count}";
                         break;
                     }
 
@@ -53,11 +53,6 @@ namespace AB15_GUI.WPF.Models
                     {
                         Data.Add(new PstChannelTestResult(rawData[i]));
                     }
-
-                    // Construct Error string based on Data
-                    Error = string.Join("\n", 
-                                Data.Select((result, index) => !string.IsNullOrEmpty(result.Error) ? $"Ch{index + 1}. {result.Error}" : null)
-                                    .Where(msg => msg != null));
                     break;
                 default:
                     throw new ArgumentException($"Unexpected status received: {status}");

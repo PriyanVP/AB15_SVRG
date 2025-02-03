@@ -1379,6 +1379,9 @@ namespace AB15_GUI.WPF.ViewModels
             // Validate response
             if (IsResponseValid(mcuResponse, null) == false) return;
 
+            // Report results
+            List<int> configuredFiringChannels = [.. FiringResultTable.Select(itm => itm.ChannelID)];
+
             // Trigger for transiting to TestMode2
             await asicWrapper.ASICs[0].ExecuteTestMode1TransitionAsync();
         }
