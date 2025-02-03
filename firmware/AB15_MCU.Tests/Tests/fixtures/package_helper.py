@@ -35,7 +35,8 @@ class Command(Enum):
     INIT_SYNC                   = 25             # syncs ASIC and GUI: SPI_COLDSTART_0, response to GUI when ASIC in INIT state
     WRITE_RAW_DATA_SPI          = 26             # 0x1A write 32bit raw data to spi
     FLM_DIAG_DISABLE            = 27             # disables Firing Loop Module cyclic diagnostics
-    START_TEST_MODE1            = 29             # configure and start Test mode 1 
+    WRITE_DATA_UART         = 28             # write data to UART
+    START_TEST_MODE1            = 29             # configure and start Test mode 1
     START_TEST_MODE2            = 30             # configure and start Test mode 2 
     STOP_TEST_MODE12            = 31             # stop Test mode (currently running) 
 
