@@ -35,29 +35,26 @@ class TestFLMDiagCommands:
         - enabling AB15 FLM Diagnostics and manually getting the results of diagnostic'''
 
         # Arrange
-        # issue ASIC cold start 
+        # TODO: separate ASIC cold start into it's own method
         address = 0x01E # SysStates_Reset_Config
         data = 0x001 # Bit 0 spi_coldstart1
         address_converted = pkg.Int2BytesConverter(address)
         data_converted = pkg.Int2BytesConverter(data)
         payload = [*address_converted.bytes, *data_converted.bytes]
         packageToSend = pkg.TransmitPackage(0x00, 0x01, pkg.Command.WRITE_REG, payload)
-        self.serial.com_port.write(packageToSend.serialize())
-
-        sleep(self.DELAY)
-
-        packageToSend = pkg.TransmitPackage(0x0F, 0, pkg.Command.FLM_DIAG_ENABLE)
-
+        
         # Act
-        self.serial.com_port.write(packageToSend.serialize())
+        self.serial.com_port.write(packageToSend.serialize()) # Issue ASIC cold start 
+        sleep(self.DELAY)
+        packageToSend = pkg.TransmitPackage(0x0F, 0, pkg.Command.FLM_DIAG_ENABLE)
+        self.serial.com_port.write(packageToSend.serialize()) # Turn on diagnostics
         sleep(self.DELAY)
         is_response_received = self.serial.extract_packages()
         result = pkg.ReceivePackage(self.serial.packages.pop(0))
         print("Status:" + str(result.status))
-        # TODO: read LM_READ_SQUIB_RES_SQREF
 
         # Assert
-        # TODO: add analysis of TODO: diagnostic results (LM_READ_SQUIB_RES_SQREF?)
+        # TODO: add analysis of TODO: diagnostic results
         assert result.status == pkg.Status.ACK
 
     @pytest.mark.firing
