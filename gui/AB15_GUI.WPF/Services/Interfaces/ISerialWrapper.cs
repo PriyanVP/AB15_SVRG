@@ -1,6 +1,6 @@
-﻿using AB15_GUI.WPF.Models.Interfaces;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using AB15_GUI.WPF.Models.Interfaces;
 
 namespace AB15_GUI.WPF.Services.Interfaces
 {
@@ -35,6 +35,14 @@ namespace AB15_GUI.WPF.Services.Interfaces
         /// </summary>
         /// <returns>true if connected, false if failed</returns>
         bool ReconnectCOMPort();
+
+        /// <summary>
+        /// Get task instance from waitlist by ID
+        /// To be used for continuous communication (few answers on one request)
+        /// </summary>
+        /// <param name="msgID">message ID</param>
+        /// <returns></returns>
+        public Task<IReceiveCommunicationPackage?> GetContinuousTaskInstance(int? msgID);
         
         /// <summary>
         /// Removes item from waitlist by msg_id
@@ -47,7 +55,7 @@ namespace AB15_GUI.WPF.Services.Interfaces
         /// Looks for delegates that will handle package and removes relevant items from waitlist
         /// </summary>
         /// <param name="packageToSend">package that will be send via serial port</param>
-        /// <returns>true if all operations were performed successfully, false - otherwise (message wasn't send)</returns>
-        bool SerialWrite(ITransmitCommunicationPackage packageToSend);
+        /// <returns>Task which returns response if all operations were performed successfully, null - otherwise (message wasn't send)</returns>
+        Task<IReceiveCommunicationPackage?> SerialWriteAsync(ITransmitCommunicationPackage packageToSend);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using AB15_GUI.WPF.Models.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace AB15_GUI.WPF.Services.Interfaces
 {
@@ -10,48 +11,44 @@ namespace AB15_GUI.WPF.Services.Interfaces
     public interface IWaitlist
     {
         /// <summary>
-        /// Add item to waitlist. Will return message id
+        /// Add item to waitlist. Will return message id and awaitable task
         /// </summary>
-        /// <param name="msgID">message ID</param>
-        /// <param name="isAddedSuccessfully">flag to tell if item was added to waitlist</param>
-        /// <param name="deleg">delegate that will be called for received msg</param>
         /// <param name="payloadType">payload type</param>
         /// <param name="isContinuous">flag to define if MCU response can be received few times</param>
-        /// <returns>pair of msgID and isAddedSuccessfully</returns>
-        (int msgID, bool isAddedSuccessfully) AddItemToWaitlist(Action<IReceiveCommunicationPackage> deleg, Type payloadType, bool isContinuous = false);
-        
-        /// <summary>
-        /// Removs all items from waitlist
-        /// </summary>
-        /// <param name="msgID">message ID</param>
-        /// <returns>true if removal was successful, false - otherwise</returns>    
-        void ClearWaitlist();
-        
-        /// <summary>
-        /// Looks for delegate that will handle package and removes relevant item from waitlist
-        /// </summary>
-        /// <param name="receivedPackage">package from MCU</param>
-        /// <returns>Delegate that should be called for this package or null if delegate is not found</returns>    
-        Action<IReceiveCommunicationPackage>? GetDelegate(IReceiveCommunicationPackage receivedPackage);
-        
-        /// <summary>
-        /// Gets payload type stored in waitlist item
-        /// </summary>
-        /// <param name="msgID">message ID in package from MCU</param>
-        /// <returns>Type of package payload or null if no waitlist item was found</returns>    
-        Type? GetPayloadType(int msgID);
+        /// <returns>pair of msgID and task; will be nulls if unsuccessful</returns>
+        (int? msgID, Task<IReceiveCommunicationPackage>? task) AddItemToWaitlist(Type payloadType, bool isContinuous = false);
 
         /// <summary>
-        /// Removes outdated items from waitlist and returns list of their delegates
+        /// Handle responses from MCU
         /// </summary>
-        /// <returns>List with outdated commands delegates and payload types</returns>
-        List<(Action<IReceiveCommunicationPackage> deleg, Type? payloadType)> RemoveOutdatedItems();
-        
+        /// <param name="package">raw package from MCU</param>
+        void HandleResponse(List<byte> package);
+
+        /// <summary>
+        /// Removes outdated items from waitlist
+        /// </summary>
+        /// <returns>Nothing</returns>
+        void RemoveOutdatedItems();
+
         /// <summary>
         /// Remove item from waitlist by ID. Intended for removing continuous items
         /// </summary>
         /// <param name="msgID">message ID</param>
         /// <returns>true if removal was successful, false - otherwise</returns>
         bool RemoveItemFromWaitlist(int? msgID);
+
+        /// <summary>
+        /// Get task instance from waitlist by ID
+        /// To be used for continuous communication (few answers on one request)
+        /// </summary>
+        /// <param name="msgID">message ID</param>
+        /// <returns>Task instance or null if not found</returns>
+        Task<IReceiveCommunicationPackage?> GetContinuousTaskInstance(int? msgID);
+
+        /// <summary>
+        /// Remove all items from waitlist
+        /// WARNING: may cause stuck of await operations
+        /// </summary>
+        void ClearWaitlist();
     }
 }
