@@ -23,8 +23,8 @@
 /*------------------------------------------------------Macros-------------------------------------------------------*/
 /*********************************************************************************************************************/
 
-#define FLM_POWERSTAGE_GUARD_TIMEOUT     (20)  /** \brief If powerstage test is not finished after
-                                                    3 (3*3) expected durations - skip test */
+#define FLM_POWERSTAGE_GUARD_TIMEOUT     (15)  /** \brief If powerstage test is not finished after
+                                                      expected duration + margin - skip test */
 
 #define FLM_POWERSTAGE_STEP_DURATION     (1)   /** \brief Expected duration of one step in powerstage test. 
                                                     Expected to have 3 steps for completion for 1 channel */
