@@ -432,7 +432,8 @@
                                     IsEnabled="{Binding isPSIEnable}"
                                     SelectedIndex="{Binding ChannelConfigurationIndex}"
                                     HorizontalAlignment="Left"
-                                    VerticalAlignment="Center">
+                                    VerticalAlignment="Center"
+                                    MinWidth="100">
                             <ComboBoxItem   IsSelected="True">
                                 <TextBlock  Text="Channel 1"
                                             Style="{DynamicResource CustomTextBlock}"
@@ -916,7 +917,7 @@
                         </ScrollViewer>
 
 
-                        <TextBlock  Grid.Row="0" Grid.Column="1"
+                        <TextBlock  Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
                                     Text="Channel configuration"
                                     Style="{DynamicResource CustomTextBlock}"
                                     VerticalAlignment="Center"
@@ -930,18 +931,29 @@
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
 
-                            <TextBox    Grid.Row="0"
-                                        Style="{DynamicResource TextBoxStyle}"
-                                        Text="{Binding ChannelSID}"
-                                        IsEnabled="{Binding isPSIEnable}"
-                                        FontSize="16"/>
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock  Text="SID"
+                                            Grid.Column="0"
+                                            Style="{DynamicResource TextBlockStyle}"
+                                            FontSize="16"/>
+                                <TextBox    Grid.Column="1"
+                                            Style="{DynamicResource TextBoxStyle}"
+                                            Text="{Binding ChannelSID}"
+                                            IsEnabled="{Binding isPSIEnable}"
+                                            FontSize="16"/>
+                            </Grid>
 
                             <TextBlock  Grid.Row="1"
                                         Text="PSI Format"
                                         Style="{DynamicResource CustomTextBlock}"
                                         VerticalAlignment="Center"
-                                        HorizontalAlignment="Center"/>
-                            
+                                        HorizontalAlignment="Center"
+                                        FontSize="16"/>
+
                             <ComboBox   Grid.Row="2"
                                         SelectedIndex="{Binding ChannelFormatModeConfigurationIndex}"
                                         IsEnabled="{Binding isPSIEnable}"
@@ -969,6 +981,332 @@
                                 </ComboBoxItem>
                             </ComboBox>
                         </Grid>
+                    </Grid>
+
+                    <Grid Grid.Row="2" Grid.Column="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                      Grid.Column="0">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto" MinHeight="10"/>
+                                    <RowDefinition Height="auto" MinHeight="10"/>
+                                    <RowDefinition Height="auto" MinHeight="10"/>
+                                    <RowDefinition Height="auto" MinHeight="10"/>
+                                    <RowDefinition Height="auto" MinHeight="10"/>
+                                    <RowDefinition Height="auto" MinHeight="10"/>
+                                    <RowDefinition Height="auto" MinHeight="10"/>
+                                    <RowDefinition Height="auto" MinHeight="10"/>
+                                    <RowDefinition Height="auto" MinHeight="10"/>
+                                    <RowDefinition Height="auto" MinHeight="10"/>
+                                    <RowDefinition Height="auto" MinHeight="10"/>
+                                    <RowDefinition Height="auto" MinHeight="10"/>
+                                    <RowDefinition Height="auto" MinHeight="10"/>
+                                </Grid.RowDefinitions>
+
+                                <TextBlock  Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                                            Text="Common configuration"
+                                            Style="{DynamicResource CustomTextBlock}"
+                                            Margin="5"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Center"/>
+
+                                <TextBlock  Grid.Row="1" Grid.Column="0"
+                                            Text="Sync generation" FontSize="16"
+                                            Style="{DynamicResource CustomTextBlock}"
+                                            Margin="5"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Center"
+                                            IsEnabled="{Binding isPSIEnable}"/>
+
+                                <CheckBox   Grid.Row="1" Grid.Column="1"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            IsEnabled="{Binding isPSIEnable}"
+                                            Style="{DynamicResource ToggleSwitchStyle}" 
+                                            IsChecked="{Binding IsChannelSyncGenerationConfigurationEn}"/>
+                                
+                                <TextBlock  Grid.Row="2" Grid.Column="0"
+                                            Text="Sync Trigger source" FontSize="16"
+                                            Style="{DynamicResource CustomTextBlock}"
+                                            Margin="5"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Center"
+                                            IsEnabled="{Binding isPSIEnable}"/>
+
+                                <ComboBox   Grid.Row="2" Grid.Column="1"
+                                            SelectedIndex="{Binding ChannelSyncTriggerSourceConfigurationIndex}"
+                                            IsEnabled="{Binding isPSIEnable}"
+                                            Margin="5">
+                                    <ComboBoxItem   IsSelected="True">
+                                        <TextBlock  Text="Off"
+                                                    Style="{DynamicResource CustomTextBlock}"
+                                                    FontSize="16"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalAlignment="Center"/>
+                                    </ComboBoxItem>
+                                    <ComboBoxItem>
+                                        <TextBlock  Text="Automatic"
+                                                    Style="{DynamicResource CustomTextBlock}"
+                                                    FontSize="16"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalAlignment="Center"/>
+                                    </ComboBoxItem>
+                                    <ComboBoxItem>
+                                        <TextBlock  Text="Pin"
+                                                    Style="{DynamicResource CustomTextBlock}"
+                                                    FontSize="16"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalAlignment="Center"/>
+                                    </ComboBoxItem>
+                                    <ComboBoxItem>
+                                        <TextBlock  Text="SPI"
+                                                    Style="{DynamicResource CustomTextBlock}"
+                                                    FontSize="16"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalAlignment="Center"/>
+                                    </ComboBoxItem>
+                                </ComboBox>
+
+                                <TextBlock  Grid.Row="3" Grid.Column="0"
+                                            Text="S2B reaction" FontSize="16"
+                                            Style="{DynamicResource CustomTextBlock}"
+                                            Margin="5"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Center"
+                                            IsEnabled="{Binding isPSIEnable}"/>
+
+                                <ComboBox   Grid.Row="3" Grid.Column="1"
+                                            SelectedIndex="{Binding ChannelS2BReactionConfigurationIndex}"
+                                            IsEnabled="{Binding isPSIEnable}"
+                                            Margin="5">
+                                    <ComboBoxItem   IsSelected="True">
+                                        <TextBlock  Text="SPI trigger"
+                                                    Style="{DynamicResource CustomTextBlock}"
+                                                    FontSize="16"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalAlignment="Center"/>
+                                    </ComboBoxItem>
+                                    <ComboBoxItem>
+                                        <TextBlock  Text="Automatic"
+                                                    Style="{DynamicResource CustomTextBlock}"
+                                                    FontSize="16"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalAlignment="Center"/>
+                                    </ComboBoxItem>
+                                </ComboBox>
+
+                                <TextBlock  Grid.Row="4" Grid.Column="0"
+                                            Text="S2B blanking time" FontSize="16"
+                                            Style="{DynamicResource CustomTextBlock}"
+                                            Margin="5"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Center"
+                                            IsEnabled="{Binding isPSIEnable}"/>
+
+                                <ComboBox   Grid.Row="4" Grid.Column="1"
+                                            SelectedIndex="{Binding ChannelS2BBlankingTimeConfigurationIndex}"
+                                            IsEnabled="{Binding isPSIEnable}"
+                                            Margin="5">
+                                    <ComboBoxItem   IsSelected="True">
+                                        <TextBlock  Text="0.128"
+                                                    Style="{DynamicResource CustomTextBlock}"
+                                                    FontSize="16"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalAlignment="Center"/>
+                                    </ComboBoxItem>
+                                    <ComboBoxItem>
+                                        <TextBlock  Text="5.5ms"
+                                                    Style="{DynamicResource CustomTextBlock}"
+                                                    FontSize="16"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalAlignment="Center"/>
+                                    </ComboBoxItem>
+                                </ComboBox>
+
+                                <TextBlock  Grid.Row="5" Grid.Column="0"
+                                            Text="Sync delay" FontSize="16"
+                                            Style="{DynamicResource CustomTextBlock}"
+                                            Margin="5"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Center"
+                                            IsEnabled="{Binding isPSIEnable}"/>
+
+                                <!-- TODO add varification -->
+                                <TextBox    Grid.Row="5" Grid.Column="1"
+                                        Style="{DynamicResource TextBoxStyle}"
+                                        Text="{Binding ChannelSyncCommonDelayConfiguration}"
+                                        IsEnabled="{Binding isPSIEnable}"
+                                        FontSize="16"/>
+
+                                <TextBlock  Grid.Row="6" Grid.Column="0"
+                                            Text="Sync internal delay" FontSize="16"
+                                            Style="{DynamicResource CustomTextBlock}"
+                                            Margin="5"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Center"
+                                            IsEnabled="{Binding isPSIEnable}"/>
+
+                                <!-- TODO add varification -->
+                                <TextBox    Grid.Row="6" Grid.Column="1"
+                                            Style="{DynamicResource TextBoxStyle}"
+                                            Text="{Binding ChannelSyncCommonInternalDelayConfiguration}"
+                                            IsEnabled="{Binding isPSIEnable}"
+                                            FontSize="16"/>
+
+                                <TextBlock  Grid.Row="7" Grid.Column="0"
+                                            Text="Sync group2group delay" FontSize="16"
+                                            Style="{DynamicResource CustomTextBlock}"
+                                            Margin="5"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Center"
+                                            IsEnabled="{Binding isPSIEnable}"/>
+
+                                <!-- TODO add varification -->
+                                <TextBox    Grid.Row="7" Grid.Column="1"
+                                            Style="{DynamicResource TextBoxStyle}"
+                                            Text="{Binding ChannelSyncCommonGroup2GroupDelayConfiguration}"
+                                            IsEnabled="{Binding isPSIEnable}"
+                                            FontSize="16"/>
+
+                                <TextBlock  Grid.Row="8" Grid.Column="0"
+                                            Text="Is sequential startup disable" FontSize="16"
+                                            Style="{DynamicResource CustomTextBlock}"
+                                            Margin="5"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Center"
+                                            IsEnabled="{Binding isPSIDebugEnable}"/>
+
+                                <CheckBox   Grid.Row="8" Grid.Column="1"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            IsEnabled="{Binding isPSIDebugEnable}"
+                                            Style="{DynamicResource ToggleSwitchStyle}" 
+                                            IsChecked="{Binding IsChannelSequentialStartupDisableConfigurationEn}"/>
+
+                                <TextBlock  Grid.Row="9" Grid.Column="0"
+                                            Text="Shadow register" FontSize="16"
+                                            Style="{DynamicResource CustomTextBlock}"
+                                            Margin="5"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Center"
+                                            IsEnabled="{Binding isPSIEnable}"/>
+
+                                <ComboBox   Grid.Row="9" Grid.Column="1"
+                                            SelectedIndex="{Binding ChannelShadowRegisterConfigurationIndex}"
+                                            IsEnabled="{Binding isPSIEnable}"
+                                            Margin="5">
+                                    <ComboBoxItem   IsSelected="True">
+                                        <TextBlock  Text="Next sync pulse"
+                                                    Style="{DynamicResource CustomTextBlock}"
+                                                    FontSize="16"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalAlignment="Center"/>
+                                    </ComboBoxItem>
+                                    <ComboBoxItem>
+                                        <TextBlock  Text="End of each timeslot"
+                                                    Style="{DynamicResource CustomTextBlock}"
+                                                    FontSize="16"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalAlignment="Center"/>
+                                    </ComboBoxItem>
+                                </ComboBox>
+
+                                <TextBlock  Grid.Row="10" Grid.Column="0"
+                                            Text="Is bist idischarge en" FontSize="16"
+                                            Style="{DynamicResource CustomTextBlock}"
+                                            Margin="5"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Center"
+                                            IsEnabled="{Binding isPSIEnable}"/>
+
+                                <CheckBox   Grid.Row="10" Grid.Column="1"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            IsEnabled="{Binding isPSIEnable}"
+                                            Style="{DynamicResource ToggleSwitchStyle}" 
+                                            IsChecked="{Binding IsChannelBistIdischargeEnConfigurationEn}"/>
+
+                                <TextBlock  Grid.Row="11" Grid.Column="0"
+                                            Text="BIST mode" FontSize="16"
+                                            Style="{DynamicResource CustomTextBlock}"
+                                            Margin="5"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Center"
+                                            IsEnabled="{Binding isPSIEnable}"/>
+
+                                <ComboBox   Grid.Row="11" Grid.Column="1"
+                                            SelectedIndex="{Binding ChannelBistModeConfigurationIndex}"
+                                            IsEnabled="{Binding isPSIEnable}"
+                                            Margin="5">
+                                    <ComboBoxItem   IsSelected="True">
+                                        <TextBlock  Text="OFF"
+                                                    Style="{DynamicResource CustomTextBlock}"
+                                                    FontSize="16"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalAlignment="Center"/>
+                                    </ComboBoxItem>
+                                    <ComboBoxItem>
+                                        <TextBlock  Text="CC master"
+                                                    Style="{DynamicResource CustomTextBlock}"
+                                                    FontSize="16"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalAlignment="Center"/>
+                                    </ComboBoxItem>
+                                    <ComboBoxItem>
+                                        <TextBlock  Text="CC master"
+                                                    Style="{DynamicResource CustomTextBlock}"
+                                                    FontSize="16"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalAlignment="Center"/>
+                                    </ComboBoxItem>
+                                    <ComboBoxItem>
+                                        <TextBlock  Text="CC slave"
+                                                    Style="{DynamicResource CustomTextBlock}"
+                                                    FontSize="16"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalAlignment="Center"/>
+                                    </ComboBoxItem>
+                                    <ComboBoxItem>
+                                        <TextBlock  Text="Cap Test"
+                                                    Style="{DynamicResource CustomTextBlock}"
+                                                    FontSize="16"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalAlignment="Center"/>
+                                    </ComboBoxItem>
+                                    <ComboBoxItem>
+                                        <TextBlock  Text="FBIST"
+                                                    Style="{DynamicResource CustomTextBlock}"
+                                                    FontSize="16"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalAlignment="Center"/>
+                                    </ComboBoxItem>
+                                </ComboBox>
+
+                                <TextBlock  Grid.Row="12" Grid.Column="0"
+                                            Text="Edge counter" FontSize="16"
+                                            Style="{DynamicResource CustomTextBlock}"
+                                            Margin="5"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Center"
+                                            IsEnabled="{Binding isPSIEnable}"/>
+
+                                <!-- TODO add varification -->
+                                <TextBox    Grid.Row="12" Grid.Column="1"
+                                            Style="{DynamicResource TextBoxStyle}"
+                                            Text="{Binding ChannelEdgeCounter}"
+                                            FontSize="16"
+                                            IsReadOnly="True"/>
+
+
+                            </Grid>
+                        </ScrollViewer>
                     </Grid>
                 </Grid>
 
