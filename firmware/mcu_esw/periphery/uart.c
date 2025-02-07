@@ -18,10 +18,9 @@
 /* Communication parameters */
 #define UART_BAUDRATE         2000000                            /** \brief Baud rate of the UART interface in bit/s */
 
-#define UART_PIN_RX           IfxAsclin2_RXE_P33_8_IN            /** \brief RX pin of the UART interface             */
-#define UART_PIN_TX           IfxAsclin2_TX_P33_9_OUT            /** \brief TX pin of the UART interface             */
+#define UART_PIN_TX           IfxAsclin7_TX_P23_3_OUT            /** \brief TX pin of the UART interface             */
 
-#define UART_TX_BUFFER_SIZE      64                              /** \brief Definition of the buffer size in byte    */
+#define UART_TX_BUFFER_SIZE      12                              /** \brief Definition of the buffer size in byte    */
 
 #define UART_TIMEOUT             5                               /** \brief UART transmit busywait timeout           */
 /*********************************************************************************************************************/
@@ -41,9 +40,9 @@ static sint32 g_uart_timeout;                                               /** 
 /*********************************************************************************************************************/
 /*---------------------------------------------Function Implementations----------------------------------------------*/
 /*********************************************************************************************************************/
-IFX_INTERRUPT(asclin2TxISR, 0, ISR_PRIORITY_UART_TX);
+IFX_INTERRUPT(uartTxISR, 0, ISR_PRIORITY_UART_TX);
 
-void asclin2TxISR(void)
+void uartTxISR(void)
 {
     IfxAsclin_Asc_isrTransmit(&g_uart);
 }
@@ -55,6 +54,7 @@ void InitUart(void)
     IfxAsclin_Asc_initModuleConfig(&uartConfig, UART_PIN_TX.module);
 
     /* Set the desired baud rate */
+    uartConfig.baudrate.prescaler = 1;
     uartConfig.baudrate.baudrate = UART_BAUDRATE;
 
     /* ISR priorities and interrupt target */
@@ -69,7 +69,7 @@ void InitUart(void)
     const IfxAsclin_Asc_Pins pins = {
         .cts        = NULL_PTR,                         /* CTS pin not used                                     */
         .ctsMode    = IfxPort_InputMode_pullUp,
-        .rx         = &UART_PIN_RX ,
+        .rx         = NULL_PTR,
         .rxMode     = IfxPort_InputMode_pullUp,
         .rts        = NULL_PTR,                         /* RTS pin not used                                     */
         .rtsMode    = IfxPort_OutputMode_pushPull,
@@ -78,6 +78,9 @@ void InitUart(void)
         .pinDriver  = IfxPort_PadDriver_cmosAutomotiveSpeed1
     };
     uartConfig.pins = &pins;
+
+    uartConfig.frame.parityBit = TRUE;
+    uartConfig.frame.parityType = IfxAsclin_ParityType_odd;
 
     IfxAsclin_Asc_initModule(&g_uart, &uartConfig);                      /* Initialize module with above parameters  */
 
