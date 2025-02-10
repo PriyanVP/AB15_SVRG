@@ -33,6 +33,9 @@
 
     <SolidColorBrush x:Key="UI.TextBoxBackground" Color="#91ffffff"/>
 
+    <SolidColorBrush x:Key="ToolTipError.Background" Color="#f50000"/>
+    <SolidColorBrush x:Key="ToolTipError.BorderBrush" Color="#979197"/>
+
     <SolidColorBrush x:Key="Button.Background.StandBy" Color="Transparent"/>
     <SolidColorBrush x:Key="Button.Background.IsMouseOver" Color="#C0C0C0"/>
     <SolidColorBrush x:Key="Button.Background.IsPressed" Color="#979197"/>
@@ -116,6 +119,14 @@
         <Setter Property="Foreground" Value="{DynamicResource Foreground.Default}"/>
         <Setter Property="Background" Value="{DynamicResource UI.BackGround}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource UI.SeparateLine}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="BorderThickness" Value="1"/>
+    </Style>
+    
+    <Style x:Key="ToolTipError" TargetType="ToolTip">
+        <Setter Property="Foreground" Value="{DynamicResource Foreground.Default}"/>
+        <Setter Property="Background" Value="{DynamicResource ToolTipError.Background}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ToolTipError.BorderBrush}"/>
         <Setter Property="FontSize" Value="14"/>
         <Setter Property="BorderThickness" Value="1"/>
     </Style>

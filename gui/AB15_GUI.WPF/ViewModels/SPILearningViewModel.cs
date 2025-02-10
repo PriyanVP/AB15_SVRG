@@ -31,6 +31,67 @@ namespace AB15_GUI.WPF.ViewModels
         /// </summary>
         private readonly IASICWrapper asicWrapper;
 
+        private string _hexValueAddress = "";
+
+        public string HexValueAddress
+        {
+            get => _hexValueAddress;
+            set
+            {
+                _hexValueAddress = value;
+                OnPropertyChanged();
+                if (value == "")
+                {
+                    RefToActiveRecord.MOSI.Address = 0;
+                }
+                else
+                {
+                    RefToActiveRecord.MOSI.Address = uint.Parse(value, System.Globalization.NumberStyles.HexNumber);
+                }
+            }
+        }
+
+        private string _hexValueData = "";
+
+        public string HexValueData
+        {
+            get => _hexValueData;
+            set
+            {
+                _hexValueData = value;
+                OnPropertyChanged();
+                if (value == "")
+                {
+                    RefToActiveRecord.MOSI.Data = 0;
+                }
+                else
+                {
+                    RefToActiveRecord.MOSI.Data = ushort.Parse(value, System.Globalization.NumberStyles.HexNumber);
+                }
+            }
+        }
+
+        private string _hexValueRaw = "";
+
+        public string HexValueRaw
+        {
+            get => _hexValueData;
+            set
+            {
+                _hexValueData = value;
+                OnPropertyChanged();
+                if (value == "")
+                {
+                    RefToActiveRecord.MOSI.RawMOSI = 0;
+                }
+                else
+                {
+                    RefToActiveRecord.MOSI.RawMOSI = uint.Parse(value, System.Globalization.NumberStyles.HexNumber);
+                }
+            }
+        }
+
+
         /// <summary>
         /// Constructor
         /// </summary>
