@@ -67,7 +67,8 @@
             <TextBox    Grid.Row="0" Grid.Column="3"
                         Style="{DynamicResource TextBoxStyle}"
                         IsEnabled="{Binding IsSPILearningEn}"
-                        Text="{Binding Path=RefToActiveRecord.MOSI.Address}"
+                        Text="{Binding HexValueAddress, UpdateSourceTrigger=PropertyChanged}"
+                        PreviewTextInput="HexAddressTextBox_PreviewTextInput"
                         Name="AddressTextBox">
             </TextBox>
             
@@ -86,7 +87,8 @@
             <TextBox    Grid.Row="1" Grid.Column="3"
                         Style="{DynamicResource TextBoxStyle}"
                         IsEnabled="{Binding IsSPILearningEn}"
-                        Text="{Binding Path=RefToActiveRecord.MOSI.Data}"
+                        Text="{Binding HexValueData, UpdateSourceTrigger=PropertyChanged}"
+                        PreviewTextInput="HexDataTextBox_PreviewTextInput"
                         Name="DataTextBox">
             </TextBox>
             
@@ -114,8 +116,9 @@
             <TextBox    Grid.Row="2" Grid.Column="3"
                         x:Name="RawFormatTextBox"
                         IsEnabled="{Binding IsSPILearningEn}"
-                        Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI}"
+                        Text="{Binding HexValueRaw, UpdateSourceTrigger=PropertyChanged}"
                         Visibility="Hidden"
+                        PreviewTextInput="HexFullTextBox_PreviewTextInput"
                         Style="{DynamicResource TextBoxStyle}"/>
 
 
