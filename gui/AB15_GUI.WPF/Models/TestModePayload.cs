@@ -19,7 +19,7 @@ namespace AB15_GUI.WPF.Models
         /// <summary>
         /// List with register values
         /// </summary>
-        public List<PstChannelTestResult> Data { get; set; } = new List<PstChannelTestResult>();
+        public List<PstChannelSideTestResult> Data { get; set; } = new List<PstChannelSideTestResult>();
 
         /// <summary>
         /// Convert byte list to field values
@@ -48,10 +48,10 @@ namespace AB15_GUI.WPF.Models
                         break;
                     }
 
-                    // Deserialize rawData into PstChannelTestResult objects
+                    // Deserialize rawData into PstChannelSideTestResult objects
                     for (int i = 0; i < rawData.Count; i++)
                     {
-                        Data.Add(new PstChannelTestResult(rawData[i]));
+                        Data.Add(new PstChannelSideTestResult(rawData[i]));
                     }
                     break;
                 default:
