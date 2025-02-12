@@ -66,7 +66,7 @@ typedef union
         uint32 unused              : 3;    /** \brief unused bits */
     } bf;
     uint8 dw;
-} PstChannelTestResult;
+} PstChannelSideTestResult;
 
 /** \brief Structure for Watchdog configuration
  */
@@ -90,7 +90,7 @@ static PstRuntimeConfiguration g_pstConfiguration;
 
 /** \brief Local static variable to store powerstage test results
  */
-static PstChannelTestResult g_pstResults[FLM_POWERSTAGE_CHANNELS_COUNT];
+static PstChannelSideTestResult g_pstResults[FLM_POWERSTAGE_CHANNELS_COUNT];
 
 /*********************************************************************************************************************/
 /*------------------------------------------------Function Prototypes------------------------------------------------*/
