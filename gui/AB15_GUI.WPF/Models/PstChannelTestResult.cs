@@ -1,52 +1,105 @@
+using System;
+
 namespace AB15_GUI.WPF.Models
 {
     /// <summary>
-    /// Struct that is used for unpacking Test Mode channel data
+    /// PST class that includes lowside and highside test results and diagnostic status
     /// </summary>
-    public struct PstChannelTestResult
+    public class PstChannelTestResult
     {
-        public bool PstNotValid { get; private set; }
-        public bool PstPretestS2xErr { get; private set; }
-        public bool PstTestS2xErr { get; private set; }
-        public bool PstTimeoutErr { get; private set; }
-        public bool TestGuardFail { get; private set; }
-        public bool SpiOnChFail { get; private set; }
+        /// <summary>
+        /// <inheritdoc cref="Lowside" path='/summary'/>
+        /// </summary>
+        private PstChannelSideTestResult lowside;
 
-        public string? Error { get; private set; } = null;
+        /// <summary>
+        /// <inheritdoc cref="Highside" path='/summary'/>
+        /// </summary>
+        private PstChannelSideTestResult highside;
 
-        public PstChannelTestResult(byte rawData)
+        /// <summary>
+        /// <inheritdoc cref="DiagStatus" path='/summary'/>
+        /// </summary>
+        private string diagStatus;
+
+        /// <summary>
+        /// Flag to indicate if results should be ignored
+        /// </summary>
+        public bool IgnoreResults { get; set; } = false;
+
+        /// <summary>
+        /// Lowside test results
+        /// </summary>
+        public PstChannelSideTestResult Lowside
         {
-            PstNotValid = (rawData & 0x01) != 0;
-            PstPretestS2xErr = (rawData & 0x02) != 0;
-            PstTestS2xErr = (rawData & 0x04) != 0;
-            PstTimeoutErr = (rawData & 0x08) != 0;
-            TestGuardFail = (rawData & 0x10) != 0;
-            SpiOnChFail = (rawData & 0x20) != 0;
+            get => lowside;
+            set
+            {
+                if (!lowside.Equals(value))
+                {
+                    lowside = value;
+                    UpdateDiagStatus();
+                }
+            }
+        }
 
-            // Generate error message
-            if (PstNotValid)
+        /// <summary>
+        /// Highside test results
+        /// </summary>
+        public PstChannelSideTestResult Highside
+        {
+            get => highside;
+            set
             {
-                Error = "PST not valid";
+                if (!highside.Equals(value))
+                {
+                    highside = value;
+                    UpdateDiagStatus();
+                }
             }
-            else if (PstPretestS2xErr)
+        }
+
+        /// <summary>
+        /// Diagnostic summary
+        /// </summary>
+        public string DiagStatus
+        {
+            get
             {
-                Error = "PST pretest S2X error";
+                return diagStatus;
             }
-            else if (PstTestS2xErr)
+            private set 
             {
-                Error = "PST test S2X error";
+                diagStatus = value;
             }
-            else if (PstTimeoutErr)
+        }
+
+        /// <summary>
+        /// Updates the diagnostic status based on lowside and highside test results
+        /// </summary>
+        private void UpdateDiagStatus()
+        {
+            // Update diagStatus based on lowside and highside
+            DiagStatus = "";
+            if (Lowside.Error != null)
             {
-                Error = "PST timeout error";
+                DiagStatus += $"Lowside {lowside.Error}{Environment.NewLine}";
             }
-            else if (TestGuardFail)
+            
+            if (Highside.Error != null)
             {
-                Error = "Test guard fail";
+                DiagStatus += $"Highside {highside.Error}{Environment.NewLine}";
             }
-            else if (SpiOnChFail)
+
+            if (Lowside.Error == null && Highside.Error == null)
             {
-                Error = "SPI on channel fail";
+                DiagStatus = $"PST OK{Environment.NewLine}";
+            }
+
+            // Special option to handle cases where results should be ignored
+            if (IgnoreResults)
+            {
+                DiagStatus = "PST skipped";
             }
         }
     }

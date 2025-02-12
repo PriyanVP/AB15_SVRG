@@ -4,55 +4,27 @@ using System.Runtime.CompilerServices;
 
 namespace AB15_GUI.WPF.Models
 {
+    #region ObservableMembers
+
     /// <summary>
-    /// Data record class that holds channel specific firing error data
+    /// Data record class that holds voltage measurement value
     /// </summary>
-    public class FiringChannelErrorRecord : INotifyPropertyChanged // TODO: obsolete?
-    {
+    public class VoltageRecord : INotifyPropertyChanged
+    {     
         /// <summary>
-        /// <inheritdoc cref="ChannelID" path='/summary'/>
+        /// Voltage channel name
         /// </summary>
-        public int channelID;
-        
+        public string Name { get; set; }
+
         /// <summary>
-        /// Channel ID
+        /// Flag to indicate if the voltage measurement is valid
         /// </summary>
-        public int ChannelID 
-        { 
-            get
-            {
-                return channelID;
-            } 
-            set
-            {
-                channelID = value;
-                OnPropertyChanged();
-            } 
-        }
-        
+        public bool IsValid { get; set; } = false;
+
         /// <summary>
-        /// <inheritdoc cref="Identifier" path='/summary'/>
+        /// Measured voltage value
         /// </summary>
-        private string identifier = "None";
-        
-        /// <summary>
-        /// Custom channel identifier
-        /// Note: identifier is not guaranteed to be unique
-        /// </summary>
-        public string Identifier
-        { 
-            get
-            {
-                return identifier;
-            }
-            set
-            {
-                // Length limitation
-                if (value.Length > 15) return;
-                identifier = value;
-                OnPropertyChanged();
-            }
-        }
+        public uint Value { get; set; }
 
         /// <summary>
         /// <inheritdoc cref="Status" path='/summary'/>
@@ -68,15 +40,33 @@ namespace AB15_GUI.WPF.Models
             {
                 return status;
             }
-            set
-            {
-                // Do not update property if value is same as previously
-                if (status == value) return;
-
-                status = value;
-                OnPropertyChanged();
-            }
         }
+
+        #endregion // ObservableMembers
+
+        #region Data
+
+        /// <summary>
+        /// Method to update observable status based on data
+        /// </summary>
+        public void UpdateStatus()
+        {
+            // Update status based on data
+            string status = "";
+
+            if (IsValid)
+            {
+                status += "Voltage measurement is valid.";
+            }
+            else
+            {
+                status += "Voltage measurement is invalid.";
+            }
+
+            OnPropertyChanged(nameof(Status));
+        }
+
+        #endregion // Data
 
         #region Services
 
