@@ -981,6 +981,8 @@ namespace AB15_GUI.WPF.ViewModels
             // Call corresponding ASIC methods to write configuration
             asicWrapper.ASICs[0].OnRequestConfiguration();      // Raise event to request configuration from all subscribers TODO: verify if config data is updated
             await asicWrapper.ASICs[0].WriteConfigurationWithCRCAsync(); 
+
+            // TODO: check
         }
 
         /// <summary>
@@ -1382,6 +1384,7 @@ namespace AB15_GUI.WPF.ViewModels
 
             // Report results
             List<int> configuredFiringChannels = [.. FiringResultTable.Select(itm => itm.ChannelID)];
+            FiringDiagnosticsData.UnpackPowerstageDiagnostics(true, mcuResponse.Payload, configuredFiringChannels);
 
             // Trigger for transiting to TestMode2
             await asicWrapper.ASICs[0].ExecuteTestMode1TransitionAsync();
@@ -1402,6 +1405,10 @@ namespace AB15_GUI.WPF.ViewModels
 
             // Validate response
             if (IsResponseValid(mcuResponse, null) == false) return;
+
+            // Report results
+            List<int> configuredFiringChannels = [.. FiringResultTable.Select(itm => itm.ChannelID)];
+            FiringDiagnosticsData.UnpackPowerstageDiagnostics(false, mcuResponse.Payload, configuredFiringChannels);
 
             // Trigger for transiting to Normal mode
             await asicWrapper.ASICs[0].ExecuteTestMode2TransitionAsync();

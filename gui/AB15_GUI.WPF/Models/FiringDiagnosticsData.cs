@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace AB15_GUI.WPF.Models
@@ -12,7 +13,7 @@ namespace AB15_GUI.WPF.Models
         /// <summary>
         /// Constructor for diagnostics model
         /// </summary>
-        public FiringDiagnosticsData()
+        public FiringDiagnosticsData() // TODO: handling of uncofigured channels missing (only PST?)
         {
             // Populate channel records
             for (int i = 1; i <= NUM_CHANNELS; i++)
@@ -85,16 +86,21 @@ namespace AB15_GUI.WPF.Models
                 voltageRecord.UpdateStatus();
             }
         }
-
+        
         /// <summary>
         /// Unpack and store data from powerstage diagnostics to diagnostics model
         /// </summary>
+        /// <param name="isLowsideTest">true if TestMode1, false - TestMode2</param>
         /// <param name="diagData">powerstage test data</param>
-        public void UnpackPowerstageDiagnostics(bool isLowsideTest, TestModePayload diagData)
+        /// <param name="configuredChannels">list with indexes of configured channels</param>
+        public void UnpackPowerstageDiagnostics(bool isLowsideTest, TestModePayload diagData, List<int> configuredChannels)
         {
             // Unpack data
             for (int i = 0; i < diagData.Data.Count; i++)
             {
+                // Update ignore flags based on configured channels
+                ChannelRecords[i].PstResult.IgnoreResults = !configuredChannels.Contains(i + 1); // Channel ID is 1-based
+
                 if (isLowsideTest)
                 {
                     ChannelRecords[i].PstResult.Lowside  = diagData.Data[i];
