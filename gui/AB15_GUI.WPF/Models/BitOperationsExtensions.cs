@@ -39,7 +39,7 @@ namespace AB15_GUI.WPF.Models
         /// <summary>
         /// Create 32 bit word from a variable number of bytes (3-4)
         /// </summary>
-        /// <param name="bytes">input values; lsb to msb, 3-4 values</param>
+        /// <param name="bytes">input values; msb to lsb, 3-4 values</param>
         /// <returns>32 bit unsigned int constructed from bytes</returns>
         public static uint ConstructWordFromBytes(params byte[] bytes)
         {
@@ -51,7 +51,7 @@ namespace AB15_GUI.WPF.Models
             uint result = 0;
             for (int i = 0; i < bytes.Length; i++)
             {
-                result |= (uint)(bytes[i] << (8 * i));
+                result |= (uint)(bytes[bytes.Length - i - 1] << (8 * i));
             }
 
             return result;
