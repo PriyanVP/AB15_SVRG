@@ -1040,12 +1040,15 @@ namespace AB15_GUI.WPF.ViewModels
             // == Step 0.2 - disabling monoflop TODO: add register model, replace delegate
 
             // Create package to MCU
+            Reg_Disable_Triggers reg_Disable_Triggers = new Reg_Disable_Triggers();
+            reg_Disable_Triggers.Data = 0x0000;
+            reg_Disable_Triggers.disable_logic_capture_curr.Data = 1;
             packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
             packageToSend.ASICID = 1;
             packageToSend.Cmd = MCUCommand.WRITE_REG;
             packageToSend.PayloadType = typeof(EmptyPayload);
-            packageToSend.Payload.Address.Add(0x0136); // TODO: refactor
-            packageToSend.Payload.Data.Add(0x0001);
+            packageToSend.Payload.Address.Add(reg_Disable_Triggers.Address);
+            packageToSend.Payload.Data.Add(reg_Disable_Triggers.Data);
 
             // Send command to MCU and wait for response
             ReceiveCommunicationPackage<EmptyPayload>? mcuResponse02 = (ReceiveCommunicationPackage<EmptyPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
