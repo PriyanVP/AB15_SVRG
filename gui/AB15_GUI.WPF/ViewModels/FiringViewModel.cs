@@ -120,7 +120,7 @@ namespace AB15_GUI.WPF.ViewModels
             _stateMachine.Fire(Triggers.POR);
 
             // Events from ASIC // TODO: some of these handlers should be moved out of Firing VM
-            // this.asicWrapper.ASICs[0].InitModeEntered += InitModeEnteredHandler; // TODO: add in future 
+            this.asicWrapper.ASICs[0].InitModeEntered += InitModeEnteredHandler;
             this.asicWrapper.ASICs[0].ConfigurationLoaded += ConfigurationLoadedHandler;
             this.asicWrapper.ASICs[0].ConfigurationLocked += ConfigurationLockedHandler;
             this.asicWrapper.ASICs[0].NormalModeEntered += NormalModeEnteredHandler;
@@ -1607,6 +1607,149 @@ namespace AB15_GUI.WPF.ViewModels
 
             // Unsubscribe from event - by design can be fired only once
             caller.NormalModeEntered -= NormalModeEnteredHandler;
+        }
+
+        /// <summary>
+        /// Event handler that will be called when ASIC enters Init mode
+        /// </summary>
+        /// <param name="sender">object that called this event. Must be one of ASIC objects</param>
+        /// <param name="e">unused</param>
+        private async void InitModeEnteredHandler(object? sender, EventArgs e)
+        {
+            // Precondition
+            if (sender == null)
+            {
+                throw new ArgumentNullException("Incorrect argument - can't be null!");
+            }
+
+            // Typecast sender to actual type
+            IASIC caller = (IASIC) sender;
+
+            // TODO: run diagnostics
+            Reg_FLM_Diag_Start reg_FLM_Diag_Start = new Reg_FLM_Diag_Start();
+
+            // == Run LEA diode polarity test ==
+            // Configure diagnostics register
+            reg_FLM_Diag_Start.flm_diag_start.Data = 0x1;
+            reg_FLM_Diag_Start.flm_diag_mode.Data = reg_FLM_Diag_Start.flm_diag_mode.EnumeratedValues["lea_diode_all"];
+            reg_FLM_Diag_Start.flm_diag_channel.Data = 0x0;
+
+            TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
+            packageToSend.ASICID = 1;
+            packageToSend.Cmd = MCUCommand.WRITE_REG;
+            packageToSend.PayloadType = typeof(EmptyPayload);
+            packageToSend.Payload.Address.Add(reg_FLM_Diag_Start.Address);
+            packageToSend.Payload.Data.Add(reg_FLM_Diag_Start.Data);
+
+            // Send command to MCU and wait for response
+            ReceiveCommunicationPackage<EmptyPayload>? mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
+
+            // Validate response
+            if (IsResponseValid(mcuResponse, null) == false) return;
+
+            await Task.Delay(10);
+
+            // Read results
+            TransmitCommunicationPackage<AddressDataPayload> packageToSend2 = new TransmitCommunicationPackage<AddressDataPayload>();
+            packageToSend2.ASICID = 1;
+            packageToSend2.Cmd = MCUCommand.EXECUTE_READ_SEQUENCE;
+            packageToSend2.PayloadType = typeof(AddressDataPayload);
+            packageToSend2.Payload.Address.Add(new Reg_FLM_Read_Lea_Diode_ch16_1().Address);
+            packageToSend2.Payload.Address.Add(new Reg_FLM_Read_Lea_Diode_ch20_17().Address);
+
+            // Send command to MCU and wait for response
+            ReceiveCommunicationPackage<AddressDataPayload>? mcuResponse2 = (ReceiveCommunicationPackage<AddressDataPayload>?) await serialWrapper.SerialWriteAsync(packageToSend2);
+
+            // Validate response
+            if (IsResponseValid(mcuResponse2, null) == true) 
+            {
+                // Report results
+                uint leaDiodeErrorFlags = (uint) (mcuResponse2.Payload.Data[1] << 16) | mcuResponse2.Payload.Data[0];
+                FiringDiagnosticsData.UnpackLeaDiodeData(leaDiodeErrorFlags);
+            }
+
+            // == Run Cross Coupling test ==
+            // Configure diagnostics register
+            reg_FLM_Diag_Start.flm_diag_start.Data = 0x1;
+            reg_FLM_Diag_Start.flm_diag_mode.Data = reg_FLM_Diag_Start.flm_diag_mode.EnumeratedValues["cross_couple_master"];
+            reg_FLM_Diag_Start.flm_diag_channel.Data = 0x0;
+
+            packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
+            packageToSend.ASICID = 1;
+            packageToSend.Cmd = MCUCommand.WRITE_REG;
+            packageToSend.PayloadType = typeof(EmptyPayload);
+            packageToSend.Payload.Address.Add(reg_FLM_Diag_Start.Address);
+            packageToSend.Payload.Data.Add(reg_FLM_Diag_Start.Data);
+
+            // Send command to MCU and wait for response
+            mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
+
+            // Validate response
+            if (IsResponseValid(mcuResponse, null) == false) return;
+
+            await Task.Delay(10);
+
+            // Read results
+            packageToSend2 = new TransmitCommunicationPackage<AddressDataPayload>();
+            packageToSend2.ASICID = 1;
+            packageToSend2.Cmd = MCUCommand.EXECUTE_READ_SEQUENCE;
+            packageToSend2.PayloadType = typeof(AddressDataPayload);
+            packageToSend2.Payload.Address.Add(new Reg_FLM_Read_Coupling_s2x_ch16_1().Address);
+            packageToSend2.Payload.Address.Add(new Reg_FLM_Read_Coupling_s2x_ch20_17().Address);
+
+            // Send command to MCU and wait for response
+            mcuResponse2 = (ReceiveCommunicationPackage<AddressDataPayload>?) await serialWrapper.SerialWriteAsync(packageToSend2);
+
+            // Validate response
+            if (IsResponseValid(mcuResponse2, null) == true) 
+            {
+                // Report results
+                uint crossCouplingErrorFlags = (uint) (mcuResponse2.Payload.Data[1] << 16) | mcuResponse2.Payload.Data[0];
+                FiringDiagnosticsData.UnpackCrossCouplingData(crossCouplingErrorFlags);
+            }
+
+            // == Run Capacity Test ==
+            // Configure diagnostics register
+            reg_FLM_Diag_Start.flm_diag_start.Data = 0x1;
+            reg_FLM_Diag_Start.flm_diag_mode.Data = reg_FLM_Diag_Start.flm_diag_mode.EnumeratedValues["igx_cap_all"];
+            reg_FLM_Diag_Start.flm_diag_channel.Data = 0x0;
+
+            packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
+            packageToSend.ASICID = 1;
+            packageToSend.Cmd = MCUCommand.WRITE_REG;
+            packageToSend.PayloadType = typeof(EmptyPayload);
+            packageToSend.Payload.Address.Add(reg_FLM_Diag_Start.Address);
+            packageToSend.Payload.Data.Add(reg_FLM_Diag_Start.Data);
+
+            // Send command to MCU and wait for response
+            mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
+
+            // Validate response
+            if (IsResponseValid(mcuResponse, null) == false) return;
+
+            await Task.Delay(10);
+
+            // Read results
+            packageToSend2 = new TransmitCommunicationPackage<AddressDataPayload>();
+            packageToSend2.ASICID = 1;
+            packageToSend2.Cmd = MCUCommand.EXECUTE_READ_SEQUENCE;
+            packageToSend2.PayloadType = typeof(AddressDataPayload);
+            packageToSend2.Payload.Address.Add(new Reg_FLM_Read_Cap_Detect_ch16_1().Address);
+            packageToSend2.Payload.Address.Add(new Reg_FLM_Read_Cap_Detect_ch20_17().Address);
+
+            // Send command to MCU and wait for response
+            mcuResponse2 = (ReceiveCommunicationPackage<AddressDataPayload>?) await serialWrapper.SerialWriteAsync(packageToSend2);
+
+            // Validate response
+            if (IsResponseValid(mcuResponse2, null) == true) 
+            {
+                // Report results
+                uint capacityTestErrorFlags = (uint) (mcuResponse2.Payload.Data[1] << 16) | mcuResponse2.Payload.Data[0];
+                FiringDiagnosticsData.UnpackCapacityTestData(capacityTestErrorFlags);
+            }
+
+            // Unsubscribe from event - by design can be fired only once
+            caller.InitModeEntered -= InitModeEnteredHandler;
         }
 
         #endregion // ASIC_events
