@@ -442,7 +442,7 @@
 
                             <!-- Table content -->
                             <ListView   Name="ASIC1ChannelMonitor" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3"
-                                        ItemsSource="{Binding FiringMonitoringErrorTable}"
+                                        ItemsSource="{Binding Path=FiringDiagnosticsData.ChannelRecords}"
                                         ItemContainerStyle="{DynamicResource ListViewItemStyle}" 
                                         FontSize="14">
                                 <ListView.ItemTemplate>

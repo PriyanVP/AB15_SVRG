@@ -69,7 +69,7 @@ namespace AB15_GUI.WPF.ViewModels
 
             // Enables synchronization for multithread access to observable collection
             System.Windows.Data.BindingOperations.EnableCollectionSynchronization(FiringMonitoringStatusTable, _lock);
-            System.Windows.Data.BindingOperations.EnableCollectionSynchronization(FiringMonitoringErrorTable, _lock);
+            System.Windows.Data.BindingOperations.EnableCollectionSynchronization(FiringDiagnosticsData.ChannelRecords , _lock);
             System.Windows.Data.BindingOperations.EnableCollectionSynchronization(FiringResultTable, _lock);
 
             // Configure state machine
@@ -279,9 +279,10 @@ namespace AB15_GUI.WPF.ViewModels
         public ObservableCollection<FiringCriteriaRecord> FiringMonitoringStatusTable { get; private set; } = new ObservableCollection<FiringCriteriaRecord>();
 
         /// <summary>
-        /// Observable collection for monitoring tab error table
+        /// Object that holds and analyzes diagnostic data for firing.
+        /// Used as bindable for monitoring tab error table
         /// </summary>
-        public ObservableCollection<FiringChannelErrorRecord> FiringMonitoringErrorTable { get; private set; } = new ObservableCollection<FiringChannelErrorRecord>();
+        public FiringDiagnosticsData FiringDiagnosticsData { get; } = new FiringDiagnosticsData();
 
         /// <summary>
         /// <inheritdoc cref="IsConfigControlsEnabled" path='/summary'/>
