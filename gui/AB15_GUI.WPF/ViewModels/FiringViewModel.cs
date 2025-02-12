@@ -3,7 +3,7 @@ using System.Windows.Input;
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
+using System.Timers;
 using System.Threading.Tasks;
 using Stateless;
 using Stateless.Graph;
@@ -48,6 +48,11 @@ namespace AB15_GUI.WPF.ViewModels
         /// Object that can be used to sequentially execute code - allows to add async-like features
         /// </summary>
         private TaskCompletionSource<bool>? _taskCompletionSource = null;
+
+        /// <summary>
+        /// Timer to periodically read diagnostics data
+        /// </summary>
+        private Timer _cyclicDiagnosticsTimer;
 
         /// <summary>
         /// Constructor
@@ -125,6 +130,9 @@ namespace AB15_GUI.WPF.ViewModels
 
             // Trigger initial fill in of Configuration table
             FiringConfigurationIndex = 0;
+
+            // Initialize timers
+            InitializeTimers();
         }
 
         #region State_Machine
@@ -1037,7 +1045,7 @@ namespace AB15_GUI.WPF.ViewModels
             // Validate response
             if (IsResponseValid(mcuResponse0, nameof(FireSimultaneous)) == false) return;
 
-            // == Step 0.2 - disabling monoflop TODO: add register model, replace delegate
+            // == Step 0.2 - disabling monoflop ==
 
             // Create package to MCU
             Reg_Disable_Triggers reg_Disable_Triggers = new Reg_Disable_Triggers();
@@ -1337,36 +1345,38 @@ namespace AB15_GUI.WPF.ViewModels
         /// </summary>
         private async void StartStopCyclicReadingExecuteAsync(object obj)
         {
-            // TODO: uncomment after MCU feature finalization
-            // // Handle that command execution can only be done once in a row
-            // if (_startStopCyclicReadingCommand.IsEnabled == false) return;
-            // _startStopCyclicReadingCommand.InProgress = true;
-            // OnPropertyChanged(nameof(StartStopCyclicReadingCommandEn));
+            // Handle that command execution can only be done once in a row
+            if (_startStopCyclicReadingCommand.IsEnabled == false) return;
+            _startStopCyclicReadingCommand.InProgress = true;
+            OnPropertyChanged(nameof(StartStopCyclicReadingCommandEn));
 
             logger.Debug($"Pressed Start stop cyclic reading");
 
-            // // Create package to MCU
-            // TransmitCommunicationPackage<EmptyPayload> packageToSend = new TransmitCommunicationPackage<EmptyPayload>();
-            // packageToSend.ASICID = 1;
-            // packageToSend.Cmd = (IsCyclicDiagnosticsEn) ? (MCUCommand.FLM_DIAG_ENABLE) : (MCUCommand.FLM_DIAG_DISABLE);
-            // packageToSend.Deleg = CyclicReadingStartStopDelegate;
-            // packageToSend.PayloadType = typeof(EmptyPayload);
+            // Create package to MCU
+            TransmitCommunicationPackage<EmptyPayload> packageToSend = new TransmitCommunicationPackage<EmptyPayload>();
+            packageToSend.ASICID = 1;
+            packageToSend.Cmd = (IsCyclicDiagnosticsEn) ? (MCUCommand.FLM_DIAG_ENABLE) : (MCUCommand.FLM_DIAG_DISABLE);
+            packageToSend.PayloadType = typeof(EmptyPayload);
 
-            // // Send command to MCU
-            // serialWrapper.SerialWrite(packageToSend);
+            // Send command to MCU
+            ReceiveCommunicationPackage<EmptyPayload>? mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
 
-            // // Get FLM diagnostics data
-            // logger.Debug($"Request diagnostics data on ASIC 1");
+            // Allow next command execution
+            _startStopCyclicReadingCommand.InProgress = false;
+            OnPropertyChanged(nameof(StartStopCyclicReadingCommandEn));
 
-            // // Construct command to MCU
-            // TransmitCommunicationPackage<EmptyPayload> packageToSend = new TransmitCommunicationPackage<EmptyPayload>();
-            // packageToSend.ASICID = 1; // TODO: check for ASICs 2-4
-            // packageToSend.Cmd = MCUCommand.FLM_DIAG_READ_RESULTS;
-            // packageToSend.Deleg = FLMDiagnosticsDelegate;
-            // packageToSend.PayloadType = typeof(FiringDiagnosticsPayload);
+            // Validate response
+            if (IsResponseValid(mcuResponse, nameof(StartStopCyclicReading)) == false) return;
 
-            // // Send command to MCU
-            // serialWrapper.SerialWrite(packageToSend);
+            // Start/stop timer based on command
+            if (packageToSend.Cmd == MCUCommand.FLM_DIAG_ENABLE)
+            {
+                _cyclicDiagnosticsTimer.Start();
+            }
+            else
+            {
+                _cyclicDiagnosticsTimer.Stop();
+            }
         }
 
         /// <summary>
@@ -1600,5 +1610,58 @@ namespace AB15_GUI.WPF.ViewModels
         }
 
         #endregion // ASIC_events
+
+        #region Timers
+
+        /// <summary>
+        /// Initialize timers and their events
+        /// </summary>
+        private void InitializeTimers()
+        {
+            // Initialize cyclic diagnostics timer
+            _cyclicDiagnosticsTimer = new Timer();
+            _cyclicDiagnosticsTimer.Elapsed += new ElapsedEventHandler(OnCyclicDiagnosticsTimedEvent);
+            _cyclicDiagnosticsTimer.Interval = 1000; // time delay is experimentally defined for smooth operation
+            _cyclicDiagnosticsTimer.Enabled = false;
+        }
+
+        /// <summary>
+        /// Event handler for cyclic diagnostics timer
+        /// </summary>
+        /// <param name="source">caller</param>
+        /// <param name="e">event arguments</param>
+        private async void OnCyclicDiagnosticsTimedEvent(object source, ElapsedEventArgs e)
+        {
+            // Stop timer
+            _cyclicDiagnosticsTimer.Stop();
+
+            // Get FLM diagnostics data
+            logger.Debug($"Request diagnostics data on ASIC 1");
+
+            // Construct command to MCU
+            TransmitCommunicationPackage<EmptyPayload> packageToSend = new TransmitCommunicationPackage<EmptyPayload>();
+            packageToSend.ASICID = 1; // TODO: check for ASICs 2-4
+            packageToSend.Cmd = MCUCommand.FLM_DIAG_READ_RESULTS;
+            packageToSend.PayloadType = typeof(FiringDiagnosticsPayload);
+
+            // Send command to MCU and wait for response
+            ReceiveCommunicationPackage<FiringDiagnosticsPayload>? mcuResponse = (ReceiveCommunicationPackage<FiringDiagnosticsPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
+
+            // Validate response
+            if (IsResponseValid(mcuResponse, nameof(OnCyclicDiagnosticsTimedEvent)) == false)
+            {
+                // Restart timer
+                _cyclicDiagnosticsTimer.Start();
+                return;
+            }
+
+            // Unpack diagnostics data
+            FiringDiagnosticsData.UnpackPeriodicDiagnostics(mcuResponse.Payload);
+
+            // Restart timer
+            _cyclicDiagnosticsTimer.Start();
+        }
+
+        #endregion // Timers
     }
 }
