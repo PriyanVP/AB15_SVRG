@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using AB15_GUI.WPF.Models;
 
 namespace AB15_GUI.WPF.Models.Interfaces
@@ -123,27 +124,27 @@ namespace AB15_GUI.WPF.Models.Interfaces
         /// <summary>
         /// Write configuration data and apply CRC
         /// </summary>
-        void WriteConfigurationWithCRC();
+        Task WriteConfigurationWithCRCAsync();
 
         /// <summary>
         /// Lock configuration (EOP)
         /// </summary>        
-        void LockConfiguration();
+        Task LockConfigurationAsync();
 
         /// <summary>
         /// Execute SPI_COLDSTART1 command
         /// Will cause ASIC reset (unconditionally)
         /// </summary>
-        public void ExecuteSPIColdstart1();
+        Task ExecuteSPIColdstart1Async();
         
         /// <summary>
         /// Execute transition from test mode 1 command
         /// </summary>        
-        void ExecuteTestMode1Transition();
+        Task ExecuteTestMode1TransitionAsync();
         
         /// <summary>
         /// Execute transition from test mode 2 command
         /// </summary>        
-        void ExecuteTestMode2Transition();
+        Task ExecuteTestMode2TransitionAsync();
     }
 }

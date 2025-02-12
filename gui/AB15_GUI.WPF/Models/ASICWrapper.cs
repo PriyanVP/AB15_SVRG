@@ -1,5 +1,6 @@
 using System;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using AB15_GUI.WPF.Models.Interfaces;
 
 namespace AB15_GUI.WPF.Models
@@ -34,12 +35,12 @@ namespace AB15_GUI.WPF.Models
         /// Connect to all available ASICs
         /// WARNING: will cause resets of all ASICs
         /// </summary>
-        public void EstablishConnection()
+        public async Task EstablishConnectionAsync()
         {
             // Call ASIC reset - will ensure ASICs are in expected state and will determine if ASICs are present
             foreach (var ASIC in ASICs)
             {
-                ASIC.ExecuteSPIColdstart1();
+                await ASIC.ExecuteSPIColdstart1Async();
                 ASIC.StartPeriodicStateReading();
             }
         }
