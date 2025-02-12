@@ -160,7 +160,7 @@ namespace AB15_GUI.WPF.Models
         /// Unpack and store data from LEA diode polarity diagnostics to diagnostics model
         /// </summary>
         /// <param name="diagData">LEA diode error data</param>
-        public void UnpackLeaDiodeDate(uint diagData)
+        public void UnpackLeaDiodeData(uint diagData)
         {
             // Unpack data
             for (int i = 0; i < ChannelRecords.Count; i++)
