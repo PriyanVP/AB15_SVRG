@@ -14,6 +14,7 @@
 #include "cmd/watchdog.h"
 #include "cmd/testmode_cmd.h"
 #include "cmd/hacked_timer_cmd.h" // TODO: refactor
+#include "cmd/uart_cmd.h"
 #include "periphery/led.h"
 #include "periphery/usb.h"
 #include "periphery/timer.h"
@@ -27,6 +28,7 @@
 #include "IfxPort.h" // for gpio.h
 #include "IfxPort_PinMap.h" // for gpio.h // TODO: remove dependency to IFxPort stuff
 #include "periphery/gpio.h" // for chip select lines
+#include "periphery/uart.h"
 
 
 IFX_ALIGN(4) IfxCpu_syncEvent g_cpuSyncEvent = 0;
@@ -161,6 +163,9 @@ void core0_main(void)
 
     /* Initialize the QSPI modules and the LED */
     QSPIInit();
+
+    // Init UART
+    InitUart();
 
     // Init message pump
     QueueInit();
@@ -327,6 +332,10 @@ void core0_main(void)
 
             case USB_CMD_FLM_DIAG_READ_RESULTS:
                 CmdReadFLMDiagResults(&cmdPackage);
+                break;
+
+            case USB_CMD_WRITE_DATA_UART:
+                CmdSendUartData(&cmdPackage);
                 break;
 
             /* Region: internal commands */

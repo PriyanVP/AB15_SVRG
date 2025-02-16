@@ -1,5 +1,5 @@
-using System;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 namespace AB15_GUI.WPF.Models.Interfaces
 {
@@ -18,7 +18,7 @@ namespace AB15_GUI.WPF.Models.Interfaces
         /// <summary>
         /// Connect to all available ASICs
         /// </summary>
-        void EstablishConnection();
+        Task EstablishConnectionAsync();
 
         /// <summary>
         /// Arm ASIC's to reset INIT mode timeout

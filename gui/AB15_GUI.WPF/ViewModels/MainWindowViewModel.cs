@@ -96,7 +96,8 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// Constructor
         /// </summary>
-        public MainViewModel(ILoggingService logger, LoggerViewModel loggerViewModel, LoggerView loggerWindowView, WatchdogViewModel watchdogViewModel, IASICWrapper asicWrapper)
+        public MainViewModel(ILoggingService logger, LoggerViewModel loggerViewModel, LoggerView loggerWindowView, WatchdogViewModel watchdogViewModel, IASICWrapper asicWrapper) :
+                base(logger)
         {
             // Init Logger and logger view model
             this.logger = logger;
@@ -114,7 +115,7 @@ namespace AB15_GUI.WPF.ViewModels
 
             // TODO: remove temporary code - should be on other page
             // Trigger ASIC reset + start ASIC state reading
-            this.asicWrapper.EstablishConnection();              // TODO: uncomment for testing
+            this.asicWrapper.EstablishConnectionAsync();              // TODO: uncomment for testing
             this.asicWrapper.StartInitModeTimeoutResetting();
         }
     }

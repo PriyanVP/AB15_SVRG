@@ -123,6 +123,17 @@ public class SerialWrapper : IDisposable, ISerialWrapper
     }
 
     /// <summary>
+    /// Serial wrapper destruction method. Required for testability and correct timer handling
+    /// </summary>
+    public void Dispose()
+    {
+        _serialInputDispatchTimer.Elapsed -= new ElapsedEventHandler(OnTimedEvent);
+        _waitlistTimeOfLifeTimer.Elapsed -= new ElapsedEventHandler(OnWaitlistTimedEvent);
+        _serialInputDispatchTimer.Dispose();
+        _waitlistTimeOfLifeTimer.Dispose();
+    }
+
+    /// <summary>
     /// Check if any of the waitlist items are outdated
     /// </summary>
     /// <param name="source">caller</param>
@@ -133,44 +144,10 @@ public class SerialWrapper : IDisposable, ISerialWrapper
         _waitlistTimeOfLifeTimer.Stop();
 
         // Run removal of outdated packages
-        List<(Action<IReceiveCommunicationPackage> deleg, Type? payloadType)> removedItems = _responseWaitlist.RemoveOutdatedItems();
-
-        // Invoke delegates
-        foreach (var itm in removedItems)
-        {
-            // Local variables
-            Type? payloadType;
-
-            // Get payload type for package from waitlist based on message ID
-            payloadType = itm.payloadType;
-            if (payloadType is null)
-            {
-                logger.Warn("Received package without type in waitlist item");
-                continue;
-            }
-
-            // Create received package instance dynamically based on type
-            Type type = typeof(ReceiveCommunicationPackage<>).MakeGenericType(payloadType);
-            IReceiveCommunicationPackage tmpReceivedPackage = (IReceiveCommunicationPackage)Activator.CreateInstance(type);
-            tmpReceivedPackage!.UnpackPackage(new List<byte>() { (byte)MCUStatus.RESPONSE_ABSENT }); // Use specific package layout for response absen
-
-            // Invoke delegate
-            Task.Run(() => itm.deleg(tmpReceivedPackage));
-        }
+        _responseWaitlist.RemoveOutdatedItems();
 
         // Start timer
         _waitlistTimeOfLifeTimer.Start();
-    }
-
-    /// <summary>
-    /// Serial wrapper destruction method. Required for testability and correct timer handling
-    /// </summary>
-    public void Dispose()
-    {
-        _serialInputDispatchTimer.Elapsed -= new ElapsedEventHandler(OnTimedEvent);
-        _waitlistTimeOfLifeTimer.Elapsed -= new ElapsedEventHandler(OnWaitlistTimedEvent);
-        _serialInputDispatchTimer.Dispose();
-        _waitlistTimeOfLifeTimer.Dispose();
     }
 
     /// <summary>
@@ -185,8 +162,6 @@ public class SerialWrapper : IDisposable, ISerialWrapper
 
         // Temporary variables
         List<byte> package;
-        Type? payloadType;
-        bool isPackageValid = false;
 
         // Check SerialComm for full messages, store all of them to queue
         SelectFullPackages();
@@ -196,40 +171,8 @@ public class SerialWrapper : IDisposable, ISerialWrapper
         {
             package = _receivedPackages.Dequeue();
 
-            // Get payload type for package from waitlist based on message ID
-            payloadType = _responseWaitlist.GetPayloadType(package.ElementAt(SerialPackageConstants.MsgIDPosition));
-            if (payloadType is null)
-            {
-                logger.Warn("Received package without type in waitlist item");
-                continue;
-            }
-
-            // Create received package instance dynamically based on type
-            Type type = typeof(ReceiveCommunicationPackage<>).MakeGenericType(payloadType);
-            IReceiveCommunicationPackage tmpReceivedPackage = (IReceiveCommunicationPackage)Activator.CreateInstance(type);
-
-            // Convert raw package received from MCU to field values
-            isPackageValid = tmpReceivedPackage!.UnpackPackage(package);
-
-            // If package is not valid - skip
-            if (isPackageValid == false)
-            {
-                logger.Info("Received invalid message");
-                continue;
-            }
-
-            // Get delegates for package
-            Action<IReceiveCommunicationPackage>? msgCallback = _responseWaitlist.GetDelegate(tmpReceivedPackage);
-
-            // Skip iteration if no delegate found
-            if (msgCallback is null)
-            {
-                logger.Warn("Received msg without delegate");
-                continue;
-            }
-
-            // Call delegate function. Call is done in Task to increase performance
-            Task.Run(() => msgCallback(tmpReceivedPackage));
+            // Here task will be completed and data will be execution of command will continue
+            _responseWaitlist.HandleResponse(package);
         }
 
         // Restart timer
@@ -314,30 +257,28 @@ public class SerialWrapper : IDisposable, ISerialWrapper
     /// Looks for delegates that will handle package and removes relevant items from waitlist
     /// </summary>
     /// <param name="packageToSend">package that will be send via serial port</param>
-    /// <returns>true if all operations were performed successfully, false - otherwise (message wasn't send)</returns>
-    public bool SerialWrite(ITransmitCommunicationPackage packageToSend)
+    /// <returns>Task which returns response if all operations were performed successfully, null - otherwise (message wasn't send)</returns>
+    public Task<IReceiveCommunicationPackage?> SerialWriteAsync(ITransmitCommunicationPackage packageToSend)
     {
         // Stop processing if package is not valid
         if (packageToSend.IsPackageValid == false)
         {
             logger.Warn("Tried to send invalid package!");
-            return false;
+            return Task.FromResult<IReceiveCommunicationPackage?>(null);
         }
+
+        Task<IReceiveCommunicationPackage>? responseTask;
 
         // Critical section - block multithread access
         lock (_lock)
         {
-            // Create item in waitlist waiting for response if delegate is present
-            if (packageToSend.Deleg != null)
-            {
-                (packageToSend.MsgID, bool addingStatus) = _responseWaitlist.AddItemToWaitlist(packageToSend.Deleg, packageToSend.PayloadType, packageToSend.IsContinuous);
+            (packageToSend.MsgID, responseTask) = _responseWaitlist.AddItemToWaitlist(packageToSend.PayloadType, packageToSend.IsContinuous);
 
-                // If adding item to list wasn't successful, stop processing and return
-                if (addingStatus == false)
-                {
-                    logger.Error("Adding item to waitlist failed!");
-                    return false;
-                }
+            // If adding item to list wasn't successful, stop processing and return
+            if ((packageToSend.MsgID is null) || (responseTask is null))
+            {
+                logger.Error("Adding item to waitlist failed!");
+                return Task.FromResult<IReceiveCommunicationPackage?>(null);
             }
 
             // Generate package and call serial write function
@@ -350,7 +291,7 @@ public class SerialWrapper : IDisposable, ISerialWrapper
             _serialPort.Write(package.ToArray<byte>(), package.Count);
         }
 
-        return true;
+        return responseTask;
     }
 
     /// <summary>
@@ -360,6 +301,17 @@ public class SerialWrapper : IDisposable, ISerialWrapper
     public bool ReconnectCOMPort()
     {
         return _serialPort.ConnectCOMPort();
+    }
+
+    /// <summary>
+    /// Get task instance from waitlist by ID
+    /// To be used for continuous communication (few answers on one request)
+    /// </summary>
+    /// <param name="msgID">message ID</param>
+    /// <returns></returns>
+    public Task<IReceiveCommunicationPackage?> GetContinuousTaskInstance(int? msgID)
+    {
+        return _responseWaitlist.GetContinuousTaskInstance(msgID);
     }
 
     /// <summary>

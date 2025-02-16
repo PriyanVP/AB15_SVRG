@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Timers;
 using Stateless;
 using Stateless.Graph;
 using AB15_GUI.WPF.NLog;
@@ -53,7 +52,8 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// Constructor
         /// </summary>
-        public FiringViewModel(ILoggingService logger, ISerialWrapper serialWrapper, IASICWrapper asicWrapper)
+        public FiringViewModel(ILoggingService logger, ISerialWrapper serialWrapper, IASICWrapper asicWrapper) :
+                base(logger)
         {
             // Assign references to objects to local variables
             this.logger = logger;
@@ -106,10 +106,10 @@ namespace AB15_GUI.WPF.ViewModels
             string graph = UmlDotGraph.Format(_stateMachine.GetInfo());
 
             // Init commands for controls
-            WriteConfiguration      = new RelayCommand(WriteConfigToASICExecute);
-            TransferToNormalMode    = new RelayCommand(TransferToNormalModeExecute);
-            FireSimultaneous        = new RelayCommand(FireSimultaneousCommandExecute);
-            StartStopCyclicReading  = new RelayCommand(StartStopCyclicReadingExecute);
+            WriteConfiguration      = new RelayCommand(WriteConfigToASICExecuteAsync);
+            TransferToNormalMode    = new RelayCommand(TransferToNormalModeExecuteAsync);
+            FireSimultaneous        = new RelayCommand(FireSimultaneousCommandExecuteAsync);
+            StartStopCyclicReading  = new RelayCommand(StartStopCyclicReadingExecuteAsync);
 
             // Fire transition to Idle state
             _stateMachine.Fire(Triggers.POR);
@@ -962,7 +962,7 @@ namespace AB15_GUI.WPF.ViewModels
         /// Execute Write config to ASIC command
         /// Note: will write ALL configuration and apply cyclic CRC
         /// </summary>
-        private void WriteConfigToASICExecute(object obj)
+        private async void WriteConfigToASICExecuteAsync(object obj)
         {
             // Handle that command execution can only be done once in a row
             if (_writeConfigurationCommand.IsEnabled == false) return;
@@ -979,13 +979,13 @@ namespace AB15_GUI.WPF.ViewModels
 
             // Call corresponding ASIC methods to write configuration
             asicWrapper.ASICs[0].OnRequestConfiguration();      // Raise event to request configuration from all subscribers TODO: verify if config data is updated
-            asicWrapper.ASICs[0].WriteConfigurationWithCRC(); 
+            await asicWrapper.ASICs[0].WriteConfigurationWithCRCAsync(); 
         }
 
         /// <summary>
         /// Execute Transfer to Normal mode ASIC command // TODO: find better place
         /// </summary>
-        private void TransferToNormalModeExecute(object obj)
+        private async void TransferToNormalModeExecuteAsync(object obj)
         {
             // Handle that command execution can only be done once in a row
             if (_transferToNormalModeCommand.IsEnabled == false) return;
@@ -995,18 +995,18 @@ namespace AB15_GUI.WPF.ViewModels
             logger.Debug($"Pressed Transfer to Normal mode button");
 
             // Call corresponding ASIC methods to cause start of transferring to normal mode sequence
-            asicWrapper.ASICs[0].LockConfiguration();      // Raise event to request configuration from all subscribers
+            await asicWrapper.ASICs[0].LockConfigurationAsync();      // Raise event to request configuration from all subscribers
 
             // Temporarily disable  cyclic reading for Test mode
             isCyclicDiagnosticsEn_previous = IsCyclicDiagnosticsEn;
             IsCyclicDiagnosticsEn = false;
-            StartStopCyclicReadingExecute(new object());
+            StartStopCyclicReadingExecuteAsync(new object());
         }
 
         /// <summary>
         /// Execute Firing simultaneous command
         /// </summary>
-        private async void FireSimultaneousCommandExecute(object obj)
+        private async void FireSimultaneousCommandExecuteAsync(object obj)
         {
             // Handle that command execution can only be done once in a row
             if (_fireSimultaneousCommand.IsEnabled == false) return;
@@ -1017,9 +1017,6 @@ namespace AB15_GUI.WPF.ViewModels
 
             // == Step 0 - raw SPI ==
 
-            // Initialize a new TaskCompletionSource instance for each call
-            _taskCompletionSource = new TaskCompletionSource<bool>();
-
             // Raw SPI for unlocking ASIC
             const uint RAW_SPI_TRANSACTION = 0x0200_0806;
 
@@ -1027,36 +1024,31 @@ namespace AB15_GUI.WPF.ViewModels
             TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
             packageToSend.ASICID = 7; // TODO: replace hardcoded
             packageToSend.Cmd = MCUCommand.WRITE_RAW_DATA_SPI;
-            packageToSend.Deleg = FireSimultaneousDelegate_step0;
             packageToSend.PayloadType = typeof(AddressDataPayload);
             packageToSend.Payload.Data.Add((UInt16) (RAW_SPI_TRANSACTION & 0xFFFF));       // 16 LSB
             packageToSend.Payload.Data.Add((UInt16) (RAW_SPI_TRANSACTION >> 16) & 0xFFFF); // 16 MSB
 
-            // Send command to MCU
-            serialWrapper.SerialWrite(packageToSend);
+            // Send command to MCU and wait for response
+            ReceiveCommunicationPackage<AddressDataPayload>? mcuResponse0 = (ReceiveCommunicationPackage<AddressDataPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
 
-            // Wait asynchronously without blocking the main thread for completing step
-            await _taskCompletionSource.Task; 
+            // Validate response
+            if (IsResponseValid(mcuResponse0, nameof(FireSimultaneous)) == false) return;
 
             // == Step 0.2 - disabling monoflop TODO: add register model, replace delegate
-
-            // Initialize a new TaskCompletionSource instance for each call
-            _taskCompletionSource = new TaskCompletionSource<bool>();
 
             // Create package to MCU
             packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
             packageToSend.ASICID = 1;
             packageToSend.Cmd = MCUCommand.WRITE_REG;
-            packageToSend.Deleg = FireSimultaneousDelegate_step1;
             packageToSend.PayloadType = typeof(EmptyPayload);
-            packageToSend.Payload.Address.Add(0x0136);
+            packageToSend.Payload.Address.Add(0x0136); // TODO: refactor
             packageToSend.Payload.Data.Add(0x0001);
 
-            // Send command to MCU
-            serialWrapper.SerialWrite(packageToSend);
+            // Send command to MCU and wait for response
+            ReceiveCommunicationPackage<EmptyPayload>? mcuResponse02 = (ReceiveCommunicationPackage<EmptyPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
 
-            // Wait asynchronously without blocking the main thread for completing step
-            await _taskCompletionSource.Task;  
+            // Validate response
+            if (IsResponseValid(mcuResponse02, nameof(FireSimultaneous)) == false) return;
 
             // == Step 1 - unlocking ==
 
@@ -1095,21 +1087,17 @@ namespace AB15_GUI.WPF.ViewModels
             packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
             packageToSend.ASICID = 1;
             packageToSend.Cmd = MCUCommand.WRITE_REG;
-            packageToSend.Deleg = FireSimultaneousDelegate_step1; // temporary
             packageToSend.PayloadType = typeof(EmptyPayload);
             packageToSend.Payload.Address.Add(reg_FLM_Unlock.Address);
             packageToSend.Payload.Data.Add(reg_FLM_Unlock.Data);
 
-            // Send command to MCU
-            serialWrapper.SerialWrite(packageToSend);
+            // Send command to MCU and wait for response
+            ReceiveCommunicationPackage<EmptyPayload>? mcuResponse1 = (ReceiveCommunicationPackage<EmptyPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
 
-            // Wait asynchronously without blocking the main thread for completing step
-            await _taskCompletionSource.Task;  
+            // Validate response
+            if (IsResponseValid(mcuResponse1, nameof(FireSimultaneous)) == false) return;
 
             // == Step 2 - firing ==
-
-            // Initialize a new TaskCompletionSource instance for each call
-            _taskCompletionSource = new TaskCompletionSource<bool>();
 
             // Registers for firing
             Reg_FLM_HS_LS_on_ch7_1   flm_HS_LS_On_Ch7_1   = new Reg_FLM_HS_LS_on_ch7_1();
@@ -1213,7 +1201,6 @@ namespace AB15_GUI.WPF.ViewModels
             packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
             packageToSend.ASICID = 1;
             packageToSend.Cmd = MCUCommand.EXECUTE_WRITE_SEQUENCE;
-            packageToSend.Deleg = FireSimultaneousDelegate_step2;
             packageToSend.PayloadType = typeof(EmptyPayload);
             packageToSend.Payload.Address.Add(flm_HS_LS_On_Ch7_1.Address);
             packageToSend.Payload.Data.Add(flm_HS_LS_On_Ch7_1.Data);
@@ -1222,24 +1209,14 @@ namespace AB15_GUI.WPF.ViewModels
             packageToSend.Payload.Address.Add(flm_HS_LS_On_Ch20_15.Address);
             packageToSend.Payload.Data.Add(flm_HS_LS_On_Ch20_15.Data);
 
-            // Debug mode code - TODO: remove after finalization
-            // if (DEBUG_MODE)
-            // {
-            //     // Emulate response - channel firing is not executed but flow continues
-            //     ReceiveCommunicationPackage<EmptyPayload> mcuResponse = new ReceiveCommunicationPackage<EmptyPayload>();
-            //     mcuResponse.Payload.Error = null;
-            //     FireSimultaneousDelegate_step2(mcuResponse);
-            // }
-            // else
-            // {
-                // Send command to MCU
-                serialWrapper.SerialWrite(packageToSend);    
-            // }
+            // Send command to MCU and wait for response
+            ReceiveCommunicationPackage<EmptyPayload>? mcuResponse2 = (ReceiveCommunicationPackage<EmptyPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
 
-            // Wait asynchronously without blocking the main thread for completing step
-            await _taskCompletionSource.Task;   
+            // Validate response
+            if (IsResponseValid(mcuResponse2, nameof(FireSimultaneous)) == false) return;
 
-            _taskCompletionSource = null;
+            // Emulate delay TODO: find better approach
+            await Task.Delay(13);
 
             // == Step 3 - cleaning & locking ==
 
@@ -1266,7 +1243,6 @@ namespace AB15_GUI.WPF.ViewModels
             packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
             packageToSend.ASICID = 1;
             packageToSend.Cmd = MCUCommand.EXECUTE_WRITE_SEQUENCE;
-            packageToSend.Deleg = FireSimultaneousDelegate_step3;
             packageToSend.PayloadType = typeof(EmptyPayload);
             packageToSend.Payload.Address.Add(flm_HS_LS_On_Ch7_1.Address);
             packageToSend.Payload.Data.Add(flm_HS_LS_On_Ch7_1.Data);
@@ -1277,8 +1253,11 @@ namespace AB15_GUI.WPF.ViewModels
             packageToSend.Payload.Address.Add(reg_FLM_Unlock.Address);
             packageToSend.Payload.Data.Add(reg_FLM_Unlock.Data);
 
-            // Send command to MCU
-            serialWrapper.SerialWrite(packageToSend);  
+            // Send command to MCU and wait for response
+            ReceiveCommunicationPackage<EmptyPayload>? mcuResponse3 = (ReceiveCommunicationPackage<EmptyPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
+
+            // Validate response
+            if (IsResponseValid(mcuResponse3, nameof(FireSimultaneous)) == false) return;
 
             // == Step 4 - getting firing status ==
 
@@ -1311,21 +1290,46 @@ namespace AB15_GUI.WPF.ViewModels
             packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
             packageToSend.ASICID = 1;
             packageToSend.Cmd = MCUCommand.EXECUTE_READ_SEQUENCE;
-            packageToSend.Deleg = FireSimultaneousDelegate_step4;
             packageToSend.PayloadType = typeof(AddressDataPayload);
             foreach (IRegister reg in fireCntRegsList)
             {
                 packageToSend.Payload.Address.Add(reg.Address);
             }
 
-            // Send command to MCU
-            serialWrapper.SerialWrite(packageToSend);   
+            // Send command to MCU and wait for response
+            ReceiveCommunicationPackage<AddressDataPayload>? mcuResponse4 = (ReceiveCommunicationPackage<AddressDataPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
+
+            // Validate response
+            if (IsResponseValid(mcuResponse4, nameof(FireSimultaneous)) == false) return;
+
+            // Register for field masks - all firing counter regs have same layout
+            Reg_FLM_Read_Fire_Cnt_ch1 fireCntRegTemplate = new Reg_FLM_Read_Fire_Cnt_ch1();
+
+            // Update data in results table
+            for (int i = 0; i < FiringResultTable.Count; i++)
+            {
+                fireCntRegTemplate.Data = mcuResponse4.Payload.Data[i];
+                FiringResultTable[i].FiringCntHigh = fireCntRegTemplate.flm_fire_cnt_hl.Data;
+                FiringResultTable[i].FiringCntLow  = fireCntRegTemplate.flm_fire_cnt_ll.Data;
+
+                // Report error if error flag is set
+                if (fireCntRegTemplate.flm_fire_sequence_err.Data != 0)
+                {
+                    AddError($"Error in firing occurred! Channel {i+1}, message: {fireCntRegTemplate.flm_fire_sequence_err.Description}", nameof(FireSimultaneous));
+                    logger.Error($"Error in firing occurred! Channel {i+1}, message: {fireCntRegTemplate.flm_fire_sequence_err.Description}");
+                    continue;
+                }
+            }
+
+            // Unlock firing command
+            _fireSimultaneousCommand.InProgress = false;
+            OnPropertyChanged(nameof(FireSimultaneousCommandEn));
         }
 
         /// <summary>
         /// Execute start/stop cyclic reading for FLM command
         /// </summary>
-        private void StartStopCyclicReadingExecute(object obj)
+        private async void StartStopCyclicReadingExecuteAsync(object obj)
         {
             // TODO: uncomment after MCU feature finalization
             // // Handle that command execution can only be done once in a row
@@ -1344,272 +1348,63 @@ namespace AB15_GUI.WPF.ViewModels
 
             // // Send command to MCU
             // serialWrapper.SerialWrite(packageToSend);
+
+            // // Get FLM diagnostics data
+            // logger.Debug($"Request diagnostics data on ASIC 1");
+
+            // // Construct command to MCU
+            // TransmitCommunicationPackage<EmptyPayload> packageToSend = new TransmitCommunicationPackage<EmptyPayload>();
+            // packageToSend.ASICID = 1; // TODO: check for ASICs 2-4
+            // packageToSend.Cmd = MCUCommand.FLM_DIAG_READ_RESULTS;
+            // packageToSend.Deleg = FLMDiagnosticsDelegate;
+            // packageToSend.PayloadType = typeof(FiringDiagnosticsPayload);
+
+            // // Send command to MCU
+            // serialWrapper.SerialWrite(packageToSend);
         }
 
         /// <summary>
         /// Method that will initiate TestMode1 diagnostics
         /// </summary>
-        private void ExecuteTestMode1Diagnostics()
+        private async Task ExecuteTestMode1DiagnosticsAsync()
         {
             TransmitCommunicationPackage<TestModePayload> packageToSend = new TransmitCommunicationPackage<TestModePayload>(); // TODO: implement payload
             packageToSend.ASICID = 1;
             packageToSend.Cmd = MCUCommand.START_TEST_MODE1;
-            packageToSend.Deleg = TestMode1Delegate;
             packageToSend.PayloadType = typeof(TestModePayload);
 
-            // Send command to MCU
-            serialWrapper.SerialWrite(packageToSend);
+            // Send command to MCU and wait for response
+            ReceiveCommunicationPackage<TestModePayload>? mcuResponse = (ReceiveCommunicationPackage<TestModePayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
+
+            // Validate response
+            if (IsResponseValid(mcuResponse, null) == false) return;
+
+            // Trigger for transiting to TestMode2
+            await asicWrapper.ASICs[0].ExecuteTestMode1TransitionAsync();
         }
 
         /// <summary>
         /// Method that will initiate TestMode2 diagnostics
         /// </summary>
-        private void ExecuteTestMode2Diagnostics()
+        private async Task ExecuteTestMode2DiagnosticsAsync()
         {
             TransmitCommunicationPackage<TestModePayload> packageToSend = new TransmitCommunicationPackage<TestModePayload>(); // TODO: implement payload
             packageToSend.ASICID = 1;
             packageToSend.Cmd = MCUCommand.START_TEST_MODE2;
-            packageToSend.Deleg = TestMode2Delegate;
             packageToSend.PayloadType = typeof(TestModePayload);
 
-            // Send command to MCU
-            serialWrapper.SerialWrite(packageToSend);
+            // Send command to MCU and wait for response
+            ReceiveCommunicationPackage<TestModePayload>? mcuResponse = (ReceiveCommunicationPackage<TestModePayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
+
+            // Validate response
+            if (IsResponseValid(mcuResponse, null) == false) return;
+
+            // Trigger for transiting to Normal mode
+            await asicWrapper.ASICs[0].ExecuteTestMode2TransitionAsync();
         }
 
         #endregion // Commands
-
-        #region Commands_delegates
-
-        /// <summary>
-        /// Delegate for handling response from executing test mode 1
-        /// </summary>
-        /// <param name="response">MCU response package</param>
-        private void TestMode1Delegate(IReceiveCommunicationPackage response)
-        {
-            // Typecast response to actual type
-            ReceiveCommunicationPackage<TestModePayload> mcuResponse = (ReceiveCommunicationPackage<TestModePayload>) response;
-
-            // TODO: bypassed for demo - still some issues
-            // // Change state if response received
-            // if (mcuResponse.Payload.Error is not null)
-            // {
-            //     AddError(mcuResponse.Payload.Error, nameof(FireSimultaneous));
-            //     logger.Error($"Error response received. Status: {mcuResponse.Status}");
-            //     return;
-            // }
-
-            // // Basic reporting
-            // if (mcuResponse.Payload.Data.Any(x => x != 0))
-            // {
-            //     // Some error occurred // TODO: make more explicit
-            //     FiringMonitoringErrorTable.Add(new FiringChannelErrorRecord() { ChannelID = 0, Status = "Error in Test mode 1" });
-            // }
-            // else
-            // {
-            //     FiringMonitoringErrorTable.Add(new FiringChannelErrorRecord() { ChannelID = 0, Status = "Test mode 1 finished without errors" });
-            // }
-
-            // Trigger for transiting to TestMode2
-            asicWrapper.ASICs[0].ExecuteTestMode1Transition();
-        }
-
-
-        /// <summary>
-        /// Delegate for handling response from executing test mode 2
-        /// </summary>
-        /// <param name="response">MCU response package</param>
-        private void TestMode2Delegate(IReceiveCommunicationPackage response)
-        {
-            // Typecast response to actual type
-            ReceiveCommunicationPackage<TestModePayload> mcuResponse = (ReceiveCommunicationPackage<TestModePayload>) response;
-
-            // TODO: bypassed for demo - still some issues
-            // // Change state if response received
-            // if (mcuResponse.Payload.Error is not null)
-            // {
-            //     AddError(mcuResponse.Payload.Error, nameof(FireSimultaneous));
-            //     logger.Error($"Error response received. Status: {mcuResponse.Status}");
-            //     return;
-            // }
-
-            // // Basic reporting
-            // if (mcuResponse.Payload.Data.Any(x => x != 0))
-            // {
-            //     // Some error occurred // TODO: make more explicit
-            //     FiringMonitoringErrorTable.Add(new FiringChannelErrorRecord() { ChannelID = 0, Status = "Error in Test mode 2" });
-            // }
-            // else
-            // {
-            //     FiringMonitoringErrorTable.Add(new FiringChannelErrorRecord() { ChannelID = 0, Status = "Test mode 2 finished without errors" });
-            // }
-
-            // Trigger for transiting to Normal mode
-            asicWrapper.ASICs[0].ExecuteTestMode2Transition();
-        }
-
-        /// <summary>
-        /// Delegate for Fire simultaneous command - raw spi
-        /// </summary>
-        /// <param name="response">MCU response package</param>
-        private void FireSimultaneousDelegate_step0(IReceiveCommunicationPackage response)
-        {
-            // Ensure there is a valid TaskCompletionSource to complete
-            if (_taskCompletionSource != null && !_taskCompletionSource.Task.IsCompleted)
-            {
-                _taskCompletionSource.SetResult(true); // Completes the task - allow proceeding 
-            }
-
-            // Typecast response to actual type
-            ReceiveCommunicationPackage<AddressDataPayload> mcuResponse = (ReceiveCommunicationPackage<AddressDataPayload>) response;
-
-            // Change state if response received
-            if (mcuResponse.Payload.Error is not null)
-            {
-                AddError(mcuResponse.Payload.Error, nameof(FireSimultaneous));
-                logger.Error($"Error response received. Status: {mcuResponse.Status}");
-                return;
-            }
-
-            // Emulate delay TODO: find better approach
-            Thread.Sleep(1);
-        }
-
-        /// <summary>
-        /// Delegate for Fire simultaneous command - unlock
-        /// </summary>
-        /// <param name="response">MCU response package</param>
-        private void FireSimultaneousDelegate_step1(IReceiveCommunicationPackage response)
-        {
-            // Ensure there is a valid TaskCompletionSource to complete
-            if (_taskCompletionSource != null && !_taskCompletionSource.Task.IsCompleted)
-            {
-                _taskCompletionSource.SetResult(true); // Completes the task - allow proceeding 
-            }
-
-            // Typecast response to actual type
-            ReceiveCommunicationPackage<EmptyPayload> mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>) response;
-
-            // Change state if response received
-            if (mcuResponse.Payload.Error is not null)
-            {
-                AddError(mcuResponse.Payload.Error, nameof(FireSimultaneous));
-                logger.Error($"Error response received. Status: {mcuResponse.Status}");
-                return;
-            }
-
-            // Emulate delay TODO: find better approach
-            Thread.Sleep(1);
-        }
-
-        /// <summary>
-        /// Delegate for Fire simultaneous command - fire
-        /// </summary>
-        /// <param name="response">MCU response package</param>
-        private void FireSimultaneousDelegate_step2(IReceiveCommunicationPackage response)
-        {
-            // Ensure there is a valid TaskCompletionSource to complete
-            if (_taskCompletionSource != null && !_taskCompletionSource.Task.IsCompleted)
-            {
-                _taskCompletionSource.SetResult(true); // Completes the task - allow proceeding 
-            }
-
-            // Typecast response to actual type
-            ReceiveCommunicationPackage<EmptyPayload> mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>) response;
-
-            // Change state if response received
-            if (mcuResponse.Payload.Error is not null)
-            {
-                AddError(mcuResponse.Payload.Error, nameof(FireSimultaneous));
-                logger.Error($"Error response received. Status: {mcuResponse.Status}");
-                return;
-            }
-
-            // Emulate delay TODO: find better approach
-            Thread.Sleep(13);
-        }
-
-        /// <summary>
-        /// Delegate for Fire simultaneous command - stop firing and lock
-        /// </summary>
-        /// <param name="response">MCU response package</param>
-        private void FireSimultaneousDelegate_step3(IReceiveCommunicationPackage response)
-        {
-            // Typecast response to actual type
-            ReceiveCommunicationPackage<EmptyPayload> mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>) response;
-
-            // Change state if response received
-            if (mcuResponse.Payload.Error is not null)
-            {
-                AddError(mcuResponse.Payload.Error, nameof(FireSimultaneous));
-                logger.Error($"Error response received. Status: {mcuResponse.Status}");
-                return;
-            }
-        }
-
-        /// <summary>
-        /// Delegate for Fire simultaneous command - read status
-        /// </summary>
-        /// <param name="response">MCU response package</param>
-        private void FireSimultaneousDelegate_step4(IReceiveCommunicationPackage response)
-        {
-            // Response received - unlock command usage
-            _fireSimultaneousCommand.InProgress = false;
-            OnPropertyChanged(nameof(FireSimultaneousCommandEn));
-
-            // Typecast response to actual type
-            ReceiveCommunicationPackage<AddressDataPayload> mcuResponse = (ReceiveCommunicationPackage<AddressDataPayload>) response;
-
-            // Change state if response received
-            if (mcuResponse.Payload.Error is not null)
-            {
-                AddError(mcuResponse.Payload.Error, nameof(FireSimultaneous));
-                logger.Error($"Error response received. Status: {mcuResponse.Status}");
-                return;
-            }
-
-            // Register for field masks - all firing counter regs have same layout
-            Reg_FLM_Read_Fire_Cnt_ch1 reg = new Reg_FLM_Read_Fire_Cnt_ch1();
-
-            // Update data in results table
-            for (int i = 0; i < FiringResultTable.Count; i++)
-            {
-                reg.Data = mcuResponse.Payload.Data[i];
-                FiringResultTable[i].FiringCntHigh = reg.flm_fire_cnt_hl.Data;
-                FiringResultTable[i].FiringCntLow  = reg.flm_fire_cnt_ll.Data;
-
-                // Report error if error flag is set
-                if (reg.flm_fire_sequence_err.Data != 0)
-                {
-                    AddError($"Error in firing occurred! Channel {i+1}, message: {reg.flm_fire_sequence_err.Description}", nameof(FireSimultaneous));
-                    logger.Error($"Error in firing occurred! Channel {i+1}, message: {reg.flm_fire_sequence_err.Description}");
-                    return;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Delegate for start and stop cyclic FLM diagnostics reading
-        /// </summary>
-        /// <param name="response">MCU response package</param>
-        private void CyclicReadingStartStopDelegate(IReceiveCommunicationPackage response)
-        {
-            _startStopCyclicReadingCommand.InProgress = false;
-            OnPropertyChanged(nameof(StartStopCyclicReadingCommandEn));
-
-            // Typecast response to actual type
-            ReceiveCommunicationPackage<EmptyPayload> mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>) response;
-
-            // Change state if response received
-            if (mcuResponse.Payload.Error is not null)
-            {
-                AddError(mcuResponse.Payload.Error, nameof(StartStopCyclicReading));
-                logger.Error($"Error response received. Status: {mcuResponse.Status}");
-                return;
-            }
-        }
-
-        #endregion // Commands_delegates
-
+     
         #region ASIC_events
 
         /// <summary>
@@ -1711,7 +1506,7 @@ namespace AB15_GUI.WPF.ViewModels
         /// </summary>
         /// <param name="sender">object that called this event. Must be one of ASIC objects</param>
         /// <param name="e">unused</param>
-        private void TestMode1EnteredHandler(object? sender, EventArgs e)
+        private async void TestMode1EnteredHandler(object? sender, EventArgs e)
         {
             // Precondition
             if (sender == null)
@@ -1726,7 +1521,7 @@ namespace AB15_GUI.WPF.ViewModels
             UpdateMonitoringStatusTable(caller.State, true);
 
             // Execute Test mode 1 diagnostics
-            ExecuteTestMode1Diagnostics();
+            await ExecuteTestMode1DiagnosticsAsync();
 
             // Unsubscribe from event - by design can be fired only once
             caller.TestMode1Entered -= TestMode1EnteredHandler;
@@ -1737,7 +1532,7 @@ namespace AB15_GUI.WPF.ViewModels
         /// </summary>
         /// <param name="sender">object that called this event. Must be one of ASIC objects</param>
         /// <param name="e">unused</param>
-        private void TestMode2EnteredHandler(object? sender, EventArgs e)
+        private async void TestMode2EnteredHandler(object? sender, EventArgs e)
         {
             // Precondition
             if (sender == null)
@@ -1751,10 +1546,10 @@ namespace AB15_GUI.WPF.ViewModels
             // TODO: temporary approach
             UpdateMonitoringStatusTable(caller.State, true);
 
-            Thread.Sleep(200); // TODO: Test
+            await Task.Delay(200);
 
             // Execute Test mode 2 diagnostics
-            ExecuteTestMode2Diagnostics();
+            await ExecuteTestMode2DiagnosticsAsync();
 
             // Unsubscribe from event - by design can be fired only once
             caller.TestMode2Entered -= TestMode2EnteredHandler;
@@ -1781,7 +1576,7 @@ namespace AB15_GUI.WPF.ViewModels
 
             // Restore cyclic reading for state
             IsCyclicDiagnosticsEn = isCyclicDiagnosticsEn_previous;
-            StartStopCyclicReadingExecute(new object());
+            StartStopCyclicReadingExecuteAsync(new object());
 
             // Fire corresponding state machine trigger
             _stateMachine.Fire(Triggers.EnteredNormalMode);
@@ -1791,90 +1586,5 @@ namespace AB15_GUI.WPF.ViewModels
         }
 
         #endregion // ASIC_events
-
-        #region Diagnostics
-
-        /// <summary>
-        /// Timer to perform periodic FLM data reading
-        /// </summary>
-        private System.Timers.Timer? diagnosticsTimer = null;
-
-        /// <summary>
-        /// Start timer to arm periodic FLM diagnostics reading
-        /// </summary>
-        /// <param name="timeout">timer timeout in ms. Defaults to 0.2s</param>
-        public void StartPeriodicDiagnosticsReading(int timeout = 200)
-        {
-            logger.Debug($"Started periodic FLM diagnostics reading (timer)");
-
-            // Precondition check
-            if (diagnosticsTimer != null)
-            {
-                logger.Warn($"Tried to start timer while it was already running");
-                return;
-            }
-
-            // Arm timer
-            diagnosticsTimer = new System.Timers.Timer();
-            diagnosticsTimer.Elapsed += new ElapsedEventHandler(OnFLMDiagnosticsEvent);
-            diagnosticsTimer.Interval = timeout;
-            diagnosticsTimer.Enabled = true;
-        }
-
-        /// <summary>
-        /// Stop and dispose timer. No update of FLM periodic diagnostics will be performed
-        /// </summary>
-        public void StopPeriodicDiagnosticsReading()
-        {
-            logger.Debug($"Stopped periodic FLM diagnostics reading (timer)");
-
-            // Stop and dispose timer
-            diagnosticsTimer.Enabled = false;
-            diagnosticsTimer.Dispose();
-            diagnosticsTimer = null;
-        }
-
-        /// <summary>
-        /// Method that will be called periodically by timer to read FLM diagnostics data
-        /// </summary>
-        /// <param name="source">unused</param>
-        /// <param name="e">unused</param>
-        private void OnFLMDiagnosticsEvent(object source, ElapsedEventArgs e)
-        {
-            // Get FLM diagnostics data
-            logger.Debug($"Request diagnostics data on ASIC 1");
-
-            // Construct command to MCU
-            TransmitCommunicationPackage<EmptyPayload> packageToSend = new TransmitCommunicationPackage<EmptyPayload>();
-            packageToSend.ASICID = 1; // TODO: check for ASICs 2-4
-            packageToSend.Cmd = MCUCommand.FLM_DIAG_READ_RESULTS;
-            packageToSend.Deleg = FLMDiagnosticsDelegate;
-            packageToSend.PayloadType = typeof(FiringDiagnosticsPayload);
-
-            // Send command to MCU
-            serialWrapper.SerialWrite(packageToSend);
-        }
-
-        /// <summary>
-        /// Delegate for periodic FLM diagnostics acquisition
-        /// </summary>
-        /// <param name="response">MCU response package</param>
-        private void FLMDiagnosticsDelegate(IReceiveCommunicationPackage response)
-        {
-            // Typecast response to actual type
-            ReceiveCommunicationPackage<FiringDiagnosticsPayload> mcuResponse = (ReceiveCommunicationPackage<FiringDiagnosticsPayload>) response;
-
-            // Change state if response received
-            if (mcuResponse.Payload.Error is not null)
-            {
-                AddError(mcuResponse.Payload.Error, nameof(StartStopCyclicReading));
-                logger.Error($"Error response received. Status: {mcuResponse.Status}");
-                return;
-            }
-
-            // TODO: update bindable properties based on data
-        }
-
-        #endregion // Diagnostics
     }
 }

@@ -95,7 +95,8 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// Constructor
         /// </summary>
-        public SPILearningViewModel(ILoggingService logger, ISerialWrapper serialWrapper, IASICWrapper asicWrapper)
+        public SPILearningViewModel(ILoggingService logger, ISerialWrapper serialWrapper, IASICWrapper asicWrapper) :
+                base(logger)
         {
             // Assign references to objects to local variables
             this.logger = logger;
@@ -110,11 +111,11 @@ namespace AB15_GUI.WPF.ViewModels
             System.Windows.Data.BindingOperations.EnableCollectionSynchronization(SPICommunicationTable, _lock);
 
             // Init commands for controls
-            SPICommand = new RelayCommand(SPICommandExecute);
+            SPICommand = new RelayCommand(SPICommandExecuteAsync);
 
             // Enable all by default
             IsSPILearningEn = true;
-            _SPICommandState.Enable = true;
+            SPICommandCommandEn = true;
 
             // Create record for SPI transaction
             RefToActiveRecord = new SPITransactionRecord();
@@ -242,30 +243,24 @@ namespace AB15_GUI.WPF.ViewModels
         #endregion // Bindable_Properties
 
         #region Commands
-
+       
         /// <summary>
         /// Command handler for executing SPI command
         /// </summary>
         public ICommand SPICommand { get; }
-
-        /// <summary>
-        /// Execute SPI command button/command enable state
-        /// </summary>
-        private CommandState _SPICommandState = new CommandState();
-        
+       
         /// <summary>
         /// Bindable SPI command button/command enable state
         /// </summary>
-        public bool SPICommandCommandEn => _SPICommandState.IsEnabled;
+        public bool SPICommandCommandEn { get; set; }
 
         /// <summary>
         /// Method that will execute SPI command (read, write or raw)
         /// </summary>
-        private void SPICommandExecute(object obj)
+        private async void SPICommandExecuteAsync(object obj)
         {
             // Handle that command execution can only be done once in a row
-            if (_SPICommandState.IsEnabled == false) return;
-            _SPICommandState.InProgress = true;
+            if (SPICommandCommandEn == false) return;
             OnPropertyChanged(nameof(SPICommand));
             IsSPILearningEn = false;
 
@@ -274,35 +269,21 @@ namespace AB15_GUI.WPF.ViewModels
 
             // Create package to MCU
             TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
-            packageToSend.ASICID = 1; // TODO: should be value from dropdown
+            packageToSend.ASICID = 1; // TODO: should be a value from dropdown
             packageToSend.Cmd = MCUCommand.WRITE_RAW_DATA_SPI;
-            packageToSend.Deleg = SPICommandDelegate;
             packageToSend.PayloadType = typeof(AddressDataPayload);
             packageToSend.Payload.Data.Add((UInt16) (RefToActiveRecord.MOSI.RawMOSI & 0xFFFF));        // 16 LSB
             packageToSend.Payload.Data.Add((UInt16)((RefToActiveRecord.MOSI.RawMOSI >> 16) & 0xFFFF)); // 16 MSB
 
-            // Send command to MCU
-            serialWrapper.SerialWrite(packageToSend);
-        }
+            // Send command to MCU and wait for response
+            ReceiveCommunicationPackage<AddressDataPayload>? mcuResponse = (ReceiveCommunicationPackage<AddressDataPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
 
-        #endregion // Commands
-
-        #region Commands_delegates
-
-        /// <summary>
-        /// Delegate for executing command
-        /// </summary>
-        /// <param name="response">MCU response package</param>
-        private void SPICommandDelegate(IReceiveCommunicationPackage response)
-        {
             // Response received - unlock command usage
-            _SPICommandState.InProgress = false;
+            SPICommandCommandEn = true;
             OnPropertyChanged(nameof(SPICommand));
             IsSPILearningEn = true;
-            ClearErrors(nameof(SPICommand));
 
-            // Typecast response to actual type
-            ReceiveCommunicationPackage<AddressDataPayload> mcuResponse = (ReceiveCommunicationPackage<AddressDataPayload>) response;
+            if (IsResponseValid(mcuResponse, nameof(SPICommand)) == false) return;
       
             // Update MISO frame only if data available
             if (mcuResponse.Payload.Data.Count == 2)
@@ -318,16 +299,8 @@ namespace AB15_GUI.WPF.ViewModels
             // Create next record
             MOSIRecord CurrentMOSIRecordCopy = RefToActiveRecord.MOSI.Copy();
             RefToActiveRecord = new SPITransactionRecord(mosi: CurrentMOSIRecordCopy);
-
-            // Change state if response received
-            if (mcuResponse.Payload.Error is not null)
-            {
-                AddError(mcuResponse.Payload.Error, nameof(SPICommand));
-                logger.Error($"Error response received. Status: {mcuResponse.Status}");
-                return;
-            }
         }
 
-        #endregion // Commands_delegates
+        #endregion // Commands
     }
 }
