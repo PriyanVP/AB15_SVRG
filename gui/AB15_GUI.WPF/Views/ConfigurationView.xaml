@@ -4,9 +4,14 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:AB15_GUI.WPF.Views"
+      xmlns:cnvrt="clr-namespace:AB15_GUI.WPF.Views.Converters"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="ConfigurationView">
+
+    <Page.Resources>
+        <cnvrt:FaultFlagToColorConverter x:Key="FaultFlagToColorConverter"/>
+    </Page.Resources>
 
     <Grid Background="{DynamicResource UI.BackGround}">
 
@@ -19,6 +24,1059 @@
             <TabItem Header="PSI" FontSize="20" Style="{DynamicResource CustomTabItem}">
 
                 <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" MinHeight="40"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="auto" MinHeight="40"/>
+                    </Grid.RowDefinitions>
+
+                    <Border     Grid.Row="2" Grid.RowSpan="2"
+                                Grid.Column="1"
+                                BorderThickness="0,1,1,0"
+                                BorderBrush="{DynamicResource UI.SeparateLine}"/>
+
+                    <Border     Grid.Row="2" Grid.RowSpan="2"
+                                Grid.Column="2"
+                                BorderThickness="0,1,0,0"
+                                BorderBrush="{DynamicResource UI.SeparateLine}"/>
+
+                    <Border     Grid.Row="1" Grid.RowSpan="3"
+                                Grid.Column="0"
+                                BorderThickness="0,1,1,0"
+                                BorderBrush="{DynamicResource UI.SeparateLine}"/>
+
+                    <Button Grid.Column="0"
+                            Grid.Row="3"
+                            Content="Read"
+                            MinWidth="60"
+                            Margin="5,0"
+                            Command="{Binding ReadPSISensorDaaCommand}"
+                            Style="{DynamicResource SimpleButton}"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Right"/>
+
+                    <Button Grid.Column="1"
+                            Grid.Row="3"
+                            Content="Read"
+                            MinWidth="60"
+                            Margin="5,0"
+                            Command="{Binding ReadPSIStatusCommand}"
+                            Style="{DynamicResource SimpleButton}"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Right"/>
+
+                    <Button Grid.Column="2"
+                            Grid.Row="3"
+                            Content="Read"
+                            MinWidth="60"
+                            Margin="5,0"
+                            Command="{Binding ReadMonitorPSIStatusCommand}"
+                            Style="{DynamicResource SimpleButton}"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Right"/>
+                    
+                    <!-- top contol tab -->
+                    <StackPanel Orientation="Horizontal"
+                                Grid.Row="0"
+                                Grid.Column="0" Grid.ColumnSpan="3"
+                                HorizontalAlignment="Right">
+
+                        <TextBlock Text="Sync puls generation -" 
+                                       HorizontalAlignment="Center" 
+                                       Style="{DynamicResource TextBlockStyle}"
+                                       MinWidth="150"/>
+                        
+                        <Border Grid.Row="3" Grid.Column="3" 
+                                BorderThickness="1" 
+                                BorderBrush="{DynamicResource Animation.Lines}" HorizontalAlignment="Stretch" 
+                                Margin="4,2">
+                            <!--<Border.Background>
+                                <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
+                                    <Binding Path = "IsSyncPulsGeneretingStatus"/>
+                                    <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                                </MultiBinding>
+                            </Border.Background>-->
+                            <TextBlock Text="{Binding IsSyncPulsGeneretingStatusText}" 
+                                       HorizontalAlignment="Center" 
+                                       Style="{DynamicResource TextBlockStyle}"
+                                       MinWidth="60"/>
+                        </Border>
+                        
+                        <Border Grid.Row="3" Grid.Column="3" 
+                                BorderThickness="1" 
+                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                HorizontalAlignment="Stretch" 
+                                Margin="10,2">
+                            <!--<Border.Background>
+                                <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
+                                    <Binding Path = "FLMFiringWithPSIStatus"/>
+                                    <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                                </MultiBinding>
+                            </Border.Background>-->
+                            <TextBlock Text="FLM Firing with PSI" 
+                                       HorizontalAlignment="Center" 
+                                       Style="{DynamicResource TextBlockStyle}"
+                                       MinWidth="150"/>
+                        </Border>
+                        
+                        <Border Grid.Row="3" Grid.Column="3" 
+                                BorderThickness="1" 
+                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                CornerRadius="5" HorizontalAlignment="Stretch"
+                                Margin="4,2">
+                            <!--<Border.Background>
+                                <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
+                                    <Binding Path = "PSITopStatus"/>
+                                    <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                                </MultiBinding>
+                            </Border.Background>-->
+                            <TextBlock Text="{Binding PSITopStatusText}" 
+                                       HorizontalAlignment="Center" 
+                                       Style="{DynamicResource TextBlockStyle}"
+                                       MinWidth="150"/>
+                        </Border>
+
+                    </StackPanel>
+
+                    <!-- PSI Configuratiion selecter register -->
+                    <Grid   Grid.Row="1"
+                            Grid.Column="1" Grid.ColumnSpan="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid   Grid.Row="0"
+                                Grid.Column="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock  Grid.Row="0"
+                                        Grid.Column="0"
+                                        Text="PSI Configuration"
+                                        Style="{DynamicResource TextBlockStyle}"
+                                        FontWeight="Bold"
+                                        Margin="5,0"/>
+
+                        </Grid>
+
+                        <StackPanel Orientation="Horizontal"
+                                    Grid.Row="4"
+                                    HorizontalAlignment="Right"
+                                    Margin="0,0,0,3">
+                            
+                            <Button Content="Write"
+                                    Margin="10,0"
+                                    Style="{DynamicResource SimpleButton}"
+                                    Command="{Binding WritePSIConfigurationCommand}"/>
+
+                            <Button Content="Read"
+                                    Margin="10,0"
+                                    Style="{DynamicResource SimpleButton}"
+                                    Command="{Binding ReadPSIConfigurationCommand}"/>
+
+                            <Button Content="Reset"
+                                    Margin="10,0"
+                                    Style="{DynamicResource SimpleButton}"
+                                    Command="{Binding ResetPSIConfigurationCommand}"/>
+
+                        </StackPanel>
+
+
+                    </Grid>
+
+                    <!-- PSI Sensor Data-->
+                    <Grid   Grid.Row="1" Grid.RowSpan="2"
+                            Grid.Column="0"
+                            Margin="3,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock  Text="PSI Sensor Data"
+                                    Style="{DynamicResource TextBlockStyle}"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    FontWeight="Bold"/>
+
+                        <ScrollViewer   Grid.Row="1"
+                                        VerticalScrollBarVisibility="Visible"
+                                        HorizontalScrollBarVisibility="Auto">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                </Grid.RowDefinitions>
+
+                                <Border Grid.Row="1"
+                                        BorderThickness="0,1,0,1"
+                                        BorderBrush="{DynamicResource UI.SeparateLine}"/>
+
+                                <Border Grid.Row="3"
+                                        BorderThickness="0,1,0,1"
+                                        BorderBrush="{DynamicResource UI.SeparateLine}"/>
+
+                                <!--#region Slot 1 sensor data -->
+                                <Grid   Grid.Row="0"
+                                        Grid.Column="0"
+                                        Margin="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <!--#region texts -->
+                                    <TextBlock  Text="Slot 1"
+                                                Grid.Row="0" Grid.RowSpan="8"
+                                                Grid.Column="0"
+                                                Style="{DynamicResource TextBlockStyle}"/>
+
+                                    <TextBlock  Text="Ch 1"
+                                                Grid.Row="0"
+                                                Grid.Column="1"
+                                                Style="{DynamicResource TextBlockStyle}"/>
+
+                                    <TextBlock  Text="Ch 2"
+                                                Grid.Row="1"
+                                                Grid.Column="1"
+                                                Style="{DynamicResource TextBlockStyle}"/>
+
+                                    <TextBlock  Text="Ch 3"
+                                                Grid.Row="2"
+                                                Grid.Column="1"
+                                                Style="{DynamicResource TextBlockStyle}"/>
+
+                                    <TextBlock  Text="Ch 4"
+                                                Grid.Row="3"
+                                                Grid.Column="1"
+                                                Style="{DynamicResource TextBlockStyle}"/>
+
+                                    <TextBlock  Text="Ch 5"
+                                                Grid.Row="4"
+                                                Grid.Column="1"
+                                                Style="{DynamicResource TextBlockStyle}"/>
+
+                                    <TextBlock  Text="Ch 5"
+                                                Grid.Row="5"
+                                                Grid.Column="1"
+                                                Style="{DynamicResource TextBlockStyle}"/>
+
+                                    <TextBlock  Text="Ch 7"
+                                                Grid.Row="6"
+                                                Grid.Column="1"
+                                                Style="{DynamicResource TextBlockStyle}"/>
+
+                                    <TextBlock  Text="Ch 8"
+                                                Grid.Row="7"
+                                                Grid.Column="1"
+                                                Style="{DynamicResource TextBlockStyle}"/>
+                                    <!--#endregion-->
+
+                                    <!--#region data -->
+                                    <Border     Grid.Row="0" Grid.Column="2" 
+                                                BorderThickness="1" 
+                                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                        <TextBlock  Text="{Binding Slot1Ch1SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                    </Border>
+
+                                    <Border     Grid.Row="1" Grid.Column="2" 
+                                                BorderThickness="1" 
+                                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                        <TextBlock  Text="{Binding Slot1Ch2SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                    </Border>
+
+                                    <Border     Grid.Row="2" Grid.Column="2" 
+                                                BorderThickness="1" 
+                                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                        <TextBlock  Text="{Binding Slot1Ch3SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                    </Border>
+
+                                    <Border     Grid.Row="3" Grid.Column="2" 
+                                                BorderThickness="1" 
+                                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                        <TextBlock  Text="{Binding Slot1Ch4SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                    </Border>
+
+                                    <Border     Grid.Row="4" Grid.Column="2" 
+                                                BorderThickness="1" 
+                                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                        <TextBlock  Text="{Binding Slot1Ch5SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                    </Border>
+
+                                    <Border     Grid.Row="5" Grid.Column="2" 
+                                                BorderThickness="1" 
+                                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                        <TextBlock  Text="{Binding Slot1Ch6SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                    </Border>
+
+                                    <Border     Grid.Row="6" Grid.Column="2" 
+                                                BorderThickness="1" 
+                                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                        <TextBlock  Text="{Binding Slot1Ch7SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                    </Border>
+
+                                    <Border     Grid.Row="7" Grid.Column="2" 
+                                                BorderThickness="1" 
+                                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                        <TextBlock  Text="{Binding Slot1Ch8SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                    </Border>
+                                    <!--#endregion-->
+
+                                </Grid>
+                                <!--#endregion-->
+
+                                <!--#region Slot 2 sensor data -->
+                                <Grid   Grid.Row="1"
+                                        Grid.Column="0"
+                                        Margin="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <!--#region texts -->
+                                    <TextBlock  Text="Slot 2"
+                                                Grid.Row="0" Grid.RowSpan="8"
+                                                Grid.Column="0"
+                                                Style="{DynamicResource TextBlockStyle}"/>
+
+                                    <TextBlock  Text="Ch 1"
+                                                Grid.Row="0"
+                                                Grid.Column="1"
+                                                Style="{DynamicResource TextBlockStyle}"/>
+
+                                    <TextBlock  Text="Ch 2"
+                                                Grid.Row="1"
+                                                Grid.Column="1"
+                                                Style="{DynamicResource TextBlockStyle}"/>
+
+                                    <TextBlock  Text="Ch 3"
+                                                Grid.Row="2"
+                                                Grid.Column="1"
+                                                Style="{DynamicResource TextBlockStyle}"/>
+
+                                    <TextBlock  Text="Ch 4"
+                                                Grid.Row="3"
+                                                Grid.Column="1"
+                                                Style="{DynamicResource TextBlockStyle}"/>
+
+                                    <TextBlock  Text="Ch 5"
+                                                Grid.Row="4"
+                                                Grid.Column="1"
+                                                Style="{DynamicResource TextBlockStyle}"/>
+
+                                    <TextBlock  Text="Ch 5"
+                                                Grid.Row="5"
+                                                Grid.Column="1"
+                                                Style="{DynamicResource TextBlockStyle}"/>
+
+                                    <TextBlock  Text="Ch 7"
+                                                Grid.Row="6"
+                                                Grid.Column="1"
+                                                Style="{DynamicResource TextBlockStyle}"/>
+
+                                    <TextBlock  Text="Ch 8"
+                                                Grid.Row="7"
+                                                Grid.Column="1"
+                                                Style="{DynamicResource TextBlockStyle}"/>
+                                    <!--#endregion-->
+
+                                    <!--#region data -->
+                                    <Border     Grid.Row="0" Grid.Column="2" 
+                                                BorderThickness="1" 
+                                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                        <TextBlock  Text="{Binding Slot2Ch1SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                    </Border>
+
+                                    <Border     Grid.Row="1" Grid.Column="2" 
+                                                BorderThickness="1" 
+                                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                        <TextBlock  Text="{Binding Slot2Ch2SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                    </Border>
+
+                                    <Border     Grid.Row="2" Grid.Column="2" 
+                                                BorderThickness="1" 
+                                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                        <TextBlock  Text="{Binding Slot2Ch3SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                    </Border>
+
+                                    <Border     Grid.Row="3" Grid.Column="2" 
+                                                BorderThickness="1" 
+                                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                        <TextBlock  Text="{Binding Slot2Ch4SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                    </Border>
+
+                                    <Border     Grid.Row="4" Grid.Column="2" 
+                                                BorderThickness="1" 
+                                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                        <TextBlock  Text="{Binding Slot2Ch5SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                    </Border>
+
+                                    <Border     Grid.Row="5" Grid.Column="2" 
+                                                BorderThickness="1" 
+                                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                        <TextBlock  Text="{Binding Slot2Ch6SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                    </Border>
+
+                                    <Border     Grid.Row="6" Grid.Column="2" 
+                                                BorderThickness="1" 
+                                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                        <TextBlock  Text="{Binding Slot2Ch7SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                    </Border>
+
+                                    <Border     Grid.Row="7" Grid.Column="2" 
+                                                BorderThickness="1" 
+                                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                        <TextBlock  Text="{Binding Slot2Ch8SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                    </Border>
+                                    <!--#endregion-->
+
+                                </Grid>
+                                <!--#endregion-->
+
+                                <!--#region Slot 3 sensor data -->
+                                <Grid   Grid.Row="2"
+                                        Grid.Column="0"
+                                        Margin="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <!--#region texts -->
+                                    <TextBlock  Text="Slot 3"
+                                                Grid.Row="0" Grid.RowSpan="8"
+                                                Grid.Column="0"
+                                                Style="{DynamicResource TextBlockStyle}"/>
+
+                                    <TextBlock  Text="Ch 1"
+                                                Grid.Row="0"
+                                                Grid.Column="1"
+                                                Style="{DynamicResource TextBlockStyle}"/>
+
+                                    <TextBlock  Text="Ch 2"
+                                                Grid.Row="1"
+                                                Grid.Column="1"
+                                                Style="{DynamicResource TextBlockStyle}"/>
+
+                                    <TextBlock  Text="Ch 3"
+                                                Grid.Row="2"
+                                                Grid.Column="1"
+                                                Style="{DynamicResource TextBlockStyle}"/>
+
+                                    <TextBlock  Text="Ch 4"
+                                                Grid.Row="3"
+                                                Grid.Column="1"
+                                                Style="{DynamicResource TextBlockStyle}"/>
+
+                                    <TextBlock  Text="Ch 5"
+                                                Grid.Row="4"
+                                                Grid.Column="1"
+                                                Style="{DynamicResource TextBlockStyle}"/>
+
+                                    <TextBlock  Text="Ch 5"
+                                                Grid.Row="5"
+                                                Grid.Column="1"
+                                                Style="{DynamicResource TextBlockStyle}"/>
+
+                                    <TextBlock  Text="Ch 7"
+                                                Grid.Row="6"
+                                                Grid.Column="1"
+                                                Style="{DynamicResource TextBlockStyle}"/>
+
+                                    <TextBlock  Text="Ch 8"
+                                                Grid.Row="7"
+                                                Grid.Column="1"
+                                                Style="{DynamicResource TextBlockStyle}"/>
+                                    <!--#endregion-->
+
+                                    <!--#region data -->
+                                    <Border     Grid.Row="0" Grid.Column="2" 
+                                                BorderThickness="1" 
+                                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                        <TextBlock  Text="{Binding Slot3Ch1SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                    </Border>
+
+                                    <Border     Grid.Row="1" Grid.Column="2" 
+                                                BorderThickness="1" 
+                                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                        <TextBlock  Text="{Binding Slot3Ch2SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                    </Border>
+
+                                    <Border     Grid.Row="2" Grid.Column="2" 
+                                                BorderThickness="1" 
+                                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                        <TextBlock  Text="{Binding Slot3Ch3SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                    </Border>
+
+                                    <Border     Grid.Row="3" Grid.Column="2" 
+                                                BorderThickness="1" 
+                                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                        <TextBlock  Text="{Binding Slot3Ch4SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                    </Border>
+
+                                    <Border     Grid.Row="4" Grid.Column="2" 
+                                                BorderThickness="1" 
+                                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                        <TextBlock  Text="{Binding Slot3Ch5SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                    </Border>
+
+                                    <Border     Grid.Row="5" Grid.Column="2" 
+                                                BorderThickness="1" 
+                                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                        <TextBlock  Text="{Binding Slot3Ch6SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                    </Border>
+
+                                    <Border     Grid.Row="6" Grid.Column="2" 
+                                                BorderThickness="1" 
+                                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                        <TextBlock  Text="{Binding Slot3Ch7SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                    </Border>
+
+                                    <Border     Grid.Row="7" Grid.Column="2" 
+                                                BorderThickness="1" 
+                                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                        <TextBlock  Text="{Binding Slot3Ch8SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                    </Border>
+                                    <!--#endregion-->
+
+                                </Grid>
+                                <!--#endregion-->
+
+                                <!--#region Slot 4 sensor data -->
+                                <Grid   Grid.Row="3"
+                                        Grid.Column="0"
+                                        Margin="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <!--#region texts -->
+                                    <TextBlock  Text="Slot 4"
+                                                Grid.Row="0" Grid.RowSpan="8"
+                                                Grid.Column="0"
+                                                Style="{DynamicResource TextBlockStyle}"/>
+
+                                    <TextBlock  Text="Ch 1"
+                                                Grid.Row="0"
+                                                Grid.Column="1"
+                                                Style="{DynamicResource TextBlockStyle}"/>
+
+                                    <TextBlock  Text="Ch 2"
+                                                Grid.Row="1"
+                                                Grid.Column="1"
+                                                Style="{DynamicResource TextBlockStyle}"/>
+
+                                    <TextBlock  Text="Ch 3"
+                                                Grid.Row="2"
+                                                Grid.Column="1"
+                                                Style="{DynamicResource TextBlockStyle}"/>
+
+                                    <TextBlock  Text="Ch 4"
+                                                Grid.Row="3"
+                                                Grid.Column="1"
+                                                Style="{DynamicResource TextBlockStyle}"/>
+
+                                    <TextBlock  Text="Ch 5"
+                                                Grid.Row="4"
+                                                Grid.Column="1"
+                                                Style="{DynamicResource TextBlockStyle}"/>
+
+                                    <TextBlock  Text="Ch 5"
+                                                Grid.Row="5"
+                                                Grid.Column="1"
+                                                Style="{DynamicResource TextBlockStyle}"/>
+
+                                    <TextBlock  Text="Ch 7"
+                                                Grid.Row="6"
+                                                Grid.Column="1"
+                                                Style="{DynamicResource TextBlockStyle}"/>
+
+                                    <TextBlock  Text="Ch 8"
+                                                Grid.Row="7"
+                                                Grid.Column="1"
+                                                Style="{DynamicResource TextBlockStyle}"/>
+                                    <!--#endregion-->
+
+                                    <!--#region data -->
+                                    <Border     Grid.Row="0" Grid.Column="2" 
+                                                BorderThickness="1" 
+                                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                        <TextBlock  Text="{Binding Slot4Ch1SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                    </Border>
+
+                                    <Border     Grid.Row="1" Grid.Column="2" 
+                                                BorderThickness="1" 
+                                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                        <TextBlock  Text="{Binding Slot4Ch2SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                    </Border>
+
+                                    <Border     Grid.Row="2" Grid.Column="2" 
+                                                BorderThickness="1" 
+                                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                        <TextBlock  Text="{Binding Slot4Ch3SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                    </Border>
+
+                                    <Border     Grid.Row="3" Grid.Column="2" 
+                                                BorderThickness="1" 
+                                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                        <TextBlock  Text="{Binding Slot4Ch4SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                    </Border>
+
+                                    <Border     Grid.Row="4" Grid.Column="2" 
+                                                BorderThickness="1" 
+                                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                        <TextBlock  Text="{Binding Slot4Ch5SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                    </Border>
+
+                                    <Border     Grid.Row="5" Grid.Column="2" 
+                                                BorderThickness="1" 
+                                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                        <TextBlock  Text="{Binding Slot4Ch6SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                    </Border>
+
+                                    <Border     Grid.Row="6" Grid.Column="2" 
+                                                BorderThickness="1" 
+                                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                        <TextBlock  Text="{Binding Slot4Ch7SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                    </Border>
+
+                                    <Border     Grid.Row="7" Grid.Column="2" 
+                                                BorderThickness="1" 
+                                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                                        <TextBlock  Text="{Binding Slot4Ch8SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
+                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                    </Border>
+                                    <!--#endregion-->
+
+                                </Grid>
+                                <!--#endregion-->
+
+
+                            </Grid>
+                        </ScrollViewer>
+
+                    </Grid>
+
+                    <!-- PSI STATUS -->
+                    <Grid   Grid.Row="2" Grid.Column="1"
+                            Margin="2,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock  Text="PSI Status"
+                                    Grid.Column="0" Grid.ColumnSpan="4"
+                                    Grid.Row="0"
+                                    Style="{DynamicResource TextBlockStyle}"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Left"
+                                    FontWeight="Bold"/>
+
+                        <!--#region names of channels -->
+
+                        <TextBlock  Text="Ch 1"
+                                    Grid.Column="0" Grid.Row="1"
+                                    Style="{DynamicResource TextBlockStyle}"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"/>
+
+                        <TextBlock  Text="Ch 3"
+                                    Grid.Column="0" Grid.Row="2"
+                                    Style="{DynamicResource TextBlockStyle}"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"/>
+
+                        <TextBlock  Text="Ch 5"
+                                    Grid.Column="0" Grid.Row="3"
+                                    Style="{DynamicResource TextBlockStyle}"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"/>
+
+                        <TextBlock  Text="Ch 7"
+                                    Grid.Column="0" Grid.Row="4"
+                                    Style="{DynamicResource TextBlockStyle}"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"/>
+
+                        <TextBlock  Text="Ch 2"
+                                    Grid.Column="2" Grid.Row="1"
+                                    Style="{DynamicResource TextBlockStyle}"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"/>
+
+                        <TextBlock  Text="Ch 4"
+                                    Grid.Column="2" Grid.Row="2"
+                                    Style="{DynamicResource TextBlockStyle}"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"/>
+
+                        <TextBlock  Text="Ch 6"
+                                    Grid.Column="2" Grid.Row="3"
+                                    Style="{DynamicResource TextBlockStyle}"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"/>
+
+                        <TextBlock  Text="Ch 8"
+                                    Grid.Column="2" Grid.Row="4"
+                                    Style="{DynamicResource TextBlockStyle}"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"/>
+                        <!--#endregion-->
+
+                        <!--#region PSI status windows -->
+                        <!-- TODO: remove commented code when binding in viewModel is ready-->
+                        <Border Grid.Row="1" Grid.Column="1" 
+                                BorderThickness="1" 
+                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                            <!--<Border.Background>
+                                <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
+                                    <Binding Path = "Ch1Status"/>
+                                    <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                                </MultiBinding>
+                            </Border.Background>-->
+                            <TextBlock Text="{Binding Ch1StatusText}" 
+                                       HorizontalAlignment="Center" 
+                                       Style="{DynamicResource TextBlockStyle}"/>
+                        </Border>
+
+                        <Border Grid.Row="2" Grid.Column="1" 
+                                BorderThickness="1" 
+                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                            <!--<Border.Background>
+                                <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
+                                    <Binding Path = "Ch3Status"/>
+                                    <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                                </MultiBinding>
+                            </Border.Background>-->
+                            <TextBlock Text="{Binding Ch3StatusText}" 
+                                       HorizontalAlignment="Center" 
+                                       Style="{DynamicResource TextBlockStyle}"/>
+                        </Border>
+
+                        <Border Grid.Row="3" Grid.Column="1" 
+                                BorderThickness="1" 
+                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                            <!--<Border.Background>
+                                <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
+                                    <Binding Path = "Ch5Status"/>
+                                    <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                                </MultiBinding>
+                            </Border.Background>-->
+                            <TextBlock Text="{Binding Ch5StatusText}" 
+                                       HorizontalAlignment="Center" 
+                                       Style="{DynamicResource TextBlockStyle}"/>
+                        </Border>
+
+                        <Border Grid.Row="4" Grid.Column="1" 
+                                BorderThickness="1" 
+                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                            <!--<Border.Background>
+                                <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
+                                    <Binding Path = "Ch7Status"/>
+                                    <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                                </MultiBinding>
+                            </Border.Background>-->
+                            <TextBlock Text="{Binding Ch7StatusText}" 
+                                       HorizontalAlignment="Center" 
+                                       Style="{DynamicResource TextBlockStyle}"/>
+                        </Border>
+
+                        <Border Grid.Row="1" Grid.Column="3" 
+                                BorderThickness="1" 
+                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                            <!--<Border.Background>
+                                <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
+                                    <Binding Path = "Ch2Status"/>
+                                    <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                                </MultiBinding>
+                            </Border.Background>-->
+                            <TextBlock Text="{Binding Ch2StatusText}" 
+                                       HorizontalAlignment="Center" 
+                                       Style="{DynamicResource TextBlockStyle}"/>
+                        </Border>
+
+                        <Border Grid.Row="2" Grid.Column="3" 
+                                BorderThickness="1" 
+                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                            <!--<Border.Background>
+                                <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
+                                    <Binding Path = "Ch4Status"/>
+                                    <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                                </MultiBinding>
+                            </Border.Background>-->
+                            <TextBlock Text="{Binding Ch4StatusText}" 
+                                       HorizontalAlignment="Center" 
+                                       Style="{DynamicResource TextBlockStyle}"/>
+                        </Border>
+
+                        <Border Grid.Row="3" Grid.Column="3" 
+                                BorderThickness="1" 
+                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                            <!--<Border.Background>
+                                <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
+                                    <Binding Path = "Ch6Status"/>
+                                    <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                                </MultiBinding>
+                            </Border.Background>-->
+                            <TextBlock Text="{Binding Ch6StatusText}" 
+                                       HorizontalAlignment="Center" 
+                                       Style="{DynamicResource TextBlockStyle}"/>
+                        </Border>
+
+                        <Border Grid.Row="4" Grid.Column="3" 
+                                BorderThickness="1" 
+                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
+                            <!--<Border.Background>
+                                <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
+                                    <Binding Path = "Ch8Status"/>
+                                    <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                                </MultiBinding>
+                            </Border.Background>-->
+                            <TextBlock Text="{Binding Ch8StatusText}" 
+                                       HorizontalAlignment="Center" 
+                                       Style="{DynamicResource TextBlockStyle}"/>
+                        </Border>
+                        <!--#endregion-->
+
+                    </Grid>
+
+                    <!-- SPI Monitor status-->
+                    <Grid   Grid.Row="2" Grid.Column="2"
+                            Margin="3,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <!--#region monitor spi controls -->
+                        <TextBlock  Text="Monitor SPI Status"
+                                    Grid.Row="0"
+                                    Grid.Column="0" Grid.ColumnSpan="4"
+                                    Style="{DynamicResource TextBlockStyle}"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Left"
+                                    FontWeight="Bold"/>
+
+                        <TextBlock  Text="SPI 1"
+                                    Grid.Row="1"
+                                    Grid.Column="1"
+                                    Style="{DynamicResource TextBlockStyle}"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"/>
+
+                        <TextBlock  Text="SPI 2"
+                                    Grid.Row="1"
+                                    Grid.Column="2"
+                                    Style="{DynamicResource TextBlockStyle}"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"/>
+
+                        <TextBlock  Text="Data"
+                                    Grid.Row="2"
+                                    Grid.Column="0"
+                                    Style="{DynamicResource TextBlockStyle}"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"/>
+                        <!--#endregion-->
+
+                        <!--#region monitor spi textboxs -->
+                        <TextBlock  Text="SID"
+                                    Grid.Row="3"
+                                    Grid.Column="0"
+                                    Style="{DynamicResource TextBlockStyle}"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"/>
+
+                        <TextBox    Grid.Row="2" Grid.Column="1"
+                                    Margin="5,1"
+                                    Text="{Binding SPI1DataStatusText}" 
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Stretch" 
+                                    Style="{DynamicResource TextBoxStyle}"/>
+
+                        <TextBox    Grid.Row="2" Grid.Column="2"
+                                    Margin="5,1"
+                                    Text="{Binding SPI2DataStatusText}" 
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Stretch" 
+                                    Style="{DynamicResource TextBoxStyle}"/>
+
+                        <TextBox    Grid.Row="3" Grid.Column="1"
+                                    Margin="5,1"
+                                    Text="{Binding SPI1SidStatusText}" 
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Stretch" 
+                                    Style="{DynamicResource TextBoxStyle}"/>
+
+                        <TextBox    Grid.Row="3" Grid.Column="2"
+                                    Margin="5,1"
+                                    Text="{Binding SPI2SidStatusText}" 
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Stretch" 
+                                    Style="{DynamicResource TextBoxStyle}"/>
+                        <!--#endregion-->
+
+                    </Grid>
+                </Grid>
+
+                <!-- Hidden old menu
+                    TODO: delete if not needed-->
+                <!--<Grid Visibility="Hidden">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="5"/>
                         <ColumnDefinition Width="*"/>
@@ -33,7 +1091,9 @@
                         <RowDefinition Height="5"/>
                     </Grid.RowDefinitions>
                     
-                    <!--#region Slots blocks -->
+                    -->
+                <!--#region Slots blocks -->
+                <!--
                     <Grid Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -57,7 +1117,9 @@
                                 Grid.Column="0" Grid.ColumnSpan="9" Grid.Row="2"
                                 BorderThickness="0,0,0,1"/>
 
-                        <!--#region Slot 1 Block -->
+                        -->
+                <!--#region Slot 1 Block -->
+                <!--
                         <Grid   Background="{Binding Slot1BlockBackground}"
                                 Grid.Row="1" Grid.Column="1">
                             <Grid.ColumnDefinitions>
@@ -144,9 +1206,11 @@
                                         IsEnabled="{Binding isPSIEnable}"
                                         IsHitTestVisible="False"/>
                         </Grid>
-                        <!--#endregion-->
+                        -->
+                <!--#endregion-->
 
-                        <!--#region Slot 1 Block -->
+                <!--#region Slot 1 Block -->
+                <!--
                         <Grid   Background="{Binding Slot2BlockBackground}"
                                 Grid.Row="1" Grid.Column="3">
                             <Grid.ColumnDefinitions>
@@ -233,9 +1297,11 @@
                                         IsEnabled="{Binding isPSIEnable}"
                                         IsHitTestVisible="False"/>
                         </Grid>
-                        <!--#endregion-->
+                        -->
+                <!--#endregion-->
 
-                        <!--#region Slot 1 Block -->
+                <!--#region Slot 1 Block -->
+                <!--
                         <Grid   Background="{Binding Slot3BlockBackground}"
                                 Grid.Row="1" Grid.Column="5">
                             <Grid.ColumnDefinitions>
@@ -322,9 +1388,11 @@
                                         IsEnabled="{Binding isPSIEnable}"
                                         IsHitTestVisible="False"/>
                         </Grid>
-                        <!--#endregion-->
+                        -->
+                <!--#endregion-->
 
-                        <!--#region Slot 1 Block -->
+                <!--#region Slot 1 Block -->
+                <!--
                         <Grid   Background="{Binding Slot4BlockBackground}"
                                 Grid.Row="1" Grid.Column="7">
                             <Grid.ColumnDefinitions>
@@ -411,10 +1479,14 @@
                                         IsEnabled="{Binding isPSIEnable}"
                                         IsHitTestVisible="False"/>
                         </Grid>
-                        <!--#endregion-->
+                        -->
+                <!--#endregion-->
+                <!--
 
                     </Grid>
-                    <!--#endregion-->
+                    -->
+                <!--#endregion-->
+                <!--
 
                     <Grid Grid.Row="2" Grid.Column="1">
                         <Grid.ColumnDefinitions>
@@ -427,7 +1499,9 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
 
-                        <!-- Choose chanel to configure -->
+                        -->
+                <!-- Choose chanel to configure -->
+                <!--
                         <ComboBox   Grid.Row="0" Grid.Column="0"
                                     IsEnabled="{Binding isPSIEnable}"
                                     SelectedIndex="{Binding ChannelConfigurationIndex}"
@@ -492,7 +1566,9 @@
                             </ComboBoxItem>
                         </ComboBox>
 
-                        <!-- Channel configuration table -->
+                        -->
+                <!-- Channel configuration table -->
+                <!--
                         <ScrollViewer Grid.Row="1" Grid.Column="0"
                                       VerticalScrollBarVisibility="Auto">
                             <Grid>
@@ -1138,7 +2214,9 @@
                                             HorizontalAlignment="Center"
                                             IsEnabled="{Binding isPSIEnable}"/>
 
-                                <!-- TODO add varification -->
+                                -->
+                <!-- TODO add varification -->
+                <!--
                                 <TextBox    Grid.Row="5" Grid.Column="1"
                                         Style="{DynamicResource TextBoxStyle}"
                                         Text="{Binding ChannelSyncCommonDelayConfiguration}"
@@ -1153,7 +2231,9 @@
                                             HorizontalAlignment="Center"
                                             IsEnabled="{Binding isPSIEnable}"/>
 
-                                <!-- TODO add varification -->
+                                -->
+                <!-- TODO add varification -->
+                <!--
                                 <TextBox    Grid.Row="6" Grid.Column="1"
                                             Style="{DynamicResource TextBoxStyle}"
                                             Text="{Binding ChannelSyncCommonInternalDelayConfiguration}"
@@ -1168,7 +2248,9 @@
                                             HorizontalAlignment="Center"
                                             IsEnabled="{Binding isPSIEnable}"/>
 
-                                <!-- TODO add varification -->
+                                -->
+                <!-- TODO add varification -->
+                <!--
                                 <TextBox    Grid.Row="7" Grid.Column="1"
                                             Style="{DynamicResource TextBoxStyle}"
                                             Text="{Binding ChannelSyncCommonGroup2GroupDelayConfiguration}"
@@ -1297,7 +2379,9 @@
                                             HorizontalAlignment="Center"
                                             IsEnabled="{Binding isPSIEnable}"/>
 
-                                <!-- TODO add varification -->
+                                -->
+                <!-- TODO add varification -->
+                <!--
                                 <TextBox    Grid.Row="12" Grid.Column="1"
                                             Style="{DynamicResource TextBoxStyle}"
                                             Text="{Binding ChannelEdgeCounter}"
@@ -1308,7 +2392,7 @@
                             </Grid>
                         </ScrollViewer>
                     </Grid>
-                </Grid>
+                </Grid>-->
 
             </TabItem>
 
