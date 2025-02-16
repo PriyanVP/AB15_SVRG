@@ -778,6 +778,79 @@
                                 </StackPanel>
                             </ComboBoxItem>
                         </ComboBox>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            
+                            <Border Grid.Row="0" Grid.RowSpan="2"
+                                    Grid.Column="0" Grid.ColumnSpan="6"
+                                    BorderBrush="{DynamicResource UI.SeparateLine}"
+                                    BorderThickness="1"/>
+
+                            <TextBlock  Grid.Row="0"
+                                        Grid.Column="0" Grid.ColumnSpan="6"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Style="{DynamicResource TextBlockStyle}"
+                                        Text="Sensor Input"/>
+
+                            <TextBlock  Grid.Row="1"
+                                        Grid.Column="1"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Style="{DynamicResource TextBlockStyle}"
+                                        Text="UART"/>
+
+                            <TextBlock  Grid.Row="1"
+                                        Grid.Column="3"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Style="{DynamicResource TextBlockStyle}"
+                                        Text="SPI"/>
+
+                            <TextBlock  Grid.Row="1"
+                                        Grid.Column="5"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Style="{DynamicResource TextBlockStyle}"
+                                        Text="PSI"/>
+
+                            <CheckBox   Grid.Row="1" 
+                                        Grid.Column="0"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Style="{DynamicResource ToggleSwitchStyle}" 
+                                        IsChecked="{Binding IsUARTSensorInputEn}"
+                                        IsEnabled="{Binding IsFiringControlsEnabled}"/>
+
+                            <CheckBox   Grid.Row="1" 
+                                        Grid.Column="2"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Style="{DynamicResource ToggleSwitchStyle}" 
+                                        IsChecked="{Binding IsSPISensorInputEn}"
+                                        IsEnabled="{Binding IsFiringControlsEnabled}"/>
+
+                            <CheckBox   Grid.Row="1" 
+                                        Grid.Column="4"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Style="{DynamicResource ToggleSwitchStyle}" 
+                                        IsChecked="{Binding IsPSISensorInputEn}"
+                                        IsEnabled="{Binding IsFiringControlsEnabled}"/>
+
+                        </Grid>
                     </StackPanel>
 
                     <!-- Fire simultaneously button -->
