@@ -2398,7 +2398,225 @@
 
             <!-- Monitoring tab -->
             <TabItem Header="UART" FontSize="20" Style="{DynamicResource CustomTabItem}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="1*"/>
+                    </Grid.RowDefinitions>
 
+                    <StackPanel Grid.Row="0"
+                                Grid.Column="0" Grid.ColumnSpan="3"
+                                Orientation="Horizontal"
+                                HorizontalAlignment="Right">
+
+                        <Border Grid.Row="3" Grid.Column="3" 
+                                BorderThickness="1" 
+                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                HorizontalAlignment="Center"
+                                Margin="4,2">
+                            <TextBlock Text="UART 2" 
+                                       HorizontalAlignment="Center" 
+                                       VerticalAlignment="Center"
+                                       Style="{DynamicResource TextBlockStyle}"
+                                       MinWidth="100"
+                                       Margin="0"/>
+                        </Border>
+
+                        <Border Grid.Row="3" Grid.Column="3" 
+                                BorderThickness="1" 
+                                BorderBrush="{DynamicResource Animation.Lines}" 
+                                CornerRadius="5" HorizontalAlignment="Stretch"
+                                Margin="4,2">
+                            <!--<Border.Background>
+                                <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
+                                    <Binding Path = "UARTTopStatus"/>
+                                    <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                                </MultiBinding>
+                            </Border.Background>-->
+                            <TextBlock Text="{Binding UARTTopStatusText}" 
+                                       HorizontalAlignment="Center" 
+                                       Style="{DynamicResource TextBlockStyle}"
+                                       MinWidth="150"/>
+                        </Border>
+                    </StackPanel>
+
+                    <Grid   Grid.Row="1"
+                            Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock  Grid.Row="0"
+                                    Text="UART configuration (Read only)"
+                                    Style="{DynamicResource TextBlockStyle}"
+                                    FontWeight="Bold"/>
+                        
+                        <ScrollViewer Grid.Row="1">
+                            <TextBox Text="Looking into datasheet..."/>
+                        </ScrollViewer>
+
+                        <Button Grid.Row="2"
+                                Content="Read"
+                                Style="{DynamicResource SimpleButton}"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                Command="{Binding ReadUartConfigCommand}"
+                                Margin="5,0"/>
+                    </Grid>
+
+                    <Grid   Grid.Row="2"
+                            Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock  Grid.Row="0"
+                                    Text="UART 2 Frames (Tx)"
+                                    Style="{DynamicResource TextBlockStyle}"
+                                    FontWeight="Bold"/>
+
+                        <Grid   Grid.Row="1"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock  Grid.Row="0"
+                                        Grid.Column="0"
+                                        Style="{DynamicResource TextBlockStyle}"
+                                        Text="Frame 1  0x"/>
+                            
+                            <TextBlock  Grid.Row="1"
+                                        Grid.Column="0"
+                                        Style="{DynamicResource TextBlockStyle}"
+                                        Text="Frame 2  0x"/>
+                            
+                            <TextBlock  Grid.Row="2"
+                                        Grid.Column="0"
+                                        Style="{DynamicResource TextBlockStyle}"
+                                        Text="Frame 3  0x"/>
+
+                            <TextBox    Grid.Row="0"
+                                        Grid.Column="1"
+                                        Style="{DynamicResource TextBoxStyle}"
+                                        Text="{Binding UartFrame1Text}"
+                                        MinWidth="80"/>
+
+                            <TextBox    Grid.Row="1"
+                                        Grid.Column="1"
+                                        Style="{DynamicResource TextBoxStyle}"
+                                        Text="{Binding UartFrame2Text}"
+                                        MinWidth="80"/>
+
+                            <TextBox    Grid.Row="2"
+                                        Grid.Column="1"
+                                        Style="{DynamicResource TextBoxStyle}"
+                                        Text="{Binding UartFrame3Text}"
+                                        MinWidth="80"/>
+
+                        </Grid>
+                        
+
+                        <StackPanel Grid.Row="2"
+                                    Orientation="Horizontal"
+                                    HorizontalAlignment="Right">
+
+                            <Button Grid.Row="2"
+                                    Content="Reset"
+                                    Style="{DynamicResource SimpleButton}"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Center"
+                                    Command="{Binding ResetUartFrameConfigCommand}"
+                                    Margin="5,0"
+                                    Width="60"/>
+                            
+                            <Button Grid.Row="2"
+                                    Content="Set"
+                                    Style="{DynamicResource SimpleButton}"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Center"
+                                    Command="{Binding SetUartFrameConfigCommand}"
+                                    Margin="5,0"
+                                    Width="60"/>
+                        </StackPanel>
+                    </Grid>
+
+
+                    <Grid   Grid.Row="2"
+                            Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock  Grid.Row="0"
+                                    Text="UART 1"
+                                    Style="{DynamicResource TextBlockStyle}"
+                                    FontWeight="Bold"/>
+
+                        <TextBlock  Text="To Be Implemented"
+                                    Style="{DynamicResource TextBlockStyle}"
+                                    Grid.Row="1"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"/>
+                    </Grid>
+
+                    <Grid   Grid.Row="1"
+                            Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock  Grid.Row="0"
+                                    Text="Register"
+                                    Style="{DynamicResource TextBlockStyle}"
+                                    FontWeight="Bold"/>
+                        
+                        
+
+                        <StackPanel Orientation="Horizontal"
+                                    Grid.Row="4"
+                                    HorizontalAlignment="Right"
+                                    Margin="0,0,0,3">
+
+                            <Button Content="Write"
+                                    Margin="10,0"
+                                    Style="{DynamicResource SimpleButton}"
+                                    Command="{Binding WriteUartConfigurationCommand}"/>
+
+                            <Button Content="Read"
+                                    Margin="10,0"
+                                    Style="{DynamicResource SimpleButton}"
+                                    Command="{Binding ReadUARTConfigurationCommand}"/>
+
+                            <Button Content="Reset"
+                                    Margin="10,0"
+                                    Style="{DynamicResource SimpleButton}"
+                                    Command="{Binding ResetUARTConfigurationCommand}"/>
+
+                        </StackPanel>
+                    </Grid>
+                </Grid>
             </TabItem>
 
         </TabControl>
