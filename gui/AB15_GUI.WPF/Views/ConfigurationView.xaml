@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:AB15_GUI.WPF.Views"
       xmlns:cnvrt="clr-namespace:AB15_GUI.WPF.Views.Converters"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      d:DesignHeight="450" d:DesignWidth="900"
       Title="ConfigurationView">
 
     <Page.Resources>
@@ -49,7 +49,12 @@
 
                     <Border     Grid.Row="1" Grid.RowSpan="3"
                                 Grid.Column="0"
-                                BorderThickness="0,1,1,0"
+                                BorderThickness="0,0,1,0"
+                                BorderBrush="{DynamicResource UI.SeparateLine}"/>
+
+                    <Border     Grid.Row="0" 
+                                Grid.Column="0" Grid.ColumnSpan="3"
+                                BorderThickness="0,0,0,1"
                                 BorderBrush="{DynamicResource UI.SeparateLine}"/>
 
                     <Button Grid.Column="0"
@@ -58,6 +63,7 @@
                             MinWidth="60"
                             Margin="5,0"
                             Command="{Binding ReadPSISensorDaaCommand}"
+                            IsEnabled="{Binding isConfigurationPSIPageEnabled}"
                             Style="{DynamicResource SimpleButton}"
                             VerticalAlignment="Center"
                             HorizontalAlignment="Right"/>
@@ -68,6 +74,7 @@
                             MinWidth="60"
                             Margin="5,0"
                             Command="{Binding ReadPSIStatusCommand}"
+                            IsEnabled="{Binding isConfigurationPSIPageEnabled}"
                             Style="{DynamicResource SimpleButton}"
                             VerticalAlignment="Center"
                             HorizontalAlignment="Right"/>
@@ -78,6 +85,7 @@
                             MinWidth="60"
                             Margin="5,0"
                             Command="{Binding ReadMonitorPSIStatusCommand}"
+                            IsEnabled="{Binding isConfigurationPSIPageEnabled}"
                             Style="{DynamicResource SimpleButton}"
                             VerticalAlignment="Center"
                             HorizontalAlignment="Right"/>
@@ -86,7 +94,8 @@
                     <StackPanel Orientation="Horizontal"
                                 Grid.Row="0"
                                 Grid.Column="0" Grid.ColumnSpan="3"
-                                HorizontalAlignment="Right">
+                                HorizontalAlignment="Right"
+                                Margin="0,3">
 
                         <TextBlock Text="Sync puls generation -" 
                                        HorizontalAlignment="Center" 
@@ -95,6 +104,7 @@
                         
                         <Border Grid.Row="3" Grid.Column="3" 
                                 BorderThickness="1" 
+                                CornerRadius="5" 
                                 BorderBrush="{DynamicResource Animation.Lines}" HorizontalAlignment="Stretch" 
                                 Margin="4,2">
                             <!--<Border.Background>
@@ -111,6 +121,7 @@
                         
                         <Border Grid.Row="3" Grid.Column="3" 
                                 BorderThickness="1" 
+                                CornerRadius="5" 
                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                 HorizontalAlignment="Stretch" 
                                 Margin="10,2">
@@ -151,7 +162,6 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="auto"/>
-                            <RowDefinition Height="auto"/>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="auto"/>
                         </Grid.RowDefinitions>
@@ -172,26 +182,127 @@
                                         FontWeight="Bold"
                                         Margin="5,0"/>
 
+                            <TextBlock  Grid.Row="0"
+                                        Grid.Column="0"
+                                        Text="PSI Configuration"
+                                        Style="{DynamicResource TextBlockStyle}"
+                                        FontWeight="Bold"
+                                        Margin="5,0"/>
+
+                            <Border Grid.Row="0" Grid.Column="2" 
+                                    BorderThickness="1" 
+                                CornerRadius="5" 
+                                    BorderBrush="{DynamicResource Animation.Lines}" 
+                                    HorizontalAlignment="Stretch" 
+                                    Margin="10,3">
+                                <!--<Border.Background>
+                                <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
+                                    <Binding Path = "PSIDataReceivedStatus"/>
+                                    <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                                </MultiBinding>
+                            </Border.Background>-->
+                                <TextBlock Text="Psi Data received" 
+                                           HorizontalAlignment="Center" 
+                                           Style="{DynamicResource TextBlockStyle}"
+                                           MinWidth="100"/>
+                            </Border>
+
+                            <Border Grid.Row="0" Grid.Column="3" 
+                                    BorderThickness="1" 
+                                    CornerRadius="5" 
+                                    BorderBrush="{DynamicResource Animation.Lines}" 
+                                    HorizontalAlignment="Stretch" 
+                                    Margin="10,3">
+                                <!--<Border.Background>
+                                <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
+                                    <Binding Path = "CrashDataPSIStatus"/>
+                                    <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                                </MultiBinding>
+                            </Border.Background>-->
+                                <TextBlock Text="{Binding CrashDataPSIStatusText}" 
+                                           HorizontalAlignment="Center" 
+                                           Style="{DynamicResource TextBlockStyle}"
+                                           MinWidth="150"/>
+                            </Border>
+
+
+                        </Grid>
+
+                        <Grid   Grid.Row="1"
+                                HorizontalAlignment="Center">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock  Grid.Row="0"
+                                        Grid.Column="0"
+                                        Text="PSI Supply"
+                                        HorizontalAlignment="Center"
+                                        Style="{DynamicResource TextBlockStyle}"/>
+
+                            <StackPanel Grid.Row="0"
+                                        Grid.Column="1"
+                                        Orientation="Horizontal">
+
+                                <TextBlock  Text="0x"
+                                            Style="{DynamicResource TextBlockStyle}"/>
+
+                                <TextBox    Style="{DynamicResource TextBoxStyle}"
+                                            IsEnabled="{Binding isConfigurationPSIPageEnabled}"
+                                            Text="{Binding PSISupplyValue}"
+                                            PreviewTextInput="HexPsiConfigTextBox_PreviewTextInput"
+                                            MinWidth="130"/>
+                            </StackPanel>
+
+                            <TextBlock  Grid.Row="1"
+                                        Grid.Column="0"
+                                        Text="PSI Gen Mask Sync"
+                                        HorizontalAlignment="Center"
+                                        Style="{DynamicResource TextBlockStyle}"/>
+
+                            <StackPanel Grid.Row="1"
+                                        Grid.Column="1"
+                                        Orientation="Horizontal">
+
+                                <TextBlock  Text="0x"
+                                            Style="{DynamicResource TextBlockStyle}"/>
+
+                                <TextBox    Style="{DynamicResource TextBoxStyle}"
+                                            IsEnabled="{Binding isConfigurationPSIPageEnabled}"
+                                            Text="{Binding PSIGenMaskSyncValue}"
+                                            PreviewTextInput="HexPsiConfigTextBox_PreviewTextInput"
+                                            MinWidth="130"/>
+                            </StackPanel>
+
                         </Grid>
 
                         <StackPanel Orientation="Horizontal"
-                                    Grid.Row="4"
+                                    Grid.Row="3"
                                     HorizontalAlignment="Right"
                                     Margin="0,0,0,3">
                             
                             <Button Content="Write"
                                     Margin="10,0"
                                     Style="{DynamicResource SimpleButton}"
+                                    IsEnabled="{Binding isConfigurationPSIPageEnabled}"
                                     Command="{Binding WritePSIConfigurationCommand}"/>
 
                             <Button Content="Read"
                                     Margin="10,0"
                                     Style="{DynamicResource SimpleButton}"
+                                    IsEnabled="{Binding isConfigurationPSIPageEnabled}"
                                     Command="{Binding ReadPSIConfigurationCommand}"/>
 
                             <Button Content="Reset"
                                     Margin="10,0"
                                     Style="{DynamicResource SimpleButton}"
+                                    IsEnabled="{Binding isConfigurationPSIPageEnabled}"
                                     Command="{Binding ResetPSIConfigurationCommand}"/>
 
                         </StackPanel>
@@ -1045,6 +1156,7 @@
                         <TextBox    Grid.Row="2" Grid.Column="1"
                                     Margin="5,1"
                                     Text="{Binding SPI1DataStatusText}" 
+                                    IsEnabled="{Binding isConfigurationPSIPageEnabled}"
                                     VerticalAlignment="Center"
                                     HorizontalAlignment="Stretch" 
                                     Style="{DynamicResource TextBoxStyle}"/>
@@ -1052,6 +1164,7 @@
                         <TextBox    Grid.Row="2" Grid.Column="2"
                                     Margin="5,1"
                                     Text="{Binding SPI2DataStatusText}" 
+                                    IsEnabled="{Binding isConfigurationPSIPageEnabled}"
                                     VerticalAlignment="Center"
                                     HorizontalAlignment="Stretch" 
                                     Style="{DynamicResource TextBoxStyle}"/>
@@ -1059,6 +1172,7 @@
                         <TextBox    Grid.Row="3" Grid.Column="1"
                                     Margin="5,1"
                                     Text="{Binding SPI1SidStatusText}" 
+                                    IsEnabled="{Binding isConfigurationPSIPageEnabled}"
                                     VerticalAlignment="Center"
                                     HorizontalAlignment="Stretch" 
                                     Style="{DynamicResource TextBoxStyle}"/>
@@ -1066,6 +1180,7 @@
                         <TextBox    Grid.Row="3" Grid.Column="2"
                                     Margin="5,1"
                                     Text="{Binding SPI2SidStatusText}" 
+                                    IsEnabled="{Binding isConfigurationPSIPageEnabled}"
                                     VerticalAlignment="Center"
                                     HorizontalAlignment="Stretch" 
                                     Style="{DynamicResource TextBoxStyle}"/>
@@ -2405,9 +2520,19 @@
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"/>
-                        <RowDefinition Height="2*"/>
-                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
+
+                    <Border Grid.Column="0"
+                            Grid.Row="1" Grid.RowSpan="2"
+                            BorderBrush="{DynamicResource UI.SeparateLine}"
+                            BorderThickness="0,0,1,0"/>
+
+                    <Border Grid.Column="0" Grid.ColumnSpan="2"
+                            Grid.Row="2"
+                            BorderBrush="{DynamicResource UI.SeparateLine}"
+                            BorderThickness="0,1,0,0"/>
 
                     <StackPanel Grid.Row="0"
                                 Grid.Column="0" Grid.ColumnSpan="3"
@@ -2418,6 +2543,7 @@
                                 BorderThickness="1" 
                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                 HorizontalAlignment="Center"
+                                CornerRadius="5" 
                                 Margin="4,2">
                             <TextBlock Text="UART 2" 
                                        HorizontalAlignment="Center" 
@@ -2430,7 +2556,8 @@
                         <Border Grid.Row="3" Grid.Column="3" 
                                 BorderThickness="1" 
                                 BorderBrush="{DynamicResource Animation.Lines}" 
-                                CornerRadius="5" HorizontalAlignment="Stretch"
+                                CornerRadius="5" 
+                                HorizontalAlignment="Stretch"
                                 Margin="4,2">
                             <!--<Border.Background>
                                 <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
@@ -2446,7 +2573,8 @@
                     </StackPanel>
 
                     <Grid   Grid.Row="1"
-                            Grid.Column="0">
+                            Grid.Column="0"
+                            Margin="3">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="*"/>
@@ -2459,12 +2587,123 @@
                                     FontWeight="Bold"/>
                         
                         <ScrollViewer Grid.Row="1">
-                            <TextBox Text="Looking into datasheet..."/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                </Grid.RowDefinitions>
+
+                                <TextBlock  Grid.Row="0"
+                                            Grid.Column="0"
+                                            Text="Parity"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Style="{DynamicResource TextBlockStyle}"/>
+
+                                <TextBox    Grid.Row="0"
+                                            Grid.Column="1"
+                                            Style="{DynamicResource TextBoxStyle}"
+                                            Text="{Binding UartParityText}"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            IsReadOnly="True"
+                                            MinWidth="100"/>
+                                
+                                <TextBlock  Grid.Row="1"
+                                            Grid.Column="0"
+                                            Text="Databit Number"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Style="{DynamicResource TextBlockStyle}"/>
+
+                                <TextBox    Grid.Row="1"
+                                            Grid.Column="1"
+                                            Style="{DynamicResource TextBoxStyle}"
+                                            Text="{Binding UartDatabitNumberText}"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            IsReadOnly="True"
+                                            MinWidth="100"/>
+
+                                <TextBlock  Grid.Row="2"
+                                            Grid.Column="0"
+                                            Text="Boudrate"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Style="{DynamicResource TextBlockStyle}"/>
+
+                                <TextBox    Grid.Row="2"
+                                            Grid.Column="1"
+                                            Style="{DynamicResource TextBoxStyle}"
+                                            Text="{Binding UartBoudrateText}"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            IsReadOnly="True"
+                                            MinWidth="100"/>
+                                
+                                <TextBlock  Grid.Row="3"
+                                            Grid.Column="0"
+                                            Text="Number of Stopbits"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Style="{DynamicResource TextBlockStyle}"/>
+
+                                <TextBox    Grid.Row="3"
+                                            Grid.Column="1"
+                                            Style="{DynamicResource TextBoxStyle}"
+                                            Text="{Binding UartNumberOfStopbitsText}"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            IsReadOnly="True"
+                                            MinWidth="100"/>
+                                
+                                <TextBlock  Grid.Row="4"
+                                            Grid.Column="0"
+                                            Text="Time b/n 1 UART frames"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Style="{DynamicResource TextUART1FramesStyle}"/>
+
+                                <TextBox    Grid.Row="4"
+                                            Grid.Column="1"
+                                            Style="{DynamicResource TextBoxStyle}"
+                                            Text="{Binding UartParityText}"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            IsReadOnly="True"
+                                            MinWidth="100"/>
+                                
+                                <TextBlock  Grid.Row="5"
+                                            Grid.Column="0"
+                                            Text="Time b/n 2 UART frames"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Style="{DynamicResource TextBlockStyle}"/>
+
+                                <TextBox    Grid.Row="5"
+                                            Grid.Column="1"
+                                            Style="{DynamicResource TextBoxStyle}"
+                                            Text="{Binding UartUART2FramesText}"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            IsReadOnly="True"
+                                            MinWidth="100"/>
+                                
+                            </Grid>
                         </ScrollViewer>
 
                         <Button Grid.Row="2"
                                 Content="Read"
                                 Style="{DynamicResource SimpleButton}"
+                                IsEnabled="{Binding isConfigurationUARTPageEnabled}"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Center"
                                 Command="{Binding ReadUartConfigCommand}"
@@ -2484,55 +2723,60 @@
                                     Style="{DynamicResource TextBlockStyle}"
                                     FontWeight="Bold"/>
 
-                        <Grid   Grid.Row="1"
-                                VerticalAlignment="Center"
-                                HorizontalAlignment="Center">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="auto"/>
-                                <ColumnDefinition Width="auto"/>
-                            </Grid.ColumnDefinitions>
+                        <ScrollViewer   Grid.Row="1"
+                                        VerticalScrollBarVisibility="Auto">
+                            <Grid   VerticalAlignment="Center"
+                                    HorizontalAlignment="Center">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
 
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="auto"/>
-                            </Grid.RowDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                </Grid.RowDefinitions>
 
-                            <TextBlock  Grid.Row="0"
+                                <TextBlock  Grid.Row="0"
                                         Grid.Column="0"
                                         Style="{DynamicResource TextBlockStyle}"
                                         Text="Frame 1  0x"/>
-                            
-                            <TextBlock  Grid.Row="1"
+
+                                <TextBlock  Grid.Row="1"
                                         Grid.Column="0"
                                         Style="{DynamicResource TextBlockStyle}"
                                         Text="Frame 2  0x"/>
-                            
-                            <TextBlock  Grid.Row="2"
+
+                                <TextBlock  Grid.Row="2"
                                         Grid.Column="0"
                                         Style="{DynamicResource TextBlockStyle}"
                                         Text="Frame 3  0x"/>
 
-                            <TextBox    Grid.Row="0"
+                                <TextBox    Grid.Row="0"
                                         Grid.Column="1"
                                         Style="{DynamicResource TextBoxStyle}"
                                         Text="{Binding UartFrame1Text}"
+                                        IsEnabled="{Binding isConfigurationUARTPageEnabled}"
                                         MinWidth="80"/>
 
-                            <TextBox    Grid.Row="1"
+                                <TextBox    Grid.Row="1"
                                         Grid.Column="1"
                                         Style="{DynamicResource TextBoxStyle}"
                                         Text="{Binding UartFrame2Text}"
+                                        IsEnabled="{Binding isConfigurationUARTPageEnabled}"
                                         MinWidth="80"/>
 
-                            <TextBox    Grid.Row="2"
+                                <TextBox    Grid.Row="2"
                                         Grid.Column="1"
                                         Style="{DynamicResource TextBoxStyle}"
                                         Text="{Binding UartFrame3Text}"
+                                        IsEnabled="{Binding isConfigurationUARTPageEnabled}"
                                         MinWidth="80"/>
 
-                        </Grid>
-                        
+                            </Grid>
+                        </ScrollViewer>
+
 
                         <StackPanel Grid.Row="2"
                                     Orientation="Horizontal"
@@ -2543,6 +2787,7 @@
                                     Style="{DynamicResource SimpleButton}"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Center"
+                                    IsEnabled="{Binding isConfigurationUARTPageEnabled}"
                                     Command="{Binding ResetUartFrameConfigCommand}"
                                     Margin="5,0"
                                     Width="60"/>
@@ -2552,6 +2797,7 @@
                                     Style="{DynamicResource SimpleButton}"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Center"
+                                    IsEnabled="{Binding isConfigurationUARTPageEnabled}"
                                     Command="{Binding SetUartFrameConfigCommand}"
                                     Margin="5,0"
                                     Width="60"/>
@@ -2591,8 +2837,50 @@
                                     Text="Register"
                                     Style="{DynamicResource TextBlockStyle}"
                                     FontWeight="Bold"/>
-                        
-                        
+
+                        <Grid Grid.Row="1" 
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Top">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock  Grid.Row="0"
+                                        Grid.Column="0"
+                                        Text="Select register"
+                                        Margin="5,0"
+                                        Style="{DynamicResource TextBlockStyle}"/>
+
+
+                            <ComboBox   Grid.Row="0" 
+                                        Grid.Column="1"
+                                        Margin="5,0"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        ItemsSource="{Binding UartRegistersComboBoxItems}"
+                                        IsEnabled="{Binding isConfigurationUARTPageEnabled}"
+                                        MinWidth="100"/>
+
+                            <StackPanel Grid.Row="0"
+                                        Grid.Column="2"
+                                        Orientation="Horizontal">
+                                <TextBlock  Text="0x"
+                                            Style="{DynamicResource TextBlockStyle}"/>
+                                <TextBox    HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Style="{DynamicResource TextBoxStyle}"
+                                            IsEnabled="{Binding isConfigurationUARTPageEnabled}"
+                                            MinWidth="120"
+                                            Margin="2"
+                                            PreviewTextInput="HexPsiConfigTextBox_PreviewTextInput"/>
+                            </StackPanel>
+
+                        </Grid>
 
                         <StackPanel Orientation="Horizontal"
                                     Grid.Row="4"
@@ -2602,16 +2890,19 @@
                             <Button Content="Write"
                                     Margin="10,0"
                                     Style="{DynamicResource SimpleButton}"
+                                    IsEnabled="{Binding isConfigurationUARTPageEnabled}"
                                     Command="{Binding WriteUartConfigurationCommand}"/>
 
                             <Button Content="Read"
                                     Margin="10,0"
                                     Style="{DynamicResource SimpleButton}"
+                                    IsEnabled="{Binding isConfigurationUARTPageEnabled}"
                                     Command="{Binding ReadUARTConfigurationCommand}"/>
 
                             <Button Content="Reset"
                                     Margin="10,0"
                                     Style="{DynamicResource SimpleButton}"
+                                    IsEnabled="{Binding isConfigurationUARTPageEnabled}"
                                     Command="{Binding ResetUARTConfigurationCommand}"/>
 
                         </StackPanel>
