@@ -13,6 +13,7 @@
     <Page.Resources>
         <cnvrt:BitToTextConverter x:Key="BitToTextConverter"/>
         <cnvrt:BoolToIntConverter x:Key="BoolToIntConverter"/>
+        <cnvrt:BoolToRWConverter x:Key="BoolToRWConverter"/>
     </Page.Resources>
     
     <Grid Background="{DynamicResource UI.BackGround}">
@@ -187,7 +188,7 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="28"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
@@ -233,7 +234,7 @@
                         Grid.Row="0" Grid.RowSpan="3"/>
 
                 <Border BorderBrush="{DynamicResource SimpleButton.BorderBrush}"
-                        BorderThickness="2"
+                        BorderThickness="0,2"
                         Grid.Column="10" Grid.ColumnSpan="1"
                         Grid.Row="0" Grid.RowSpan="3"/>
 
@@ -243,7 +244,7 @@
                         Grid.Row="0" Grid.RowSpan="3"/>
 
                 <Border BorderBrush="{DynamicResource SimpleButton.BorderBrush}"
-                        BorderThickness="2"
+                        BorderThickness="0,2"
                         Grid.Column="27" Grid.ColumnSpan="3"
                         Grid.Row="0" Grid.RowSpan="3"/>
 
@@ -258,7 +259,7 @@
                            Style="{DynamicResource CustomTextBlock}"/>
 
                 <TextBlock Grid.Row="0" Grid.Column="10" Grid.ColumnSpan="1"
-                           Text=" R/W " FontSize="16" 
+                           Text=" R/W " FontSize="14" 
                            HorizontalAlignment="Center" VerticalAlignment="Center"
                            Style="{DynamicResource CustomTextBlock}">
                 </TextBlock>
@@ -847,7 +848,7 @@
                                 <TextBlock  Grid.Column="3"  Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
-                                            Text="{Binding Path=MOSI.RwFlag, Converter={StaticResource BoolToIntConverter}}"
+                                            Text="{Binding Path=MOSI.RwFlag, Converter={StaticResource BoolToRWConverter}}"
                                             Style="{DynamicResource TextBlockStyle}" 
                                             MouseLeftButtonDown="MouseDoubleClick"/>
 
