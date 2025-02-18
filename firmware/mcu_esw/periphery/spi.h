@@ -95,7 +95,7 @@ void QSPIDeinitPeriphery(void);
  * \param length data length in bytes
  * \return Returns nothing.
  */
-void QSPIExchangeData(SpiBusSelectEnum spiBus, const uint32 * const dataToSend, uint32 * const dataOut, uint8 length);
+void QSPIExchangeData(uint8 spiChannel, SpiBusSelectEnum spiBus, const uint32 * const dataToSend, uint32 * const dataOut, uint8 length);
 
 /** \brief QSPI Master channel CS pin reconfiguration
  * Channel will be reconfigured only if new spiChannel is not the same as previous one

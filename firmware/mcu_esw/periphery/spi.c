@@ -393,7 +393,7 @@ void QSPIDeinitPeriphery(void)
     IfxPort_setPinModeInput(qspi2Slave11Select.pin->pin.port, qspi2Slave11Select.pin->pin.pinIndex, IfxPort_InputMode_noPullDevice);
 }
 
-void QSPIExchangeData(SpiBusSelectEnum spiBusNumber, const uint32 * const dataToSend, uint32 * const dataOut, uint8 length)
+void QSPIExchangeData(uint8 spiChannel, SpiBusSelectEnum spiBusNumber, const uint32 * const dataToSend, uint32 * const dataOut, uint8 length)
 {
     // Temporary variables to store data with correct endian for communication
     uint32 dataToSendSwapped = SWAP_ENDIAN(*dataToSend);
@@ -403,6 +403,10 @@ void QSPIExchangeData(SpiBusSelectEnum spiBusNumber, const uint32 * const dataTo
     if (spiBusNumber > SPI_BUS_2) return;
 
     //use SpiBusSelectEnum as type would be good.
+
+    // Activate additional CS pins if required by spiChannel
+    //
+
     if (spiBusNumber == SPI_BUS_1)
     {
         sint32 timeout = IfxStm_getTicksFromMilliseconds(BSP_DEFAULT_TIMER, SPI_TIMEOUT);
@@ -423,6 +427,10 @@ void QSPIExchangeData(SpiBusSelectEnum spiBusNumber, const uint32 * const dataTo
             if ((--timeout) <= 0) break;
         }
     }
+
+    // Disactivate additional CS pins
+    //
+
     *dataOut = SWAP_ENDIAN(dataToRecive);
 }
 
