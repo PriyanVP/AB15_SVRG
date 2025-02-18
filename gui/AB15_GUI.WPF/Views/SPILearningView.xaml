@@ -900,7 +900,7 @@
                     <ColumnDefinition Width="30"/>
                     <ColumnDefinition Width="30"/>
                     <ColumnDefinition Width="40"/>
-                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="60"/>
                     <ColumnDefinition Width="25"/>
                     <ColumnDefinition Width="30"/>
                     <ColumnDefinition Width="*" />
@@ -1010,7 +1010,7 @@
                                     <ColumnDefinition Width="30"/>
                                     <ColumnDefinition Width="30"/>
                                     <ColumnDefinition Width="40"/>
-                                    <ColumnDefinition Width="50"/>
+                                    <ColumnDefinition Width="60"/>
                                     <ColumnDefinition Width="25"/>
                                     <ColumnDefinition Width="30"/>
                                     <ColumnDefinition Width="*"/>
