@@ -95,15 +95,15 @@ namespace AB15_GUI.WPF.Models
             ConfigData.Add(new Reg_PSI_SID_Slot2_Ch8() { Data = 0x0000 });
             ConfigData.Add(new Reg_PSI_SID_Slot3_Ch8() { Data = 0x0000 });
             ConfigData.Add(new Reg_PSI_SID_Slot4_Ch8() { Data = 0x0000 });
-            ConfigData.Add(new Reg_PSI_Config_Common() { Data = 0x0002 });
-            ConfigData.Add(new Reg_PSI_Config_Ch1() { Data = 0x2102 });
-            ConfigData.Add(new Reg_PSI_Config_Ch2() { Data = 0x0000 });
-            ConfigData.Add(new Reg_PSI_Config_Ch3() { Data = 0x0000 });
-            ConfigData.Add(new Reg_PSI_Config_Ch4() { Data = 0x0000 });
-            ConfigData.Add(new Reg_PSI_Config_Ch5() { Data = 0x0000 });
-            ConfigData.Add(new Reg_PSI_Config_Ch6() { Data = 0x0000 });
-            ConfigData.Add(new Reg_PSI_Config_Ch7() { Data = 0x0000 });
-            ConfigData.Add(new Reg_PSI_Config_Ch8() { Data = 0x0000 });
+            ConfigData.Add(new Reg_PSI_Config_Common() { Data = 0x0005 });
+            ConfigData.Add(new Reg_PSI_Config_Ch1() { Data = 0x001A });
+            ConfigData.Add(new Reg_PSI_Config_Ch2() { Data = 0x001A });
+            ConfigData.Add(new Reg_PSI_Config_Ch3() { Data = 0x001A });
+            ConfigData.Add(new Reg_PSI_Config_Ch4() { Data = 0x001A });
+            ConfigData.Add(new Reg_PSI_Config_Ch5() { Data = 0x001A });
+            ConfigData.Add(new Reg_PSI_Config_Ch6() { Data = 0x001A });
+            ConfigData.Add(new Reg_PSI_Config_Ch7() { Data = 0x001A });
+            ConfigData.Add(new Reg_PSI_Config_Ch8() { Data = 0x001A });
 
             // Write configuration for POM registers
             ConfigData.Add(new Reg_POM_Config() { Data = 0x0000 });
