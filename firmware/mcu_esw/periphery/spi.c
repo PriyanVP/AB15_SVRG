@@ -405,7 +405,14 @@ void QSPIExchangeData(uint8 spiChannel, SpiBusSelectEnum spiBusNumber, const uin
     //use SpiBusSelectEnum as type would be good.
 
     // Activate additional CS pins if required by spiChannel
-    //
+    if (spiChannel == SPI1_CS_MON1)
+    {
+        IfxPort_setPinState(SPI1_CS_MON1_PIN, IfxPort_State_low);
+    }
+    if (spiChannel == SPI2_CS_MON2)
+    {
+        IfxPort_setPinState(SPI2_CS_MON2_PIN, IfxPort_State_low);
+    }
 
     if (spiBusNumber == SPI_BUS_1)
     {
@@ -429,7 +436,14 @@ void QSPIExchangeData(uint8 spiChannel, SpiBusSelectEnum spiBusNumber, const uin
     }
 
     // Disactivate additional CS pins
-    //
+    if (spiChannel == SPI1_CS_MON1)
+    {
+        IfxPort_setPinState(SPI1_CS_MON1_PIN, IfxPort_State_high);
+    }
+    if (spiChannel == SPI2_CS_MON2)
+    {
+        IfxPort_setPinState(SPI2_CS_MON2_PIN, IfxPort_State_high);
+    }
 
     *dataOut = SWAP_ENDIAN(dataToRecive);
 }
