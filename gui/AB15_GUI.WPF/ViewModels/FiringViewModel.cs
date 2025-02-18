@@ -115,7 +115,7 @@ namespace AB15_GUI.WPF.ViewModels
             _stateMachine.Fire(Triggers.POR);
 
             // Events from ASIC // TODO: some of these handlers should be moved out of Firing VM
-            // this.asicWrapper.ASICs[0].InitModeEntered += InitModeEnteredHandler; // TODO: add in future 
+            this.asicWrapper.ASICs[0].InitModeEntered += InitModeEnteredHandler; // TODO: add in future 
             this.asicWrapper.ASICs[0].ConfigurationLoaded += ConfigurationLoadedHandler;
             this.asicWrapper.ASICs[0].ConfigurationLocked += ConfigurationLockedHandler;
             this.asicWrapper.ASICs[0].NormalModeEntered += NormalModeEnteredHandler;
@@ -1139,7 +1139,7 @@ namespace AB15_GUI.WPF.ViewModels
             IsCyclicDiagnosticsEn = false;
             StartStopCyclicReadingExecuteAsync(new object());
         }
-
+        
         /// <summary>
         /// Execute Firing simultaneous command
         /// </summary>
@@ -1153,28 +1153,39 @@ namespace AB15_GUI.WPF.ViewModels
             logger.Debug($"Pressed Fire simultaneous button");
 
             // == Step 0 - raw SPI ==
+            bool isPlausibilityCheckOk = false;
 
-            // Raw SPI for unlocking ASIC
-            const uint RAW_SPI_TRANSACTION = 0x0200_0806;
+            // Do configured plausibility check
+            if (IsSpiSensorDataEn)
+            {
+                isPlausibilityCheckOk = await PlausibilityCheckSPI();
+            }
 
-            // Create package to MCU
-            TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
-            packageToSend.ASICID = 7; // TODO: replace hardcoded
-            packageToSend.Cmd = MCUCommand.WRITE_RAW_DATA_SPI;
-            packageToSend.PayloadType = typeof(AddressDataPayload);
-            packageToSend.Payload.Data.Add((UInt16) (RAW_SPI_TRANSACTION & 0xFFFF));       // 16 LSB
-            packageToSend.Payload.Data.Add((UInt16) (RAW_SPI_TRANSACTION >> 16) & 0xFFFF); // 16 MSB
+            if (IsPsiSensorDataEn)
+            {
+                isPlausibilityCheckOk = await PlausibilityCheckPSI();
+            }
 
-            // Send command to MCU and wait for response
-            ReceiveCommunicationPackage<AddressDataPayload>? mcuResponse0 = (ReceiveCommunicationPackage<AddressDataPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
+            if (IsUartEn)
+            {
+                isPlausibilityCheckOk = await PlausibilityCheckUART();
+            }
 
-            // Validate response
-            if (IsResponseValid(mcuResponse0, nameof(FireSimultaneous)) == false) return;
+            // Stop execution if not successful
+            if (isPlausibilityCheckOk == false)
+            {
+                AddError(nameof(FireSimultaneous), "Plausibility check failed");
+                
+                // Unlock firing command
+                _fireSimultaneousCommand.InProgress = false;
+                OnPropertyChanged(nameof(FireSimultaneousCommandEn));
+                return;
+            }
 
             // == Step 0.2 - disabling monoflop TODO: add register model, replace delegate
 
             // Create package to MCU
-            packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
+            TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
             packageToSend.ASICID = 1;
             packageToSend.Cmd = MCUCommand.WRITE_REG;
             packageToSend.PayloadType = typeof(EmptyPayload);
@@ -1540,6 +1551,116 @@ namespace AB15_GUI.WPF.ViewModels
             await asicWrapper.ASICs[0].ExecuteTestMode2TransitionAsync();
         }
 
+        /// <summary>
+        /// Plausibility check via SPI sensor data
+        /// </summary>
+        /// <returns>flag indicating if execution was successful</returns>
+        private async Task<bool> PlausibilityCheckSPI()
+        {
+            // Raw SPI for unlocking ASIC
+            const uint RAW_SPI_TRANSACTION = 0x0200_0806;
+
+            // Create package to MCU
+            var packageToSend = new TransmitCommunicationPackage<AddressDataPayload>
+            {
+                ASICID = 7, // TODO: replace hardcoded
+                Cmd = MCUCommand.WRITE_RAW_DATA_SPI,
+                PayloadType = typeof(AddressDataPayload)
+            };
+            packageToSend.Payload.Data.Add((ushort)(RAW_SPI_TRANSACTION & 0xFFFF));         // 16 LSB
+            packageToSend.Payload.Data.Add((ushort)((RAW_SPI_TRANSACTION >> 16) & 0xFFFF)); // 16 MSB
+
+            // Send command to MCU and wait for response
+            var mcuResponse0 = (ReceiveCommunicationPackage<AddressDataPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
+
+            // Validate response
+            return IsResponseValid(mcuResponse0, nameof(FireSimultaneous));
+        }
+
+        /// <summary>
+        /// Plausibility check via PSI sensor data
+        /// </summary>
+        /// <returns>flag indicating if execution was successful</returns>
+        private async Task<bool> PlausibilityCheckPSI()
+        {
+            // Activating PSI data check
+            Reg_PSI_Supply reg_PSI_Supply = new Reg_PSI_Supply();
+            reg_PSI_Supply.Data = 0;
+            reg_PSI_Supply.psi_supply_on_ch1.Data = 1;
+            reg_PSI_Supply.psi_supply_on_ch2.Data = 1;
+            reg_PSI_Supply.psi_supply_on_ch3.Data = 1;
+            reg_PSI_Supply.psi_supply_on_ch4.Data = 1;
+            reg_PSI_Supply.psi_supply_on_ch5.Data = 1;
+            reg_PSI_Supply.psi_supply_on_ch6.Data = 1;
+            reg_PSI_Supply.psi_supply_on_ch7.Data = 1;
+            reg_PSI_Supply.psi_supply_on_ch8.Data = 1;
+
+            Reg_PSI_Gen_Mask_Sync reg_PSI_Gen_Mask_Sync = new Reg_PSI_Gen_Mask_Sync();
+            reg_PSI_Gen_Mask_Sync.Data = 0;
+            reg_PSI_Gen_Mask_Sync.psi_sync_gen.Data = 1;
+
+            // Create package to MCU
+            TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>
+            {
+                ASICID = 1, // TODO: replace hardcoded
+                Cmd = MCUCommand.EXECUTE_WRITE_SEQUENCE,
+                PayloadType = typeof(EmptyPayload)
+            };
+            packageToSend.Payload.Address.Add(reg_PSI_Supply.Address);
+            packageToSend.Payload.Data.Add(reg_PSI_Supply.Data);
+            packageToSend.Payload.Address.Add(reg_PSI_Gen_Mask_Sync.Address);
+            packageToSend.Payload.Data.Add(reg_PSI_Gen_Mask_Sync.Data);
+
+            // Send command to MCU and wait for response
+            ReceiveCommunicationPackage<EmptyPayload>? mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
+
+            // Validate response
+            if(IsResponseValid(mcuResponse, nameof(FireSimultaneous)) == false) return false;
+
+            // Emulate pause
+            await Task.Delay(100);
+
+            // Read register for doing plausibility check
+            Reg_PSI_Read_Data_Slot1_Ch1 reg_PSI_Read_Data_Slot1_Ch1 = new Reg_PSI_Read_Data_Slot1_Ch1();
+
+            packageToSend = new TransmitCommunicationPackage<AddressDataPayload>
+            {
+                ASICID = 7, // TODO: replace hardcoded
+                Cmd = MCUCommand.READ_REG,
+                PayloadType = typeof(ReadRegisterPayload)
+            };
+            packageToSend.Payload.Address.Add(reg_PSI_Read_Data_Slot1_Ch1.Address);
+
+            ReceiveCommunicationPackage<ReadRegisterPayload>? mcuResponse2 = (ReceiveCommunicationPackage<ReadRegisterPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
+
+            return IsResponseValid(mcuResponse2, nameof(FireSimultaneous));
+        }
+
+        /// <summary>
+        /// Plausibility check via UART
+        /// </summary>
+        /// <returns>flag indicating if execution was successful</returns>
+        private async Task<bool> PlausibilityCheckUART()
+        {
+            // Raw UART for unlocking ASIC
+            const uint RAW_UART_TRANSACTION = 0x0400_0A08;
+
+            // Create package to MCU
+            var packageToSend = new TransmitCommunicationPackage<UartPayload>
+            {
+                ASICID = 1, // TODO: replace hardcoded
+                Cmd = MCUCommand.WRITE_DATA_UART,
+                PayloadType = typeof(UartPayload)
+            };
+            packageToSend.Payload.UartData.AddRange(new List<byte> { 0xAA, 0xFF, 0x00 })
+
+            // Send command to MCU and wait for response
+            var mcuResponse = (ReceiveCommunicationPackage<UartPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
+
+            // Validate response
+            return IsResponseValid(mcuResponse, nameof(FireSimultaneous));
+        }
+
         #endregion // Commands
      
         #region ASIC_events
@@ -1569,6 +1690,54 @@ namespace AB15_GUI.WPF.ViewModels
 
             // Unsubscribe from event - by design can't be used twice
             caller.RequestConfiguration -= RequestConfigurationHandler;
+        }
+
+        /// <summary>
+        /// Event handler that will be called when ASIC enters init mode
+        /// </summary>
+        /// <param name="sender">object that called this event. Must be one of ASIC objects</param>
+        /// <param name="e">unused</param>
+        private async void InitModeEnteredHandler(object? sender, EventArgs e)
+        {
+            // Precondition
+            if (sender == null)
+            {
+                throw new ArgumentNullException("Incorrect argument - can't be null!");
+            }
+
+            // Typecast sender to actual type
+            IASIC caller = (IASIC) sender;
+
+            // Check if UART is enabled
+            Reg_SAFE_SETTINGS reg_SAFE_SETTINGS = new Reg_SAFE_SETTINGS();
+            TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
+            packageToSend.ASICID = 1;
+            packageToSend.Cmd = MCUCommand.READ_REG;
+            packageToSend.PayloadType = typeof(AddressDataPayload);
+            packageToSend.Payload.Address.Add(reg_SAFE_SETTINGS.Address);
+
+            // Send command to MCU and wait for response
+            ReceiveCommunicationPackage<AddressDataPayload>? mcuResponse = (ReceiveCommunicationPackage<AddressDataPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
+
+            // Validate response
+            if (IsResponseValid(mcuResponse, null) == false) return;
+
+            // Report UART enable status
+            reg_SAFE_SETTINGS.Data = mcuResponse.Payload.Data[0];
+            IsUartEn = (reg_SAFE_SETTINGS.disable_master_mode.Data > 1);
+            IsUartControlEn = false;
+
+            // Disable other plausibilisation checks if only UART plausibilisation required
+            if (reg_SAFE_SETTINGS.disable_master_mode.Data == 3)
+            {
+                IsSpiSensorDataControlEn = false;
+                IsPsiSensorDataControlEn = false;
+                IsSpiSensorDataEn = false;
+                IsPsiSensorDataEn = false;
+            }
+
+            // Unsubscribe from event - by design can be fired only once
+            caller.ConfigurationLoaded -= InitModeEnteredHandler;
         }
 
         /// <summary>
