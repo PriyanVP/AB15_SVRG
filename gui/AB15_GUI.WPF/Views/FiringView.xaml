@@ -831,24 +831,24 @@
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Center"
                                         Style="{DynamicResource ToggleSwitchStyle}" 
-                                        IsChecked="{Binding IsUARTSensorInputEn}"
-                                        IsEnabled="{Binding IsFiringControlsEnabled}"/>
+                                        IsChecked="{Binding IsUartEn}"
+                                        IsEnabled="{Binding IsUartControlEn}"/>
 
                             <CheckBox   Grid.Row="1" 
                                         Grid.Column="2"
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Center"
                                         Style="{DynamicResource ToggleSwitchStyle}" 
-                                        IsChecked="{Binding IsSPISensorInputEn}"
-                                        IsEnabled="{Binding IsFiringControlsEnabled}"/>
+                                        IsChecked="{Binding IsSpiSensorDataEn}"
+                                        IsEnabled="{Binding IsSpiSensorDataControlEn}"/>
 
                             <CheckBox   Grid.Row="1" 
                                         Grid.Column="4"
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Center"
                                         Style="{DynamicResource ToggleSwitchStyle}" 
-                                        IsChecked="{Binding IsPSISensorInputEn}"
-                                        IsEnabled="{Binding IsFiringControlsEnabled}"/>
+                                        IsChecked="{Binding IsPsiSensorDataEn}"
+                                        IsEnabled="{Binding IsPsiSensorDataControlEn}"/>
 
                         </Grid>
                     </StackPanel>

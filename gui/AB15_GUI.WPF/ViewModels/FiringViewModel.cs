@@ -435,7 +435,6 @@ namespace AB15_GUI.WPF.ViewModels
             }
         }
 
-
         /// <summary>
         /// <inheritdoc cref="IsAlternativeFiringModeEn" path='/summary'/>
         /// </summary>
@@ -453,6 +452,144 @@ namespace AB15_GUI.WPF.ViewModels
                 if (isAlternativeFiringModeEn == value) return;
 
                 isAlternativeFiringModeEn = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// <inheritdoc cref="IsSpiSensorDataEn" path='/summary'/>
+        /// </summary>
+        private bool isSpiSensorDataEn = true;
+        
+        /// <summary>
+        /// Flag to indicate if firing with sensor data via SPI enabled
+        /// </summary>
+        public bool IsSpiSensorDataEn
+        {
+            get => isSpiSensorDataEn;
+            set 
+            {
+                // Do nothing if value is not changed
+                if (isSpiSensorDataEn == value) return;
+
+                // Disable PSI option
+                if (value == true)
+                {
+                    IsPsiSensorDataEn = false;
+                }
+
+                isSpiSensorDataEn = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// <inheritdoc cref="IsPsiSensorDataEn" path='/summary'/>
+        /// </summary>
+        private bool isPsiSensorDataEn = false;
+        
+        /// <summary>
+        /// Flag to indicate if firing with sensor data via PSI enabled
+        /// </summary>
+        public bool IsPsiSensorDataEn
+        {
+            get => isPsiSensorDataEn;
+            set 
+            {
+                // Do nothing if value is not changed
+                if (isPsiSensorDataEn == value) return;
+
+                // Disable SPI option
+                if (value == true)
+                {
+                    IsSpiSensorDataEn = false;
+                }
+
+                isPsiSensorDataEn = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// <inheritdoc cref="IsUartEn" path='/summary'/>
+        /// </summary>
+        private bool isUartEn = false;
+        
+        /// <summary>
+        /// Flag to indicate if firing with UART enabled
+        /// </summary>
+        public bool IsUartEn
+        {
+            get => isUartEn;
+            set 
+            {
+                // Do nothing if value is not changed
+                if (isUartEn == value) return;
+
+                isUartEn = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// <inheritdoc cref="IsSpiSensorDataControlEn" path='/summary'/>
+        /// </summary>
+        private bool isSpiSensorDataControlEn = true;
+        
+        /// <summary>
+        /// Flag to indicate if firing with sensor data via SPI control element is enabled
+        /// </summary>
+        public bool IsSpiSensorDataControlEn
+        {
+            get => isSpiSensorDataControlEn;
+            set 
+            {
+                // Do nothing if value is not changed
+                if (isSpiSensorDataControlEn == value) return;
+
+                isSpiSensorDataControlEn = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// <inheritdoc cref="IsPsiSensorDataControlEn" path='/summary'/>
+        /// </summary>
+        private bool isPsiSensorDataControlEn = true;
+        
+        /// <summary>
+        /// Flag to indicate if firing with sensor data via PSI control element is enabled
+        /// </summary>
+        public bool IsPsiSensorDataControlEn
+        {
+            get => isPsiSensorDataControlEn;
+            set 
+            {
+                // Do nothing if value is not changed
+                if (isPsiSensorDataControlEn == value) return;
+
+                isPsiSensorDataControlEn = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// <inheritdoc cref="IsUartControlEn" path='/summary'/>
+        /// </summary>
+        private bool isUartControlEn = true;
+        
+        /// <summary>
+        /// Flag to indicate if firing with UART control element is enabled
+        /// </summary>
+        public bool IsUartControlEn
+        {
+            get => isUartControlEn;
+            set 
+            {
+                // Do nothing if value is not changed
+                if (isUartControlEn == value) return;
+
+                isUartControlEn = value;
                 OnPropertyChanged();
             }
         }
