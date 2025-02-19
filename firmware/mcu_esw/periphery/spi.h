@@ -89,6 +89,7 @@ void QSPIDeinitPeriphery(void);
  * 3) Receives 32 bit package from slave\n
  * 4) Waits for configured time to avoid issues in communication
  *
+ * \param spiChannel defines CS line to be activated in transaction
  * \param SpiBusSelectEnum defines on which SPI module the SPIt transaction is initiated
  * \param dataToSend pointer to buffer with data to send
  * \param dataToReceive pointer to empty buffer which will be filled with data from slave
