@@ -757,16 +757,16 @@ namespace AB15_GUI.WPF.ViewModels
         /// </summary>
         private List<IRegister> _firingConfig = new List<IRegister>()
         {
-            new Reg_FLM_Config_ch2_1()   { Data = 0x0000 },
-            new Reg_FLM_Config_ch4_3()   { Data = 0x0000 },
-            new Reg_FLM_Config_ch6_5()   { Data = 0x0000 },
-            new Reg_FLM_Config_ch8_7()   { Data = 0x0000 },
-            new Reg_FLM_Config_ch10_9()  { Data = 0x0000 },
-            new Reg_FLM_Config_ch12_11() { Data = 0x0000 },
-            new Reg_FLM_Config_ch14_13() { Data = 0x0000 },
-            new Reg_FLM_Config_ch16_15() { Data = 0x0000 },
-            new Reg_FLM_Config_ch18_17() { Data = 0x0000 },
-            new Reg_FLM_Config_ch20_19() { Data = 0x0000 }
+            new Reg_FLM_Config_ch2_1()   { Data = 0x0101 },
+            new Reg_FLM_Config_ch4_3()   { Data = 0x0101 },
+            new Reg_FLM_Config_ch6_5()   { Data = 0x0101 },
+            new Reg_FLM_Config_ch8_7()   { Data = 0x0101 },
+            new Reg_FLM_Config_ch10_9()  { Data = 0x0101 },
+            new Reg_FLM_Config_ch12_11() { Data = 0x0101 },
+            new Reg_FLM_Config_ch14_13() { Data = 0x0101 },
+            new Reg_FLM_Config_ch16_15() { Data = 0x0101 },
+            new Reg_FLM_Config_ch18_17() { Data = 0x0101 },
+            new Reg_FLM_Config_ch20_19() { Data = 0x0101 }
         };
 
         /// <summary>
@@ -1625,7 +1625,7 @@ namespace AB15_GUI.WPF.ViewModels
 
             packageToSend = new TransmitCommunicationPackage<AddressDataPayload>
             {
-                ASICID = 7, // TODO: replace hardcoded
+                ASICID = 2, // TODO: replace hardcoded
                 Cmd = MCUCommand.READ_REG,
                 PayloadType = typeof(ReadRegisterPayload)
             };
@@ -1737,7 +1737,7 @@ namespace AB15_GUI.WPF.ViewModels
             }
 
             // Unsubscribe from event - by design can be fired only once
-            caller.ConfigurationLoaded -= InitModeEnteredHandler;
+            caller.InitModeEntered -= InitModeEnteredHandler;
         }
 
         /// <summary>
