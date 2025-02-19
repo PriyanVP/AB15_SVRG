@@ -1652,7 +1652,7 @@ namespace AB15_GUI.WPF.ViewModels
                 Cmd = MCUCommand.WRITE_DATA_UART,
                 PayloadType = typeof(UartPayload)
             };
-            packageToSend.Payload.UartData.AddRange(new List<byte> { 0xAA, 0xFF, 0x00 })
+            packageToSend.Payload.UartData.AddRange(new List<byte> { 0xAA, 0xFF, 0x00 });
 
             // Send command to MCU and wait for response
             var mcuResponse = (ReceiveCommunicationPackage<UartPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
