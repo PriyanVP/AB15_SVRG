@@ -128,40 +128,33 @@
                         x:Name="ReadWriteChooseField">
 
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="50"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock  Grid.Column="0"
-                            FontSize="16" Margin="3"
-                            VerticalAlignment="Center" HorizontalAlignment="Right"
-                            Text="Read:"
-                            Style="{DynamicResource CustomTextBlock}"/>
-
-                <CheckBox   Grid.Column="1"
-                            x:Name="ReadingCheckBox"
-                            Style="{DynamicResource ToggleSwitchStyle}"
-                            IsEnabled="{Binding IsSPILearningEn}"
-                            HorizontalAlignment="Left" Margin="3"
-                            Checked="CheckBox_Checked"
-                            Unchecked="CheckBox_Checked"/>
-
-                <TextBlock  Grid.Column="2"
-                            FontSize="16" Margin="3"
-                            VerticalAlignment="Center" HorizontalAlignment="Right"
-                            Text="Write:"
-                            Style="{DynamicResource CustomTextBlock}"/>
-
-                <CheckBox   Grid.Column="3"
+                <CheckBox   Grid.Column="0"
                             x:Name="WritingCheckBox"
                             Style="{DynamicResource ToggleSwitchStyle}"
                             IsChecked="{Binding IsWriteRegisterSelected}"
                             IsEnabled="{Binding IsSPILearningEn}"
-                            HorizontalAlignment="Left" Margin="3"
-                            Checked="CheckBox_Checked"
-                            Unchecked="CheckBox_Checked"/>
+                            HorizontalAlignment="Center" Margin="3" />
+
+                <TextBlock  Grid.Column="1"
+                            FontSize="16" Margin="3"
+                            VerticalAlignment="Center" HorizontalAlignment="Left"
+                            Foreground="{DynamicResource Foreground.Default}" >
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Text" Value="Read" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=WritingCheckBox, Path=IsChecked}" Value="True">
+                                    <Setter Property="Text" Value="Write" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+
             </Grid>
 
 

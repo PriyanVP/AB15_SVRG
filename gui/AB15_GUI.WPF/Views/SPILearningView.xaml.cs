@@ -14,21 +14,6 @@ namespace AB15_GUI.WPF.Views
         public SPILearning()
         {
             InitializeComponent();
-
-            ReadingCheckBox.IsChecked = true;
-        }
-
-        private void CheckBox_Checked(object sender, RoutedEventArgs e)
-        {
-            CheckBox checkBox = (CheckBox)sender;
-            if (checkBox.Name == ReadingCheckBox.Name)
-            {
-                WritingCheckBox.IsChecked = !checkBox.IsChecked;
-            }
-            else
-            {
-                ReadingCheckBox.IsChecked = !checkBox.IsChecked;
-            }
         }
 
         private void MouseDoubleClick(object sender, MouseButtonEventArgs e)
