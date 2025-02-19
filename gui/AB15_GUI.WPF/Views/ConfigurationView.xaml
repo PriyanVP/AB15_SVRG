@@ -162,7 +162,9 @@
 
                     <!-- PSI Configuratiion selecter register -->
                     <Grid   Grid.Row="1"
-                            Grid.Column="1" Grid.ColumnSpan="2">
+                            Grid.Column="1" 
+                            Grid.ColumnSpan="2"
+                            Margin="3,0">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="auto"/>
@@ -428,56 +430,56 @@
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot1Ch1SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                                        <TextBlock  Text="{Binding Slot1Ch1SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="1" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot1Ch2SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                                        <TextBlock  Text="{Binding Slot1Ch2SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="2" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot1Ch3SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                                        <TextBlock  Text="{Binding Slot1Ch3SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="3" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot1Ch4SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                                        <TextBlock  Text="{Binding Slot1Ch4SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="4" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot1Ch5SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                                        <TextBlock  Text="{Binding Slot1Ch5SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="5" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot1Ch6SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                                        <TextBlock  Text="{Binding Slot1Ch6SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="6" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot1Ch7SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                                        <TextBlock  Text="{Binding Slot1Ch7SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="7" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot1Ch8SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                                        <TextBlock  Text="{Binding Slot1Ch8SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
                                     <!--#endregion-->
 
@@ -556,64 +558,56 @@
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot2Ch1SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                        <TextBlock  Text="{Binding Slot2Ch1SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="1" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot2Ch2SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                        <TextBlock  Text="{Binding Slot2Ch2SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="2" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot2Ch3SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                        <TextBlock  Text="{Binding Slot2Ch3SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="3" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot2Ch4SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                        <TextBlock  Text="{Binding Slot2Ch4SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="4" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot2Ch5SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                        <TextBlock  Text="{Binding Slot2Ch5SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="5" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot2Ch6SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                        <TextBlock  Text="{Binding Slot2Ch6SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="6" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot2Ch7SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                        <TextBlock  Text="{Binding Slot2Ch7SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="7" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot2Ch8SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                        <TextBlock  Text="{Binding Slot2Ch8SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
                                     <!--#endregion-->
 
@@ -692,64 +686,56 @@
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot3Ch1SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                        <TextBlock  Text="{Binding Slot3Ch1SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="1" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot3Ch2SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                        <TextBlock  Text="{Binding Slot3Ch2SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="2" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot3Ch3SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                        <TextBlock  Text="{Binding Slot3Ch3SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="3" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot3Ch4SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                        <TextBlock  Text="{Binding Slot3Ch4SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="4" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot3Ch5SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                        <TextBlock  Text="{Binding Slot3Ch5SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="5" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot3Ch6SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                        <TextBlock  Text="{Binding Slot3Ch6SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="6" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot3Ch7SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                        <TextBlock  Text="{Binding Slot3Ch7SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="7" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot3Ch8SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                        <TextBlock  Text="{Binding Slot3Ch8SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
                                     <!--#endregion-->
 
@@ -828,64 +814,56 @@
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot4Ch1SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                        <TextBlock  Text="{Binding Slot4Ch1SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="1" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot4Ch2SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                        <TextBlock  Text="{Binding Slot4Ch2SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="2" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot4Ch3SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                        <TextBlock  Text="{Binding Slot4Ch3SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="3" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot4Ch4SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                        <TextBlock  Text="{Binding Slot4Ch4SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="4" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot4Ch5SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                        <TextBlock  Text="{Binding Slot4Ch5SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="5" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot4Ch6SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                        <TextBlock  Text="{Binding Slot4Ch6SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="6" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot4Ch7SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                        <TextBlock  Text="{Binding Slot4Ch7SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="7" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot4Ch8SensorDataText}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"
-                                                    FontSize="{Binding ElementName=TextScale, Path=FontSize, Mode=OneWay}"/>
+                                        <TextBlock  Text="{Binding Slot4Ch8SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
                                     <!--#endregion-->
 
@@ -914,7 +892,8 @@
                                     HorizontalAlignment="Left"
                                     FontWeight="Bold"/>
                         <ScrollViewer   Grid.Row="1"
-                                        Style="{DynamicResource ScrollViewer}">
+                                        Style="{DynamicResource ScrollViewer}"
+                                        VerticalAlignment="Top">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="auto"/>
@@ -1122,7 +1101,8 @@
                                     HorizontalAlignment="Left"
                                     FontWeight="Bold"/>
                         <ScrollViewer   Grid.Row="1"
-                                        Style="{DynamicResource ScrollViewer}">
+                                        Style="{DynamicResource ScrollViewer}"
+                                        VerticalAlignment="Top">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="auto"/>
@@ -2610,7 +2590,8 @@
                         
                         <!-- Actual table for uart configuration -->
                         <ListView   Grid.Row="1" 
-                                    Name="UartConfigurationTable" 
+                                    Name="UartConfigurationTable"
+                                    Style="{DynamicResource ListViewStyle}"
                                     ItemsSource="{Binding UartConfigurationTable}"
                                     ItemContainerStyle="{DynamicResource ListViewItemStyle}" 
                                     FontSize="16">
@@ -2722,8 +2703,10 @@
                                     <TextBox    VerticalAlignment="Center"
                                                 HorizontalAlignment="Center"
                                                 Style="{DynamicResource TextBoxStyle}"
+                                                Padding="3"
                                                 Text="{Binding UartFrame1Text}"
                                                 IsEnabled="{Binding isConfigurationUARTPageEnabled}"
+                                                PreviewTextInput="HexUartFrameTextBox_PreviewTextInput"
                                                 MinWidth="160"/>
                                 </StackPanel>
 
@@ -2736,7 +2719,9 @@
                                     <TextBox    VerticalAlignment="Center"
                                                 HorizontalAlignment="Center"
                                                 Style="{DynamicResource TextBoxStyle}"
+                                                Padding="3"
                                                 Text="{Binding UartFrame2Text}"
+                                                PreviewTextInput="HexUartFrameTextBox_PreviewTextInput"
                                                 IsEnabled="{Binding isConfigurationUARTPageEnabled}"
                                                 MinWidth="160"/>
                                 </StackPanel>
@@ -2750,8 +2735,10 @@
                                     <TextBox    VerticalAlignment="Center"
                                                 HorizontalAlignment="Center"
                                                 Style="{DynamicResource TextBoxStyle}"
+                                                Padding="3"
                                                 Text="{Binding UartFrame3Text}"
                                                 IsEnabled="{Binding isConfigurationUARTPageEnabled}"
+                                                PreviewTextInput="HexUartFrameTextBox_PreviewTextInput"
                                                 MinWidth="160"/>
                                 </StackPanel>
 

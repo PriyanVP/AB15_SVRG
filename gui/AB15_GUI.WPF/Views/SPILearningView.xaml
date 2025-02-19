@@ -802,11 +802,12 @@
                 <!-- #endregion -->
 
                 <!-- #region Table content -->
-                <ListView Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="8" Name="MOSITableTableView" 
-                                ItemsSource="{Binding SPICommunicationTable}"
-                                ItemContainerStyle="{DynamicResource ListViewItemStyle}" 
-                                IsEnabled="{Binding IsSPILearningEn}"
-                                FontSize="16">
+                <ListView   Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="8" Name="MOSITableTableView" 
+                            Style="{DynamicResource ListViewStyle}"
+                            ItemsSource="{Binding SPICommunicationTable}"
+                            ItemContainerStyle="{DynamicResource ListViewItemStyle}" 
+                            IsEnabled="{Binding IsSPILearningEn}"
+                            FontSize="16">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Grid>
@@ -994,11 +995,12 @@
                 <!-- #endregion -->
 
                 <!-- #region Table content -->
-                <ListView Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="14" Name="MISOTableTableView" 
-                                ItemsSource="{Binding SPICommunicationTable}"
-                                ItemContainerStyle="{DynamicResource ListViewItemStyle}" 
-                                IsEnabled="{Binding IsSPILearningEn}"
-                                FontSize="16">
+                <ListView   Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="14" Name="MISOTableTableView" 
+                            Style="{DynamicResource ListViewStyle}"
+                            ItemsSource="{Binding SPICommunicationTable}"
+                            ItemContainerStyle="{DynamicResource ListViewItemStyle}" 
+                            IsEnabled="{Binding IsSPILearningEn}"
+                            FontSize="16">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Grid>

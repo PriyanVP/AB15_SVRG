@@ -271,6 +271,518 @@ namespace AB15_GUI.WPF.ViewModels
                 OnPropertyChanged();
             }
         }
+        
+        /// <summary>
+        /// </summary>
+        private string slot1Ch1SensorDataText;
+        
+        /// <summary>
+        /// </summary>
+        public string Slot1Ch1SensorDataText
+        {
+            get => slot1Ch1SensorDataText;
+            set 
+            {
+                slot1Ch1SensorDataText = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        /// <summary>
+        /// </summary>
+        private string slot1Ch2SensorDataText;
+        
+        /// <summary>
+        /// </summary>
+        public string Slot1Ch2SensorDataText
+        {
+            get => slot1Ch2SensorDataText;
+            set 
+            {
+                slot1Ch2SensorDataText = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        /// <summary>
+        /// </summary>
+        private string slot1Ch3SensorDataText;
+        
+        /// <summary>
+        /// </summary>
+        public string Slot1Ch3SensorDataText
+        {
+            get => slot1Ch3SensorDataText;
+            set 
+            {
+                slot1Ch3SensorDataText = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        /// <summary>
+        /// </summary>
+        private string slot1Ch4SensorDataText;
+        
+        /// <summary>
+        /// </summary>
+        public string Slot1Ch4SensorDataText
+        {
+            get => slot1Ch4SensorDataText;
+            set 
+            {
+                slot1Ch4SensorDataText = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        /// <summary>
+        /// </summary>
+        private string slot1Ch5SensorDataText;
+        
+        /// <summary>
+        /// </summary>
+        public string Slot1Ch5SensorDataText
+        {
+            get => slot1Ch5SensorDataText;
+            set 
+            {
+                slot1Ch5SensorDataText = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        /// <summary>
+        /// </summary>
+        private string slot1Ch6SensorDataText;
+        
+        /// <summary>
+        /// </summary>
+        public string Slot1Ch6SensorDataText
+        {
+            get => slot1Ch6SensorDataText;
+            set 
+            {
+                slot1Ch6SensorDataText = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        /// <summary>
+        /// </summary>
+        private string slot1Ch7SensorDataText;
+        
+        /// <summary>
+        /// </summary>
+        public string Slot1Ch7SensorDataText
+        {
+            get => slot1Ch7SensorDataText;
+            set 
+            {
+                slot1Ch7SensorDataText = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        /// <summary>
+        /// </summary>
+        private string slot1Ch8SensorDataText;
+        
+        /// <summary>
+        /// </summary>
+        public string Slot1Ch8SensorDataText
+        {
+            get => slot1Ch8SensorDataText;
+            set 
+            {
+                slot1Ch8SensorDataText = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        /// <summary>
+        /// </summary>
+        private string slot2Ch1SensorDataText;
+        
+        /// <summary>
+        /// </summary>
+        public string Slot2Ch1SensorDataText
+        {
+            get => slot2Ch1SensorDataText;
+            set 
+            {
+                slot2Ch1SensorDataText = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        /// <summary>
+        /// </summary>
+        private string slot2Ch2SensorDataText;
+        
+        /// <summary>
+        /// </summary>
+        public string Slot2Ch2SensorDataText
+        {
+            get => slot2Ch2SensorDataText;
+            set 
+            {
+                slot2Ch2SensorDataText = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        /// <summary>
+        /// </summary>
+        private string slot2Ch3SensorDataText;
+        
+        /// <summary>
+        /// </summary>
+        public string Slot2Ch3SensorDataText
+        {
+            get => slot2Ch3SensorDataText;
+            set 
+            {
+                slot2Ch3SensorDataText = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        /// <summary>
+        /// </summary>
+        private string slot2Ch4SensorDataText;
+        
+        /// <summary>
+        /// </summary>
+        public string Slot2Ch4SensorDataText
+        {
+            get => slot2Ch4SensorDataText;
+            set 
+            {
+                slot2Ch4SensorDataText = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        /// <summary>
+        /// </summary>
+        private string slot2Ch5SensorDataText;
+        
+        /// <summary>
+        /// </summary>
+        public string Slot2Ch5SensorDataText
+        {
+            get => slot2Ch5SensorDataText;
+            set 
+            {
+                slot2Ch5SensorDataText = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        /// <summary>
+        /// </summary>
+        private string slot2Ch6SensorDataText;
+        
+        /// <summary>
+        /// </summary>
+        public string Slot2Ch6SensorDataText
+        {
+            get => slot2Ch6SensorDataText;
+            set 
+            {
+                slot2Ch6SensorDataText = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        /// <summary>
+        /// </summary>
+        private string slot2Ch7SensorDataText;
+        
+        /// <summary>
+        /// </summary>
+        public string Slot2Ch7SensorDataText
+        {
+            get => slot2Ch7SensorDataText;
+            set 
+            {
+                slot2Ch7SensorDataText = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        /// <summary>
+        /// </summary>
+        private string slot2Ch8SensorDataText;
+        
+        /// <summary>
+        /// </summary>
+        public string Slot2Ch8SensorDataText
+        {
+            get => slot2Ch8SensorDataText;
+            set 
+            {
+                slot2Ch8SensorDataText = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        /// <summary>
+        /// </summary>
+        private string slot3Ch1SensorDataText;
+        
+        /// <summary>
+        /// </summary>
+        public string Slot3Ch1SensorDataText
+        {
+            get => slot3Ch1SensorDataText;
+            set 
+            {
+                slot3Ch1SensorDataText = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        /// <summary>
+        /// </summary>
+        private string slot3Ch2SensorDataText;
+        
+        /// <summary>
+        /// </summary>
+        public string Slot3Ch2SensorDataText
+        {
+            get => slot3Ch2SensorDataText;
+            set 
+            {
+                slot3Ch2SensorDataText = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        /// <summary>
+        /// </summary>
+        private string slot3Ch3SensorDataText;
+        
+        /// <summary>
+        /// </summary>
+        public string Slot3Ch3SensorDataText
+        {
+            get => slot3Ch3SensorDataText;
+            set 
+            {
+                slot3Ch3SensorDataText = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        /// <summary>
+        /// </summary>
+        private string slot3Ch4SensorDataText;
+        
+        /// <summary>
+        /// </summary>
+        public string Slot3Ch4SensorDataText
+        {
+            get => slot3Ch4SensorDataText;
+            set 
+            {
+                slot3Ch4SensorDataText = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        /// <summary>
+        /// </summary>
+        private string slot3Ch5SensorDataText;
+        
+        /// <summary>
+        /// </summary>
+        public string Slot3Ch5SensorDataText
+        {
+            get => slot3Ch5SensorDataText;
+            set 
+            {
+                slot3Ch5SensorDataText = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        /// <summary>
+        /// </summary>
+        private string slot3Ch6SensorDataText;
+        
+        /// <summary>
+        /// </summary>
+        public string Slot3Ch6SensorDataText
+        {
+            get => slot3Ch6SensorDataText;
+            set 
+            {
+                slot3Ch6SensorDataText = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        /// <summary>
+        /// </summary>
+        private string slot3Ch7SensorDataText;
+        
+        /// <summary>
+        /// </summary>
+        public string Slot3Ch7SensorDataText
+        {
+            get => slot3Ch7SensorDataText;
+            set 
+            {
+                slot3Ch7SensorDataText = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        /// <summary>
+        /// </summary>
+        private string slot3Ch8SensorDataText;
+        
+        /// <summary>
+        /// </summary>
+        public string Slot3Ch8SensorDataText
+        {
+            get => slot3Ch8SensorDataText;
+            set 
+            {
+                slot3Ch8SensorDataText = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        /// <summary>
+        /// </summary>
+        private string slot4Ch1SensorDataText;
+        
+        /// <summary>
+        /// </summary>
+        public string Slot4Ch1SensorDataText
+        {
+            get => slot4Ch1SensorDataText;
+            set 
+            {
+                slot4Ch1SensorDataText = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        /// <summary>
+        /// </summary>
+        private string slot4Ch2SensorDataText;
+        
+        /// <summary>
+        /// </summary>
+        public string Slot4Ch2SensorDataText
+        {
+            get => slot4Ch2SensorDataText;
+            set 
+            {
+                slot4Ch2SensorDataText = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        /// <summary>
+        /// </summary>
+        private string slot4Ch3SensorDataText;
+        
+        /// <summary>
+        /// </summary>
+        public string Slot4Ch3SensorDataText
+        {
+            get => slot4Ch3SensorDataText;
+            set 
+            {
+                slot4Ch3SensorDataText = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        /// <summary>
+        /// </summary>
+        private string slot4Ch4SensorDataText;
+        
+        /// <summary>
+        /// </summary>
+        public string Slot4Ch4SensorDataText
+        {
+            get => slot4Ch4SensorDataText;
+            set 
+            {
+                slot4Ch4SensorDataText = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        /// <summary>
+        /// </summary>
+        private string slot4Ch5SensorDataText;
+        
+        /// <summary>
+        /// </summary>
+        public string Slot4Ch5SensorDataText
+        {
+            get => slot4Ch5SensorDataText;
+            set 
+            {
+                slot4Ch5SensorDataText = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        /// <summary>
+        /// </summary>
+        private string slot4Ch6SensorDataText;
+        
+        /// <summary>
+        /// </summary>
+        public string Slot4Ch6SensorDataText
+        {
+            get => slot4Ch6SensorDataText;
+            set 
+            {
+                slot4Ch6SensorDataText = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        /// <summary>
+        /// </summary>
+        private string slot4Ch7SensorDataText;
+        
+        /// <summary>
+        /// </summary>
+        public string Slot4Ch7SensorDataText
+        {
+            get => slot4Ch7SensorDataText;
+            set 
+            {
+                slot4Ch7SensorDataText = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        /// <summary>
+        /// </summary>
+        private string slot4Ch8SensorDataText;
+        
+        /// <summary>
+        /// </summary>
+        public string Slot4Ch8SensorDataText
+        {
+            get => slot4Ch8SensorDataText;
+            set 
+            {
+                slot4Ch8SensorDataText = value;
+                OnPropertyChanged();
+            }
+        }
 
         /// <summary>
         /// </summary>
