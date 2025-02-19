@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -57,6 +58,12 @@ namespace AB15_GUI.WPF.Views
             ReadWriteChooseField.Visibility = Visibility.Visible;
             RawFormatTextBox.Visibility = Visibility.Hidden;
             RawHexText.Visibility = Visibility.Hidden;
+        }
+        
+        private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9a-fA-F]+$");
+            e.Handled = regex.IsMatch(e.Text);
         }
     }
 }

@@ -14,6 +14,7 @@
         <cnvrt:BitToTextConverter x:Key="BitToTextConverter"/>
         <cnvrt:BoolToIntConverter x:Key="BoolToIntConverter"/>
         <cnvrt:BoolToRWConverter x:Key="BoolToRWConverter"/>
+        <cnvrt:HexToIntConverter x:Key="HexToIntConverter"/>
     </Page.Resources>
     
     <Grid Background="{DynamicResource UI.BackGround}">
@@ -68,8 +69,9 @@
             <TextBox    Grid.Row="0" Grid.Column="3"
                         Style="{DynamicResource TextBoxStyle}"
                         IsEnabled="{Binding IsSPILearningEn}"
-                        Text="{Binding Path=RefToActiveRecord.MOSI.Address}"
-                        Name="AddressTextBox">
+                        Text="{Binding Path=RefToActiveRecord.MOSI.Address, Converter={StaticResource HexToIntConverter}, Mode=TwoWay}"
+                        Name="AddressTextBox"
+                        PreviewTextInput="TextBox_PreviewTextInput">
             </TextBox>
             
             <TextBlock  Grid.Row="1" Grid.Column="1"
@@ -87,8 +89,9 @@
             <TextBox    Grid.Row="1" Grid.Column="3"
                         Style="{DynamicResource TextBoxStyle}"
                         IsEnabled="{Binding IsSPILearningEn}"
-                        Text="{Binding Path=RefToActiveRecord.MOSI.Data}"
-                        Name="DataTextBox">
+                        Text="{Binding Path=RefToActiveRecord.MOSI.Data, Converter={StaticResource HexToIntConverter}, Mode=TwoWay}"
+                        Name="DataTextBox"
+                        PreviewTextInput="TextBox_PreviewTextInput">
             </TextBox>
             
             <StackPanel Orientation="Horizontal"
@@ -110,14 +113,15 @@
                         VerticalAlignment="Bottom" HorizontalAlignment="Right"
                         Text="0x"
                         Style="{DynamicResource CustomTextBlock}"
-                        Name="RawHexText" Visibility="Hidden"/>
+                        Name="RawHexText" Visibility="Hidden" />
 
             <TextBox    Grid.Row="2" Grid.Column="3"
                         x:Name="RawFormatTextBox"
                         IsEnabled="{Binding IsSPILearningEn}"
-                        Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI}"
+                        Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI, Converter={StaticResource HexToIntConverter}, Mode=TwoWay}"
                         Visibility="Hidden"
-                        Style="{DynamicResource TextBoxStyle}"/>
+                        Style="{DynamicResource TextBoxStyle}"
+                        PreviewTextInput="TextBox_PreviewTextInput" />
 
 
             <Grid       Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="1"
