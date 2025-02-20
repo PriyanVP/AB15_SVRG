@@ -15,6 +15,7 @@
         <cnvrt:BoolToIntConverter x:Key="BoolToIntConverter"/>
         <cnvrt:BoolToRWConverter x:Key="BoolToRWConverter"/>
         <cnvrt:HexToIntConverter x:Key="HexToIntConverter"/>
+        <cnvrt:HelpMessageConverter x:Key="HelpMessageConverter"/>
     </Page.Resources>
     
     <Grid Background="{DynamicResource UI.BackGround}">
@@ -58,7 +59,9 @@
                         FontSize="16" Margin="3"
                         VerticalAlignment="Bottom" HorizontalAlignment="Left"
                         Text="Address:"
-                        Style="{DynamicResource CustomTextBlock}"/>
+                        Style="{DynamicResource CustomTextBlock}"
+                        ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='Address', Mode=OneWay}"
+	                    ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
             
             <TextBlock  Grid.Row="0" Grid.Column="2"
                         FontSize="16" Margin="3"
@@ -78,7 +81,9 @@
                         FontSize="16" Margin="3"
                         VerticalAlignment="Bottom" HorizontalAlignment="Left"
                         Text="Data:"
-                        Style="{DynamicResource CustomTextBlock}"/>
+                        Style="{DynamicResource CustomTextBlock}"
+                        ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='MOSIData', Mode=OneWay}"
+	                    ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
 
             <TextBlock  Grid.Row="1" Grid.Column="2"
                         FontSize="16" Margin="3"
@@ -105,7 +110,9 @@
                             IsEnabled="{Binding IsSPILearningEn}"
                             IsChecked="{Binding IsRawSPISelected}"
                             Checked="isRawFormat_Checked"
-                            Unchecked="isRawFormat_Unchecked"/>
+                            Unchecked="isRawFormat_Unchecked"
+                            ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='IsRawSPISelected', Mode=OneWay}"
+	                        ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
             </StackPanel>
 
             <TextBlock  Grid.Row="2" Grid.Column="2"
@@ -128,8 +135,9 @@
                         x:Name="ReadWriteChooseField">
 
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="45"/>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="25"/>
                 </Grid.ColumnDefinitions>
 
                 <CheckBox   Grid.Column="0"
@@ -137,7 +145,9 @@
                             Style="{DynamicResource ToggleSwitchStyle}"
                             IsChecked="{Binding IsWriteRegisterSelected}"
                             IsEnabled="{Binding IsSPILearningEn}"
-                            HorizontalAlignment="Center" Margin="3" />
+                            HorizontalAlignment="Center" Margin="3"
+                            ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='ReadWriteSwitch', Mode=OneWay}"
+	                        ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
 
                 <TextBlock  Grid.Column="1"
                             FontSize="16" Margin="3"
@@ -155,20 +165,31 @@
                     </TextBlock.Style>
                 </TextBlock>
 
+                <ToggleButton Style="{DynamicResource SimpleToggleButton}" 
+                      x:Name="HelpProviderToggleButton"
+                      HorizontalAlignment="Right"
+                      Content="?" Grid.Row="0" Grid.Column="2" 
+                      BorderThickness="1" Margin="2" Width="20" Height="20"
+                      ToolTip="Enable/Disable the UI elements help messages" />
+
             </Grid>
 
 
             <ComboBox   Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="1"
                         ItemsSource="{Binding SelectedASICToSend}"
                         IsEnabled="{Binding IsSPILearningEn}"
-                        MinWidth="100" Margin="3"/>
+                        MinWidth="100" Margin="3"
+                        ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='DeviceIDSelector', Mode=OneWay}"
+	                    ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
 
             <Button     Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="1"
                         Style="{DynamicResource SimpleButton}"
                         Command="{Binding SPICommand}"
                         IsEnabled="{Binding SPICommandCommandEn}"
                         Content="Execute command" FontSize="16"
-                        Margin="2"/>
+                        Margin="2"
+                        ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='SPICommand', Mode=OneWay}"
+	                    ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
             <!--#endregion-->
 
             <!--#region Message decoded-->
@@ -253,28 +274,38 @@
                 <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="10"
                            Text="Address" FontSize="16" 
                            HorizontalAlignment="Center" VerticalAlignment="Center"
-                           Style="{DynamicResource CustomTextBlock}"/>
+                           Style="{DynamicResource CustomTextBlock}"
+                           ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='Address', Mode=OneWay}"
+	                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
 
                 <TextBlock Grid.Row="0" Grid.Column="10" Grid.ColumnSpan="1"
-                           Text=" R/W " FontSize="14" 
+                           Text="R/W" FontSize="14" 
                            HorizontalAlignment="Center" VerticalAlignment="Center"
-                           Style="{DynamicResource CustomTextBlock}">
+                           Style="{DynamicResource CustomTextBlock}"
+                           ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='RW', Mode=OneWay}"
+	                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                 </TextBlock>
 
                 <TextBlock Grid.Row="0" Grid.Column="11" Grid.ColumnSpan="16"
                            Text="Data" FontSize="16" 
                            HorizontalAlignment="Center" VerticalAlignment="Center"
-                           Style="{DynamicResource CustomTextBlock}"/>
+                           Style="{DynamicResource CustomTextBlock}"
+                           ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='MOSIData', Mode=OneWay}"
+	                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
 
                 <TextBlock Grid.Row="0" Grid.Column="27" Grid.ColumnSpan="3"
                            Text="CRC" FontSize="16" 
                            HorizontalAlignment="Center" VerticalAlignment="Center"
-                           Style="{DynamicResource CustomTextBlock}"/>
+                           Style="{DynamicResource CustomTextBlock}"
+                           ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='MOSICRC', Mode=OneWay}"
+	                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
 
                 <TextBlock Grid.Row="0" Grid.Column="30" Grid.ColumnSpan="2" Margin="0,5"
                            Text="NA" FontSize="16" 
                            HorizontalAlignment="Center" VerticalAlignment="Center"
-                           Style="{DynamicResource CustomTextBlock}"/>
+                           Style="{DynamicResource CustomTextBlock}"
+                           ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='NA', Mode=OneWay}"
+	                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
 
                 <!--#region bit numbers -->
                 <TextBlock  Grid.Row="1" Grid.Column="0" Text=" 31 " FontSize="16" 
@@ -762,37 +793,49 @@
                 <TextBlock Grid.Row="1" Grid.Column="1" FontSize="16"
                            Text="Time" HorizontalAlignment="Center"
                            VerticalAlignment="Center"
-                           Style="{DynamicResource CustomTextBlock}">
+                           Style="{DynamicResource CustomTextBlock}"
+                           ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='Time', Mode=OneWay}"
+	                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="2" FontSize="16"
                            Text="Address" HorizontalAlignment="Center"
                            VerticalAlignment="Center"
-                           Style="{DynamicResource CustomTextBlock}">
+                           Style="{DynamicResource CustomTextBlock}"
+                           ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='Address', Mode=OneWay}"
+	                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="3" FontSize="16"
                            Text="R/W" HorizontalAlignment="Center"
                            VerticalAlignment="Center"
-                           Style="{DynamicResource CustomTextBlock}">
+                           Style="{DynamicResource CustomTextBlock}"
+                           ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='RwFlag', Mode=OneWay}"
+	                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="4" FontSize="16"
                            Text="Data" HorizontalAlignment="Center"
                            VerticalAlignment="Center"
-                           Style="{DynamicResource CustomTextBlock}">
+                           Style="{DynamicResource CustomTextBlock}"
+                           ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='MOSIData', Mode=OneWay}"
+	                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="5" FontSize="16"
                            Text="CRC" HorizontalAlignment="Center"
                            VerticalAlignment="Center"
-                           Style="{DynamicResource CustomTextBlock}">
+                           Style="{DynamicResource CustomTextBlock}"
+                           ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='MOSICRC', Mode=OneWay}"
+	                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="6" FontSize="16"
                            Text="RAW MOSI" HorizontalAlignment="Center"
                            VerticalAlignment="Center"
-                           Style="{DynamicResource CustomTextBlock}">
+                           Style="{DynamicResource CustomTextBlock}"
+                           ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='RawMOSI', Mode=OneWay}"
+	                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                 </TextBlock>
                 <!-- #endregion -->
 
@@ -919,72 +962,97 @@
                 <TextBlock Grid.Row="1" Grid.Column="1" FontSize="16"
                            Text="GS5" HorizontalAlignment="Center"
                            VerticalAlignment="Center"
-                           Style="{DynamicResource CustomTextBlock}">
+                           Style="{DynamicResource CustomTextBlock}"
+                           ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='GS5', Mode=OneWay}"
+	                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="2" FontSize="16"
                            Text="GS4" HorizontalAlignment="Center"
                            VerticalAlignment="Center"
-                           Style="{DynamicResource CustomTextBlock}">
+                           Style="{DynamicResource CustomTextBlock}"
+                           ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='GS4', Mode=OneWay}"
+	                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="3" FontSize="16"
                            Text="GS3" HorizontalAlignment="Center"
                            VerticalAlignment="Center"
-                           Style="{DynamicResource CustomTextBlock}">
+                           Style="{DynamicResource CustomTextBlock}"
+                           ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='GS3', Mode=OneWay}"
+	                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="4" FontSize="16"
                            Text="GS2" HorizontalAlignment="Center"
                            VerticalAlignment="Center"
-                           Style="{DynamicResource CustomTextBlock}">
+                           Style="{DynamicResource CustomTextBlock}"
+                           ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='GS2', Mode=OneWay}"
+	                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="5" FontSize="16"
                            Text="GS1" HorizontalAlignment="Center"
                            VerticalAlignment="Center"
-                           Style="{DynamicResource CustomTextBlock}">
+                           Style="{DynamicResource CustomTextBlock}"
+                           ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='GS1', Mode=OneWay}"
+	                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="6" FontSize="16"
                            Text="GS0" HorizontalAlignment="Center"
-                           VerticalAlignment="Center">
+                           VerticalAlignment="Center"
+                           Style="{DynamicResource CustomTextBlock}"
+                           ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='GS0', Mode=OneWay}"
+	                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="7" FontSize="16"
                            Text="SF" HorizontalAlignment="Center"
                            VerticalAlignment="Center"
-                           Style="{DynamicResource CustomTextBlock}">
+                           Style="{DynamicResource CustomTextBlock}"
+                           ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='SF', Mode=OneWay}"
+	                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="8" FontSize="16"
                            Text="Status" HorizontalAlignment="Center"
                            VerticalAlignment="Center"
-                           Style="{DynamicResource CustomTextBlock}">
+                           Style="{DynamicResource CustomTextBlock}"
+                           ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='AdditionalStatus', Mode=OneWay}"
+	                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="9" FontSize="16"
                            Text="Data" HorizontalAlignment="Center"
                            VerticalAlignment="Center"
-                           Style="{DynamicResource CustomTextBlock}">
+                           Style="{DynamicResource CustomTextBlock}"
+                           ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='MISOData', Mode=OneWay}"
+	                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="10" FontSize="16"
                            Text="S0" HorizontalAlignment="Center"
                            VerticalAlignment="Center"
-                           Style="{DynamicResource CustomTextBlock}">
+                           Style="{DynamicResource CustomTextBlock}"
+                           ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='S0', Mode=OneWay}"
+	                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="11" FontSize="16"
                            Text="CRC" HorizontalAlignment="Center"
                            VerticalAlignment="Center"
-                           Style="{DynamicResource CustomTextBlock}">
+                           Style="{DynamicResource CustomTextBlock}"
+                           ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='MISOCRC', Mode=OneWay}"
+	                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="12" FontSize="16"
                            Text="RAW MISO" HorizontalAlignment="Center"
                            VerticalAlignment="Center"
-                           Style="{DynamicResource CustomTextBlock}">
+                           Style="{DynamicResource CustomTextBlock}"
+                           ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='RawMISO', Mode=OneWay}"
+	                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                 </TextBlock>
                 <!-- #endregion -->
 
