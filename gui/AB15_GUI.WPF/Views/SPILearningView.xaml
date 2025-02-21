@@ -5,6 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:cnvrt="clr-namespace:AB15_GUI.WPF.Views.Converters" 
       xmlns:local="clr-namespace:AB15_GUI.WPF.Views"
+      xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="1100"
       Title="SPILearning"
@@ -92,11 +93,23 @@
                         Style="{DynamicResource CustomTextBlock}"/>
 
             <TextBox    Grid.Row="1" Grid.Column="3"
-                        Style="{DynamicResource TextBoxStyle}"
-                        IsEnabled="{Binding IsSPILearningEn}"
                         Text="{Binding Path=RefToActiveRecord.MOSI.Data, Converter={StaticResource HexToIntConverter}, Mode=TwoWay}"
                         Name="DataTextBox"
                         PreviewTextInput="TextBox_PreviewTextInput">
+                        <TextBox.Style>
+                            <Style TargetType="TextBox" BasedOn="{StaticResource TextBoxStyle}">
+                                <Setter Property="IsEnabled" Value="False"/>
+                                <Style.Triggers>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding Path=IsSPILearningEn}" Value="True" />
+                                            <Condition Binding="{Binding Path=IsWriteRegisterSelected}" Value="True" />
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter Property="IsEnabled" Value="True" />
+                                    </MultiDataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBox.Style>
             </TextBox>
             
             <StackPanel Orientation="Horizontal"
@@ -128,7 +141,14 @@
                         Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI, Converter={StaticResource HexToIntConverter}, Mode=TwoWay}"
                         Visibility="Hidden"
                         Style="{DynamicResource TextBoxStyle}"
-                        PreviewTextInput="TextBox_PreviewTextInput" />
+                        PreviewTextInput="TextBox_PreviewTextInput" 
+                        >
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="LostFocus">
+                                <i:InvokeCommandAction Command="{Binding Path=RawValueUpdatedCommand}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+            </TextBox>
 
 
             <Grid       Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="1"

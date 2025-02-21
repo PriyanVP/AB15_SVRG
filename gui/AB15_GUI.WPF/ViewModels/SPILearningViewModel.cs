@@ -51,6 +51,7 @@ namespace AB15_GUI.WPF.ViewModels
 
             // Init commands for controls
             SPICommand = new RelayCommand(SPICommandExecuteAsync);
+            RawValueUpdatedCommand = new RelayCommand(RawValueUpdated);
 
             // Enable all by default
             IsSPILearningEn = true;
@@ -148,8 +149,11 @@ namespace AB15_GUI.WPF.ViewModels
                 OnPropertyChanged();
 
                 // Also update SPI transaction
-                RefToActiveRecord.MOSI.Data = (isWriteRegisterSelected) ? ((UInt16) 0x0) : (RefToActiveRecord.MOSI.Data);
-                RefToActiveRecord.MOSI.RwFlag = isWriteRegisterSelected;
+                if (IsRawSPISelected == false)
+                {
+                    RefToActiveRecord.MOSI.Data = isWriteRegisterSelected ? RefToActiveRecord.MOSI.Data : ((UInt16) 0x0);
+                    RefToActiveRecord.MOSI.RwFlag = isWriteRegisterSelected;
+                }
             }
         }
 
@@ -268,6 +272,19 @@ namespace AB15_GUI.WPF.ViewModels
             // Create next record
             MOSIRecord CurrentMOSIRecordCopy = RefToActiveRecord.MOSI.Copy();
             RefToActiveRecord = new SPITransactionRecord(mosi: CurrentMOSIRecordCopy);
+        }
+
+        /// <summary>
+        /// Command handler for updating IsWriteRegisterSelected based on RawValue 
+        /// </summary>
+        public ICommand RawValueUpdatedCommand { get; }
+
+        /// <summary>
+        /// Method that will update IsWriteRegisterSelected based on RawValue 
+        /// </summary>
+        private void RawValueUpdated(object obj)
+        {
+            IsWriteRegisterSelected = RefToActiveRecord.MOSI.RwFlag;
         }
 
         #endregion // Commands
