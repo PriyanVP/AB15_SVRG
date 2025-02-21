@@ -860,35 +860,46 @@
                 <!-- #endregion -->
 
                 <!-- #region Table content -->
-                <ListView Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="8" Name="MOSITableTableView" 
+                <ScrollViewer Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="8"
+                              Name="MOSITableTableViewScroll"
+                              ScrollChanged="ScrollChanged"
+                              HorizontalScrollBarVisibility="Disabled"
+                              VerticalScrollBarVisibility="Auto">
+                    <ListView Name="MOSITableTableView" 
                                 ItemsSource="{Binding SPICommunicationTable}"
                                 ItemContainerStyle="{DynamicResource ListViewItemStyle}" 
                                 IsEnabled="{Binding IsSPILearningEn}"
                                 FontSize="16">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="5" />
-                                    <ColumnDefinition Width="auto" MinWidth="100"/>
-                                    <ColumnDefinition Width="100"/>
-                                    <ColumnDefinition Width="40"/>
-                                    <ColumnDefinition Width="100"/>
-                                    <ColumnDefinition Width="40"/>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="5" />
-                                </Grid.ColumnDefinitions>
+                        <ListView.Template>
+                            <ControlTemplate>
+                                <!-- Empty template to allow ScrollViewer to capture mouse scroll -->
+                                <ItemsPresenter />
+                            </ControlTemplate>
+                        </ListView.Template>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="5" />
+                                        <ColumnDefinition Width="auto" MinWidth="100"/>
+                                        <ColumnDefinition Width="100"/>
+                                        <ColumnDefinition Width="40"/>
+                                        <ColumnDefinition Width="100"/>
+                                        <ColumnDefinition Width="40"/>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="5" />
+                                    </Grid.ColumnDefinitions>
 
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="auto"/>
-                                    <RowDefinition Height="2"/>
-                                    <RowDefinition Height="1"/>
-                                </Grid.RowDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="2"/>
+                                        <RowDefinition Height="1"/>
+                                    </Grid.RowDefinitions>
 
-                                <Canvas Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="8" Background="{DynamicResource UI.SeparateLine}"/>
+                                    <Canvas Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="8" Background="{DynamicResource UI.SeparateLine}"/>
 
-                                <!-- Cell with time -->
-                                <TextBlock  Grid.Column="1" Margin="0,0,5,0" 
+                                    <!-- Cell with time -->
+                                    <TextBlock  Grid.Column="1" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
                                             Text="{Binding Time, StringFormat={}{0:HH:mm:ss.FFF}}"
@@ -896,49 +907,50 @@
                                             MouseLeftButtonDown="MouseDoubleClick"/>
 
 
-                                <!-- Cell with address -->
-                                <TextBlock  Grid.Column="2"  Margin="0,0,5,0" 
+                                    <!-- Cell with address -->
+                                    <TextBlock  Grid.Column="2"  Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
                                             Text="{Binding Path=MOSI.Address, StringFormat=0x{0:X3}}"
                                             Style="{DynamicResource TextBlockStyle}" 
                                             MouseLeftButtonDown="MouseDoubleClick"/>
 
-                                <!-- Cell with R/W -->
-                                <TextBlock  Grid.Column="3"  Margin="0,0,5,0" 
+                                    <!-- Cell with R/W -->
+                                    <TextBlock  Grid.Column="3"  Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
                                             Text="{Binding Path=MOSI.RwFlag, Converter={StaticResource BoolToRWConverter}}"
                                             Style="{DynamicResource TextBlockStyle}" 
                                             MouseLeftButtonDown="MouseDoubleClick"/>
 
-                                <!-- Cell with Data -->
-                                <TextBlock  Grid.Column="4" Margin="0,0,5,0" 
+                                    <!-- Cell with Data -->
+                                    <TextBlock  Grid.Column="4" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
                                             Text="{Binding Path=MOSI.Data, StringFormat=0x{0:X4}}"
                                             Style="{DynamicResource TextBlockStyle}"
                                             MouseLeftButtonDown="MouseDoubleClick"/>
 
-                                <!-- Cell with CRC -->
-                                <TextBlock  Grid.Column="5" Margin="0,0,5,0" 
+                                    <!-- Cell with CRC -->
+                                    <TextBlock  Grid.Column="5" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
                                             Text="{Binding Path=MOSI.CRC, StringFormat=0x{0:X}, Mode=OneWay}"
                                             Style="{DynamicResource TextBlockStyle}" 
                                             MouseLeftButtonDown="MouseDoubleClick"/>
 
-                                <!-- Cell with RAW -->
-                                <TextBlock  Grid.Column="6" Margin="0,0,5,0" 
+                                    <!-- Cell with RAW -->
+                                    <TextBlock  Grid.Column="6" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
                                             Text="{Binding Path=MOSI.RawMOSI, StringFormat=0x{0:X8}}"
                                             Style="{DynamicResource TextBlockStyle}" 
                                             MouseLeftButtonDown="MouseDoubleClick"/>
-                            </Grid>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </ScrollViewer>
                 <!-- #endregion -->
             </Grid>
         </Border>
@@ -1077,138 +1089,150 @@
                 <!-- #endregion -->
 
                 <!-- #region Table content -->
-                <ListView Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="14" Name="MISOTableTableView" 
+                <ScrollViewer Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="14"
+                              Name="MISOTableTableViewScroll"
+                              ScrollChanged="ScrollChanged"
+                              HorizontalScrollBarVisibility="Disabled"
+                              VerticalScrollBarVisibility="Auto">
+                    <ListView Name="MISOTableTableView" 
                                 ItemsSource="{Binding SPICommunicationTable}"
                                 ItemContainerStyle="{DynamicResource ListViewItemStyle}" 
                                 IsEnabled="{Binding IsSPILearningEn}"
                                 FontSize="16">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="5" />
-                                    <ColumnDefinition Width="30"/>
-                                    <ColumnDefinition Width="30"/>
-                                    <ColumnDefinition Width="30"/>
-                                    <ColumnDefinition Width="30"/>
-                                    <ColumnDefinition Width="30"/>
-                                    <ColumnDefinition Width="30"/>
-                                    <ColumnDefinition Width="30"/>
-                                    <ColumnDefinition Width="40"/>
-                                    <ColumnDefinition Width="60"/>
-                                    <ColumnDefinition Width="25"/>
-                                    <ColumnDefinition Width="30"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="5" />
-                                </Grid.ColumnDefinitions>
+                        <ListView.Template>
+                            <ControlTemplate>
+                                <!-- Empty template to allow ScrollViewer to capture mouse scroll -->
+                                <ItemsPresenter />
+                            </ControlTemplate>
+                        </ListView.Template>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="5" />
+                                        <ColumnDefinition Width="30"/>
+                                        <ColumnDefinition Width="30"/>
+                                        <ColumnDefinition Width="30"/>
+                                        <ColumnDefinition Width="30"/>
+                                        <ColumnDefinition Width="30"/>
+                                        <ColumnDefinition Width="30"/>
+                                        <ColumnDefinition Width="30"/>
+                                        <ColumnDefinition Width="40"/>
+                                        <ColumnDefinition Width="60"/>
+                                        <ColumnDefinition Width="25"/>
+                                        <ColumnDefinition Width="30"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="5" />
+                                    </Grid.ColumnDefinitions>
 
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="auto"/>
-                                    <RowDefinition Height="2"/>
-                                    <RowDefinition Height="1"/>
-                                </Grid.RowDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="2"/>
+                                        <RowDefinition Height="1"/>
+                                    </Grid.RowDefinitions>
 
-                                <Canvas Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="14" Background="{DynamicResource UI.SeparateLine}"/>
+                                    <Canvas Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="14" Background="{DynamicResource UI.SeparateLine}"/>
 
-                                <!-- Cell with gs5 -->
-                                <TextBlock  Grid.Column="1" Margin="0,0,5,0" 
+                                    <!-- Cell with gs5 -->
+                                    <TextBlock  Grid.Column="1" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
                                             Text="{Binding Path=MISO.GS5, Mode=OneWay, Converter={StaticResource BoolToIntConverter}}"
                                             Style="{DynamicResource TextBlockStyle}" 
                                             MouseLeftButtonDown="MouseDoubleClick"/>
 
-                                <!-- Cell with gs4 -->
-                                <TextBlock  Grid.Column="2" Margin="0,0,5,0" 
+                                    <!-- Cell with gs4 -->
+                                    <TextBlock  Grid.Column="2" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
                                             Text="{Binding Path=MISO.GS4, Mode=OneWay, Converter={StaticResource BoolToIntConverter}}"
                                             Style="{DynamicResource TextBlockStyle}" 
                                             MouseLeftButtonDown="MouseDoubleClick"/>
 
-                                <!-- Cell with gs3 -->
-                                <TextBlock  Grid.Column="3" Margin="0,0,5,0" 
+                                    <!-- Cell with gs3 -->
+                                    <TextBlock  Grid.Column="3" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
                                             Text="{Binding Path=MISO.GS3, Mode=OneWay, Converter={StaticResource BoolToIntConverter}}"
                                             Style="{DynamicResource TextBlockStyle}" 
                                             MouseLeftButtonDown="MouseDoubleClick"/>
 
-                                <!-- Cell with gs2 -->
-                                <TextBlock  Grid.Column="4" Margin="0,0,5,0" 
+                                    <!-- Cell with gs2 -->
+                                    <TextBlock  Grid.Column="4" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
                                             Text="{Binding Path=MISO.GS2, Mode=OneWay, Converter={StaticResource BoolToIntConverter}}"
                                             Style="{DynamicResource TextBlockStyle}" 
                                             MouseLeftButtonDown="MouseDoubleClick"/>
 
-                                <!-- Cell with gs1 -->
-                                <TextBlock  Grid.Column="5" Margin="0,0,5,0" 
+                                    <!-- Cell with gs1 -->
+                                    <TextBlock  Grid.Column="5" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
                                             Text="{Binding Path=MISO.GS1, Mode=OneWay, Converter={StaticResource BoolToIntConverter}}"
                                             Style="{DynamicResource TextBlockStyle}" 
                                             MouseLeftButtonDown="MouseDoubleClick"/>
 
-                                <!-- Cell with gs0 -->
-                                <TextBlock  Grid.Column="6" Margin="0,0,5,0" 
+                                    <!-- Cell with gs0 -->
+                                    <TextBlock  Grid.Column="6" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
                                             Text="{Binding Path=MISO.GS0, Mode=OneWay, Converter={StaticResource BoolToIntConverter}}"
                                             Style="{DynamicResource TextBlockStyle}" 
                                             MouseLeftButtonDown="MouseDoubleClick"/>
 
-                                <!-- Cell with SF -->
-                                <TextBlock  Grid.Column="7"  Margin="0,0,5,0" 
+                                    <!-- Cell with SF -->
+                                    <TextBlock  Grid.Column="7"  Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
                                             Text="{Binding Path=MISO.SF, Mode=OneWay, Converter={StaticResource BoolToIntConverter}}"
                                             Style="{DynamicResource TextBlockStyle}" 
                                             MouseLeftButtonDown="MouseDoubleClick"/>
 
-                                <!-- Cell with Additional status -->
-                                <TextBlock  Grid.Column="8" Margin="0,0,5,0" 
+                                    <!-- Cell with Additional status -->
+                                    <TextBlock  Grid.Column="8" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
                                             Text="{Binding Path=MISO.AdditionalStatus, StringFormat=0x{0:X}, Mode=OneWay}"
                                             Style="{DynamicResource TextBlockStyle}" 
                                             MouseLeftButtonDown="MouseDoubleClick"/>
 
-                                <!-- Cell with Data -->
-                                <TextBlock  Grid.Column="9" Margin="0,0,5,0" 
+                                    <!-- Cell with Data -->
+                                    <TextBlock  Grid.Column="9" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
                                             Text="{Binding Path=MISO.Data, StringFormat=0x{0:X}, Mode=OneWay}"
                                             Style="{DynamicResource TextBlockStyle}" 
                                             MouseLeftButtonDown="MouseDoubleClick"/>
 
-                                <!-- Cell with S0 -->
-                                <TextBlock  Grid.Column="10" Margin="0,0,5,0" 
+                                    <!-- Cell with S0 -->
+                                    <TextBlock  Grid.Column="10" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
                                             Text="{Binding Path=MISO.S0, Mode=OneWay, Converter={StaticResource BoolToIntConverter}}"
                                             Style="{DynamicResource TextBlockStyle}"
                                             MouseLeftButtonDown="MouseDoubleClick"/>
 
-                                <!-- Cell with crc -->
-                                <TextBlock  Grid.Column="11" Margin="0,0,5,0" 
+                                    <!-- Cell with crc -->
+                                    <TextBlock  Grid.Column="11" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
                                             Text="{Binding Path=MISO.CRC, StringFormat=0x{0:X}, Mode=OneWay}"
                                             Style="{DynamicResource TextBlockStyle}" 
                                             MouseLeftButtonDown="MouseDoubleClick"/>
-                                
-                                <!-- Cell with raw -->
-                                <TextBlock  Grid.Column="12" Margin="0,0,5,0" 
+
+                                    <!-- Cell with raw -->
+                                    <TextBlock  Grid.Column="12" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
                                             Text="{Binding Path=MISO.RawMISO, StringFormat=0x{0:X8}, Mode=OneWay}"
                                             Style="{DynamicResource TextBlockStyle}" 
                                             MouseLeftButtonDown="MouseDoubleClick"/>
-                            </Grid>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </ScrollViewer>
                 <!-- #endregion -->
             </Grid>
         </Border>

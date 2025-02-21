@@ -50,5 +50,17 @@ namespace AB15_GUI.WPF.Views
             Regex regex = new Regex("[^0-9a-fA-F]+$");
             e.Handled = regex.IsMatch(e.Text);
         }
+
+        private void ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            if (sender == MOSITableTableViewScroll)
+            {
+                MISOTableTableViewScroll.ScrollToVerticalOffset(e.VerticalOffset);
+            }
+            else
+            {
+                MOSITableTableViewScroll.ScrollToVerticalOffset(e.VerticalOffset);
+            }
+        }
     }
 }

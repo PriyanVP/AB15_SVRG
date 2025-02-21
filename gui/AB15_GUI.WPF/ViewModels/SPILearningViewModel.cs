@@ -61,11 +61,11 @@ namespace AB15_GUI.WPF.ViewModels
             RefToActiveRecord = new SPITransactionRecord();
 
             // TESTING WITH MOCKUP DATA
-            SPICommunicationTable = new ObservableCollection<SPITransactionRecord>()
+            SPICommunicationTable = new ObservableCollection<SPITransactionRecord>();
+            for (var indexer = 0; indexer < 30; indexer++)
             {
-                new SPITransactionRecord(new MISORecord() {RawMISO = 0xFFFFFFFF}, new MOSIRecord() {RawMOSI = 0xFFFFFFFF}),
-                new SPITransactionRecord(new MISORecord() {RawMISO = 123456}, new MOSIRecord() {RawMOSI = 13579}),
-            };
+                SPICommunicationTable.Add(new SPITransactionRecord(new MISORecord() { RawMISO = (uint)(123456 * indexer) }, new MOSIRecord() { RawMOSI = (uint)(246810 * indexer) }));
+            }
         }
         
         #region Bindable_Properties
