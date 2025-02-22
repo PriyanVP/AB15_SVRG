@@ -35,11 +35,8 @@ namespace AB15_GUI.WPF.Models
             get => lowside;
             set
             {
-                if (!lowside.Equals(value))
-                {
-                    lowside = value;
-                    UpdateDiagStatus();
-                }
+                lowside = value;
+                UpdateDiagStatus();
             }
         }
 
@@ -51,11 +48,8 @@ namespace AB15_GUI.WPF.Models
             get => highside;
             set
             {
-                if (!highside.Equals(value))
-                {
-                    highside = value;
-                    UpdateDiagStatus();
-                }
+                highside = value;
+                UpdateDiagStatus();
             }
         }
 
@@ -81,6 +75,14 @@ namespace AB15_GUI.WPF.Models
         {
             // Update diagStatus based on lowside and highside
             DiagStatus = "";
+            
+            // Special option to handle cases where results should be ignored
+            if (IgnoreResults)
+            {
+                DiagStatus = $"PST skipped{Environment.NewLine}";
+                return;
+            }
+
             if (Lowside.Error != null)
             {
                 DiagStatus += $"Lowside {lowside.Error}{Environment.NewLine}";
@@ -94,12 +96,6 @@ namespace AB15_GUI.WPF.Models
             if (Lowside.Error == null && Highside.Error == null)
             {
                 DiagStatus = $"PST OK{Environment.NewLine}";
-            }
-
-            // Special option to handle cases where results should be ignored
-            if (IgnoreResults)
-            {
-                DiagStatus = "PST skipped";
             }
         }
     }

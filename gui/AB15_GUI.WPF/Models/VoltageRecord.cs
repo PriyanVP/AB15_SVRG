@@ -52,7 +52,7 @@ namespace AB15_GUI.WPF.Models
         public void UpdateStatus()
         {
             // Update status based on data
-            string status = "";
+            status = "";
 
             if (IsValid)
             {

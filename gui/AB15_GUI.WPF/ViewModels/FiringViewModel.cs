@@ -74,7 +74,7 @@ namespace AB15_GUI.WPF.ViewModels
 
             // Enables synchronization for multithread access to observable collection
             System.Windows.Data.BindingOperations.EnableCollectionSynchronization(FiringMonitoringStatusTable, _lock);
-            System.Windows.Data.BindingOperations.EnableCollectionSynchronization(FiringDiagnosticsData.ChannelRecords , _lock);
+            System.Windows.Data.BindingOperations.EnableCollectionSynchronization(FiringDiagnosticsDataObj.ChannelRecords, _lock);
             System.Windows.Data.BindingOperations.EnableCollectionSynchronization(FiringResultTable, _lock);
 
             // Configure state machine
@@ -290,7 +290,7 @@ namespace AB15_GUI.WPF.ViewModels
         /// Object that holds and analyzes diagnostic data for firing.
         /// Used as bindable for monitoring tab error table
         /// </summary>
-        public FiringDiagnosticsData FiringDiagnosticsData { get; } = new FiringDiagnosticsData();
+        public FiringDiagnosticsData FiringDiagnosticsDataObj { get; } = new FiringDiagnosticsData();
 
         /// <summary>
         /// <inheritdoc cref="IsConfigControlsEnabled" path='/summary'/>
@@ -1397,7 +1397,8 @@ namespace AB15_GUI.WPF.ViewModels
 
             // Report results
             List<int> configuredFiringChannels = [.. FiringResultTable.Select(itm => itm.ChannelID)];
-            FiringDiagnosticsData.UnpackPowerstageDiagnostics(true, mcuResponse.Payload, configuredFiringChannels);
+            FiringDiagnosticsDataObj.UnpackPowerstageDiagnostics(true, mcuResponse.Payload, configuredFiringChannels);
+            OnPropertyChanged(nameof(FiringDiagnosticsDataObj));
 
             // Trigger for transiting to TestMode2
             await asicWrapper.ASICs[0].ExecuteTestMode1TransitionAsync();
@@ -1421,7 +1422,8 @@ namespace AB15_GUI.WPF.ViewModels
 
             // Report results
             List<int> configuredFiringChannels = [.. FiringResultTable.Select(itm => itm.ChannelID)];
-            FiringDiagnosticsData.UnpackPowerstageDiagnostics(false, mcuResponse.Payload, configuredFiringChannels);
+            FiringDiagnosticsDataObj.UnpackPowerstageDiagnostics(false, mcuResponse.Payload, configuredFiringChannels);
+            OnPropertyChanged(nameof(FiringDiagnosticsDataObj));
 
             // Trigger for transiting to Normal mode
             await asicWrapper.ASICs[0].ExecuteTestMode2TransitionAsync();
@@ -1665,7 +1667,8 @@ namespace AB15_GUI.WPF.ViewModels
             {
                 // Report results
                 uint leaDiodeErrorFlags = (uint) (mcuResponse2.Payload.Data[1] << 16) | mcuResponse2.Payload.Data[0];
-                FiringDiagnosticsData.UnpackLeaDiodeData(leaDiodeErrorFlags);
+                FiringDiagnosticsDataObj.UnpackLeaDiodeData(leaDiodeErrorFlags);
+                OnPropertyChanged(nameof(FiringDiagnosticsDataObj));
             }
 
             // == Run Cross Coupling test ==
@@ -1705,7 +1708,8 @@ namespace AB15_GUI.WPF.ViewModels
             {
                 // Report results
                 uint crossCouplingErrorFlags = (uint) (mcuResponse2.Payload.Data[1] << 16) | mcuResponse2.Payload.Data[0];
-                FiringDiagnosticsData.UnpackCrossCouplingData(crossCouplingErrorFlags);
+                FiringDiagnosticsDataObj.UnpackCrossCouplingData(crossCouplingErrorFlags);
+                OnPropertyChanged(nameof(FiringDiagnosticsDataObj));
             }
 
             // == Run Capacity Test ==
@@ -1745,7 +1749,8 @@ namespace AB15_GUI.WPF.ViewModels
             {
                 // Report results
                 uint capacityTestErrorFlags = (uint) (mcuResponse2.Payload.Data[1] << 16) | mcuResponse2.Payload.Data[0];
-                FiringDiagnosticsData.UnpackCapacityTestData(capacityTestErrorFlags);
+                FiringDiagnosticsDataObj.UnpackCapacityTestData(capacityTestErrorFlags);
+                OnPropertyChanged(nameof(FiringDiagnosticsDataObj));
             }
 
             // Unsubscribe from event - by design can be fired only once
@@ -1799,7 +1804,8 @@ namespace AB15_GUI.WPF.ViewModels
             }
 
             // Unpack diagnostics data
-            FiringDiagnosticsData.UnpackPeriodicDiagnostics(mcuResponse.Payload);
+            FiringDiagnosticsDataObj.UnpackPeriodicDiagnostics(mcuResponse.Payload);
+            OnPropertyChanged(nameof(FiringDiagnosticsDataObj));
 
             // Restart timer
             _cyclicDiagnosticsTimer.Start();

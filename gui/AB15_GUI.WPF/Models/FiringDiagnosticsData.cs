@@ -1,12 +1,15 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace AB15_GUI.WPF.Models
 {
     /// <summary>
     /// Data record class that holds all diagnostics data for FLM
     /// </summary>
-    public class FiringDiagnosticsData
+    public class FiringDiagnosticsData : INotifyPropertyChanged
     {
         private const int NUM_CHANNELS = 20;
 
@@ -30,14 +33,40 @@ namespace AB15_GUI.WPF.Models
         }
 
         /// <summary>
+        /// <inheritdoc cref="ChannelRecords" path='/summary'/>
+        /// </summary>
+        private ObservableCollection<FiringDiagnosticsChannelRecord> channelRecords = new ObservableCollection<FiringDiagnosticsChannelRecord>();
+        
+        /// <summary>
         /// Diagnostics results for specific channel
         /// </summary>
-        public ObservableCollection<FiringDiagnosticsChannelRecord> ChannelRecords = new ObservableCollection<FiringDiagnosticsChannelRecord>();
+        public ObservableCollection<FiringDiagnosticsChannelRecord> ChannelRecords
+        {
+            get { return channelRecords; }
+            set
+            {
+                channelRecords = value;
+                OnPropertyChanged();
+            }
+        }
 
+        /// <summary>
+        /// <inheritdoc cref="VoltageRecords" path='/summary'/>
+        /// </summary>
+        private ObservableCollection<VoltageRecord> voltageRecords = new ObservableCollection<VoltageRecord>();
+        
         /// <summary>
         /// Diagnostics results for voltage measurements
         /// </summary>
-        public ObservableCollection<VoltageRecord> VoltageRecords = new ObservableCollection<VoltageRecord>();
+        public ObservableCollection<VoltageRecord> VoltageRecords
+        {
+            get { return voltageRecords; }
+            set
+            {
+                voltageRecords = value;
+                OnPropertyChanged();
+            }
+        }
 
         /// <summary>
         /// Unpack and store data from periodic diagnostics to diagnostics model
@@ -212,5 +241,26 @@ namespace AB15_GUI.WPF.Models
                 channelRecord.UpdateStatus();
             }
         }
+
+        #region Services
+
+        /// <summary>
+        /// Event for notification if property has changed
+        /// </summary>
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        /// <summary>
+        /// Raise event to notify about property change
+        /// </summary>
+        /// <param name="propertyName">name of property</param>
+        protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        {
+            // Sanity check
+            if (propertyName == null) throw new ArgumentException("Property name can't be null!");
+
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        #endregion // Services
     }
 }
