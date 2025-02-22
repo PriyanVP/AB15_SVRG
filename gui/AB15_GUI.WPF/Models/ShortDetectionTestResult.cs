@@ -11,22 +11,22 @@ namespace AB15_GUI.WPF.Models
         /// <summary>
         /// <inheritdoc cref="IGH_S2G" path='/summary'/>
         /// </summary>
-        private bool igh_s2g;
+        private bool igh_s2g = true;
 
         /// <summary>
         /// <inheritdoc cref="IGH_S2B" path='/summary'/>
         /// </summary>
-        private bool igh_s2b;
+        private bool igh_s2b = true;
 
         /// <summary>
         /// <inheritdoc cref="IGL_S2G" path='/summary'/>
         /// </summary>
-        private bool igl_s2g;
+        private bool igl_s2g = true;
 
         /// <summary>
         /// <inheritdoc cref="IGL_S2B" path='/summary'/>
         /// </summary>
-        private bool igl_s2b;
+        private bool igl_s2b = true;
 
         /// <summary>
         /// <inheritdoc cref="DiagStatus" path='/summary'/>
@@ -41,7 +41,7 @@ namespace AB15_GUI.WPF.Models
             get => igh_s2g;
             set
             {
-                if (!igh_s2g.Equals(value))
+                if (!igh_s2g.Equals(value)) // TODO: remove check
                 {
                     igh_s2g = value;
                     UpdateDiagStatus();
