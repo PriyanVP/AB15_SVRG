@@ -13,7 +13,7 @@ namespace AB15_GUI.WPF.Models.Generated.Registers
         /// <summary>
         /// Reset value for register
         /// </summary>
-        public UInt16 ResetValue { get; private set; } = 0x00;
+        public UInt16 ResetValue { get; private set; } = 0x0000;
 
         /// <summary>
         /// Name of the register
@@ -23,12 +23,12 @@ namespace AB15_GUI.WPF.Models.Generated.Registers
         /// <summary>
         /// Absolute address of the register
         /// </summary>
-        public UInt16 Address { get; private set; } = 0x035b;
+        public UInt16 Address { get; private set; } = 0x0003;
 
         /// <summary>
         /// Description
         /// </summary>
-        public string Description { get; private set; } = "Device ID";
+        public string Description { get; private set; } = "package variant ID and Customer ID      ";
 
         /// <summary>
         /// Access level of this register
@@ -37,16 +37,16 @@ namespace AB15_GUI.WPF.Models.Generated.Registers
 
         #region Fields instances
         /// <summary>
-        /// Package_Variant_ID
-        /// Bitwidth: 2
-        /// </summary>
-        public Field_Package_Variant_ID Package_Variant_ID { get; set; } = new Field_Package_Variant_ID();
-        
-        /// <summary>
         /// Customer Identifier
         /// Bitwidth: 3
         /// </summary>
         public Field_Customer_ID Customer_ID { get; set; } = new Field_Customer_ID();
+        
+        /// <summary>
+        /// Package_Variant_ID
+        /// Bitwidth: 2
+        /// </summary>
+        public Field_Package_Variant_ID Package_Variant_ID { get; set; } = new Field_Package_Variant_ID();
         #endregion // Fields instances
 
         /// <summary>
@@ -58,25 +58,25 @@ namespace AB15_GUI.WPF.Models.Generated.Registers
             {
                 UInt16 data = 0x0;
 
-                data |= Package_Variant_ID.GetPositionalValue();
                 data |= Customer_ID.GetPositionalValue();
+                data |= Package_Variant_ID.GetPositionalValue();
                 
                 return data;
             }
             set
             {
-                Package_Variant_ID.UpdateValue(value);
                 Customer_ID.UpdateValue(value);
+                Package_Variant_ID.UpdateValue(value);
                 
             }
         }
 
         #region Field classes declarations
         /// <summary>
-        /// Class for working with Package_Variant_ID field
+        /// Class for working with Customer_ID field
         /// WARNING: this class is generated, do not modify manually!
         /// </summary>
-        public sealed class Field_Package_Variant_ID
+        public sealed class Field_Customer_ID
         {
             /// <summary>
             /// Max value that can be stored in field
@@ -91,12 +91,12 @@ namespace AB15_GUI.WPF.Models.Generated.Registers
             /// <summary>
             /// Bit offset of the field in register
             /// </summary>
-            private const UInt16 bitOffset = 0;
+            private const UInt16 bitOffset = 2;
 
             /// <summary>
             /// Bit width of the field in register
             /// </summary>
-            private const UInt16 bitWidth = 2;
+            private const UInt16 bitWidth = 3;
 
             /// <summary>
             /// Data stored in register
@@ -106,12 +106,12 @@ namespace AB15_GUI.WPF.Models.Generated.Registers
             /// <summary>
             /// Name of the field
             /// </summary>
-            public string Name { get; private set; } = "Package_Variant_ID";
+            public string Name { get; private set; } = "Customer_ID";
 
             /// <summary>
             /// Description
             /// </summary>
-            public string Description { get; private set; } = "Package_Variant_ID";
+            public string Description { get; private set; } = "Customer Identifier";
 
             /// <summary>
             /// Access level of this field
@@ -177,10 +177,10 @@ namespace AB15_GUI.WPF.Models.Generated.Registers
         }
         
         /// <summary>
-        /// Class for working with Customer_ID field
+        /// Class for working with Package_Variant_ID field
         /// WARNING: this class is generated, do not modify manually!
         /// </summary>
-        public sealed class Field_Customer_ID
+        public sealed class Field_Package_Variant_ID
         {
             /// <summary>
             /// Max value that can be stored in field
@@ -195,12 +195,12 @@ namespace AB15_GUI.WPF.Models.Generated.Registers
             /// <summary>
             /// Bit offset of the field in register
             /// </summary>
-            private const UInt16 bitOffset = 2;
+            private const UInt16 bitOffset = 0;
 
             /// <summary>
             /// Bit width of the field in register
             /// </summary>
-            private const UInt16 bitWidth = 3;
+            private const UInt16 bitWidth = 2;
 
             /// <summary>
             /// Data stored in register
@@ -210,12 +210,12 @@ namespace AB15_GUI.WPF.Models.Generated.Registers
             /// <summary>
             /// Name of the field
             /// </summary>
-            public string Name { get; private set; } = "Customer_ID";
+            public string Name { get; private set; } = "Package_Variant_ID";
 
             /// <summary>
             /// Description
             /// </summary>
-            public string Description { get; private set; } = "Customer Identifier";
+            public string Description { get; private set; } = "Package_Variant_ID";
 
             /// <summary>
             /// Access level of this field

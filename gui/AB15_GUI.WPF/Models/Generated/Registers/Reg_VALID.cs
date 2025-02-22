@@ -13,7 +13,7 @@ namespace AB15_GUI.WPF.Models.Generated.Registers
         /// <summary>
         /// Reset value for register
         /// </summary>
-        public UInt16 ResetValue { get; private set; } = 0x00;
+        public UInt16 ResetValue { get; private set; } = 0x0000;
 
         /// <summary>
         /// Name of the register
@@ -23,12 +23,12 @@ namespace AB15_GUI.WPF.Models.Generated.Registers
         /// <summary>
         /// Absolute address of the register
         /// </summary>
-        public UInt16 Address { get; private set; } = 0x0367;
+        public UInt16 Address { get; private set; } = 0x0011;
 
         /// <summary>
         /// Description
         /// </summary>
-        public string Description { get; private set; } = "Customer setup";
+        public string Description { get; private set; } = "Valid Key";
 
         /// <summary>
         /// Access level of this register

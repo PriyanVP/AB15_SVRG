@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using AB15_GUI.WPF.Models.Interfaces;
 
 namespace AB15_GUI.WPF.Models.Generated.Registers
@@ -12,7 +13,7 @@ namespace AB15_GUI.WPF.Models.Generated.Registers
         /// <summary>
         /// Reset value for register
         /// </summary>
-        public UInt16 ResetValue { get; private set; } = 0x0;
+        public UInt16 ResetValue { get; private set; } = 0x0000;
 
         /// <summary>
         /// Name of the register
