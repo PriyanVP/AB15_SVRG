@@ -193,6 +193,12 @@ void IntCmdExecutePowerstageTest(void)
         QSPIWriteNormal(SPI1_CS1MASTER, FLM_FLM_HS_LS_ON_CH14_8, (ENUM_FLM_FLM_HS_LS_ON_CH14_8_FLM_CODE_CH14_8_VAL2 << FLM_FLM_HS_LS_ON_CH14_8_FLM_CODE_CH14_8_BITOFFSET));
         QSPIWriteNormal(SPI1_CS1MASTER, FLM_FLM_HS_LS_ON_CH20_15, (ENUM_FLM_FLM_HS_LS_ON_CH20_15_FLM_CODE_CH20_15_VAL3 << FLM_FLM_HS_LS_ON_CH20_15_FLM_CODE_CH20_15_BITOFFSET));
 
+        // Stop test (required only for unfinished tests, but done for all)
+        FLM_Diag_Start.as_s.FlmDiagStart_u1   = 0x1;
+        FLM_Diag_Start.as_s.FlmDiagMode_u5    = ENUM_FLM_FLM_DIAG_START_FLM_DIAG_MODE_STOP;
+        FLM_Diag_Start.as_s.FlmDiagChannel_u5 = 0;
+        isSuccessfulFlag = QSPIWriteNormal(SPI1_CS1MASTER, FLM_FLM_DIAG_START, FLM_Diag_Start.as_uint16);
+
         // Save data
         uint8 currentChannelIdx = g_pstConfiguration.channelIndex - 1;
         g_pstResults[currentChannelIdx].dw = FLM_Read_Powerstage.as_uint16 & MASK_USED_BITS_FLM_FLM_READ_POWERSTAGE;
