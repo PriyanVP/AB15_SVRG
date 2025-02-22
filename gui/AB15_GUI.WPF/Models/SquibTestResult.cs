@@ -163,7 +163,7 @@ namespace AB15_GUI.WPF.Models
 
             if (DetectionError || ResistanceMeasurementValid || ResistanceMeasurementError || ResistanceMeasurementPgndxLoss == false)
             {
-                DiagStatus = $"No short circuits detected{Environment.NewLine}";
+                DiagStatus = $"SQUIB tests OK{Environment.NewLine}";
             }
         }
     }
