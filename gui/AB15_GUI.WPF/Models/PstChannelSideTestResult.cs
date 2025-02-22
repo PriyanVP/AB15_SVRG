@@ -1,3 +1,5 @@
+using System;
+
 namespace AB15_GUI.WPF.Models
 {
     /// <summary>
@@ -24,29 +26,40 @@ namespace AB15_GUI.WPF.Models
             SpiOnChFail = (rawData & 0x20) != 0;
 
             // Generate error message
+            Error = "";
             if (PstNotValid)
             {
-                Error = "PST not valid";
+                Error += $"PST not valid{Environment.NewLine}";
             }
-            else if (PstPretestS2xErr)
+            
+            if (PstPretestS2xErr)
             {
-                Error = "PST pretest S2X error";
+                Error += $"PST pretest S2X error{Environment.NewLine}";
             }
-            else if (PstTestS2xErr)
+            
+            if (PstTestS2xErr)
             {
-                Error = "PST test S2X error";
+                Error += $"PST test S2X error{Environment.NewLine}";
             }
-            else if (PstTimeoutErr)
+            
+            if (PstTimeoutErr)
             {
-                Error = "PST timeout error";
+                Error += $"PST timeout error{Environment.NewLine}";
             }
-            else if (TestGuardFail)
+            
+            if (TestGuardFail)
             {
-                Error = "Test guard fail";
+                Error += $"Test guard fail{Environment.NewLine}";
             }
-            else if (SpiOnChFail)
+            
+            if (SpiOnChFail)
             {
-                Error = "SPI on channel fail";
+                Error += $"SPI on channel fail{Environment.NewLine}";
+            }
+
+            if (Error == "")
+            {
+                Error = null;
             }
         }
     }
