@@ -242,26 +242,7 @@ void CmdSendRawData(USBReceiveData const * const commandPackage)
     rawData |= ConstructWordFromBytes(commandPackage->data[1], commandPackage->data[0]);
 
     // Send data to SPI with waiting for response
-    /*in case of spi channel is SPI1_CSMON1 or SPI2_CS_MON2 we use Master 1 but additionally pull down CS line for MONx */
-    if (spiChannel == SPI1_CS_MON1)
-    {
-        // pull down additional CS Mon pin
-        IfxPort_setPinState(SPI1_CS_MON1_PIN, IfxPort_State_low);
-        isSuccessfulFlag = QSPIExecuteRawTransaction(spiChannel, &rawData);
-        IfxPort_setPinState(SPI1_CS_MON1_PIN, IfxPort_State_high);
-    }
-    else if (spiChannel == SPI2_CS_MON2)
-    {
-        // pull down additional CS Mon pin
-        IfxPort_setPinState(SPI2_CS_MON2_PIN, IfxPort_State_low);
-        isSuccessfulFlag = QSPIExecuteRawTransaction(spiChannel, &rawData);
-        IfxPort_setPinState(SPI2_CS_MON2_PIN, IfxPort_State_high);
-    }
-    else
-    {
-        // no additional Pulldown
-        isSuccessfulFlag = QSPIExecuteRawTransaction(spiChannel, &rawData);
-    }
+    isSuccessfulFlag = QSPIExecuteRawTransaction(spiChannel, &rawData);
 
     // Store raw SPI receive frame in temporary variable
     dataReceived.dw = rawData;

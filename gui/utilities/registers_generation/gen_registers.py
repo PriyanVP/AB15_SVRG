@@ -156,6 +156,9 @@ def generate_register_files(path_to_regmap: str, register_list: list, path_to_ou
         # Stop processing if generation for this register is not requested
         if (reg_name not in register_list):
             continue
+        else:
+            # Remove processed register from list. Fixes issue with generating models for OTP registers
+            register_list.remove(reg_name)
 
         # Get address offset of address block (base address)
         base_address = int(register.getparent().find(".//spirit:baseAddress", namespaces=xml_spirit_namespaces).text, 16)
