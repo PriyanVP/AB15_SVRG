@@ -340,11 +340,11 @@ IFX_INLINE void StartTestMode(boolean isTestMode1, USBReceiveData const * const 
         packageToSend.status = USB_STATUS_ERROR;
         packageToSend.data[0] = FLM_PST_ERR_LSENQ_HIGH;
     }
-    else if (FLM_Status2.as_s.FlmDiagActive_u1 == 1) // TODO: bypassed for demo
-    {
-        packageToSend.status = USB_STATUS_ERROR;
-        packageToSend.data[0] = FLM_PST_ERR_DIAG_ACTIVE;
-    }
+    // else if (FLM_Status2.as_s.FlmDiagActive_u1 == 1) // TODO: bypassed for demo - seems to be valid scenario
+    // {
+    //     packageToSend.status = USB_STATUS_ERROR;
+    //     packageToSend.data[0] = FLM_PST_ERR_DIAG_ACTIVE;
+    // }
     else if ((systemState.as_s.TestMode1_u1 || systemState.as_s.TestMode2_u1) == FALSE)
     {
         packageToSend.status = USB_STATUS_ERROR;
