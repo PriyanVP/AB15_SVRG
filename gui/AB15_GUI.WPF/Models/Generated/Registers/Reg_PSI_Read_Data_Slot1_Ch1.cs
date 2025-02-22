@@ -5,42 +5,42 @@ using AB15_GUI.WPF.Models.Interfaces;
 namespace AB15_GUI.WPF.Models.Generated.Registers
 {
     /// <summary>
-    /// Class for working with VALID register
+    /// Class for working with PSI_Read_Data_Slot1_Ch1 register
     /// WARNING: this class is generated, do not modify manually!
     /// </summary>
-    public class Reg_VALID : IRegister
+    public class Reg_PSI_Read_Data_Slot1_Ch1 : IRegister
     {
         /// <summary>
         /// Reset value for register
         /// </summary>
-        public UInt16 ResetValue { get; private set; } = 0x0;
+        public UInt16 ResetValue { get; private set; } = 0x7c000009;
 
         /// <summary>
         /// Name of the register
         /// </summary>
-        public string Name { get; private set; } = "VALID";
+        public string Name { get; private set; } = "PSI_Read_Data_Slot1_Ch1";
 
         /// <summary>
         /// Absolute address of the register
         /// </summary>
-        public UInt16 Address { get; private set; } = 0x0011;
+        public UInt16 Address { get; private set; } = 0x0200;
 
         /// <summary>
         /// Description
         /// </summary>
-        public string Description { get; private set; } = "Valid Key";
+        public string Description { get; private set; } = "Read PSI data of selected channel and Slot      ";
 
         /// <summary>
         /// Access level of this register
         /// </summary>
-        public string Access { get; private set; } = "read-write";
+        public string Access { get; private set; } = "read-only";
 
         #region Fields instances
         /// <summary>
-        /// determines if customer OTP area has been        written and shall be considered as valid by the device        0: not        written -> EOLmode        > 0: valid (CRC will be checked)       
+        /// psi_read_data_slot1_ch1
         /// Bitwidth: 16
         /// </summary>
-        public Field_valid valid { get; set; } = new Field_valid();
+        public Field_psi_read_data_slot1_ch1 psi_read_data_slot1_ch1 { get; set; } = new Field_psi_read_data_slot1_ch1();
         #endregion // Fields instances
 
         /// <summary>
@@ -52,23 +52,23 @@ namespace AB15_GUI.WPF.Models.Generated.Registers
             {
                 UInt16 data = 0x0;
 
-                data |= valid.GetPositionalValue();
+                data |= psi_read_data_slot1_ch1.GetPositionalValue();
                 
                 return data;
             }
             set
             {
-                valid.UpdateValue(value);
+                psi_read_data_slot1_ch1.UpdateValue(value);
                 
             }
         }
 
         #region Field classes declarations
         /// <summary>
-        /// Class for working with valid field
+        /// Class for working with psi_read_data_slot1_ch1 field
         /// WARNING: this class is generated, do not modify manually!
         /// </summary>
-        public sealed class Field_valid
+        public sealed class Field_psi_read_data_slot1_ch1
         {
             /// <summary>
             /// Max value that can be stored in field
@@ -98,17 +98,17 @@ namespace AB15_GUI.WPF.Models.Generated.Registers
             /// <summary>
             /// Name of the field
             /// </summary>
-            public string Name { get; private set; } = "valid";
+            public string Name { get; private set; } = "psi_read_data_slot1_ch1";
 
             /// <summary>
             /// Description
             /// </summary>
-            public string Description { get; private set; } = "determines if customer OTP area has been        written and shall be considered as valid by the device        0: not        written -> EOLmode        > 0: valid (CRC will be checked)       ";
+            public string Description { get; private set; } = "psi_read_data_slot1_ch1";
 
             /// <summary>
             /// Access level of this field
             /// </summary>
-            public string Access { get; private set; } = "read-write";
+            public string Access { get; private set; } = "read-only";
 
             /// <summary>
             /// Bit offset of the field in register
