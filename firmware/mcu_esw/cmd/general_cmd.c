@@ -21,6 +21,7 @@
 #include "IfxPort.h" // for gpio.h
 #include "IfxPort_PinMap.h" // hack for gpio.h // TODO: remove dependency to IFxPort stuff
 #include "periphery/gpio.h" // for add chip select, TODO: remove dep.
+#include "IfxCpu.h" // for MCU reset command
 
 /*********************************************************************************************************************/
 /*------------------------------------------------------Macros-------------------------------------------------------*/
@@ -268,4 +269,20 @@ void CmdSendRawData(USBReceiveData const * const commandPackage)
 
     // Send data back to MCU
     SendUSBPackage(&packageToSend);
+}
+
+void CmdResetMCU(USBReceiveData const * const commandPackage)
+{
+    USBTransmitData packageToSend;
+    packageToSend.device_id = 0;
+    packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
+    packageToSend.status = USB_STATUS_ACK;
+    packageToSend.dataLength = 0;
+    // Send data back to GUI
+    SendUSBPackage(&packageToSend);
+    
+    // Initiate reset of MCU
+    IfxCpu_triggerSwReset();
+    // Remain in endless loop untill MCU resets
+    while (TRUE);
 }
