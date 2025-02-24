@@ -59,13 +59,6 @@ namespace AB15_GUI.WPF.ViewModels
 
             // Create record for SPI transaction
             RefToActiveRecord = new SPITransactionRecord();
-
-            // TESTING WITH MOCKUP DATA
-            SPICommunicationTable = new ObservableCollection<SPITransactionRecord>();
-            for (var indexer = 0; indexer < 30; indexer++)
-            {
-                SPICommunicationTable.Add(new SPITransactionRecord(new MISORecord() { RawMISO = (uint)(123456 * indexer) }, new MOSIRecord() { RawMOSI = (uint)(246810 * indexer) }));
-            }
         }
         
         #region Bindable_Properties
