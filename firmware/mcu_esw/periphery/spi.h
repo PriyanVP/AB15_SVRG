@@ -89,13 +89,14 @@ void QSPIDeinitPeriphery(void);
  * 3) Receives 32 bit package from slave\n
  * 4) Waits for configured time to avoid issues in communication
  *
+ * \param spiChannel defines CS line to be activated in transaction
  * \param SpiBusSelectEnum defines on which SPI module the SPIt transaction is initiated
  * \param dataToSend pointer to buffer with data to send
  * \param dataToReceive pointer to empty buffer which will be filled with data from slave
  * \param length data length in bytes
  * \return Returns nothing.
  */
-void QSPIExchangeData(SpiBusSelectEnum spiBus, const uint32 * const dataToSend, uint32 * const dataOut, uint8 length);
+void QSPIExchangeData(uint8 spiChannel, SpiBusSelectEnum spiBus, const uint32 * const dataToSend, uint32 * const dataOut, uint8 length);
 
 /** \brief QSPI Master channel CS pin reconfiguration
  * Channel will be reconfigured only if new spiChannel is not the same as previous one
