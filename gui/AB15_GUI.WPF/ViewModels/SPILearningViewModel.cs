@@ -94,6 +94,24 @@ namespace AB15_GUI.WPF.ViewModels
         }
 
         /// <summary>
+        /// <inheritdoc cref="SelectedASICToSend" path='/summary'/>
+        /// </summary>
+        private DeviceIDs selectedASICToSend = DeviceIDs.SPI1_CS1MASTER; 
+        
+        /// <summary>
+        /// The selected Device ID
+        /// </summary>
+        public DeviceIDs SelectedASICToSend
+        {
+            get => selectedASICToSend;
+            set 
+            {
+                selectedASICToSend = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        /// <summary>
         /// <inheritdoc cref="IsSPILearningEn" path='/summary'/>
         /// </summary>
         private bool isSPILearningEn;
@@ -242,7 +260,7 @@ namespace AB15_GUI.WPF.ViewModels
 
             // Create package to MCU
             TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
-            packageToSend.ASICID = 1; // TODO: should be a value from dropdown
+            packageToSend.ASICID = (int)SelectedASICToSend;
             packageToSend.Cmd = MCUCommand.WRITE_RAW_DATA_SPI;
             packageToSend.PayloadType = typeof(AddressDataPayload);
             packageToSend.Payload.Data.Add((UInt16) (RefToActiveRecord.MOSI.RawMOSI & 0xFFFF));        // 16 LSB

@@ -6,6 +6,8 @@
       xmlns:cnvrt="clr-namespace:AB15_GUI.WPF.Views.Converters" 
       xmlns:local="clr-namespace:AB15_GUI.WPF.Views"
       xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+      xmlns:sys="clr-namespace:System;assembly=netstandard"
+      xmlns:models="clr-namespace:AB15_GUI.WPF.Models"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="1100"
       Title="SPILearning"
@@ -17,6 +19,15 @@
         <cnvrt:BoolToRWConverter x:Key="BoolToRWConverter"/>
         <cnvrt:HexToIntConverter x:Key="HexToIntConverter"/>
         <cnvrt:HelpMessageConverter x:Key="HelpMessageConverter"/>
+        
+        <ObjectDataProvider
+            x:Key="DeviceIDValues"
+            MethodName="GetValues"
+            ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="models:DeviceIDs" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
     </Page.Resources>
     
     <Grid Background="{DynamicResource UI.BackGround}">
@@ -195,12 +206,17 @@
             </Grid>
 
 
-            <ComboBox   Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="1"
-                        ItemsSource="{Binding SelectedASICToSend}"
+            <ComboBox   Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2"
+                        Name="DeviceIdSelector"
                         IsEnabled="{Binding IsSPILearningEn}"
-                        MinWidth="100" Margin="3"
+                        Height="23"
+                        MinWidth="132" Margin="0,0,5,0"
                         ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='DeviceIDSelector', Mode=OneWay}"
-	                    ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
+	                    ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"
+                        ItemsSource="{Binding Source={StaticResource DeviceIDValues}}"
+                        SelectedValue="{Binding Path=SelectedASICToSend}">
+
+            </ComboBox>
 
             <Button     Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="1"
                         Style="{DynamicResource SimpleButton}"
