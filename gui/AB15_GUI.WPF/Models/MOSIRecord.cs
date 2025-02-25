@@ -23,12 +23,7 @@ namespace AB15_GUI.WPF.Models
             set
             {
                 // Validation
-                if (value > MAX_ADDRESS)
-                {
-                    throw new ArgumentOutOfRangeException("Incorrect value for address!");
-                }
-
-                address = value;
+                address = value > MAX_ADDRESS ? MAX_ADDRESS : value;
                 OnPropertyChanged();
 
                 // Trigger frame update

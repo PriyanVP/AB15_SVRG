@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -13,21 +14,6 @@ namespace AB15_GUI.WPF.Views
         public SPILearning()
         {
             InitializeComponent();
-
-            ReadingCheckBox.IsChecked = true;
-        }
-
-        private void CheckBox_Checked(object sender, RoutedEventArgs e)
-        {
-            CheckBox checkBox = (CheckBox)sender;
-            if (checkBox.Name == ReadingCheckBox.Name)
-            {
-                WritingCheckBox.IsChecked = !checkBox.IsChecked;
-            }
-            else
-            {
-                ReadingCheckBox.IsChecked = !checkBox.IsChecked;
-            }
         }
 
         private void MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -37,11 +23,11 @@ namespace AB15_GUI.WPF.Views
             
             try
             {
-                Clipboard.SetText(((TextBox)sender).Text);
+                Clipboard.SetDataObject(((TextBlock)sender).Text);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                // Do something w/ exception 
+                // In case of exception do not copy to clipboard
             }
         }
 
@@ -57,6 +43,27 @@ namespace AB15_GUI.WPF.Views
             ReadWriteChooseField.Visibility = Visibility.Visible;
             RawFormatTextBox.Visibility = Visibility.Hidden;
             RawHexText.Visibility = Visibility.Hidden;
+        }
+        
+        private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9a-fA-F]+$");
+            e.Handled = regex.IsMatch(e.Text);
+        }
+
+        private void ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            // Syncing of the rows scrolling of MOSI and MISO tables - 
+            // when the list of the items of one of the tables has been vertically scrolled,
+            // assign the same verticle scroll offset to the other table
+            if (sender == MOSITableTableViewScroll)
+            {
+                MISOTableTableViewScroll.ScrollToVerticalOffset(e.VerticalOffset);
+            }
+            else
+            {
+                MOSITableTableViewScroll.ScrollToVerticalOffset(e.VerticalOffset);
+            }
         }
     }
 }
