@@ -83,7 +83,7 @@ namespace AB15_GUI.WPF.ViewModels
             // ResetUartStatus = new RelayCommand(ResetUartStatusExecuteAsync);
             SetResetUartFrames = new RelayCommand(SetResetUartFramesExecuteAsync);
 
-            //
+            // General page enables
             IsPsiPageEnabled = true;
             IsUartPageEnabled = true;
 
@@ -93,7 +93,11 @@ namespace AB15_GUI.WPF.ViewModels
             MonSpi2Data = "0x0000";
             MonSpi2Sid = "0x0000";
 
-            // 
+            // Default values
+            PsiSupply = 0xFF;
+            PsiGenMaskSync = 0x01;
+
+            // Statuses and indicators init
             SyncPulseGeneretingStatus = FaultStatus.Fault;
             PSIDataReceivedStatus = FaultStatus.Fault;
             PSITopStatus = FaultStatus.Fault;
@@ -312,6 +316,42 @@ namespace AB15_GUI.WPF.ViewModels
             set
             {
                 monSpi2Sid = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// <inheritdoc cref="PsiSupply" path='/summary'/>
+        /// </summary>
+        private uint psiSupply;
+        
+        /// <summary>
+        /// PSI SUPPLY register value
+        /// </summary>
+        public uint PsiSupply
+        {
+            get => psiSupply;
+            set
+            {
+                psiSupply = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// <inheritdoc cref="PsiGenMaskSync" path='/summary'/>
+        /// </summary>
+        private uint psiGenMaskSync;
+        
+        /// <summary>
+        /// PSI GEN MASK SYNC register value
+        /// </summary>
+        public uint PsiGenMaskSync
+        {
+            get => psiGenMaskSync;
+            set
+            {
+                psiGenMaskSync = value;
                 OnPropertyChanged();
             }
         }
@@ -812,10 +852,30 @@ namespace AB15_GUI.WPF.ViewModels
             _readPsiConfigurationCommand.InProgress = true;
             OnPropertyChanged(nameof(ReadPsiConfigurationCommandEn));
 
-            // ...command execution logic...
+            // Register models
+            Reg_PSI_Supply reg_PSI_Supply = new Reg_PSI_Supply();
+            Reg_PSI_Gen_Mask_Sync reg_PSI_Gen_Mask_Sync = new Reg_PSI_Gen_Mask_Sync();
+
+            // Read sensor data
+            TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
+            packageToSend.ASICID = 2; // using CS_MON1
+            packageToSend.Cmd = MCUCommand.EXECUTE_READ_SEQUENCE;
+            packageToSend.PayloadType = typeof(AddressDataPayload);
+            packageToSend.Payload.Address.Add(reg_PSI_Supply.Address);
+            packageToSend.Payload.Address.Add(reg_PSI_Gen_Mask_Sync.Address);
+
+            // Send command to MCU and wait for response
+            ReceiveCommunicationPackage<AddressDataPayload>? mcuResponse = (ReceiveCommunicationPackage<AddressDataPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
 
             _readPsiConfigurationCommand.InProgress = false;
             OnPropertyChanged(nameof(ReadPsiConfigurationCommandEn));
+
+            // Validate response
+            if (IsResponseValid(mcuResponse, nameof(ReadPsiConfiguration)) == false) return;
+
+            // Update observable properties
+            PsiSupply = mcuResponse.Payload.Data[0];
+            PsiGenMaskSync = mcuResponse.Payload.Data[1];
         }
 
         /// <summary>
@@ -827,10 +887,28 @@ namespace AB15_GUI.WPF.ViewModels
             _writePsiConfigurationCommand.InProgress = true;
             OnPropertyChanged(nameof(WritePsiConfigurationCommandEn));
 
-            // ...command execution logic...
+            // Register models
+            Reg_PSI_Supply reg_PSI_Supply = new Reg_PSI_Supply();
+            Reg_PSI_Gen_Mask_Sync reg_PSI_Gen_Mask_Sync = new Reg_PSI_Gen_Mask_Sync();
+
+            // Read sensor data
+            TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
+            packageToSend.ASICID = 2; // using CS_MON1
+            packageToSend.Cmd = MCUCommand.EXECUTE_WRITE_SEQUENCE;
+            packageToSend.PayloadType = typeof(AddressDataPayload);
+            packageToSend.Payload.Address.Add(reg_PSI_Supply.Address);
+            packageToSend.Payload.Data.Add((ushort)PsiSupply);
+            packageToSend.Payload.Address.Add(reg_PSI_Gen_Mask_Sync.Address);
+            packageToSend.Payload.Data.Add((ushort)PsiGenMaskSync);
+
+            // Send command to MCU and wait for response
+            ReceiveCommunicationPackage<AddressDataPayload>? mcuResponse = (ReceiveCommunicationPackage<AddressDataPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
 
             _writePsiConfigurationCommand.InProgress = false;
             OnPropertyChanged(nameof(WritePsiConfigurationCommandEn));
+
+            // Validate response
+            if (IsResponseValid(mcuResponse, nameof(WritePsiConfiguration)) == false) return;
         }
 
         /// <summary>
@@ -842,7 +920,9 @@ namespace AB15_GUI.WPF.ViewModels
             _resetPsiConfigurationCommand.InProgress = true;
             OnPropertyChanged(nameof(ResetPsiConfigurationCommandEn));
 
-            // ...command execution logic...
+            // Reset values to default
+            PsiSupply = 0xFF;
+            PsiGenMaskSync = 0x01;
 
             _resetPsiConfigurationCommand.InProgress = false;
             OnPropertyChanged(nameof(ResetPsiConfigurationCommandEn));

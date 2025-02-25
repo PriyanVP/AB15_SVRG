@@ -13,6 +13,7 @@
     <Page.Resources>
         <cnvrt:FaultFlagToColorConverter x:Key="FaultFlagToColorConverter"/>
         <cnvrt:IntToHexStringConverter x:Key="IntToHexCnvrt"/>
+        <cnvrt:HexToIntConverter x:Key="HexToIntNoPrefixCnvrt"/>
     </Page.Resources>
 
     <Grid Background="{DynamicResource UI.BackGround}">
@@ -243,7 +244,7 @@
 
                                 <TextBox    Style="{DynamicResource TextBoxStyle}"
                                             IsEnabled="{Binding IsPsiPageEnabled}"
-                                            Text="{Binding PSISupplyValue}"
+                                            Text="{Binding PsiSupply, Converter={StaticResource HexToIntNoPrefixCnvrt}, Mode=TwoWay}"
                                             PreviewTextInput="HexPsiConfigTextBox_PreviewTextInput"
                                             MinWidth="150"/>
                             </StackPanel>
@@ -264,7 +265,7 @@
 
                                 <TextBox    Style="{DynamicResource TextBoxStyle}"
                                             IsEnabled="{Binding IsPsiPageEnabled}"
-                                            Text="{Binding PSIGenMaskSyncValue}"
+                                            Text="{Binding PsiGenMaskSync, Converter={StaticResource HexToIntNoPrefixCnvrt}, Mode=TwoWay}"
                                             PreviewTextInput="HexPsiConfigTextBox_PreviewTextInput"
                                             MinWidth="150"/>
                             </StackPanel>
