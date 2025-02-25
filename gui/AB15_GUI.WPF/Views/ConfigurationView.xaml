@@ -1004,7 +1004,7 @@
                                             <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
                                         </MultiBinding>
                                     </Border.Background>
-                                    <TextBlock Text="{Binding Ch1StatusText, TargetNullValue='NaN'}" 
+                                    <TextBlock Text="{Binding Path=PsiStatusList[0].Data, Converter={StaticResource IntToHexCnvrt}, Mode=OneWay}"
                                        HorizontalAlignment="Center" 
                                        Style="{DynamicResource TextBlockStyle}"/>
                                 </Border>
@@ -1019,7 +1019,7 @@
                                             <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
                                         </MultiBinding>
                                     </Border.Background>
-                                    <TextBlock Text="{Binding Ch3StatusText, TargetNullValue='NaN'}" 
+                                    <TextBlock Text="{Binding Path=PsiStatusList[2].Data, Converter={StaticResource IntToHexCnvrt}, Mode=OneWay}" 
                                        HorizontalAlignment="Center" 
                                        Style="{DynamicResource TextBlockStyle}"/>
                                 </Border>
@@ -1034,7 +1034,7 @@
                                             <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
                                         </MultiBinding>
                                     </Border.Background>
-                                    <TextBlock Text="{Binding Ch5StatusText, TargetNullValue='NaN'}" 
+                                    <TextBlock Text="{Binding Path=PsiStatusList[4].Data, Converter={StaticResource IntToHexCnvrt}, Mode=OneWay}" 
                                        HorizontalAlignment="Center" 
                                        Style="{DynamicResource TextBlockStyle}"/>
                                 </Border>
@@ -1049,7 +1049,7 @@
                                             <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
                                         </MultiBinding>
                                     </Border.Background>
-                                    <TextBlock Text="{Binding Ch7StatusText, TargetNullValue='NaN'}" 
+                                    <TextBlock Text="{Binding Path=PsiStatusList[6].Data, Converter={StaticResource IntToHexCnvrt}, Mode=OneWay}" 
                                        HorizontalAlignment="Center" 
                                        Style="{DynamicResource TextBlockStyle}"/>
                                 </Border>
@@ -1064,7 +1064,7 @@
                                             <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
                                         </MultiBinding>
                                     </Border.Background>
-                                    <TextBlock Text="{Binding Ch2StatusText, TargetNullValue='NaN'}" 
+                                    <TextBlock Text="{Binding Path=PsiStatusList[1].Data, Converter={StaticResource IntToHexCnvrt}, Mode=OneWay}" 
                                        HorizontalAlignment="Center" 
                                        Style="{DynamicResource TextBlockStyle}"/>
                                 </Border>
@@ -1079,7 +1079,7 @@
                                             <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
                                         </MultiBinding>
                                     </Border.Background>
-                                    <TextBlock Text="{Binding Ch4StatusText, TargetNullValue='NaN'}" 
+                                    <TextBlock Text="{Binding Path=PsiStatusList[3].Data, Converter={StaticResource IntToHexCnvrt}, Mode=OneWay}" 
                                        HorizontalAlignment="Center" 
                                        Style="{DynamicResource TextBlockStyle}"/>
                                 </Border>
@@ -1094,7 +1094,7 @@
                                             <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
                                         </MultiBinding>
                                     </Border.Background>
-                                    <TextBlock Text="{Binding Ch6StatusText, TargetNullValue='NaN'}" 
+                                    <TextBlock Text="{Binding Path=PsiStatusList[5].Data, Converter={StaticResource IntToHexCnvrt}, Mode=OneWay}" 
                                        HorizontalAlignment="Center" 
                                        Style="{DynamicResource TextBlockStyle}"/>
                                 </Border>
@@ -1109,7 +1109,7 @@
                                             <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
                                         </MultiBinding>
                                     </Border.Background>
-                                    <TextBlock Text="{Binding Ch8StatusText, TargetNullValue='NaN'}" 
+                                    <TextBlock Text="{Binding Path=PsiStatusList[7].Data, Converter={StaticResource IntToHexCnvrt}, Mode=OneWay}" 
                                        HorizontalAlignment="Center" 
                                        Style="{DynamicResource TextBlockStyle}"/>
                                 </Border>
