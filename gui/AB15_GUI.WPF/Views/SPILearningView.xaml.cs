@@ -53,6 +53,9 @@ namespace AB15_GUI.WPF.Views
 
         private void ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
+            // Syncing of the rows scrolling of MOSI and MISO tables - 
+            // when the list of the items of one of the tables has been vertically scrolled,
+            // assign the same verticle scroll offset to the other table
             if (sender == MOSITableTableViewScroll)
             {
                 MISOTableTableViewScroll.ScrollToVerticalOffset(e.VerticalOffset);

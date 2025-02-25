@@ -25,9 +25,7 @@ namespace AB15_GUI.WPF.Views.Converters
         /// </summary>
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            int intValue = (int) value;
-            
-            return (intValue != 0);
+            throw new NotImplementedException();
         }
     }
 }

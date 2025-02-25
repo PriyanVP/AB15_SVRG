@@ -207,7 +207,7 @@ namespace AB15_GUI.WPF.ViewModels
             AddHelpMsg(nameof(RefToActiveRecord.MISO.GS2), "APB Bus Transaction Error (APB):\r\n 0 = OK\r\n 1 = Failure in the previous Read/Write APB transaction");
             AddHelpMsg(nameof(RefToActiveRecord.MISO.GS1), "ADC Error (ADC):\r\n 0 = OK\r\n 1 = ADC error has occurred");
             AddHelpMsg(nameof(RefToActiveRecord.MISO.GS0), "APB Access Time Error (ATE):\r\n 0 = Ok\r\n 1 = APB bus access from the previous SPI frame was not executed on time and correctness previous request is not guaranteed");
-            AddHelpMsg(nameof(RefToActiveRecord.MISO.SF), "N/A");
+            AddHelpMsg(nameof(RefToActiveRecord.MISO.SF), "SF - Frame Type\r\n 0 - Normal Frame\r\n 1 - Sensor Frame");
             AddHelpMsg(nameof(RefToActiveRecord.MISO.S0), "ASIC Error Flag:\r\n 0 = ASIC error not present\r\n 1 = Oscillator Monitor Error (Oscillator failure) or Current APB Read Access Time Error (ATE) or Current APB Read Bus Transaction Error (APB)");
             AddHelpMsg(nameof(RefToActiveRecord.MISO.AdditionalStatus), "Additional Status flags");
             AddHelpMsg("MISO" + nameof(RefToActiveRecord.MISO.Data), "Data read from the register (Set to 0 in case of SPI WR transaction)");

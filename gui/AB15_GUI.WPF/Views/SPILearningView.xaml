@@ -195,7 +195,7 @@
                         </Style>
                     </TextBlock.Style>
                 </TextBlock>
-
+                <!-- TO DO Move the switch to a common for all pages GUI area-->
                 <ToggleButton Style="{DynamicResource SimpleToggleButton}" 
                       x:Name="HelpProviderToggleButton"
                       HorizontalAlignment="Right"
@@ -935,7 +935,7 @@
                                     <TextBlock  Grid.Column="3"  Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
-                                            Text="{Binding Path=MOSI.RwFlag, Converter={StaticResource BoolToRWConverter}}"
+                                            Text="{Binding Path=MOSI.RwFlag, Converter={StaticResource BoolToRWConverter}, Mode=OneWay}"
                                             Style="{DynamicResource TextBlockStyle}" 
                                             MouseLeftButtonDown="MouseDoubleClick"/>
 
