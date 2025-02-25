@@ -81,6 +81,7 @@ void InitUart(void)
 
     uartConfig.frame.parityBit = TRUE;
     uartConfig.frame.parityType = IfxAsclin_ParityType_odd;
+    uartConfig.frame.stopBit = IfxAsclin_StopBit_2;     /* Use two stop bits to achieve one bit interframe time */
 
     IfxAsclin_Asc_initModule(&g_uart, &uartConfig);                      /* Initialize module with above parameters  */
 
