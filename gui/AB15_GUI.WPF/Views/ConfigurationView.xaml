@@ -66,8 +66,8 @@
                             Content="Read"
                             MinWidth="60"
                             Margin="5,0"
-                            Command="{Binding ReadPSISensorDaaCommand}"
-                            IsEnabled="{Binding isConfigurationPSIPageEnabled}"
+                            Command="{Binding ReadPsiSensorData}"
+                            IsEnabled="{Binding ReadPsiSensorDataCommandEn}"
                             Style="{DynamicResource SimpleButton}"
                             VerticalAlignment="Center"
                             HorizontalAlignment="Right"/>
@@ -77,8 +77,8 @@
                             Content="Read"
                             MinWidth="60"
                             Margin="5,0"
-                            Command="{Binding ReadPSIStatusCommand}"
-                            IsEnabled="{Binding isConfigurationPSIPageEnabled}"
+                            Command="{Binding ReadPsiStatus}"
+                            IsEnabled="{Binding ReadPsiStatusCommandEn}"
                             Style="{DynamicResource SimpleButton}"
                             VerticalAlignment="Center"
                             HorizontalAlignment="Right"/>
@@ -88,8 +88,8 @@
                             Content="Read"
                             MinWidth="60"
                             Margin="5,0"
-                            Command="{Binding ReadMonitorPSIStatusCommand}"
-                            IsEnabled="{Binding isConfigurationPSIPageEnabled}"
+                            Command="{Binding ReadMonitorSpiStatus}"
+                            IsEnabled="{Binding ReadMonitorSpiStatusCommandEn}"
                             Style="{DynamicResource SimpleButton}"
                             VerticalAlignment="Center"
                             HorizontalAlignment="Right"/>
@@ -109,14 +109,12 @@
                                 Margin="4,2">
                             <Border.Background>
                                 <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
-                                    <Binding Path = "SyncPulsGeneretingStatus"/>
+                                    <Binding Path = "SyncPulseGeneretingStatus"/>
                                     <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
                                 </MultiBinding>
                             </Border.Background>
-                            <TextBlock Text="{Binding SyncPulsGeneratingStatusText, TargetNullValue='Sync puls generation - OFF', 
-                                StringFormat='Sync puls generation - {0}'}" 
-                                       HorizontalAlignment="Center" 
-                                           TextAlignment="Center"
+                            <TextBlock Text="Sync pulse" 
+                                       HorizontalAlignment="Center" TextAlignment="Center"
                                        Style="{DynamicResource TextBlockStyle}"
                                        MinWidth="200"/>
                         </Border>
@@ -152,7 +150,7 @@
                                     <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
                                 </MultiBinding>
                             </Border.Background>
-                            <TextBlock Text="{Binding PSITopStatusText, TargetNullValue='Activated'}" 
+                            <TextBlock Text="{Binding PSITopStatusText, TargetNullValue='Deactivated'}" 
                                        HorizontalAlignment="Center" 
                                        TextAlignment="Center"
                                        Style="{DynamicResource TextBlockStyle}"
@@ -196,9 +194,9 @@
                                         FontWeight="Bold"
                                         Margin="5,0"/>
 
-                            <Border Grid.Row="0" Grid.Column="2" 
+                            <Border Grid.Row="0" Grid.Column="3" 
                                     BorderThickness="1" 
-                                CornerRadius="5" 
+                                    CornerRadius="5" 
                                     BorderBrush="{DynamicResource Animation.Lines}" 
                                     HorizontalAlignment="Stretch" 
                                     Width="200"
@@ -209,32 +207,12 @@
                                         <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
                                     </MultiBinding>
                                 </Border.Background>
-                                <TextBlock Text="Psi Data received" 
+                                <TextBlock Text="PSI Data received" 
                                            HorizontalAlignment="Center" 
                                            TextAlignment="Center"
                                            Style="{DynamicResource TextBlockStyle}"
                                            MinWidth="150"/>
                             </Border>
-
-                            <Border Grid.Row="0" Grid.Column="3" 
-                                    BorderThickness="1" 
-                                    CornerRadius="5" 
-                                    BorderBrush="{DynamicResource Animation.Lines}" 
-                                    HorizontalAlignment="Stretch" 
-                                Margin="4,2">
-                                <Border.Background>
-                                    <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
-                                        <Binding Path = "CrashDataPSIStatus"/>
-                                        <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
-                                    </MultiBinding>
-                                </Border.Background>
-                                <TextBlock Text="{Binding CrashDataPSIStatusText, TargetNullValue='Crash data'}" 
-                                           HorizontalAlignment="Center" 
-                                           TextAlignment="Center"
-                                           Style="{DynamicResource TextBlockStyle}"
-                                           MinWidth="150"/>
-                            </Border>
-
 
                         </Grid>
 
@@ -264,7 +242,7 @@
                                             Style="{DynamicResource TextBlockStyle}"/>
 
                                 <TextBox    Style="{DynamicResource TextBoxStyle}"
-                                            IsEnabled="{Binding isConfigurationPSIPageEnabled}"
+                                            IsEnabled="{Binding IsPsiPageEnabled}"
                                             Text="{Binding PSISupplyValue}"
                                             PreviewTextInput="HexPsiConfigTextBox_PreviewTextInput"
                                             MinWidth="150"/>
@@ -285,7 +263,7 @@
                                             Style="{DynamicResource TextBlockStyle}"/>
 
                                 <TextBox    Style="{DynamicResource TextBoxStyle}"
-                                            IsEnabled="{Binding isConfigurationPSIPageEnabled}"
+                                            IsEnabled="{Binding IsPsiPageEnabled}"
                                             Text="{Binding PSIGenMaskSyncValue}"
                                             PreviewTextInput="HexPsiConfigTextBox_PreviewTextInput"
                                             MinWidth="150"/>
@@ -301,20 +279,20 @@
                             <Button Content="Reset"
                                     Margin="10,0"
                                     Style="{DynamicResource SimpleButton}"
-                                    IsEnabled="{Binding isConfigurationPSIPageEnabled}"
-                                    Command="{Binding ResetPSIConfigurationCommand}"/>
+                                    Command="{Binding ResetPsiConfiguration}"
+                                    IsEnabled="{Binding ResetPsiConfigurationCommandEn}"/>
 
                             <Button Content="Read"
                                     Margin="10,0"
                                     Style="{DynamicResource SimpleButton}"
-                                    IsEnabled="{Binding isConfigurationPSIPageEnabled}"
-                                    Command="{Binding ReadPSIConfigurationCommand}"/>
+                                    Command="{Binding ReadPsiConfiguration}"
+                                    IsEnabled="{Binding ReadPsiConfigurationCommandEn}"/>
 
                             <Button Content="Write"
                                     Margin="10,0"
                                     Style="{DynamicResource SimpleButton}"
-                                    IsEnabled="{Binding isConfigurationPSIPageEnabled}"
-                                    Command="{Binding WritePSIConfigurationCommand}"/>
+                                    Command="{Binding WritePsiConfiguration}"
+                                    IsEnabled="{Binding WritePsiConfigurationCommandEn}"/>
 
                         </StackPanel>
 
@@ -1180,35 +1158,34 @@
                                 <!--#endregion-->
 
                                 <!--#region monitor spi textboxs -->
-
                                 <TextBox    Grid.Row="2" Grid.Column="1"
                                     Margin="5,1"
-                                    Text="{Binding SPI1DataStatusText}" 
-                                    IsEnabled="{Binding isConfigurationPSIPageEnabled}"
+                                    Text="{Binding MonSpi1Data}" 
+                                    IsEnabled="{Binding IsPsiPageEnabled}"
                                     VerticalAlignment="Center"
                                     HorizontalAlignment="Stretch" 
                                     Style="{DynamicResource TextBoxStyle}"/>
 
                                 <TextBox    Grid.Row="2" Grid.Column="2"
                                     Margin="5,1"
-                                    Text="{Binding SPI2DataStatusText}" 
-                                    IsEnabled="{Binding isConfigurationPSIPageEnabled}"
+                                    Text="{Binding MonSpi2Data}" 
+                                    IsEnabled="{Binding IsPsiPageEnabled}"
                                     VerticalAlignment="Center"
                                     HorizontalAlignment="Stretch" 
                                     Style="{DynamicResource TextBoxStyle}"/>
 
                                 <TextBox    Grid.Row="3" Grid.Column="1"
                                     Margin="5,1"
-                                    Text="{Binding SPI1SidStatusText}" 
-                                    IsEnabled="{Binding isConfigurationPSIPageEnabled}"
+                                    Text="{Binding MonSpi1Sid}" 
+                                    IsEnabled="{Binding IsPsiPageEnabled}"
                                     VerticalAlignment="Center"
                                     HorizontalAlignment="Stretch" 
                                     Style="{DynamicResource TextBoxStyle}"/>
 
                                 <TextBox    Grid.Row="3" Grid.Column="2"
                                     Margin="5,1"
-                                    Text="{Binding SPI2SidStatusText}" 
-                                    IsEnabled="{Binding isConfigurationPSIPageEnabled}"
+                                    Text="{Binding MonSpi2Sid}" 
+                                    IsEnabled="{Binding IsPsiPageEnabled}"
                                     VerticalAlignment="Center"
                                     HorizontalAlignment="Stretch" 
                                     Style="{DynamicResource TextBoxStyle}"/>
@@ -2598,7 +2575,7 @@
                                     <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
                                 </MultiBinding>
                             </Border.Background>
-                            <TextBlock Text="{Binding UARTTopStatusText, TargetNullValue='Activated'}" 
+                            <TextBlock Text="{Binding UARTTopStatusText, TargetNullValue='Deactivated'}" 
                                        HorizontalAlignment="Center" 
                                        Style="{DynamicResource TextBlockStyle}"
                                        TextAlignment="Center"
@@ -2735,14 +2712,13 @@
                             </Grid>
                         </ScrollViewer>
 
-                        <Button Grid.Row="2"
+                        <Button Grid.Row="2" Margin="5,0"
                                 Content="Read"
                                 Style="{DynamicResource SimpleButton}"
-                                IsEnabled="{Binding isConfigurationUARTPageEnabled}"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Center"
-                                Command="{Binding ReadUartConfigCommand}"
-                                Margin="5,0"/>
+                                Command="{Binding ReadUartConfiguration}"
+                                IsEnabled="{Binding ReadUartConfigurationCommandEn}"/>
                     </Grid>
 
                     <!-- Uart frames set up -->
@@ -2800,7 +2776,7 @@
                                                 Style="{DynamicResource TextBoxStyle}"
                                                 Padding="3"
                                                 Text="{Binding UartFrame1Text}"
-                                                IsEnabled="{Binding isConfigurationUARTPageEnabled}"
+                                                IsEnabled="{Binding IsUartPageEnabled}"
                                                 PreviewTextInput="HexUartFrameTextBox_PreviewTextInput"
                                                 MinWidth="160"/>
                                 </StackPanel>
@@ -2817,7 +2793,7 @@
                                                 Padding="3"
                                                 Text="{Binding UartFrame2Text}"
                                                 PreviewTextInput="HexUartFrameTextBox_PreviewTextInput"
-                                                IsEnabled="{Binding isConfigurationUARTPageEnabled}"
+                                                IsEnabled="{Binding IsUartPageEnabled}"
                                                 MinWidth="160"/>
                                 </StackPanel>
 
@@ -2832,7 +2808,7 @@
                                                 Style="{DynamicResource TextBoxStyle}"
                                                 Padding="3"
                                                 Text="{Binding UartFrame3Text}"
-                                                IsEnabled="{Binding isConfigurationUARTPageEnabled}"
+                                                IsEnabled="{Binding IsUartPageEnabled}"
                                                 PreviewTextInput="HexUartFrameTextBox_PreviewTextInput"
                                                 MinWidth="160"/>
                                 </StackPanel>
@@ -2845,25 +2821,21 @@
                                     Orientation="Horizontal"
                                     HorizontalAlignment="Right">
 
-                            <Button Grid.Row="2"
+                            <Button Grid.Row="2" Margin="5,0" Width="60"
                                     Content="Reset"
                                     Style="{DynamicResource SimpleButton}"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Center"
-                                    IsEnabled="{Binding isConfigurationUARTPageEnabled}"
-                                    Command="{Binding ResetUartFrameConfigCommand}"
-                                    Margin="5,0"
-                                    Width="60"/>
+                                    Command="{Binding SetResetUartFrames}" CommandParameter="Reset"
+                                    IsEnabled="{Binding SetResetUartFramesCommandEn}"/>
                             
-                            <Button Grid.Row="2"
+                            <Button Grid.Row="2" Margin="5,0" Width="60"
                                     Content="Set"
                                     Style="{DynamicResource SimpleButton}"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Center"
-                                    IsEnabled="{Binding isConfigurationUARTPageEnabled}"
-                                    Command="{Binding SetUartFrameConfigCommand}"
-                                    Margin="5,0"
-                                    Width="60"/>
+                                    Command="{Binding SetResetUartFrames}" CommandParameter="Set"
+                                    IsEnabled="{Binding SetResetUartFramesCommandEn}"/>
                         </StackPanel>
                     </Grid>
 
@@ -2932,7 +2904,7 @@
                                         VerticalAlignment="Center"
                                         MinWidth="150"
                                         Margin="2">
-                                    <TextBlock  Text="{Binding UART1StatusText, TargetNullValue='0000'}" 
+                                    <TextBlock  Text="{Binding UARTStatusText, TargetNullValue='0000'}" 
                                             HorizontalAlignment="Center" 
                                             Style="{DynamicResource TextBlockStyle}"/>
                                 </Border>
@@ -2948,19 +2920,19 @@
                             <Button Content="Reset"
                                     Margin="10,0"
                                     Style="{DynamicResource SimpleButton}"
-                                    IsEnabled="{Binding isConfigurationUARTPageEnabled}"
+                                    IsEnabled="{Binding IsUartPageEnabled}"
                                     Command="{Binding ResetUARTConfigurationCommand}"/>
 
                             <Button Content="Read"
                                     Margin="10,0"
                                     Style="{DynamicResource SimpleButton}"
-                                    IsEnabled="{Binding isConfigurationUARTPageEnabled}"
+                                    IsEnabled="{Binding IsUartPageEnabled}"
                                     Command="{Binding ReadUARTConfigurationCommand}"/>
 
                             <Button Content="Write"
                                     Margin="10,0"
                                     Style="{DynamicResource SimpleButton}"
-                                    IsEnabled="{Binding isConfigurationUARTPageEnabled}"
+                                    IsEnabled="{Binding IsUartPageEnabled}"
                                     Command="{Binding WriteUartConfigurationCommand}"/>
 
                         </StackPanel>

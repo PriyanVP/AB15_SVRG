@@ -55,7 +55,56 @@ namespace AB15_GUI.WPF.ViewModels
             this.asicWrapper = asicWrapper;
             logger.Trace("In ConfigurationViewModel");
 
-            SyncPulsGeneratingStatusText = "ON";
+            // Init observable items
+            PsiSensorData = new PsiData();
+            PsiStatusList = new ObservableCollection<ObservableRegister>()
+                {
+                    new ObservableRegister(new Reg_PSI_Status_Ch1()),
+                    new ObservableRegister(new Reg_PSI_Status_Ch2()),
+                    new ObservableRegister(new Reg_PSI_Status_Ch3()),
+                    new ObservableRegister(new Reg_PSI_Status_Ch4()),
+                    new ObservableRegister(new Reg_PSI_Status_Ch5()),
+                    new ObservableRegister(new Reg_PSI_Status_Ch6()),
+                    new ObservableRegister(new Reg_PSI_Status_Ch7()),
+                    new ObservableRegister(new Reg_PSI_Status_Ch8())
+                };
+
+            // Init commands
+            ReadPsiSensorData = new RelayCommand(ReadPsiSensorDataExecuteAsync);
+            ReadPsiStatus = new RelayCommand(ReadPsiStatusExecuteAsync);
+            ReadMonitorSpiStatus = new RelayCommand(ReadMonitorSpiStatusExecuteAsync);
+            ReadPsiConfiguration = new RelayCommand(ReadPsiConfigurationExecuteAsync);
+            WritePsiConfiguration = new RelayCommand(WritePsiConfigurationExecuteAsync);
+            ResetPsiConfiguration = new RelayCommand(ResetPsiConfigurationExecuteAsync);
+
+            ReadUartConfiguration = new RelayCommand(ReadUartConfigurationExecuteAsync);
+            ReadUartStatus = new RelayCommand(ReadUartStatusExecuteAsync);
+            // WriteUartStatus = new RelayCommand(WriteUartStatusExecuteAsync);
+            // ResetUartStatus = new RelayCommand(ResetUartStatusExecuteAsync);
+            SetResetUartFrames = new RelayCommand(SetResetUartFramesExecuteAsync);
+
+            //
+            IsPsiPageEnabled = true;
+            IsUartPageEnabled = true;
+
+            // Init monitor SPI with default values
+            MonSpi1Data = "0x0000";
+            MonSpi1Sid = "0x0000";
+            MonSpi2Data = "0x0000";
+            MonSpi2Sid = "0x0000";
+
+            // 
+            SyncPulseGeneretingStatus = FaultStatus.Fault;
+            PSIDataReceivedStatus = FaultStatus.Fault;
+            PSITopStatus = FaultStatus.Fault;
+            UARTTopStatus = FaultStatus.Fault;
+
+            PSITopStatusText = "Deactivated";
+            UARTTopStatusText = "Deactivated";
+
+            // Events from ASIC // TODO: some of these handlers should be moved out of Firing VM
+            this.asicWrapper.ASICs[0].InitModeEntered += InitModeEnteredHandler;
+            this.asicWrapper.ASICs[0].NormalModeEntered += NormalModeEnteredHandler;
         }
 
         #region State_Machine
@@ -65,10 +114,48 @@ namespace AB15_GUI.WPF.ViewModels
         #region Bindable_Properties
 
         /// <summary>
+        /// <inheritdoc cref="IsPsiPageEnabled" path='/summary'/>
+        /// </summary>
+        private bool isPsiPageEnabled;
+        
+        /// <summary>
+        /// Top level enable control for PSI page
+        /// </summary>
+        public bool IsPsiPageEnabled
+        {
+            get => isPsiPageEnabled;
+            set 
+            {
+                isPsiPageEnabled = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// <inheritdoc cref="IsUartPageEnabled" path='/summary'/>
+        /// </summary>
+        private bool isUartPageEnabled;
+        
+        /// <summary>
+        /// Top level enable control for UART page
+        /// </summary>
+        public bool IsUartPageEnabled
+        {
+            get => isUartPageEnabled;
+            set 
+            {
+                isUartPageEnabled = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// <inheritdoc cref="UARTTopStatusText" path='/summary'/>
         /// </summary>
         private string uartTopStatusText;
         
         /// <summary>
+        /// Text to be displayed in indicator on page. Represents UART communication status
         /// </summary>
         public string UARTTopStatusText
         {
@@ -81,58 +168,30 @@ namespace AB15_GUI.WPF.ViewModels
         }
 
         /// <summary>
+        /// <inheritdoc cref="UARTStatusText" path='/summary'/>
         /// </summary>
-        private string uart1StatusText;
+        private string uartStatusText;
         
         /// <summary>
+        /// Hex content of UART status register
         /// </summary>
-        public string UART1StatusText
+        public string UARTStatusText
         {
-            get => uart1StatusText;
+            get => uartStatusText;
             set 
             {
-                uart1StatusText = value;
+                uartStatusText = value;
                 OnPropertyChanged();
             }
         }
 
         /// <summary>
-        /// </summary>
-        private string syncPulsGeneratingStatusText;
-        
-        /// <summary>
-        /// </summary>
-        public string SyncPulsGeneratingStatusText
-        {
-            get => syncPulsGeneratingStatusText;
-            set 
-            {
-                syncPulsGeneratingStatusText = value;
-                OnPropertyChanged();
-            }
-        }
-
-        /// <summary>
-        /// </summary>
-        private string crashDataPSIStatusText;
-        
-        /// <summary>
-        /// </summary>
-        public string CrashDataPSIStatusText
-        {
-            get => crashDataPSIStatusText;
-            set 
-            {
-                crashDataPSIStatusText = value;
-                OnPropertyChanged();
-            }
-        }
-
-        /// <summary>
+        /// <inheritdoc cref="PSITopStatusText" path='/summary'/>
         /// </summary>
         private string psiTopStatusText;
         
         /// <summary>
+        /// Text to be displayed in indicator on page. Represents PSI communication status
         /// </summary>
         public string PSITopStatusText
         {
@@ -145,648 +204,36 @@ namespace AB15_GUI.WPF.ViewModels
         }
 
         /// <summary>
+        /// <inheritdoc cref="PsiSensorData" path='/summary'/>
         /// </summary>
-        private string ch1StatusText;
+        private PsiData psiSensorData;
         
         /// <summary>
+        /// PSI sensor data for all channels and slots
         /// </summary>
-        public string Ch1StatusText
+        public PsiData PsiSensorData
         {
-            get => ch1StatusText;
+            get => psiSensorData;
             set 
             {
-                ch1StatusText = value;
+                psiSensorData = value;
                 OnPropertyChanged();
             }
         }
 
         /// <summary>
+        /// PSI status list with observability on each element
         /// </summary>
-        private string ch2StatusText;
-        
-        /// <summary>
-        /// </summary>
-        public string Ch2StatusText
-        {
-            get => ch2StatusText;
-            set 
-            {
-                ch2StatusText = value;
-                OnPropertyChanged();
-            }
-        }
+        public ObservableCollection<ObservableRegister> PsiStatusList { get; set; }
 
         /// <summary>
-        /// </summary>
-        private string ch3StatusText;
-        
-        /// <summary>
-        /// </summary>
-        public string Ch3StatusText
-        {
-            get => ch3StatusText;
-            set 
-            {
-                ch3StatusText = value;
-                OnPropertyChanged();
-            }
-        }
-
-        /// <summary>
-        /// </summary>
-        private string ch4StatusText;
-        
-        /// <summary>
-        /// </summary>
-        public string Ch4StatusText
-        {
-            get => ch4StatusText;
-            set 
-            {
-                ch4StatusText = value;
-                OnPropertyChanged();
-            }
-        }
-
-        /// <summary>
-        /// </summary>
-        private string ch5StatusText;
-        
-        /// <summary>
-        /// </summary>
-        public string Ch5StatusText
-        {
-            get => ch5StatusText;
-            set 
-            {
-                ch5StatusText = value;
-                OnPropertyChanged();
-            }
-        }
-
-        /// <summary>
-        /// </summary>
-        private string ch6StatusText;
-        
-        /// <summary>
-        /// </summary>
-        public string Ch6StatusText
-        {
-            get => ch6StatusText;
-            set 
-            {
-                ch6StatusText = value;
-                OnPropertyChanged();
-            }
-        }
-
-        /// <summary>
-        /// </summary>
-        private string ch7StatusText;
-        
-        /// <summary>
-        /// </summary>
-        public string Ch7StatusText
-        {
-            get => ch7StatusText;
-            set 
-            {
-                ch7StatusText = value;
-                OnPropertyChanged();
-            }
-        }
-
-        /// <summary>
-        /// </summary>
-        private string ch8StatusText;
-        
-        /// <summary>
-        /// </summary>
-        public string Ch8StatusText
-        {
-            get => ch8StatusText;
-            set 
-            {
-                ch8StatusText = value;
-                OnPropertyChanged();
-            }
-        }
-        
-        /// <summary>
-        /// </summary>
-        private string slot1Ch1SensorDataText;
-        
-        /// <summary>
-        /// </summary>
-        public string Slot1Ch1SensorDataText
-        {
-            get => slot1Ch1SensorDataText;
-            set 
-            {
-                slot1Ch1SensorDataText = value;
-                OnPropertyChanged();
-            }
-        }
-        
-        /// <summary>
-        /// </summary>
-        private string slot1Ch2SensorDataText;
-        
-        /// <summary>
-        /// </summary>
-        public string Slot1Ch2SensorDataText
-        {
-            get => slot1Ch2SensorDataText;
-            set 
-            {
-                slot1Ch2SensorDataText = value;
-                OnPropertyChanged();
-            }
-        }
-        
-        /// <summary>
-        /// </summary>
-        private string slot1Ch3SensorDataText;
-        
-        /// <summary>
-        /// </summary>
-        public string Slot1Ch3SensorDataText
-        {
-            get => slot1Ch3SensorDataText;
-            set 
-            {
-                slot1Ch3SensorDataText = value;
-                OnPropertyChanged();
-            }
-        }
-        
-        /// <summary>
-        /// </summary>
-        private string slot1Ch4SensorDataText;
-        
-        /// <summary>
-        /// </summary>
-        public string Slot1Ch4SensorDataText
-        {
-            get => slot1Ch4SensorDataText;
-            set 
-            {
-                slot1Ch4SensorDataText = value;
-                OnPropertyChanged();
-            }
-        }
-        
-        /// <summary>
-        /// </summary>
-        private string slot1Ch5SensorDataText;
-        
-        /// <summary>
-        /// </summary>
-        public string Slot1Ch5SensorDataText
-        {
-            get => slot1Ch5SensorDataText;
-            set 
-            {
-                slot1Ch5SensorDataText = value;
-                OnPropertyChanged();
-            }
-        }
-        
-        /// <summary>
-        /// </summary>
-        private string slot1Ch6SensorDataText;
-        
-        /// <summary>
-        /// </summary>
-        public string Slot1Ch6SensorDataText
-        {
-            get => slot1Ch6SensorDataText;
-            set 
-            {
-                slot1Ch6SensorDataText = value;
-                OnPropertyChanged();
-            }
-        }
-        
-        /// <summary>
-        /// </summary>
-        private string slot1Ch7SensorDataText;
-        
-        /// <summary>
-        /// </summary>
-        public string Slot1Ch7SensorDataText
-        {
-            get => slot1Ch7SensorDataText;
-            set 
-            {
-                slot1Ch7SensorDataText = value;
-                OnPropertyChanged();
-            }
-        }
-        
-        /// <summary>
-        /// </summary>
-        private string slot1Ch8SensorDataText;
-        
-        /// <summary>
-        /// </summary>
-        public string Slot1Ch8SensorDataText
-        {
-            get => slot1Ch8SensorDataText;
-            set 
-            {
-                slot1Ch8SensorDataText = value;
-                OnPropertyChanged();
-            }
-        }
-        
-        /// <summary>
-        /// </summary>
-        private string slot2Ch1SensorDataText;
-        
-        /// <summary>
-        /// </summary>
-        public string Slot2Ch1SensorDataText
-        {
-            get => slot2Ch1SensorDataText;
-            set 
-            {
-                slot2Ch1SensorDataText = value;
-                OnPropertyChanged();
-            }
-        }
-        
-        /// <summary>
-        /// </summary>
-        private string slot2Ch2SensorDataText;
-        
-        /// <summary>
-        /// </summary>
-        public string Slot2Ch2SensorDataText
-        {
-            get => slot2Ch2SensorDataText;
-            set 
-            {
-                slot2Ch2SensorDataText = value;
-                OnPropertyChanged();
-            }
-        }
-        
-        /// <summary>
-        /// </summary>
-        private string slot2Ch3SensorDataText;
-        
-        /// <summary>
-        /// </summary>
-        public string Slot2Ch3SensorDataText
-        {
-            get => slot2Ch3SensorDataText;
-            set 
-            {
-                slot2Ch3SensorDataText = value;
-                OnPropertyChanged();
-            }
-        }
-        
-        /// <summary>
-        /// </summary>
-        private string slot2Ch4SensorDataText;
-        
-        /// <summary>
-        /// </summary>
-        public string Slot2Ch4SensorDataText
-        {
-            get => slot2Ch4SensorDataText;
-            set 
-            {
-                slot2Ch4SensorDataText = value;
-                OnPropertyChanged();
-            }
-        }
-        
-        /// <summary>
-        /// </summary>
-        private string slot2Ch5SensorDataText;
-        
-        /// <summary>
-        /// </summary>
-        public string Slot2Ch5SensorDataText
-        {
-            get => slot2Ch5SensorDataText;
-            set 
-            {
-                slot2Ch5SensorDataText = value;
-                OnPropertyChanged();
-            }
-        }
-        
-        /// <summary>
-        /// </summary>
-        private string slot2Ch6SensorDataText;
-        
-        /// <summary>
-        /// </summary>
-        public string Slot2Ch6SensorDataText
-        {
-            get => slot2Ch6SensorDataText;
-            set 
-            {
-                slot2Ch6SensorDataText = value;
-                OnPropertyChanged();
-            }
-        }
-        
-        /// <summary>
-        /// </summary>
-        private string slot2Ch7SensorDataText;
-        
-        /// <summary>
-        /// </summary>
-        public string Slot2Ch7SensorDataText
-        {
-            get => slot2Ch7SensorDataText;
-            set 
-            {
-                slot2Ch7SensorDataText = value;
-                OnPropertyChanged();
-            }
-        }
-        
-        /// <summary>
-        /// </summary>
-        private string slot2Ch8SensorDataText;
-        
-        /// <summary>
-        /// </summary>
-        public string Slot2Ch8SensorDataText
-        {
-            get => slot2Ch8SensorDataText;
-            set 
-            {
-                slot2Ch8SensorDataText = value;
-                OnPropertyChanged();
-            }
-        }
-        
-        /// <summary>
-        /// </summary>
-        private string slot3Ch1SensorDataText;
-        
-        /// <summary>
-        /// </summary>
-        public string Slot3Ch1SensorDataText
-        {
-            get => slot3Ch1SensorDataText;
-            set 
-            {
-                slot3Ch1SensorDataText = value;
-                OnPropertyChanged();
-            }
-        }
-        
-        /// <summary>
-        /// </summary>
-        private string slot3Ch2SensorDataText;
-        
-        /// <summary>
-        /// </summary>
-        public string Slot3Ch2SensorDataText
-        {
-            get => slot3Ch2SensorDataText;
-            set 
-            {
-                slot3Ch2SensorDataText = value;
-                OnPropertyChanged();
-            }
-        }
-        
-        /// <summary>
-        /// </summary>
-        private string slot3Ch3SensorDataText;
-        
-        /// <summary>
-        /// </summary>
-        public string Slot3Ch3SensorDataText
-        {
-            get => slot3Ch3SensorDataText;
-            set 
-            {
-                slot3Ch3SensorDataText = value;
-                OnPropertyChanged();
-            }
-        }
-        
-        /// <summary>
-        /// </summary>
-        private string slot3Ch4SensorDataText;
-        
-        /// <summary>
-        /// </summary>
-        public string Slot3Ch4SensorDataText
-        {
-            get => slot3Ch4SensorDataText;
-            set 
-            {
-                slot3Ch4SensorDataText = value;
-                OnPropertyChanged();
-            }
-        }
-        
-        /// <summary>
-        /// </summary>
-        private string slot3Ch5SensorDataText;
-        
-        /// <summary>
-        /// </summary>
-        public string Slot3Ch5SensorDataText
-        {
-            get => slot3Ch5SensorDataText;
-            set 
-            {
-                slot3Ch5SensorDataText = value;
-                OnPropertyChanged();
-            }
-        }
-        
-        /// <summary>
-        /// </summary>
-        private string slot3Ch6SensorDataText;
-        
-        /// <summary>
-        /// </summary>
-        public string Slot3Ch6SensorDataText
-        {
-            get => slot3Ch6SensorDataText;
-            set 
-            {
-                slot3Ch6SensorDataText = value;
-                OnPropertyChanged();
-            }
-        }
-        
-        /// <summary>
-        /// </summary>
-        private string slot3Ch7SensorDataText;
-        
-        /// <summary>
-        /// </summary>
-        public string Slot3Ch7SensorDataText
-        {
-            get => slot3Ch7SensorDataText;
-            set 
-            {
-                slot3Ch7SensorDataText = value;
-                OnPropertyChanged();
-            }
-        }
-        
-        /// <summary>
-        /// </summary>
-        private string slot3Ch8SensorDataText;
-        
-        /// <summary>
-        /// </summary>
-        public string Slot3Ch8SensorDataText
-        {
-            get => slot3Ch8SensorDataText;
-            set 
-            {
-                slot3Ch8SensorDataText = value;
-                OnPropertyChanged();
-            }
-        }
-        
-        /// <summary>
-        /// </summary>
-        private string slot4Ch1SensorDataText;
-        
-        /// <summary>
-        /// </summary>
-        public string Slot4Ch1SensorDataText
-        {
-            get => slot4Ch1SensorDataText;
-            set 
-            {
-                slot4Ch1SensorDataText = value;
-                OnPropertyChanged();
-            }
-        }
-        
-        /// <summary>
-        /// </summary>
-        private string slot4Ch2SensorDataText;
-        
-        /// <summary>
-        /// </summary>
-        public string Slot4Ch2SensorDataText
-        {
-            get => slot4Ch2SensorDataText;
-            set 
-            {
-                slot4Ch2SensorDataText = value;
-                OnPropertyChanged();
-            }
-        }
-        
-        /// <summary>
-        /// </summary>
-        private string slot4Ch3SensorDataText;
-        
-        /// <summary>
-        /// </summary>
-        public string Slot4Ch3SensorDataText
-        {
-            get => slot4Ch3SensorDataText;
-            set 
-            {
-                slot4Ch3SensorDataText = value;
-                OnPropertyChanged();
-            }
-        }
-        
-        /// <summary>
-        /// </summary>
-        private string slot4Ch4SensorDataText;
-        
-        /// <summary>
-        /// </summary>
-        public string Slot4Ch4SensorDataText
-        {
-            get => slot4Ch4SensorDataText;
-            set 
-            {
-                slot4Ch4SensorDataText = value;
-                OnPropertyChanged();
-            }
-        }
-        
-        /// <summary>
-        /// </summary>
-        private string slot4Ch5SensorDataText;
-        
-        /// <summary>
-        /// </summary>
-        public string Slot4Ch5SensorDataText
-        {
-            get => slot4Ch5SensorDataText;
-            set 
-            {
-                slot4Ch5SensorDataText = value;
-                OnPropertyChanged();
-            }
-        }
-        
-        /// <summary>
-        /// </summary>
-        private string slot4Ch6SensorDataText;
-        
-        /// <summary>
-        /// </summary>
-        public string Slot4Ch6SensorDataText
-        {
-            get => slot4Ch6SensorDataText;
-            set 
-            {
-                slot4Ch6SensorDataText = value;
-                OnPropertyChanged();
-            }
-        }
-        
-        /// <summary>
-        /// </summary>
-        private string slot4Ch7SensorDataText;
-        
-        /// <summary>
-        /// </summary>
-        public string Slot4Ch7SensorDataText
-        {
-            get => slot4Ch7SensorDataText;
-            set 
-            {
-                slot4Ch7SensorDataText = value;
-                OnPropertyChanged();
-            }
-        }
-        
-        /// <summary>
-        /// </summary>
-        private string slot4Ch8SensorDataText;
-        
-        /// <summary>
-        /// </summary>
-        public string Slot4Ch8SensorDataText
-        {
-            get => slot4Ch8SensorDataText;
-            set 
-            {
-                slot4Ch8SensorDataText = value;
-                OnPropertyChanged();
-            }
-        }
-
-        /// <summary>
+        /// <inheritdoc cref="UARTTopStatus" path='/summary'/>
         /// </summary>
         private FaultStatus uartTopStatus;
+        
+        /// <summary>
+        /// Color flag indicating status of UART
+        /// </summary>
         public FaultStatus UARTTopStatus
         {
             get => uartTopStatus;
@@ -798,19 +245,97 @@ namespace AB15_GUI.WPF.ViewModels
         }
 
         /// <summary>
+        /// <inheritdoc cref="MonSpi1Data" path='/summary'/>
         /// </summary>
-        private FaultStatus syncPulsGeneretingStatus;
-        public FaultStatus SyncPulsGeneretingStatus
+        private string monSpi1Data;
+        
+        /// <summary>
+        /// MON SPI1 data
+        /// </summary>
+        public string MonSpi1Data
         {
-            get => syncPulsGeneretingStatus;
+            get => monSpi1Data;
             set
             {
-                syncPulsGeneretingStatus = value;
+                monSpi1Data = value;
                 OnPropertyChanged();
             }
         }
 
         /// <summary>
+        /// <inheritdoc cref="MonSpi1Sid" path='/summary'/>
+        /// </summary>
+        private string monSpi1Sid;
+        
+        /// <summary>
+        /// MON SPI1 SID
+        /// </summary>
+        public string MonSpi1Sid
+        {
+            get => monSpi1Sid;
+            set
+            {
+                monSpi1Sid = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// <inheritdoc cref="MonSpi2Data" path='/summary'/>
+        /// </summary>
+        private string monSpi2Data;
+        
+        /// <summary>
+        /// MON SPI2 data
+        /// </summary>
+        public string MonSpi2Data
+        {
+            get => monSpi2Data;
+            set
+            {
+                monSpi2Data = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// <inheritdoc cref="MonSpi2Sid" path='/summary'/>
+        /// </summary>
+        private string monSpi2Sid;
+        
+        /// <summary>
+        /// MON SPI2 SID
+        /// </summary>
+        public string MonSpi2Sid
+        {
+            get => monSpi2Sid;
+            set
+            {
+                monSpi2Sid = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// <inheritdoc cref="SyncPulseGeneretingStatus" path='/summary'/>
+        /// </summary>
+        private FaultStatus syncPulseGeneretingStatus;
+        
+        /// <summary>
+        /// Sync pulse (for PSI) generation status
+        /// </summary>
+        public FaultStatus SyncPulseGeneretingStatus
+        {
+            get => syncPulseGeneretingStatus;
+            set
+            {
+                syncPulseGeneretingStatus = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// 
         /// </summary>
         private FaultStatus flmFiringWithPSIStatus;
         public FaultStatus FLMFiringWithPSIStatus
@@ -824,8 +349,13 @@ namespace AB15_GUI.WPF.ViewModels
         }
 
         /// <summary>
+        /// <inheritdoc cref="PSITopStatus" path='/summary'/>
         /// </summary>
         private FaultStatus psiTopStatus;
+
+        /// <summary>
+        /// Color flag of PSI status indicator
+        /// </summary>
         public FaultStatus PSITopStatus
         {
             get => psiTopStatus;
@@ -837,8 +367,13 @@ namespace AB15_GUI.WPF.ViewModels
         }
 
         /// <summary>
+        /// <inheritdoc cref="PSIDataReceivedStatus" path='/summary'/>
         /// </summary>
         private FaultStatus psiDataReceivedStatus;
+        
+        /// <summary>
+        /// PSI data was received at least once
+        /// </summary>
         public FaultStatus PSIDataReceivedStatus
         {
             get => psiDataReceivedStatus;
@@ -850,21 +385,13 @@ namespace AB15_GUI.WPF.ViewModels
         }
 
         /// <summary>
-        /// </summary>
-        private FaultStatus crashDataPSIStatus;
-        public FaultStatus CrashDataPSIStatus
-        {
-            get => crashDataPSIStatus;
-            set
-            {
-                crashDataPSIStatus = value;
-                OnPropertyChanged();
-            }
-        }
-
-        /// <summary>
+        /// <inheritdoc cref="PSIDataReceivedStatus" path='/summary'/>
         /// </summary>
         private FaultStatus ch1Status;
+
+        /// <summary>
+        /// 
+        /// </summary>
         public FaultStatus Ch1Status
         {
             get => ch1Status;
@@ -876,6 +403,7 @@ namespace AB15_GUI.WPF.ViewModels
         }
 
         /// <summary>
+        /// 
         /// </summary>
         private FaultStatus ch2Status;
         public FaultStatus Ch2Status
@@ -889,6 +417,7 @@ namespace AB15_GUI.WPF.ViewModels
         }
 
         /// <summary>
+        /// 
         /// </summary>
         private FaultStatus ch3Status;
         public FaultStatus Ch3Status
@@ -902,6 +431,7 @@ namespace AB15_GUI.WPF.ViewModels
         }
 
         /// <summary>
+        ///  
         /// </summary>
         private FaultStatus ch4Status;
         public FaultStatus Ch4Status
@@ -915,6 +445,7 @@ namespace AB15_GUI.WPF.ViewModels
         }
 
         /// <summary>
+        /// 
         /// </summary>
         private FaultStatus ch5Status;
         public FaultStatus Ch5Status
@@ -928,6 +459,7 @@ namespace AB15_GUI.WPF.ViewModels
         }
 
         /// <summary>
+        /// 
         /// </summary>
         private FaultStatus ch6Status;
         public FaultStatus Ch6Status
@@ -941,6 +473,7 @@ namespace AB15_GUI.WPF.ViewModels
         }
 
         /// <summary>
+        /// 
         /// </summary>
         private FaultStatus ch7Status;
         public FaultStatus Ch7Status
@@ -954,6 +487,7 @@ namespace AB15_GUI.WPF.ViewModels
         }
 
         /// <summary>
+        /// 
         /// </summary>
         private FaultStatus ch8Status;
         public FaultStatus Ch8Status
@@ -966,6 +500,60 @@ namespace AB15_GUI.WPF.ViewModels
             }
         }
 
+        /// <summary>
+        /// <inheritdoc cref="UartFrame1Text" path='/summary'/>
+        /// </summary>
+        private string uartFrame1Text;
+        
+        /// <summary>
+        /// Text in UART frame 1
+        /// </summary>
+        public string UartFrame1Text
+        {
+            get => uartFrame1Text;
+            set 
+            {
+                uartFrame1Text = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// <inheritdoc cref="UartFrame2Text" path='/summary'/>
+        /// </summary>
+        private string uartFrame2Text;
+        
+        /// <summary>
+        /// Text in UART frame 2
+        /// </summary>
+        public string UartFrame2Text
+        {
+            get => uartFrame2Text;
+            set 
+            {
+                uartFrame2Text = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        /// <summary>
+        /// <inheritdoc cref="UartFrame3Text" path='/summary'/>
+        /// </summary>
+        private string uartFrame3Text;
+        
+        /// <summary>
+        /// Text in UART frame 1
+        /// </summary>
+        public string UartFrame3Text
+        {
+            get => uartFrame3Text;
+            set 
+            {
+                uartFrame3Text = value;
+                OnPropertyChanged();
+            }
+        }
+        
         #endregion // Bindable_Properties
 
         #region Internal_configuration
@@ -974,9 +562,419 @@ namespace AB15_GUI.WPF.ViewModels
 
         #region Commands
 
+        /// <summary>
+        /// Read PSI sensor data command
+        /// </summary>
+        ICommand ReadPsiSensorData { get; }
+
+        /// <summary>
+        /// Read PSI sensor data button/command enable state
+        /// </summary>
+        private CommandState _readPsiSensorDataCommand        = new CommandState();
+        
+        /// <summary>
+        /// Bindable Read PSI sensor data button/command enable state
+        /// </summary>
+        public bool ReadPsiSensorDataCommandEn => _readPsiSensorDataCommand.IsEnabled;
+
+        /// <summary>
+        /// Read PSI status command
+        /// </summary>
+        ICommand ReadPsiStatus { get; }
+
+        /// <summary>
+        /// Read PSI status button/command enable state
+        /// </summary>
+        private CommandState _readPsiStatusCommand = new CommandState();
+
+        /// <summary>
+        /// Bindable Read PSI status button/command enable state
+        /// </summary>
+        public bool ReadPsiStatusCommandEn => _readPsiStatusCommand.IsEnabled;
+
+        /// <summary>
+        /// Read Monitor SPI status command
+        /// </summary>
+        ICommand ReadMonitorSpiStatus { get; }
+
+        /// <summary>
+        /// Read Monitor SPI status button/command enable state
+        /// </summary>
+        private CommandState _readMonitorSpiStatusCommand = new CommandState();
+
+        /// <summary>
+        /// Bindable Read Monitor SPI status button/command enable state
+        /// </summary>
+        public bool ReadMonitorSpiStatusCommandEn => _readMonitorSpiStatusCommand.IsEnabled;
+
+        /// <summary>
+        /// Read PSI configuration command
+        /// </summary>
+        ICommand ReadPsiConfiguration { get; }
+
+        /// <summary>
+        /// Read PSI configuration button/command enable state
+        /// </summary>
+        private CommandState _readPsiConfigurationCommand = new CommandState();
+
+        /// <summary>
+        /// Bindable Read PSI configuration button/command enable state
+        /// </summary>
+        public bool ReadPsiConfigurationCommandEn => _readPsiConfigurationCommand.IsEnabled;
+
+        /// <summary>
+        /// Write PSI configuration command
+        /// </summary>
+        ICommand WritePsiConfiguration { get; }
+
+        /// <summary>
+        /// Write PSI configuration button/command enable state
+        /// </summary>
+        private CommandState _writePsiConfigurationCommand = new CommandState();
+
+        /// <summary>
+        /// Bindable Write PSI configuration button/command enable state
+        /// </summary>
+        public bool WritePsiConfigurationCommandEn => _writePsiConfigurationCommand.IsEnabled;
+
+        /// <summary>
+        /// Reset PSI configuration command
+        /// </summary>
+        ICommand ResetPsiConfiguration { get; }
+
+        /// <summary>
+        /// Reset PSI configuration button/command enable state
+        /// </summary>
+        private CommandState _resetPsiConfigurationCommand = new CommandState();
+
+        /// <summary>
+        /// Bindable Reset PSI configuration button/command enable state
+        /// </summary>
+        public bool ResetPsiConfigurationCommandEn => _resetPsiConfigurationCommand.IsEnabled;
+
+        /// <summary>
+        /// Read UART configuration command
+        /// </summary>
+        ICommand ReadUartConfiguration { get; }
+
+        /// <summary>
+        /// Read UART configuration button/command enable state
+        /// </summary>
+        private CommandState _readUartConfigurationCommand = new CommandState();
+
+        /// <summary>
+        /// Bindable Read UART configuration button/command enable state
+        /// </summary>
+        public bool ReadUartConfigurationCommandEn => _readUartConfigurationCommand.IsEnabled;
+
+        /// <summary>
+        /// Read UART status command
+        /// </summary>
+        ICommand ReadUartStatus { get; }
+
+        /// <summary>
+        /// Read UART status button/command enable state
+        /// </summary>
+        private CommandState _readUartStatusCommand = new CommandState();
+
+        /// <summary>
+        /// Bindable Read UART status button/command enable state
+        /// </summary>
+        public bool ReadUartStatusCommandEn => _readUartStatusCommand.IsEnabled;
+
+        /// <summary>
+        /// Set/Reset UART frames command
+        /// </summary>
+        ICommand SetResetUartFrames { get; }
+
+        /// <summary>
+        /// Set/Reset UART frames button/command enable state
+        /// </summary>
+        private CommandState _setResetUartFramesCommand = new CommandState();
+
+        /// <summary>
+        /// Bindable Set/Reset UART frames button/command enable state
+        /// </summary>
+        public bool SetResetUartFramesCommandEn => _setResetUartFramesCommand.IsEnabled;
+
+        /// <summary>
+        /// Execute Read PSI sensor data command
+        /// </summary>
+        private async void ReadPsiSensorDataExecuteAsync(object obj)
+        {
+            // Handle that command execution can only be done once in a row
+            if (_readPsiSensorDataCommand.IsEnabled == false) return;
+            _readPsiSensorDataCommand.InProgress = true;
+            OnPropertyChanged(nameof(ReadPsiSensorDataCommandEn));
+
+            // Read sensor data
+            TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
+            packageToSend.ASICID = 2; // using CS_MON1
+            packageToSend.Cmd = MCUCommand.EXECUTE_READ_SEQUENCE;
+            packageToSend.PayloadType = typeof(AddressDataPayload);
+            packageToSend.Payload.Address.AddRange(PsiSensorData.Addresses);
+
+            // Send command to MCU and wait for response
+            ReceiveCommunicationPackage<AddressDataPayload>? mcuResponse = (ReceiveCommunicationPackage<AddressDataPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
+
+            _readPsiSensorDataCommand.InProgress = false;
+            OnPropertyChanged(nameof(ReadPsiSensorDataCommandEn));
+
+            // Validate response
+            if (IsResponseValid(mcuResponse, nameof(ReadPsiSensorData)) == false) return;
+
+            // Update sensor data
+            PsiSensorData.UpdateData(mcuResponse.Payload.Data);
+        }
+
+        /// <summary>
+        /// Execute Read PSI status command
+        /// </summary>
+        private async void ReadPsiStatusExecuteAsync(object obj)
+        {
+            if (_readPsiStatusCommand.IsEnabled == false) return;
+            _readPsiStatusCommand.InProgress = true;
+            OnPropertyChanged(nameof(ReadPsiStatusCommandEn));
+
+            // Read sensor data
+            TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
+            packageToSend.ASICID = 2; // using CS_MON1
+            packageToSend.Cmd = MCUCommand.EXECUTE_READ_SEQUENCE;
+            packageToSend.PayloadType = typeof(AddressDataPayload);
+            for (int i = 0; i < PsiStatusList.Count; i++)
+            {
+                packageToSend.Payload.Address.Add(PsiStatusList[i].Register.Address);
+            }
+
+            // Send command to MCU and wait for response
+            ReceiveCommunicationPackage<AddressDataPayload>? mcuResponse = (ReceiveCommunicationPackage<AddressDataPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
+
+            _readPsiStatusCommand.InProgress = false;
+            OnPropertyChanged(nameof(ReadPsiStatusCommandEn));
+
+            // Validate response
+            if (IsResponseValid(mcuResponse, nameof(ReadMonitorSpiStatus)) == false) return;
+
+            // Update sensor data
+            for (int i = 0; i < PsiStatusList.Count; i++)
+            {
+                PsiStatusList[i].Data = mcuResponse.Payload.Data[i];
+            }
+        }
+
+        /// <summary>
+        /// Execute Read Monitor SPI status command
+        /// </summary>
+        private async void ReadMonitorSpiStatusExecuteAsync(object obj)
+        {
+            if (_readMonitorSpiStatusCommand.IsEnabled == false) return;
+            _readMonitorSpiStatusCommand.InProgress = true;
+            OnPropertyChanged(nameof(ReadMonitorSpiStatusCommandEn));
+
+            // Register models
+            Reg_MON_SPI1_read_mon_data reg_MON_SPI1_Read_Mon_Data = new Reg_MON_SPI1_read_mon_data();
+            Reg_MON_SPI1_read_mon_sid reg_MON_SPI1_Read_Mon_Sid = new Reg_MON_SPI1_read_mon_sid();
+            Reg_MON_SPI2_read_mon_data reg_MON_SPI2_Read_Mon_Data = new Reg_MON_SPI2_read_mon_data();
+            Reg_MON_SPI2_read_mon_sid reg_MON_SPI2_Read_Mon_Sid = new Reg_MON_SPI2_read_mon_sid();
+
+            // Read sensor data
+            TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
+            packageToSend.ASICID = 2; // using CS_MON1
+            packageToSend.Cmd = MCUCommand.EXECUTE_READ_SEQUENCE;
+            packageToSend.PayloadType = typeof(AddressDataPayload);
+            packageToSend.Payload.Address.Add(reg_MON_SPI1_Read_Mon_Data.Address);
+            packageToSend.Payload.Address.Add(reg_MON_SPI1_Read_Mon_Sid.Address);
+            packageToSend.Payload.Address.Add(reg_MON_SPI2_Read_Mon_Data.Address);
+            packageToSend.Payload.Address.Add(reg_MON_SPI2_Read_Mon_Sid.Address);
+
+            // Send command to MCU and wait for response
+            ReceiveCommunicationPackage<AddressDataPayload>? mcuResponse = (ReceiveCommunicationPackage<AddressDataPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
+
+            _readMonitorSpiStatusCommand.InProgress = false;
+            OnPropertyChanged(nameof(ReadMonitorSpiStatusCommandEn));
+
+            // Validate response
+            if (IsResponseValid(mcuResponse, nameof(ReadMonitorSpiStatus)) == false) return;
+
+            // Update observable properties
+            MonSpi1Data = $"0x{mcuResponse.Payload.Data[0]:X4}";
+            MonSpi1Sid = $"0x{mcuResponse.Payload.Data[1]:X4}";
+            MonSpi2Data = $"0x{mcuResponse.Payload.Data[2]:X4}";
+            MonSpi2Sid = $"0x{mcuResponse.Payload.Data[3]:X4}";
+        }
+
+        /// <summary>
+        /// Execute Read PSI configuration command
+        /// </summary>
+        private async void ReadPsiConfigurationExecuteAsync(object obj)
+        {
+            if (_readPsiConfigurationCommand.IsEnabled == false) return;
+            _readPsiConfigurationCommand.InProgress = true;
+            OnPropertyChanged(nameof(ReadPsiConfigurationCommandEn));
+
+            // ...command execution logic...
+
+            _readPsiConfigurationCommand.InProgress = false;
+            OnPropertyChanged(nameof(ReadPsiConfigurationCommandEn));
+        }
+
+        /// <summary>
+        /// Execute Write PSI configuration command
+        /// </summary>
+        private async void WritePsiConfigurationExecuteAsync(object obj)
+        {
+            if (_writePsiConfigurationCommand.IsEnabled == false) return;
+            _writePsiConfigurationCommand.InProgress = true;
+            OnPropertyChanged(nameof(WritePsiConfigurationCommandEn));
+
+            // ...command execution logic...
+
+            _writePsiConfigurationCommand.InProgress = false;
+            OnPropertyChanged(nameof(WritePsiConfigurationCommandEn));
+        }
+
+        /// <summary>
+        /// Execute Reset PSI configuration command
+        /// </summary>
+        private async void ResetPsiConfigurationExecuteAsync(object obj)
+        {
+            if (_resetPsiConfigurationCommand.IsEnabled == false) return;
+            _resetPsiConfigurationCommand.InProgress = true;
+            OnPropertyChanged(nameof(ResetPsiConfigurationCommandEn));
+
+            // ...command execution logic...
+
+            _resetPsiConfigurationCommand.InProgress = false;
+            OnPropertyChanged(nameof(ResetPsiConfigurationCommandEn));
+        }
+
+        /// <summary>
+        /// Execute Read UART configuration command
+        /// </summary>
+        private async void ReadUartConfigurationExecuteAsync(object obj)
+        {
+            if (_readUartConfigurationCommand.IsEnabled == false) return;
+            _readUartConfigurationCommand.InProgress = true;
+            OnPropertyChanged(nameof(ReadUartConfigurationCommandEn));
+
+            // ...command execution logic...
+
+            _readUartConfigurationCommand.InProgress = false;
+            OnPropertyChanged(nameof(ReadUartConfigurationCommandEn));
+        }
+
+        /// <summary>
+        /// Execute Read UART status command
+        /// </summary>
+        private async void ReadUartStatusExecuteAsync(object obj)
+        {
+            if (_readUartStatusCommand.IsEnabled == false) return;
+            _readUartStatusCommand.InProgress = true;
+            OnPropertyChanged(nameof(ReadUartStatusCommandEn));
+
+            // ...command execution logic...
+
+            _readUartStatusCommand.InProgress = false;
+            OnPropertyChanged(nameof(ReadUartStatusCommandEn));
+        }
+
+        /// <summary>
+        /// Execute Set/Reset UART frames command
+        /// </summary>
+        private async void SetResetUartFramesExecuteAsync(object parameter)
+        {
+            if (_setResetUartFramesCommand.IsEnabled == false) return;
+            _setResetUartFramesCommand.InProgress = true;
+            OnPropertyChanged(nameof(SetResetUartFramesCommandEn));
+
+            // Define which parameter was used
+            string commandOption = (parameter as string) ?? "Reset"; // Defaults to reset
+
+            if (commandOption == "Set")
+            {
+                // Transfer data to FiringVM
+                // TODO: implement
+            }
+            else
+            {
+                // Reset to default
+                UartFrame1Text = "0x55";
+                UartFrame2Text = "0x01";
+                UartFrame3Text = "0xFE";
+            }
+
+            _setResetUartFramesCommand.InProgress = false;
+            OnPropertyChanged(nameof(SetResetUartFramesCommandEn));
+        }
+
         #endregion // Commands
 
         #region ASIC_events
+
+        /// <summary>
+        /// Event handler that will be called when ASIC enters init mode
+        /// </summary>
+        /// <param name="sender">object that called this event. Must be one of ASIC objects</param>
+        /// <param name="e">unused</param>
+        private async void InitModeEnteredHandler(object? sender, EventArgs e)
+        {
+            // Precondition
+            if (sender == null)
+            {
+                throw new ArgumentNullException("Incorrect argument - can't be null!");
+            }
+
+            // Typecast sender to actual type
+            IASIC caller = (IASIC) sender;
+
+            // TODO: think of way to remove duplication - same operations is already done in Firing VM
+            // Check if UART is enabled
+            Reg_SAFE_SETTINGS reg_SAFE_SETTINGS = new Reg_SAFE_SETTINGS();
+            TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
+            packageToSend.ASICID = 1;
+            packageToSend.Cmd = MCUCommand.READ_REG;
+            packageToSend.PayloadType = typeof(AddressDataPayload);
+            packageToSend.Payload.Address.Add(reg_SAFE_SETTINGS.Address);
+
+            // Send command to MCU and wait for response
+            ReceiveCommunicationPackage<AddressDataPayload>? mcuResponse = (ReceiveCommunicationPackage<AddressDataPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
+
+            // Validate response
+            if (IsResponseValid(mcuResponse, null) == false) return;
+
+            // Report UART/PSI enable status
+            reg_SAFE_SETTINGS.Data = mcuResponse.Payload.Data[0];
+            UARTTopStatus = (reg_SAFE_SETTINGS.disable_master_mode.Data > 1) ? FaultStatus.Good : FaultStatus.Fault;
+            UARTTopStatusText = (UARTTopStatus == FaultStatus.Good) ? "Activated" : "Deactivated";
+
+            PSITopStatus = (reg_SAFE_SETTINGS.disable_master_mode.Data < 3) ? FaultStatus.Good : FaultStatus.Fault;
+            PSITopStatusText = (PSITopStatus == FaultStatus.Good) ? "Activated" : "Deactivated";
+
+            // Unsubscribe from event - by design can be fired only once
+            caller.InitModeEntered -= InitModeEnteredHandler;
+        }
+
+        /// <summary>
+        /// Event handler that will be called when ASIC enters normal mode
+        /// </summary>
+        /// <param name="sender">object that called this event. Must be one of ASIC objects</param>
+        /// <param name="e">unused</param>
+        private async void NormalModeEnteredHandler(object? sender, EventArgs e)
+        {
+            // Precondition
+            if (sender == null)
+            {
+                throw new ArgumentNullException("Incorrect argument - can't be null!");
+            }
+
+            // Typecast sender to actual type
+            IASIC caller = (IASIC) sender;
+
+            // Actual logic
+
+            // Unsubscribe from event - by design can be fired only once
+            caller.InitModeEntered -= NormalModeEnteredHandler;
+        }
 
         #endregion // ASIC_events
     }
