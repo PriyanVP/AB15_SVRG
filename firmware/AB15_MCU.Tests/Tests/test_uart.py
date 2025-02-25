@@ -32,7 +32,7 @@ class TestUART:
         msg_id = 0x00
         device_id = 0x01
         command = pkg.Command.WRITE_DATA_UART
-        payload = [0xAA, 0xFF, 0x00]
+        payload = [0x55, 0x01, 0xFE]
         package_to_send = pkg.TransmitPackage(msg_id, device_id, command, payload)
 
         # Act
