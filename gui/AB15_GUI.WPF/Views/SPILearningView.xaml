@@ -84,6 +84,7 @@
             <TextBox    Grid.Row="0" Grid.Column="3"
                         Style="{DynamicResource TextBoxStyle}"
                         IsEnabled="{Binding IsSPILearningEn}"
+                        MaxLength="3"
                         Text="{Binding Path=RefToActiveRecord.MOSI.Address, Converter={StaticResource HexToIntConverter}, Mode=TwoWay}"
                         Name="AddressTextBox"
                         PreviewTextInput="TextBox_PreviewTextInput">
@@ -106,6 +107,7 @@
             <TextBox    Grid.Row="1" Grid.Column="3"
                         Text="{Binding Path=RefToActiveRecord.MOSI.Data, Converter={StaticResource HexToIntConverter}, Mode=TwoWay}"
                         Name="DataTextBox"
+                        MaxLength="4"
                         PreviewTextInput="TextBox_PreviewTextInput">
                         <TextBox.Style>
                             <Style TargetType="TextBox" BasedOn="{StaticResource TextBoxStyle}">
@@ -151,6 +153,7 @@
                         IsEnabled="{Binding IsSPILearningEn}"
                         Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI, Converter={StaticResource HexToIntConverter}, Mode=TwoWay}"
                         Visibility="Hidden"
+                        MaxLength="8"
                         Style="{DynamicResource TextBoxStyle}"
                         PreviewTextInput="TextBox_PreviewTextInput" 
                         >
