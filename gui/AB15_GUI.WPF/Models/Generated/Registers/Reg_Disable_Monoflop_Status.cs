@@ -13,7 +13,7 @@ namespace AB15_GUI.WPF.Models.Generated.Registers
         /// <summary>
         /// Reset value for register
         /// </summary>
-        public UInt16 ResetValue { get; private set; } = 0xff;
+        public UInt16 ResetValue { get; private set; } = 0x00ff;
 
         /// <summary>
         /// Name of the register
