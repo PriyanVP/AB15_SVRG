@@ -2776,7 +2776,7 @@
                                                 HorizontalAlignment="Center"
                                                 Style="{DynamicResource TextBoxStyle}"
                                                 Padding="3"
-                                                Text="{Binding UartFrame1Text}"
+                                                Text="{Binding UartFrame1Value, Converter={StaticResource HexToIntNoPrefixCnvrt}, Mode=TwoWay}}"
                                                 IsEnabled="{Binding IsUartPageEnabled}"
                                                 PreviewTextInput="HexUartFrameTextBox_PreviewTextInput"
                                                 MinWidth="160"/>
@@ -2792,7 +2792,7 @@
                                                 HorizontalAlignment="Center"
                                                 Style="{DynamicResource TextBoxStyle}"
                                                 Padding="3"
-                                                Text="{Binding UartFrame2Text}"
+                                                Text="{Binding UartFrame2Value, Converter={StaticResource HexToIntNoPrefixCnvrt}, Mode=TwoWay}}"
                                                 PreviewTextInput="HexUartFrameTextBox_PreviewTextInput"
                                                 IsEnabled="{Binding IsUartPageEnabled}"
                                                 MinWidth="160"/>
@@ -2808,7 +2808,7 @@
                                                 HorizontalAlignment="Center"
                                                 Style="{DynamicResource TextBoxStyle}"
                                                 Padding="3"
-                                                Text="{Binding UartFrame3Text}"
+                                                Text="{Binding UartFrame3Value, Converter={StaticResource HexToIntNoPrefixCnvrt}, Mode=TwoWay}}"
                                                 IsEnabled="{Binding IsUartPageEnabled}"
                                                 PreviewTextInput="HexUartFrameTextBox_PreviewTextInput"
                                                 MinWidth="160"/>
@@ -2905,7 +2905,7 @@
                                         VerticalAlignment="Center"
                                         MinWidth="150"
                                         Margin="2">
-                                    <TextBlock  Text="{Binding UARTStatusText, TargetNullValue='0000'}" 
+                                    <TextBlock  Text="{Binding UartStatus, Converter={StaticResource HexToIntNoPrefixCnvrt}, Mode=TwoWay}"
                                             HorizontalAlignment="Center" 
                                             Style="{DynamicResource TextBlockStyle}"/>
                                 </Border>

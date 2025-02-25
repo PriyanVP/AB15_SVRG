@@ -1,12 +1,6 @@
 using System;
 using System.Windows.Input;
 using System.Collections.ObjectModel;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Stateless;
-using Stateless.Graph;
 using AB15_GUI.WPF.NLog;
 using AB15_GUI.WPF.ViewModels.Commands;
 using AB15_GUI.WPF.Models.Interfaces;
@@ -96,6 +90,9 @@ namespace AB15_GUI.WPF.ViewModels
             // Default values
             PsiSupply = 0xFF;
             PsiGenMaskSync = 0x01;
+            UartFrame1Value = 0x55;
+            UartFrame2Value = 0x01;
+            UartFrame3Value = 0xFE;
 
             // Statuses and indicators init
             SyncPulseGeneretingStatus = FaultStatus.Fault;
@@ -172,14 +169,14 @@ namespace AB15_GUI.WPF.ViewModels
         }
 
         /// <summary>
-        /// <inheritdoc cref="UARTStatusText" path='/summary'/>
+        /// <inheritdoc cref="UartStatus" path='/summary'/>
         /// </summary>
-        private string uartStatusText;
+        private uint uartStatusText;
         
         /// <summary>
         /// Hex content of UART status register
         /// </summary>
-        public string UARTStatusText
+        public uint UartStatus
         {
             get => uartStatusText;
             set 
@@ -541,55 +538,55 @@ namespace AB15_GUI.WPF.ViewModels
         }
 
         /// <summary>
-        /// <inheritdoc cref="UartFrame1Text" path='/summary'/>
+        /// <inheritdoc cref="UartFrame1Value" path='/summary'/>
         /// </summary>
-        private string uartFrame1Text;
+        private ushort uartFrame1Value;
         
         /// <summary>
-        /// Text in UART frame 1
+        /// Value in UART frame 1
         /// </summary>
-        public string UartFrame1Text
+        public ushort UartFrame1Value
         {
-            get => uartFrame1Text;
+            get => uartFrame1Value;
             set 
             {
-                uartFrame1Text = value;
+                uartFrame1Value = value;
                 OnPropertyChanged();
             }
         }
 
         /// <summary>
-        /// <inheritdoc cref="UartFrame2Text" path='/summary'/>
+        /// <inheritdoc cref="UartFrame2Value" path='/summary'/>
         /// </summary>
-        private string uartFrame2Text;
+        private ushort uartFrame2Value;
         
         /// <summary>
         /// Text in UART frame 2
         /// </summary>
-        public string UartFrame2Text
+        public ushort UartFrame2Value
         {
-            get => uartFrame2Text;
+            get => uartFrame2Value;
             set 
             {
-                uartFrame2Text = value;
+                uartFrame2Value = value;
                 OnPropertyChanged();
             }
         }
         
         /// <summary>
-        /// <inheritdoc cref="UartFrame3Text" path='/summary'/>
+        /// <inheritdoc cref="UartFrame3Value" path='/summary'/>
         /// </summary>
-        private string uartFrame3Text;
+        private ushort uartFrame3Value;
         
         /// <summary>
         /// Text in UART frame 1
         /// </summary>
-        public string UartFrame3Text
+        public ushort UartFrame3Value
         {
-            get => uartFrame3Text;
+            get => uartFrame3Value;
             set 
             {
-                uartFrame3Text = value;
+                uartFrame3Value = value;
                 OnPropertyChanged();
             }
         }
@@ -749,7 +746,7 @@ namespace AB15_GUI.WPF.ViewModels
 
             // Read sensor data
             TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
-            packageToSend.ASICID = 2; // using CS_MON1
+            packageToSend.ASICID = (int) DeviceIDs.SPI1_CS_MON1;
             packageToSend.Cmd = MCUCommand.EXECUTE_READ_SEQUENCE;
             packageToSend.PayloadType = typeof(AddressDataPayload);
             packageToSend.Payload.Address.AddRange(PsiSensorData.Addresses);
@@ -778,7 +775,7 @@ namespace AB15_GUI.WPF.ViewModels
 
             // Read sensor data
             TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
-            packageToSend.ASICID = 2; // using CS_MON1
+            packageToSend.ASICID = (int) DeviceIDs.SPI1_CS1MASTER;
             packageToSend.Cmd = MCUCommand.EXECUTE_READ_SEQUENCE;
             packageToSend.PayloadType = typeof(AddressDataPayload);
             for (int i = 0; i < PsiStatusList.Count; i++)
@@ -819,7 +816,7 @@ namespace AB15_GUI.WPF.ViewModels
 
             // Read sensor data
             TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
-            packageToSend.ASICID = 2; // using CS_MON1
+            packageToSend.ASICID = (int) DeviceIDs.SPI1_CS1MASTER;
             packageToSend.Cmd = MCUCommand.EXECUTE_READ_SEQUENCE;
             packageToSend.PayloadType = typeof(AddressDataPayload);
             packageToSend.Payload.Address.Add(reg_MON_SPI1_Read_Mon_Data.Address);
@@ -858,7 +855,7 @@ namespace AB15_GUI.WPF.ViewModels
 
             // Read sensor data
             TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
-            packageToSend.ASICID = 2; // using CS_MON1
+            packageToSend.ASICID = (int) DeviceIDs.SPI1_CS1MASTER;
             packageToSend.Cmd = MCUCommand.EXECUTE_READ_SEQUENCE;
             packageToSend.PayloadType = typeof(AddressDataPayload);
             packageToSend.Payload.Address.Add(reg_PSI_Supply.Address);
@@ -893,7 +890,7 @@ namespace AB15_GUI.WPF.ViewModels
 
             // Read sensor data
             TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
-            packageToSend.ASICID = 2; // using CS_MON1
+            packageToSend.ASICID = (int) DeviceIDs.SPI1_CS1MASTER;
             packageToSend.Cmd = MCUCommand.EXECUTE_WRITE_SEQUENCE;
             packageToSend.PayloadType = typeof(AddressDataPayload);
             packageToSend.Payload.Address.Add(reg_PSI_Supply.Address);
@@ -937,7 +934,7 @@ namespace AB15_GUI.WPF.ViewModels
             _readUartConfigurationCommand.InProgress = true;
             OnPropertyChanged(nameof(ReadUartConfigurationCommandEn));
 
-            // ...command execution logic...
+            // ...command execution logic... // TODO: add
 
             _readUartConfigurationCommand.InProgress = false;
             OnPropertyChanged(nameof(ReadUartConfigurationCommandEn));
@@ -952,10 +949,27 @@ namespace AB15_GUI.WPF.ViewModels
             _readUartStatusCommand.InProgress = true;
             OnPropertyChanged(nameof(ReadUartStatusCommandEn));
 
-            // ...command execution logic...
+            // Register models
+            Reg_Uart_Ext_Data reg_Uart_Ext_Data = new Reg_Uart_Ext_Data();
+
+            // Read sensor data
+            TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
+            packageToSend.ASICID = (int) DeviceIDs.SPI1_CS1MASTER;
+            packageToSend.Cmd = MCUCommand.READ_REG;
+            packageToSend.PayloadType = typeof(AddressDataPayload);
+            packageToSend.Payload.Address.Add(reg_Uart_Ext_Data.Address);
+
+            // Send command to MCU and wait for response
+            ReceiveCommunicationPackage<AddressDataPayload>? mcuResponse = (ReceiveCommunicationPackage<AddressDataPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
 
             _readUartStatusCommand.InProgress = false;
             OnPropertyChanged(nameof(ReadUartStatusCommandEn));
+
+            // Validate response
+            if (IsResponseValid(mcuResponse, nameof(WritePsiConfiguration)) == false) return;
+
+            // Unpack data
+            UartStatus = mcuResponse.Payload.Data[0];
         }
 
         /// <summary>
@@ -978,9 +992,9 @@ namespace AB15_GUI.WPF.ViewModels
             else
             {
                 // Reset to default
-                UartFrame1Text = "0x55";
-                UartFrame2Text = "0x01";
-                UartFrame3Text = "0xFE";
+                UartFrame1Value = 0x55;
+                UartFrame2Value = 0x01;
+                UartFrame3Value = 0xFE;
             }
 
             _setResetUartFramesCommand.InProgress = false;
@@ -1011,7 +1025,7 @@ namespace AB15_GUI.WPF.ViewModels
             // Check if UART is enabled
             Reg_SAFE_SETTINGS reg_SAFE_SETTINGS = new Reg_SAFE_SETTINGS();
             TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
-            packageToSend.ASICID = 1;
+            packageToSend.ASICID = (int) DeviceIDs.SPI1_CS1MASTER;
             packageToSend.Cmd = MCUCommand.READ_REG;
             packageToSend.PayloadType = typeof(AddressDataPayload);
             packageToSend.Payload.Address.Add(reg_SAFE_SETTINGS.Address);
