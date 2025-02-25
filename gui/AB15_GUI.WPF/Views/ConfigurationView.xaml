@@ -2587,58 +2587,120 @@
                                     Text="UART configuration (Read only)"
                                     Style="{DynamicResource TextBlockStyle}"
                                     FontWeight="Bold"/>
-                        
-                        <!-- Actual table for uart configuration -->
-                        <ListView   Grid.Row="1" 
-                                    Name="UartConfigurationTable"
-                                    Style="{DynamicResource ListViewStyle}"
-                                    ItemsSource="{Binding UartConfigurationTable}"
-                                    ItemContainerStyle="{DynamicResource ListViewItemStyle}" 
-                                    FontSize="16">
-                            <ListView.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="auto"/>
-                                            <ColumnDefinition Width="*"/>
-                                        </Grid.ColumnDefinitions>
 
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="auto"/>
-                                            <RowDefinition Height="2"/>
-                                            <RowDefinition Height="1"/>
-                                        </Grid.RowDefinitions>
+                        <ScrollViewer Grid.Row="1">
+                            <Grid Margin="3">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                </Grid.RowDefinitions>
 
-                                        <Canvas Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="8" Background="{DynamicResource UI.SeparateLine}"/>
+                                <TextBlock  Grid.Row="0"
+                                            Grid.Column="0"
+                                            Text="Parity"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Style="{DynamicResource TextBlockStyle}"/>
 
-                                        <!-- Cell for name -->
-                                        <TextBlock  Grid.Column="0" 
-                                                    Margin="0,0,5,0" 
-                                                    VerticalAlignment="Center"
-                                                    FontSize="16" 
-                                                    HorizontalAlignment="Center"
-                                                    Text="{Binding Name, TargetNullValue='NaN'}"
-                                                    Style="{DynamicResource TextBlockStyle}"/>
+                                <TextBox    Grid.Row="0"
+                                            Grid.Column="1"
+                                            Style="{DynamicResource TextBoxStyle}"
+                                            Text="{Binding UartParityText}"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            IsReadOnly="True"
+                                            MinWidth="100"/>
 
-                                        <!-- Cell for value -->
-                                        <Border Grid.Column="1"
-                                                BorderThickness="1" 
-                                                BorderBrush="{DynamicResource Animation.Lines}" 
-                                                CornerRadius="5" 
-                                                HorizontalAlignment="Center"
-                                                VerticalAlignment="Center"
-                                                MinWidth="150"
-                                                Margin="2">
-                                            <TextBlock  Text="{Binding RegValue, TargetNullValue='0000'}" 
-                                                        HorizontalAlignment="Center" 
-                                                        TextAlignment="Center"
-                                                        Style="{DynamicResource TextBlockStyle}"/>
-                                        </Border>
+                                <TextBlock  Grid.Row="1"
+                                            Grid.Column="0"
+                                            Text="Databit Number"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Style="{DynamicResource TextBlockStyle}"/>
 
-                                    </Grid>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
+                                <TextBox    Grid.Row="1"
+                                            Grid.Column="1"
+                                            Style="{DynamicResource TextBoxStyle}"
+                                            Text="{Binding UartDatabitNumberText}"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            IsReadOnly="True"
+                                            MinWidth="100"/>
+
+                                <TextBlock  Grid.Row="2"
+                                            Grid.Column="0"
+                                            Text="Boudrate"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Style="{DynamicResource TextBlockStyle}"/>
+
+                                <TextBox    Grid.Row="2"
+                                            Grid.Column="1"
+                                            Style="{DynamicResource TextBoxStyle}"
+                                            Text="{Binding UartBoudrateText}"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            IsReadOnly="True"
+                                            MinWidth="100"/>
+
+                                <TextBlock  Grid.Row="3"
+                                            Grid.Column="0"
+                                            Text="Number of Stopbits"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Style="{DynamicResource TextBlockStyle}"/>
+
+                                <TextBox    Grid.Row="3"
+                                            Grid.Column="1"
+                                            Style="{DynamicResource TextBoxStyle}"
+                                            Text="{Binding UartNumberOfStopbitsText}"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            IsReadOnly="True"
+                                            MinWidth="100"/>
+
+                                <TextBlock  Grid.Row="4"
+                                            Grid.Column="0"
+                                            Text="Time b/n 1 UART frames"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Style="{DynamicResource TextUART1FramesStyle}"/>
+
+                                <TextBox    Grid.Row="4"
+                                            Grid.Column="1"
+                                            Style="{DynamicResource TextBoxStyle}"
+                                            Text="{Binding UartParityText}"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            IsReadOnly="True"
+                                            MinWidth="100"/>
+
+                                <TextBlock  Grid.Row="5"
+                                            Grid.Column="0"
+                                            Text="Time b/n 2 UART frames"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Style="{DynamicResource TextBlockStyle}"/>
+
+                                <TextBox    Grid.Row="5"
+                                            Grid.Column="1"
+                                            Style="{DynamicResource TextBoxStyle}"
+                                            Text="{Binding UartUART2FramesText}"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            IsReadOnly="True"
+                                            MinWidth="100"/>
+
+                            </Grid>
+                        </ScrollViewer>
 
                         <Button Grid.Row="2"
                                 Content="Read"
