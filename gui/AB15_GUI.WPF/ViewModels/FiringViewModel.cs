@@ -115,7 +115,7 @@ namespace AB15_GUI.WPF.ViewModels
             _stateMachine.Fire(Triggers.POR);
 
             // Events from ASIC // TODO: some of these handlers should be moved out of Firing VM
-            this.asicWrapper.ASICs[0].InitModeEntered += InitModeEnteredHandler; // TODO: add in future 
+            this.asicWrapper.ASICs[0].InitModeEntered += InitModeEnteredHandler; // TODO: add in future
             this.asicWrapper.ASICs[0].ConfigurationLoaded += ConfigurationLoadedHandler;
             this.asicWrapper.ASICs[0].ConfigurationLocked += ConfigurationLockedHandler;
             this.asicWrapper.ASICs[0].NormalModeEntered += NormalModeEnteredHandler;
@@ -260,7 +260,7 @@ namespace AB15_GUI.WPF.ViewModels
         }
 
         #endregion //State_Machine
-        
+
         #region Bindable_Properties
 
         /// <summary>
@@ -287,14 +287,14 @@ namespace AB15_GUI.WPF.ViewModels
         /// <inheritdoc cref="IsConfigControlsEnabled" path='/summary'/>
         /// </summary>
         private bool isConfigControlsEnabled;
-        
+
         /// <summary>
         /// Flag to indicate if configuration controls are allowed to be modified
         /// </summary>
         public bool IsConfigControlsEnabled
         {
             get => isConfigControlsEnabled;
-            set 
+            set
             {
                 // Do nothing if value is not changed
                 if (isConfigControlsEnabled == value) return;
@@ -308,14 +308,14 @@ namespace AB15_GUI.WPF.ViewModels
         /// <inheritdoc cref="IsFiringControlsEnabled" path='/summary'/>
         /// </summary>
         private bool isFiringControlsEnabled;
-        
+
         /// <summary>
         /// Flag to indicate if firing controls are allowed to be modified (except Fire buttons)
         /// </summary>
         public bool IsFiringControlsEnabled
         {
             get => isFiringControlsEnabled;
-            set 
+            set
             {
                 // Do nothing if value is not changed
                 if (isFiringControlsEnabled == value) return;
@@ -329,14 +329,14 @@ namespace AB15_GUI.WPF.ViewModels
         /// <inheritdoc cref="FiringConfigurationTextField" path='/summary'/>
         /// </summary>
         private string firingConfigurationTextField;
-        
+
         /// <summary>
         /// Binding property to display text on text block on Configuration tab
         /// </summary>
         public string FiringConfigurationTextField
         {
             get => firingConfigurationTextField;
-            set 
+            set
             {
                 // Do nothing if value is not changed
                 if (firingConfigurationTextField == value) return;
@@ -350,14 +350,14 @@ namespace AB15_GUI.WPF.ViewModels
         /// <inheritdoc cref="IsVH1aCurrentSinkEn" path='/summary'/>
         /// </summary>
         private bool isVH1aCurrentSinkEn;
-        
+
         /// <summary>
         /// Flag to indicate if VH1a current sink set
         /// </summary>
         public bool IsVH1aCurrentSinkEn
         {
             get => isVH1aCurrentSinkEn;
-            set 
+            set
             {
                 // Do nothing if value is not changed
                 if (isVH1aCurrentSinkEn == value) return;
@@ -371,14 +371,14 @@ namespace AB15_GUI.WPF.ViewModels
         /// <inheritdoc cref="IsVH2CurrentSinkEn" path='/summary'/>
         /// </summary>
         private bool isVH2CurrentSinkEn;
-        
+
         /// <summary>
         /// Flag to indicate if VH2 current sink set
         /// </summary>
         public bool IsVH2CurrentSinkEn
         {
             get => isVH2CurrentSinkEn;
-            set 
+            set
             {
                 // Do nothing if value is not changed
                 if (isVH2CurrentSinkEn == value) return;
@@ -392,14 +392,14 @@ namespace AB15_GUI.WPF.ViewModels
         /// <inheritdoc cref="IsLowsideOvercurrentSwitchOffEn" path='/summary'/>
         /// </summary>
         private bool isLowsideOvercurrentSwitchOffEn;
-        
+
         /// <summary>
         /// Flag to indicate if lowside behavior in case of OC fault set to switch off
         /// </summary>
         public bool IsLowsideOvercurrentSwitchOffEn
         {
             get => isLowsideOvercurrentSwitchOffEn;
-            set 
+            set
             {
                 // Do nothing if value is not changed
                 if (isLowsideOvercurrentSwitchOffEn == value) return;
@@ -418,14 +418,14 @@ namespace AB15_GUI.WPF.ViewModels
         /// <inheritdoc cref="IsCyclicDiagnosticsEn" path='/summary'/>
         /// </summary>
         private bool isCyclicDiagnosticsEn;
-        
+
         /// <summary>
         /// Flag to indicate if cyclic diagnostics for firing are anabled
         /// </summary>
         public bool IsCyclicDiagnosticsEn
         {
             get => isCyclicDiagnosticsEn;
-            set 
+            set
             {
                 // Do nothing if value is not changed
                 if (isCyclicDiagnosticsEn == value) return;
@@ -439,14 +439,14 @@ namespace AB15_GUI.WPF.ViewModels
         /// <inheritdoc cref="IsAlternativeFiringModeEn" path='/summary'/>
         /// </summary>
         private bool isAlternativeFiringModeEn;
-        
+
         /// <summary>
         /// Flag to indicate if alternative firing mode enabled
         /// </summary>
         public bool IsAlternativeFiringModeEn
         {
             get => isAlternativeFiringModeEn;
-            set 
+            set
             {
                 // Do nothing if value is not changed
                 if (isAlternativeFiringModeEn == value) return;
@@ -460,14 +460,14 @@ namespace AB15_GUI.WPF.ViewModels
         /// <inheritdoc cref="IsSpiSensorDataEn" path='/summary'/>
         /// </summary>
         private bool isSpiSensorDataEn = true;
-        
+
         /// <summary>
         /// Flag to indicate if firing with sensor data via SPI enabled
         /// </summary>
         public bool IsSpiSensorDataEn
         {
             get => isSpiSensorDataEn;
-            set 
+            set
             {
                 // Do nothing if value is not changed
                 if (isSpiSensorDataEn == value) return;
@@ -487,14 +487,14 @@ namespace AB15_GUI.WPF.ViewModels
         /// <inheritdoc cref="IsPsiSensorDataEn" path='/summary'/>
         /// </summary>
         private bool isPsiSensorDataEn = false;
-        
+
         /// <summary>
         /// Flag to indicate if firing with sensor data via PSI enabled
         /// </summary>
         public bool IsPsiSensorDataEn
         {
             get => isPsiSensorDataEn;
-            set 
+            set
             {
                 // Do nothing if value is not changed
                 if (isPsiSensorDataEn == value) return;
@@ -514,14 +514,14 @@ namespace AB15_GUI.WPF.ViewModels
         /// <inheritdoc cref="IsUartEn" path='/summary'/>
         /// </summary>
         private bool isUartEn = false;
-        
+
         /// <summary>
         /// Flag to indicate if firing with UART enabled
         /// </summary>
         public bool IsUartEn
         {
             get => isUartEn;
-            set 
+            set
             {
                 // Do nothing if value is not changed
                 if (isUartEn == value) return;
@@ -535,14 +535,14 @@ namespace AB15_GUI.WPF.ViewModels
         /// <inheritdoc cref="IsSpiSensorDataControlEn" path='/summary'/>
         /// </summary>
         private bool isSpiSensorDataControlEn = true;
-        
+
         /// <summary>
         /// Flag to indicate if firing with sensor data via SPI control element is enabled
         /// </summary>
         public bool IsSpiSensorDataControlEn
         {
             get => isSpiSensorDataControlEn;
-            set 
+            set
             {
                 // Do nothing if value is not changed
                 if (isSpiSensorDataControlEn == value) return;
@@ -556,14 +556,14 @@ namespace AB15_GUI.WPF.ViewModels
         /// <inheritdoc cref="IsPsiSensorDataControlEn" path='/summary'/>
         /// </summary>
         private bool isPsiSensorDataControlEn = true;
-        
+
         /// <summary>
         /// Flag to indicate if firing with sensor data via PSI control element is enabled
         /// </summary>
         public bool IsPsiSensorDataControlEn
         {
             get => isPsiSensorDataControlEn;
-            set 
+            set
             {
                 // Do nothing if value is not changed
                 if (isPsiSensorDataControlEn == value) return;
@@ -577,14 +577,14 @@ namespace AB15_GUI.WPF.ViewModels
         /// <inheritdoc cref="IsUartControlEn" path='/summary'/>
         /// </summary>
         private bool isUartControlEn = true;
-        
+
         /// <summary>
         /// Flag to indicate if firing with UART control element is enabled
         /// </summary>
         public bool IsUartControlEn
         {
             get => isUartControlEn;
-            set 
+            set
             {
                 // Do nothing if value is not changed
                 if (isUartControlEn == value) return;
@@ -598,14 +598,14 @@ namespace AB15_GUI.WPF.ViewModels
         /// <inheritdoc cref="FiringConfigurationIndex" path='/summary'/>
         /// </summary>
         private int? firingConfigurationIndex = null;
-        
+
         /// <summary>
         /// Index of currently selected firing scenario
         /// </summary>
         public int? FiringConfigurationIndex
         {
             get => firingConfigurationIndex;
-            set 
+            set
             {
                 // Do nothing if value is not changed
                 if (firingConfigurationIndex == value) return;
@@ -623,15 +623,15 @@ namespace AB15_GUI.WPF.ViewModels
         /// <inheritdoc cref="FiringScenarioIndex" path='/summary'/>
         /// </summary>
         private int firingScenarioIndex = -1;
-        // TODO scenario_handling - DEFAULT -1 should allow the correct initialization upon first calling 
-        
+        // TODO scenario_handling - DEFAULT -1 should allow the correct initialization upon first calling
+
         /// <summary>
         /// Index of currently selected firing scenario
         /// </summary>
         public int FiringScenarioIndex
         {
             get => firingScenarioIndex;
-            set 
+            set
             {
                 // TODO scenario_handling - Bypass the initial call here to avoid an empty FiringResultsTable
                 if (IsFiringControlsEnabled == false) return;
@@ -846,7 +846,7 @@ namespace AB15_GUI.WPF.ViewModels
                         Reg_FLM_Config_ch12_11 reg_ch12 = (Reg_FLM_Config_ch12_11) _firingConfig.Find(x => x.Name == "FLM_Config_ch12_11");
                         reg_ch12.flm_mode_ch12.Data = (UInt16) channelConfigRecord.Mode;
                         reg_ch12.flm_mode_parity_ch12.Data = (UInt16) (reg_ch12.flm_mode_ch12.Data % 2);
-                        break; 
+                        break;
                     case 13:
                         Reg_FLM_Config_ch14_13 reg_ch13 = (Reg_FLM_Config_ch14_13) _firingConfig.Find(x => x.Name == "FLM_Config_ch14_13");
                         reg_ch13.flm_mode_ch13.Data = (UInt16) channelConfigRecord.Mode;
@@ -866,7 +866,7 @@ namespace AB15_GUI.WPF.ViewModels
                         Reg_FLM_Config_ch16_15 reg_ch16 = (Reg_FLM_Config_ch16_15) _firingConfig.Find(x => x.Name == "FLM_Config_ch16_15");
                         reg_ch16.flm_mode_ch16.Data = (UInt16) channelConfigRecord.Mode;
                         reg_ch16.flm_mode_parity_ch16.Data = (UInt16) (reg_ch16.flm_mode_ch16.Data % 2);
-                        break;  
+                        break;
                     case 17:
                         Reg_FLM_Config_ch18_17 reg_ch17 = (Reg_FLM_Config_ch18_17) _firingConfig.Find(x => x.Name == "FLM_Config_ch18_17");
                         reg_ch17.flm_mode_ch17.Data = (UInt16) channelConfigRecord.Mode;
@@ -886,9 +886,9 @@ namespace AB15_GUI.WPF.ViewModels
                         Reg_FLM_Config_ch20_19 reg_ch20 = (Reg_FLM_Config_ch20_19) _firingConfig.Find(x => x.Name == "FLM_Config_ch20_19");
                         reg_ch20.flm_mode_ch20.Data = (UInt16) channelConfigRecord.Mode;
                         reg_ch20.flm_mode_parity_ch20.Data = (UInt16) (reg_ch20.flm_mode_ch20.Data % 2);
-                        break; 
+                        break;
                     default:
-                        throw new ArgumentOutOfRangeException("Unexpected channel ID! Should be in rage 1-20");             
+                        throw new ArgumentOutOfRangeException("Unexpected channel ID! Should be in rage 1-20");
                 }
             }
         }
@@ -921,7 +921,7 @@ namespace AB15_GUI.WPF.ViewModels
         /// Write configuration button/command enable state
         /// </summary>
         private CommandState _writeConfigurationCommand        = new CommandState();
-        
+
         /// <summary>
         /// Bindable Write configuration button/command enable state
         /// </summary>
@@ -931,7 +931,7 @@ namespace AB15_GUI.WPF.ViewModels
         /// Transfer to normal mode button/command enable state
         /// </summary>
         private CommandState _transferToNormalModeCommand        = new CommandState();
-        
+
         /// <summary>
         /// Bindable Transfer to normal mode button/command enable state
         /// </summary>
@@ -941,7 +941,7 @@ namespace AB15_GUI.WPF.ViewModels
         /// Fire simultaneous button/command enable state
         /// </summary>
         private CommandState _fireSimultaneousCommand        = new CommandState();
-        
+
         /// <summary>
         /// Bindable Fire simultaneous button/command enable state
         /// </summary>
@@ -1116,7 +1116,7 @@ namespace AB15_GUI.WPF.ViewModels
 
             // Call corresponding ASIC methods to write configuration
             asicWrapper.ASICs[0].OnRequestConfiguration();      // Raise event to request configuration from all subscribers TODO: verify if config data is updated
-            await asicWrapper.ASICs[0].WriteConfigurationWithCRCAsync(); 
+            await asicWrapper.ASICs[0].WriteConfigurationWithCRCAsync();
         }
 
         /// <summary>
@@ -1139,7 +1139,7 @@ namespace AB15_GUI.WPF.ViewModels
             IsCyclicDiagnosticsEn = false;
             StartStopCyclicReadingExecuteAsync(new object());
         }
-        
+
         /// <summary>
         /// Execute Firing simultaneous command
         /// </summary>
@@ -1175,7 +1175,7 @@ namespace AB15_GUI.WPF.ViewModels
             if (isPlausibilityCheckOk == false)
             {
                 AddError(nameof(FireSimultaneous), "Plausibility check failed");
-                
+
                 // Unlock firing command
                 _fireSimultaneousCommand.InProgress = false;
                 OnPropertyChanged(nameof(FireSimultaneousCommandEn));
@@ -1378,8 +1378,8 @@ namespace AB15_GUI.WPF.ViewModels
             reg_FLM_Unlock.flm_code_unlock.Data = 0x00;
 
             // Fill registers for finishing firing - all channels disabled
-            flm_HS_LS_On_Ch7_1.Data   = 0x0000;   
-            flm_HS_LS_On_Ch14_8.Data  = 0x0000; 
+            flm_HS_LS_On_Ch7_1.Data   = 0x0000;
+            flm_HS_LS_On_Ch14_8.Data  = 0x0000;
             flm_HS_LS_On_Ch20_15.Data = 0x0000;
 
             // Set unlock codes
@@ -1433,7 +1433,7 @@ namespace AB15_GUI.WPF.ViewModels
                 new Reg_FLM_Read_Fire_Cnt_ch19(),
                 new Reg_FLM_Read_Fire_Cnt_ch20()
             };
-            
+
             // Create package to MCU
             packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
             packageToSend.ASICID = 1;
@@ -1652,7 +1652,7 @@ namespace AB15_GUI.WPF.ViewModels
                 Cmd = MCUCommand.WRITE_DATA_UART,
                 PayloadType = typeof(UartPayload)
             };
-            packageToSend.Payload.UartData.AddRange(new List<byte> { 0xAA, 0xFF, 0x00 });
+            packageToSend.Payload.UartData.AddRange(new List<byte> { 0xAA, 0x80, 0x7F });
 
             // Send command to MCU and wait for response
             var mcuResponse = (ReceiveCommunicationPackage<UartPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
@@ -1662,7 +1662,7 @@ namespace AB15_GUI.WPF.ViewModels
         }
 
         #endregion // Commands
-     
+
         #region ASIC_events
 
         /// <summary>
