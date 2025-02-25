@@ -80,6 +80,25 @@ namespace AB15_GUI.WPF.Models
             PsiRegisterList.Add(new ObservableRegister(new Reg_PSI_Read_Data_Slot4_Ch4()));
         }
 
+        /// <summary>
+        /// Update stored data with new data
+        /// </summary>
+        /// <param name="data">new register data</param>
+        /// <returns>true if update was successful, false - otherwise</returns>
+        public bool UpdateData(List<ushort> data)
+        {
+            // Sanity check
+            if (data.Count != PsiRegisterList.Count) return false;
+
+            // Update data in registers
+            for (int i = 0; i < data.Count; i++)
+            {
+                PsiRegisterList[i].Data = data[i];
+            }
+
+            return true;
+        }
+
         #region Services
 
         /// <summary>
