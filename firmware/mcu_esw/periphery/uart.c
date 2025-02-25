@@ -89,5 +89,18 @@ void InitUart(void)
 
 void SendUartData(const uint8 * data, Ifx_SizeT count)
 {
-    IfxAsclin_Asc_write(&g_uart, data, &count, g_uart_timeout);
+    //IfxAsclin_Asc_write(&g_uart, data, &count, g_uart_timeout);
+
+    Ifx_SizeT size = 1;
+    volatile int x = 0;
+
+    for (Ifx_SizeT i = 0; i < count; i++)
+    {
+        IfxAsclin_Asc_write(&g_uart, &data[i], &size, g_uart_timeout);
+
+        // TODO: Temporary Approach, fix in future with correct intermediate frame time
+        for (uint32 j = 0; j < 240; j++) {
+            x++;
+        }
+    }
 }

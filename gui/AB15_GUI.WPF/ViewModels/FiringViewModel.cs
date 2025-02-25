@@ -1642,9 +1642,6 @@ namespace AB15_GUI.WPF.ViewModels
         /// <returns>flag indicating if execution was successful</returns>
         private async Task<bool> PlausibilityCheckUART()
         {
-            // Raw UART for unlocking ASIC
-            const uint RAW_UART_TRANSACTION = 0x0400_0A08;
-
             // Create package to MCU
             var packageToSend = new TransmitCommunicationPackage<UartPayload>
             {
@@ -1652,7 +1649,7 @@ namespace AB15_GUI.WPF.ViewModels
                 Cmd = MCUCommand.WRITE_DATA_UART,
                 PayloadType = typeof(UartPayload)
             };
-            packageToSend.Payload.UartData.AddRange(new List<byte> { 0xAA, 0x80, 0x7F });
+            packageToSend.Payload.UartData.AddRange(new List<byte> { 0x55, 0x01, 0xFE });
 
             // Send command to MCU and wait for response
             var mcuResponse = (ReceiveCommunicationPackage<UartPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
