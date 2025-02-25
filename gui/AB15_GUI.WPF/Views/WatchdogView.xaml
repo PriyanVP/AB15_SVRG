@@ -856,7 +856,7 @@
             </TabItem>
         </TabControl>
 
-
+        <!-- TO DO Move the switch to a common for all pages GUI area-->
         <ToggleButton Style="{DynamicResource SimpleToggleButton}" 
                       x:Name="HelpProviderToggleButton"
                       Content="?" Grid.Row="0" Grid.Column="1" 

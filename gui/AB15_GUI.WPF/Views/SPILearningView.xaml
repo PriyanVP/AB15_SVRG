@@ -5,6 +5,9 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:cnvrt="clr-namespace:AB15_GUI.WPF.Views.Converters" 
       xmlns:local="clr-namespace:AB15_GUI.WPF.Views"
+      xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+      xmlns:sys="clr-namespace:System;assembly=netstandard"
+      xmlns:models="clr-namespace:AB15_GUI.WPF.Models"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="1100"
       Title="SPILearning"
@@ -13,6 +16,18 @@
     <Page.Resources>
         <cnvrt:BitToTextConverter x:Key="BitToTextConverter"/>
         <cnvrt:BoolToIntConverter x:Key="BoolToIntConverter"/>
+        <cnvrt:BoolToRWConverter x:Key="BoolToRWConverter"/>
+        <cnvrt:HexToIntConverter x:Key="HexToIntConverter"/>
+        <cnvrt:HelpMessageConverter x:Key="HelpMessageConverter"/>
+        
+        <ObjectDataProvider
+            x:Key="DeviceIDValues"
+            MethodName="GetValues"
+            ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="models:DeviceIDs" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
     </Page.Resources>
     
     <Grid Background="{DynamicResource UI.BackGround}">
@@ -56,7 +71,9 @@
                         FontSize="16" Margin="3"
                         VerticalAlignment="Bottom" HorizontalAlignment="Left"
                         Text="Address:"
-                        Style="{DynamicResource CustomTextBlock}"/>
+                        Style="{DynamicResource CustomTextBlock}"
+                        ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='Address', Mode=OneWay}"
+	                    ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
             
             <TextBlock  Grid.Row="0" Grid.Column="2"
                         FontSize="16" Margin="3"
@@ -67,15 +84,19 @@
             <TextBox    Grid.Row="0" Grid.Column="3"
                         Style="{DynamicResource TextBoxStyle}"
                         IsEnabled="{Binding IsSPILearningEn}"
-                        Text="{Binding Path=RefToActiveRecord.MOSI.Address}"
-                        Name="AddressTextBox">
+                        MaxLength="3"
+                        Text="{Binding Path=RefToActiveRecord.MOSI.Address, Converter={StaticResource HexToIntConverter}, Mode=TwoWay}"
+                        Name="AddressTextBox"
+                        PreviewTextInput="TextBox_PreviewTextInput">
             </TextBox>
             
             <TextBlock  Grid.Row="1" Grid.Column="1"
                         FontSize="16" Margin="3"
                         VerticalAlignment="Bottom" HorizontalAlignment="Left"
                         Text="Data:"
-                        Style="{DynamicResource CustomTextBlock}"/>
+                        Style="{DynamicResource CustomTextBlock}"
+                        ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='MOSIData', Mode=OneWay}"
+	                    ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
 
             <TextBlock  Grid.Row="1" Grid.Column="2"
                         FontSize="16" Margin="3"
@@ -84,10 +105,24 @@
                         Style="{DynamicResource CustomTextBlock}"/>
 
             <TextBox    Grid.Row="1" Grid.Column="3"
-                        Style="{DynamicResource TextBoxStyle}"
-                        IsEnabled="{Binding IsSPILearningEn}"
-                        Text="{Binding Path=RefToActiveRecord.MOSI.Data}"
-                        Name="DataTextBox">
+                        Text="{Binding Path=RefToActiveRecord.MOSI.Data, Converter={StaticResource HexToIntConverter}, Mode=TwoWay}"
+                        Name="DataTextBox"
+                        MaxLength="4"
+                        PreviewTextInput="TextBox_PreviewTextInput">
+                        <TextBox.Style>
+                            <Style TargetType="TextBox" BasedOn="{StaticResource TextBoxStyle}">
+                                <Setter Property="IsEnabled" Value="False"/>
+                                <Style.Triggers>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding Path=IsSPILearningEn}" Value="True" />
+                                            <Condition Binding="{Binding Path=IsWriteRegisterSelected}" Value="True" />
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter Property="IsEnabled" Value="True" />
+                                    </MultiDataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBox.Style>
             </TextBox>
             
             <StackPanel Orientation="Horizontal"
@@ -101,7 +136,9 @@
                             IsEnabled="{Binding IsSPILearningEn}"
                             IsChecked="{Binding IsRawSPISelected}"
                             Checked="isRawFormat_Checked"
-                            Unchecked="isRawFormat_Unchecked"/>
+                            Unchecked="isRawFormat_Unchecked"
+                            ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='IsRawSPISelected', Mode=OneWay}"
+	                        ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
             </StackPanel>
 
             <TextBlock  Grid.Row="2" Grid.Column="2"
@@ -109,68 +146,89 @@
                         VerticalAlignment="Bottom" HorizontalAlignment="Right"
                         Text="0x"
                         Style="{DynamicResource CustomTextBlock}"
-                        Name="RawHexText" Visibility="Hidden"/>
+                        Name="RawHexText" Visibility="Hidden" />
 
             <TextBox    Grid.Row="2" Grid.Column="3"
                         x:Name="RawFormatTextBox"
                         IsEnabled="{Binding IsSPILearningEn}"
-                        Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI}"
+                        Text="{Binding Path=RefToActiveRecord.MOSI.RawMOSI, Converter={StaticResource HexToIntConverter}, Mode=TwoWay}"
                         Visibility="Hidden"
-                        Style="{DynamicResource TextBoxStyle}"/>
+                        MaxLength="8"
+                        Style="{DynamicResource TextBoxStyle}"
+                        PreviewTextInput="TextBox_PreviewTextInput" 
+                        >
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="LostFocus">
+                                <i:InvokeCommandAction Command="{Binding Path=RawValueUpdatedCommand}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+            </TextBox>
 
 
             <Grid       Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="1"
                         x:Name="ReadWriteChooseField">
 
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="45"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="25"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock  Grid.Column="0"
-                            FontSize="16" Margin="3"
-                            VerticalAlignment="Center" HorizontalAlignment="Right"
-                            Text="Read:"
-                            Style="{DynamicResource CustomTextBlock}"/>
-
-                <CheckBox   Grid.Column="1"
-                            x:Name="ReadingCheckBox"
-                            Style="{DynamicResource ToggleSwitchStyle}"
-                            IsEnabled="{Binding IsSPILearningEn}"
-                            HorizontalAlignment="Left" Margin="3"
-                            Checked="CheckBox_Checked"
-                            Unchecked="CheckBox_Checked"/>
-
-                <TextBlock  Grid.Column="2"
-                            FontSize="16" Margin="3"
-                            VerticalAlignment="Center" HorizontalAlignment="Right"
-                            Text="Write:"
-                            Style="{DynamicResource CustomTextBlock}"/>
-
-                <CheckBox   Grid.Column="3"
+                <CheckBox   Grid.Column="0"
                             x:Name="WritingCheckBox"
                             Style="{DynamicResource ToggleSwitchStyle}"
                             IsChecked="{Binding IsWriteRegisterSelected}"
                             IsEnabled="{Binding IsSPILearningEn}"
-                            HorizontalAlignment="Left" Margin="3"
-                            Checked="CheckBox_Checked"
-                            Unchecked="CheckBox_Checked"/>
+                            HorizontalAlignment="Center" Margin="3"
+                            ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='ReadWriteSwitch', Mode=OneWay}"
+	                        ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
+
+                <TextBlock  Grid.Column="1"
+                            FontSize="16" Margin="3"
+                            VerticalAlignment="Center" HorizontalAlignment="Left"
+                            Foreground="{DynamicResource Foreground.Default}" >
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Text" Value="Read" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=WritingCheckBox, Path=IsChecked}" Value="True">
+                                    <Setter Property="Text" Value="Write" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+                <!-- TO DO Move the switch to a common for all pages GUI area-->
+                <ToggleButton Style="{DynamicResource SimpleToggleButton}" 
+                      x:Name="HelpProviderToggleButton"
+                      HorizontalAlignment="Right"
+                      Content="?" Grid.Row="0" Grid.Column="2" 
+                      BorderThickness="1" Margin="2" Width="20" Height="20"
+                      ToolTip="Enable/Disable the UI elements help messages" />
+
             </Grid>
 
 
-            <ComboBox   Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="1"
-                        ItemsSource="{Binding SelectedASICToSend}"
+            <ComboBox   Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2"
+                        Name="DeviceIdSelector"
                         IsEnabled="{Binding IsSPILearningEn}"
-                        MinWidth="100" Margin="3"/>
+                        Height="23"
+                        MinWidth="132" Margin="0,0,5,0"
+                        ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='DeviceIDSelector', Mode=OneWay}"
+	                    ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"
+                        ItemsSource="{Binding Source={StaticResource DeviceIDValues}}"
+                        SelectedValue="{Binding Path=SelectedASICToSend}">
+
+            </ComboBox>
 
             <Button     Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="1"
                         Style="{DynamicResource SimpleButton}"
                         Command="{Binding SPICommand}"
                         IsEnabled="{Binding SPICommandCommandEn}"
                         Content="Execute command" FontSize="16"
-                        Margin="2"/>
+                        Margin="2"
+                        ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='SPICommand', Mode=OneWay}"
+	                    ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
             <!--#endregion-->
 
             <!--#region Message decoded-->
@@ -187,7 +245,7 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="28"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
@@ -233,7 +291,7 @@
                         Grid.Row="0" Grid.RowSpan="3"/>
 
                 <Border BorderBrush="{DynamicResource SimpleButton.BorderBrush}"
-                        BorderThickness="2"
+                        BorderThickness="0,2"
                         Grid.Column="10" Grid.ColumnSpan="1"
                         Grid.Row="0" Grid.RowSpan="3"/>
 
@@ -243,7 +301,7 @@
                         Grid.Row="0" Grid.RowSpan="3"/>
 
                 <Border BorderBrush="{DynamicResource SimpleButton.BorderBrush}"
-                        BorderThickness="2"
+                        BorderThickness="0,2"
                         Grid.Column="27" Grid.ColumnSpan="3"
                         Grid.Row="0" Grid.RowSpan="3"/>
 
@@ -255,28 +313,38 @@
                 <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="10"
                            Text="Address" FontSize="16" 
                            HorizontalAlignment="Center" VerticalAlignment="Center"
-                           Style="{DynamicResource CustomTextBlock}"/>
+                           Style="{DynamicResource CustomTextBlock}"
+                           ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='Address', Mode=OneWay}"
+	                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
 
                 <TextBlock Grid.Row="0" Grid.Column="10" Grid.ColumnSpan="1"
-                           Text=" R/W " FontSize="16" 
+                           Text="R/W" FontSize="14" 
                            HorizontalAlignment="Center" VerticalAlignment="Center"
-                           Style="{DynamicResource CustomTextBlock}">
+                           Style="{DynamicResource CustomTextBlock}"
+                           ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='RW', Mode=OneWay}"
+	                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                 </TextBlock>
 
                 <TextBlock Grid.Row="0" Grid.Column="11" Grid.ColumnSpan="16"
                            Text="Data" FontSize="16" 
                            HorizontalAlignment="Center" VerticalAlignment="Center"
-                           Style="{DynamicResource CustomTextBlock}"/>
+                           Style="{DynamicResource CustomTextBlock}"
+                           ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='MOSIData', Mode=OneWay}"
+	                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
 
                 <TextBlock Grid.Row="0" Grid.Column="27" Grid.ColumnSpan="3"
                            Text="CRC" FontSize="16" 
                            HorizontalAlignment="Center" VerticalAlignment="Center"
-                           Style="{DynamicResource CustomTextBlock}"/>
+                           Style="{DynamicResource CustomTextBlock}"
+                           ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='MOSICRC', Mode=OneWay}"
+	                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
 
                 <TextBlock Grid.Row="0" Grid.Column="30" Grid.ColumnSpan="2" Margin="0,5"
                            Text="NA" FontSize="16" 
                            HorizontalAlignment="Center" VerticalAlignment="Center"
-                           Style="{DynamicResource CustomTextBlock}"/>
+                           Style="{DynamicResource CustomTextBlock}"
+                           ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='NA', Mode=OneWay}"
+	                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}"/>
 
                 <!--#region bit numbers -->
                 <TextBlock  Grid.Row="1" Grid.Column="0" Text=" 31 " FontSize="16" 
@@ -764,70 +832,93 @@
                 <TextBlock Grid.Row="1" Grid.Column="1" FontSize="16"
                            Text="Time" HorizontalAlignment="Center"
                            VerticalAlignment="Center"
-                           Style="{DynamicResource CustomTextBlock}">
+                           Style="{DynamicResource CustomTextBlock}"
+                           ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='Time', Mode=OneWay}"
+	                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="2" FontSize="16"
                            Text="Address" HorizontalAlignment="Center"
                            VerticalAlignment="Center"
-                           Style="{DynamicResource CustomTextBlock}">
+                           Style="{DynamicResource CustomTextBlock}"
+                           ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='Address', Mode=OneWay}"
+	                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="3" FontSize="16"
                            Text="R/W" HorizontalAlignment="Center"
                            VerticalAlignment="Center"
-                           Style="{DynamicResource CustomTextBlock}">
+                           Style="{DynamicResource CustomTextBlock}"
+                           ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='RwFlag', Mode=OneWay}"
+	                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="4" FontSize="16"
                            Text="Data" HorizontalAlignment="Center"
                            VerticalAlignment="Center"
-                           Style="{DynamicResource CustomTextBlock}">
+                           Style="{DynamicResource CustomTextBlock}"
+                           ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='MOSIData', Mode=OneWay}"
+	                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="5" FontSize="16"
                            Text="CRC" HorizontalAlignment="Center"
                            VerticalAlignment="Center"
-                           Style="{DynamicResource CustomTextBlock}">
+                           Style="{DynamicResource CustomTextBlock}"
+                           ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='MOSICRC', Mode=OneWay}"
+	                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="6" FontSize="16"
                            Text="RAW MOSI" HorizontalAlignment="Center"
                            VerticalAlignment="Center"
-                           Style="{DynamicResource CustomTextBlock}">
+                           Style="{DynamicResource CustomTextBlock}"
+                           ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='RawMOSI', Mode=OneWay}"
+	                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                 </TextBlock>
                 <!-- #endregion -->
 
                 <!-- #region Table content -->
-                <ListView Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="8" Name="MOSITableTableView" 
+                <ScrollViewer Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="8"
+                              Name="MOSITableTableViewScroll"
+                              ScrollChanged="ScrollChanged"
+                              HorizontalScrollBarVisibility="Disabled"
+                              VerticalScrollBarVisibility="Auto">
+                    <ListView Name="MOSITableTableView" 
                                 ItemsSource="{Binding SPICommunicationTable}"
                                 ItemContainerStyle="{DynamicResource ListViewItemStyle}" 
                                 IsEnabled="{Binding IsSPILearningEn}"
                                 FontSize="16">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="5" />
-                                    <ColumnDefinition Width="auto" MinWidth="100"/>
-                                    <ColumnDefinition Width="100"/>
-                                    <ColumnDefinition Width="40"/>
-                                    <ColumnDefinition Width="100"/>
-                                    <ColumnDefinition Width="40"/>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="5" />
-                                </Grid.ColumnDefinitions>
+                        <ListView.Template>
+                            <ControlTemplate>
+                                <!-- Empty template to allow ScrollViewer to capture mouse scroll -->
+                                <ItemsPresenter />
+                            </ControlTemplate>
+                        </ListView.Template>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="5" />
+                                        <ColumnDefinition Width="auto" MinWidth="100"/>
+                                        <ColumnDefinition Width="100"/>
+                                        <ColumnDefinition Width="40"/>
+                                        <ColumnDefinition Width="100"/>
+                                        <ColumnDefinition Width="40"/>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="5" />
+                                    </Grid.ColumnDefinitions>
 
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="auto"/>
-                                    <RowDefinition Height="2"/>
-                                    <RowDefinition Height="1"/>
-                                </Grid.RowDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="2"/>
+                                        <RowDefinition Height="1"/>
+                                    </Grid.RowDefinitions>
 
-                                <Canvas Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="8" Background="{DynamicResource UI.SeparateLine}"/>
+                                    <Canvas Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="8" Background="{DynamicResource UI.SeparateLine}"/>
 
-                                <!-- Cell with time -->
-                                <TextBlock  Grid.Column="1" Margin="0,0,5,0" 
+                                    <!-- Cell with time -->
+                                    <TextBlock  Grid.Column="1" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
                                             Text="{Binding Time, StringFormat={}{0:HH:mm:ss.FFF}}"
@@ -835,49 +926,50 @@
                                             MouseLeftButtonDown="MouseDoubleClick"/>
 
 
-                                <!-- Cell with address -->
-                                <TextBlock  Grid.Column="2"  Margin="0,0,5,0" 
+                                    <!-- Cell with address -->
+                                    <TextBlock  Grid.Column="2"  Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
                                             Text="{Binding Path=MOSI.Address, StringFormat=0x{0:X3}}"
                                             Style="{DynamicResource TextBlockStyle}" 
                                             MouseLeftButtonDown="MouseDoubleClick"/>
 
-                                <!-- Cell with R/W -->
-                                <TextBlock  Grid.Column="3"  Margin="0,0,5,0" 
+                                    <!-- Cell with R/W -->
+                                    <TextBlock  Grid.Column="3"  Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
-                                            Text="{Binding Path=MOSI.RwFlag, Converter={StaticResource BoolToIntConverter}}"
+                                            Text="{Binding Path=MOSI.RwFlag, Converter={StaticResource BoolToRWConverter}, Mode=OneWay}"
                                             Style="{DynamicResource TextBlockStyle}" 
                                             MouseLeftButtonDown="MouseDoubleClick"/>
 
-                                <!-- Cell with Data -->
-                                <TextBlock  Grid.Column="4" Margin="0,0,5,0" 
+                                    <!-- Cell with Data -->
+                                    <TextBlock  Grid.Column="4" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
                                             Text="{Binding Path=MOSI.Data, StringFormat=0x{0:X4}}"
                                             Style="{DynamicResource TextBlockStyle}"
                                             MouseLeftButtonDown="MouseDoubleClick"/>
 
-                                <!-- Cell with CRC -->
-                                <TextBlock  Grid.Column="5" Margin="0,0,5,0" 
+                                    <!-- Cell with CRC -->
+                                    <TextBlock  Grid.Column="5" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
                                             Text="{Binding Path=MOSI.CRC, StringFormat=0x{0:X}, Mode=OneWay}"
                                             Style="{DynamicResource TextBlockStyle}" 
                                             MouseLeftButtonDown="MouseDoubleClick"/>
 
-                                <!-- Cell with RAW -->
-                                <TextBlock  Grid.Column="6" Margin="0,0,5,0" 
+                                    <!-- Cell with RAW -->
+                                    <TextBlock  Grid.Column="6" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
                                             Text="{Binding Path=MOSI.RawMOSI, StringFormat=0x{0:X8}}"
                                             Style="{DynamicResource TextBlockStyle}" 
                                             MouseLeftButtonDown="MouseDoubleClick"/>
-                            </Grid>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </ScrollViewer>
                 <!-- #endregion -->
             </Grid>
         </Border>
@@ -899,7 +991,7 @@
                     <ColumnDefinition Width="30"/>
                     <ColumnDefinition Width="30"/>
                     <ColumnDefinition Width="40"/>
-                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="60"/>
                     <ColumnDefinition Width="25"/>
                     <ColumnDefinition Width="30"/>
                     <ColumnDefinition Width="*" />
@@ -921,208 +1013,245 @@
                 <TextBlock Grid.Row="1" Grid.Column="1" FontSize="16"
                            Text="GS5" HorizontalAlignment="Center"
                            VerticalAlignment="Center"
-                           Style="{DynamicResource CustomTextBlock}">
+                           Style="{DynamicResource CustomTextBlock}"
+                           ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='GS5', Mode=OneWay}"
+	                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="2" FontSize="16"
                            Text="GS4" HorizontalAlignment="Center"
                            VerticalAlignment="Center"
-                           Style="{DynamicResource CustomTextBlock}">
+                           Style="{DynamicResource CustomTextBlock}"
+                           ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='GS4', Mode=OneWay}"
+	                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="3" FontSize="16"
                            Text="GS3" HorizontalAlignment="Center"
                            VerticalAlignment="Center"
-                           Style="{DynamicResource CustomTextBlock}">
+                           Style="{DynamicResource CustomTextBlock}"
+                           ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='GS3', Mode=OneWay}"
+	                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="4" FontSize="16"
                            Text="GS2" HorizontalAlignment="Center"
                            VerticalAlignment="Center"
-                           Style="{DynamicResource CustomTextBlock}">
+                           Style="{DynamicResource CustomTextBlock}"
+                           ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='GS2', Mode=OneWay}"
+	                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="5" FontSize="16"
                            Text="GS1" HorizontalAlignment="Center"
                            VerticalAlignment="Center"
-                           Style="{DynamicResource CustomTextBlock}">
+                           Style="{DynamicResource CustomTextBlock}"
+                           ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='GS1', Mode=OneWay}"
+	                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="6" FontSize="16"
                            Text="GS0" HorizontalAlignment="Center"
-                           VerticalAlignment="Center">
+                           VerticalAlignment="Center"
+                           Style="{DynamicResource CustomTextBlock}"
+                           ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='GS0', Mode=OneWay}"
+	                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="7" FontSize="16"
                            Text="SF" HorizontalAlignment="Center"
                            VerticalAlignment="Center"
-                           Style="{DynamicResource CustomTextBlock}">
+                           Style="{DynamicResource CustomTextBlock}"
+                           ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='SF', Mode=OneWay}"
+	                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="8" FontSize="16"
                            Text="Status" HorizontalAlignment="Center"
                            VerticalAlignment="Center"
-                           Style="{DynamicResource CustomTextBlock}">
+                           Style="{DynamicResource CustomTextBlock}"
+                           ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='AdditionalStatus', Mode=OneWay}"
+	                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="9" FontSize="16"
                            Text="Data" HorizontalAlignment="Center"
                            VerticalAlignment="Center"
-                           Style="{DynamicResource CustomTextBlock}">
+                           Style="{DynamicResource CustomTextBlock}"
+                           ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='MISOData', Mode=OneWay}"
+	                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="10" FontSize="16"
                            Text="S0" HorizontalAlignment="Center"
                            VerticalAlignment="Center"
-                           Style="{DynamicResource CustomTextBlock}">
+                           Style="{DynamicResource CustomTextBlock}"
+                           ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='S0', Mode=OneWay}"
+	                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="11" FontSize="16"
                            Text="CRC" HorizontalAlignment="Center"
                            VerticalAlignment="Center"
-                           Style="{DynamicResource CustomTextBlock}">
+                           Style="{DynamicResource CustomTextBlock}"
+                           ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='MISOCRC', Mode=OneWay}"
+	                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="12" FontSize="16"
                            Text="RAW MISO" HorizontalAlignment="Center"
                            VerticalAlignment="Center"
-                           Style="{DynamicResource CustomTextBlock}">
+                           Style="{DynamicResource CustomTextBlock}"
+                           ToolTipService.ToolTip="{Binding Path=HelpMsgDictionary, Converter={StaticResource HelpMessageConverter}, ConverterParameter='RawMISO', Mode=OneWay}"
+	                       ToolTipService.IsEnabled="{Binding ElementName=HelpProviderToggleButton, Path=IsChecked}">
                 </TextBlock>
                 <!-- #endregion -->
 
                 <!-- #region Table content -->
-                <ListView Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="14" Name="MISOTableTableView" 
+                <ScrollViewer Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="14"
+                              Name="MISOTableTableViewScroll"
+                              ScrollChanged="ScrollChanged"
+                              HorizontalScrollBarVisibility="Disabled"
+                              VerticalScrollBarVisibility="Auto">
+                    <ListView Name="MISOTableTableView" 
                                 ItemsSource="{Binding SPICommunicationTable}"
                                 ItemContainerStyle="{DynamicResource ListViewItemStyle}" 
                                 IsEnabled="{Binding IsSPILearningEn}"
                                 FontSize="16">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="5" />
-                                    <ColumnDefinition Width="30"/>
-                                    <ColumnDefinition Width="30"/>
-                                    <ColumnDefinition Width="30"/>
-                                    <ColumnDefinition Width="30"/>
-                                    <ColumnDefinition Width="30"/>
-                                    <ColumnDefinition Width="30"/>
-                                    <ColumnDefinition Width="30"/>
-                                    <ColumnDefinition Width="40"/>
-                                    <ColumnDefinition Width="50"/>
-                                    <ColumnDefinition Width="25"/>
-                                    <ColumnDefinition Width="30"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="5" />
-                                </Grid.ColumnDefinitions>
+                        <ListView.Template>
+                            <ControlTemplate>
+                                <!-- Empty template to allow ScrollViewer to capture mouse scroll -->
+                                <ItemsPresenter />
+                            </ControlTemplate>
+                        </ListView.Template>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="5" />
+                                        <ColumnDefinition Width="30"/>
+                                        <ColumnDefinition Width="30"/>
+                                        <ColumnDefinition Width="30"/>
+                                        <ColumnDefinition Width="30"/>
+                                        <ColumnDefinition Width="30"/>
+                                        <ColumnDefinition Width="30"/>
+                                        <ColumnDefinition Width="30"/>
+                                        <ColumnDefinition Width="40"/>
+                                        <ColumnDefinition Width="60"/>
+                                        <ColumnDefinition Width="25"/>
+                                        <ColumnDefinition Width="30"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="5" />
+                                    </Grid.ColumnDefinitions>
 
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="auto"/>
-                                    <RowDefinition Height="2"/>
-                                    <RowDefinition Height="1"/>
-                                </Grid.RowDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="2"/>
+                                        <RowDefinition Height="1"/>
+                                    </Grid.RowDefinitions>
 
-                                <Canvas Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="14" Background="{DynamicResource UI.SeparateLine}"/>
+                                    <Canvas Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="14" Background="{DynamicResource UI.SeparateLine}"/>
 
-                                <!-- Cell with gs5 -->
-                                <TextBlock  Grid.Column="1" Margin="0,0,5,0" 
+                                    <!-- Cell with gs5 -->
+                                    <TextBlock  Grid.Column="1" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
                                             Text="{Binding Path=MISO.GS5, Mode=OneWay, Converter={StaticResource BoolToIntConverter}}"
                                             Style="{DynamicResource TextBlockStyle}" 
                                             MouseLeftButtonDown="MouseDoubleClick"/>
 
-                                <!-- Cell with gs4 -->
-                                <TextBlock  Grid.Column="2" Margin="0,0,5,0" 
+                                    <!-- Cell with gs4 -->
+                                    <TextBlock  Grid.Column="2" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
                                             Text="{Binding Path=MISO.GS4, Mode=OneWay, Converter={StaticResource BoolToIntConverter}}"
                                             Style="{DynamicResource TextBlockStyle}" 
                                             MouseLeftButtonDown="MouseDoubleClick"/>
 
-                                <!-- Cell with gs3 -->
-                                <TextBlock  Grid.Column="3" Margin="0,0,5,0" 
+                                    <!-- Cell with gs3 -->
+                                    <TextBlock  Grid.Column="3" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
                                             Text="{Binding Path=MISO.GS3, Mode=OneWay, Converter={StaticResource BoolToIntConverter}}"
                                             Style="{DynamicResource TextBlockStyle}" 
                                             MouseLeftButtonDown="MouseDoubleClick"/>
 
-                                <!-- Cell with gs2 -->
-                                <TextBlock  Grid.Column="4" Margin="0,0,5,0" 
+                                    <!-- Cell with gs2 -->
+                                    <TextBlock  Grid.Column="4" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
                                             Text="{Binding Path=MISO.GS2, Mode=OneWay, Converter={StaticResource BoolToIntConverter}}"
                                             Style="{DynamicResource TextBlockStyle}" 
                                             MouseLeftButtonDown="MouseDoubleClick"/>
 
-                                <!-- Cell with gs1 -->
-                                <TextBlock  Grid.Column="5" Margin="0,0,5,0" 
+                                    <!-- Cell with gs1 -->
+                                    <TextBlock  Grid.Column="5" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
                                             Text="{Binding Path=MISO.GS1, Mode=OneWay, Converter={StaticResource BoolToIntConverter}}"
                                             Style="{DynamicResource TextBlockStyle}" 
                                             MouseLeftButtonDown="MouseDoubleClick"/>
 
-                                <!-- Cell with gs0 -->
-                                <TextBlock  Grid.Column="6" Margin="0,0,5,0" 
+                                    <!-- Cell with gs0 -->
+                                    <TextBlock  Grid.Column="6" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
                                             Text="{Binding Path=MISO.GS0, Mode=OneWay, Converter={StaticResource BoolToIntConverter}}"
                                             Style="{DynamicResource TextBlockStyle}" 
                                             MouseLeftButtonDown="MouseDoubleClick"/>
 
-                                <!-- Cell with SF -->
-                                <TextBlock  Grid.Column="7"  Margin="0,0,5,0" 
+                                    <!-- Cell with SF -->
+                                    <TextBlock  Grid.Column="7"  Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
                                             Text="{Binding Path=MISO.SF, Mode=OneWay, Converter={StaticResource BoolToIntConverter}}"
                                             Style="{DynamicResource TextBlockStyle}" 
                                             MouseLeftButtonDown="MouseDoubleClick"/>
 
-                                <!-- Cell with Additional status -->
-                                <TextBlock  Grid.Column="8" Margin="0,0,5,0" 
+                                    <!-- Cell with Additional status -->
+                                    <TextBlock  Grid.Column="8" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
                                             Text="{Binding Path=MISO.AdditionalStatus, StringFormat=0x{0:X}, Mode=OneWay}"
                                             Style="{DynamicResource TextBlockStyle}" 
                                             MouseLeftButtonDown="MouseDoubleClick"/>
 
-                                <!-- Cell with Data -->
-                                <TextBlock  Grid.Column="9" Margin="0,0,5,0" 
+                                    <!-- Cell with Data -->
+                                    <TextBlock  Grid.Column="9" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
                                             Text="{Binding Path=MISO.Data, StringFormat=0x{0:X}, Mode=OneWay}"
                                             Style="{DynamicResource TextBlockStyle}" 
                                             MouseLeftButtonDown="MouseDoubleClick"/>
 
-                                <!-- Cell with S0 -->
-                                <TextBlock  Grid.Column="10" Margin="0,0,5,0" 
+                                    <!-- Cell with S0 -->
+                                    <TextBlock  Grid.Column="10" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
                                             Text="{Binding Path=MISO.S0, Mode=OneWay, Converter={StaticResource BoolToIntConverter}}"
                                             Style="{DynamicResource TextBlockStyle}"
                                             MouseLeftButtonDown="MouseDoubleClick"/>
 
-                                <!-- Cell with crc -->
-                                <TextBlock  Grid.Column="11" Margin="0,0,5,0" 
+                                    <!-- Cell with crc -->
+                                    <TextBlock  Grid.Column="11" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
                                             Text="{Binding Path=MISO.CRC, StringFormat=0x{0:X}, Mode=OneWay}"
                                             Style="{DynamicResource TextBlockStyle}" 
                                             MouseLeftButtonDown="MouseDoubleClick"/>
-                                
-                                <!-- Cell with raw -->
-                                <TextBlock  Grid.Column="12" Margin="0,0,5,0" 
+
+                                    <!-- Cell with raw -->
+                                    <TextBlock  Grid.Column="12" Margin="0,0,5,0" 
                                             VerticalAlignment="Center"
                                             FontSize="16" HorizontalAlignment="Center"
                                             Text="{Binding Path=MISO.RawMISO, StringFormat=0x{0:X8}, Mode=OneWay}"
                                             Style="{DynamicResource TextBlockStyle}" 
                                             MouseLeftButtonDown="MouseDoubleClick"/>
-                            </Grid>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </ScrollViewer>
                 <!-- #endregion -->
             </Grid>
         </Border>
