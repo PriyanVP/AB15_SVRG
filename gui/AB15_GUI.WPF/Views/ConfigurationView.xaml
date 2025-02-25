@@ -12,6 +12,7 @@
 
     <Page.Resources>
         <cnvrt:FaultFlagToColorConverter x:Key="FaultFlagToColorConverter"/>
+        <cnvrt:IntToHexStringConverter x:Key="IntToHexCnvrt"/>
     </Page.Resources>
 
     <Grid Background="{DynamicResource UI.BackGround}">
@@ -21,7 +22,7 @@
                     Grid.Row="1" Grid.Column="1" 
                     Background="{DynamicResource UI.BackGround}" BorderThickness="0">
 
-            <!-- Configuration tab -->
+            <!-- PSI tab -->
             <TabItem Header="PSI" FontSize="20" Style="{DynamicResource CustomTabItem}">
 
                 <Grid>
@@ -59,7 +60,7 @@
                                 BorderBrush="{DynamicResource UI.SeparateLine}"/>
                     
                     <!-- Control buttons -->
-                    <!--#region Botton buttons -->
+                    <!--#region Bottom buttons -->
                     <Button Grid.Column="0"
                             Grid.Row="3"
                             Content="Read"
@@ -94,7 +95,7 @@
                             HorizontalAlignment="Right"/>
                     <!--#endregion-->
 
-                    <!-- top contol tab -->
+                    <!-- Top contol tab -->
                     <StackPanel Orientation="Horizontal"
                                 Grid.Row="0"
                                 Grid.Column="0" Grid.ColumnSpan="3"
@@ -430,56 +431,64 @@
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot1Ch1SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                                        <TextBlock  Text="{Binding Path=PsiSensorData.PsiRegisterList[0].Data, Converter={StaticResource IntToHexCnvrt}, Mode=OneWay}"
+                                                    HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="1" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot1Ch2SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                                        <TextBlock  Text="{Binding Path=PsiSensorData.PsiRegisterList[1].Data, Converter={StaticResource IntToHexCnvrt}, Mode=OneWay}"
+                                                    HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="2" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot1Ch3SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                                        <TextBlock  Text="{Binding Path=PsiSensorData.PsiRegisterList[2].Data, Converter={StaticResource IntToHexCnvrt}, Mode=OneWay}"
+                                                    HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="3" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot1Ch4SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                                        <TextBlock  Text="{Binding Path=PsiSensorData.PsiRegisterList[3].Data, Converter={StaticResource IntToHexCnvrt}, Mode=OneWay}"
+                                                    HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="4" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot1Ch5SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                                        <TextBlock  Text="{Binding Path=PsiSensorData.PsiRegisterList[4].Data, Converter={StaticResource IntToHexCnvrt}, Mode=OneWay}"
+                                                    HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="5" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot1Ch6SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                                        <TextBlock  Text="{Binding Path=PsiSensorData.PsiRegisterList[5].Data, Converter={StaticResource IntToHexCnvrt}, Mode=OneWay}"
+                                                    HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="6" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot1Ch7SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                                        <TextBlock  Text="{Binding Path=PsiSensorData.PsiRegisterList[6].Data, Converter={StaticResource IntToHexCnvrt}, Mode=OneWay}"
+                                                    HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="7" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot1Ch8SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                                        <TextBlock  Text="{Binding Path=PsiSensorData.PsiRegisterList[7].Data, Converter={StaticResource IntToHexCnvrt}, Mode=OneWay}"
+                                                    HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
                                     <!--#endregion-->
 
@@ -558,56 +567,64 @@
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot2Ch1SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                                        <TextBlock  Text="{Binding Path=PsiSensorData.PsiRegisterList[8].Data, Converter={StaticResource IntToHexCnvrt}, Mode=OneWay}"
+                                                    HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="1" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot2Ch2SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                                        <TextBlock  Text="{Binding Path=PsiSensorData.PsiRegisterList[9].Data, Converter={StaticResource IntToHexCnvrt}, Mode=OneWay}"
+                                                    HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="2" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot2Ch3SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                                        <TextBlock  Text="{Binding Path=PsiSensorData.PsiRegisterList[10].Data, Converter={StaticResource IntToHexCnvrt}, Mode=OneWay}"
+                                                    HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="3" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot2Ch4SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                                        <TextBlock  Text="{Binding Path=PsiSensorData.PsiRegisterList[11].Data, Converter={StaticResource IntToHexCnvrt}, Mode=OneWay}"
+                                                    HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="4" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot2Ch5SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                                        <TextBlock  Text="{Binding Path=PsiSensorData.PsiRegisterList[12].Data, Converter={StaticResource IntToHexCnvrt}, Mode=OneWay}"
+                                                    HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="5" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot2Ch6SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                                        <TextBlock  Text="{Binding Path=PsiSensorData.PsiRegisterList[13].Data, Converter={StaticResource IntToHexCnvrt}, Mode=OneWay}"
+                                                    HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="6" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot2Ch7SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                                        <TextBlock  Text="{Binding Path=PsiSensorData.PsiRegisterList[14].Data, Converter={StaticResource IntToHexCnvrt}, Mode=OneWay}"
+                                                    HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="7" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot2Ch8SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                                        <TextBlock  Text="{Binding Path=PsiSensorData.PsiRegisterList[15].Data, Converter={StaticResource IntToHexCnvrt}, Mode=OneWay}"
+                                                    HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
                                     <!--#endregion-->
 
@@ -686,56 +703,64 @@
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot3Ch1SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                                        <TextBlock  Text="{Binding Path=PsiSensorData.PsiRegisterList[16].Data, Converter={StaticResource IntToHexCnvrt}, Mode=OneWay}"
+                                                    HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="1" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot3Ch2SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                                        <TextBlock  Text="{Binding Path=PsiSensorData.PsiRegisterList[17].Data, Converter={StaticResource IntToHexCnvrt}, Mode=OneWay}"
+                                                    HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="2" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot3Ch3SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                                        <TextBlock  Text="{Binding Path=PsiSensorData.PsiRegisterList[18].Data, Converter={StaticResource IntToHexCnvrt}, Mode=OneWay}"
+                                                    HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="3" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot3Ch4SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                                        <TextBlock  Text="{Binding Path=PsiSensorData.PsiRegisterList[19].Data, Converter={StaticResource IntToHexCnvrt}, Mode=OneWay}"
+                                                    HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="4" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot3Ch5SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                                        <TextBlock  Text="{Binding Path=PsiSensorData.PsiRegisterList[20].Data, Converter={StaticResource IntToHexCnvrt}, Mode=OneWay}"
+                                                    HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="5" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot3Ch6SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                                        <TextBlock  Text="{Binding Path=PsiSensorData.PsiRegisterList[21].Data, Converter={StaticResource IntToHexCnvrt}, Mode=OneWay}"
+                                                    HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="6" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot3Ch7SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                                        <TextBlock  Text="{Binding Path=PsiSensorData.PsiRegisterList[22].Data, Converter={StaticResource IntToHexCnvrt}, Mode=OneWay}"
+                                                    HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="7" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot3Ch8SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                                        <TextBlock  Text="{Binding Path=PsiSensorData.PsiRegisterList[23].Data, Converter={StaticResource IntToHexCnvrt}, Mode=OneWay}"
+                                                    HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
                                     <!--#endregion-->
 
@@ -814,56 +839,64 @@
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot4Ch1SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                                        <TextBlock  Text="{Binding Path=PsiSensorData.PsiRegisterList[24].Data, Converter={StaticResource IntToHexCnvrt}, Mode=OneWay}"
+                                                    HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="1" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot4Ch2SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                                        <TextBlock  Text="{Binding Path=PsiSensorData.PsiRegisterList[25].Data, Converter={StaticResource IntToHexCnvrt}, Mode=OneWay}"
+                                                    HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="2" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot4Ch3SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                                        <TextBlock  Text="{Binding Path=PsiSensorData.PsiRegisterList[26].Data, Converter={StaticResource IntToHexCnvrt}, Mode=OneWay}"
+                                                    HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="3" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot4Ch4SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                                        <TextBlock  Text="{Binding Path=PsiSensorData.PsiRegisterList[27].Data, Converter={StaticResource IntToHexCnvrt}, Mode=OneWay}"
+                                                    HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="4" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot4Ch5SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                                        <TextBlock  Text="{Binding Path=PsiSensorData.PsiRegisterList[28].Data, Converter={StaticResource IntToHexCnvrt}, Mode=OneWay}"
+                                                    HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="5" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot4Ch6SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                                        <TextBlock  Text="{Binding Path=PsiSensorData.PsiRegisterList[29].Data, Converter={StaticResource IntToHexCnvrt}, Mode=OneWay}"
+                                                    HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="6" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot4Ch7SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                                        <TextBlock  Text="{Binding Path=PsiSensorData.PsiRegisterList[30].Data, Converter={StaticResource IntToHexCnvrt}, Mode=OneWay}"
+                                                    HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
 
                                     <Border     Grid.Row="7" Grid.Column="2" 
                                                 BorderThickness="1" 
                                                 BorderBrush="{DynamicResource Animation.Lines}" 
                                                 CornerRadius="5" HorizontalAlignment="Stretch" Margin="2">
-                                        <TextBlock  Text="{Binding Slot4Ch8SensorDataText, TargetNullValue='NaN'}" HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
+                                        <TextBlock  Text="{Binding Path=PsiSensorData.PsiRegisterList[31].Data, Converter={StaticResource IntToHexCnvrt}, Mode=OneWay}"
+                                                    HorizontalAlignment="Center" Style="{DynamicResource TextBlockStyle}"/>
                                     </Border>
                                     <!--#endregion-->
 
@@ -2508,7 +2541,7 @@
 
             </TabItem>
 
-            <!-- Monitoring tab -->
+            <!-- UART tab -->
             <TabItem Header="UART" FontSize="20" Style="{DynamicResource CustomTabItem}">
                 <Grid>
                     <Grid.ColumnDefinitions>
