@@ -1,7 +1,8 @@
-using AB15_GUI.WPF.Models.Interfaces;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using AB15_GUI.WPF.Models;
+using AB15_GUI.WPF.Models.Interfaces;
 
 namespace AB15_GUI.WPF.Models
 {
@@ -15,17 +16,10 @@ namespace AB15_GUI.WPF.Models
         /// </summary>
         public string? Error { get; set; } = null;
 
-        // TODO: implement unpacking - use different storages
-
-        ///// <summary>
-        ///// Property to report errors
-        ///// </summary>
-        //public string? Error { get; set; } = null;
-      
         /// <summary>
         /// List with register values
         /// </summary>
-        public List<UInt16> Data { get; set; } = new List<ushort>();
+        public List<PstChannelSideTestResult> Data { get; set; } = new List<PstChannelSideTestResult>();
 
         /// <summary>
         /// Convert byte list to field values
@@ -50,19 +44,15 @@ namespace AB15_GUI.WPF.Models
                     // Check if data in payload is expected
                     if (rawData.Count != 20)
                     {
-                        Error = $"Received package with unexpected number of bytes in payload. Expected 86, but got {rawData.Count}";
+                        Error = $"Received package with unexpected number of bytes in payload. Expected 20, but got {rawData.Count}";
                         break;
                     }
 
-                    // TODO: analysis logic for incoming data
-
-                    // Store payload as registers data
+                    // Deserialize rawData into PstChannelSideTestResult objects
                     for (int i = 0; i < rawData.Count; i++)
                     {
-                        Data.Add(rawData[i]);
-
+                        Data.Add(new PstChannelSideTestResult(rawData[i]));
                     }
- 
                     break;
                 default:
                     throw new ArgumentException($"Unexpected status received: {status}");
