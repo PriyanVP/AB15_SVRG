@@ -16,7 +16,7 @@ namespace AB15_GUI.WPF.Models
         {
             // Set MOSI and MISO frame if provided for constructor
             MISO = miso ?? (new MISORecord() { RawMISO = 0xFFFF_FFFF });
-            MOSI = mosi ?? (new MOSIRecord() { RawMOSI = 0xFFFF_FFFF });
+            MOSI = mosi ?? (new MOSIRecord() { RawMOSI = 0x0000_0000 });
         }
 
         /// <summary>

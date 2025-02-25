@@ -44,11 +44,11 @@ namespace AB15_GUI.WPF.Views
             
             try
             {
-                Clipboard.SetText(((TextBox)sender).Text);
+                Clipboard.SetDataObject(((TextBlock)sender).Text);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                // Do something w/ exception 
+                // In case of exception do not copy to clipboard
             }
         }
 

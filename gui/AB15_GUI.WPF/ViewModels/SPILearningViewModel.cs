@@ -112,6 +112,7 @@ namespace AB15_GUI.WPF.ViewModels
 
             // Init commands for controls
             SPICommand = new RelayCommand(SPICommandExecuteAsync);
+            RawValueUpdatedCommand = new RelayCommand(RawValueUpdated);
 
             // Enable all by default
             IsSPILearningEn = true;
@@ -146,6 +147,24 @@ namespace AB15_GUI.WPF.ViewModels
             }
         }
 
+        /// <summary>
+        /// <inheritdoc cref="SelectedASICToSend" path='/summary'/>
+        /// </summary>
+        private DeviceIDs selectedASICToSend = DeviceIDs.SPI1_CS1MASTER; 
+        
+        /// <summary>
+        /// The selected Device ID
+        /// </summary>
+        public DeviceIDs SelectedASICToSend
+        {
+            get => selectedASICToSend;
+            set 
+            {
+                selectedASICToSend = value;
+                OnPropertyChanged();
+            }
+        }
+        
         /// <summary>
         /// <inheritdoc cref="IsSPILearningEn" path='/summary'/>
         /// </summary>
@@ -202,8 +221,11 @@ namespace AB15_GUI.WPF.ViewModels
                 OnPropertyChanged();
 
                 // Also update SPI transaction
-                RefToActiveRecord.MOSI.Data = (isWriteRegisterSelected) ? ((UInt16) 0x0) : (RefToActiveRecord.MOSI.Data);
-                RefToActiveRecord.MOSI.RwFlag = isWriteRegisterSelected;
+                if (IsRawSPISelected == false)
+                {
+                    RefToActiveRecord.MOSI.Data = isWriteRegisterSelected ? RefToActiveRecord.MOSI.Data : ((UInt16) 0x0);
+                    RefToActiveRecord.MOSI.RwFlag = isWriteRegisterSelected;
+                }
             }
         }
 
@@ -230,14 +252,37 @@ namespace AB15_GUI.WPF.ViewModels
         /// </summary>
         private void InitHelpMessages()
         {
-            // TODO: add later
             // Bindable properties help messages
-            // AddHelpMsg(nameof(), $"");
+            AddHelpMsg(nameof(IsRawSPISelected), "Enable or disable the RAW value input");
+            AddHelpMsg(nameof(RefToActiveRecord.Time), "Frame Time");
+            // MOSI
+            AddHelpMsg(nameof(RefToActiveRecord.MOSI.Address), "Register address (10 Bit)");
+            AddHelpMsg(nameof(RefToActiveRecord.MOSI.RwFlag), "Indicates transfer direction for the address:\r\n R = read\r\n W = write");
+            AddHelpMsg("MOSI" + nameof(RefToActiveRecord.MOSI.Data), "Data being written into registers");
+            AddHelpMsg("MOSI" + nameof(RefToActiveRecord.MOSI.CRC), "Checksum input: Calculated using bits 31 to 5 of MOSI frame");
+            AddHelpMsg(nameof(RefToActiveRecord.MOSI.RawMOSI), "RAW Receive Frame (MOSI)");
+            // MISO
+            AddHelpMsg(nameof(RefToActiveRecord.MISO.GS5), "Transfer Failure Flag (TFF):\r\n 0 = OK\r\n 1 = Failure in previous SPI Communication");
+            AddHelpMsg(nameof(RefToActiveRecord.MISO.GS4), "Test Active Flag (TST):\r\n 0 = OK\r\n 1 = ASIC in test mode");
+            AddHelpMsg(nameof(RefToActiveRecord.MISO.GS3), "End Of Programming (EOP):\r\n 0 = EOP1 and EOP2 set\r\n 1 = EOP1 and/or EOP2 not set");
+            AddHelpMsg(nameof(RefToActiveRecord.MISO.GS2), "APB Bus Transaction Error (APB):\r\n 0 = OK\r\n 1 = Failure in the previous Read/Write APB transaction");
+            AddHelpMsg(nameof(RefToActiveRecord.MISO.GS1), "ADC Error (ADC):\r\n 0 = OK\r\n 1 = ADC error has occurred");
+            AddHelpMsg(nameof(RefToActiveRecord.MISO.GS0), "APB Access Time Error (ATE):\r\n 0 = Ok\r\n 1 = APB bus access from the previous SPI frame was not executed on time and correctness previous request is not guaranteed");
+            AddHelpMsg(nameof(RefToActiveRecord.MISO.SF), "SF - Frame Type\r\n 0 - Normal Frame\r\n 1 - Sensor Frame");
+            AddHelpMsg(nameof(RefToActiveRecord.MISO.S0), "ASIC Error Flag:\r\n 0 = ASIC error not present\r\n 1 = Oscillator Monitor Error (Oscillator failure) or Current APB Read Access Time Error (ATE) or Current APB Read Bus Transaction Error (APB)");
+            AddHelpMsg(nameof(RefToActiveRecord.MISO.AdditionalStatus), "Additional Status flags");
+            AddHelpMsg("MISO" + nameof(RefToActiveRecord.MISO.Data), "Data read from the register (Set to 0 in case of SPI WR transaction)");
+            AddHelpMsg("MISO" + nameof(RefToActiveRecord.MISO.CRC), "Checksum output: Calculated using bits 31 to 3 of MISO frame");
+            AddHelpMsg(nameof(RefToActiveRecord.MISO.RawMISO), "RAW Transmit Frame (MISO)");
 
             // Commands
-            // AddHelpMsg(nameof(), $"");
+            AddHelpMsg(nameof(SPICommand), "Execute the selected SPI command");
 
             // UI elements help messages
+            AddHelpMsg("RW", "Indicates transfer direction for the address:\r\n 0 = read\r\n 1 = write");
+            AddHelpMsg("NA", "Unused constant for bit 0 and bit 1");
+            AddHelpMsg("ReadWriteSwitch", "Switch between Read and Write frame type");
+            AddHelpMsg("DeviceIDSelector", "Device ID");
         }
 
         #endregion // Bindable_Properties
@@ -269,7 +314,7 @@ namespace AB15_GUI.WPF.ViewModels
 
             // Create package to MCU
             TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
-            packageToSend.ASICID = 1; // TODO: should be a value from dropdown
+            packageToSend.ASICID = (int)SelectedASICToSend;
             packageToSend.Cmd = MCUCommand.WRITE_RAW_DATA_SPI;
             packageToSend.PayloadType = typeof(AddressDataPayload);
             packageToSend.Payload.Data.Add((UInt16) (RefToActiveRecord.MOSI.RawMOSI & 0xFFFF));        // 16 LSB
@@ -299,6 +344,19 @@ namespace AB15_GUI.WPF.ViewModels
             // Create next record
             MOSIRecord CurrentMOSIRecordCopy = RefToActiveRecord.MOSI.Copy();
             RefToActiveRecord = new SPITransactionRecord(mosi: CurrentMOSIRecordCopy);
+        }
+
+        /// <summary>
+        /// Command handler for updating IsWriteRegisterSelected based on RawValue 
+        /// </summary>
+        public ICommand RawValueUpdatedCommand { get; }
+
+        /// <summary>
+        /// Method that will update IsWriteRegisterSelected based on RawValue 
+        /// </summary>
+        private void RawValueUpdated(object obj)
+        {
+            IsWriteRegisterSelected = RefToActiveRecord.MOSI.RwFlag;
         }
 
         #endregion // Commands

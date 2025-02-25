@@ -228,6 +228,11 @@ namespace AB15_GUI.Tests.ViewModels
                 throw new NotImplementedException();
             }
 
+            public Task EstablishConnectionAsync()
+            {
+                throw new NotImplementedException();
+            }
+
             public void StartInitModeTimeoutResetting()
             {
                 throw new NotImplementedException();
