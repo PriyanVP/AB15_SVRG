@@ -838,23 +838,27 @@ namespace AB15_GUI.WPF.ViewModels
             OnPropertyChanged(nameof(ReadPsiSensorDataCommandEn));
 
             // Read sensor data
-            TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
-            packageToSend.ASICID = (int) DeviceIDs.SPI1_CS_MON1;
-            packageToSend.Cmd = MCUCommand.EXECUTE_READ_SEQUENCE;
-            packageToSend.PayloadType = typeof(AddressDataPayload);
-            packageToSend.Payload.Address.AddRange(PsiSensorData.Addresses);
+            Reg_PSI_Read_Data_Slot1_Ch1 reg_PSI_Read_Data_Slot1_Ch1 = new Reg_PSI_Read_Data_Slot1_Ch1();
 
-            // Send command to MCU and wait for response
-            ReceiveCommunicationPackage<AddressDataPayload>? mcuResponse = (ReceiveCommunicationPackage<AddressDataPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
+            TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>
+            {
+                ASICID = (int) DeviceIDs.SPI1_CS_MON1, // TODO: replace hardcoded
+                Cmd = MCUCommand.READ_REG,
+                PayloadType = typeof(ReadRegisterPayload)
+            };
+            packageToSend.Payload.Address.Add(reg_PSI_Read_Data_Slot1_Ch1.Address);
+
+            ReceiveCommunicationPackage<ReadRegisterPayload>? mcuResponse = (ReceiveCommunicationPackage<ReadRegisterPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
 
             _readPsiSensorDataCommand.InProgress = false;
             OnPropertyChanged(nameof(ReadPsiSensorDataCommandEn));
 
-            // Validate response
-            if (IsResponseValid(mcuResponse, nameof(ReadPsiSensorData)) == false) return;
+            // Validate response TODO: specifics of PSI data - not all can be read, check adresses
+            // if (IsResponseValid(mcuResponse, nameof(ReadPsiSensorData)) == false) return;
 
             // Update sensor data
-            PsiSensorData.UpdateData(mcuResponse.Payload.Data);
+            // PsiSensorData.UpdateData(mcuResponse.Payload.Data);
+            PsiSensorData.PsiRegisterList[0].Data = mcuResponse.Payload.RegisterData;
 
             // Update indicator
             PsiDataReceivedStatus = FaultStatus.Good;
@@ -979,11 +983,13 @@ namespace AB15_GUI.WPF.ViewModels
             {
                 SyncPulseGeneretingStatus = FaultStatus.Good;
                 _readPsiSensorDataCommand.Enable = true;
+                OnPropertyChanged(nameof(ReadPsiSensorDataCommandEn));
             }
             else
             {
                 SyncPulseGeneretingStatus = FaultStatus.Fault;
                 _readPsiSensorDataCommand.Enable = false;
+                OnPropertyChanged(nameof(ReadPsiSensorDataCommandEn));
             }
         }
 
@@ -1004,14 +1010,14 @@ namespace AB15_GUI.WPF.ViewModels
             TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
             packageToSend.ASICID = (int) DeviceIDs.SPI1_CS1MASTER;
             packageToSend.Cmd = MCUCommand.EXECUTE_WRITE_SEQUENCE;
-            packageToSend.PayloadType = typeof(AddressDataPayload);
+            packageToSend.PayloadType = typeof(EmptyPayload);
             packageToSend.Payload.Address.Add(reg_PSI_Supply.Address);
             packageToSend.Payload.Data.Add((ushort)PsiSupply);
             packageToSend.Payload.Address.Add(reg_PSI_Gen_Mask_Sync.Address);
             packageToSend.Payload.Data.Add((ushort)PsiGenMaskSync);
 
             // Send command to MCU and wait for response
-            ReceiveCommunicationPackage<AddressDataPayload>? mcuResponse = (ReceiveCommunicationPackage<AddressDataPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
+            ReceiveCommunicationPackage<EmptyPayload>? mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
 
             _writePsiConfigurationCommand.InProgress = false;
             OnPropertyChanged(nameof(WritePsiConfigurationCommandEn));
@@ -1198,7 +1204,7 @@ namespace AB15_GUI.WPF.ViewModels
             _writePsiConfigurationCommand.Enable = true;
             _readUartConfigurationCommand.Enable = false;
 
-            OnPropertyChanged(nameof(SetResetUartFramesCommandEn));
+            OnPropertyChanged(nameof(ReadPsiStatusCommandEn));
             OnPropertyChanged(nameof(ReadMonitorSpiStatusCommandEn));
             OnPropertyChanged(nameof(WritePsiConfigurationCommandEn));
             OnPropertyChanged(nameof(ReadUartConfigurationCommandEn));

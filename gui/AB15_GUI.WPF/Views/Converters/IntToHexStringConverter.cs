@@ -19,7 +19,7 @@ namespace AB15_GUI.WPF.Views.Converters
             try
             {
                 // Typecast to actual types. Incorrect typecast is handled by try-catch
-                uint inputNumber = (uint)value;
+                ushort inputNumber = (ushort)value;
                 int outputLength = (parameter != null) ? System.Convert.ToInt32(parameter) : 4; // defaults to 4
 
                 // Validate bit position range
