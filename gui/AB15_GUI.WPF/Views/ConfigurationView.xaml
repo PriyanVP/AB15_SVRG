@@ -1161,7 +1161,7 @@
                                 <!--#region monitor spi textboxs -->
                                 <TextBox    Grid.Row="2" Grid.Column="1"
                                     Margin="5,1"
-                                    Text="{Binding MonSpi1Data}" 
+                                    Text="{Binding MonSpi1Data, Converter={StaticResource IntToHexCnvrt}, Mode=OneWay}"
                                     IsEnabled="{Binding IsPsiPageEnabled}"
                                     VerticalAlignment="Center"
                                     HorizontalAlignment="Stretch" 
@@ -1169,7 +1169,7 @@
 
                                 <TextBox    Grid.Row="2" Grid.Column="2"
                                     Margin="5,1"
-                                    Text="{Binding MonSpi2Data}" 
+                                    Text="{Binding MonSpi2Data, Converter={StaticResource IntToHexCnvrt}, Mode=OneWay}"
                                     IsEnabled="{Binding IsPsiPageEnabled}"
                                     VerticalAlignment="Center"
                                     HorizontalAlignment="Stretch" 
@@ -1177,7 +1177,7 @@
 
                                 <TextBox    Grid.Row="3" Grid.Column="1"
                                     Margin="5,1"
-                                    Text="{Binding MonSpi1Sid}" 
+                                    Text="{Binding MonSpi1Sid, Converter={StaticResource IntToHexCnvrt}, Mode=OneWay}"
                                     IsEnabled="{Binding IsPsiPageEnabled}"
                                     VerticalAlignment="Center"
                                     HorizontalAlignment="Stretch" 
@@ -1185,7 +1185,7 @@
 
                                 <TextBox    Grid.Row="3" Grid.Column="2"
                                     Margin="5,1"
-                                    Text="{Binding MonSpi2Sid}" 
+                                    Text="{Binding MonSpi2Sid, Converter={StaticResource IntToHexCnvrt}, Mode=OneWay}"
                                     IsEnabled="{Binding IsPsiPageEnabled}"
                                     VerticalAlignment="Center"
                                     HorizontalAlignment="Stretch" 

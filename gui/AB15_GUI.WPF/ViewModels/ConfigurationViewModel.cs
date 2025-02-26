@@ -82,10 +82,10 @@ namespace AB15_GUI.WPF.ViewModels
             IsUartPageEnabled = true;
 
             // Init monitor SPI with default values
-            MonSpi1Data = "0x0000";
-            MonSpi1Sid = "0x0000";
-            MonSpi2Data = "0x0000";
-            MonSpi2Sid = "0x0000";
+            MonSpi1Data = 0x0000;
+            MonSpi1Sid  = 0x0000;
+            MonSpi2Data = 0x0000;
+            MonSpi2Sid  = 0x0000;
 
             // Default values
             PsiSupply = 0xFF;
@@ -248,12 +248,12 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// <inheritdoc cref="MonSpi1Data" path='/summary'/>
         /// </summary>
-        private string monSpi1Data;
+        private ushort monSpi1Data;
         
         /// <summary>
         /// MON SPI1 data
         /// </summary>
-        public string MonSpi1Data
+        public ushort MonSpi1Data
         {
             get => monSpi1Data;
             set
@@ -266,12 +266,12 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// <inheritdoc cref="MonSpi1Sid" path='/summary'/>
         /// </summary>
-        private string monSpi1Sid;
+        private ushort monSpi1Sid;
         
         /// <summary>
         /// MON SPI1 SID
         /// </summary>
-        public string MonSpi1Sid
+        public ushort MonSpi1Sid
         {
             get => monSpi1Sid;
             set
@@ -284,12 +284,12 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// <inheritdoc cref="MonSpi2Data" path='/summary'/>
         /// </summary>
-        private string monSpi2Data;
+        private ushort monSpi2Data;
         
         /// <summary>
         /// MON SPI2 data
         /// </summary>
-        public string MonSpi2Data
+        public ushort MonSpi2Data
         {
             get => monSpi2Data;
             set
@@ -302,12 +302,12 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// <inheritdoc cref="MonSpi2Sid" path='/summary'/>
         /// </summary>
-        private string monSpi2Sid;
+        private ushort monSpi2Sid;
         
         /// <summary>
         /// MON SPI2 SID
         /// </summary>
-        public string MonSpi2Sid
+        public ushort MonSpi2Sid
         {
             get => monSpi2Sid;
             set
@@ -834,10 +834,10 @@ namespace AB15_GUI.WPF.ViewModels
             if (IsResponseValid(mcuResponse, nameof(ReadMonitorSpiStatus)) == false) return;
 
             // Update observable properties
-            MonSpi1Data = $"0x{mcuResponse.Payload.Data[0]:X4}";
-            MonSpi1Sid = $"0x{mcuResponse.Payload.Data[1]:X4}";
-            MonSpi2Data = $"0x{mcuResponse.Payload.Data[2]:X4}";
-            MonSpi2Sid = $"0x{mcuResponse.Payload.Data[3]:X4}";
+            MonSpi1Data = mcuResponse.Payload.Data[0];
+            MonSpi1Sid  = mcuResponse.Payload.Data[1];
+            MonSpi2Data = mcuResponse.Payload.Data[2];
+            MonSpi2Sid  = mcuResponse.Payload.Data[3];
         }
 
         /// <summary>
