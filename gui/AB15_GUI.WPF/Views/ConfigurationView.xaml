@@ -2928,19 +2928,19 @@
                                     Margin="10,0"
                                     Style="{DynamicResource SimpleButton}"
                                     IsEnabled="{Binding IsUartPageEnabled}"
-                                    Command="{Binding ResetUARTConfigurationCommand}"/>
+                                    Command="{Binding ResetUartStatus}"/>
 
                             <Button Content="Read"
                                     Margin="10,0"
                                     Style="{DynamicResource SimpleButton}"
-                                    IsEnabled="{Binding IsUartPageEnabled}"
-                                    Command="{Binding ReadUARTConfigurationCommand}"/>
+                                    IsEnabled="{Binding ReadUartStatusCommandEn}"
+                                    Command="{Binding ReadUartStatus}"/>
 
                             <Button Content="Write"
                                     Margin="10,0"
                                     Style="{DynamicResource SimpleButton}"
                                     IsEnabled="{Binding IsUartPageEnabled}"
-                                    Command="{Binding WriteUartConfigurationCommand}"/>
+                                    Command="{Binding WriteUartStatus}"/>
 
                         </StackPanel>
                     </Grid>
