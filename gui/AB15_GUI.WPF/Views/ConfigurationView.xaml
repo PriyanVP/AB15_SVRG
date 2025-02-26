@@ -2694,7 +2694,7 @@
                                 <TextBox    Grid.Row="4"
                                             Grid.Column="1"
                                             Style="{DynamicResource TextBoxStyle}"
-                                            Text="{Binding UartParityText}"
+                                            Text="{Binding UartUART1FramesText}"
                                             HorizontalAlignment="Center"
                                             VerticalAlignment="Center"
                                             IsReadOnly="True"
