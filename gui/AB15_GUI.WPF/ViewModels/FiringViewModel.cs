@@ -1743,12 +1743,12 @@ namespace AB15_GUI.WPF.ViewModels
             ReceiveCommunicationPackage<AddressDataPayload>? mcuResponse0 = (ReceiveCommunicationPackage<AddressDataPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
 
             // Validate response
-            if (IsResponseValid(mcuResponse0, null) == false)
+            if (IsResponseValid(mcuResponse0, null))
             {
                 // Report UART enable status
                 reg_SAFE_SETTINGS.Data = mcuResponse0.Payload.Data[0];
                 IsUartEn = (reg_SAFE_SETTINGS.disable_master_mode.Data > 1);
-                IsUartControlEn = false;
+                IsUartControlEn = true;
 
                 // Disable other plausibilisation checks if only UART plausibilisation required
                 if (reg_SAFE_SETTINGS.disable_master_mode.Data == 3)

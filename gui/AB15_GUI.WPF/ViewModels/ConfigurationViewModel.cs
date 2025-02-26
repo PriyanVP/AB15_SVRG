@@ -622,7 +622,7 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// Read PSI sensor data command
         /// </summary>
-        ICommand ReadPsiSensorData { get; }
+        public ICommand ReadPsiSensorData { get; }
 
         /// <summary>
         /// Read PSI sensor data button/command enable state
@@ -637,7 +637,7 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// Read PSI status command
         /// </summary>
-        ICommand ReadPsiStatus { get; }
+        public ICommand ReadPsiStatus { get; }
 
         /// <summary>
         /// Read PSI status button/command enable state
@@ -652,7 +652,7 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// Read Monitor SPI status command
         /// </summary>
-        ICommand ReadMonitorSpiStatus { get; }
+        public ICommand ReadMonitorSpiStatus { get; }
 
         /// <summary>
         /// Read Monitor SPI status button/command enable state
@@ -667,7 +667,7 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// Read PSI configuration command
         /// </summary>
-        ICommand ReadPsiConfiguration { get; }
+        public ICommand ReadPsiConfiguration { get; }
 
         /// <summary>
         /// Read PSI configuration button/command enable state
@@ -682,7 +682,7 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// Write PSI configuration command
         /// </summary>
-        ICommand WritePsiConfiguration { get; }
+        public ICommand WritePsiConfiguration { get; }
 
         /// <summary>
         /// Write PSI configuration button/command enable state
@@ -697,7 +697,7 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// Reset PSI configuration command
         /// </summary>
-        ICommand ResetPsiConfiguration { get; }
+        public ICommand ResetPsiConfiguration { get; }
 
         /// <summary>
         /// Reset PSI configuration button/command enable state
@@ -712,7 +712,7 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// Read UART configuration command
         /// </summary>
-        ICommand ReadUartConfiguration { get; }
+        public ICommand ReadUartConfiguration { get; }
 
         /// <summary>
         /// Read UART configuration button/command enable state
@@ -727,7 +727,7 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// Read UART status command
         /// </summary>
-        ICommand ReadUartStatus { get; }
+        public ICommand ReadUartStatus { get; }
 
         /// <summary>
         /// Read UART status button/command enable state
@@ -742,7 +742,7 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// Set/Reset UART frames command
         /// </summary>
-        ICommand SetResetUartFrames { get; }
+        public ICommand SetResetUartFrames { get; }
 
         /// <summary>
         /// Set/Reset UART frames button/command enable state
@@ -1009,7 +1009,7 @@ namespace AB15_GUI.WPF.ViewModels
             OnPropertyChanged(nameof(ReadUartStatusCommandEn));
 
             // Validate response
-            if (IsResponseValid(mcuResponse, nameof(WritePsiConfiguration)) == false) return;
+            if (IsResponseValid(mcuResponse, nameof(ReadUartStatus)) == false) return;
 
             // Unpack data
             UartStatus = mcuResponse.Payload.Data[0];
@@ -1094,6 +1094,11 @@ namespace AB15_GUI.WPF.ViewModels
             _readUartStatusCommand.Enable = true;
             _setResetUartFramesCommand.Enable = true;
 
+            OnPropertyChanged(nameof(ReadPsiConfigurationCommandEn));
+            OnPropertyChanged(nameof(ResetPsiConfigurationCommandEn));
+            OnPropertyChanged(nameof(ReadUartStatusCommandEn));
+            OnPropertyChanged(nameof(SetResetUartFramesCommandEn));
+
             // Unsubscribe from event - by design can be fired only once
             caller.InitModeEntered -= InitModeEnteredHandler;
         }
@@ -1119,6 +1124,11 @@ namespace AB15_GUI.WPF.ViewModels
             _readMonitorSpiStatusCommand.Enable = true;
             _writePsiConfigurationCommand.Enable = true;
             _readUartConfigurationCommand.Enable = false;
+
+            OnPropertyChanged(nameof(SetResetUartFramesCommandEn));
+            OnPropertyChanged(nameof(ReadMonitorSpiStatusCommandEn));
+            OnPropertyChanged(nameof(WritePsiConfigurationCommandEn));
+            OnPropertyChanged(nameof(ReadUartConfigurationCommandEn));
             
             // Unsubscribe from event - by design can be fired only once
             caller.InitModeEntered -= NormalModeEnteredHandler;
