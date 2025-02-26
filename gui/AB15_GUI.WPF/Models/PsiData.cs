@@ -60,24 +60,40 @@ namespace AB15_GUI.WPF.Models
             PsiRegisterList.Add(new ObservableRegister(new Reg_PSI_Read_Data_Slot1_Ch2()));
             PsiRegisterList.Add(new ObservableRegister(new Reg_PSI_Read_Data_Slot1_Ch3()));
             PsiRegisterList.Add(new ObservableRegister(new Reg_PSI_Read_Data_Slot1_Ch4()));
+            PsiRegisterList.Add(new ObservableRegister(new Reg_PSI_Read_Data_Slot1_Ch5()));
+            PsiRegisterList.Add(new ObservableRegister(new Reg_PSI_Read_Data_Slot1_Ch6()));
+            PsiRegisterList.Add(new ObservableRegister(new Reg_PSI_Read_Data_Slot1_Ch7()));
+            PsiRegisterList.Add(new ObservableRegister(new Reg_PSI_Read_Data_Slot1_Ch8()));
 
             // Slot 2
             PsiRegisterList.Add(new ObservableRegister(new Reg_PSI_Read_Data_Slot2_Ch1()));
             PsiRegisterList.Add(new ObservableRegister(new Reg_PSI_Read_Data_Slot2_Ch2()));
             PsiRegisterList.Add(new ObservableRegister(new Reg_PSI_Read_Data_Slot2_Ch3()));
             PsiRegisterList.Add(new ObservableRegister(new Reg_PSI_Read_Data_Slot2_Ch4()));
+            PsiRegisterList.Add(new ObservableRegister(new Reg_PSI_Read_Data_Slot2_Ch5()));
+            PsiRegisterList.Add(new ObservableRegister(new Reg_PSI_Read_Data_Slot2_Ch6()));
+            PsiRegisterList.Add(new ObservableRegister(new Reg_PSI_Read_Data_Slot2_Ch7()));
+            PsiRegisterList.Add(new ObservableRegister(new Reg_PSI_Read_Data_Slot2_Ch8()));
 
             // Slot 3
             PsiRegisterList.Add(new ObservableRegister(new Reg_PSI_Read_Data_Slot3_Ch1()));
             PsiRegisterList.Add(new ObservableRegister(new Reg_PSI_Read_Data_Slot3_Ch2()));
             PsiRegisterList.Add(new ObservableRegister(new Reg_PSI_Read_Data_Slot3_Ch3()));
             PsiRegisterList.Add(new ObservableRegister(new Reg_PSI_Read_Data_Slot3_Ch4()));
+            PsiRegisterList.Add(new ObservableRegister(new Reg_PSI_Read_Data_Slot3_Ch5()));
+            PsiRegisterList.Add(new ObservableRegister(new Reg_PSI_Read_Data_Slot3_Ch6()));
+            PsiRegisterList.Add(new ObservableRegister(new Reg_PSI_Read_Data_Slot3_Ch7()));
+            PsiRegisterList.Add(new ObservableRegister(new Reg_PSI_Read_Data_Slot3_Ch8()));
 
             // Slot 4
             PsiRegisterList.Add(new ObservableRegister(new Reg_PSI_Read_Data_Slot4_Ch1()));
             PsiRegisterList.Add(new ObservableRegister(new Reg_PSI_Read_Data_Slot4_Ch2()));
             PsiRegisterList.Add(new ObservableRegister(new Reg_PSI_Read_Data_Slot4_Ch3()));
             PsiRegisterList.Add(new ObservableRegister(new Reg_PSI_Read_Data_Slot4_Ch4()));
+            PsiRegisterList.Add(new ObservableRegister(new Reg_PSI_Read_Data_Slot4_Ch5()));
+            PsiRegisterList.Add(new ObservableRegister(new Reg_PSI_Read_Data_Slot4_Ch6()));
+            PsiRegisterList.Add(new ObservableRegister(new Reg_PSI_Read_Data_Slot4_Ch7()));
+            PsiRegisterList.Add(new ObservableRegister(new Reg_PSI_Read_Data_Slot4_Ch8()));
         }
 
         /// <summary>
