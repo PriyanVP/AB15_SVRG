@@ -614,7 +614,80 @@ namespace AB15_GUI.WPF.ViewModels
                 OnPropertyChanged();
             }
         }
-        
+
+        /// <summary>
+        /// <inheritdoc cref="UartParityText" path='/summary'/>
+        /// </summary>
+        private string uartParityText = "odd";
+
+        /// <summary>
+        /// Text to be displayed in Parity textbox.
+        /// </summary>
+        public string UartParityText
+        {
+            get => uartParityText;
+            set
+            {
+                uartParityText = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// <inheritdoc cref="UartDatabitNumberText" path='/summary'/>
+        /// </summary>
+        private uint uartDatabitNumberText = 8;
+
+        /// <summary>
+        /// Text to be displayed in Databit textbox.
+        /// </summary>
+        public uint UartDatabitNumberText
+        {
+            get => uartDatabitNumberText;
+            set
+            {
+                uartDatabitNumberText = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// <inheritdoc cref="UartNumberOfStopbitsText" path='/summary'/>
+        /// </summary>
+        private uint uartNumberOfStopbitsText = 1;
+
+        /// <summary>
+        /// Text to be displayed in Number of Stopbits textbox.
+        /// </summary>
+        public uint UartNumberOfStopbitsText
+
+        {
+            get => uartNumberOfStopbitsText;
+            set
+            {
+                uartNumberOfStopbitsText = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// <inheritdoc cref="UartBaudrateText" path='/summary'/>
+        /// </summary>
+        private string uartBaudrateText = "2 MBaud";
+
+        /// <summary>
+        /// Text to be displayed in Baudrate textbox.
+        /// </summary>
+        public string UartBaudrateText
+        {
+            get => uartBaudrateText;
+            set
+            {
+                uartBaudrateText = value;
+                OnPropertyChanged();
+            }
+        }
+
         #endregion // Bindable_Properties
 
         #region Commands
