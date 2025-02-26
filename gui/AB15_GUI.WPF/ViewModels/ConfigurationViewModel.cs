@@ -96,12 +96,14 @@ namespace AB15_GUI.WPF.ViewModels
 
             // Statuses and indicators init
             SyncPulseGeneretingStatus = FaultStatus.Fault;
-            PSIDataReceivedStatus = FaultStatus.Fault;
-            PSITopStatus = FaultStatus.Fault;
-            UARTTopStatus = FaultStatus.Fault;
+            PsiDataReceivedStatus = FaultStatus.Fault;
+            PsiTopStatus = FaultStatus.Fault;
+            UartTopStatus = FaultStatus.Fault;
+            Uart2TopStatus = UartTopStatus;
+            FlmFiringWithPsiStatus = FaultStatus.Fault;
 
-            PSITopStatusText = "Deactivated";
-            UARTTopStatusText = "Deactivated";
+            PsiTopStatusText = "Deactivated";
+            UartTopStatusText = "Deactivated";
 
             // Events from ASIC // TODO: some of these handlers should be moved out of Firing VM
             this.asicWrapper.ASICs[0].InitModeEntered += InitModeEnteredHandler;
@@ -151,14 +153,14 @@ namespace AB15_GUI.WPF.ViewModels
         }
 
         /// <summary>
-        /// <inheritdoc cref="UARTTopStatusText" path='/summary'/>
+        /// <inheritdoc cref="UartTopStatusText" path='/summary'/>
         /// </summary>
         private string uartTopStatusText;
         
         /// <summary>
         /// Text to be displayed in indicator on page. Represents UART communication status
         /// </summary>
-        public string UARTTopStatusText
+        public string UartTopStatusText
         {
             get => uartTopStatusText;
             set 
@@ -187,14 +189,14 @@ namespace AB15_GUI.WPF.ViewModels
         }
 
         /// <summary>
-        /// <inheritdoc cref="PSITopStatusText" path='/summary'/>
+        /// <inheritdoc cref="PsiTopStatusText" path='/summary'/>
         /// </summary>
         private string psiTopStatusText;
         
         /// <summary>
         /// Text to be displayed in indicator on page. Represents PSI communication status
         /// </summary>
-        public string PSITopStatusText
+        public string PsiTopStatusText
         {
             get => psiTopStatusText;
             set 
@@ -228,19 +230,37 @@ namespace AB15_GUI.WPF.ViewModels
         public ObservableCollection<ObservableRegister> PsiStatusList { get; set; }
 
         /// <summary>
-        /// <inheritdoc cref="UARTTopStatus" path='/summary'/>
+        /// <inheritdoc cref="UartTopStatus" path='/summary'/>
         /// </summary>
         private FaultStatus uartTopStatus;
         
         /// <summary>
         /// Color flag indicating status of UART
         /// </summary>
-        public FaultStatus UARTTopStatus
+        public FaultStatus UartTopStatus
         {
             get => uartTopStatus;
             set
             {
                 uartTopStatus = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// <inheritdoc cref="Uart2TopStatus" path='/summary'/>
+        /// </summary>
+        private FaultStatus uart2TopStatus;
+        
+        /// <summary>
+        /// Color flag indicating status of UART 2 TODO: why needed?
+        /// </summary>
+        public FaultStatus Uart2TopStatus
+        {
+            get => uart2TopStatus;
+            set
+            {
+                uart2TopStatus = value;
                 OnPropertyChanged();
             }
         }
@@ -320,12 +340,12 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// <inheritdoc cref="PsiSupply" path='/summary'/>
         /// </summary>
-        private uint psiSupply;
+        private ushort psiSupply;
         
         /// <summary>
         /// PSI SUPPLY register value
         /// </summary>
-        public uint PsiSupply
+        public ushort PsiSupply
         {
             get => psiSupply;
             set
@@ -338,12 +358,12 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// <inheritdoc cref="PsiGenMaskSync" path='/summary'/>
         /// </summary>
-        private uint psiGenMaskSync;
+        private ushort psiGenMaskSync;
         
         /// <summary>
         /// PSI GEN MASK SYNC register value
         /// </summary>
-        public uint PsiGenMaskSync
+        public ushort PsiGenMaskSync
         {
             get => psiGenMaskSync;
             set
@@ -372,10 +392,14 @@ namespace AB15_GUI.WPF.ViewModels
         }
 
         /// <summary>
-        /// 
+        /// <inheritdoc cref="FlmFiringWithPsiStatus" path='/summary'/>
         /// </summary>
         private FaultStatus flmFiringWithPSIStatus;
-        public FaultStatus FLMFiringWithPSIStatus
+        
+        /// <summary>
+        /// Status of firing with PSI. On if PSI data received
+        /// </summary>
+        public FaultStatus FlmFiringWithPsiStatus
         {
             get => flmFiringWithPSIStatus;
             set
@@ -386,14 +410,14 @@ namespace AB15_GUI.WPF.ViewModels
         }
 
         /// <summary>
-        /// <inheritdoc cref="PSITopStatus" path='/summary'/>
+        /// <inheritdoc cref="PsiTopStatus" path='/summary'/>
         /// </summary>
         private FaultStatus psiTopStatus;
 
         /// <summary>
         /// Color flag of PSI status indicator
         /// </summary>
-        public FaultStatus PSITopStatus
+        public FaultStatus PsiTopStatus
         {
             get => psiTopStatus;
             set
@@ -404,14 +428,14 @@ namespace AB15_GUI.WPF.ViewModels
         }
 
         /// <summary>
-        /// <inheritdoc cref="PSIDataReceivedStatus" path='/summary'/>
+        /// <inheritdoc cref="PsiDataReceivedStatus" path='/summary'/>
         /// </summary>
         private FaultStatus psiDataReceivedStatus;
         
         /// <summary>
         /// PSI data was received at least once
         /// </summary>
-        public FaultStatus PSIDataReceivedStatus
+        public FaultStatus PsiDataReceivedStatus
         {
             get => psiDataReceivedStatus;
             set
@@ -422,7 +446,7 @@ namespace AB15_GUI.WPF.ViewModels
         }
 
         /// <summary>
-        /// <inheritdoc cref="PSIDataReceivedStatus" path='/summary'/>
+        /// <inheritdoc cref="PsiDataReceivedStatus" path='/summary'/>
         /// </summary>
         private FaultStatus ch1Status;
 
@@ -593,10 +617,6 @@ namespace AB15_GUI.WPF.ViewModels
         
         #endregion // Bindable_Properties
 
-        #region Internal_configuration
-
-        #endregion // Internal_configuration
-
         #region Commands
 
         /// <summary>
@@ -762,6 +782,10 @@ namespace AB15_GUI.WPF.ViewModels
 
             // Update sensor data
             PsiSensorData.UpdateData(mcuResponse.Payload.Data);
+
+            // Update indicator
+            PsiDataReceivedStatus = FaultStatus.Good;
+            FlmFiringWithPsiStatus = FaultStatus.Good;
         }
 
         /// <summary>
@@ -873,6 +897,19 @@ namespace AB15_GUI.WPF.ViewModels
             // Update observable properties
             PsiSupply = mcuResponse.Payload.Data[0];
             PsiGenMaskSync = mcuResponse.Payload.Data[1];
+
+            // Update indicator
+            reg_PSI_Supply.Data = PsiSupply;
+            reg_PSI_Gen_Mask_Sync.Data = PsiGenMaskSync;
+            // TODO: check approach
+            if ((reg_PSI_Gen_Mask_Sync.psi_sync_gen.Data == 1) && (reg_PSI_Supply.psi_supply_on_ch1.Data == 1))
+            {
+                SyncPulseGeneretingStatus = FaultStatus.Good;
+            }
+            else
+            {
+                SyncPulseGeneretingStatus = FaultStatus.Fault;
+            }
         }
 
         /// <summary>
@@ -906,6 +943,9 @@ namespace AB15_GUI.WPF.ViewModels
 
             // Validate response
             if (IsResponseValid(mcuResponse, nameof(WritePsiConfiguration)) == false) return;
+
+            // Update indicator
+            SyncPulseGeneretingStatus = FaultStatus.Good;
         }
 
         /// <summary>
@@ -1038,11 +1078,12 @@ namespace AB15_GUI.WPF.ViewModels
 
             // Report UART/PSI enable status
             reg_SAFE_SETTINGS.Data = mcuResponse.Payload.Data[0];
-            UARTTopStatus = (reg_SAFE_SETTINGS.disable_master_mode.Data > 1) ? FaultStatus.Good : FaultStatus.Fault;
-            UARTTopStatusText = (UARTTopStatus == FaultStatus.Good) ? "Activated" : "Deactivated";
+            UartTopStatus = (reg_SAFE_SETTINGS.disable_master_mode.Data > 1) ? FaultStatus.Good : FaultStatus.Fault;
+            UartTopStatusText = (UartTopStatus == FaultStatus.Good) ? "Activated" : "Deactivated";
+            Uart2TopStatus = UartTopStatus;
 
-            PSITopStatus = (reg_SAFE_SETTINGS.disable_master_mode.Data < 3) ? FaultStatus.Good : FaultStatus.Fault;
-            PSITopStatusText = (PSITopStatus == FaultStatus.Good) ? "Activated" : "Deactivated";
+            PsiTopStatus = (reg_SAFE_SETTINGS.disable_master_mode.Data < 3) ? FaultStatus.Good : FaultStatus.Fault;
+            PsiTopStatusText = (PsiTopStatus == FaultStatus.Good) ? "Activated" : "Deactivated";
 
             // Unsubscribe from event - by design can be fired only once
             caller.InitModeEntered -= InitModeEnteredHandler;

@@ -129,7 +129,7 @@
                                 Margin="10,2">
                             <Border.Background>
                                 <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
-                                    <Binding Path = "FLMFiringWithPSIStatus"/>
+                                    <Binding Path = "FlmFiringWithPsiStatus"/>
                                     <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
                                 </MultiBinding>
                             </Border.Background>
@@ -147,11 +147,11 @@
                                 Margin="4,2">
                             <Border.Background>
                                 <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
-                                    <Binding Path = "PSITopStatus"/>
+                                    <Binding Path = "PsiTopStatus"/>
                                     <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
                                 </MultiBinding>
                             </Border.Background>
-                            <TextBlock Text="{Binding PSITopStatusText, TargetNullValue='Deactivated'}" 
+                            <TextBlock Text="{Binding PsiTopStatusText, TargetNullValue='Deactivated'}" 
                                        HorizontalAlignment="Center" 
                                        TextAlignment="Center"
                                        Style="{DynamicResource TextBlockStyle}"
@@ -204,7 +204,7 @@
                                     Margin="10,3">
                                 <Border.Background>
                                     <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
-                                        <Binding Path = "PSIDataReceivedStatus"/>
+                                        <Binding Path = "PsiDataReceivedStatus"/>
                                         <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
                                     </MultiBinding>
                                 </Border.Background>
@@ -2555,6 +2555,12 @@
                                 HorizontalAlignment="Center"
                                 CornerRadius="5" 
                                 Margin="4,2">
+                            <Border.Background>
+                                <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
+                                    <Binding Path = "Uart2TopStatus"/>
+                                    <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
+                                </MultiBinding>
+                            </Border.Background>
                             <TextBlock  Text="UART 2" 
                                         HorizontalAlignment="Center" 
                                         VerticalAlignment="Center"
@@ -2572,11 +2578,11 @@
                                 Margin="4,2">
                             <Border.Background>
                                 <MultiBinding Converter = "{StaticResource FaultFlagToColorConverter}">
-                                    <Binding Path = "UARTTopStatus"/>
+                                    <Binding Path = "UartTopStatus"/>
                                     <Binding Path = "IsDarkTheme" Source="{StaticResource SharedThemeState}"/>
                                 </MultiBinding>
                             </Border.Background>
-                            <TextBlock Text="{Binding UARTTopStatusText, TargetNullValue='Deactivated'}" 
+                            <TextBlock Text="{Binding UartTopStatusText, TargetNullValue='Deactivated'}" 
                                        HorizontalAlignment="Center" 
                                        Style="{DynamicResource TextBlockStyle}"
                                        TextAlignment="Center"
