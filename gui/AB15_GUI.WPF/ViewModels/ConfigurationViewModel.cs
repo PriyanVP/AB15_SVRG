@@ -978,10 +978,12 @@ namespace AB15_GUI.WPF.ViewModels
             if ((reg_PSI_Gen_Mask_Sync.psi_sync_gen.Data == 1) && (reg_PSI_Supply.psi_supply_on_ch1.Data == 1))
             {
                 SyncPulseGeneretingStatus = FaultStatus.Good;
+                _readPsiSensorDataCommand.Enable = true;
             }
             else
             {
                 SyncPulseGeneretingStatus = FaultStatus.Fault;
+                _readPsiSensorDataCommand.Enable = false;
             }
         }
 
@@ -1019,6 +1021,7 @@ namespace AB15_GUI.WPF.ViewModels
 
             // Update indicator
             SyncPulseGeneretingStatus = FaultStatus.Good;
+            _readPsiSensorDataCommand.Enable = true;
         }
 
         /// <summary>
@@ -1158,6 +1161,12 @@ namespace AB15_GUI.WPF.ViewModels
             PsiTopStatus = (reg_SAFE_SETTINGS.disable_master_mode.Data < 3) ? FaultStatus.Good : FaultStatus.Fault;
             PsiTopStatusText = (PsiTopStatus == FaultStatus.Good) ? "Activated" : "Deactivated";
 
+            // Enabling commands
+            _readPsiConfigurationCommand.Enable = true;
+            _resetPsiConfigurationCommand.Enable = true;
+            _readUartStatusCommand.Enable = true;
+            _setResetUartFramesCommand.Enable = true;
+
             // Unsubscribe from event - by design can be fired only once
             caller.InitModeEntered -= InitModeEnteredHandler;
         }
@@ -1178,8 +1187,12 @@ namespace AB15_GUI.WPF.ViewModels
             // Typecast sender to actual type
             IASIC caller = (IASIC) sender;
 
-            // Actual logic
-
+            // Enabling commands
+            _readPsiStatusCommand.Enable = true;
+            _readMonitorSpiStatusCommand.Enable = true;
+            _writePsiConfigurationCommand.Enable = true;
+            _readUartConfigurationCommand.Enable = false;
+            
             // Unsubscribe from event - by design can be fired only once
             caller.InitModeEntered -= NormalModeEnteredHandler;
         }
