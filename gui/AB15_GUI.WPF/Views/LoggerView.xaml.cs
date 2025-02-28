@@ -12,7 +12,7 @@ namespace AB15_GUI.WPF.Views;
 /// <summary>
 /// Interaction logic for LoggerWindow.xaml
 /// </summary>
-public partial class LoggerView : Window, INotifyPropertyChanged
+public partial class LoggerView : UserControl, INotifyPropertyChanged
 {
     /// <summary>
     /// Event to update bind properties in View

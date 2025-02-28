@@ -6,7 +6,7 @@
     <Image x:Key="FontSizeIncreaseIco" Source="../Resources/font_increase_light.png"/>
     <Image x:Key="AscendingSortIco" Source="../Resources/sort_ascending_light.png"/>
     <Image x:Key="DescendingSortIco" Source="../Resources/sort_descending_light.png"/>
-
+    
     <BitmapImage x:Key="Ico.Home" UriSource="../Resources/home_light.png"/>
     <BitmapImage x:Key="Ico.Config" UriSource="../Resources/config_light.png"/>
     <BitmapImage x:Key="Ico.Sensor" UriSource="../Resources/sensor_light.png"/>
@@ -17,6 +17,7 @@
     <BitmapImage x:Key="Ico.Zoom" UriSource="../Resources/zoom_light.png"/>
     <BitmapImage x:Key="Ico.Arrow.Up" UriSource="../Resources/align_up_arrow_light.png"/>
     <BitmapImage x:Key="Ico.Arrow.Down" UriSource="../Resources/align_down_arrow_light.png"/>
+    <BitmapImage x:Key="Ico.Maximize" UriSource="../Resources/maximize_light.png"/>
 
     <!--All colors defines-->
     <SolidColorBrush x:Key="UI.BackGround" Color="#fbfbfb"/>
@@ -1047,4 +1048,46 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <!--#region Expander-->
+    <Style TargetType="Expander">
+        <Setter Property="Background" Value="White" />
+        <Setter Property="Foreground" Value="Black" />
+    </Style>
+    
+    <Style x:Key="CaptionButtonStyle" TargetType="Button">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Width" Value="20" />
+        <Setter Property="Height" Value="20" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Margin" Value="0,0,0,0" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border
+                            BorderBrush="LightGray"
+                            BorderThickness="1"
+                            CornerRadius="5">
+                        <Grid x:Name="LayoutRoot" Background="Transparent">
+                            <Image
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Source="{DynamicResource Ico.Maximize}" />
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="LayoutRoot" Property="Background">
+                                <Setter.Value>
+                                    <SolidColorBrush Opacity="0.5" Color="White" />
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!--#endregion-->
+
 </ResourceDictionary>

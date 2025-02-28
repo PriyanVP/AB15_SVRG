@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 
 namespace AB15_GUI.WPF.Views
@@ -16,6 +17,8 @@ namespace AB15_GUI.WPF.Views
         {
             InitializeComponent();
         }
+
+        private Expander expander;
 
         /// <summary>
         /// Sitch betwen tabs from menu buttons
@@ -73,5 +76,51 @@ namespace AB15_GUI.WPF.Views
             }
 
         }
+
+        private void Button_Undock_Click(object sender, RoutedEventArgs e)
+        {
+            var loggerWindowName = "Logger Window";
+            var loggerWindowIsOpened = false;
+
+            expander = FindName("LoggerExpander") as Expander;
+
+            foreach (Window w in Application.Current.Windows)
+            {
+                if (w.Title == loggerWindowName)
+                {
+                    loggerWindowIsOpened = true;
+                    break;
+                }
+            }
+
+            if (!loggerWindowIsOpened)
+            {
+                expander.Visibility = Visibility.Collapsed;
+                FrameworkElement dockedWindowContent = (FrameworkElement)expander.Content;
+                expander.Content = null;
+
+                Window window = new()
+                {
+                    Content = dockedWindowContent,
+                    Tag = expander,
+                    Name = expander.Name,
+                    Title = loggerWindowName,
+                    Width = 800,
+                    Height = 450,
+                };
+
+                window.Closing += (s, e) =>
+                {
+                    Window windowToClose = (Window)s;
+                    Expander expanderItem = (Expander)windowToClose.Tag;
+
+                    expanderItem.Content = windowToClose.Content;
+                    expanderItem.Visibility = Visibility.Visible;
+                };
+
+                window.Show();
+            }
+        }
+
     }
 }

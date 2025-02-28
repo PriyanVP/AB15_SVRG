@@ -24,6 +24,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" MinHeight="20"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="auto" MinHeight="25"/>
             <RowDefinition Height="auto" MinHeight="20"/>
         </Grid.RowDefinitions>
 
@@ -338,8 +339,33 @@
             </Grid>
         </Grid>
 
+        <!--Logger panel group-->
+
+        <Expander Name="LoggerExpander" Grid.Row="2" IsExpanded="False" Width="Auto">
+            <Expander.Header>
+                <Grid Width="Auto">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Label
+                        Width="{Binding Path=ActualWidth, ElementName=LoggerExpander}"
+                        Content="Logger"
+                        Grid.Column="0"/>
+                    <Button
+                        Grid.Column="1"
+                        Margin="0,0,5,0"
+                        HorizontalAlignment="Left"
+                        Click="Button_Undock_Click"
+                        Style="{StaticResource CaptionButtonStyle}"
+                        ToolTip="Undock" />
+                </Grid>
+            </Expander.Header>
+            <local:LoggerView MaxHeight="200"/>
+        </Expander>
+
         <!--Bottom panel group-->
-        <Grid Grid.Row="2" Background="{DynamicResource BottonPanel.Background}">
+        <Grid Grid.Row="3" Background="{DynamicResource BottonPanel.Background}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="*"/>
