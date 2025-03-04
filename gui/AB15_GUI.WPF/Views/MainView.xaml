@@ -10,7 +10,7 @@
         mc:Ignorable="d"
         Title="Bosch AB15" 
         MinHeight="550" MinWidth="1200"
-        Height="650" Width="1000"
+        Height="720" Width="1200"
         Icon="Resources/bosch.ico"
         DataContext="{Binding MainViewModel, Source={StaticResource ViewModelLocator}}">
     <Window.Resources>
@@ -125,7 +125,6 @@
                     <RowDefinition Height="auto" MinHeight="20"/>
                     <RowDefinition Height="auto" MinHeight="20"/>
                     <RowDefinition Height="*"/>
-                    <RowDefinition Height="auto" MinHeight="20"/>
                 </Grid.RowDefinitions>
                 
                 <!--Menu size toggle button-->
@@ -339,33 +338,8 @@
             </Grid>
         </Grid>
 
-        <!--Logger panel group-->
-
-        <Expander Name="LoggerExpander" Grid.Row="2" IsExpanded="False" Width="Auto">
-            <Expander.Header>
-                <Grid Width="Auto">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <Label
-                        Width="{Binding Path=ActualWidth, ElementName=LoggerExpander}"
-                        Content="Logger"
-                        Grid.Column="0"/>
-                    <Button
-                        Grid.Column="1"
-                        Margin="0,0,5,0"
-                        HorizontalAlignment="Left"
-                        Click="Button_Undock_Click"
-                        Style="{StaticResource CaptionButtonStyle}"
-                        ToolTip="Undock" />
-                </Grid>
-            </Expander.Header>
-            <local:LoggerView MaxHeight="200"/>
-        </Expander>
-
         <!--Bottom panel group-->
-        <Grid Grid.Row="3" Background="{DynamicResource BottonPanel.Background}">
+        <Grid Grid.Row="2" Background="{DynamicResource BottonPanel.Background}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="*"/>
@@ -408,5 +382,29 @@
                 </Border>
             </StackPanel>
         </Grid>
+
+        <!--Logger panel group-->
+        <Expander Name="LoggerExpander" Grid.Row="3" IsExpanded="False" Width="Auto" MinHeight="0" MaxHeight="200">
+            <Expander.Header>
+                <Grid Width="Auto">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="30" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock
+                        Grid.Column="0"
+                        Style="{DynamicResource TextBlockStyle}"
+                        Width="{Binding Path=ActualWidth, ElementName=LoggerExpander}" Text="Logger" />
+                    <Button
+                        Grid.Column="1"
+                        HorizontalAlignment="Left"
+                        Click="Button_Undock_Click"
+                        Style="{StaticResource CaptionButtonStyle}"
+                        ToolTip="Undock" />
+                </Grid>
+            </Expander.Header>
+            <local:LoggerView />
+        </Expander>
+
     </Grid>
 </Window>

@@ -1,6 +1,8 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Media.Imaging;
 
 namespace AB15_GUI.WPF.Views
 {
@@ -79,48 +81,46 @@ namespace AB15_GUI.WPF.Views
 
         private void Button_Undock_Click(object sender, RoutedEventArgs e)
         {
-            var loggerWindowName = "Logger Window";
-            var loggerWindowIsOpened = false;
-
-            expander = FindName("LoggerExpander") as Expander;
-
-            foreach (Window w in Application.Current.Windows)
+            if ((expander = FindName("LoggerExpander") as Expander) != null)
             {
-                if (w.Title == loggerWindowName)
+                try
                 {
-                    loggerWindowIsOpened = true;
-                    break;
+                    var loggerWindowName = "Logger Window";
+                    var loggerWindowIcon = new BitmapImage(new Uri("pack://application:,,,/AB15_GUI.WPF;component/Views/Resources/bosch.ico"));
+
+                    expander.Visibility = Visibility.Collapsed;
+                    FrameworkElement dockedWindowContent = (FrameworkElement)expander.Content;
+                    expander.Content = null;
+
+                    Window window = new()
+                    {
+                        Content = dockedWindowContent,
+                        Icon = loggerWindowIcon,
+                        Tag = expander,
+                        Name = expander.Name,
+                        Title = loggerWindowName,
+                        Width = 800,
+                        Height = 450,
+                        MinWidth = 700,
+                        MinHeight = 300
+                    };
+
+                    window.Closing += (s, e) =>
+                    {
+                        Window windowToClose = (Window)s;
+                        Expander expanderItem = (Expander)windowToClose.Tag;
+
+                        expanderItem.Content = windowToClose.Content;
+                        expanderItem.Visibility = Visibility.Visible;
+                    };
+
+                    window.Show();
+                }
+                catch (Exception)
+                {
+                    // Protect the app of crashing by just not undocking the window
                 }
             }
-
-            if (!loggerWindowIsOpened)
-            {
-                expander.Visibility = Visibility.Collapsed;
-                FrameworkElement dockedWindowContent = (FrameworkElement)expander.Content;
-                expander.Content = null;
-
-                Window window = new()
-                {
-                    Content = dockedWindowContent,
-                    Tag = expander,
-                    Name = expander.Name,
-                    Title = loggerWindowName,
-                    Width = 800,
-                    Height = 450,
-                };
-
-                window.Closing += (s, e) =>
-                {
-                    Window windowToClose = (Window)s;
-                    Expander expanderItem = (Expander)windowToClose.Tag;
-
-                    expanderItem.Content = windowToClose.Content;
-                    expanderItem.Visibility = Visibility.Visible;
-                };
-
-                window.Show();
-            }
         }
-
     }
 }

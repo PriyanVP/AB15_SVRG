@@ -8,7 +8,7 @@
         xmlns:vlrls="clr-namespace:AB15_GUI.WPF.Views.Validations"
         mc:Ignorable="d"
         Name="LoggerWindow"
-        MinWidth="600" MinHeight="200"
+        MinWidth="680" MinHeight="200"
         DataContext="{Binding LoggerViewModel, Source={StaticResource ViewModelLocator}}">
     <UserControl.Resources>
         <cnvrt:CustomDateTimeConverter x:Key="CustomDateTimeConverter"/>
@@ -19,7 +19,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" MinHeight="10"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="auto" MinHeight="10"/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
@@ -45,18 +44,18 @@
                 <ColumnDefinition Width="5"/>
             </Grid.ColumnDefinitions>
 
-            <ToggleButton x:Name="SortingButton" Grid.Column="1" MinWidth="20" Click="SortingButton_Click" Style="{DynamicResource SortingToggleButtonStyle}"/>
+            <ToggleButton x:Name="SortingButton" Grid.Column="1" MinWidth="25" Click="SortingButton_Click" Style="{DynamicResource SortingToggleButtonStyle}"/>
 
-            <Button Grid.Column="3" MinWidth="20" 
+            <Button Grid.Column="3" MinWidth="25" 
                     Content="{DynamicResource FontSizeIncreaseIco}" 
                     Style="{DynamicResource DefaultButton}"
-                    Click="IncreaseFont_Click" Height="35"/>
-            <Button Grid.Column="4" MinWidth="20" 
+                    Click="IncreaseFont_Click" Height="25"/>
+            <Button Grid.Column="4" MinWidth="25"
                     Content="{DynamicResource FontSizeDecreaseIco}" 
                     Style="{DynamicResource DefaultButton}"
-                    Click="DecreaseFont_Click" Height="35"/>
+                    Click="DecreaseFont_Click" Height="25"/>
 
-            <TextBox Grid.Column="5" MinWidth="40" Style="{DynamicResource TextBoxStyle}" FontSize="20">
+            <TextBox Grid.Column="5" MinWidth="40" Style="{DynamicResource TextBoxStyle}" FontSize="20" Height="37">
                 <TextBox.Text>
                     <Binding Path="LogTableFontSize"
                              RelativeSource="{RelativeSource AncestorType={x:Type local:LoggerView}}"
@@ -177,20 +176,5 @@
             </ListView.ItemTemplate>
         </ListView>
 
-        <!--Bottom control panel-->
-        <Grid Grid.Row="2" Grid.Column="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="auto"/>
-            </Grid.ColumnDefinitions>
-
-            <TextBlock Text="GUI:" Grid.Column="0" Style="{DynamicResource TextBlockStyle}"/>
-            <TextBlock Text="01.00.00"  Grid.Column="1" Style="{DynamicResource TextBlockStyle}"/>
-            <TextBlock Text="MCU:" Grid.Column="2" Style="{DynamicResource TextBlockStyle}"/>
-            <TextBlock Text="01.00.00"  Grid.Column="3" Style="{DynamicResource TextBlockStyle}"/>
-
-        </Grid>
     </Grid>
 </UserControl>
