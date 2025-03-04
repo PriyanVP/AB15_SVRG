@@ -35,5 +35,26 @@ namespace AB15_GUI.WPF.Models
         {
             return (UInt16)((msb << 8) | lsb);
         }
+
+        /// <summary>
+        /// Create 32 bit word from a variable number of bytes (3-4)
+        /// </summary>
+        /// <param name="bytes">input values; msb to lsb, 3-4 values</param>
+        /// <returns>32 bit unsigned int constructed from bytes</returns>
+        public static uint ConstructWordFromBytes(params byte[] bytes)
+        {
+            if (bytes.Length < 3 || bytes.Length > 4)
+            {
+                throw new ArgumentException("ConstructWordFromBytes requires 3 to 4 bytes.");
+            }
+
+            uint result = 0;
+            for (int i = 0; i < bytes.Length; i++)
+            {
+                result |= (uint)(bytes[bytes.Length - i - 1] << (8 * i));
+            }
+
+            return result;
+        }
     }
 }
