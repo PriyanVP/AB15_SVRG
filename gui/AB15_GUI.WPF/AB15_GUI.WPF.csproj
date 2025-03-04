@@ -35,6 +35,7 @@
     <None Remove="Views\Resources\home_dark.png" />
     <None Remove="Views\Resources\home_light.png" />
     <None Remove="Views\Resources\maximize_light.png" />
+    <None Remove="Views\Resources\maximize_dark.png" />
     <None Remove="Views\Resources\menu_dark.png" />
     <None Remove="Views\Resources\menu_light.png" />
     <None Remove="Views\Resources\sensor_dark.png" />
