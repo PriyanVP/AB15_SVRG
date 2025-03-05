@@ -289,6 +289,4 @@ void CmdResetMCU(USBReceiveData const * const commandPackage)
     
     // Initiate reset of MCU
     IfxScuRcu_performReset(IfxScuRcu_ResetType_system, 0);
-    // Remain in endless loop untill MCU resets
-    while (TRUE);
 }
