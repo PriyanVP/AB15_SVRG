@@ -338,6 +338,10 @@ void core0_main(void)
                 CmdSendUartData(&cmdPackage);
                 break;
 
+            case USB_CMD_RESET_MCU:
+                CmdResetMCU(&cmdPackage);
+                break;
+
             /* Region: internal commands */
 
             case INT_CMD_ACK_WATCHDOG1:
