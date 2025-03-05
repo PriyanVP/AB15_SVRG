@@ -352,6 +352,7 @@
                         Style="{DynamicResource TextBlockStyle}"
                         Width="{Binding Path=ActualWidth, ElementName=LoggerExpander}" Text="Logger" Grid.ColumnSpan="3" Margin="2,0,-29,0" />
                     <Button
+                        Name="UndockLoggerButton"
                         Grid.Column="2"
                         HorizontalAlignment="Left"
                         Click="Button_Undock_Click"
