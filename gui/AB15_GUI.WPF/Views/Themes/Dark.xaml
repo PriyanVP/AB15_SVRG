@@ -17,6 +17,7 @@
     <BitmapImage x:Key="Ico.Zoom" UriSource="../Resources/zoom_dark.png"/>
     <BitmapImage x:Key="Ico.Arrow.Up" UriSource="../Resources/align_up_arrow_dark.png"/>
     <BitmapImage x:Key="Ico.Arrow.Down" UriSource="../Resources/align_down_arrow_dark.png"/>
+    <BitmapImage x:Key="Ico.Refresh" UriSource="../Resources/refresh_dark.png"/>    
     
     <!--All colors defines-->
     <SolidColorBrush x:Key="UI.BackGround" Color="#e4000000"/>
@@ -1069,4 +1070,11 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <!--#region RescanButtonImageStyle style define -->
+    <Style x:Key="RescanButtonImageStyle" TargetType="{x:Type Image}">
+        <Setter Property="Source" Value="{DynamicResource Ico.Refresh}"/>
+    </Style>
+    <!--#endregion-->
+
 </ResourceDictionary>

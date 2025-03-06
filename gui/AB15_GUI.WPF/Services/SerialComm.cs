@@ -67,9 +67,6 @@ public class SerialComm : ISerialComm
         // Event handler for DataReceived assignment
         _port.DataReceived += new SerialDataReceivedEventHandler(port_DataReceived);
 
-        // Connect COM port
-        ConnectCOMPort();
-
         logger.Trace("Finished SerialComm initialization");
     }
 
@@ -81,33 +78,61 @@ public class SerialComm : ISerialComm
     {
         logger.Trace($"Trying to connect MCU...");
 
-        // Attempt automatic port detection
-        string? detectedPortNumber = (ManualCOMPortName is null) ? (GetCOMPorts().LastOrDefault()) : (ManualCOMPortName);
-
         // Check if required port present
-        if (detectedPortNumber is null)
+        if (ManualCOMPortName is null)
         {
-            // Automatic connection was unsuccesfull, report in StatusPanel and log window
-            logger.Warn($"Automatic port detect hasn't found MCU");
+            // Connection was unsuccesfull, report in StatusPanel and log window
+            logger.Warn($"No port selected");
             return false;
         }
 
         // Seting up port for opening
         _port.Close();
-        _port.PortName = detectedPortNumber;
-        logger.Debug($"Found needed MCU port at {detectedPortNumber}");
+        _port.PortName = ManualCOMPortName;
+        logger.Debug($"Connecting to MCU at port {ManualCOMPortName}");
 
         // Try to open port
         try
         {
             _port.Open();
-            logger.Debug("Connected to MCU at " + detectedPortNumber);
+            logger.Debug("Connected to MCU at " + ManualCOMPortName);
             return true;
         }
         catch (Exception serEx)
         {
             logger.Warn(serEx, "Couldn't open port! Check if port is not busy!");
             logger.Warn($"Connection to MCU failed");
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Disconnect from USB COM port
+    /// </summary>
+    /// <returns>true if connected, false if failed</returns>
+    public bool DisconnectCOMPort()
+    {
+        logger.Trace($"Trying to disconnect MCU...");
+
+        // Check if required port present
+        if (ManualCOMPortName is null)
+        {
+            // Connection was unsuccesfull, report in StatusPanel and log window
+            logger.Warn($"No port selected");
+            return false;
+        }
+
+        // Try to close port
+        try
+        {
+            _port.Close();
+            logger.Debug("Disconnected from MCU at " + ManualCOMPortName);
+            return true;
+        }
+        catch (Exception serEx)
+        {
+            logger.Warn(serEx, "Couldn't close port!");
+            logger.Warn($"Disconnecting from MCU failed");
             return false;
         }
     }

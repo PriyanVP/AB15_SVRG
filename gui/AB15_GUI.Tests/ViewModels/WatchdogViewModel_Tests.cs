@@ -251,6 +251,8 @@ namespace AB15_GUI.Tests.ViewModels
 
             public bool ReconnectCOMPort() => throw new NotImplementedException();
 
+            public bool DicsonnectCOMPort() => throw new NotImplementedException();
+
             public bool RemoveWaitlistItem(int? msgID)
             {
                 WaitlistItemRemoved = true;

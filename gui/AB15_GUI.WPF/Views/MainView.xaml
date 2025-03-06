@@ -31,19 +31,13 @@
         <Grid Grid.Row="0" Background="{DynamicResource TopPanel.Background}">
             <!--Quick action menu control group-->
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="5"/>
                 <ColumnDefinition Width="auto" MinWidth="20"/>
-                <ColumnDefinition Width="5"/>
-                <ColumnDefinition Width="auto" MinWidth="20"/>
-                <ColumnDefinition Width="5"/>
                 <ColumnDefinition Width="auto" MinWidth="20"/>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="auto" MinWidth="20"/>
-                <ColumnDefinition Width="5"/>
             </Grid.ColumnDefinitions>
             
             <!--Save/Load menu-->
-            <Menu Grid.Column="1" FontSize="20">
+            <Menu Grid.Column="0" FontSize="20" Margin="5,0,0,0">
                 <MenuItem Template="{StaticResource VsMenuTop}" Header="File">
                     <MenuItem Command="{Binding RunLoadRegisterSetting}" Template="{StaticResource MenuSubItem}" Header="Load Register settings"/>
                     <MenuItem Command="{Binding RunSaveRegisterSetting}" Template="{StaticResource MenuSubItem}" Header="Save Register settings"/>
@@ -51,7 +45,7 @@
             </Menu>
             
             <!--Links menu-->
-            <Menu Grid.Column="3" FontSize="20">
+            <Menu Grid.Column="1" FontSize="20" Margin="5,0,0,0">
                 <MenuItem Template="{StaticResource VsMenuTop}" Header="More" >
                     <MenuItem Command="{Binding OpenDocumantation}" 
                               Template="{StaticResource MenuSubItem}" Header="AB15 Documantation"/>
@@ -67,6 +61,59 @@
                               Template="{StaticResource MenuSubItem}" Header="Sensor details"/>
                 </MenuItem>
             </Menu>
+
+            <!--Manual Connection-->
+            <Grid Grid.Column="2" Background="{DynamicResource TopPanel.Background}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock  Grid.Column="0"
+                            FontSize="16"
+                            Margin="0,3,5,0"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Right"
+                            Text="Port:"
+                            Style="{DynamicResource CustomTextBlock}"/>
+                
+                <ComboBox   Grid.Column="1"
+                            Name="ConnectionsMenu"
+                            HorizontalAlignment="Right"
+                            IsEnabled="True"
+                            Height="26"
+                            Width="100"
+                            Margin="0,0,5,0"
+                            ToolTip="Available Ports"
+                            ItemsSource="{Binding AvailableCommPorts}"
+                            FontSize="16"
+                            SelectedValue="{Binding Path=SelectedCommPort}" />
+                
+                <Button     Grid.Column="2"
+                            Style="{DynamicResource SimpleButton}"
+                            Command="{Binding RescanCOmmPortsCommand}"
+                            Height="25"
+                            Width="25"
+                            ToolTip="Re-scan"
+                            Margin="0,0,5,0" >
+                    <Image Style="{DynamicResource RescanButtonImageStyle}" />
+                </Button>
+
+                <Button     Grid.Column="3"
+                            Style="{DynamicResource SimpleButton}"
+                            Command="{Binding CommPortConnectCommand}"
+                            IsEnabled="{Binding CommPortAvaiable}"
+                            Content="Connect"
+                            FontSize="16"
+                            FontWeight="Bold"
+                            Height="26"
+                            Width="100"
+                            ToolTip="Connect to the selected Comm port"
+                            Margin="10,0,15,0" />
+
+            </Grid>
         </Grid>
 
         <!--Middle panel group-->

@@ -304,6 +304,15 @@ public class SerialWrapper : IDisposable, ISerialWrapper
     }
 
     /// <summary>
+    /// Dicsonnect from USB COM port
+    /// </summary>
+    /// <returns>true if disconnected, false if failed</returns>
+    public bool DicsonnectCOMPort()
+    {
+        return _serialPort.DisconnectCOMPort();
+    }
+
+    /// <summary>
     /// Get task instance from waitlist by ID
     /// To be used for continuous communication (few answers on one request)
     /// </summary>

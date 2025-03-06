@@ -37,6 +37,12 @@ namespace AB15_GUI.WPF.Services.Interfaces
         bool ReconnectCOMPort();
 
         /// <summary>
+        /// Dicsonnect from USB COM port
+        /// </summary>
+        /// <returns>true if disconnected, false if failed</returns>
+        bool DicsonnectCOMPort();
+
+        /// <summary>
         /// Get task instance from waitlist by ID
         /// To be used for continuous communication (few answers on one request)
         /// </summary>
