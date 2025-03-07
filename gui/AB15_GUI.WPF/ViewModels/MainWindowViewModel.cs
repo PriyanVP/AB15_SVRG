@@ -3,12 +3,10 @@ using AB15_GUI.WPF.Views;
 using AB15_GUI.WPF.NLog;
 using AB15_GUI.WPF.Models;
 using AB15_GUI.WPF.Models.Interfaces;
-using System.Collections.Generic;
 using AB15_GUI.WPF.Services.Interfaces;
-using System;
 using System.Windows.Input;
-using AB15_GUI.WPF.Services;
 using System.Linq;
+using System.Collections.ObjectModel;
 
 namespace AB15_GUI.WPF.ViewModels
 {
@@ -82,34 +80,19 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// The list of available comm ports
         /// </summary>
-        private List<string> availableCommPorts;
-        public List<string> AvailableCommPorts
+        private ObservableCollection<string> availableCommPorts;
+        public ObservableCollection<string> AvailableCommPorts
         {
             get => availableCommPorts;
             set
             {
                 availableCommPorts = value;
                 OnPropertyChanged();
-
-                if ( (availableCommPorts != null)
-                  && (availableCommPorts.Count > 0))
-                {
-                    CommPortAvaiable = true;
-
-                    if (string.IsNullOrEmpty(SelectedCommPort))
-                    {
-                        SelectedCommPort = availableCommPorts.FirstOrDefault();
-                    }
-                }
-                else
-                {
-                    CommPortAvaiable = false;
-                }
             }
         }
 
         /// <summary>
-        /// The selected comm port
+        /// The selected comm port from the drop down menu
         /// </summary>
         private string selectedCommPort;
         public string SelectedCommPort
@@ -119,6 +102,15 @@ namespace AB15_GUI.WPF.ViewModels
             {
                 selectedCommPort = value;
                 OnPropertyChanged();
+
+                if (SelectedCommPort == SerialWrapper.ManualComPortName)
+                {
+                    IsSelectedPortDisplayed = true;
+                }
+                else
+                {
+                    IsSelectedPortDisplayed = false;
+                }
             }
         }
 
@@ -146,6 +138,21 @@ namespace AB15_GUI.WPF.ViewModels
             set
             {
                 isCommPortConnected = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// True if the currently displayed comm port in the drop down menu is the 
+        /// same as the connected one, used to show "Reconnect" instead of "Connect"
+        /// </summary>
+        private bool isSelectedPortDisplayed;
+        public bool IsSelectedPortDisplayed
+        {
+            get => isSelectedPortDisplayed;
+            set
+            {
+                isSelectedPortDisplayed = value;
                 OnPropertyChanged();
             }
         }
@@ -196,7 +203,8 @@ namespace AB15_GUI.WPF.ViewModels
             loggerWindowView.Show();
 
             SerialWrapper = serialWrapper;
-            AvailableCommPorts = SerialWrapper.AvailableCOMPorts;
+            AvailableCommPorts = new ObservableCollection<string>(SerialWrapper.AvailableCOMPorts);
+            UpdateAvailableAndSelectedCommPort();
 
             // TODO: remove temporary code - should be on other page
             // Trigger ASIC reset + start ASIC state reading
@@ -218,18 +226,61 @@ namespace AB15_GUI.WPF.ViewModels
                     SerialWrapper.ManualComPortName = SelectedCommPort;
                 }
                 IsCommPortConnected = SerialWrapper.ReconnectCOMPort();
+
+                // TEST START
+                IsCommPortConnected = true;
+                // TEST END
+
+                if (IsCommPortConnected)
+                {
+                    IsSelectedPortDisplayed = true;
+                }
             }
         }
 
-        private RelayCommand rescanCOmmPortsCommand;
-        public ICommand RescanCOmmPortsCommand => rescanCOmmPortsCommand ??= new RelayCommand(RescanCOmmPorts);
-
-        private void RescanCOmmPorts(object commandParameter)
+        /// <summary>
+        /// Used to re-scan the list of the avaiable comm ports
+        /// </summary>
+        private RelayCommand rescanCommPortsCommand;
+        public ICommand RescanCommPortsCommand => rescanCommPortsCommand ??= new RelayCommand(RescanCommPorts);
+        private void RescanCommPorts(object commandParameter)
         {
-            AvailableCommPorts = SerialWrapper.AvailableCOMPorts;
+            //AvailableCommPorts = SerialWrapper.AvailableCOMPorts;
+            // TEST START
+            if (AvailableCommPorts.Count == 0)
+            {
+                AvailableCommPorts = new ObservableCollection<string>() { "Comm1", "Comm2", "Comm3", "Comm4" };
+            }
+            else
+            {
+                AvailableCommPorts.Remove(AvailableCommPorts[AvailableCommPorts.Count-1]);
+            }
+            // TEST END
+            UpdateAvailableAndSelectedCommPort();
+        }
 
-            // TEST
-            AvailableCommPorts = new List<string>() { "Comm1", "Comm2", "Comm3" };
+        // Helper methods
+
+        /// <summary>
+        /// Used to update CommPortAvaiable flag if the list of commports is not empty
+        /// and SelectedCommPort if it is not initialized or is removed from the list
+        /// </summary>
+        private void UpdateAvailableAndSelectedCommPort()
+        {
+            if ((availableCommPorts != null)
+                && (availableCommPorts.Count > 0))
+            {
+                CommPortAvaiable = true;
+
+                if (string.IsNullOrEmpty(SelectedCommPort))
+                {
+                    SelectedCommPort = availableCommPorts.FirstOrDefault();
+                }
+            }
+            else
+            {
+                CommPortAvaiable = false;
+            }
         }
     }
 }
