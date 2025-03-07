@@ -34,7 +34,7 @@ namespace AB15_GUI.WPF.Services.Interfaces
         /// Reconnect to USB COM port
         /// </summary>
         /// <returns>true if connected, false if failed</returns>
-        bool ReconnectCOMPort();
+        bool ConnectCOMPort();
 
         /// <summary>
         /// Dicsonnect from USB COM port

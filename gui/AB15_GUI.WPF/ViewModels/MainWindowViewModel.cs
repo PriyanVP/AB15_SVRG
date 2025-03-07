@@ -103,7 +103,7 @@ namespace AB15_GUI.WPF.ViewModels
                 selectedCommPort = value;
                 OnPropertyChanged();
 
-                if (SelectedCommPort == SerialWrapper.ManualComPortName)
+                if (SelectedCommPort == this.serialWrapper.ManualComPortName)
                 {
                     IsSelectedPortDisplayed = true;
                 }
@@ -168,6 +168,11 @@ namespace AB15_GUI.WPF.ViewModels
         private readonly IASICWrapper asicWrapper;
 
         /// <summary>
+        /// Watchdog page instance
+        /// </summary>
+        public ISerialWrapper serialWrapper { get; private set; }
+
+        /// <summary>
         /// Logger window instance
         /// </summary>
         public LoggerViewModel LoggerViewModel { get; private set; }
@@ -177,10 +182,6 @@ namespace AB15_GUI.WPF.ViewModels
         /// </summary>
         public WatchdogViewModel WatchdogViewModel { get; private set; }
 
-        /// <summary>
-        /// Watchdog page instance
-        /// </summary>
-        public ISerialWrapper SerialWrapper { get; private set; }
 
         /// <summary>
         /// Constructor
@@ -202,14 +203,9 @@ namespace AB15_GUI.WPF.ViewModels
             logger.Trace("In MainViewModel");
             loggerWindowView.Show();
 
-            SerialWrapper = serialWrapper;
-            AvailableCommPorts = new ObservableCollection<string>(SerialWrapper.AvailableCOMPorts);
+            this.serialWrapper = serialWrapper;
+            AvailableCommPorts = new ObservableCollection<string>(this.serialWrapper.AvailableCOMPorts);
             UpdateAvailableAndSelectedCommPort();
-
-            // TODO: remove temporary code - should be on other page
-            // Trigger ASIC reset + start ASIC state reading
-            this.asicWrapper.EstablishConnectionAsync();              // TODO: uncomment for testing
-            this.asicWrapper.StartInitModeTimeoutResetting();
         }
 
         // Commands
@@ -220,12 +216,25 @@ namespace AB15_GUI.WPF.ViewModels
         {
             if (SelectedCommPort != null)
             {
-                if (SelectedCommPort != SerialWrapper.ManualComPortName)
+                // If try to connect to another port, first close the currently connected one
+                if (SelectedCommPort != this.serialWrapper.ManualComPortName)
                 {
-                    SerialWrapper.DicsonnectCOMPort();
-                    SerialWrapper.ManualComPortName = SelectedCommPort;
+                    this.serialWrapper.DicsonnectCOMPort();
+                    serialWrapper.ManualComPortName = SelectedCommPort;
                 }
-                IsCommPortConnected = SerialWrapper.ReconnectCOMPort();
+                else
+                {
+                    // Before the reconnect reset the MCU
+                    if (IsCommPortConnected)
+                    {
+                        ResetMcu();
+
+                        //TODO add wait
+                    }
+                }
+
+                // Connect to the selected comm port
+                IsCommPortConnected = serialWrapper.ConnectCOMPort();
 
                 // TEST START
                 IsCommPortConnected = true;
@@ -233,7 +242,13 @@ namespace AB15_GUI.WPF.ViewModels
 
                 if (IsCommPortConnected)
                 {
+                    // Update the flag to change the button text from Connect to Reconnect
                     IsSelectedPortDisplayed = true;
+
+                    // TODO: remove temporary code - should be on other page
+                    // Trigger ASIC reset + start ASIC state reading
+                    this.asicWrapper.EstablishConnectionAsync();              // TODO: uncomment for testing
+                    this.asicWrapper.StartInitModeTimeoutResetting();
                 }
             }
         }
@@ -282,5 +297,26 @@ namespace AB15_GUI.WPF.ViewModels
                 CommPortAvaiable = false;
             }
         }
+
+        /// <summary>
+        /// Execute reset mcu command
+        /// </summary>
+        private async void ResetMcu()
+        {
+            logger.Debug($"Reseting MCU");
+
+            // Create package to MCU
+            TransmitCommunicationPackage<EmptyPayload> packageToSend = new TransmitCommunicationPackage<EmptyPayload>();
+            packageToSend.ASICID = 1; //TODO
+            packageToSend.Cmd = MCUCommand.RESET_MCU;
+            packageToSend.PayloadType = typeof(EmptyPayload);
+
+            // Send command to MCU
+            ReceiveCommunicationPackage<EmptyPayload>? mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>?)await this.serialWrapper.SerialWriteAsync(packageToSend);
+
+            // Validate response
+            IsResponseValid(mcuResponse, nameof(ResetMcu));
+        }
+
     }
 }

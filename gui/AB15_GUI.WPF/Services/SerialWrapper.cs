@@ -298,7 +298,7 @@ public class SerialWrapper : IDisposable, ISerialWrapper
     /// Reconnect to USB COM port
     /// </summary>
     /// <returns>true if connected, false if failed</returns>
-    public bool ReconnectCOMPort()
+    public bool ConnectCOMPort()
     {
         return _serialPort.ConnectCOMPort();
     }
