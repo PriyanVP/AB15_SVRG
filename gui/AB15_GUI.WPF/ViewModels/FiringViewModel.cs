@@ -1774,10 +1774,10 @@ namespace AB15_GUI.WPF.ViewModels
             packageToSend.Payload.Data.Add(reg_FLM_Diag_Start.Data);
 
             // Send command to MCU and wait for response
-            ReceiveCommunicationPackage<EmptyPayload>? mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
+            ReceiveCommunicationPackage<EmptyPayload>? mcuResponse1 = (ReceiveCommunicationPackage<EmptyPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
 
             // Validate response
-            if (IsResponseValid(mcuResponse, null) == false) return;
+            if (IsResponseValid(mcuResponse1, null) == false) return;
 
             await Task.Delay(10);
 
@@ -1815,10 +1815,10 @@ namespace AB15_GUI.WPF.ViewModels
             packageToSend.Payload.Data.Add(reg_FLM_Diag_Start.Data);
 
             // Send command to MCU and wait for response
-            mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
+            ReceiveCommunicationPackage<EmptyPayload>? mcuResponse3 = (ReceiveCommunicationPackage<EmptyPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
 
             // Validate response
-            if (IsResponseValid(mcuResponse, null) == false) return;
+            if (IsResponseValid(mcuResponse3, null) == false) return;
 
             await Task.Delay(10);
 
@@ -1831,18 +1831,43 @@ namespace AB15_GUI.WPF.ViewModels
             packageToSend2.Payload.Address.Add(new Reg_FLM_Read_Coupling_s2x_ch20_17().Address);
 
             // Send command to MCU and wait for response
-            mcuResponse2 = (ReceiveCommunicationPackage<AddressDataPayload>?) await serialWrapper.SerialWriteAsync(packageToSend2);
+            ReceiveCommunicationPackage<AddressDataPayload>? mcuResponse4 = (ReceiveCommunicationPackage<AddressDataPayload>?) await serialWrapper.SerialWriteAsync(packageToSend2);
 
             // Validate response
-            if (IsResponseValid(mcuResponse2, null) == true) 
+            if (IsResponseValid(mcuResponse4, null) == true) 
             {
                 // Report results
-                uint crossCouplingErrorFlags = (uint) (mcuResponse2.Payload.Data[1] << 16) | mcuResponse2.Payload.Data[0];
+                uint crossCouplingErrorFlags = (uint) (mcuResponse4.Payload.Data[1] << 16) | mcuResponse4.Payload.Data[0];
                 FiringDiagnosticsDataObj.UnpackCrossCouplingData(crossCouplingErrorFlags);
                 OnPropertyChanged(nameof(FiringDiagnosticsDataObj));
             }
 
             // == Run Capacity Test ==
+            // Configure parameters for diagnostic
+            Reg_FLM_Diag_Setting1 reg_FLM_Diag_Setting1 = new Reg_FLM_Diag_Setting1();
+            reg_FLM_Diag_Setting1.Data = 0x0;
+            reg_FLM_Diag_Setting1.flm_diag_cap_time_min.Data = 0x0;
+
+            Reg_FLM_Diag_Setting2 reg_FLM_Diag_Setting2 = new Reg_FLM_Diag_Setting2();
+            reg_FLM_Diag_Setting2.Data = 0x0;
+            reg_FLM_Diag_Setting2.flm_diag_cap_time_max.Data = 0x19;
+
+            // Send settings to MCU
+            packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
+            packageToSend.ASICID = 1;
+            packageToSend.Cmd = MCUCommand.EXECUTE_WRITE_SEQUENCE;
+            packageToSend.PayloadType = typeof(EmptyPayload);
+            packageToSend.Payload.Address.Add(reg_FLM_Diag_Setting1.Address);
+            packageToSend.Payload.Data.Add(reg_FLM_Diag_Setting1.Data);
+            packageToSend.Payload.Address.Add(reg_FLM_Diag_Setting2.Address);
+            packageToSend.Payload.Data.Add(reg_FLM_Diag_Setting2.Data);
+
+            // Send command to MCU and wait for response
+            ReceiveCommunicationPackage<EmptyPayload>? mcuResponse5_1 = (ReceiveCommunicationPackage<EmptyPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
+
+            // Validate response
+            if (IsResponseValid(mcuResponse5_1, null) == false) return;
+
             // Configure diagnostics register
             reg_FLM_Diag_Start.flm_diag_start.Data = 0x1;
             reg_FLM_Diag_Start.flm_diag_mode.Data = reg_FLM_Diag_Start.flm_diag_mode.EnumeratedValues["igx_cap_all"];
@@ -1856,10 +1881,10 @@ namespace AB15_GUI.WPF.ViewModels
             packageToSend.Payload.Data.Add(reg_FLM_Diag_Start.Data);
 
             // Send command to MCU and wait for response
-            mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
+            ReceiveCommunicationPackage<EmptyPayload>? mcuResponse5 = (ReceiveCommunicationPackage<EmptyPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
 
             // Validate response
-            if (IsResponseValid(mcuResponse, null) == false) return;
+            if (IsResponseValid(mcuResponse5, null) == false) return;
 
             await Task.Delay(10);
 
@@ -1872,13 +1897,13 @@ namespace AB15_GUI.WPF.ViewModels
             packageToSend2.Payload.Address.Add(new Reg_FLM_Read_Cap_Detect_ch20_17().Address);
 
             // Send command to MCU and wait for response
-            mcuResponse2 = (ReceiveCommunicationPackage<AddressDataPayload>?) await serialWrapper.SerialWriteAsync(packageToSend2);
+            ReceiveCommunicationPackage<AddressDataPayload>? mcuResponse6 = (ReceiveCommunicationPackage<AddressDataPayload>?) await serialWrapper.SerialWriteAsync(packageToSend2);
 
             // Validate response
-            if (IsResponseValid(mcuResponse2, null) == true) 
+            if (IsResponseValid(mcuResponse6, null) == true) 
             {
                 // Report results
-                uint capacityTestErrorFlags = (uint) (mcuResponse2.Payload.Data[1] << 16) | mcuResponse2.Payload.Data[0];
+                uint capacityTestErrorFlags = (uint) (mcuResponse6.Payload.Data[1] << 16) | mcuResponse6.Payload.Data[0];
                 FiringDiagnosticsDataObj.UnpackCapacityTestData(capacityTestErrorFlags);
                 OnPropertyChanged(nameof(FiringDiagnosticsDataObj));
             }
