@@ -735,16 +735,13 @@ namespace AB15_GUI.WPF.ViewModels
             // UI elements help messages
         }
 
-        // TODO: add handling for Monitoring page tables
-        // TODO: periodic reading/update of status table
-
         /// <summary>
         /// Init messages for status table on monitoring page
         /// </summary>
         private void InitMonitoringStatusTable()
         {
             FiringMonitoringStatusTable.Add(new FiringCriteriaRecord() { Criteria = "ASIC mode", Status = ""});
-            FiringMonitoringStatusTable.Add(new FiringCriteriaRecord() { Criteria = "LSENQ/DIS_ALP", Status = ""});
+            FiringMonitoringStatusTable.Add(new FiringCriteriaRecord() { Criteria = "DIS_ALP", Status = ""});
         }
 
         /// <summary>
@@ -753,7 +750,7 @@ namespace AB15_GUI.WPF.ViewModels
         private void UpdateMonitoringStatusTable(ASICState state, bool isDisAlpPinOk)
         {
             FiringMonitoringStatusTable.First(x => x.Criteria == "ASIC mode").Status = state.ToString();
-            FiringMonitoringStatusTable.First(x => x.Criteria == "LSENQ/DIS_ALP").Status = (isDisAlpPinOk) ? ("OK") : ("NOT OK");
+            FiringMonitoringStatusTable.First(x => x.Criteria == "DIS_ALP").Status = (isDisAlpPinOk) ? ("OK") : ("NOT OK");
         }
 
         #endregion // Bindable_Properties
