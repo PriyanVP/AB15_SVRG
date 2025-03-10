@@ -27,6 +27,8 @@ namespace AB15_GUI.WPF.ViewModels
     /// </summary>
     public class MainViewModel : ViewModelBase
     {
+        #region Bindable_Properties
+
         /// <summary>
         /// PC status for view
         /// </summary>
@@ -158,6 +160,8 @@ namespace AB15_GUI.WPF.ViewModels
             }
         }
 
+        #endregion // Bindable_Properties
+
         /// <summary>
         /// Local logger instance
         /// </summary>
@@ -209,7 +213,8 @@ namespace AB15_GUI.WPF.ViewModels
             UpdateAvailableAndSelectedCommPort();
         }
 
-        // Commands
+        #region Commands
+
         private RelayCommand commPortConnectCommand;
         public ICommand CommPortConnectCommand => commPortConnectCommand ??= new RelayCommand(CommPortConnect);
 
@@ -237,10 +242,6 @@ namespace AB15_GUI.WPF.ViewModels
                 // Connect to the selected comm port
                 IsCommPortConnected = serialWrapper.ConnectCOMPort();
 
-                // TEST START
-                IsCommPortConnected = true;
-                // TEST END
-
                 if (IsCommPortConnected)
                 {
                     // Update the flag to change the button text from Connect to Reconnect
@@ -261,21 +262,14 @@ namespace AB15_GUI.WPF.ViewModels
         public ICommand RescanCommPortsCommand => rescanCommPortsCommand ??= new RelayCommand(RescanCommPorts);
         private void RescanCommPorts(object commandParameter)
         {
-            //AvailableCommPorts = SerialWrapper.AvailableCOMPorts;
-            // TEST START
-            if (AvailableCommPorts.Count == 0)
-            {
-                AvailableCommPorts = new ObservableCollection<string>() { "Comm1", "Comm2", "Comm3", "Comm4" };
-            }
-            else
-            {
-                AvailableCommPorts.Remove(AvailableCommPorts[AvailableCommPorts.Count-1]);
-            }
-            // TEST END
+            AvailableCommPorts = new ObservableCollection<string>(this.serialWrapper.AvailableCOMPorts);
+
             UpdateAvailableAndSelectedCommPort();
         }
 
-        // Helper methods
+        #endregion // Commands
+
+        #region Helper methods
 
         /// <summary>
         /// Used to update CommPortAvaiable flag if the list of commports is not empty
@@ -319,5 +313,6 @@ namespace AB15_GUI.WPF.ViewModels
             IsResponseValid(mcuResponse, nameof(ResetMcu));
         }
 
+        #endregion Helper methods
     }
 }
