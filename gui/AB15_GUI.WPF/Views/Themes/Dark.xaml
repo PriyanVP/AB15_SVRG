@@ -17,7 +17,8 @@
     <BitmapImage x:Key="Ico.Zoom" UriSource="../Resources/zoom_dark.png"/>
     <BitmapImage x:Key="Ico.Arrow.Up" UriSource="../Resources/align_up_arrow_dark.png"/>
     <BitmapImage x:Key="Ico.Arrow.Down" UriSource="../Resources/align_down_arrow_dark.png"/>
-    
+    <BitmapImage x:Key="Ico.Maximize" UriSource="../Resources/maximize_dark.png"/>
+   
     <!--All colors defines-->
     <SolidColorBrush x:Key="UI.BackGround" Color="#e4000000"/>
 
@@ -1069,4 +1070,41 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <!--#region Expander-->
+    <Style TargetType="Expander">
+        <Setter Property="Background" Value="{DynamicResource BottonPanel.Background}" />
+        <Setter Property="Foreground" Value="{DynamicResource Foreground.Default}" />
+    </Style>
+    
+    <Style x:Key="CaptionButtonStyle" TargetType="Button">
+        <Setter Property="Background" Value="{DynamicResource Button.Background.StandBy}" />
+        <Setter Property="Width" Value="25" />
+        <Setter Property="Height" Value="25" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border
+                            BorderBrush="{DynamicResource SimpleButton.BorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="5">
+                        <Grid x:Name="LayoutRoot" Background="{DynamicResource Button.Background.StandBy}">
+                            <Image
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Source="{DynamicResource Ico.Maximize}" />
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True" SourceName="LayoutRoot">
+                            <Setter TargetName="LayoutRoot" Property="Background" Value="{DynamicResource Button.Background.IsMouseOver}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!--#endregion-->
 </ResourceDictionary>

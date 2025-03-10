@@ -1,6 +1,4 @@
-﻿using System;
-using AB15_GUI.WPF.Views;
-using AB15_GUI.WPF.NLog;
+﻿using AB15_GUI.WPF.NLog;
 using AB15_GUI.WPF.Models;
 using AB15_GUI.WPF.Models.Interfaces;
 
@@ -84,11 +82,6 @@ namespace AB15_GUI.WPF.ViewModels
         private readonly IASICWrapper asicWrapper;
 
         /// <summary>
-        /// Logger window instance
-        /// </summary>
-        public LoggerViewModel LoggerViewModel { get; private set; }
-
-        /// <summary>
         /// Watchdog page instance
         /// </summary>
         public WatchdogViewModel WatchdogViewModel { get; private set; }
@@ -96,7 +89,7 @@ namespace AB15_GUI.WPF.ViewModels
         /// <summary>
         /// Constructor
         /// </summary>
-        public MainViewModel(ILoggingService logger, LoggerViewModel loggerViewModel, LoggerView loggerWindowView, WatchdogViewModel watchdogViewModel, IASICWrapper asicWrapper) :
+        public MainViewModel(ILoggingService logger, LoggerViewModel loggerViewModel, WatchdogViewModel watchdogViewModel, IASICWrapper asicWrapper) :
                 base(logger)
         {
             // Init Logger and logger view model
@@ -104,14 +97,12 @@ namespace AB15_GUI.WPF.ViewModels
             this.asicWrapper = asicWrapper;
 
             // Store references to child view models
-            LoggerViewModel = loggerViewModel;
             WatchdogViewModel = watchdogViewModel;
 
             // Dummy configuration TODO: refactor to final implementation when available
             var asicConfig = new DummyConfiguration(asicWrapper);
 
             logger.Trace("In MainViewModel");
-            loggerWindowView.Show();
 
             // TODO: remove temporary code - should be on other page
             // Trigger ASIC reset + start ASIC state reading
