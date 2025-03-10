@@ -105,9 +105,6 @@ namespace AB15_GUI.Regression.Requirements
         [NonParallelizable]
         public void WhenLoggerIsPromptedToOpen_ThenLoggerOpensSuccessfully()
         {
-            // TODO: add when functionality for opening logger will be available on main view
-            // TODO: 1) Should apply control action to open logger window (like button click)
-
             // Arrange
             if (mainView != null)
             {
