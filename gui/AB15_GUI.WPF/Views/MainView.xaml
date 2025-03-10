@@ -107,23 +107,40 @@
                             FontSize="16"
                             FontWeight="Normal"
                             Height="26"
-                            Width="100"
+                            Width="120"
                             ToolTip="Connect to the selected Comm port"
-                            Margin="10,0,15,0" >
-                    <Button.Style>
-                        <Style TargetType="Button" BasedOn="{StaticResource SimpleButton}">
-                            <Setter Property="Content" Value="Connect"/>
-                            <Style.Triggers>
-                                <MultiDataTrigger>
-                                    <MultiDataTrigger.Conditions>
-                                        <Condition Binding="{Binding Path=IsCommPortConnected}" Value="True" />
-                                        <Condition Binding="{Binding Path=IsSelectedPortDisplayed}" Value="True" />
-                                    </MultiDataTrigger.Conditions>
-                                    <Setter Property="Content" Value="Reconnect" />
-                                </MultiDataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Button.Style>
+                            Margin="10,0,15,0" 
+                            Style="{StaticResource SimpleButton}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Width="16" Height="16" Margin="0,1,10,0" >
+                            <Image.Style>
+                                <Style TargetType="Image" BasedOn="{StaticResource ConnectImageStyle}">
+                                    <Setter Property="Opacity" Value="1"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Path=CommPortAvaiable}" Value="False">
+                                            <Setter Property="Opacity" Value="0.5" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
+                        <TextBlock Name="ConnectButtonText" FontSize="16">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock" BasedOn="{StaticResource CustomTextBlock}">
+                                    <Setter Property="Text" Value="Connect"/>
+                                    <Style.Triggers>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding Path=IsCommPortConnected}" Value="True" />
+                                                <Condition Binding="{Binding Path=IsSelectedPortDisplayed}" Value="True" />
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Text" Value="Reconnect" />
+                                        </MultiDataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </StackPanel>
                 </Button>
             </Grid>
         </Grid>

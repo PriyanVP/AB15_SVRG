@@ -7,6 +7,7 @@ using AB15_GUI.WPF.Services.Interfaces;
 using System.Windows.Input;
 using System.Linq;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 namespace AB15_GUI.WPF.ViewModels
 {
@@ -229,7 +230,7 @@ namespace AB15_GUI.WPF.ViewModels
                     {
                         ResetMcu();
 
-                        //TODO add wait
+                        Task.WaitAll([Task.Delay(100)]);
                     }
                 }
 
@@ -254,7 +255,7 @@ namespace AB15_GUI.WPF.ViewModels
         }
 
         /// <summary>
-        /// Used to re-scan the list of the avaiable comm ports
+        /// Used to rescan the list of the avaiable comm ports
         /// </summary>
         private RelayCommand rescanCommPortsCommand;
         public ICommand RescanCommPortsCommand => rescanCommPortsCommand ??= new RelayCommand(RescanCommPorts);

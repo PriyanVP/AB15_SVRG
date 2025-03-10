@@ -28,6 +28,8 @@
     <None Remove="Views\Resources\chip_light.png" />
     <None Remove="Views\Resources\config_dark.png" />
     <None Remove="Views\Resources\config_light.png" />
+    <None Remove="Views\Resources\connect_dark.png" />
+    <None Remove="Views\Resources\connect_light.png" />
     <None Remove="Views\Resources\font_decrease_light.png" />
     <None Remove="Views\Resources\font_decrease_dark.png" />
     <None Remove="Views\Resources\font_increase_light.png" />
@@ -60,6 +62,8 @@
     <Resource Include="Views\Resources\chip_light.png" />
     <Resource Include="Views\Resources\config_dark.png" />
     <Resource Include="Views\Resources\config_light.png" />
+    <Resource Include="Views\Resources\connect_dark.png" />
+    <Resource Include="Views\Resources\connect_light.png" />
     <Resource Include="Views\Resources\font_decrease_light.png" />
     <Resource Include="Views\Resources\font_decrease_dark.png" />
     <Resource Include="Views\Resources\font_increase_light.png" />
