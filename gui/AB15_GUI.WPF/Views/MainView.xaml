@@ -10,20 +10,21 @@
         mc:Ignorable="d"
         Title="Bosch AB15" 
         MinHeight="550" MinWidth="1200"
-        Height="650" Width="1000"
+        Height="720" Width="1200"
         Icon="Resources/bosch.ico"
         DataContext="{Binding MainViewModel, Source={StaticResource ViewModelLocator}}">
     <Window.Resources>
         <cnvrt:FaultFlagToColorConverter x:Key="FaultFlagToColorConverter"/>
         <cnvrt:StatusToColorConverter x:Key="StatusToColorConverter"/>
     </Window.Resources>
-    
+
     <Grid Background="{DynamicResource UI.BackGround}">
-        
+
         <!--Main panels setup-->
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" MinHeight="20"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="auto" MinHeight="20"/>
         </Grid.RowDefinitions>
 
@@ -35,7 +36,7 @@
                 <ColumnDefinition Width="auto" MinWidth="20"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            
+
             <!--Save/Load menu-->
             <Menu Grid.Column="0" FontSize="20" Margin="5,0,0,0">
                 <MenuItem Template="{StaticResource VsMenuTop}" Header="File">
@@ -43,7 +44,7 @@
                     <MenuItem Command="{Binding RunSaveRegisterSetting}" Template="{StaticResource MenuSubItem}" Header="Save Register settings"/>
                 </MenuItem>
             </Menu>
-            
+
             <!--Links menu-->
             <Menu Grid.Column="1" FontSize="20" Margin="5,0,0,0">
                 <MenuItem Template="{StaticResource VsMenuTop}" Header="More" >
@@ -199,13 +200,12 @@
                     <RowDefinition Height="auto" MinHeight="20"/>
                     <RowDefinition Height="auto" MinHeight="20"/>
                     <RowDefinition Height="*"/>
-                    <RowDefinition Height="auto" MinHeight="20"/>
                 </Grid.RowDefinitions>
-                
+
                 <!--Menu size toggle button-->
                 <ToggleButton Style="{DynamicResource MenuToggleButtonTemplate}" IsChecked="True"
                               Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
-                    
+
                     <StackPanel Orientation="Horizontal">
                         <Image Source="{DynamicResource Ico.Menu}" 
                                Width="30" 
@@ -218,7 +218,7 @@
                         </Image>
                         <TextBlock Text="Menu" FontSize="20" Grid.Column="1" Style="{DynamicResource TextBlockStyle}"/>
                     </StackPanel>
-                    
+
                     <ToggleButton.Triggers>
                         <EventTrigger RoutedEvent="ToggleButton.Unchecked">
                             <BeginStoryboard>
@@ -277,7 +277,7 @@
 
                         <Image Source="{DynamicResource Ico.Zoom}" Margin="5,0" Width="30"/>
                         <TextBlock Text="SPI Learning" FontSize="20" Style="{DynamicResource TextBlockStyle}"/>
-                        
+
                     </StackPanel>
                 </ToggleButton>
 
@@ -289,7 +289,7 @@
 
                         <Image Source="{DynamicResource Ico.Watchdog}" Margin="5,0" Width="30"/>
                         <TextBlock Text="Watchdog" FontSize="20" Style="{DynamicResource TextBlockStyle}"/>
-                        
+
                     </StackPanel>
                 </ToggleButton>
 
@@ -301,7 +301,7 @@
 
                         <Image Source="{DynamicResource Ico.Airbag}" Margin="5,0" Width="30"/>
                         <TextBlock Text="Firing" FontSize="20" Style="{DynamicResource TextBlockStyle}"/>
-                        
+
                     </StackPanel>
                 </ToggleButton>
 
@@ -313,7 +313,7 @@
 
                         <Image Source="{DynamicResource Ico.Chip}" Margin="5,0" Width="30"/>
                         <TextBlock Text="AB15 Data" FontSize="20" Style="{DynamicResource TextBlockStyle}"/>
-                        
+
                     </StackPanel>
                 </ToggleButton>
 
@@ -325,7 +325,7 @@
 
                         <Image Source="{DynamicResource Ico.Sensor}" Margin="5,0" Width="30"/>
                         <TextBlock Text="Sensor" FontSize="20" Style="{DynamicResource TextBlockStyle}"/>
-                        
+
                     </StackPanel>
                 </ToggleButton>
 
@@ -337,7 +337,7 @@
 
                         <Image Source="{DynamicResource Ico.Config}" Margin="5,0" Width="30"/>
                         <TextBlock Text="Diagnostics" FontSize="20" Style="{DynamicResource TextBlockStyle}"/>
-                        
+
                     </StackPanel>
                 </ToggleButton>
 
@@ -413,27 +413,52 @@
             </Grid>
         </Grid>
 
+        <!--Logger panel group-->
+        <Expander Name="LoggerExpander" Grid.Row="2" IsExpanded="False" Width="Auto" MaxHeight="200">
+            <Expander.Header>
+                <Grid Width="Auto">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="4*" />
+                        <ColumnDefinition Width="123*"/>
+                        <ColumnDefinition Width="30" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock
+                        Grid.Column="0"
+                        Style="{DynamicResource TextBlockStyle}"
+                        Width="{Binding Path=ActualWidth, ElementName=LoggerExpander}" Text="Logger" Grid.ColumnSpan="3" Margin="2,0,-29,0" />
+                    <Button
+                        Name="UndockLoggerButton"
+                        Grid.Column="2"
+                        HorizontalAlignment="Left"
+                        Click="Button_Undock_Click"
+                        Style="{StaticResource CaptionButtonStyle}"
+                        ToolTip="Undock" Margin="0,3,0,3" />
+                </Grid>
+            </Expander.Header>
+            <local:LoggerView />
+        </Expander>
+
         <!--Bottom panel group-->
-        <Grid Grid.Row="2" Background="{DynamicResource BottonPanel.Background}">
+        <Grid Grid.Row="3" Background="{DynamicResource BottonPanel.Background}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
             <StackPanel Orientation="Horizontal" Grid.Column="0">
-                
+
                 <TextBlock Style="{DynamicResource TextBlockStyle}" Text="GUI:"/>
 
                 <!--Text="{Binding GUIVersion}"-->
                 <TextBlock Style="{DynamicResource TextBlockStyle}" MinWidth="20"
                            Text="01.00.00" Margin="0,0,15,0"/>
-                
+
                 <TextBlock Style="{DynamicResource TextBlockStyle}" Text="MCU:"/>
 
                 <!--Text="{Binding MCUVersion}"-->
                 <TextBlock Style="{DynamicResource TextBlockStyle}" MinWidth="20"
                            Text="01.00.00" Margin="0,0,15,0"/>
-                
+
                 <TextBlock Style="{DynamicResource TextBlockStyle}" Text="AB15:"/>
 
                 <!--Text="{Binding ASICID}"-->
@@ -457,5 +482,6 @@
                 </Border>
             </StackPanel>
         </Grid>
+
     </Grid>
 </Window>

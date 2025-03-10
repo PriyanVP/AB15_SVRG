@@ -36,6 +36,8 @@
     <None Remove="Views\Resources\font_increase_dark.png" />
     <None Remove="Views\Resources\home_dark.png" />
     <None Remove="Views\Resources\home_light.png" />
+    <None Remove="Views\Resources\maximize_light.png" />
+    <None Remove="Views\Resources\maximize_dark.png" />
     <None Remove="Views\Resources\menu_dark.png" />
     <None Remove="Views\Resources\menu_light.png" />
     <None Remove="Views\Resources\refresh_dark.png" />
@@ -70,6 +72,8 @@
     <Resource Include="Views\Resources\font_increase_dark.png" />
     <Resource Include="Views\Resources\home_dark.png" />
     <Resource Include="Views\Resources\home_light.png" />
+    <Resource Include="Views\Resources\maximize_dark.png" />
+    <Resource Include="Views\Resources\maximize_light.png" />
     <Resource Include="Views\Resources\menu_dark.png" />
     <Resource Include="Views\Resources\menu_light.png" />
     <Resource Include="Views\Resources\align_down_arrow_dark.png" />

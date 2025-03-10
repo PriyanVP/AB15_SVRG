@@ -62,8 +62,6 @@ namespace AB15_GUI.WPF
 
                             services.AddSingleton<MainView>();
 
-                            services.AddSingleton<LoggerView>();
-
                             #endregion // Views
 
                             #region Services

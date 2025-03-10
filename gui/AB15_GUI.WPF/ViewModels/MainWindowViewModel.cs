@@ -1,5 +1,4 @@
 ﻿using AB15_GUI.WPF.ViewModels.Commands;
-using AB15_GUI.WPF.Views;
 using AB15_GUI.WPF.NLog;
 using AB15_GUI.WPF.Models;
 using AB15_GUI.WPF.Models.Interfaces;
@@ -173,7 +172,7 @@ namespace AB15_GUI.WPF.ViewModels
         private readonly IASICWrapper asicWrapper;
 
         /// <summary>
-        /// Watchdog page instance
+        /// Serial Wrapper instance
         /// </summary>
         public ISerialWrapper serialWrapper { get; private set; }
 
@@ -187,11 +186,10 @@ namespace AB15_GUI.WPF.ViewModels
         /// </summary>
         public WatchdogViewModel WatchdogViewModel { get; private set; }
 
-
         /// <summary>
         /// Constructor
         /// </summary>
-        public MainViewModel(ILoggingService logger, LoggerViewModel loggerViewModel, LoggerView loggerWindowView, WatchdogViewModel watchdogViewModel, IASICWrapper asicWrapper, ISerialWrapper serialWrapper) :
+        public MainViewModel(ILoggingService logger, LoggerViewModel loggerViewModel, WatchdogViewModel watchdogViewModel, IASICWrapper asicWrapper, ISerialWrapper serialWrapper) :
                 base(logger)
         {
             // Init Logger and logger view model
@@ -206,7 +204,6 @@ namespace AB15_GUI.WPF.ViewModels
             var asicConfig = new DummyConfiguration(asicWrapper);
 
             logger.Trace("In MainViewModel");
-            loggerWindowView.Show();
 
             this.serialWrapper = serialWrapper;
             AvailableCommPorts = new ObservableCollection<string>(this.serialWrapper.AvailableCOMPorts);
