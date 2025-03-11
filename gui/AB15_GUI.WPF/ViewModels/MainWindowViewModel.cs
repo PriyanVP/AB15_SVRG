@@ -212,9 +212,11 @@ namespace AB15_GUI.WPF.ViewModels
 
         #region Commands
 
+        /// <summary>
+        /// Used to connect/reconnect to the selected COM port
+        /// </summary>
         private RelayCommand commPortConnectCommand;
         public ICommand CommPortConnectCommand => commPortConnectCommand ??= new RelayCommand(CommPortConnect);
-
         private void CommPortConnect(object commandParameter)
         {
             if (SelectedCommPort != null)
@@ -253,7 +255,7 @@ namespace AB15_GUI.WPF.ViewModels
         }
 
         /// <summary>
-        /// Used to rescan the list of the avaiable comm ports
+        /// Used to rescan the list of the avaiable COM ports
         /// </summary>
         private RelayCommand rescanCommPortsCommand;
         public ICommand RescanCommPortsCommand => rescanCommPortsCommand ??= new RelayCommand(RescanCommPorts);
@@ -299,7 +301,7 @@ namespace AB15_GUI.WPF.ViewModels
 
             // Create package to MCU
             TransmitCommunicationPackage<EmptyPayload> packageToSend = new TransmitCommunicationPackage<EmptyPayload>();
-            packageToSend.ASICID = 1; //TODO
+            packageToSend.ASICID = (int)DeviceIDs.SPI1_CS1MASTER; //TODO
             packageToSend.Cmd = MCUCommand.RESET_MCU;
             packageToSend.PayloadType = typeof(EmptyPayload);
 
