@@ -88,13 +88,13 @@
                             Width="100"
                             Margin="0,0,5,0"
                             ToolTip="Available Ports"
-                            ItemsSource="{Binding AvailableCommPorts}"
+                            ItemsSource="{Binding AvailableCOMPorts}"
                             FontSize="16"
-                            SelectedValue="{Binding Path=SelectedCommPort}" />
+                            SelectedValue="{Binding Path=SelectedCOMPort}" />
                 
                 <Button     Grid.Column="2"
                             Style="{DynamicResource SimpleButton}"
-                            Command="{Binding RescanCommPortsCommand}"
+                            Command="{Binding RescanCOMPortsCommand}"
                             Height="25"
                             Width="25"
                             ToolTip="Rescan the available com ports"
@@ -103,8 +103,8 @@
                 </Button>
 
                 <Button     Grid.Column="3"
-                            Command="{Binding CommPortConnectCommand}"
-                            IsEnabled="{Binding CommPortAvaiable}"
+                            Command="{Binding COMPortConnectCommand}"
+                            IsEnabled="{Binding COMPortAvaiable}"
                             FontSize="16"
                             FontWeight="Normal"
                             Height="26"
@@ -117,7 +117,7 @@
                                 <Style TargetType="Image" BasedOn="{StaticResource ConnectImageStyle}">
                                     <Setter Property="Opacity" Value="1"/>
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Path=CommPortAvaiable}" Value="False">
+                                        <DataTrigger Binding="{Binding Path=COMPortAvaiable}" Value="False">
                                             <Setter Property="Opacity" Value="0.5" />
                                         </DataTrigger>
                                     </Style.Triggers>
@@ -131,7 +131,7 @@
                                     <Style.Triggers>
                                         <MultiDataTrigger>
                                             <MultiDataTrigger.Conditions>
-                                                <Condition Binding="{Binding Path=IsCommPortConnected}" Value="True" />
+                                                <Condition Binding="{Binding Path=IsCOMPortConnected}" Value="True" />
                                                 <Condition Binding="{Binding Path=IsSelectedPortDisplayed}" Value="True" />
                                             </MultiDataTrigger.Conditions>
                                             <Setter Property="Text" Value="Reconnect" />
