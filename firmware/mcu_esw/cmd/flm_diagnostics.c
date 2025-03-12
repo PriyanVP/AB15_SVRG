@@ -46,7 +46,9 @@ typedef enum
     FLM_DIAG_ORDER_VHX_MEAS         = 2,        /** \brief VHx voltage measurement (all loops) */
     FLM_DIAG_ORDER_LOOP_RES_MEAS    = 3,        /** \brief Loop resistance measurement (all loops) */
     FLM_DIAG_ORDER_SQUIB_DET        = 4,        /** \brief Squib presence test (all loops) */
-    FLM_DIAG_ORDER_SAVE_RESULTS     = 5         /** \brief Save results of diagnostics into package for GUI */
+    DIAG_ORDER_FLM_SVRG_TST         = 5,        /** \brief SVRG test from FLM Diagnostics*/
+    DIAG_ORDER_SVRG_DIAG            = 6,        /** \brief SVRG diagnostic from SVRG module */
+    FLM_DIAG_ORDER_SAVE_RESULTS     = 7         /** \brief Save results of diagnostics into package for GUI */
 } FLMDiagExecOrderEnum;
 
 /** \brief Execution status of each diagnostic
@@ -130,6 +132,14 @@ void FLMLoopResDiag(void);
 /** \brief SPI-triggered test, must be set by FLM_diag_mode = Squib_pres_test_all and started FLM_DIAG_START = 1
  */
 void FLMSquibDetErrDiag(void);
+
+/** \brief SPI-triggered test, enabled by FML_diag_mode = SVRG_test and started FLM_DIAG_START = 1
+ */
+void DiagFLMSVRGTest(void);
+
+/** \brief  SVRG module test, configured and started by GUI, MCU only reads results (SVRG_STATUS reg)
+ */
+void DiagSVRGDiag(void);
 
 /** \brief Save diag results into package to be sent to GUI
  */
@@ -249,7 +259,8 @@ void IntCmdExecuteFLMDiag()
 {
     // Initial FLM Diagnostic execution state is initialised as Idle
     // and on later rounds updated from ASIC 
-    if (g_diagExecStatus != FLM_DIAG_EXEC_STATUS_IDLE)
+    if ((g_diagExecStatus != FLM_DIAG_EXEC_STATUS_IDLE) &&
+        (g_diagExecNumber != DIAG_ORDER_SVRG_DIAG)) // skip for non-FLM diag
     {
         FLMUpdateDiagExecStatus();
     }
@@ -288,6 +299,24 @@ void IntCmdExecuteFLMDiag()
 
     case FLM_DIAG_ORDER_SQUIB_DET:
         FLMSquibDetErrDiag();
+        if (g_diagExecStatus == FLM_DIAG_EXEC_STATUS_FINISHED)
+        {
+            // Move on to next diagnostic
+            g_diagExecNumber = DIAG_ORDER_FLM_SVRG_TST;
+        }
+        break;
+
+    case DIAG_ORDER_FLM_SVRG_TST:
+        DiagFLMSVRGTest();
+        if (g_diagExecStatus == FLM_DIAG_EXEC_STATUS_FINISHED)
+        {
+            // Move on to next diagnostic
+            g_diagExecNumber = DIAG_ORDER_SVRG_DIAG;
+        }
+        break;
+
+    case DIAG_ORDER_SVRG_DIAG:
+        DiagSVRGDiag();
         if (g_diagExecStatus == FLM_DIAG_EXEC_STATUS_FINISHED)
         {
             // Move on to next diagnostic
@@ -463,6 +492,16 @@ void FLMLoopResDiag()
         g_diagExecStatus = FLM_DIAG_EXEC_STATUS_FINISHED;
     }
 
+    return;
+}
+
+void DiagFLMSVRGTest()
+{
+    return;
+}
+
+void DiagSVRGDiag()
+{
     return;
 }
 
