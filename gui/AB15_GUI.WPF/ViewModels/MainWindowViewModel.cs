@@ -29,9 +29,13 @@ namespace AB15_GUI.WPF.ViewModels
         #region Bindable_Properties
 
         /// <summary>
-        /// PC status for view
+        /// <inheritdoc cref="ConnectionStatusPC" path='/summary'/>
         /// </summary>
         private UIConnectionStatus connectionStatusPC;
+
+        /// <summary>
+        /// PC status for view
+        /// </summary>
         public UIConnectionStatus ConnectionStatusPC
         {
             get => connectionStatusPC;
@@ -46,9 +50,13 @@ namespace AB15_GUI.WPF.ViewModels
         }
 
         /// <summary>
-        /// MCU status for view
+        /// <inheritdoc cref="ConnectionStatusMCU" path='/summary'/>
         /// </summary>
         private UIConnectionStatus connectionStatusMCU;
+
+        /// <summary>
+        /// MCU status for view
+        /// </summary>
         public UIConnectionStatus ConnectionStatusMCU
         {
             get => connectionStatusMCU;
@@ -63,9 +71,13 @@ namespace AB15_GUI.WPF.ViewModels
         }
 
         /// <summary>
-        /// AB status for view
+        /// <inheritdoc cref="ConnectionStatusAB" path='/summary'/>
         /// </summary>
         private UIConnectionStatus connectionStatusAB;
+
+        /// <summary>
+        /// AB status for view
+        /// </summary>
         public UIConnectionStatus ConnectionStatusAB
         {
             get => connectionStatusAB;
@@ -80,9 +92,13 @@ namespace AB15_GUI.WPF.ViewModels
         }
 
         /// <summary>
-        /// The list of available comm ports
+        /// <inheritdoc cref="AvailableCOMPorts" path='/summary'/>
         /// </summary>
         private ObservableCollection<string> availableCOMPorts;
+
+        /// <summary>
+        /// Observable collection of available comm ports
+        /// </summary>
         public ObservableCollection<string> AvailableCOMPorts
         {
             get => availableCOMPorts;
@@ -94,9 +110,13 @@ namespace AB15_GUI.WPF.ViewModels
         }
 
         /// <summary>
-        /// The selected comm port from the drop down menu
+        /// <inheritdoc cref="SelectedCOMPort" path='/summary'/>
         /// </summary>
         private string selectedCOMPort;
+
+        /// <summary>
+        /// The selected comm port from the drop down menu
+        /// </summary>
         public string SelectedCOMPort
         {
             get => selectedCOMPort;
@@ -117,9 +137,13 @@ namespace AB15_GUI.WPF.ViewModels
         }
 
         /// <summary>
-        /// There is at least one comm port avaiable
+        /// <inheritdoc cref="COMPortAvaiable" path='/summary'/>
         /// </summary>
         private bool comPortAvaiable;
+
+        /// <summary>
+        /// True if there is at least one comm port avaiable
+        /// </summary>
         public bool COMPortAvaiable
         {
             get => comPortAvaiable;
@@ -131,9 +155,13 @@ namespace AB15_GUI.WPF.ViewModels
         }
 
         /// <summary>
-        /// Connected to a comm port
+        /// <inheritdoc cref="IsCOMPortConnected" path='/summary'/>
         /// </summary>
         private bool isCOMPortConnected;
+
+        /// <summary>
+        /// True when connected to a comm port
+        /// </summary>
         public bool IsCOMPortConnected
         {
             get => isCOMPortConnected;
@@ -145,10 +173,14 @@ namespace AB15_GUI.WPF.ViewModels
         }
 
         /// <summary>
+        /// <inheritdoc cref="IsSelectedPortDisplayed" path='/summary'/>
+        /// </summary>
+        private bool isSelectedPortDisplayed;
+
+        /// <summary>
         /// True if the currently displayed comm port in the drop down menu is the 
         /// same as the connected one, used to show "Reconnect" instead of "Connect"
         /// </summary>
-        private bool isSelectedPortDisplayed;
         public bool IsSelectedPortDisplayed
         {
             get => isSelectedPortDisplayed;
@@ -218,11 +250,18 @@ namespace AB15_GUI.WPF.ViewModels
         #region Commands
 
         /// <summary>
-        /// Used to connect/reconnect to the selected COM port
+        /// <inheritdoc cref="COMPortConnectCommand" path='/summary'/>
         /// </summary>
         private RelayCommand comPortConnectCommand;
+
+        /// <summary>
+        /// Used to connect/reconnect to the selected COM port
+        /// </summary>
         public ICommand COMPortConnectCommand => comPortConnectCommand;
 
+        /// <summary>
+        /// <inheritdoc cref="COMPortConnectCommand" path='/summary'/>
+        /// </summary>
         private void COMPortConnect(object commandParameter)
         {
             if (SelectedCOMPort == null) return;
@@ -259,13 +298,18 @@ namespace AB15_GUI.WPF.ViewModels
         }
 
         /// <summary>
+        /// <inheritdoc cref="RescanCommPortsCommand" path='/summary'/>
+        /// </summary>
+        private RelayCommand rescanCommPortsCommand;
+
+        /// <summary>
         /// Used to rescan the list of the avaiable COM ports
         /// </summary>
-        private RelayCommand rescanCOMPortsCommand;
-        public ICommand RescanCOMPortsCommand => rescanCOMPortsCommand ??= new RelayCommand(RescanCOMPorts);
-
-        private RelayCommand rescanCommPortsCommand;
         public ICommand RescanCommPortsCommand => rescanCommPortsCommand;
+
+        /// <summary>
+        /// <inheritdoc cref="RescanCommPortsCommand" path='/summary'/>
+        /// </summary>
         private void RescanCOMPorts(object commandParameter)
         {
             AvailableCOMPorts = new ObservableCollection<string>(this.serialWrapper.AvailableCOMPorts);
