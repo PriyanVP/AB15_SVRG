@@ -28,6 +28,8 @@
     <None Remove="Views\Resources\chip_light.png" />
     <None Remove="Views\Resources\config_dark.png" />
     <None Remove="Views\Resources\config_light.png" />
+    <None Remove="Views\Resources\connect_dark.png" />
+    <None Remove="Views\Resources\connect_light.png" />
     <None Remove="Views\Resources\font_decrease_light.png" />
     <None Remove="Views\Resources\font_decrease_dark.png" />
     <None Remove="Views\Resources\font_increase_light.png" />
@@ -38,6 +40,8 @@
     <None Remove="Views\Resources\maximize_dark.png" />
     <None Remove="Views\Resources\menu_dark.png" />
     <None Remove="Views\Resources\menu_light.png" />
+    <None Remove="Views\Resources\refresh_dark.png" />
+    <None Remove="Views\Resources\refresh_light.png" />
     <None Remove="Views\Resources\sensor_dark.png" />
     <None Remove="Views\Resources\sensor_light.png" />
     <None Remove="Views\Resources\sort_ascending_light.png" />
@@ -60,6 +64,8 @@
     <Resource Include="Views\Resources\chip_light.png" />
     <Resource Include="Views\Resources\config_dark.png" />
     <Resource Include="Views\Resources\config_light.png" />
+    <Resource Include="Views\Resources\connect_dark.png" />
+    <Resource Include="Views\Resources\connect_light.png" />
     <Resource Include="Views\Resources\font_decrease_light.png" />
     <Resource Include="Views\Resources\font_decrease_dark.png" />
     <Resource Include="Views\Resources\font_increase_light.png" />
@@ -72,6 +78,8 @@
     <Resource Include="Views\Resources\menu_light.png" />
     <Resource Include="Views\Resources\align_down_arrow_dark.png" />
     <Resource Include="Views\Resources\align_up_arrow_dark.png" />
+    <Resource Include="Views\Resources\refresh_dark.png" />
+    <Resource Include="Views\Resources\refresh_light.png" />
     <Resource Include="Views\Resources\sensor_dark.png" />
     <Resource Include="Views\Resources\sensor_light.png" />
     <Resource Include="Views\Resources\sort_ascending_light.png" />

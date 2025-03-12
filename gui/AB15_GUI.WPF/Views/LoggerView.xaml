@@ -8,7 +8,7 @@
         xmlns:vlrls="clr-namespace:AB15_GUI.WPF.Views.Validations"
         mc:Ignorable="d"
         Name="LoggerWindow"
-        MinWidth="680" MinHeight="200"
+        MinWidth="680" MinHeight="160"
         DataContext="{Binding LoggerViewModel, Source={StaticResource ViewModelLocator}}">
     <UserControl.Resources>
         <cnvrt:CustomDateTimeConverter x:Key="CustomDateTimeConverter"/>

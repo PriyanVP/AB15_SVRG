@@ -17,6 +17,8 @@
     <BitmapImage x:Key="Ico.Zoom" UriSource="../Resources/zoom_light.png"/>
     <BitmapImage x:Key="Ico.Arrow.Up" UriSource="../Resources/align_up_arrow_light.png"/>
     <BitmapImage x:Key="Ico.Arrow.Down" UriSource="../Resources/align_down_arrow_light.png"/>
+    <BitmapImage x:Key="Ico.Refresh" UriSource="../Resources/refresh_light.png"/>
+    <BitmapImage x:Key="Ico.Connect" UriSource="../Resources/connect_light.png"/>
     <BitmapImage x:Key="Ico.Maximize" UriSource="../Resources/maximize_light.png"/>
 
     <!--All colors defines-->
@@ -1049,6 +1051,18 @@
         </Setter>
     </Style>
 
+    <!--#region RescanButtonImageStyle style define -->
+    <Style x:Key="RescanButtonImageStyle" TargetType="{x:Type Image}">
+        <Setter Property="Source" Value="{DynamicResource Ico.Refresh}"/>
+    </Style>
+    <!--#endregion-->
+    
+    <!--#region ConnectImageStyle style define -->
+    <Style x:Key="ConnectImageStyle" TargetType="{x:Type Image}">
+        <Setter Property="Source" Value="{DynamicResource Ico.Connect}"/>
+    </Style>
+    <!--#endregion-->
+    
     <!--#region Expander-->
     <Style TargetType="Expander">
         <Setter Property="Background" Value="{DynamicResource BottonPanel.Background}" />

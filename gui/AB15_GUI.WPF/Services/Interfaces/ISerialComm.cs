@@ -24,6 +24,12 @@ namespace AB15_GUI.WPF.Services.Interfaces
         /// </summary>
         /// <returns>true if connected, false if failed</returns>
         bool ConnectCOMPort();
+
+        /// <summary>
+        /// Disconnect from USB COM port
+        /// </summary>
+        /// <returns>true if disconnected, false if failed</returns>
+        bool DisconnectCOMPort();
         
         /// <summary>
         /// Automatically detect all COM ports with ShieldBuddy's connected to them
