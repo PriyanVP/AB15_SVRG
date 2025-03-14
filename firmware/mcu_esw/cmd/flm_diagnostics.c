@@ -16,6 +16,8 @@
 #include "periphery/timer.h"
 #include "flm_diagnostics.h"
 
+// TODO: change approach to naming: FLM_DIAG -> DIAG
+
 /*********************************************************************************************************************/
 /*------------------------------------------------------Macros-------------------------------------------------------*/
 /*********************************************************************************************************************/
@@ -31,7 +33,7 @@
 #define FLM_DIAG_READ_RES_REGS_COUNT        (21)    /** \brief Number of registers with results of loop resistance 
                                                     measurement, including SQREF */
 
-#define FLM_DIAG_READ_VHX_REGS_COUNT        (11)    /** \brief Number of registers with results of VHx measurement 
+#define FLM_DIAG_READ_VHX_REGS_COUNT        (12)    /** \brief Number of registers with results of VHx measurement 
                                                     results*/ 
 
 /*************************************************************************************************************************/
@@ -65,6 +67,23 @@ typedef enum
 /*************************************************************************************************************************/
 /*-------------------------------------------------Data Structures-------------------------------------------------------*/
 /*************************************************************************************************************************/
+
+/** \brief Structure to organise enable flags of each diagnostic 
+*/
+typedef union
+{
+    struct 
+    {
+        uint8     shortDetEn      :1;
+        uint8     VHxMeasEn       :1;
+        uint8     squibDetEn      :1;
+        uint8     loopResMeasEn   :1;
+        uint8     SVRGtestEn      :1;
+        uint8     SVRGdiagEn      :1;
+        uint8     unused          :2;
+    } bf;
+    uint8 sw;
+} DiagEnableFlags;
 
 /** \brief Structure to store results of FLM channel short detection (IGH/IGL short to ground/battery)
  * 10 bytes
@@ -106,7 +125,7 @@ typedef struct
  */
 typedef struct
 {
-    FLMDiagReadVHx      resultVHxDiag[11];
+    FLMDiagReadVHx      resultVHxDiag[12];
     boolean             resultSquibErrorDiag[20];
     FLMReadSquibRes     resultLoopResDiag[20];
     FLMShortDiagStruct  resultShortDiag;
@@ -163,6 +182,7 @@ boolean CheckBatVoltage(void);
 /*********************************************************************************************************************/
 
 static boolean g_isflmDiagEn = FALSE;
+static DiagEnableFlags g_diagEnableFlags;
 static FLMCycDiagResults g_resultsValues;
 static FLMDiagExecStatusEnum g_diagExecStatus = FLM_DIAG_EXEC_STATUS_IDLE;
 static FLMDiagExecOrderEnum g_diagExecNumber = FLM_DIAG_ORDER_SHORT_DET;
@@ -176,10 +196,13 @@ void CmdEnableFLMDiag(USBReceiveData const * const commandPackage)
 {
     USBTransmitData packageToSend;
 
+    // Update enable flags from GUI command
+    g_diagEnableFlags.sw = commandPackage->data[0];
+
     // Enable command should not be executed twice
     if (g_isflmDiagEn == TRUE)
     {
-        // Skip further function execution - FLM Diag already is enabled, 
+        // Skip further function execution - FLM Diag interrupt already is enabled,
         // GUI will see no response to repeated USB_CMD_FLM_DIAG_ENABLE command
         return;
     }
@@ -232,6 +255,9 @@ void CmdDisableFLMDiag(USBReceiveData const * const commandPackage)
     g_diagExecStatus = FLM_DIAG_EXEC_STATUS_IDLE;
     g_diagExecNumber = FLM_DIAG_ORDER_SHORT_DET;
 
+    // Reset all Diagnostic enable flags
+    g_diagEnableFlags.sw = 0;
+
     // Turn off FLM diagnostics performing interrupt of MCU
     DisableTimerInterrupt(FLM_DIAG_TIMER);
 
@@ -266,22 +292,27 @@ void IntCmdExecuteFLMDiag()
     }
 
     // Start diagnostic and get out
-    // On next entries, check execution status:
+    // On next entries, check execution status
     switch (g_diagExecNumber)
     {
     case FLM_DIAG_ORDER_SHORT_DET:
-        // check status of diag execution, dont enter any diagnostic if status is ONGOING
-        if ((g_diagExecStatus == FLM_DIAG_EXEC_STATUS_FINISHED)||(g_diagExecStatus == FLM_DIAG_EXEC_STATUS_IDLE))
+        // Check enable and status of diag execution
+        // Dont enter any diagnostic if disabled, or last diagnostic didn't finish yet
+        if ((g_diagEnableFlags.bf.shortDetEn == TRUE)&&
+            ((g_diagExecStatus == FLM_DIAG_EXEC_STATUS_FINISHED)||(g_diagExecStatus == FLM_DIAG_EXEC_STATUS_IDLE)))
         {
             FLMShortDiag();
-            // Move on to next diagnostic
-            g_diagExecNumber = FLM_DIAG_ORDER_VHX_MEAS;
         }
+        // Move on to next diagnostic
+        g_diagExecNumber = FLM_DIAG_ORDER_VHX_MEAS;
         break;
 
     case FLM_DIAG_ORDER_VHX_MEAS: 
-        FLMVHxDiag();
-        if (g_diagExecStatus == FLM_DIAG_EXEC_STATUS_FINISHED)
+        if (g_diagEnableFlags.bf.VHxMeasEn == TRUE)
+        {
+            FLMVHxDiag();
+        }
+        if ((g_diagExecStatus == FLM_DIAG_EXEC_STATUS_FINISHED)||(g_diagEnableFlags.bf.VHxMeasEn == FALSE))
         {
             // Move on to next diagnostic
             g_diagExecNumber = FLM_DIAG_ORDER_LOOP_RES_MEAS;
@@ -289,8 +320,11 @@ void IntCmdExecuteFLMDiag()
         break;
 
     case FLM_DIAG_ORDER_LOOP_RES_MEAS:
-        FLMLoopResDiag();
-        if (g_diagExecStatus == FLM_DIAG_EXEC_STATUS_FINISHED)
+        if (g_diagEnableFlags.bf.loopResMeasEn == TRUE)
+        {
+            FLMLoopResDiag();
+        }
+        if ((g_diagExecStatus == FLM_DIAG_EXEC_STATUS_FINISHED)||(g_diagEnableFlags.bf.loopResMeasEn == FALSE))
         {
             // Move on to next diagnostic
             g_diagExecNumber = FLM_DIAG_ORDER_SQUIB_DET;
@@ -298,8 +332,11 @@ void IntCmdExecuteFLMDiag()
         break;
 
     case FLM_DIAG_ORDER_SQUIB_DET:
-        FLMSquibDetErrDiag();
-        if (g_diagExecStatus == FLM_DIAG_EXEC_STATUS_FINISHED)
+        if (g_diagEnableFlags.bf.squibDetEn == TRUE)
+        {
+            FLMSquibDetErrDiag();
+        }
+        if ((g_diagExecStatus == FLM_DIAG_EXEC_STATUS_FINISHED)||(g_diagEnableFlags.bf.squibDetEn == FALSE))
         {
             // Move on to next diagnostic
             g_diagExecNumber = DIAG_ORDER_FLM_SVRG_TST;
@@ -307,8 +344,11 @@ void IntCmdExecuteFLMDiag()
         break;
 
     case DIAG_ORDER_FLM_SVRG_TST:
-        DiagFLMSVRGTest();
-        if (g_diagExecStatus == FLM_DIAG_EXEC_STATUS_FINISHED)
+        if (g_diagEnableFlags.bf.SVRGtestEn == TRUE)
+        {
+            DiagFLMSVRGTest();
+        }
+        if ((g_diagExecStatus == FLM_DIAG_EXEC_STATUS_FINISHED)||(g_diagEnableFlags.bf.SVRGtestEn == FALSE))
         {
             // Move on to next diagnostic
             g_diagExecNumber = DIAG_ORDER_SVRG_DIAG;
@@ -316,8 +356,11 @@ void IntCmdExecuteFLMDiag()
         break;
 
     case DIAG_ORDER_SVRG_DIAG:
-        DiagSVRGDiag();
-        if (g_diagExecStatus == FLM_DIAG_EXEC_STATUS_FINISHED)
+        if (g_diagEnableFlags.bf.SVRGdiagEn == TRUE)
+        {
+            DiagSVRGDiag();
+        }
+        if ((g_diagExecStatus == FLM_DIAG_EXEC_STATUS_FINISHED)||(g_diagEnableFlags.bf.SVRGdiagEn == FALSE))
         {
             // Move on to next diagnostic
             g_diagExecNumber = FLM_DIAG_ORDER_SAVE_RESULTS;
@@ -376,7 +419,7 @@ void FLMVHxDiag()
         FLM_FLM_READ_DIAG_VH1A, FLM_FLM_READ_DIAG_VH2, FLM_FLM_READ_DIAG_VH3, 
         FLM_FLM_READ_DIAG_VH4, FLM_FLM_READ_DIAG_VH5, FLM_FLM_READ_DIAG_VH6, 
         FLM_FLM_READ_DIAG_VH7, FLM_FLM_READ_DIAG_VH8, FLM_FLM_READ_DIAG_VH9, 
-        FLM_FLM_READ_DIAG_VH10, FLM_FLM_READ_DIAG_VH1B};
+        FLM_FLM_READ_DIAG_VH10, FLM_FLM_READ_DIAG_VH1B, FLM_FLM_READ_DIAG_SVRG_GATE};
 
     if (g_diagExecStatus == FLM_DIAG_EXEC_STATUS_FINISHED)
     {
@@ -520,6 +563,7 @@ void FLMSaveDiagResults()
     g_resultsToSend.data[9] = GetMSB(g_resultsValues.resultShortDiag.readShortCh20_17);
 
     // VHx diagnostic results resultVHxDiag[]
+    // TODO: add reading of FLM_Read_Diag_SVRG_GATE
     g_resultsToSend.data[10] = GetLSB(g_resultsValues.resultVHxDiag[0].readVHxVoltageValue);
     g_resultsToSend.data[11] = GetMSB(g_resultsValues.resultVHxDiag[0].readVHxVoltageValue);
     g_resultsToSend.data[12] = GetLSB(g_resultsValues.resultVHxDiag[1].readVHxVoltageValue);
