@@ -837,6 +837,10 @@ namespace AB15_GUI.WPF.ViewModels
             _readPsiSensorDataCommand.InProgress = true;
             OnPropertyChanged(nameof(ReadPsiSensorDataCommandEn));
 
+            // TODO: update approach to work with reading all slots - in model, allow to read only specific channels (addresses gen + data unpacking)
+            // TODO: revert current approach to use few channels (previous version). Confirned to work with ch 1-4
+            // TODO: align on option to read using different CS_MON
+
             // Read sensor data
             Reg_PSI_Read_Data_Slot1_Ch1 reg_PSI_Read_Data_Slot1_Ch1 = new Reg_PSI_Read_Data_Slot1_Ch1();
 
