@@ -26,12 +26,6 @@
 
 #define WD_STATUS_REGS_COUNT        (4)         /** \brief Number of WD status registers for periodic reading */
 
-#define AB12_WD2_ACK_PERIOD         (12)        /** \brief Periodicity of acknowledging WD2 on AB12 platform: 600 us/ 50 us
-                                                    where 50 us - timer interrupt periodicity on MCU */
-
-#define AB12_WD3_ACK_PERIOD         (200)       /** \brief Periodicity of acknowledging WD3 on AB12 platform: 10 ms/ 50 us
-                                                    where 50 us - timer interrupt periodicity on MCU */
-
 #define WD1_ACK_PERIOD_SCALE_FACTOR (20)        /** \brief Scale factor to convert WD1 ACK period 
                                                     from register units to timer ticks: 1 ms / 50 us = 20 */
 
@@ -224,10 +218,11 @@ void CmdConfigureWatchdog(USBReceiveData const * const commandPackage)
 
     // Code for AB15 implementation
     isSuccessfulFlag = TRUE;
+    
     // Write both WD configs to ASIC to ASIC
     for (uint8 i = 0; i < length; i++)
     {
-        isSuccessfulFlag &= QSPIWriteNormal(SPI1_CS1MASTER, address[i], data[i]); // TODO: configuration, not yet implemented; not available for AB12
+        isSuccessfulFlag &= QSPIWriteNormal(SPI1_CS1MASTER, address[i], data[i]);
     }
 
     // Prepare report for GUI
