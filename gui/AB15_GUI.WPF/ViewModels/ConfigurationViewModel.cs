@@ -1028,6 +1028,7 @@ namespace AB15_GUI.WPF.ViewModels
             // Update indicator
             SyncPulseGeneretingStatus = FaultStatus.Good;
             _readPsiSensorDataCommand.Enable = true;
+            OnPropertyChanged(nameof(ReadPsiSensorDataCommandEn));
         }
 
         /// <summary>
