@@ -18,7 +18,10 @@
     <BitmapImage x:Key="Ico.Arrow.Up" UriSource="../Resources/align_up_arrow_dark.png"/>
     <BitmapImage x:Key="Ico.Arrow.Down" UriSource="../Resources/align_down_arrow_dark.png"/>
     <BitmapImage x:Key="Ico.Configuration" UriSource="../Resources/configuration_dark.png"/>
-    
+    <BitmapImage x:Key="Ico.Refresh" UriSource="../Resources/refresh_dark.png"/>
+    <BitmapImage x:Key="Ico.Connect" UriSource="../Resources/connect_dark.png"/>
+    <BitmapImage x:Key="Ico.Maximize" UriSource="../Resources/maximize_dark.png"/>
+
     <!--All colors defines-->
     <SolidColorBrush x:Key="UI.BackGround" Color="#e4000000"/>
 
@@ -32,7 +35,7 @@
     <SolidColorBrush x:Key="UI.SeparateLine" Color="#f8ffffff"/>
 
     <SolidColorBrush x:Key="UI.TextBoxBackground" Color="#ff404040"/>
-    
+
     <SolidColorBrush x:Key="ToolTipError.Background" Color="#ff1e1e"/>
     <SolidColorBrush x:Key="ToolTipError.BorderBrush" Color="#f8ffffff"/>
 
@@ -46,7 +49,7 @@
     <SolidColorBrush x:Key="SimpleButton.Background.Disable" Color="#c0c0c0c0"/>
     <SolidColorBrush x:Key="SimpleButton.BorderBrush" Color="#ff404040"/>
     <SolidColorBrush x:Key="SimpleButton.ValidationError" Color="#ff1e1e"/>
-    
+
     <SolidColorBrush x:Key="Foreground.Helper" Color="#c0c0c0c0"/>
     <SolidColorBrush x:Key="Foreground.Disable" Color="#8a8886"/>
     <SolidColorBrush x:Key="Foreground.Default" Color="#E1E1E1"/>
@@ -66,7 +69,7 @@
     <SolidColorBrush x:Key="CheckBox.Unchecked.BorderBrush" Color="#ff404040" />
     <SolidColorBrush x:Key="CheckBox.Unchecked.Fill" Color="#e4000000" />
 
-    <SolidColorBrush x:Key="TextBox.Static.Backgroung" Color="#ff404040" />
+    <SolidColorBrush x:Key="TextBox.Static.Backgroung" Color="#ff404040" /> <!-- TODO: fix - no corresponding style in Light.xaml -->
     <SolidColorBrush x:Key="TextBox.Static.Border" Color="#7F7A7A7A" />
     <SolidColorBrush x:Key="TextBox.MouseOver.Border" Color="#f8ffffff" />
     <SolidColorBrush x:Key="TextBox.Focus.Border" Color="#edeced" />
@@ -139,7 +142,7 @@
         <Setter Property="BorderThickness" Value="1"/>
     </Style>
     <!--#endregion-->
-    
+
     <!--#region SimpleToggleButton -->
     <Style x:Key="SimpleToggleButton" TargetType="ToggleButton">
 
@@ -151,10 +154,10 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ToggleButton}">
                     <Border Background="{TemplateBinding Background}" 
-                        BorderThickness="1"
-                        BorderBrush="{DynamicResource SimpleButton.BorderBrush}">
+                            BorderThickness="1"
+                            BorderBrush="{DynamicResource SimpleButton.BorderBrush}">
                         <ContentPresenter HorizontalAlignment="Center"                  
-                                      VerticalAlignment="Center"/>
+                                          VerticalAlignment="Center"/>
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
@@ -173,7 +176,7 @@
         </Style.Triggers>
     </Style>
     <!--#endregion-->
-    
+
     <!--#region AdditionalInfoImageStyle style define -->
     <Style x:Key="AdditionalInfoImageStyle" TargetType="{x:Type Image}">
         <Setter Property="Source" Value="{DynamicResource Ico.Arrow.Down}"/>
@@ -187,7 +190,7 @@
     <!--#endregion-->
 
     <!--#region Default Button style define -->
-    <Style TargetType="{x:Type Button}" x:Key="DefaultButton">
+    <Style TargetType="{x:Type Button}" x:Key="DefaultButton"> <!-- TODO: fix - no corresponding style in Light.xaml -->
         <Setter Property="FontSize" Value="20"/>
         <Setter Property="Background" Value="{DynamicResource Button.Background.StandBy}"/>
         <Setter Property="Foreground" Value="{DynamicResource Foreground.Default}"/>
@@ -273,7 +276,6 @@
                     <Setter.Value>
                         <ToolTip DataContext="{Binding RelativeSource={RelativeSource Self}, Path=PlacementTarget}">
                             <ItemsControl ItemsSource="{Binding Path=(Validation.Errors)}" DisplayMemberPath="ErrorContent" />
-
                         </ToolTip>
                     </Setter.Value>
                 </Setter>
@@ -864,7 +866,7 @@
                                     <Storyboard>
                                         <ColorAnimationUsingKeyFrames Storyboard.TargetName="border"
                                                               Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)">
-                                            <!--Animation colors cannot be change dynamicly-->
+                                            <!--Animation colors cannot be change dynamically-->
                                             <EasingColorKeyFrame KeyTime="0" Value="#ff404040" />
                                         </ColorAnimationUsingKeyFrames>
                                     </Storyboard>
@@ -911,7 +913,7 @@
                             <Setter TargetName="contentPresenter" Property="IsEnabled" Value="False" />
                             <Setter TargetName="bk" Property="BorderBrush" Value="#554d56" />
                             <Setter TargetName="ep" Property="Fill" Value="#FFD5D5D5" />
-                            <Setter Property="Background" TargetName="bk" Value="{DynamicResource CheckBox.Checked.Background}" />
+                            <Setter Property="Background" TargetName="bk" Value="{DynamicResource CheckBox.Checked.Background}" /> <!-- TODO: fix - no corresponding style in Light.xaml -->
                         </Trigger>
 
                         <Trigger Property="IsChecked" Value="true">
@@ -1009,10 +1011,10 @@
 
     <!--#region TextBox -->
     <Style x:Key="TextBoxStyle" TargetType="{x:Type TextBox}">
-        <Setter Property="Background" 
+        <Setter Property="Background"
                     Value="{DynamicResource TextBox.Static.Backgroung}" />
         <Setter Property="BorderBrush" Value="{DynamicResource TextBox.Static.Border}" />
-        <Setter Property="Foreground" 
+        <Setter Property="Foreground"
                     Value="{DynamicResource Foreground.Default}" />
         <Setter Property="Margin" Value="2,2,2,2"/>
         <Setter Property="Padding" Value="8,4,4,8" />
@@ -1069,6 +1071,7 @@
     </Style>
     <!--#endregion-->
 
+    <!--#region TabItem -->
     <Style TargetType="TabItem" x:Key="CustomTabItem">
         <Setter Property="Width" Value="Auto"/>
         <Setter Property="Background" Value="{DynamicResource UI.BackGround}" />
@@ -1099,7 +1102,8 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+    <!--#endregion-->
+
     <!--#region ScrollViewer -->
     <Style x:Key="ScrollBarButtonStyle" TargetType="{x:Type RepeatButton}">
     <Setter Property="SnapsToDevicePixels" Value="True" />
@@ -1351,7 +1355,7 @@
       </Setter>
     </Style>
     <!--#endregion-->
-    
+
     <Style x:Key="ListViewStyle" TargetType="{x:Type ListView}">
         <Setter Property="Template">
             <Setter.Value>
@@ -1363,4 +1367,54 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <!--#region RescanButtonImageStyle style define -->
+    <Style x:Key="RescanButtonImageStyle" TargetType="{x:Type Image}">
+        <Setter Property="Source" Value="{DynamicResource Ico.Refresh}"/>
+    </Style>
+    <!--#endregion-->
+
+    <!--#region ConnectImageStyle style define -->
+    <Style x:Key="ConnectImageStyle" TargetType="{x:Type Image}">
+        <Setter Property="Source" Value="{DynamicResource Ico.Connect}"/>
+    </Style>
+    <!--#endregion-->
+
+    <!--#region Expander-->
+    <Style TargetType="Expander">
+        <Setter Property="Background" Value="{DynamicResource BottonPanel.Background}" />
+        <Setter Property="Foreground" Value="{DynamicResource Foreground.Default}" />
+    </Style>
+
+    <Style x:Key="CaptionButtonStyle" TargetType="Button">
+        <Setter Property="Background" Value="{DynamicResource Button.Background.StandBy}" />
+        <Setter Property="Width" Value="25" />
+        <Setter Property="Height" Value="25" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border
+                            BorderBrush="{DynamicResource SimpleButton.BorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="5">
+                        <Grid x:Name="LayoutRoot" Background="{DynamicResource Button.Background.StandBy}">
+                            <Image
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Source="{DynamicResource Ico.Maximize}" />
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True" SourceName="LayoutRoot">
+                            <Setter TargetName="LayoutRoot" Property="Background" Value="{DynamicResource Button.Background.IsMouseOver}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!--#endregion-->
+
 </ResourceDictionary>

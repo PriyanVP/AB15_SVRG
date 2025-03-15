@@ -249,7 +249,9 @@ namespace AB15_GUI.Tests.ViewModels
 
             public void Dispose() => throw new NotImplementedException();
 
-            public bool ReconnectCOMPort() => throw new NotImplementedException();
+            public bool ConnectCOMPort() => throw new NotImplementedException();
+
+            public bool DicsonnectCOMPort() => throw new NotImplementedException();
 
             public bool RemoveWaitlistItem(int? msgID)
             {
