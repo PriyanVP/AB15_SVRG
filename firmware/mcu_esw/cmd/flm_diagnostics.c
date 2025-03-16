@@ -34,7 +34,9 @@
                                                     measurement, including SQREF */
 
 #define FLM_DIAG_READ_VHX_REGS_COUNT        (12)    /** \brief Number of registers with results of VHx measurement 
-                                                    results*/ 
+                                                    results*/
+
+#define DIAG_READ_SVRG_DIAG_REGS_COUNT      (1)     /** \brief Number of registers with results of SVRG diagnostic */
 
 /*************************************************************************************************************************/
 /*--------------------------------------------------Enumerations---------------------------------------------------------*/
@@ -119,6 +121,15 @@ typedef struct
     boolean readSquibResPgndxLoss;
 } FLMReadSquibRes;
 
+/** \brief Structure to store results of SVRG capacity diagnostic
+ * 2 bytes
+ */
+typedef struct
+{
+    uint16 readSVRGcapacityValue;
+    boolean readSVRGcapacityValid;
+} DiagReadSVRGdiag;
+
 /** \brief Structure to store results of cyclic tests
  * 86 bytes
  * TODO: add field/fields to indicate if diagnostics failed on MCU level (i.e., SPI read was unsuccessful)
@@ -129,7 +140,7 @@ typedef struct
     boolean             resultSquibErrorDiag[20];
     FLMReadSquibRes     resultLoopResDiag[20];
     FLMShortDiagStruct  resultShortDiag;
-
+    DiagReadSVRGdiag     resultSVRGdiag;
 } FLMCycDiagResults;
 
 /*********************************************************************************************************************/
@@ -540,11 +551,35 @@ void FLMLoopResDiag()
 
 void DiagFLMSVRGTest()
 {
+    // TODO: investigate if this function is needed - unclear what svrg_test in FLM_diag_mode
+    // actually does (FLM_READ_DIAG_SVRG_GATE is the only SVRG related FLM Diag result register
+    // and it is controlled by VHx Diagnostic (read by FLMVHxDiag()) 
     return;
 }
 
 void DiagSVRGDiag()
 {
+    // Get result of Capacity diagnosis
+    SPIReceiveDataNormal data[DIAG_READ_SVRG_DIAG_REGS_COUNT];
+    uint16 length = DIAG_READ_SVRG_DIAG_REGS_COUNT;
+    boolean isSuccessfulFlag = FALSE;
+    static const uint16 diagSVRGdiagRegsAddresses[DIAG_READ_SVRG_DIAG_REGS_COUNT] = {SVRG_SVRG_STATUS};
+
+    // Diagnostic was configured and started by GUI, get results
+    g_diagExecStatus = FLM_DIAG_EXEC_STATUS_ONGOING;
+
+    // Read SVRG_STATUS
+    isSuccessfulFlag = QSPIReadSequenceNormal(SPI1_CS1MASTER, diagSVRGdiagRegsAddresses, &data[0].dw, &length);
+    
+    // Store results
+    svrg_svrg_status_ut diagReadSVRGDiagResTmp;
+    diagReadSVRGDiagResTmp.as_uint16 = (data[i].bf.output_data);
+    g_resultsValues.resultSVRGdiag.readSVRGcapacityValue = diagReadSVRGDiagResTmp.as_s.SvrgCapValue_u9;
+    g_resultsValues.resultSVRGdiag.readSVRGcapacityValid = diagReadSVRGDiagResTmp.as_s.SvrgCapValueValid_u1;
+
+    // Results are stored, get back
+    g_diagExecStatus = FLM_DIAG_EXEC_STATUS_FINISHED;
+
     return;
 }
 
