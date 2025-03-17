@@ -1,3 +1,53 @@
+# Version 01.01.00 (2025-03-17) 
+Firing with PSI, UART. FLM diagnostics. Enhanced SPI learning.
+
+### **MCU SW (firmware)**:
+- Added firmware for working with UART
+- Added reset MCU command
+- Finalized FLM diagnostics
+- Finalized PST implementation
+- Fixed bug with incorrect SPI transactions for communicating with addresses higher than 0x200
+- Removed old files (unused)
+- Removed AB12 functions (unused)
+- Modified SPI commands to support CS option with 2 CS at same time
+- Refactored virtual timers to be easily extendable
+- Fixed major part of warnings (2 left)
+
+### **PC SW (GUI)**:
+#### **UI**:
+- Added SPI learning page
+- Added Configuration page
+- Added PSI, UART tabs on Configuration page
+- Updated logger implementation to work as undockable panel
+- Fixed failing unit tests
+- Added elements for manual connection to COM port
+#### **Backend**
+- Implemented backend for SPI learning
+- Implemented backend for PSI, UART tabs
+- Added functionality to do firing with different plausibilization checks (PSI, UART)
+- Added logic for manually connecting to COM port
+- Refactored serial communication to work as async commands
+- Refactored code for use new async commands
+- Added models for FLM diagnostic data handling
+- Added models for handling data for SPI learning
+- Added models for PSI data
+- Added models for PST data handling
+- Added logic for sending UART commands
+- Added logic for sending reset MCU commands
+- Added model for adding observability to Register objects
+- Added enum for ASIC IDs
+- Added method for constructing word from 3-4 bytes (32 bit)
+- Added generic response validation approach
+- Fixed bug in AddressDataPayload
+- Renamed default configuration file
+
+
+#### **Other**
+- Added CRC3 calculation function to PyTest
+- Added CRC3 in gui project
+- Fixed register models generation issues (reset value, double generation)
+
+
 # Version 01.00.00 (2024-12-05) 
 MVP. Firing feature release.
 
