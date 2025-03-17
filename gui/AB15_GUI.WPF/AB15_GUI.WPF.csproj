@@ -26,6 +26,8 @@
     <None Remove="Views\Resources\bosch.ico" />
     <None Remove="Views\Resources\chip_dark.png" />
     <None Remove="Views\Resources\chip_light.png" />
+    <None Remove="Views\Resources\configuration_dark.png" />
+    <None Remove="Views\Resources\configuration_light.png" />
     <None Remove="Views\Resources\config_dark.png" />
     <None Remove="Views\Resources\config_light.png" />
     <None Remove="Views\Resources\connect_dark.png" />
@@ -62,6 +64,8 @@
     <Resource Include="Views\Resources\bosch.ico" />
     <Resource Include="Views\Resources\chip_dark.png" />
     <Resource Include="Views\Resources\chip_light.png" />
+    <Resource Include="Views\Resources\configuration_dark.png" />
+    <Resource Include="Views\Resources\configuration_light.png" />
     <Resource Include="Views\Resources\config_dark.png" />
     <Resource Include="Views\Resources\config_light.png" />
     <Resource Include="Views\Resources\connect_dark.png" />

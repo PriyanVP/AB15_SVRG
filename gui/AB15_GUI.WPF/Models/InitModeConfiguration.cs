@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using AB15_GUI.WPF.Models.Generated.Registers;
 using AB15_GUI.WPF.Models.Interfaces;
@@ -6,21 +5,23 @@ using AB15_GUI.WPF.Models.Interfaces;
 namespace AB15_GUI.WPF.Models
 {
     /// <summary>
-    /// ASIC wrapper. Organizes work of few ASICs
+    /// Class for storing init mode configuration
     /// </summary>
-    public class DummyConfiguration
+    public class InitModeConfiguration
     {
         /// <summary>
         /// Constructor
         /// </summary>
-        public DummyConfiguration(IASICWrapper asicWrapper)
+        public InitModeConfiguration(IASICWrapper asicWrapper)
         {
             // Populate list
-            InitListWithDummyValues();
+            InitListWithDefaultValues();
 
             // Append configuration to ASIC centralized config
             asicWrapper.ASICs[0].AppendConfigRegisters(ConfigData);
         }
+
+        // TODO: move configuration related functionality from ASIC class here
 
         /// <summary>
         /// Configuration data
@@ -30,7 +31,7 @@ namespace AB15_GUI.WPF.Models
         /// <summary>
         /// Fill list with dummy values
         /// </summary>
-        private void InitListWithDummyValues()
+        private void InitListWithDefaultValues()
         {
             // Write configuration for common registers
             ConfigData.Add(new Reg_Common_Config1() { Data = 0x0007 });
@@ -63,7 +64,7 @@ namespace AB15_GUI.WPF.Models
             ConfigData.Add(new Reg_Uart_Sp_Config() { Data = 0x0007 });
 
             // Write configuration for PSI registers
-            ConfigData.Add(new Reg_PSI_SID_Slot1_Ch1() { Data = 0x0001 });
+            ConfigData.Add(new Reg_PSI_SID_Slot1_Ch1() { Data = 0x0000 });
             ConfigData.Add(new Reg_PSI_SID_Slot2_Ch1() { Data = 0x0000 });
             ConfigData.Add(new Reg_PSI_SID_Slot3_Ch1() { Data = 0x0000 });
             ConfigData.Add(new Reg_PSI_SID_Slot4_Ch1() { Data = 0x0000 });
@@ -95,15 +96,15 @@ namespace AB15_GUI.WPF.Models
             ConfigData.Add(new Reg_PSI_SID_Slot2_Ch8() { Data = 0x0000 });
             ConfigData.Add(new Reg_PSI_SID_Slot3_Ch8() { Data = 0x0000 });
             ConfigData.Add(new Reg_PSI_SID_Slot4_Ch8() { Data = 0x0000 });
-            ConfigData.Add(new Reg_PSI_Config_Common() { Data = 0x0002 });
-            ConfigData.Add(new Reg_PSI_Config_Ch1() { Data = 0x2102 });
-            ConfigData.Add(new Reg_PSI_Config_Ch2() { Data = 0x0000 });
-            ConfigData.Add(new Reg_PSI_Config_Ch3() { Data = 0x0000 });
-            ConfigData.Add(new Reg_PSI_Config_Ch4() { Data = 0x0000 });
-            ConfigData.Add(new Reg_PSI_Config_Ch5() { Data = 0x0000 });
-            ConfigData.Add(new Reg_PSI_Config_Ch6() { Data = 0x0000 });
-            ConfigData.Add(new Reg_PSI_Config_Ch7() { Data = 0x0000 });
-            ConfigData.Add(new Reg_PSI_Config_Ch8() { Data = 0x0000 });
+            ConfigData.Add(new Reg_PSI_Config_Common() { Data = 0x0005 });
+            ConfigData.Add(new Reg_PSI_Config_Ch1() { Data = 0x001A });
+            ConfigData.Add(new Reg_PSI_Config_Ch2() { Data = 0x001A });
+            ConfigData.Add(new Reg_PSI_Config_Ch3() { Data = 0x001A });
+            ConfigData.Add(new Reg_PSI_Config_Ch4() { Data = 0x001A });
+            ConfigData.Add(new Reg_PSI_Config_Ch5() { Data = 0x001A });
+            ConfigData.Add(new Reg_PSI_Config_Ch6() { Data = 0x001A });
+            ConfigData.Add(new Reg_PSI_Config_Ch7() { Data = 0x001A });
+            ConfigData.Add(new Reg_PSI_Config_Ch8() { Data = 0x001A });
 
             // Write configuration for POM registers
             ConfigData.Add(new Reg_POM_Config() { Data = 0x0000 });
@@ -170,22 +171,19 @@ namespace AB15_GUI.WPF.Models
             ConfigData.Add(new Reg_Mapping_Config_Ch20_Ch19() { Data = 0x0101 });
 
             // Write configuration for FLM registers
-            ConfigData.Add(new Reg_FLM_Config_ch2_1() { Data = 0x0808 });
-            ConfigData.Add(new Reg_FLM_Config_ch4_3() { Data = 0x0404 });
-            ConfigData.Add(new Reg_FLM_Config_ch6_5() { Data = 0x0404 });
-            ConfigData.Add(new Reg_FLM_Config_ch8_7() { Data = 0x0404 });
-            ConfigData.Add(new Reg_FLM_Config_ch10_9() { Data = 0x01010 });
-            ConfigData.Add(new Reg_FLM_Config_ch12_11() { Data = 0x0404 });
-            ConfigData.Add(new Reg_FLM_Config_ch14_13() { Data = 0x0404 });
-            ConfigData.Add(new Reg_FLM_Config_ch16_15() { Data = 0x0404 });
-            ConfigData.Add(new Reg_FLM_Config_ch18_17() { Data = 0x0404 });
-            ConfigData.Add(new Reg_FLM_Config_ch20_19() { Data = 0x0404 });
+            ConfigData.Add(new Reg_FLM_Config_ch2_1() { Data = 0x0101 });
+            ConfigData.Add(new Reg_FLM_Config_ch4_3() { Data = 0x0101 });
+            ConfigData.Add(new Reg_FLM_Config_ch6_5() { Data = 0x0101 });
+            ConfigData.Add(new Reg_FLM_Config_ch8_7() { Data = 0x0101 });
+            ConfigData.Add(new Reg_FLM_Config_ch10_9() { Data = 0x01101 });
+            ConfigData.Add(new Reg_FLM_Config_ch12_11() { Data = 0x0101 });
+            ConfigData.Add(new Reg_FLM_Config_ch14_13() { Data = 0x0101 });
+            ConfigData.Add(new Reg_FLM_Config_ch16_15() { Data = 0x0101 });
+            ConfigData.Add(new Reg_FLM_Config_ch18_17() { Data = 0x0101 });
+            ConfigData.Add(new Reg_FLM_Config_ch20_19() { Data = 0x0101 });
 
             // Write configuration for SVRG registers
             ConfigData.Add(new Reg_SVRG_Config() { Data = 0x00DA });
-
-            // Expected CRC 
-            // Cyclic_Checker_CRC_Config = 0x2F0A
         }
     }
 }

@@ -237,7 +237,7 @@ namespace AB15_GUI.WPF.ViewModels
             WatchdogViewModel = watchdogViewModel;
 
             // Dummy configuration TODO: refactor to final implementation when available
-            var asicConfig = new DummyConfiguration(asicWrapper);
+            var asicConfig = new InitModeConfiguration(asicWrapper);
 
             logger.Trace("In MainViewModel");
 

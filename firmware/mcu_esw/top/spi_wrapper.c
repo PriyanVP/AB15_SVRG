@@ -82,44 +82,6 @@ void QSPIDeinit(void)
     QSPIDeinitPeriphery();
 }
 
-#ifdef AB12_PLATFORM
-// AB12 implementations
-
-boolean QSPIExecuteInstruction(uint8 spiChannel, AB12SPIInstructionsEnum instruction, boolean programmingEnable, uint16 dataToSend, uint32 * const p_data)
-{
-    // Execute only if enabled
-    if (enSPICommunication == FALSE) return FALSE;
-
-    // Configure SPI channel for communication and stop execution if unsuccussful
-    SpiBusSelectEnum spiBusNumber = QSPIUpdateChannelConfig(spiChannel);
-    if (spiBusNumber == SPI_BUS_INVALID) return FALSE;
-
-    // Initialize variables
-    boolean isReceivedDataValid = FALSE;
-    SPITransmitData dataToTransmit;
-    SPIReceiveData dataToReceive;
-
-    // Configure and execute read request
-    dataToTransmit.dw = 0;
-    dataToTransmit.bf.instruction = instruction;
-    dataToTransmit.bf.pe = programmingEnable;
-    dataToTransmit.bf.data = dataToSend;
-    dataToTransmit.bf.crc = GetCRC3(&(dataToTransmit.dw));
-
-    QSPIExchangeData(SpiBusNum, &dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
-
-    // Validating input
-    isReceivedDataValid = IsCRC3Correct(&(dataToReceive.dw), dataToReceive.bf.crc);
-
-    // Return data
-    *p_data = dataToReceive.dw;
-
-    return (isReceivedDataValid);
-}
-
-#else
-// AB15 implementations
-
 boolean QSPIReadNormal(uint8 spiChannel, uint16 address, uint32 * const p_data)
 {
     // Execute only if enabled
@@ -136,7 +98,6 @@ boolean QSPIReadNormal(uint8 spiChannel, uint16 address, uint32 * const p_data)
 
     // Configure and execute read request
     dataToTransmit.dw = 0;
-    dataToTransmit.bf.sensor_data = FALSE;
     dataToTransmit.bf.address = address;
     dataToTransmit.bf.rw = READ;
     dataToTransmit.bf.crc = GetCRC3(&(dataToTransmit.dw));
@@ -173,7 +134,6 @@ boolean QSPIWriteNormal(SpiChSlaveSelectEnum spiChannel, uint16 address, uint16 
 
     // Configure and execute write request
     dataToTransmit.dw  = 0;
-    dataToTransmit.bf.sensor_data = FALSE;
     dataToTransmit.bf.address = address;
     dataToTransmit.bf.rw = WRITE;
     dataToTransmit.bf.data = data;
@@ -263,7 +223,6 @@ IFX_INLINE boolean QSPIReadWriteSequenceNormalInline(uint8 spiChannel, const uin
 
     // Configure common parameters of SPI normal frame
     dataToTransmit.dw = 0;
-    dataToTransmit.bf.sensor_data = FALSE;
     dataToTransmit.bf.rw = (SEQ_TYPE == READ_ONLY) ? (READ) : (WRITE);
 
     // Execute series of SPI transactions
@@ -322,7 +281,6 @@ boolean QSPIReadSensor(uint8 spiChannel, uint16 address, uint32 * const p_data)
 
     // Configure and execute read request
     dataToTransmit.dw = 0;
-    dataToTransmit.bf.sensor_data = TRUE;
     dataToTransmit.bf.address = address;
     dataToTransmit.bf.crc = GetCRC3(&(dataToTransmit.dw));
     QSPIExchangeData(spiChannel, spiBusNumber, &dataToTransmit.dw, &dataToReceive.dw, SPI_TRANSACTION_LENGTH);
@@ -364,7 +322,6 @@ boolean QSPIReadSequenceSensor(uint8 spiChannel, const uint16 * const p_addressB
 
     // Configure common parameters of SPI normal frame
     dataToTransmit.dw = 0;
-    dataToTransmit.bf.sensor_data = TRUE;
 
     // Execute series of SPI transactions
     for (uint16 i = 0; i < numberOfFrames; i++)
@@ -395,5 +352,3 @@ boolean QSPIReadSequenceSensor(uint8 spiChannel, const uint16 * const p_addressB
     }
     return TRUE;
 }
-
-#endif
