@@ -41,7 +41,6 @@ Firing with PSI, UART. FLM diagnostics. Enhanced SPI learning.
 - Fixed bug in AddressDataPayload
 - Renamed default configuration file
 
-
 #### **Other**
 - Added CRC3 calculation function to PyTest
 - Added CRC3 in gui project
