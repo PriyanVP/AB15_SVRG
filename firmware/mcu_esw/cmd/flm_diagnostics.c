@@ -551,35 +551,44 @@ void FLMLoopResDiag()
 
 void DiagFLMSVRGTest()
 {
-    // TODO: investigate if this function is needed - unclear what svrg_test in FLM_diag_mode
-    // actually does (FLM_READ_DIAG_SVRG_GATE is the only SVRG related FLM Diag result register
-    // and it is controlled by VHx Diagnostic (read by FLMVHxDiag()) 
-    return;
-}
-
-void DiagSVRGDiag()
-{
-    // Get result of Capacity diagnosis
+    // TODO: investigate current working theory how this diagnostic works
+    // Configured with SVRG_Diag by GUI; selected and started with FLM_DIAG_START, 
+    // Execution status monitored by FLM_Status2 as other FLM Diags
     SPIReceiveDataNormal data[DIAG_READ_SVRG_DIAG_REGS_COUNT];
     uint16 length = DIAG_READ_SVRG_DIAG_REGS_COUNT;
     boolean isSuccessfulFlag = FALSE;
     static const uint16 diagSVRGdiagRegsAddresses[DIAG_READ_SVRG_DIAG_REGS_COUNT] = {SVRG_SVRG_STATUS};
 
-    // Diagnostic was configured and started by GUI, get results
-    g_diagExecStatus = FLM_DIAG_EXEC_STATUS_ONGOING;
+    if (g_diagExecStatus == FLM_DIAG_EXEC_STATUS_FINISHED)
+    {
+        // Select corresponding mode and start diagnostic
+        StartFLMDiag(ENUM_FLM_FLM_DIAG_START_FLM_DIAG_MODE_SVRG_TEST);
+        g_diagExecStatus = FLM_DIAG_EXEC_STATUS_ONGOING;
 
-    // Read SVRG_STATUS
-    isSuccessfulFlag = QSPIReadSequenceNormal(SPI1_CS1MASTER, diagSVRGdiagRegsAddresses, &data[0].dw, &length);
+        // Get back out to check results on next interupt
+        return;
+    }
+
+    if (g_diagExecStatus == FLM_DIAG_EXEC_STATUS_EVALUATED)
+    {
+        // Read SVRG_STATUS
+        isSuccessfulFlag = QSPIReadSequenceNormal(SPI1_CS1MASTER, diagSVRGdiagRegsAddresses, &data[0].dw, &length);
     
-    // Store results
-    svrg_svrg_status_ut diagReadSVRGDiagResTmp;
-    diagReadSVRGDiagResTmp.as_uint16 = (data[i].bf.output_data);
-    g_resultsValues.resultSVRGdiag.readSVRGcapacityValue = diagReadSVRGDiagResTmp.as_s.SvrgCapValue_u9;
-    g_resultsValues.resultSVRGdiag.readSVRGcapacityValid = diagReadSVRGDiagResTmp.as_s.SvrgCapValueValid_u1;
+        // Store results
+        svrg_svrg_status_ut diagReadSVRGDiagResTmp;
+        diagReadSVRGDiagResTmp.as_uint16 = (data[i].bf.output_data);
+        g_resultsValues.resultSVRGdiag.readSVRGcapacityValue = diagReadSVRGDiagResTmp.as_s.SvrgCapValue_u9;
+        g_resultsValues.resultSVRGdiag.readSVRGcapacityValid = diagReadSVRGDiagResTmp.as_s.SvrgCapValueValid_u1;
 
-    // Results are stored, get back
-    g_diagExecStatus = FLM_DIAG_EXEC_STATUS_FINISHED;
+        // Results are stored, get back
+        g_diagExecStatus = FLM_DIAG_EXEC_STATUS_FINISHED;
+    }
 
+    return;
+}
+
+void DiagSVRGDiag()
+{
     return;
 }
 
