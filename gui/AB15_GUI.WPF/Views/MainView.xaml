@@ -32,19 +32,13 @@
         <Grid Grid.Row="0" Background="{DynamicResource TopPanel.Background}">
             <!--Quick action menu control group-->
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="5"/>
                 <ColumnDefinition Width="auto" MinWidth="20"/>
-                <ColumnDefinition Width="5"/>
-                <ColumnDefinition Width="auto" MinWidth="20"/>
-                <ColumnDefinition Width="5"/>
                 <ColumnDefinition Width="auto" MinWidth="20"/>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="auto" MinWidth="20"/>
-                <ColumnDefinition Width="5"/>
             </Grid.ColumnDefinitions>
 
             <!--Save/Load menu-->
-            <Menu Grid.Column="1" FontSize="20">
+            <Menu Grid.Column="0" FontSize="20" Margin="5,0,0,0">
                 <MenuItem Template="{StaticResource VsMenuTop}" Header="File">
                     <MenuItem Command="{Binding RunLoadRegisterSetting}" Template="{StaticResource MenuSubItem}" Header="Load Register settings"/>
                     <MenuItem Command="{Binding RunSaveRegisterSetting}" Template="{StaticResource MenuSubItem}" Header="Save Register settings"/>
@@ -52,7 +46,7 @@
             </Menu>
 
             <!--Links menu-->
-            <Menu Grid.Column="3" FontSize="20">
+            <Menu Grid.Column="1" FontSize="20" Margin="5,0,0,0">
                 <MenuItem Template="{StaticResource VsMenuTop}" Header="More" >
                     <MenuItem Command="{Binding OpenDocumantation}" 
                               Template="{StaticResource MenuSubItem}" Header="AB15 Documantation"/>
@@ -68,6 +62,87 @@
                               Template="{StaticResource MenuSubItem}" Header="Sensor details"/>
                 </MenuItem>
             </Menu>
+
+            <!--Manual Connection-->
+            <Grid Grid.Column="2" Background="{DynamicResource TopPanel.Background}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock  Grid.Column="0"
+                            FontSize="16"
+                            Margin="0,3,5,0"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Right"
+                            Text="Port:"
+                            Style="{DynamicResource CustomTextBlock}"/>
+                
+                <ComboBox   Grid.Column="1"
+                            Name="ConnectionsMenu"
+                            HorizontalAlignment="Right"
+                            IsEnabled="True"
+                            Height="26"
+                            Width="100"
+                            Margin="0,0,5,0"
+                            ToolTip="Available Ports"
+                            ItemsSource="{Binding AvailableCOMPorts}"
+                            FontSize="16"
+                            SelectedValue="{Binding Path=SelectedCOMPort}" />
+                
+                <Button     Grid.Column="2"
+                            Style="{DynamicResource SimpleButton}"
+                            Command="{Binding RescanCOMPortsCommand}"
+                            Height="25"
+                            Width="25"
+                            ToolTip="Rescan the available com ports"
+                            Margin="0,0,5,0" >
+                    <Image Style="{DynamicResource RescanButtonImageStyle}" />
+                </Button>
+
+                <Button     Grid.Column="3"
+                            Command="{Binding COMPortConnectCommand}"
+                            IsEnabled="{Binding COMPortAvaiable}"
+                            FontSize="16"
+                            FontWeight="Normal"
+                            Height="26"
+                            Width="120"
+                            Margin="10,0,15,0" 
+                            Style="{StaticResource SimpleButton}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Width="16" Height="16" Margin="0,1,10,0" >
+                            <Image.Style>
+                                <Style TargetType="Image" BasedOn="{StaticResource ConnectImageStyle}">
+                                    <Setter Property="Opacity" Value="1"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Path=COMPortAvaiable}" Value="False">
+                                            <Setter Property="Opacity" Value="0.5" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
+                        <TextBlock Name="ConnectButtonText" FontSize="16">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock" BasedOn="{StaticResource CustomTextBlock}">
+                                    <Setter Property="Text" Value="Connect"/>
+                                    <Style.Triggers>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding Path=IsCOMPortConnected}" Value="True" />
+                                                <Condition Binding="{Binding Path=IsSelectedPortDisplayed}" Value="True" />
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Text" Value="Reconnect" />
+                                        </MultiDataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </StackPanel>
+                </Button>
+            </Grid>
         </Grid>
 
         <!--Middle panel group-->
@@ -104,6 +179,9 @@
                 <TabItem>
                     <Frame Source="DiagnosticsView.xaml"/>
                 </TabItem>
+                <TabItem>
+                    <Frame Source="ConfigurationView.xaml"/>
+                </TabItem>
             </TabControl>
 
             <Border Grid.Column="0" BorderThickness="0,1,1,1" BorderBrush="{DynamicResource Menu.SeparateLine}"/>
@@ -116,6 +194,7 @@
                 </Grid.ColumnDefinitions>
 
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" MinHeight="20"/>
                     <RowDefinition Height="auto" MinHeight="20"/>
                     <RowDefinition Height="auto" MinHeight="20"/>
                     <RowDefinition Height="auto" MinHeight="20"/>
@@ -152,7 +231,7 @@
                                         Storyboard.TargetName="MenuPanel"
                                         Storyboard.TargetProperty="Width"
                                         BeginTime="0:0:0"
-                                        From="160" To="40"
+                                        From="180" To="40"
                                         Duration="0:0:0.2"/>
                                     <DoubleAnimation
                                         Storyboard.TargetName="MenuImage"
@@ -169,7 +248,7 @@
                                         Storyboard.TargetName="MenuPanel"
                                         Storyboard.TargetProperty="Width"
                                         BeginTime="0:0:0"
-                                        To="160" From="40"
+                                        To="180" From="40"
                                         Duration="0:0:0.2"/>
                                     <DoubleAnimation
                                         Storyboard.TargetName="MenuImage"
@@ -266,8 +345,20 @@
                     </StackPanel>
                 </ToggleButton>
 
+                <!--Configuration button-->
+                <ToggleButton Name="ConfigurationButton" Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2"
+                              Style="{DynamicResource MenuToggleButtons}" Command="{Binding GoToConfigurationPage}"
+                              Click="Button_Click">
+                    <StackPanel Orientation="Horizontal">
+
+                        <Image Source="{DynamicResource Ico.Configuration}" Margin="5,0" Width="30"/>
+                        <TextBlock Text="Configuration" FontSize="20" Style="{DynamicResource TextBlockStyle}"/>
+
+                    </StackPanel>
+                </ToggleButton>
+
                 <!--Status section-->
-                <Grid Grid.Row="8" VerticalAlignment="Bottom">
+                <Grid Grid.Row="9" VerticalAlignment="Bottom">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto"/>

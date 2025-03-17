@@ -55,6 +55,7 @@ namespace AB15_GUI.WPF
                             services.AddSingleton<WatchdogViewModel>();
                             services.AddSingleton<FiringViewModel>();
                             services.AddSingleton<SPILearningViewModel>();
+                            services.AddSingleton<ConfigurationViewModel>();
 
                             #endregion // ViewModels
 

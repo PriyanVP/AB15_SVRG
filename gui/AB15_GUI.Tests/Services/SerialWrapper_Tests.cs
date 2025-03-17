@@ -193,6 +193,11 @@ namespace AB15_GUI.Tests.Services
                 throw new NotImplementedException();
             }
 
+            public bool DisconnectCOMPort()
+            {
+                throw new NotImplementedException();
+            }
+
             public List<string> GetCOMPorts()
             {
                 throw new NotImplementedException();

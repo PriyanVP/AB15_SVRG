@@ -52,6 +52,9 @@ namespace AB15_GUI.WPF.Views
                 case "DiagnosticsButton":
                     PagesControl.SelectedIndex = 6;
                     break;
+                case "ConfigurationButton":
+                    PagesControl.SelectedIndex = 7;
+                    break;
                 default:
                     PagesControl.SelectedIndex = 0;
                     break;

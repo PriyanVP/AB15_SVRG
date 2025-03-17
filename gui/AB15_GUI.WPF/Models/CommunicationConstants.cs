@@ -85,6 +85,7 @@ public enum MCUCommand
     INIT_SYNC                   = 25,                 /** \brief syncs ASIC and GUI: SPI_COLDSTART_0, response to GUI when ASIC in INIT state */
     WRITE_RAW_DATA_SPI          = 26,                 /** \brief 0x1A write 32bit raw data to spi */
     FLM_DIAG_DISABLE            = 27,                 /** \brief disables Firing Loop Module cyclic diagnostics */
+    WRITE_DATA_UART             = 28,                 /** \brief write data to UART */
     START_TEST_MODE1            = 29,                 /** \brief configure and start Test mode 1  */
     START_TEST_MODE2            = 30,                 /** \brief configure and start Test mode 2  */
     STOP_TEST_MODE12            = 31,                 /** \brief stop Test mode (currently running)  */
