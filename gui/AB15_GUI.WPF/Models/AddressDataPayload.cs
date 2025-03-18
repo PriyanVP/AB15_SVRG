@@ -96,7 +96,7 @@ namespace AB15_GUI.WPF.Models
             }
             else if ((Address.Count == 0) && (Data.Count != 0))
             {
-                for (int i = 0; i < Address.Count; i++)
+                for (int i = 0; i < Data.Count; i++)
                 {
                     // Layout: Data_LSB - Data_MSB
                     payloadToSend.Add(Data[i].GetLSB());

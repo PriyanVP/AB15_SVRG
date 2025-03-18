@@ -71,4 +71,11 @@ void CmdReadReg(USBReceiveData const * const commandPackage);
 
 void CmdSendRawData(USBReceiveData const * const commandPackage);
 
+/** \brief Handling USB_CMD_RESET_MCU 
+ * 
+ * \param commandPackage package with command
+ * \return Nothing
+ */
+void CmdResetMCU(USBReceiveData const * const commandPackage);
+
 #endif /* GENERAL_CMD_H_ */

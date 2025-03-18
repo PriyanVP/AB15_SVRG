@@ -1,11 +1,11 @@
 using System;
-using NUnit.Framework;
-using FlaUI.Core;
 using FlaUI.Core.Conditions;
 using FlaUI.Core.AutomationElements;
 using FlaUI.UIA3;
 using System.IO;
 using System.Text.RegularExpressions;
+using Window = FlaUI.Core.AutomationElements.Window;
+using Application = FlaUI.Core.Application;
 
 namespace AB15_GUI.Regression.Requirements
 {
@@ -103,12 +103,17 @@ namespace AB15_GUI.Regression.Requirements
         /// </summary>
         [Test, Order(1)]
         [NonParallelizable]
-        public void WhenLoggerIsPromptedToOpen_ThenLoggerOpensSuccessfully() 
+        public void WhenLoggerIsPromptedToOpen_ThenLoggerOpensSuccessfully()
         {
-            // TODO: add when functionality for opening logger will be available on main view
-            // TODO: 1) Should apply control action to open logger window (like button click)
-
             // Arrange
+            if (mainView != null)
+            {
+                Button? undockButton = mainView.FindFirstDescendant(cf.ByAutomationId("UndockLoggerButton"))?.AsButton();
+                if (undockButton != null)
+                {
+                    undockButton.Click();
+                }
+            }
 
             // Act
             Window[] allWindows = app.GetAllTopLevelWindows(automation);

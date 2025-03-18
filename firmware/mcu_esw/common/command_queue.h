@@ -42,13 +42,13 @@ typedef struct
 
 /** \brief Initialize queue variable with default data
  */
-void QueueInit();
+void QueueInit(void);
 
 /** \brief Read item from queue tail (first out) and remove it from queue
  *
  * \return Item from queue tail
  */
-USBReceiveData QueueRead();
+USBReceiveData QueueRead(void);
 
 /** \brief Write item to queue head (first in)
  *
@@ -70,10 +70,10 @@ boolean QueueWriteTail(USBReceiveData const * const handle);
  *
  * \return Number of items in queue
  */
-uint8 QueueGetOccupiedSize();
+uint8 QueueGetOccupiedSize(void);
 
 /** \brief Remove all items from queue
  */
-void QueueClear();
+void QueueClear(void);
 
 #endif /* COMMAND_QUEUE_H_ */

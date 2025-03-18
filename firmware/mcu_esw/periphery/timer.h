@@ -45,19 +45,28 @@
 #define FREQ_GPT12_HZ 100000000                             /* GPT12 module base frequency                           */
 
 /*********************************************************************************************************************/
+/*--------------------------------------------------Enumerations-----------------------------------------------------*/
+/*********************************************************************************************************************/
+
+/** \brief Enum for timer types
+ */
+typedef enum 
+{
+   WATCHDOG1_TIMER,
+   WATCHDOG2_TIMER,
+   WATCHDOG_STATUS_CHECK_TIMER,
+   FLM_DIAG_TIMER,
+   HACKED_TIMER,
+   TEST_MODE_TIMER
+} TimerTypeEnum;
+
+/*********************************************************************************************************************/
 /*-------------------------------------------------Global variables--------------------------------------------------*/
 /*********************************************************************************************************************/
 
 /*********************************************************************************************************************/
 /*------------------------------------------------Function Prototypes------------------------------------------------*/
 /*********************************************************************************************************************/
-
-
-void ConfigureHackedTimerPeriodicity(uint16 hackedTimerPeriodicity);
-void EnableHackedTimerInterrupt(void);
-void DisableHackedTimerInterrupt(void);
-
-
 
 /** \brief Function to initialize the GPT12 Module and configure timers
  * Should be called before starting timers!
@@ -92,184 +101,42 @@ void StopServiceTimer(void);
  */
 void StopGeneralTimer(void);
 
-/** \brief Configure ASIC watchdog acknowledge periodicity
+/** \brief Configure periodicity of specified timer
  * Periodicity is defined in number of General timer interrupts
  *
- * \param wdType type of WD (valid options WD1 and WD2)
- * \param watchdogPeriodicity periodicity of acknowledging WD
+ * \param timerType type of timer
+ * \param periodicity periodicity of timer
  * \return Returns nothing
  */
-void ConfigureWatchdogPeriodicity(WatchdogTypeEnum wdType, uint16 watchdogPeriodicity);
+void ConfigureTimerPeriodicity(TimerTypeEnum timerType, uint16 periodicity);
 
-/** \brief Configure ASIC watchdog status check periodicity
- * Periodicity is defined in number of General timer interrupts
- *
- * \param watchdogStatusCheckPeriodicity periodicity of reading chunks of data
- * \return Returns nothing
- */
-void ConfigureWatchdogStatusCheckPeriodicity(uint16 watchdogStatusCheckPeriodicity);
-
-/** \brief Configure Test mode 1/2 check periodicity
- * Periodicity is defined in number of General timer interrupts
- *
- * \param testModePeriodicity periodicity of checking test mode results
- * \return Returns nothing
- */
-void ConfigureTestModePeriodicity(uint16 testModePeriodicity);
-
-/** \brief Configure error check periodicity
- * Periodicity is defined in number of General timer interrupts
- *
- * \param errorCheckPeriodicity periodicity of reading error registers in ASIC
- * \return Returns nothing
- */
-void ConfigureErrorCheckPeriodicity(uint16 errorCheckPeriodicity);
-
-/** \brief Configure continuous read periodicity
- * Periodicity is defined in number of General timer interrupts
- *
- * \param continuousReadPeriodicity periodicity of reading chunks of data
- * \return Returns nothing
- */
-void ConfigureContinuousReadPeriodicity(uint16 continuousReadPeriodicity);
-
-/** \brief Configure GPIO handling periodicity
- * Periodicity is defined in number of General timer interrupts
- *
- * \param gpioPeriodicity periodicity of reading chunks of data
- * \return Returns nothing
- */
-void ConfigureGPIOPeriodicity(uint16 gpioPeriodicity);
-
-/** \brief Configure FLM Diagnostics performing periodicity
- * Periodicity is defined in number of General timer interrupts
- * \param flmDiagPeriodicity periodicity of starting and checking on execution of FLM diags
- * \return Returns nothing
- */
-void ConfigureFLMDiagPeriodicity(uint16 flmDiagPeriodicity);
-
-/** \brief Enable Watchdog interrupt
+/** \brief Enable specified timer interrupt
  * Periodicity has to be configured first!
  *
- * \param wdType type of WD (valid options WD1 and WD2)
+ * \param timerType type of timer
  * \return Returns nothing
  */
-void EnableWatchdogInterrupt(WatchdogTypeEnum wdType);
+void EnableTimerInterrupt(TimerTypeEnum timerType);
 
-/** \brief Enable Watchdog status check interrupt
- * Periodicity has to be configured first!
- *
+/** \brief Disable specified timer interrupt
+ * 
+ * \param timerType type of timer
  * \return Returns nothing
  */
-void EnableWatchdogStatusCheckInterrupt(void);
+void DisableTimerInterrupt(TimerTypeEnum timerType);
 
-/** \brief Enable Test mode 1/2 check interrupt
- * Periodicity has to be configured first!
+/** \brief Get specified timer interrupt state
  *
- * \return Returns nothing
- */
-void EnableTestModeInterrupt(void);
-
-/** \brief Enable error check interrupt
- * Periodicity has to be configured first!
- *
- * \return Returns nothing
- */
-void EnableErrorCheckInterrupt(void);
-
-/** \brief Enable continuous read interrupt
- * Periodicity has to be configured first!
- *
- * \return Returns nothing
- */
-void EnableContinuousReadInterrupt(void);
-
-/** \brief Enable GPIO handling interrupt
- * Periodicity has to be configured first!
- *
- * \return Returns nothing
- */
-void EnableGPIOInterrupt(void);
-
-/** \brief Disable Watchdog interrupt
- *
- * \param wdType type of WD (valid options WD1 and WD2)
- * \return Returns nothing
- */
-void DisableWatchdogInterrupt(WatchdogTypeEnum wdType);
-
-/** \brief Disable Watchdog status check interrupt
- *
- * \return Returns nothing
- */
-void DisableWatchdogStatusCheckInterrupt(void);
-
-/** \brief Disable Test mode 1/2 check interrupt
- *
- * \return Returns nothing
- */
-void DisableTestModeInterrupt(void);
-
-/** \brief Disable Fast interrupt
- *
- * \return Returns nothing
- */
-void DisableFastInterrupt(void); // TODO: for removal
-
-/** \brief Disable error check interrupt
- *
- * \return Returns nothing
- */
-void DisableErrorCheckInterrupt(void);
-
-/** \brief Disable continuous read interrupt
- *
- * \return Returns nothing
- */
-void DisableContinuousReadInterrupt(void);
-
-/** \brief Disable GPIO handling interrupt
- *
- * \return Returns nothing
- */
-void DisableGPIOInterrupt(void);
-
-/** \brief Get watchdog acknowledgement interrupt state
- *
- * \param wdType type of WD (valid options WD1 and WD2)
+ * \param timerType type of timer
  * \return Returns true if irq enabled, false - otherwise
  */
-boolean GetStateWatchdogInterrupt(WatchdogTypeEnum wdType);
+boolean GetTimerState(TimerTypeEnum timerType);
 
-/** \brief Get watchdog status check interrupt state
+/** \brief Gets duration of specified interrupt period
  *
- * \return Returns true if irq enabled, false - otherwise
+ * \param timerType type of timer
+ * \return Returns value of timer periodicity
  */
-boolean GetStateWatchdogStatusCheckInterrupt(void);
-
-/** \brief Get error check interrupt state
- *
- * \return Returns true if irq enabled, false - otherwise
- */
-boolean GetStateErrorCheckInterrupt(void);
-
-/** \brief Get continuous reading interrupt state
- *
- * \return Returns true if irq enabled, false - otherwise
- */
-boolean GetStateContinuousReadInterrupt(void);
-
-/** \brief Get GPIO interrupt state
- *
- * \return Returns true if irq enabled, false - otherwise
- */
-boolean GetStateGPIOInterrupt(void);
-
-/** \brief Gets duration of Watchdog interrupt period
- *
- * \param wdType type of WD (valid options WD1 and WD2)
- * \return Returns value of g_watchdogReload variable
- */
-uint16 GetWatchdogPeriodicity(WatchdogTypeEnum wdType);
+uint16 GetTimerPeriodicity(TimerTypeEnum timerType);
 
 #endif /* TIMER_H_ */

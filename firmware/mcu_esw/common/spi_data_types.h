@@ -29,30 +29,6 @@ typedef enum
     WRITE = 1
 } RWFlagEnum;
 
-/** \brief Defines applicable instructions for SPI communication with AB12
- */
-typedef enum
-{
-    /* Module SPI */
-    READ_DEV_ID             = 0x0000,             /** \brief read device ID                           */
-    READ_REV_ID             = 0x0001,             /** \brief read revision ID                         */
-    READ_MASK_ID            = 0x0002,             /** \brief read mask ID                             */
-    EOP                     = 0x0006,             /** \brief end of programming                       */
-
-    /* Module WD */
-    WD2_TRIGGER             = 0x0004,             /** \brief SPI instruction WD2_TRIGGER              */
-    WD3_TRIGGER             = 0x0005,             /** \brief SPI instruction WD3_TRIGGER              */
-    WD_STATUS               = 0x0007,             /** \brief SPI instruction WD_STATUS                */
-
-    /* Module ... */
-
-
-
-    /* Module TEST */
-    TEST_FLM                = 0x016c              /** \brief Test FLM                                 */
-} AB12SPIInstructionsEnum;
-
-
 /** \brief SPI Slave Device ID to SPI bus and chip select mapping
  */
 typedef enum
@@ -74,14 +50,9 @@ typedef enum
     SPI_CH_ENUM_LAST    = 12                  /** \brief  enum Last    */
 } SpiChSlaveSelectEnum;
 
-
-
 /*********************************************************************************************************************/
 /*-------------------------------------------------Data Structures---------------------------------------------------*/
 /*********************************************************************************************************************/
-
-#ifndef AB12_PLATFORM
-// AB15 SPI data types
 
 /** \brief Structure for transmit SPI data (normal data frame)
  */
@@ -93,8 +64,7 @@ typedef union
         uint32 crc        : 3;    /** \brief package checksum */
         uint32 data       : 16;   /** \brief data being written into register */
         uint32 rw         : 1;    /** \brief transfer direction: 0 - read, 1 - write */
-        uint32 address    : 9;    /** \brief register address */
-        uint32 sensor_data: 1;    /** \brief flag indicating if sensor data is send (0 for normal frame) */
+        uint32 address    : 10;   /** \brief register address */
     } bf;
     uint32 dw;
 } SPITransmitDataNormal;
@@ -129,8 +99,7 @@ typedef union
         uint32 unused     : 2;    /** \brief unused bits */
         uint32 crc        : 3;    /** \brief package checksum */
         uint32 dont_care  : 21;   /** \brief don't care bits */
-        uint32 address    : 5;    /** \brief sensor address (A8...A4) */
-        uint32 sensor_data: 1;    /** \brief flag indicating if sensor data is send (1 for sensor frame) */
+        uint32 address    : 6;    /** \brief sensor address (A8...A4) */
     } bf;
     uint32 dw;
 } SPITransmitDataSensor;
@@ -169,48 +138,6 @@ typedef union
     } bf;
     uint32 dw;
 } SPITransmitDataRaw;
-
-
-#else
-// AB12 SPI data types
-
-/** \brief Structure for transmit SPI data
- */
-typedef union
-{
-    struct
-    {
-        uint32 unused       : 2;   /** \brief unused bit*/
-        uint32 crc          : 3;   /** \brief crc3 */
-        uint32 data         : 16;  /** \brief input data  */
-        uint32 pe           : 1;   /** \brief programming enable flag */
-        uint32 instruction  : 10;  /** \brief spi instruction */
-    } bf;
-    uint32 dw;
-} SPITransmitData;
-
-/** \brief Structure for received SPI data
- */
-typedef union
-{
-    struct
-    {
-        uint32 crc              : 3;  /** \brief package checksum */
-        uint32 gs_flag          : 1;  /** \brief global status flag */
-        uint32 output_data      : 16; /** \brief receive data */
-        uint32 sid_add_status   : 5;  /** \brief safety ID */
-        uint32 s_bit            : 1;  /** \brief sensor data flag */
-        uint32 dis1             : 1;  /** \brief Disposal flag 1 */
-        uint32 dis2             : 1;  /** \brief Disposal flag 2 */
-        uint32 wdf              : 1;  /** \brief Watchdog fault */
-        uint32 eop              : 1;  /** \brief End Of Programming */
-        uint32 tst              : 1;  /** \brief Test Active Flag */
-        uint32 tff              : 1;  /** \brief Transfer Failure Flag */
-    } bf;
-    uint32 dw;
-} SPIReceiveData;
-
-#endif
 
 /*********************************************************************************************************************/
 /*------------------------------------------------Function Prototypes------------------------------------------------*/

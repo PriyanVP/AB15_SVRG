@@ -11,7 +11,7 @@ namespace AB15_GUI.WPF.Models.Interfaces
         /// <summary>
         /// Message ID
         /// </summary>
-        int MsgID { get; set; }
+        int? MsgID { get; set; }
 
         /// <summary>
         /// ASIC ID
@@ -32,11 +32,6 @@ namespace AB15_GUI.WPF.Models.Interfaces
         /// Receive package payload type
         /// </summary>
         public Type? PayloadType { get; set; }
-
-        /// <summary>
-        /// Delegate that will be called for received msg
-        /// </summary>
-        public Action<IReceiveCommunicationPackage>? Deleg { get; set; }
 
         /// <summary> 
         /// Flag to indicate if package is valid

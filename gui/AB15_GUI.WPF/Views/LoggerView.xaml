@@ -1,4 +1,4 @@
-﻿<Window x:Class="AB15_GUI.WPF.Views.LoggerView"
+﻿<UserControl x:Class="AB15_GUI.WPF.Views.LoggerView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -7,20 +7,18 @@
         xmlns:cnvrt="clr-namespace:AB15_GUI.WPF.Views.Converters"
         xmlns:vlrls="clr-namespace:AB15_GUI.WPF.Views.Validations"
         mc:Ignorable="d"
-        Title="Logger Window" Height="450" Width="800"
-        MinWidth="600" MinHeight="300"
-        Icon="Resources/bosch.ico"
+        Name="LoggerWindow"
+        MinWidth="680" MinHeight="160"
         DataContext="{Binding LoggerViewModel, Source={StaticResource ViewModelLocator}}">
-    <Window.Resources>
+    <UserControl.Resources>
         <cnvrt:CustomDateTimeConverter x:Key="CustomDateTimeConverter"/>
-    </Window.Resources>
+    </UserControl.Resources>
     
     <Grid Background="{DynamicResource UI.BackGround}">
         <!--Window main layout-->
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" MinHeight="10"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="auto" MinHeight="10"/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
@@ -46,18 +44,18 @@
                 <ColumnDefinition Width="5"/>
             </Grid.ColumnDefinitions>
 
-            <ToggleButton x:Name="SortingButton" Grid.Column="1" MinWidth="20" Click="SortingButton_Click" Style="{DynamicResource SortingToggleButtonStyle}"/>
+            <ToggleButton x:Name="SortingButton" Grid.Column="1" MinWidth="25" Click="SortingButton_Click" Style="{DynamicResource SortingToggleButtonStyle}"/>
 
-            <Button Grid.Column="3" MinWidth="20" 
+            <Button Grid.Column="3" MinWidth="25" 
                     Content="{DynamicResource FontSizeIncreaseIco}" 
                     Style="{DynamicResource DefaultButton}"
-                    Click="IncreaseFont_Click" Height="35"/>
-            <Button Grid.Column="4" MinWidth="20" 
+                    Click="IncreaseFont_Click" Height="25"/>
+            <Button Grid.Column="4" MinWidth="25"
                     Content="{DynamicResource FontSizeDecreaseIco}" 
                     Style="{DynamicResource DefaultButton}"
-                    Click="DecreaseFont_Click" Height="35"/>
+                    Click="DecreaseFont_Click" Height="25"/>
 
-            <TextBox Grid.Column="5" MinWidth="40" Style="{DynamicResource TextBoxStyle}" FontSize="20">
+            <TextBox Grid.Column="5" MinWidth="40" Style="{DynamicResource TextBoxStyle}" FontSize="20" Height="37">
                 <TextBox.Text>
                     <Binding Path="LogTableFontSize"
                              RelativeSource="{RelativeSource AncestorType={x:Type local:LoggerView}}"
@@ -110,6 +108,7 @@
 
         <!--Log Table-->
         <ListView Grid.Row="1" Grid.Column="1" Name="LogTable" 
+                  Style="{DynamicResource ListViewStyle}"
                   ItemsSource="{Binding LoggerRecords}"
                   ItemContainerStyle="{DynamicResource ListViewItemStyle}" 
                   FontSize="{Binding LogTableFontSize, RelativeSource={RelativeSource AncestorType={x:Type local:LoggerView}}}">
@@ -133,7 +132,8 @@
 
                         <Canvas Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="4" Background="{DynamicResource UI.SeparateLine}"/>
 
-                        <TextBlock Grid.Column="1" Margin="0,0,5,0">
+                        <TextBlock Grid.Column="1" Margin="0,0,5,0"
+                                   Style="{DynamicResource TextBlockStyle}">
                             <TextBlock.Text>
                                 <MultiBinding Converter = "{StaticResource CustomDateTimeConverter}" >
                                     <Binding Path = "TimeStamp"/>
@@ -169,29 +169,16 @@
                                 </Style>
                             </TextBlock.Style>
                         </TextBlock>
-                        <TextBlock Grid.Column="3" Text="{Binding Index}" Margin="5,0,5,0"/>
+                        <TextBlock Grid.Column="3" Text="{Binding Index}" Margin="5,0,5,0"
+                                   Style="{DynamicResource TextBlockStyle}"/>
                         <WrapPanel Grid.Column="4">
-                            <TextBlock  TextWrapping="Wrap" Text="{Binding Message}" Margin="5,0,0,0"/>
+                            <TextBlock  TextWrapping="Wrap" Text="{Binding Message}" Margin="5,0,0,0"
+                                        Style="{DynamicResource TextBlockStyle}"/>
                         </WrapPanel>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
 
-        <!--Bottom control panel-->
-        <Grid Grid.Row="2" Grid.Column="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="auto"/>
-            </Grid.ColumnDefinitions>
-
-            <TextBlock Text="GUI:" Grid.Column="0" Style="{DynamicResource TextBlockStyle}"/>
-            <TextBlock Text="01.00.00"  Grid.Column="1" Style="{DynamicResource TextBlockStyle}"/>
-            <TextBlock Text="MCU:" Grid.Column="2" Style="{DynamicResource TextBlockStyle}"/>
-            <TextBlock Text="01.00.00"  Grid.Column="3" Style="{DynamicResource TextBlockStyle}"/>
-
-        </Grid>
     </Grid>
-</Window>
+</UserControl>

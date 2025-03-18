@@ -19,6 +19,9 @@
     <Compile Update="Views\Components\WatchdogSlider.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\ConfigurationView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\DiagnosticsView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -52,6 +55,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\Components\WatchdogSlider.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\ConfigurationView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\DiagnosticsView.xaml">

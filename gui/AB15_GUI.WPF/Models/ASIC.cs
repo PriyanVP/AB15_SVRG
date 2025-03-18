@@ -1,13 +1,13 @@
 using System;
-using System.Timers;
+using System.Linq;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using AB15_GUI.WPF.NLog;
 using AB15_GUI.WPF.Services.Interfaces;
 using AB15_GUI.WPF.Models.Interfaces;
 using AB15_GUI.WPF.Models.Generated.Registers;
-using System.Linq;
 
 namespace AB15_GUI.WPF.Models
 {
@@ -25,22 +25,6 @@ namespace AB15_GUI.WPF.Models
         /// Logger reference with custom configuration
         /// </summary>
         private readonly ILoggingService logger;
-
-        /// <summary>
-        /// Timer to perform periodic ASIC state readings
-        /// </summary>
-        private Timer? stateReadingTimer = null;
-
-        /// <summary>
-        /// Timer to perform periodic INIT mode timeout resets
-        /// </summary>
-        private Timer? initModeResetTimer = null;
-
-        /// <summary>
-        /// Number of packages with configuration data that will be written to ASIC
-        /// Null corresponds to unset value
-        /// </summary>
-        private int? expectedNumberOfConfigPackages = null;
 
         /// <summary>
         /// Constructor
@@ -298,7 +282,7 @@ namespace AB15_GUI.WPF.Models
         {
             logger.Debug($"Started periodic state reading (timer) on ASIC {ID}");
 
-            GetASICState();
+            GetASICStateAsync();
 
             // // Precondition check
             // if (stateReadingTimer != null)
@@ -365,23 +349,22 @@ namespace AB15_GUI.WPF.Models
         /// <summary>
         /// Write configuration data and apply CRC
         /// </summary>
-        public void WriteConfigurationWithCRC()
+        public async Task WriteConfigurationWithCRCAsync()
         {
             logger.Debug($"Started execution of WriteConfiguration command on ASIC {ID}");
 
             TransmitCommunicationPackage<AddressDataPayload> packageToSend;
+            ReceiveCommunicationPackage<EmptyPayload>? mcuResponse;
 
             // Send configuration as commands (may not fit in one command)
             int offset = 0;
             int itmIdx = 0;
-            expectedNumberOfConfigPackages = 0;
             while (offset < ConfigData.Count)
             {
                 // Create new package to write configuration
                 packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
                 packageToSend.ASICID = ID; // TODO: check for ASICs 2-4
                 packageToSend.Cmd = MCUCommand.EXECUTE_WRITE_SEQUENCE;
-                packageToSend.Deleg = WriteConfigurationDelegate;
                 packageToSend.PayloadType = typeof(EmptyPayload);
 
                 // Add up to max amount of registers to payload
@@ -408,11 +391,10 @@ namespace AB15_GUI.WPF.Models
                     }
                 }
 
-                // Increment number of packages
-                expectedNumberOfConfigPackages++;
+                // Send command to MCU and wait for response
+                mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
 
-                // Send command to MCU
-                serialWrapper.SerialWrite(packageToSend);
+                if (IsResponseValid(mcuResponse) == false) return;
             }
 
             // Apply CRC for configuration
@@ -431,22 +413,23 @@ namespace AB15_GUI.WPF.Models
             packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
             packageToSend.ASICID = ID; // TODO: check for ASICs 2-4
             packageToSend.Cmd = MCUCommand.WRITE_REG;
-            packageToSend.Deleg = WriteConfigurationDelegate;
             packageToSend.PayloadType = typeof(EmptyPayload);
             packageToSend.Payload.Address.Add(_Cyclic_Checker_CRC_Config.Address);
             packageToSend.Payload.Data.Add(_Cyclic_Checker_CRC_Config.Data);
 
-            // Increment number of packages
-            expectedNumberOfConfigPackages++;
+            // Send command to MCU and wait for response
+            mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
 
-            // Send command to MCU
-            serialWrapper.SerialWrite(packageToSend);
+            if (IsResponseValid(mcuResponse) == false) return;
+
+            // If this point is reached - all configuration was loaded successfully
+            OnConfigurationLoaded();
         }
 
         /// <summary>
         /// Lock configuration (EOP)
         /// </summary>
-        public void LockConfiguration()
+        public async Task LockConfigurationAsync()
         {
             logger.Debug($"Started execution of EOP command on ASIC {ID}");
 
@@ -460,20 +443,24 @@ namespace AB15_GUI.WPF.Models
             TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
             packageToSend.ASICID = ID; // TODO: check for ASICs 2-4
             packageToSend.Cmd = MCUCommand.WRITE_REG;
-            packageToSend.Deleg = LockConfigurationDelegate;
             packageToSend.PayloadType = typeof(EmptyPayload);
             packageToSend.Payload.Address.Add(_SysStates_Reset_Locked_Config.Address);
             packageToSend.Payload.Data.Add(_SysStates_Reset_Locked_Config.Data);
 
-            // Send command to MCU
-            serialWrapper.SerialWrite(packageToSend);
+            // Send command to MCU and wait for response
+            ReceiveCommunicationPackage<EmptyPayload>? mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
+
+            if (IsResponseValid(mcuResponse) == false) return;
+
+            // Raise configuration locked event
+            OnConfigurationLocked();
         }
 
         /// <summary>
         /// Execute SPI_COLDSTART1 command
         /// Will cause ASIC reset (unconditionally)
         /// </summary>
-        public void ExecuteSPIColdstart1()
+        public async Task ExecuteSPIColdstart1Async()
         {
             logger.Debug($"Started execution of SPIColdstart1 command on ASIC {ID}");
 
@@ -486,23 +473,27 @@ namespace AB15_GUI.WPF.Models
             TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
             packageToSend.ASICID = ID; // TODO: check for ASICs 2-4
             packageToSend.Cmd = MCUCommand.WRITE_REG;
-            packageToSend.Deleg = SPIColdstart1Delegate;
             packageToSend.PayloadType = typeof(EmptyPayload);
             packageToSend.Payload.Address.Add(_SysStates_Reset_Config.Address);
             packageToSend.Payload.Data.Add(_SysStates_Reset_Config.Data);
 
-            // Send command to MCU
-            serialWrapper.SerialWrite(packageToSend);
+            // Send command to MCU and wait for response
+            ReceiveCommunicationPackage<EmptyPayload>? mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
+
+            if (IsResponseValid(mcuResponse) == false) return;
+
+            // No error present - reset ASIC State property
+            State = ASICState.npor_release;
         }
 
         /// <summary>
         /// Execute transition from test mode 1 command
         /// </summary>
-        public void ExecuteTestMode1Transition()
+        public async Task ExecuteTestMode1TransitionAsync()
         {
             logger.Debug($"Started execution of Test mode 1 transition command on ASIC {ID}");
 
-            // Create register content for executing SPI_COLDSTART1
+            // Create register content for executing transition from test mode 1
             Reg_SysStates_Reset_Config _SysStates_Reset_Config = new Reg_SysStates_Reset_Config();
             _SysStates_Reset_Config.Data = 0x0;
             _SysStates_Reset_Config.spi_exit_testmode1.Data = 0x1;
@@ -511,23 +502,24 @@ namespace AB15_GUI.WPF.Models
             TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
             packageToSend.ASICID = ID; // TODO: check for ASICs 2-4
             packageToSend.Cmd = MCUCommand.WRITE_REG;
-            packageToSend.Deleg = BasicWriteCommandDelegate;
             packageToSend.PayloadType = typeof(EmptyPayload);
             packageToSend.Payload.Address.Add(_SysStates_Reset_Config.Address);
             packageToSend.Payload.Data.Add(_SysStates_Reset_Config.Data);
 
-            // Send command to MCU
-            serialWrapper.SerialWrite(packageToSend);
+            // Send command to MCU and wait for response
+            ReceiveCommunicationPackage<EmptyPayload>? mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
+
+            if (IsResponseValid(mcuResponse) == false) return;
         }
 
         /// <summary>
         /// Execute transition from test mode 2 command
         /// </summary>
-        public void ExecuteTestMode2Transition()
+        public async Task ExecuteTestMode2TransitionAsync()
         {
-            logger.Debug($"Started execution of Test mode 1 transition command on ASIC {ID}");
+            logger.Debug($"Started execution of Test mode 2 transition command on ASIC {ID}");
 
-            // Create register content for executing SPI_COLDSTART1
+            // Create register content for executing transition from test mode 2
             Reg_SysStates_Reset_Config _SysStates_Reset_Config = new Reg_SysStates_Reset_Config();
             _SysStates_Reset_Config.Data = 0x0;
             _SysStates_Reset_Config.spi_exit_testmode2.Data = 0x1;
@@ -536,19 +528,20 @@ namespace AB15_GUI.WPF.Models
             TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
             packageToSend.ASICID = ID; // TODO: check for ASICs 2-4
             packageToSend.Cmd = MCUCommand.WRITE_REG;
-            packageToSend.Deleg = BasicWriteCommandDelegate;
             packageToSend.PayloadType = typeof(EmptyPayload);
             packageToSend.Payload.Address.Add(_SysStates_Reset_Config.Address);
             packageToSend.Payload.Data.Add(_SysStates_Reset_Config.Data);
 
-            // Send command to MCU
-            serialWrapper.SerialWrite(packageToSend);
+            // Send command to MCU and wait for response
+            ReceiveCommunicationPackage<EmptyPayload>? mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
+
+            if (IsResponseValid(mcuResponse) == false) return;
         }
 
         /// <summary>
-        /// Read current ASIC state
+        /// Read current ASIC state + start init mode timeout resetting
         /// </summary>
-        private void GetASICState()
+        private async Task GetASICStateAsync()
         {
             logger.Debug($"Started execution of GetASICState command on ASIC {ID}");
 
@@ -560,210 +553,63 @@ namespace AB15_GUI.WPF.Models
             TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
             packageToSend.ASICID = ID; // TODO: check for ASICs 2-4
             packageToSend.Cmd = MCUCommand.START_HACKED_TIMER;
-            packageToSend.Deleg = ASICStateDelegate;
             packageToSend.IsContinuous = true;
             packageToSend.PayloadType = typeof(ReadRegisterPayload);
             packageToSend.Payload.Address.Add(SYSTEM_STATE.Address);
 
-            // Send command to MCU
-            serialWrapper.SerialWrite(packageToSend);
-        }
+            // Send command to MCU and store task to local variable
+            Task<IReceiveCommunicationPackage?> task = serialWrapper.SerialWriteAsync(packageToSend);
+            int? responseMsgId = packageToSend.MsgID;
+            ReceiveCommunicationPackage<ReadRegisterPayload>? mcuResponse;
 
-        // /// <summary>
-        // /// Reset INIT mode timeout
-        // /// </summary>
-        // private void ResetInitModeTimeout()
-        // {
-        //     logger.Debug($"Started execution of Reset ITM command on ASIC {ID}");
-
-        //     // Create register content for executing SPI_COLDSTART1
-        //     Reg_SysStates_Reset_Config _SysStates_Reset_Config = new Reg_SysStates_Reset_Config();
-        //     _SysStates_Reset_Config.Data = 0x0;
-        //     _SysStates_Reset_Config.spi_clear_imt.Data = 0x1;
-
-        //     // Construct command to MCU
-        //     TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
-        //     packageToSend.ASICID = ID; // TODO: check for ASICs 2-4
-        //     packageToSend.Cmd = MCUCommand.WRITE_REG;
-        //     packageToSend.Deleg = BasicWriteCommandDelegate;
-        //     packageToSend.PayloadType = typeof(EmptyPayload);
-        //     packageToSend.Payload.Address.Add(_SysStates_Reset_Config.Address);
-        //     packageToSend.Payload.Data.Add(_SysStates_Reset_Config.Data);
-
-        //     // Send command to MCU
-        //     serialWrapper.SerialWrite(packageToSend);
-        // }
-
-        #endregion // Methods
-
-        #region CallbackHandlers
-
-        // /// <summary>
-        // /// Method that will be called periodically by timer to read ASIC state
-        // /// </summary>
-        // /// <param name="source">unused</param>
-        // /// <param name="e">unused</param>
-        // private void OnAsicStateReadingEvent(object source, ElapsedEventArgs e)
-        // {
-        //         // Execute ASIC state reading
-        //         GetASICState();
-        // }
-
-        // /// <summary>
-        // /// Method that will be called periodically by timer to reset INIT mode timeout
-        // /// </summary>
-        // /// <param name="source">unused</param>
-        // /// <param name="e">unused</param>
-        // private void OnInitModeTimeoutResettingEvent(object source, ElapsedEventArgs e)
-        // {
-        //         // Reset INIT mode timeout
-        //         ResetInitModeTimeout();
-        // }
-
-        /// <summary>
-        /// Method that will be called when response for SPIColdstart1 command is received
-        /// </summary>
-        /// <param name="response">MCU response package</param>
-        private void SPIColdstart1Delegate(IReceiveCommunicationPackage response)
-        {
-            // Typecast response to actual type
-            ReceiveCommunicationPackage<EmptyPayload> mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>)response;
-
-            // If error received - pass it to error provider
-            if (mcuResponse.Payload.Error is not null)
+            // Infinite loop TODO: ASIC state reading can be refactored to use GUI timer
+            while (true)
             {
-                string errorMsg = $"Error response received. Status: {mcuResponse.Status}. Message: {mcuResponse.Payload.Error}";
-                OnErrorCallbackReceived(new CallbackErrorEventArgs() { Error = errorMsg });
-                logger.Error(errorMsg);
-                return;
-            }
+                // Wait for response
+                mcuResponse = (ReceiveCommunicationPackage<ReadRegisterPayload>?) await task;
 
-            // No error present - reset ASIC State property
-            State = ASICState.npor_release;
-        }
+                // Arm next iteration
+                task = serialWrapper.GetContinuousTaskInstance(responseMsgId);
 
-        /// <summary>
-        /// Method that will be called when response for reading SYSTEM_STATE register command is received
-        /// </summary>
-        /// <param name="response">MCU response package</param>
-        private void ASICStateDelegate(IReceiveCommunicationPackage response)
-        {
-            // Typecast response to actual type
-            ReceiveCommunicationPackage<ReadRegisterPayload> mcuResponse = (ReceiveCommunicationPackage<ReadRegisterPayload>)response;
-
-            // If error received - pass it to error provider
-            if (mcuResponse.Payload.Error is not null)
-            {
                 // Report missing communication
                 if (mcuResponse.Status == MCUStatus.RESPONSE_ABSENT)
                 {
                     IsOnline = false;
                 }
-                string errorMsg = $"Error response received. Status: {mcuResponse.Status}. Message: {mcuResponse.Payload.Error}";
-                OnErrorCallbackReceived(new CallbackErrorEventArgs() { Error = errorMsg });
-                logger.Error(errorMsg);
-                return;
-            }
 
-            // No error present - update ASIC state
-            ASICState prevState = State;
-            State = (ASICState) mcuResponse.Payload.RegisterData;
-            IsOnline = true;
+                if (IsResponseValid(mcuResponse) == false) continue;
 
-            // Raise event if entered new mode
-            if (prevState != State)
-            {
-                switch (State)
+                // No error present - update ASIC state
+                ASICState prevState = State;
+                State = (ASICState) mcuResponse.Payload.RegisterData;
+                IsOnline = true;
+
+                // Raise event if entered new mode
+                if (prevState != State)
                 {
-                    case ASICState.init_mode:
-                        OnInitModeEntered();
-                        break;
-                    case ASICState.test_mode1:
-                        OnTestMode1Entered();
-                        break;
-                    case ASICState.test_mode2:
-                        OnTestMode2Entered();
-                        break;
-                    case ASICState.normal_mode:
-                        OnNormalModeEntered();
-                        break;
-                    default:
-                        OnErrorCallbackReceived(new CallbackErrorEventArgs() { Error = $"Unexpected ASIC{ID} mode received {State}" });
-                        break;
+                    switch (State)
+                    {
+                        case ASICState.init_mode:
+                            OnInitModeEntered();
+                            break;
+                        case ASICState.test_mode1:
+                            OnTestMode1Entered();
+                            break;
+                        case ASICState.test_mode2:
+                            OnTestMode2Entered();
+                            break;
+                        case ASICState.normal_mode:
+                            OnNormalModeEntered();
+                            break;
+                        default:
+                            OnErrorCallbackReceived(new CallbackErrorEventArgs() { Error = $"Unexpected ASIC{ID} mode received {State}" });
+                            break;
+                    }
                 }
             }
         }
 
-        /// <summary>
-        /// Method that will be called when response for writing configuration received
-        /// </summary>
-        /// <param name="response">MCU response package</param>
-        private void WriteConfigurationDelegate(IReceiveCommunicationPackage response)
-        {
-            // Typecast response to actual type
-            ReceiveCommunicationPackage<EmptyPayload> mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>)response;
-
-            // If error received - pass it to error provider
-            if (mcuResponse.Payload.Error is not null)
-            {
-                string errorMsg = $"Error response received. Status: {mcuResponse.Status}. Message: {mcuResponse.Payload.Error}";
-                OnErrorCallbackReceived(new CallbackErrorEventArgs() { Error = errorMsg });
-                logger.Error(errorMsg);
-                return;
-            }
-
-            // Check if this is the last expected response
-            logger.Debug($"Remaining number of config packages: {expectedNumberOfConfigPackages}");
-            expectedNumberOfConfigPackages--;
-            if (expectedNumberOfConfigPackages <= 0)    // TODO: debug, possibly multithreading issue with counter
-            {
-                OnConfigurationLoaded();
-                expectedNumberOfConfigPackages = null;
-            }
-        }
-
-        /// <summary>
-        /// Method that will be called when response for locking configuration (EOP) received
-        /// </summary>
-        /// <param name="response">MCU response package</param>
-        private void LockConfigurationDelegate(IReceiveCommunicationPackage response)
-        {
-            // Typecast response to actual type
-            ReceiveCommunicationPackage<EmptyPayload> mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>)response;
-
-            // If error received - pass it to error provider
-            if (mcuResponse.Payload.Error is not null)
-            {
-                string errorMsg = $"Error response received. Status: {mcuResponse.Status}. Message: {mcuResponse.Payload.Error}";
-                OnErrorCallbackReceived(new CallbackErrorEventArgs() { Error = errorMsg });
-                logger.Error(errorMsg);
-                return;
-            }
-
-            // Raise configuration locked event
-            OnConfigurationLocked();
-        }
-
-        /// <summary>
-        /// Method that will be called when response for write register command received
-        /// </summary>
-        /// <param name="response">MCU response package</param>
-        private void BasicWriteCommandDelegate(IReceiveCommunicationPackage response)
-        {
-            // Typecast response to actual type
-            ReceiveCommunicationPackage<EmptyPayload> mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>)response;
-
-            // If error received - pass it to error provider
-            if (mcuResponse.Payload.Error is not null)
-            {
-                string errorMsg = $"Error response received. Status: {mcuResponse.Status}. Message: {mcuResponse.Payload.Error}";
-                OnErrorCallbackReceived(new CallbackErrorEventArgs() { Error = errorMsg });
-                logger.Error(errorMsg);
-                return;
-            }
-        }
-
-        #endregion // CallbackHandlers
+        #endregion // Methods
 
         #region Services
 
@@ -782,6 +628,47 @@ namespace AB15_GUI.WPF.Models
             if (propertyName == null) throw new ArgumentException("Property name can't be null!");
 
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        /// <summary>
+        /// Generic validation method
+        /// </summary>
+        /// <param name="response">response from MCU</param>
+        /// <param name="customValidation">method to do custom validation (response true/false)</param>
+        /// <returns>true if response is valid, false if not valid</returns>
+        private bool IsResponseValid<T>(T response, Predicate<T>? customValidation = null) where T : IReceiveCommunicationPackage?
+        {
+            // Response not received
+            if (response is null)
+            {
+                logger.Error($"Error response received. Status: fault on sending command");
+                return false;
+            }
+
+            // Error in payload
+            try
+            {
+                dynamic dynamicResponse = response;
+                if (dynamicResponse.Payload.Error is not null)
+                {
+                    string errorMsg = $"Error response received. Status: {dynamicResponse.Status}. Message: {dynamicResponse.Payload.Error}";
+                    OnErrorCallbackReceived(new CallbackErrorEventArgs() { Error = errorMsg });
+                    logger.Error($"Error response received. Status: {dynamicResponse.Status}");
+                    return false;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+
+            // Apply custom validation if provided
+            if (customValidation is not null)
+            {
+                return customValidation(response);
+            }
+            
+            return true;
         }
 
         #endregion // Services

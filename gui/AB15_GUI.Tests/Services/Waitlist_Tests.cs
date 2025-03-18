@@ -1,15 +1,9 @@
 using System;
 using System.Collections.Generic;
 using AB15_GUI.WPF.Services;
-using AB15_GUI.WPF.Services.Interfaces;
 using AB15_GUI.WPF.Models;
 using AB15_GUI.WPF.Models.Interfaces;
-using System.Collections.Concurrent;
-using System.Linq;
 using AB15_GUI.WPF.NLog;
-using NLog;
-using System.Threading;
-using System.Windows;
 using System.Threading.Tasks;
 
 namespace AB15_GUI.Tests.Services
@@ -46,28 +40,22 @@ namespace AB15_GUI.Tests.Services
         {
         }
 
-        [Test, Description("Checking that valid data is send to COM port correctly")]
+        [Test, Description("Checking that valid items are added to waitlist")]
         [NonParallelizable]
         public void WhenValidItemsAreAdded_ThenWaitlistItemIsCorrect([Values(typeof(EmptyPayload))] Type payloadType, [Values(true, false)] bool isContinuous)
         {
             // Arrange
-            Action<IReceiveCommunicationPackage> delegIn = (package) => {};
-            Action<IReceiveCommunicationPackage>? delegOut = null;
             Waitlist waitlist = new Waitlist(loggerMock);
-            ReceivePackageMock receivedPackage = new ReceivePackageMock();
-            bool isAddedSuccessfully = false;
+            Task<IReceiveCommunicationPackage>? task;
+            int? msgID;
           
             // Act
-            receivedPackage.IsPackageValid = true;
-            (receivedPackage.MsgID, isAddedSuccessfully) = waitlist.AddItemToWaitlist(delegIn, payloadType, isContinuous);
-            delegOut = waitlist.GetDelegate(receivedPackage);
+            (msgID,  task) = waitlist.AddItemToWaitlist(payloadType, isContinuous);
 
-            // Assert
-            // Check that flag indicating successful adding is valid
-            Assert.That(isAddedSuccessfully, Is.True);
-
-            // Verify Delegate
-            Assert.That(delegOut, Is.EqualTo(delegIn));
+            // Assert          
+            // Verify if added successfully
+            Assert.That(msgID, Is.Not.Null);
+            Assert.That(task, Is.Not.Null);
         }
 
         #region Mocks
@@ -95,7 +83,7 @@ namespace AB15_GUI.Tests.Services
 
         public class LoggerMock : ILoggingService
         {
-            public bool IsDebugEnabled => throw new NotImplementedException();
+            public bool IsDebugEnabled => false;
 
             public bool IsErrorEnabled => throw new NotImplementedException();
 

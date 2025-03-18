@@ -219,3 +219,25 @@ class TestGeneralCommands:
         assert is_response_received, "No response from MCU received"
         assert result.status == pkg.Status.DATA, f"Incorrect status in payload. Expected DATA, but received {result.status}"
         assert (received_value.int_value == 0x080), f"Unexpected data. Expected 0x80 , but received {received_value.int_value}"
+
+    @pytest.mark.serial
+    @pytest.mark.basic
+    def test_ResetMCU(self):
+        '''group basic tests
+        sends command that should reset ShieldBuddy
+        tests:
+        - MCU command:
+            * RESET_MCU'''
+
+        # Arrange
+        packageToSend = pkg.TransmitPackage(0x00, 0x00, pkg.Command.RESET_MCU)
+
+        # Act
+        self.serial.com_port.write(packageToSend.serialize())
+        sleep(self.DELAY)
+        is_response_received = self.serial.extract_packages()
+        result = pkg.ReceivePackage(self.serial.packages.pop(0))
+
+        # Assert
+        assert is_response_received, "No response from MCU received"
+        assert result.status == pkg.Status.ACK

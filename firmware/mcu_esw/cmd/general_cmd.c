@@ -21,10 +21,14 @@
 #include "IfxPort.h" // for gpio.h
 #include "IfxPort_PinMap.h" // hack for gpio.h // TODO: remove dependency to IFxPort stuff
 #include "periphery/gpio.h" // for add chip select, TODO: remove dep.
+#include "IfxScuRcu.h" // for MCU reset command
+#include "Bsp.h" // for MCU reset command
 
 /*********************************************************************************************************************/
 /*------------------------------------------------------Macros-------------------------------------------------------*/
 /*********************************************************************************************************************/
+
+#define WAIT_TIME 50   /*mseconds */
 
 /*********************************************************************************************************************/
 /*------------------------------------------------Function Prototypes------------------------------------------------*/
@@ -229,7 +233,7 @@ void CmdSendRawData(USBReceiveData const * const commandPackage)
     // Parameters for SPI packages and variable to store output data
     USBTransmitData packageToSend;
     uint32 rawData;
-    //SPIReceiveDataNormal dataReceived;
+    SPIReceiveDataNormal dataReceived;
     boolean isSuccessfulFlag = FALSE;
     uint8 spiChannel;
 
@@ -242,44 +246,47 @@ void CmdSendRawData(USBReceiveData const * const commandPackage)
     rawData |= ConstructWordFromBytes(commandPackage->data[1], commandPackage->data[0]);
 
     // Send data to SPI with waiting for response
-    /*in case of spi channel is SPI1_CSMON1 or SPI2_CS_MON2 we use Master 1 but additinally pull down CS line for MONx */
-    if (spiChannel == SPI1_CS_MON1)
-    {
-        // pull down additional CS Mon pin
-        IfxPort_setPinState(SPI1_CS_MON1_PIN, IfxPort_State_low);
-        isSuccessfulFlag = QSPIWriteRaw(spiChannel, rawData);
-        IfxPort_setPinState(SPI1_CS_MON1_PIN, IfxPort_State_high);
-    }
-    else if (spiChannel == SPI2_CS_MON2)
-    {
-        // pull down additional CS Mon pin
-        IfxPort_setPinState(SPI2_CS_MON2_PIN, IfxPort_State_low);
-        isSuccessfulFlag = QSPIWriteRaw(spiChannel, rawData);
-        IfxPort_setPinState(SPI2_CS_MON2_PIN, IfxPort_State_high);
-    }
-    else
-    {
-        // no additional Pulldown
-        isSuccessfulFlag = QSPIWriteRaw(spiChannel, rawData);
-    }
+    isSuccessfulFlag = QSPIExecuteRawTransaction(spiChannel, &rawData);
+
+    // Store raw SPI receive frame in temporary variable
+    dataReceived.dw = rawData;
 
     // Construct package to PC
     packageToSend.device_id = commandPackage->device_id;
     packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
-    packageToSend.dataLength = 0;
+    packageToSend.dataLength = 4;
+    packageToSend.data[0] = GetByteByIdx(0, dataReceived.dw);
+    packageToSend.data[1] = GetByteByIdx(1, dataReceived.dw);
+    packageToSend.data[2] = GetByteByIdx(2, dataReceived.dw);
+    packageToSend.data[3] = GetByteByIdx(3, dataReceived.dw);
 
     // Construct packages based on error status
     if (isSuccessfulFlag == FALSE)
     {
-        // Common error frame setup
         packageToSend.status = USB_STATUS_ERROR;
     }
     else
     {
-        // Store SPI response frame to temporary variable for extracting data
-        packageToSend.status = USB_STATUS_ACK;
+        packageToSend.status = USB_STATUS_DATA;
     }
 
     // Send data back to MCU
     SendUSBPackage(&packageToSend);
+}
+
+void CmdResetMCU(USBReceiveData const * const commandPackage)
+{
+    USBTransmitData packageToSend;
+
+    packageToSend.device_id = 0;
+    packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
+    packageToSend.status = USB_STATUS_ACK;
+    packageToSend.dataLength = 0;
+    // Send data back to GUI
+    SendUSBPackage(&packageToSend);
+    // Delay to send status to GUI
+    waitTime(IfxStm_getTicksFromMilliseconds(BSP_DEFAULT_TIMER, WAIT_TIME));
+    
+    // Initiate reset of MCU
+    IfxScuRcu_performReset(IfxScuRcu_ResetType_system, 0);
 }

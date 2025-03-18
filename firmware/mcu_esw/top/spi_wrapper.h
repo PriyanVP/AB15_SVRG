@@ -42,21 +42,6 @@ void QSPIInit(void);
  */
 void QSPIDeinit(void);
 
-// AB12 prototypes
-
-/** \brief Execute SPI instruction for AB12 via QSPI
- *
- * \param spiChannel SPI Slave to and from which the SPI instruction is executed
- * \param instruction absolute address to read from
- * \param programmingEnable boolean flag to enable ASIC programming
- * \param dataToSend data that should be send as SPI input data (look for correct format for each instruction individually)
- * \param p_data empty variable (as pointer) to store readout data
- * \return Returns TRUE if no errors in received data, FALSE - otherwise
- */
-boolean QSPIExecuteInstruction(uint8 spiChannel, AB12SPIInstructionsEnum instruction, boolean programmingEnable, uint16 dataToSend, uint32 * const p_data);
-
-// AB15 prototypes
-
 /** \brief Reads sensor data via QSPI
  * 
  * \param spiChannel SPI Slave to and from which the SPI instruction is executed
@@ -99,10 +84,10 @@ boolean QSPIWriteNormal(SpiChSlaveSelectEnum spiChannel, uint16 address, uint16 
  * Created for raw command sending.
  *
  * \param spiChannel SPI Slave to and from which the SPI instruction is executed
- * \param data 32bit data to write
+ * \param p_data 32bit SPI frame; is also used for sending back raw SPI receive frame
  * \return Returns TRUE
  */
-boolean QSPIWriteRaw(uint8 spiChannel, uint32 data);
+boolean QSPIExecuteRawTransaction(uint8 spiChannel, uint32 * const p_data);
 
 /** \brief Read sequentially data from ASIC via QSPI
  * 

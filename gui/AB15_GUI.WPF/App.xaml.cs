@@ -54,14 +54,14 @@ namespace AB15_GUI.WPF
                             services.AddSingleton<LoggerViewModel>();
                             services.AddSingleton<WatchdogViewModel>();
                             services.AddSingleton<FiringViewModel>();
+                            services.AddSingleton<SPILearningViewModel>();
+                            services.AddSingleton<ConfigurationViewModel>();
 
                             #endregion // ViewModels
 
                             #region Views
 
                             services.AddSingleton<MainView>();
-
-                            services.AddSingleton<LoggerView>();
 
                             #endregion // Views
 

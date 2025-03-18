@@ -26,12 +26,6 @@
 
 #define WD_STATUS_REGS_COUNT        (4)         /** \brief Number of WD status registers for periodic reading */
 
-#define AB12_WD2_ACK_PERIOD         (12)        /** \brief Periodicity of acknowledging WD2 on AB12 platform: 600 us/ 50 us
-                                                    where 50 us - timer interrupt periodicity on MCU */
-
-#define AB12_WD3_ACK_PERIOD         (200)       /** \brief Periodicity of acknowledging WD3 on AB12 platform: 10 ms/ 50 us
-                                                    where 50 us - timer interrupt periodicity on MCU */
-
 #define WD1_ACK_PERIOD_SCALE_FACTOR (20)        /** \brief Scale factor to convert WD1 ACK period 
                                                     from register units to timer ticks: 1 ms / 50 us = 20 */
 
@@ -224,10 +218,11 @@ void CmdConfigureWatchdog(USBReceiveData const * const commandPackage)
 
     // Code for AB15 implementation
     isSuccessfulFlag = TRUE;
+    
     // Write both WD configs to ASIC to ASIC
     for (uint8 i = 0; i < length; i++)
     {
-        isSuccessfulFlag &= QSPIWriteNormal(SPI1_CS1MASTER, address[i], data[i]); // TODO: configuration, not yet implemented; not available for AB12
+        isSuccessfulFlag &= QSPIWriteNormal(SPI1_CS1MASTER, address[i], data[i]);
     }
 
     // Prepare report for GUI
@@ -252,7 +247,7 @@ void CmdConfigureWatchdog(USBReceiveData const * const commandPackage)
 
 void IntCmdAcknowledgeWatchdog1(void)
 {
-    uint16 question;
+    uint8 question;
     uint16 answer = 0;
     SPIReceiveDataNormal data;
 
@@ -271,7 +266,7 @@ void IntCmdAcknowledgeWatchdog1(void)
 
 void IntCmdAcknowledgeWatchdog2(void)
 {
-    uint16 question;
+    uint8 question;
     uint16 answer = 0;
     SPIReceiveDataNormal data;
 
@@ -320,13 +315,12 @@ void CmdStartWatchdog(USBReceiveData const * const commandPackage)
     QSPIWriteNormal(SPI1_CS1MASTER, SAFETY_LOGIC_SPI_SET_WDSETTINGS, SAFETY_LOGIC_SPI_SET_WDSETTINGS_SPI_ON_SL_MASK);
 
     // Configure periodicity of Watchdog serving MCU interrupt
-    ConfigureWatchdogPeriodicity(WD1, g_wd1Parameters.wdConfig.ackPeriod);
-    ConfigureWatchdogPeriodicity(WD2, g_wd2Parameters.wdConfig.ackPeriod);
+    ConfigureTimerPeriodicity(WATCHDOG1_TIMER, g_wd1Parameters.wdConfig.ackPeriod);
+    ConfigureTimerPeriodicity(WATCHDOG2_TIMER, g_wd2Parameters.wdConfig.ackPeriod);
 
     // Turn on Watchdog serving interrupt of MCU
-    EnableWatchdogInterrupt(WD2);
-    EnableWatchdogInterrupt(WD1);
-
+    EnableTimerInterrupt(WATCHDOG1_TIMER);
+    EnableTimerInterrupt(WATCHDOG2_TIMER);
 
     // Modify state
     g_wd1Parameters.state = WD_STATE_RUNNING_NORMAL;
@@ -342,8 +336,8 @@ void CmdStartWatchdog(USBReceiveData const * const commandPackage)
 void CmdStopWatchdog(USBReceiveData const * const commandPackage)
 {
     // Turn off Watchdog serving interrupt of MCU
-    DisableWatchdogInterrupt(WD1);
-    DisableWatchdogInterrupt(WD2);
+    DisableTimerInterrupt(WATCHDOG1_TIMER);
+    DisableTimerInterrupt(WATCHDOG2_TIMER);
 
     // Modify state and flags for WD
     g_wd1Parameters.isWDConfigured = FALSE;
@@ -419,8 +413,8 @@ void CmdStartMonitoringWatchdog(USBReceiveData const * const commandPackage)
     g_wdStatusMonitoringConfig.enStatusReading = TRUE;
 
     // Arm timer routine
-    ConfigureWatchdogStatusCheckPeriodicity(WD_STATUS_CHECK_PERIOD);
-    EnableWatchdogStatusCheckInterrupt();
+    ConfigureTimerPeriodicity(WATCHDOG_STATUS_CHECK_TIMER, WD_STATUS_CHECK_PERIOD);
+    EnableTimerInterrupt(WATCHDOG_STATUS_CHECK_TIMER);
 }
 
 void CmdStopMonitoringWatchdog(USBReceiveData const * const commandPackage)
@@ -429,7 +423,7 @@ void CmdStopMonitoringWatchdog(USBReceiveData const * const commandPackage)
     g_wdStatusMonitoringConfig.enStatusReading = FALSE;
 
     // Unarm timer routine
-    DisableWatchdogStatusCheckInterrupt();
+    DisableTimerInterrupt(WATCHDOG_STATUS_CHECK_TIMER);
 
     // Prepare acknowledge message
     USBTransmitData packageToSend;
@@ -458,7 +452,7 @@ void IntCmdMonitorWatchdog(void)
 
     // Read WD status from ASIC
     // AB15 platform
-    SPIReceiveDataNormal data[WD_STATUS_REGS_COUNT] = {0};
+    SPIReceiveDataNormal data[WD_STATUS_REGS_COUNT] = {0}; // TODO: may not work as this type of initializer not intended for array of structs
 
     // Read WD related registers from ASIC
     isSuccessfulFlag = QSPIReadSequenceNormal(SPI1_CS1MASTER, g_wdStatusMonitoringConfig.wdStatusRegsAddresses, &data[0].dw, &length); // TODO: not implemented

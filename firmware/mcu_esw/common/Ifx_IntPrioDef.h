@@ -24,6 +24,9 @@
 #define ISR_PRIORITY_ASCLIN_RX        (4)             /** \brief Priority for interrupt ISR Receive                  */
 #define ISR_PRIORITY_ASCLIN_ER        (12)            /** \brief Priority for interrupt ISR Errors                   */
 
+/* Interrupt Service Routine priorities for UART communication */
+#define ISR_PRIORITY_UART_TX          (40)            /** \brief Priority for interrupt UART ISR Transmit            */
+
 /* Interrupt Service Routine priorities for Master and Slave SPI communication */
 #define ISR_PRIORITY_MASTER1_TX        (50)            /** \brief Priority for interrupt SPI ISR Transmit             */
 #define ISR_PRIORITY_MASTER1_RX        (51)            /** \brief Priority for interrupt SPI ISR Receive              */

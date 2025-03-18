@@ -95,11 +95,14 @@ namespace AB15_GUI.WPF.Models
                 OnPropertyChanged();
             }
         }
-        
+
         /// <summary>
         /// Indicate how many sides of channel were deployed (2 corresponds to firing)
         /// </summary>
-        private int numberOfSidesDeployed = 0;
+        // TODO firecnt_translation - Changed strategy from counting number of sides deployed - Cleanup 
+        // private int numberOfSidesDeployed = 0;
+        private bool hsWasFired = false;
+        private bool lsWasFired = false;
 
         /// <summary>
         /// Flag indicating if channel was fired
@@ -110,12 +113,13 @@ namespace AB15_GUI.WPF.Models
             get
             {
                 // Report successful firing only if both sides were deployed
-                return (numberOfSidesDeployed == 2);
+                return (hsWasFired && lsWasFired);
             } 
             set
             {
                 // Any input value will cause counter reset
-                numberOfSidesDeployed = 0;
+                // TODO firecnt_translation - Changed strategy from counting number of sides deployed - Cleanup 
+                // numberOfSidesDeployed = 0;
                 OnPropertyChanged();
             } 
         }
@@ -136,11 +140,18 @@ namespace AB15_GUI.WPF.Models
             } 
             set
             {
+                // TODO firecnt_translation - Changed strategy from counting number of sides deployed - Cleanup 
                 // Increment counter if firing occurred
-                if (firingCntHigh != value)
+                if (value > 0)
                 {
-                    numberOfSidesDeployed++;
+                    // TODO firecnt_translation - Changed strategy from counting number of sides deployed - Cleanup 
+                    //numberOfSidesDeployed++;
+                    hsWasFired = true;
                     OnPropertyChanged(nameof(WasFired));
+                }
+                else
+                {
+                    hsWasFired = false;
                 }
 
                 firingCntHigh = value;
@@ -164,11 +175,18 @@ namespace AB15_GUI.WPF.Models
             } 
             set
             {
+                // TODO firecnt_translation - Changed strategy from counting number of sides deployed - Cleanup 
                 // Increment counter if firing occurred
-                if (firingCntHigh != value)
+                if (value > 0)
                 {
-                    numberOfSidesDeployed++;
+                    // TODO firecnt_translation - Changed strategy from counting number of sides deployed - Cleanup 
+                    //numberOfSidesDeployed++;
+                    lsWasFired = true;
                     OnPropertyChanged(nameof(WasFired));
+                }
+                else
+                {
+                    lsWasFired = false;
                 }
 
                 firingCntLow = value;

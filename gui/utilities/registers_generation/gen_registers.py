@@ -156,6 +156,9 @@ def generate_register_files(path_to_regmap: str, register_list: list, path_to_ou
         # Stop processing if generation for this register is not requested
         if (reg_name not in register_list):
             continue
+        else:
+            # Remove processed register from list. Fixes issue with generating models for OTP registers
+            register_list.remove(reg_name)
 
         # Get address offset of address block (base address)
         base_address = int(register.getparent().find(".//spirit:baseAddress", namespaces=xml_spirit_namespaces).text, 16)
@@ -166,10 +169,18 @@ def generate_register_files(path_to_regmap: str, register_list: list, path_to_ou
         # Calculate absolute address and store as a hex string
         abs_address = f"0x{(base_address+reg_offset):04x}"
 
-        # Get reset value
-        reset_value = register.find(".//spirit:reset", namespaces=xml_spirit_namespaces) \
-                              .find(".//spirit:value", namespaces=xml_spirit_namespaces).text
-        
+        # Get reset value. Handle reset field without mask
+        try:
+            reset_value = int(register.find(".//spirit:reset", namespaces=xml_spirit_namespaces) \
+                                .find(".//spirit:value", namespaces=xml_spirit_namespaces).text, 16)
+
+            reset_mask = int(register.find(".//spirit:reset", namespaces=xml_spirit_namespaces) \
+                                    .find(".//spirit:mask", namespaces=xml_spirit_namespaces).text, 16)
+
+            reset_value = f"0x{(reset_value & reset_mask):04x}"
+        except AttributeError:
+            reset_value = "0x0000"
+            
         # Get description
         reg_description = register.find(".//spirit:description", namespaces=xml_spirit_namespaces).text
 
