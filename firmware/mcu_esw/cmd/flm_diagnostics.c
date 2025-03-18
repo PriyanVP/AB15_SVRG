@@ -594,6 +594,9 @@ void DiagSVRGDiag()
 
 void FLMSaveDiagResults()
 {
+    // Enable flags
+    // TODO: update data array index values
+    g_resultsToSend.data[0] = g_diagEnableFlags.sw;
     // Short detection results
     g_resultsToSend.data[0] = GetLSB(g_resultsValues.resultShortDiag.readShortCh4_1);
     g_resultsToSend.data[1] = GetMSB(g_resultsValues.resultShortDiag.readShortCh4_1);
@@ -630,9 +633,12 @@ void FLMSaveDiagResults()
     g_resultsToSend.data[29] = GetMSB(g_resultsValues.resultVHxDiag[9].readVHxVoltageValue);
     g_resultsToSend.data[30] = GetLSB(g_resultsValues.resultVHxDiag[10].readVHxVoltageValue);
     g_resultsToSend.data[31] = GetMSB(g_resultsValues.resultVHxDiag[10].readVHxVoltageValue);
+    // TODO: update data array index values
+    g_resultsToSend.data[30] = GetLSB(g_resultsValues.resultVHxDiag[11].readVHxVoltageValue);
+    g_resultsToSend.data[31] = GetMSB(g_resultsValues.resultVHxDiag[11].readVHxVoltageValue);
 
     uint8 tmp1VHxVoltageValid, tmp2VHxVoltageValid = 0;
-    for (uint8 i = 0; i<11; i++)
+    for (uint8 i = 0; i<FLM_DIAG_READ_VHX_REGS_COUNT; i++)
     {
         if (i < 8)
         {
@@ -810,6 +816,13 @@ void FLMSaveDiagResults()
     g_resultsToSend.data[83] = tmp1SquibResPgndxLoss;
     g_resultsToSend.data[84] = tmp2SquibResPgndxLoss;
     g_resultsToSend.data[85] = tmp3SquibResPgndxLoss;
+
+    // SVRG capacity test results
+    // TODO: update index
+    g_resultsToSend.data[88] = GetLSB(g_resultsValues.resultSVRGdiag.readSVRGcapacityValue);
+    g_resultsToSend.data[89] = GetMSB(g_resultsValues.resultSVRGdiag.readSVRGcapacityValue);
+    g_resultsToSend.data[90] = g_resultsValues.resultSVRGdiag.readSVRGcapacityValid;
+
 }
 
 void StartFLMDiag(uint8 diagMode)
