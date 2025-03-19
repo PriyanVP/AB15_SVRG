@@ -51,7 +51,7 @@ typedef enum
     FLM_DIAG_ORDER_LOOP_RES_MEAS    = 3,        /** \brief Loop resistance measurement (all loops) */
     FLM_DIAG_ORDER_SQUIB_DET        = 4,        /** \brief Squib presence test (all loops) */
     DIAG_ORDER_FLM_SVRG_TST         = 5,        /** \brief SVRG test from FLM Diagnostics*/
-    DIAG_ORDER_SVRG_DIAG            = 6,        /** \brief SVRG diagnostic from SVRG module */
+    DIAG_ORDER_SVRG_DIAG            = 6,        /** \brief SVRG diagnostic from SVRG module */ // TODO: probably obsolete
     FLM_DIAG_ORDER_SAVE_RESULTS     = 7         /** \brief Save results of diagnostics into package for GUI */
 } FLMDiagExecOrderEnum;
 
@@ -70,7 +70,7 @@ typedef enum
 /*-------------------------------------------------Data Structures-------------------------------------------------------*/
 /*************************************************************************************************************************/
 
-/** \brief Structure to organise enable flags of each diagnostic 
+/** \brief Structure to organize enable flags of each diagnostic 
 */
 typedef union
 {
@@ -97,7 +97,6 @@ typedef struct
     uint16          readShortCh12_9;
     uint16          readShortCh16_13;
     uint16          readShortCh20_17;
-
 } FLMShortDiagStruct;
 
 /** \brief Structure to store results of one FLM channel VH voltage diagnostic
@@ -107,7 +106,6 @@ typedef struct
 {
     uint16 readVHxVoltageValue;
     boolean readVHxVoltageValid;
-
 } FLMDiagReadVHx;
 
 /** \brief Structure to store results of FLM Loop resistanse diagnostic
