@@ -15,8 +15,9 @@
 /*------------------------------------------------------Macros-------------------------------------------------------*/
 /*********************************************************************************************************************/
 
-#define SVR1_FLAG 0x01
-#define SVR2_FLAG 0x02
+#define SVR_NO_CHANGE 0x00
+#define SVR_OFF 0xA0
+#define SVR_ON 0xA5
 
 /*********************************************************************************************************************/
 /*------------------------------------------------Function Prototypes------------------------------------------------*/
@@ -32,24 +33,32 @@
 
 void CmdSetSvr(USBReceiveData const * const commandPackage)
 {
-    // Get value of SVR from received data
-    uint8 svrCommand = commandPackage->data[0];
-
-    if (svrCommand & SVR1_FLAG)
-    {
-        SetSVRPin(SVR1);
-    }
-    else
-    {
-        ClearSVRPin(SVR1);
-    }
-
     // Construct package to PC
     USBTransmitData packageToSend;
     packageToSend.device_id = commandPackage->device_id;
     packageToSend.msg_id = SetResponseBit(commandPackage->msg_id);
     packageToSend.dataLength = 0;
     packageToSend.status = USB_STATUS_ACK;
+
+    // Get value of SVR from received data
+    uint8 svr1Command = commandPackage->data[0];
+
+    if (svr1Command == SVR_ON)
+    {
+        SetSVRPin(SVR1);
+    }
+    else if (svr1Command == SVR_OFF)
+    {
+        ClearSVRPin(SVR1);
+    }
+    else if (svr1Command == SVR_NO_CHANGE)
+    {
+        // Do nothing
+    }
+    else
+    {
+        packageToSend.status = USB_STATUS_ERROR;
+    }
 
     // Send data back to MCU
     SendUSBPackage(&packageToSend);
