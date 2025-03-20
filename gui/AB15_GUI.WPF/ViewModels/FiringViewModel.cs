@@ -3,6 +3,7 @@ using System.Windows.Input;
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.JavaScript;
 using System.Timers;
 using System.Threading.Tasks;
 using Stateless;
@@ -1189,6 +1190,8 @@ namespace AB15_GUI.WPF.ViewModels
                 OnPropertyChanged(nameof(FireSimultaneousCommandEn));
                 return;
             }
+            
+            await EnableSvr1((int)DeviceIDs.SPI1_CS1MASTER);
 
             // == Step 0.2 - disabling monoflop ==
 
@@ -1207,7 +1210,11 @@ namespace AB15_GUI.WPF.ViewModels
             ReceiveCommunicationPackage<EmptyPayload>? mcuResponse02 = (ReceiveCommunicationPackage<EmptyPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
 
             // Validate response
-            if (IsResponseValid(mcuResponse02, nameof(FireSimultaneous)) == false) return;
+            if (IsResponseValid(mcuResponse02, nameof(FireSimultaneous)) == false)
+            {
+                await DisableSvr1((int)DeviceIDs.SPI1_CS1MASTER);
+                return;
+            }
 
             // == Step 1 - unlocking ==
 
@@ -1254,7 +1261,11 @@ namespace AB15_GUI.WPF.ViewModels
             ReceiveCommunicationPackage<EmptyPayload>? mcuResponse1 = (ReceiveCommunicationPackage<EmptyPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
 
             // Validate response
-            if (IsResponseValid(mcuResponse1, nameof(FireSimultaneous)) == false) return;
+            if (IsResponseValid(mcuResponse1, nameof(FireSimultaneous)) == false)
+            {
+                await DisableSvr1((int)DeviceIDs.SPI1_CS1MASTER);
+                return;
+            }
 
             // == Step 2 - firing ==
 
@@ -1372,7 +1383,11 @@ namespace AB15_GUI.WPF.ViewModels
             ReceiveCommunicationPackage<EmptyPayload>? mcuResponse2 = (ReceiveCommunicationPackage<EmptyPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
 
             // Validate response
-            if (IsResponseValid(mcuResponse2, nameof(FireSimultaneous)) == false) return;
+            if (IsResponseValid(mcuResponse2, nameof(FireSimultaneous)) == false)
+            {
+                await DisableSvr1((int)DeviceIDs.SPI1_CS1MASTER);
+                return;
+            }
 
             // Emulate delay TODO: find better approach
             await Task.Delay(13);
@@ -1416,7 +1431,11 @@ namespace AB15_GUI.WPF.ViewModels
             ReceiveCommunicationPackage<EmptyPayload>? mcuResponse3 = (ReceiveCommunicationPackage<EmptyPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
 
             // Validate response
-            if (IsResponseValid(mcuResponse3, nameof(FireSimultaneous)) == false) return;
+            if (IsResponseValid(mcuResponse3, nameof(FireSimultaneous)) == false)
+            {
+                await DisableSvr1((int)DeviceIDs.SPI1_CS1MASTER);
+                return;
+            }
 
             // == Step 4 - getting firing status ==
 
@@ -1459,7 +1478,11 @@ namespace AB15_GUI.WPF.ViewModels
             ReceiveCommunicationPackage<AddressDataPayload>? mcuResponse4 = (ReceiveCommunicationPackage<AddressDataPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
 
             // Validate response
-            if (IsResponseValid(mcuResponse4, nameof(FireSimultaneous)) == false) return;
+            if (IsResponseValid(mcuResponse4, nameof(FireSimultaneous)) == false)
+            {
+                await DisableSvr1((int)DeviceIDs.SPI1_CS1MASTER);
+                return;
+            }
 
             // Register for field masks - all firing counter regs have same layout
             Reg_FLM_Read_Fire_Cnt_ch1 fireCntRegTemplate = new Reg_FLM_Read_Fire_Cnt_ch1();
@@ -1479,6 +1502,8 @@ namespace AB15_GUI.WPF.ViewModels
                     continue;
                 }
             }
+            
+            await DisableSvr1((int)DeviceIDs.SPI1_CS1MASTER);
 
             // Unlock firing command
             _fireSimultaneousCommand.InProgress = false;
@@ -1676,6 +1701,42 @@ namespace AB15_GUI.WPF.ViewModels
 
             // Send command to MCU and wait for response
             var mcuResponse = (ReceiveCommunicationPackage<UartPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
+
+            // Validate response
+            return IsResponseValid(mcuResponse, nameof(FireSimultaneous));
+        }
+
+        private async Task<bool> EnableSvr1(int asicId)
+        {
+            // Create package to MCU
+            var packageToSend = new TransmitCommunicationPackage<SvrPayload>
+            {
+                ASICID = asicId,
+                Cmd = MCUCommand.SET_SVR,
+                PayloadType = typeof(SvrPayload)
+            };
+            packageToSend.Payload.Svr1Command = SvrCommandValues.SVR_ON;
+
+            // Send command to MCU and wait for response
+            var mcuResponse = (ReceiveCommunicationPackage<SvrPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
+
+            // Validate response
+            return IsResponseValid(mcuResponse, nameof(FireSimultaneous));
+        }
+        
+        private async Task<bool> DisableSvr1(int asicId)
+        {
+            // Create package to MCU
+            var packageToSend = new TransmitCommunicationPackage<SvrPayload>
+            {
+                ASICID = asicId,
+                Cmd = MCUCommand.SET_SVR,
+                PayloadType = typeof(SvrPayload)
+            };
+            packageToSend.Payload.Svr1Command = SvrCommandValues.SVR_OFF;
+
+            // Send command to MCU and wait for response
+            var mcuResponse = (ReceiveCommunicationPackage<SvrPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
 
             // Validate response
             return IsResponseValid(mcuResponse, nameof(FireSimultaneous));
