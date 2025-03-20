@@ -14,6 +14,7 @@
 #include "cmd/watchdog.h"
 #include "cmd/testmode_cmd.h"
 #include "cmd/hacked_timer_cmd.h" // TODO: refactor
+#include "cmd/svr_cmd.h"
 #include "cmd/uart_cmd.h"
 #include "periphery/led.h"
 #include "periphery/usb.h"
@@ -28,6 +29,7 @@
 #include "IfxPort.h" // for gpio.h
 #include "IfxPort_PinMap.h" // for gpio.h // TODO: remove dependency to IFxPort stuff
 #include "periphery/gpio.h" // for chip select lines
+#include "periphery/svr.h"
 #include "periphery/uart.h"
 
 
@@ -157,6 +159,7 @@ void core0_main(void)
     ConfigureSelectPin();
     InitGPIOPins();
     InitCSPins();
+    InitSVRPins();
 
     // Init USB
     USBInit();
@@ -340,6 +343,10 @@ void core0_main(void)
 
             case USB_CMD_RESET_MCU:
                 CmdResetMCU(&cmdPackage);
+                break;
+
+            case USB_CMD_SET_SVR:
+                CmdSetSvr(&cmdPackage);
                 break;
 
             /* Region: internal commands */
