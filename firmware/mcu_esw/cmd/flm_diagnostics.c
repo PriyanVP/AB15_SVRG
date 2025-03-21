@@ -580,47 +580,45 @@ void DiagFLMSVRGTest()
 void FLMSaveDiagResults()
 {
     // Enable flags
-    // TODO: update data array index values
     g_resultsToSend.data[0] = g_diagEnableFlags.sw;
     // Short detection results
-    g_resultsToSend.data[0] = GetLSB(g_resultsValues.resultShortDiag.readShortCh4_1);
-    g_resultsToSend.data[1] = GetMSB(g_resultsValues.resultShortDiag.readShortCh4_1);
-    g_resultsToSend.data[2] = GetLSB(g_resultsValues.resultShortDiag.readShortCh8_5);
-    g_resultsToSend.data[3] = GetMSB(g_resultsValues.resultShortDiag.readShortCh8_5);
-    g_resultsToSend.data[4] = GetLSB(g_resultsValues.resultShortDiag.readShortCh12_9);
-    g_resultsToSend.data[5] = GetMSB(g_resultsValues.resultShortDiag.readShortCh12_9);
-    g_resultsToSend.data[6] = GetLSB(g_resultsValues.resultShortDiag.readShortCh16_13);
-    g_resultsToSend.data[7] = GetMSB(g_resultsValues.resultShortDiag.readShortCh16_13);
-    g_resultsToSend.data[8] = GetLSB(g_resultsValues.resultShortDiag.readShortCh20_17);
-    g_resultsToSend.data[9] = GetMSB(g_resultsValues.resultShortDiag.readShortCh20_17);
+    g_resultsToSend.data[1] = GetLSB(g_resultsValues.resultShortDiag.readShortCh4_1);
+    g_resultsToSend.data[2] = GetMSB(g_resultsValues.resultShortDiag.readShortCh4_1);
+    g_resultsToSend.data[3] = GetLSB(g_resultsValues.resultShortDiag.readShortCh8_5);
+    g_resultsToSend.data[4] = GetMSB(g_resultsValues.resultShortDiag.readShortCh8_5);
+    g_resultsToSend.data[5] = GetLSB(g_resultsValues.resultShortDiag.readShortCh12_9);
+    g_resultsToSend.data[6] = GetMSB(g_resultsValues.resultShortDiag.readShortCh12_9);
+    g_resultsToSend.data[7] = GetLSB(g_resultsValues.resultShortDiag.readShortCh16_13);
+    g_resultsToSend.data[8] = GetMSB(g_resultsValues.resultShortDiag.readShortCh16_13);
+    g_resultsToSend.data[9] = GetLSB(g_resultsValues.resultShortDiag.readShortCh20_17);
+    g_resultsToSend.data[10] = GetMSB(g_resultsValues.resultShortDiag.readShortCh20_17);
 
     // VHx diagnostic results resultVHxDiag[]
-    // TODO: add reading of FLM_Read_Diag_SVRG_GATE
-    g_resultsToSend.data[10] = GetLSB(g_resultsValues.resultVHxDiag[0].readVHxVoltageValue);
-    g_resultsToSend.data[11] = GetMSB(g_resultsValues.resultVHxDiag[0].readVHxVoltageValue);
-    g_resultsToSend.data[12] = GetLSB(g_resultsValues.resultVHxDiag[1].readVHxVoltageValue);
-    g_resultsToSend.data[13] = GetMSB(g_resultsValues.resultVHxDiag[1].readVHxVoltageValue);
-    g_resultsToSend.data[14] = GetLSB(g_resultsValues.resultVHxDiag[2].readVHxVoltageValue);
-    g_resultsToSend.data[15] = GetMSB(g_resultsValues.resultVHxDiag[2].readVHxVoltageValue);
-    g_resultsToSend.data[16] = GetLSB(g_resultsValues.resultVHxDiag[3].readVHxVoltageValue);
-    g_resultsToSend.data[17] = GetMSB(g_resultsValues.resultVHxDiag[3].readVHxVoltageValue);
-    g_resultsToSend.data[18] = GetLSB(g_resultsValues.resultVHxDiag[4].readVHxVoltageValue);
-    g_resultsToSend.data[19] = GetMSB(g_resultsValues.resultVHxDiag[4].readVHxVoltageValue);
-    g_resultsToSend.data[20] = GetLSB(g_resultsValues.resultVHxDiag[5].readVHxVoltageValue);
-    g_resultsToSend.data[21] = GetMSB(g_resultsValues.resultVHxDiag[5].readVHxVoltageValue);
-    g_resultsToSend.data[22] = GetLSB(g_resultsValues.resultVHxDiag[6].readVHxVoltageValue);
-    g_resultsToSend.data[23] = GetMSB(g_resultsValues.resultVHxDiag[6].readVHxVoltageValue);
-    g_resultsToSend.data[24] = GetLSB(g_resultsValues.resultVHxDiag[7].readVHxVoltageValue);
-    g_resultsToSend.data[25] = GetMSB(g_resultsValues.resultVHxDiag[7].readVHxVoltageValue);
-    g_resultsToSend.data[26] = GetLSB(g_resultsValues.resultVHxDiag[8].readVHxVoltageValue);
-    g_resultsToSend.data[27] = GetMSB(g_resultsValues.resultVHxDiag[8].readVHxVoltageValue);
-    g_resultsToSend.data[28] = GetLSB(g_resultsValues.resultVHxDiag[9].readVHxVoltageValue);
-    g_resultsToSend.data[29] = GetMSB(g_resultsValues.resultVHxDiag[9].readVHxVoltageValue);
-    g_resultsToSend.data[30] = GetLSB(g_resultsValues.resultVHxDiag[10].readVHxVoltageValue);
-    g_resultsToSend.data[31] = GetMSB(g_resultsValues.resultVHxDiag[10].readVHxVoltageValue);
-    // TODO: update data array index values
-    g_resultsToSend.data[30] = GetLSB(g_resultsValues.resultVHxDiag[11].readVHxVoltageValue);
-    g_resultsToSend.data[31] = GetMSB(g_resultsValues.resultVHxDiag[11].readVHxVoltageValue);
+    g_resultsToSend.data[11] = GetLSB(g_resultsValues.resultVHxDiag[0].readVHxVoltageValue);
+    g_resultsToSend.data[12] = GetMSB(g_resultsValues.resultVHxDiag[0].readVHxVoltageValue);
+    g_resultsToSend.data[13] = GetLSB(g_resultsValues.resultVHxDiag[1].readVHxVoltageValue);
+    g_resultsToSend.data[14] = GetMSB(g_resultsValues.resultVHxDiag[1].readVHxVoltageValue);
+    g_resultsToSend.data[15] = GetLSB(g_resultsValues.resultVHxDiag[2].readVHxVoltageValue);
+    g_resultsToSend.data[16] = GetMSB(g_resultsValues.resultVHxDiag[2].readVHxVoltageValue);
+    g_resultsToSend.data[17] = GetLSB(g_resultsValues.resultVHxDiag[3].readVHxVoltageValue);
+    g_resultsToSend.data[18] = GetMSB(g_resultsValues.resultVHxDiag[3].readVHxVoltageValue);
+    g_resultsToSend.data[19] = GetLSB(g_resultsValues.resultVHxDiag[4].readVHxVoltageValue);
+    g_resultsToSend.data[20] = GetMSB(g_resultsValues.resultVHxDiag[4].readVHxVoltageValue);
+    g_resultsToSend.data[21] = GetLSB(g_resultsValues.resultVHxDiag[5].readVHxVoltageValue);
+    g_resultsToSend.data[22] = GetMSB(g_resultsValues.resultVHxDiag[5].readVHxVoltageValue);
+    g_resultsToSend.data[23] = GetLSB(g_resultsValues.resultVHxDiag[6].readVHxVoltageValue);
+    g_resultsToSend.data[24] = GetMSB(g_resultsValues.resultVHxDiag[6].readVHxVoltageValue);
+    g_resultsToSend.data[25] = GetLSB(g_resultsValues.resultVHxDiag[7].readVHxVoltageValue);
+    g_resultsToSend.data[26] = GetMSB(g_resultsValues.resultVHxDiag[7].readVHxVoltageValue);
+    g_resultsToSend.data[27] = GetLSB(g_resultsValues.resultVHxDiag[8].readVHxVoltageValue);
+    g_resultsToSend.data[28] = GetMSB(g_resultsValues.resultVHxDiag[8].readVHxVoltageValue);
+    g_resultsToSend.data[29] = GetLSB(g_resultsValues.resultVHxDiag[9].readVHxVoltageValue);
+    g_resultsToSend.data[30] = GetMSB(g_resultsValues.resultVHxDiag[9].readVHxVoltageValue);
+    g_resultsToSend.data[31] = GetLSB(g_resultsValues.resultVHxDiag[10].readVHxVoltageValue);
+    g_resultsToSend.data[32] = GetMSB(g_resultsValues.resultVHxDiag[10].readVHxVoltageValue);
+    // FLM_Read_Diag_SVRG_GATE values
+    g_resultsToSend.data[33] = GetLSB(g_resultsValues.resultVHxDiag[11].readVHxVoltageValue);
+    g_resultsToSend.data[34] = GetMSB(g_resultsValues.resultVHxDiag[11].readVHxVoltageValue);
 
     uint8 tmp1VHxVoltageValid, tmp2VHxVoltageValid = 0;
     for (uint8 i = 0; i<FLM_DIAG_READ_VHX_REGS_COUNT; i++)
@@ -640,8 +638,8 @@ void FLMSaveDiagResults()
             }
         }
     }
-    g_resultsToSend.data[32] = tmp1VHxVoltageValid;
-    g_resultsToSend.data[33] = tmp2VHxVoltageValid;
+    g_resultsToSend.data[35] = tmp1VHxVoltageValid;
+    g_resultsToSend.data[36] = tmp2VHxVoltageValid;
 
     // Squib detection error results
     uint8 tmp1SquibDetErr, tmp2SquibDetErr, tmp3SquibDetErr = 0;
@@ -669,51 +667,51 @@ void FLMSaveDiagResults()
             }
         }
     }
-    g_resultsToSend.data[34] = tmp1SquibDetErr;
-    g_resultsToSend.data[35] = tmp2SquibDetErr;
-    g_resultsToSend.data[36] = tmp3SquibDetErr;
+    g_resultsToSend.data[37] = tmp1SquibDetErr;
+    g_resultsToSend.data[38] = tmp2SquibDetErr;
+    g_resultsToSend.data[39] = tmp3SquibDetErr;
 
     // Loop resistance diagnostics results
-    g_resultsToSend.data[37] = GetLSB(g_resultsValues.resultLoopResDiag[0].readSquibResValue);
-    g_resultsToSend.data[38] = GetMSB(g_resultsValues.resultLoopResDiag[0].readSquibResValue);
-    g_resultsToSend.data[39] = GetLSB(g_resultsValues.resultLoopResDiag[1].readSquibResValue);
-    g_resultsToSend.data[40] = GetMSB(g_resultsValues.resultLoopResDiag[1].readSquibResValue);
-    g_resultsToSend.data[41] = GetLSB(g_resultsValues.resultLoopResDiag[2].readSquibResValue);
-    g_resultsToSend.data[42] = GetMSB(g_resultsValues.resultLoopResDiag[2].readSquibResValue);
-    g_resultsToSend.data[43] = GetLSB(g_resultsValues.resultLoopResDiag[3].readSquibResValue);
-    g_resultsToSend.data[44] = GetMSB(g_resultsValues.resultLoopResDiag[3].readSquibResValue);
-    g_resultsToSend.data[45] = GetLSB(g_resultsValues.resultLoopResDiag[4].readSquibResValue);
-    g_resultsToSend.data[46] = GetMSB(g_resultsValues.resultLoopResDiag[4].readSquibResValue);
-    g_resultsToSend.data[47] = GetLSB(g_resultsValues.resultLoopResDiag[5].readSquibResValue);
-    g_resultsToSend.data[48] = GetMSB(g_resultsValues.resultLoopResDiag[5].readSquibResValue);
-    g_resultsToSend.data[49] = GetLSB(g_resultsValues.resultLoopResDiag[6].readSquibResValue);
-    g_resultsToSend.data[50] = GetMSB(g_resultsValues.resultLoopResDiag[6].readSquibResValue);
-    g_resultsToSend.data[51] = GetLSB(g_resultsValues.resultLoopResDiag[7].readSquibResValue);
-    g_resultsToSend.data[52] = GetMSB(g_resultsValues.resultLoopResDiag[7].readSquibResValue);
-    g_resultsToSend.data[53] = GetLSB(g_resultsValues.resultLoopResDiag[8].readSquibResValue);
-    g_resultsToSend.data[54] = GetMSB(g_resultsValues.resultLoopResDiag[8].readSquibResValue);
-    g_resultsToSend.data[55] = GetLSB(g_resultsValues.resultLoopResDiag[9].readSquibResValue);
-    g_resultsToSend.data[56] = GetMSB(g_resultsValues.resultLoopResDiag[9].readSquibResValue);
-    g_resultsToSend.data[57] = GetLSB(g_resultsValues.resultLoopResDiag[10].readSquibResValue);
-    g_resultsToSend.data[58] = GetMSB(g_resultsValues.resultLoopResDiag[10].readSquibResValue);
-    g_resultsToSend.data[59] = GetLSB(g_resultsValues.resultLoopResDiag[11].readSquibResValue);
-    g_resultsToSend.data[60] = GetMSB(g_resultsValues.resultLoopResDiag[11].readSquibResValue);
-    g_resultsToSend.data[61] = GetLSB(g_resultsValues.resultLoopResDiag[12].readSquibResValue);
-    g_resultsToSend.data[62] = GetMSB(g_resultsValues.resultLoopResDiag[12].readSquibResValue);
-    g_resultsToSend.data[63] = GetLSB(g_resultsValues.resultLoopResDiag[13].readSquibResValue);
-    g_resultsToSend.data[64] = GetMSB(g_resultsValues.resultLoopResDiag[13].readSquibResValue);
-    g_resultsToSend.data[65] = GetLSB(g_resultsValues.resultLoopResDiag[14].readSquibResValue);
-    g_resultsToSend.data[66] = GetMSB(g_resultsValues.resultLoopResDiag[14].readSquibResValue);
-    g_resultsToSend.data[67] = GetLSB(g_resultsValues.resultLoopResDiag[15].readSquibResValue);
-    g_resultsToSend.data[68] = GetMSB(g_resultsValues.resultLoopResDiag[15].readSquibResValue);
-    g_resultsToSend.data[69] = GetLSB(g_resultsValues.resultLoopResDiag[16].readSquibResValue);
-    g_resultsToSend.data[70] = GetMSB(g_resultsValues.resultLoopResDiag[16].readSquibResValue);
-    g_resultsToSend.data[71] = GetLSB(g_resultsValues.resultLoopResDiag[17].readSquibResValue);
-    g_resultsToSend.data[72] = GetMSB(g_resultsValues.resultLoopResDiag[17].readSquibResValue);
-    g_resultsToSend.data[73] = GetLSB(g_resultsValues.resultLoopResDiag[18].readSquibResValue);
-    g_resultsToSend.data[74] = GetMSB(g_resultsValues.resultLoopResDiag[18].readSquibResValue);
-    g_resultsToSend.data[75] = GetLSB(g_resultsValues.resultLoopResDiag[19].readSquibResValue);
-    g_resultsToSend.data[76] = GetMSB(g_resultsValues.resultLoopResDiag[19].readSquibResValue);
+    g_resultsToSend.data[40] = GetLSB(g_resultsValues.resultLoopResDiag[0].readSquibResValue);
+    g_resultsToSend.data[41] = GetMSB(g_resultsValues.resultLoopResDiag[0].readSquibResValue);
+    g_resultsToSend.data[42] = GetLSB(g_resultsValues.resultLoopResDiag[1].readSquibResValue);
+    g_resultsToSend.data[43] = GetMSB(g_resultsValues.resultLoopResDiag[1].readSquibResValue);
+    g_resultsToSend.data[44] = GetLSB(g_resultsValues.resultLoopResDiag[2].readSquibResValue);
+    g_resultsToSend.data[45] = GetMSB(g_resultsValues.resultLoopResDiag[2].readSquibResValue);
+    g_resultsToSend.data[46] = GetLSB(g_resultsValues.resultLoopResDiag[3].readSquibResValue);
+    g_resultsToSend.data[47] = GetMSB(g_resultsValues.resultLoopResDiag[3].readSquibResValue);
+    g_resultsToSend.data[48] = GetLSB(g_resultsValues.resultLoopResDiag[4].readSquibResValue);
+    g_resultsToSend.data[49] = GetMSB(g_resultsValues.resultLoopResDiag[4].readSquibResValue);
+    g_resultsToSend.data[50] = GetLSB(g_resultsValues.resultLoopResDiag[5].readSquibResValue);
+    g_resultsToSend.data[51] = GetMSB(g_resultsValues.resultLoopResDiag[5].readSquibResValue);
+    g_resultsToSend.data[52] = GetLSB(g_resultsValues.resultLoopResDiag[6].readSquibResValue);
+    g_resultsToSend.data[53] = GetMSB(g_resultsValues.resultLoopResDiag[6].readSquibResValue);
+    g_resultsToSend.data[54] = GetLSB(g_resultsValues.resultLoopResDiag[7].readSquibResValue);
+    g_resultsToSend.data[55] = GetMSB(g_resultsValues.resultLoopResDiag[7].readSquibResValue);
+    g_resultsToSend.data[56] = GetLSB(g_resultsValues.resultLoopResDiag[8].readSquibResValue);
+    g_resultsToSend.data[57] = GetMSB(g_resultsValues.resultLoopResDiag[8].readSquibResValue);
+    g_resultsToSend.data[58] = GetLSB(g_resultsValues.resultLoopResDiag[9].readSquibResValue);
+    g_resultsToSend.data[59] = GetMSB(g_resultsValues.resultLoopResDiag[9].readSquibResValue);
+    g_resultsToSend.data[60] = GetLSB(g_resultsValues.resultLoopResDiag[10].readSquibResValue);
+    g_resultsToSend.data[61] = GetMSB(g_resultsValues.resultLoopResDiag[10].readSquibResValue);
+    g_resultsToSend.data[62] = GetLSB(g_resultsValues.resultLoopResDiag[11].readSquibResValue);
+    g_resultsToSend.data[63] = GetMSB(g_resultsValues.resultLoopResDiag[11].readSquibResValue);
+    g_resultsToSend.data[64] = GetLSB(g_resultsValues.resultLoopResDiag[12].readSquibResValue);
+    g_resultsToSend.data[65] = GetMSB(g_resultsValues.resultLoopResDiag[12].readSquibResValue);
+    g_resultsToSend.data[66] = GetLSB(g_resultsValues.resultLoopResDiag[13].readSquibResValue);
+    g_resultsToSend.data[67] = GetMSB(g_resultsValues.resultLoopResDiag[13].readSquibResValue);
+    g_resultsToSend.data[68] = GetLSB(g_resultsValues.resultLoopResDiag[14].readSquibResValue);
+    g_resultsToSend.data[69] = GetMSB(g_resultsValues.resultLoopResDiag[14].readSquibResValue);
+    g_resultsToSend.data[70] = GetLSB(g_resultsValues.resultLoopResDiag[15].readSquibResValue);
+    g_resultsToSend.data[71] = GetMSB(g_resultsValues.resultLoopResDiag[15].readSquibResValue);
+    g_resultsToSend.data[72] = GetLSB(g_resultsValues.resultLoopResDiag[16].readSquibResValue);
+    g_resultsToSend.data[73] = GetMSB(g_resultsValues.resultLoopResDiag[16].readSquibResValue);
+    g_resultsToSend.data[74] = GetLSB(g_resultsValues.resultLoopResDiag[17].readSquibResValue);
+    g_resultsToSend.data[75] = GetMSB(g_resultsValues.resultLoopResDiag[17].readSquibResValue);
+    g_resultsToSend.data[76] = GetLSB(g_resultsValues.resultLoopResDiag[18].readSquibResValue);
+    g_resultsToSend.data[77] = GetMSB(g_resultsValues.resultLoopResDiag[18].readSquibResValue);
+    g_resultsToSend.data[78] = GetLSB(g_resultsValues.resultLoopResDiag[19].readSquibResValue);
+    g_resultsToSend.data[80] = GetMSB(g_resultsValues.resultLoopResDiag[19].readSquibResValue);
 
     uint8 tmp1SquibResErr, tmp2SquibResErr, tmp3SquibResErr = 0;
     for (uint8 i = 0; i<20; i++)
@@ -740,9 +738,9 @@ void FLMSaveDiagResults()
             }
         }
     }
-    g_resultsToSend.data[77] = tmp1SquibResErr;
-    g_resultsToSend.data[78] = tmp2SquibResErr;
-    g_resultsToSend.data[79] = tmp3SquibResErr;
+    g_resultsToSend.data[81] = tmp1SquibResErr;
+    g_resultsToSend.data[82] = tmp2SquibResErr;
+    g_resultsToSend.data[83] = tmp3SquibResErr;
 
     uint8 tmp1SquibResValid, tmp2SquibResValid, tmp3SquibResValid = 0;
     for (uint8 i = 0; i<20; i++)
@@ -769,9 +767,9 @@ void FLMSaveDiagResults()
             }
         }
     }
-    g_resultsToSend.data[80] = tmp1SquibResValid;
-    g_resultsToSend.data[81] = tmp2SquibResValid;
-    g_resultsToSend.data[82] = tmp3SquibResValid;
+    g_resultsToSend.data[84] = tmp1SquibResValid;
+    g_resultsToSend.data[85] = tmp2SquibResValid;
+    g_resultsToSend.data[86] = tmp3SquibResValid;
 
     uint8 tmp1SquibResPgndxLoss, tmp2SquibResPgndxLoss, tmp3SquibResPgndxLoss = 0;
     for (uint8 i = 0; i<20; i++)
@@ -798,15 +796,14 @@ void FLMSaveDiagResults()
             }
         }
     }
-    g_resultsToSend.data[83] = tmp1SquibResPgndxLoss;
-    g_resultsToSend.data[84] = tmp2SquibResPgndxLoss;
-    g_resultsToSend.data[85] = tmp3SquibResPgndxLoss;
+    g_resultsToSend.data[87] = tmp1SquibResPgndxLoss;
+    g_resultsToSend.data[88] = tmp2SquibResPgndxLoss;
+    g_resultsToSend.data[89] = tmp3SquibResPgndxLoss;
 
     // SVRG capacity test results
-    // TODO: update index
-    g_resultsToSend.data[88] = GetLSB(g_resultsValues.resultSVRGdiag.readSVRGcapacityValue);
-    g_resultsToSend.data[89] = GetMSB(g_resultsValues.resultSVRGdiag.readSVRGcapacityValue);
-    g_resultsToSend.data[90] = g_resultsValues.resultSVRGdiag.readSVRGcapacityValid;
+    g_resultsToSend.data[90] = GetLSB(g_resultsValues.resultSVRGdiag.readSVRGcapacityValue);
+    g_resultsToSend.data[91] = GetMSB(g_resultsValues.resultSVRGdiag.readSVRGcapacityValue);
+    g_resultsToSend.data[92] = g_resultsValues.resultSVRGdiag.readSVRGcapacityValid;
 
 }
 
