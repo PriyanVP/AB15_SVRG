@@ -161,7 +161,7 @@ void FLMLoopResDiag(void);
  */
 void FLMSquibDetErrDiag(void);
 
-/** \brief SPI-triggered test, enabled by FML_diag_mode = SVRG_test and started FLM_DIAG_START = 1
+/** \brief SPI-triggered test, enabled by FML_diag_mode = SVRG_test, started FLM_DIAG_START = 1 and results in SVRG_STATUS
  */
 void DiagFLMSVRGTest(void);
 
@@ -177,6 +177,10 @@ void FLMSaveDiagResults(void);
  * \param diagMode configuration to select required diagnostic in ASIC
  */
 void StartFLMDiag(uint8 diagMode);
+
+/** \brief Start SVRG Capacity diagnostic
+ */
+void StartSVRGDiag(void);
 
 /** \brief Get FLM diagnostic execution status from ASIC (ongoing/evaluated)
  */
@@ -295,7 +299,7 @@ void IntCmdExecuteFLMDiag()
     // Initial FLM Diagnostic execution state is initialised as Idle
     // and on later rounds updated from ASIC 
     if ((g_diagExecStatus != FLM_DIAG_EXEC_STATUS_IDLE) &&
-        (g_diagExecNumber != DIAG_ORDER_SVRG_DIAG)) // skip for non-FLM diag
+        (g_diagExecNumber != DIAG_ORDER_FLM_SVRG_TST)) // skip for non-FLM diag
     {
         FLMUpdateDiagExecStatus();
     }
@@ -561,7 +565,12 @@ void DiagFLMSVRGTest()
     {
         // Select corresponding mode and start diagnostic
         StartFLMDiag(ENUM_FLM_FLM_DIAG_START_FLM_DIAG_MODE_SVRG_TEST);
-        g_diagExecStatus = FLM_DIAG_EXEC_STATUS_ONGOING;
+
+        // Start SVRG Capacity test
+        StartSVRGDiag();
+
+        // FLM busy flag is always on with this diagnostic, has to be manually stopped (TODO)
+        g_diagExecStatus = FLM_DIAG_EXEC_STATUS_EVALUATED;
 
         // Get back out to check results on next interupt
         return;
@@ -835,6 +844,32 @@ void StartFLMDiag(uint8 diagMode)
     // Write to ASIC
     // TODO: check whether diags can be run on slaves (spiChannel selection)
     QSPIWriteNormal(SPI1_CS1MASTER, FLM_FLM_DIAG_START, tmpFLMDiagStartfRegister.as_uint16);
+}
+
+void StartSVRGDiag(void)
+{
+    svrg_svrg_diag_ut tmpSVRGDiagRegister;
+    tmpSVRGDiagRegister.as_s = 0;
+
+    // TODO: evaluate how to actually perform SVRG Capacity test
+    // 1) SVRG_DIAG pre-configured by GUI fully, start FLM svrg_test (test requested by Oleksii)
+    // 2) SVRG_DIAG pre-configured by GUI without SvrgDiagStartCapTest_u1, start FLM svrg_test, start SVRG Capacity test
+    // 3) SVRG_DIAG is not pre-confiigured by GUI, start FLM svrg_test, configure SVRG_DIAG by MCU, start SVRG Capacity test
+
+    // Start Capacity test
+    // Read-Modify-Write so config written by GUI is not ovewritten
+    // QSPIReadNormal(SPI1_CS1MASTER, SVRG_SVRG_DIAG, tmpFLMDiagStartfRegister.as_uint16);
+    // tmpSVRGDiagRegister.as_s.SvrgDiagStartCapTest_u1 = 1;
+
+    // Debug
+    // Config acording to Vasant's reference
+    // SvrgDiagDacValue_u6 = 0x30;
+    // SvrgDiagDacEn_u1 = 0x0;
+    // SvrgDiagStartCapTest_u1 = 0x1;
+    tmpSVRGDiagRegister.as_s = 0xB0;
+    
+    // Write to ASIC
+    QSPIWriteNormal(SPI1_CS1MASTER, SVRG_SVRG_DIAG, tmpSVRGDiagRegister.as_uint16);
 }
 
 void FLMUpdateDiagExecStatus(void)
