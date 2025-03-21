@@ -15,13 +15,15 @@
 /*------------------------------------------------------Macros-------------------------------------------------------*/
 /*********************************************************************************************************************/
 
-#define SVR_NO_CHANGE 0x00
-#define SVR_OFF 0xA0
-#define SVR_ON 0xA5
+#define SVR_NO_CHANGE 0xFF
+#define SVR_OFF 0x00
+#define SVR_ON 0x11
 
 /*********************************************************************************************************************/
 /*------------------------------------------------Function Prototypes------------------------------------------------*/
 /*********************************************************************************************************************/
+
+static inline boolean UpdateSVRPin(SVRPinsEnum pinIdx, uint8 svrCommand);
 
 /*********************************************************************************************************************/
 /*-------------------------------------------------Global variables--------------------------------------------------*/
@@ -40,26 +42,49 @@ void CmdSetSvr(USBReceiveData const * const commandPackage)
     packageToSend.dataLength = 0;
     packageToSend.status = USB_STATUS_ACK;
 
-    // Get value of SVR from received data
-    uint8 svr1Command = commandPackage->data[0];
+    if (commandPackage->dataLength != 2)
+    {
+        packageToSend.status = USB_STATUS_ERROR;
+    }
+    else
+    {
+	    // Get value of SVR from received data
+    	uint8 svr1Command = commandPackage->data[0];
+    	uint8 svr2Command = commandPackage->data[1];
 
-    if (svr1Command == SVR_ON)
-    {
-        SetSVRPin(SVR1);
+    	if (UpdateSVRPin(SVR1, svr1Command) == FALSE)
+    	{
+	        packageToSend.status = USB_STATUS_ERROR;
+    	}
+
+    	if (UpdateSVRPin(SVR2, svr2Command) == FALSE)
+    	{
+	        packageToSend.status = USB_STATUS_ERROR;
+	    }
     }
-    else if (svr1Command == SVR_OFF)
+
+    // Send data back to MCU
+    SendUSBPackage(&packageToSend);
+}
+
+static inline boolean UpdateSVRPin(SVRPinsEnum pinIdx, uint8 svrCommand)
+{
+  	boolean isSuccessfulFlag = TRUE;
+    if (svrCommand == SVR_ON)
     {
-        ClearSVRPin(SVR1);
+        SetSVRPin(pinIdx);
     }
-    else if (svr1Command == SVR_NO_CHANGE)
+    else if (svrCommand == SVR_OFF)
+    {
+        ClearSVRPin(pinIdx);
+    }
+    else if (svrCommand == SVR_NO_CHANGE)
     {
         // Do nothing
     }
     else
     {
-        packageToSend.status = USB_STATUS_ERROR;
+        isSuccessfulFlag = FALSE;
     }
-
-    // Send data back to MCU
-    SendUSBPackage(&packageToSend);
+    return isSuccessfulFlag;
 }

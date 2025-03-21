@@ -17,12 +17,12 @@ namespace AB15_GUI.WPF.Models
         /// <summary>
         /// Property to store SVR1 command
         /// </summary>
-        public SvrCommandValues Svr1Command { get; set; } = SvrCommandValues.SVR_OFF;
+        public SvrCommandValues Svr1Command { get; set; } = SvrCommandValues.SVR_NO_CHANGE;
         
         /// <summary>
         /// Property to store SVR1 command
         /// </summary>
-        public SvrCommandValues Svr2Command { get; set; } = SvrCommandValues.SVR_OFF;
+        public SvrCommandValues Svr2Command { get; set; } = SvrCommandValues.SVR_NO_CHANGE;
 
         /// <summary>
         /// Convert byte list to field values
