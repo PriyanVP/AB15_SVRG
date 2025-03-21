@@ -566,7 +566,7 @@ void DiagFLMSVRGTest()
     
         // Store results
         svrg_svrg_status_ut diagReadSVRGDiagResTmp;
-        diagReadSVRGDiagResTmp.as_uint16 = (data[i].bf.output_data);
+        diagReadSVRGDiagResTmp.as_uint16 = (data[0].bf.output_data);
         g_resultsValues.resultSVRGdiag.readSVRGcapacityValue = diagReadSVRGDiagResTmp.as_s.SvrgCapValue_u9;
         g_resultsValues.resultSVRGdiag.readSVRGcapacityValid = diagReadSVRGDiagResTmp.as_s.SvrgCapValueValid_u1;
 
@@ -824,7 +824,7 @@ void StartFLMDiag(uint8 diagMode)
 void StartSVRGDiag(void)
 {
     svrg_svrg_diag_ut tmpSVRGDiagRegister;
-    tmpSVRGDiagRegister.as_s = 0;
+    tmpSVRGDiagRegister.as_uint16 = 0;
 
     // TODO: evaluate how to actually perform SVRG Capacity test
     // 1) SVRG_DIAG pre-configured by GUI fully, start FLM svrg_test (test requested by Oleksii)
@@ -841,7 +841,7 @@ void StartSVRGDiag(void)
     // SvrgDiagDacValue_u6 = 0x30;
     // SvrgDiagDacEn_u1 = 0x0;
     // SvrgDiagStartCapTest_u1 = 0x1;
-    tmpSVRGDiagRegister.as_s = 0xB0;
+    tmpSVRGDiagRegister.as_uint16 = 0xB0;
     
     // Write to ASIC
     QSPIWriteNormal(SPI1_CS1MASTER, SVRG_SVRG_DIAG, tmpSVRGDiagRegister.as_uint16);
