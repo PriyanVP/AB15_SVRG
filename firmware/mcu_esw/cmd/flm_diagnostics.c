@@ -827,9 +827,9 @@ void StartSVRGDiag(void)
     tmpSVRGDiagRegister.as_uint16 = 0;
 
     // TODO: evaluate how to actually perform SVRG Capacity test
-    // 1) SVRG_DIAG pre-configured by GUI fully, start FLM svrg_test (test requested by Oleksii)
+    // 0) SVRG_DIAG is not pre-confiigured by GUI, start FLM svrg_test, configure SVRG_DIAG by MCU, start SVRG Capacity test -> tested, works
+    // 1) SVRG_DIAG pre-configured by GUI fully, start FLM svrg_test (test requested by Oleksii) -> tested, doesn't work (SVRG_DIAG was pre-configured by MCU)
     // 2) SVRG_DIAG pre-configured by GUI without SvrgDiagStartCapTest_u1, start FLM svrg_test, start SVRG Capacity test
-    // 3) SVRG_DIAG is not pre-confiigured by GUI, start FLM svrg_test, configure SVRG_DIAG by MCU, start SVRG Capacity test
 
     // Start Capacity test
     // Read-Modify-Write so config written by GUI is not ovewritten
@@ -837,11 +837,12 @@ void StartSVRGDiag(void)
     // tmpSVRGDiagRegister.as_s.SvrgDiagStartCapTest_u1 = 1;
 
     // Debug
+    // tmpSVRGDiagRegister.as_uint16 = 0xB0;
+
     // Config acording to Vasant's reference
-    // SvrgDiagDacValue_u6 = 0x30;
-    // SvrgDiagDacEn_u1 = 0x0;
-    // SvrgDiagStartCapTest_u1 = 0x1;
-    tmpSVRGDiagRegister.as_uint16 = 0xB0;
+    tmpSVRGDiagRegister.as_s.SvrgDiagDacValue_u6 = 0x30;
+    tmpSVRGDiagRegister.as_s.SvrgDiagDacEn_u1 = 0x0;
+    tmpSVRGDiagRegister.as_s.SvrgDiagStartCapTest_u1 = 0x1;
     
     // Write to ASIC
     QSPIWriteNormal(SPI1_CS1MASTER, SVRG_SVRG_DIAG, tmpSVRGDiagRegister.as_uint16);
