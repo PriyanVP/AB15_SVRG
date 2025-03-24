@@ -80,8 +80,7 @@ typedef union
         uint8     squibDetEn      :1;
         uint8     loopResMeasEn   :1;
         uint8     SVRGtestEn      :1;
-        uint8     SVRGdiagEn      :1;
-        uint8     unused          :2;
+        uint8     unused          :3;
     } bf;
     uint8 sw;
 } DiagEnableFlags;
@@ -118,15 +117,6 @@ typedef struct
     boolean readSquibResPgndxLoss;
 } FLMReadSquibRes;
 
-/** \brief Structure to store results of SVRG capacity diagnostic
- * 2 bytes
- */
-typedef struct
-{
-    uint16 readSVRGcapacityValue;
-    boolean readSVRGcapacityValid;
-} DiagReadSVRGdiag;
-
 /** \brief Structure to store results of cyclic tests
  * 86 bytes
  * TODO: add field/fields to indicate if diagnostics failed on MCU level (i.e., SPI read was unsuccessful)
@@ -137,7 +127,7 @@ typedef struct
     boolean             resultSquibErrorDiag[20];
     FLMReadSquibRes     resultLoopResDiag[20];
     FLMShortDiagStruct  resultShortDiag;
-    DiagReadSVRGdiag     resultSVRGdiag;
+    uint16              resultSVRGtest;
 } FLMCycDiagResults;
 
 /*********************************************************************************************************************/
@@ -561,14 +551,13 @@ void DiagFLMSVRGTest()
 
     if (g_diagExecStatus == FLM_DIAG_EXEC_STATUS_EVALUATED)
     {
-        // Read SVRG_STATUS
+        // Read SVRG_STATUS and store full value
         isSuccessfulFlag = QSPIReadSequenceNormal(SPI1_CS1MASTER, diagSVRGdiagRegsAddresses, &data[0].dw, &length);
     
-        // Store results
+        // Intermediate variable with register fields for debug purpose
         svrg_svrg_status_ut diagReadSVRGDiagResTmp;
         diagReadSVRGDiagResTmp.as_uint16 = (data[0].bf.output_data);
-        g_resultsValues.resultSVRGdiag.readSVRGcapacityValue = diagReadSVRGDiagResTmp.as_s.SvrgCapValue_u9;
-        g_resultsValues.resultSVRGdiag.readSVRGcapacityValid = diagReadSVRGDiagResTmp.as_s.SvrgCapValueValid_u1;
+        g_resultsValues.resultSVRGtest = diagReadSVRGDiagResTmp.as_uint16;
 
         // Results are stored, get back
         g_diagExecStatus = FLM_DIAG_EXEC_STATUS_FINISHED;
@@ -594,31 +583,32 @@ void FLMSaveDiagResults()
     g_resultsToSend.data[10] = GetMSB(g_resultsValues.resultShortDiag.readShortCh20_17);
 
     // VHx diagnostic results resultVHxDiag[]
-    g_resultsToSend.data[11] = GetLSB(g_resultsValues.resultVHxDiag[0].readVHxVoltageValue);
-    g_resultsToSend.data[12] = GetMSB(g_resultsValues.resultVHxDiag[0].readVHxVoltageValue);
-    g_resultsToSend.data[13] = GetLSB(g_resultsValues.resultVHxDiag[1].readVHxVoltageValue);
-    g_resultsToSend.data[14] = GetMSB(g_resultsValues.resultVHxDiag[1].readVHxVoltageValue);
-    g_resultsToSend.data[15] = GetLSB(g_resultsValues.resultVHxDiag[2].readVHxVoltageValue);
-    g_resultsToSend.data[16] = GetMSB(g_resultsValues.resultVHxDiag[2].readVHxVoltageValue);
-    g_resultsToSend.data[17] = GetLSB(g_resultsValues.resultVHxDiag[3].readVHxVoltageValue);
-    g_resultsToSend.data[18] = GetMSB(g_resultsValues.resultVHxDiag[3].readVHxVoltageValue);
-    g_resultsToSend.data[19] = GetLSB(g_resultsValues.resultVHxDiag[4].readVHxVoltageValue);
-    g_resultsToSend.data[20] = GetMSB(g_resultsValues.resultVHxDiag[4].readVHxVoltageValue);
-    g_resultsToSend.data[21] = GetLSB(g_resultsValues.resultVHxDiag[5].readVHxVoltageValue);
-    g_resultsToSend.data[22] = GetMSB(g_resultsValues.resultVHxDiag[5].readVHxVoltageValue);
-    g_resultsToSend.data[23] = GetLSB(g_resultsValues.resultVHxDiag[6].readVHxVoltageValue);
-    g_resultsToSend.data[24] = GetMSB(g_resultsValues.resultVHxDiag[6].readVHxVoltageValue);
-    g_resultsToSend.data[25] = GetLSB(g_resultsValues.resultVHxDiag[7].readVHxVoltageValue);
-    g_resultsToSend.data[26] = GetMSB(g_resultsValues.resultVHxDiag[7].readVHxVoltageValue);
-    g_resultsToSend.data[27] = GetLSB(g_resultsValues.resultVHxDiag[8].readVHxVoltageValue);
-    g_resultsToSend.data[28] = GetMSB(g_resultsValues.resultVHxDiag[8].readVHxVoltageValue);
-    g_resultsToSend.data[29] = GetLSB(g_resultsValues.resultVHxDiag[9].readVHxVoltageValue);
-    g_resultsToSend.data[30] = GetMSB(g_resultsValues.resultVHxDiag[9].readVHxVoltageValue);
-    g_resultsToSend.data[31] = GetLSB(g_resultsValues.resultVHxDiag[10].readVHxVoltageValue);
-    g_resultsToSend.data[32] = GetMSB(g_resultsValues.resultVHxDiag[10].readVHxVoltageValue);
+    g_resultsToSend.data[11] = GetLSB(g_resultsValues.resultVHxDiag[11].readVHxVoltageValue);
+    g_resultsToSend.data[12] = GetMSB(g_resultsValues.resultVHxDiag[11].readVHxVoltageValue);
+    
     // FLM_Read_Diag_SVRG_GATE values
-    g_resultsToSend.data[33] = GetLSB(g_resultsValues.resultVHxDiag[11].readVHxVoltageValue);
-    g_resultsToSend.data[34] = GetMSB(g_resultsValues.resultVHxDiag[11].readVHxVoltageValue);
+    g_resultsToSend.data[13] = GetLSB(g_resultsValues.resultVHxDiag[0].readVHxVoltageValue);
+    g_resultsToSend.data[14] = GetMSB(g_resultsValues.resultVHxDiag[0].readVHxVoltageValue);
+    g_resultsToSend.data[15] = GetLSB(g_resultsValues.resultVHxDiag[1].readVHxVoltageValue);
+    g_resultsToSend.data[16] = GetMSB(g_resultsValues.resultVHxDiag[1].readVHxVoltageValue);
+    g_resultsToSend.data[17] = GetLSB(g_resultsValues.resultVHxDiag[2].readVHxVoltageValue);
+    g_resultsToSend.data[18] = GetMSB(g_resultsValues.resultVHxDiag[2].readVHxVoltageValue);
+    g_resultsToSend.data[19] = GetLSB(g_resultsValues.resultVHxDiag[3].readVHxVoltageValue);
+    g_resultsToSend.data[20] = GetMSB(g_resultsValues.resultVHxDiag[3].readVHxVoltageValue);
+    g_resultsToSend.data[21] = GetLSB(g_resultsValues.resultVHxDiag[4].readVHxVoltageValue);
+    g_resultsToSend.data[22] = GetMSB(g_resultsValues.resultVHxDiag[4].readVHxVoltageValue);
+    g_resultsToSend.data[23] = GetLSB(g_resultsValues.resultVHxDiag[5].readVHxVoltageValue);
+    g_resultsToSend.data[24] = GetMSB(g_resultsValues.resultVHxDiag[5].readVHxVoltageValue);
+    g_resultsToSend.data[25] = GetLSB(g_resultsValues.resultVHxDiag[6].readVHxVoltageValue);
+    g_resultsToSend.data[26] = GetMSB(g_resultsValues.resultVHxDiag[6].readVHxVoltageValue);
+    g_resultsToSend.data[27] = GetLSB(g_resultsValues.resultVHxDiag[7].readVHxVoltageValue);
+    g_resultsToSend.data[28] = GetMSB(g_resultsValues.resultVHxDiag[7].readVHxVoltageValue);
+    g_resultsToSend.data[29] = GetLSB(g_resultsValues.resultVHxDiag[8].readVHxVoltageValue);
+    g_resultsToSend.data[30] = GetMSB(g_resultsValues.resultVHxDiag[8].readVHxVoltageValue);
+    g_resultsToSend.data[31] = GetLSB(g_resultsValues.resultVHxDiag[9].readVHxVoltageValue);
+    g_resultsToSend.data[32] = GetMSB(g_resultsValues.resultVHxDiag[9].readVHxVoltageValue);
+    g_resultsToSend.data[33] = GetLSB(g_resultsValues.resultVHxDiag[10].readVHxVoltageValue);
+    g_resultsToSend.data[34] = GetMSB(g_resultsValues.resultVHxDiag[10].readVHxVoltageValue);
 
     uint8 tmp1VHxVoltageValid, tmp2VHxVoltageValid = 0;
     for (uint8 i = 0; i<FLM_DIAG_READ_VHX_REGS_COUNT; i++)
@@ -801,9 +791,8 @@ void FLMSaveDiagResults()
     g_resultsToSend.data[89] = tmp3SquibResPgndxLoss;
 
     // SVRG capacity test results
-    g_resultsToSend.data[90] = GetLSB(g_resultsValues.resultSVRGdiag.readSVRGcapacityValue);
-    g_resultsToSend.data[91] = GetMSB(g_resultsValues.resultSVRGdiag.readSVRGcapacityValue);
-    g_resultsToSend.data[92] = g_resultsValues.resultSVRGdiag.readSVRGcapacityValid;
+    g_resultsToSend.data[90] = GetLSB(g_resultsValues.resultSVRGtest);
+    g_resultsToSend.data[91] = GetMSB(g_resultsValues.resultSVRGtest);
 
 }
 
@@ -826,10 +815,7 @@ void StartSVRGDiag(void)
     svrg_svrg_diag_ut tmpSVRGDiagRegister;
     tmpSVRGDiagRegister.as_uint16 = 0;
 
-    // TODO: evaluate how to actually perform SVRG Capacity test
-    // 0) SVRG_DIAG is not pre-confiigured by GUI, start FLM svrg_test, configure SVRG_DIAG by MCU, start SVRG Capacity test -> tested, works
-    // 1) SVRG_DIAG pre-configured by GUI fully, start FLM svrg_test (test requested by Oleksii) -> tested, doesn't work (SVRG_DIAG was pre-configured by MCU)
-    // 2) SVRG_DIAG pre-configured by GUI without SvrgDiagStartCapTest_u1, start FLM svrg_test, start SVRG Capacity test
+    // TODO: finalize chosen approach (receive SVRG_DIAG value from GUI's enable cmd payload, start FLM svrg_test, configure SVRG_DIAG by MCU)
 
     // Start Capacity test
     // Read-Modify-Write so config written by GUI is not ovewritten
