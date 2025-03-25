@@ -16,8 +16,6 @@
 #include "periphery/timer.h"
 #include "flm_diagnostics.h"
 
-// TODO: change approach to naming: FLM_DIAG -> DIAG
-
 /*********************************************************************************************************************/
 /*------------------------------------------------------Macros-------------------------------------------------------*/
 /*********************************************************************************************************************/
@@ -150,7 +148,7 @@ void FLMLoopResDiag(void);
  */
 void FLMSquibDetErrDiag(void);
 
-/** \brief SPI-triggered test, enabled by FML_diag_mode = SVRG_test, started FLM_DIAG_START = 1 and results in SVRG_STATUS
+/** \brief SVRG Capacity test, started by FLM_diag_mode = svrg_test and svrg_diag_start_cap_test = 1
  */
 void DiagFLMSVRGTest(void);
 
@@ -162,10 +160,6 @@ void FLMSaveDiagResults(void);
  * \param diagMode configuration to select required diagnostic in ASIC
  */
 void StartFLMDiag(uint8 diagMode);
-
-/** \brief Start SVRG Capacity diagnostic
- */
-void StartSVRGDiag(void);
 
 /** \brief Get FLM diagnostic execution status from ASIC (ongoing/evaluated)
  */
@@ -185,6 +179,7 @@ static FLMCycDiagResults g_resultsValues;
 static FLMDiagExecStatusEnum g_diagExecStatus = FLM_DIAG_EXEC_STATUS_IDLE;
 static FLMDiagExecOrderEnum g_diagExecNumber = FLM_DIAG_ORDER_SHORT_DET;
 static USBTransmitData g_resultsToSend;
+static uint16 g_svrgDiagCfgValue = 0;
 
 /*********************************************************************************************************************/
 /*---------------------------------------------Function Implementations----------------------------------------------*/
@@ -196,6 +191,12 @@ void CmdEnableFLMDiag(USBReceiveData const * const commandPackage)
 
     // Update enable flags from GUI command
     g_diagEnableFlags.sw = commandPackage->data[0];
+
+    // Get SVRG test configuration if enabled
+    if (g_diagEnableFlags.bf.SVRGtestEn == TRUE)
+    {
+       g_svrgDiagCfgValue =  ConstructWordFromBytes(commandPackage->data[2], commandPackage->data[3]);
+    }
 
     // Enable command should not be executed twice
     if (g_isflmDiagEn == TRUE)
@@ -525,10 +526,7 @@ void FLMLoopResDiag()
 }
 
 void DiagFLMSVRGTest()
-{
-    // TODO: investigate current working theory how this diagnostic works
-    // Configured with SVRG_Diag by GUI; selected and started with FLM_DIAG_START, 
-    // Execution status monitored by FLM_Status2 as other FLM Diags
+{    
     SPIReceiveDataNormal data[DIAG_READ_SVRG_DIAG_REGS_COUNT];
     uint16 length = DIAG_READ_SVRG_DIAG_REGS_COUNT;
     boolean isSuccessfulFlag = FALSE;
@@ -539,8 +537,9 @@ void DiagFLMSVRGTest()
         // Select corresponding mode and start diagnostic
         StartFLMDiag(ENUM_FLM_FLM_DIAG_START_FLM_DIAG_MODE_SVRG_TEST);
 
-        // Start SVRG Capacity test
-        StartSVRGDiag();
+        // Configure SVRG_DIAG register (value provided by GUI in CMD_FLM_DIAG_ENABLE)
+        // and start SVRG Capacity test
+        QSPIWriteNormal(SPI1_CS1MASTER, SVRG_SVRG_DIAG, g_svrgDiagCfgValue);
 
         // FLM busy flag is always on with this diagnostic, has to be manually stopped (TODO)
         g_diagExecStatus = FLM_DIAG_EXEC_STATUS_EVALUATED;
@@ -808,30 +807,6 @@ void StartFLMDiag(uint8 diagMode)
     // Write to ASIC
     // TODO: check whether diags can be run on slaves (spiChannel selection)
     QSPIWriteNormal(SPI1_CS1MASTER, FLM_FLM_DIAG_START, tmpFLMDiagStartfRegister.as_uint16);
-}
-
-void StartSVRGDiag(void)
-{
-    svrg_svrg_diag_ut tmpSVRGDiagRegister;
-    tmpSVRGDiagRegister.as_uint16 = 0;
-
-    // TODO: finalize chosen approach (receive SVRG_DIAG value from GUI's enable cmd payload, start FLM svrg_test, configure SVRG_DIAG by MCU)
-
-    // Start Capacity test
-    // Read-Modify-Write so config written by GUI is not ovewritten
-    // QSPIReadNormal(SPI1_CS1MASTER, SVRG_SVRG_DIAG, tmpFLMDiagStartfRegister.as_uint16);
-    // tmpSVRGDiagRegister.as_s.SvrgDiagStartCapTest_u1 = 1;
-
-    // Debug
-    // tmpSVRGDiagRegister.as_uint16 = 0xB0;
-
-    // Config acording to Vasant's reference
-    tmpSVRGDiagRegister.as_s.SvrgDiagDacValue_u6 = 0x30;
-    tmpSVRGDiagRegister.as_s.SvrgDiagDacEn_u1 = 0x0;
-    tmpSVRGDiagRegister.as_s.SvrgDiagStartCapTest_u1 = 0x1;
-    
-    // Write to ASIC
-    QSPIWriteNormal(SPI1_CS1MASTER, SVRG_SVRG_DIAG, tmpSVRGDiagRegister.as_uint16);
 }
 
 void FLMUpdateDiagExecStatus(void)
