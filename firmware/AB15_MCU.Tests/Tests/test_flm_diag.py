@@ -27,6 +27,9 @@ class TestFLMDiagCommands:
         # disconnects after test's completion
         cls.serial.close_port()
 
+    # TODO: test_EnableFLMDiag not operational, update pending
+    # - enable flags for separate diags;
+    # - FLM_DIAG_ENABLE payload must have value for SVRG_DIAG configuration
     @pytest.mark.firing
     @pytest.mark.serial
     def test_EnableFLMDiag(self):
@@ -75,5 +78,5 @@ class TestFLMDiagCommands:
         result = pkg.ReceivePackage(self.serial.packages.pop(0))
         print("Length of payload, bytes:" + str(result.payload_len))
         # Assert
-        assert result.payload_len == 86, f"Length of payload is not 86 bytes! Length received: {result.payload_len}"
+        assert result.payload_len == 92, f"Length of payload is not 86 bytes! Length received: {result.payload_len}"
         # TODO: analyse and check values of diagnostics results

@@ -1523,10 +1523,11 @@ namespace AB15_GUI.WPF.ViewModels
             logger.Debug($"Pressed Start stop cyclic reading");
 
             // Create package to MCU
-            TransmitCommunicationPackage<EmptyPayload> packageToSend = new TransmitCommunicationPackage<EmptyPayload>();
+            TransmitCommunicationPackage<AddressDataPayload> packageToSend = new TransmitCommunicationPackage<AddressDataPayload>();
             packageToSend.ASICID = 1;
             packageToSend.Cmd = (IsCyclicDiagnosticsEn) ? (MCUCommand.FLM_DIAG_ENABLE) : (MCUCommand.FLM_DIAG_DISABLE);
             packageToSend.PayloadType = typeof(EmptyPayload);
+            packageToSend.Payload.Data.Add(0x3F); // TODO: replace with model for enable flags - now all diags enabled
 
             // Send command to MCU
             ReceiveCommunicationPackage<EmptyPayload>? mcuResponse = (ReceiveCommunicationPackage<EmptyPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
