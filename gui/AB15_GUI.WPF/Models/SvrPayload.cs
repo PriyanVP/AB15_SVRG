@@ -17,12 +17,13 @@ namespace AB15_GUI.WPF.Models
         /// <summary>
         /// Property to store SVR1 command
         /// </summary>
-        public SvrCommandValues Svr1Command { get; set; } = SvrCommandValues.SVR_NO_CHANGE;
+        public SvrCommandValues Svr1Command { get; } = SvrCommandValues.SVR_NO_CHANGE;            // Change
         
         /// <summary>
-        /// Property to store SVR1 command
+        /// Property to store SVR2 command
         /// </summary>
-        public SvrCommandValues Svr2Command { get; set; } = SvrCommandValues.SVR_NO_CHANGE;
+        public SvrCommandValues Svr2Command { get; } = SvrCommandValues.SVR_NO_CHANGE;            //Change
+    
 
         /// <summary>
         /// Convert byte list to field values
@@ -56,12 +57,15 @@ namespace AB15_GUI.WPF.Models
         /// Converts payload data to byte list
         /// </summary>
         /// <returns>Empty list</returns>
+        
         public List<byte> Serialize()
         {
-            List<byte> serializedPackage = new List<byte>();
-            serializedPackage.Add((byte)Svr1Command);
-            serializedPackage.Add((byte)Svr2Command);
-            return serializedPackage;
+        //Always sending SVR_NO_CHANGE for both commands to remove the GUI dependency         //Change
+            
+            return new List<byte> {
+                (byte)SvrCommandValues.SVR_NO_CHANGE,                                    //Change
+                (byte)SvrCommandValues.SVR_NO_CHANGE
+                };
         }
     }
 }
