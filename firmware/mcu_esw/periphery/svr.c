@@ -69,3 +69,22 @@ void ClearSVRPin(SVRPinsEnum pinIdx)
             break;
     }
 }
+
+//Changes for GGPIO control transfer to MCU are made below
+
+void HandleFiringCommand(void)
+{
+    //Activating the GPIO
+    SetSVRPin(SVR1);                                                            //Changes for transfer GPIO control from GUI to MCU
+    SetSVRPin(SVR2);
+
+    //Executing the ASIC firing
+    ExecuteASICFiring();
+
+    //Waiting for a desired/required duration. In my case i have considered that to be 500ms
+    delay(500);
+
+    //Deactivating the GPIO
+    ClearSVRPin(SVR1);
+    ClearSVRPin(SVR2);
+}
