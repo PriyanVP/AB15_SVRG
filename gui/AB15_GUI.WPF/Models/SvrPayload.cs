@@ -63,8 +63,8 @@ namespace AB15_GUI.WPF.Models
         //Always sending SVR_NO_CHANGE for both commands to remove the GUI dependency         //Change
             
             return new List<byte> {
-                (byte)SvrCommandValues.SVR_NO_CHANGE,                                    //Change
-                (byte)SvrCommandValues.SVR_NO_CHANGE
+                (byte)Svr1CommandValues.SVR_NO_CHANGE,                                    //Change
+                (byte)Svr2CommandValues.SVR_NO_CHANGE
                 };
         }
     }
