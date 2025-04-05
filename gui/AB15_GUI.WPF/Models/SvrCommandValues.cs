@@ -5,8 +5,8 @@
     /// </summary>
     public enum SvrCommandValues
     {
-        SVR_OFF = 0x00,
-        SVR_ON = 0x11,
+        //SVR_OFF = 0x00,            ~ Change
+        //SVR_ON = 0x11,             ~ Change (Explicitly used by GUI to control GPIO pins)
         SVR_NO_CHANGE = 0xFF,
     }
 
