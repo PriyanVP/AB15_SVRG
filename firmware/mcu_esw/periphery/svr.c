@@ -72,25 +72,41 @@ void ClearSVRPin(SVRPinsEnum pinIdx)
 
 //Changes for GPIO control transfer to MCU are made below     // Function to handle firing command
 
-void HandleFiringCommand(void)
-{
-    //Activating the GPIO
-    SetSVRPin(SVR1);                                                            //Changes for transfer GPIO control from GUI to MCU
-    SetSVRPin(SVR2);
+//Option 1: Blocks the MCU execution for 500ms
 
-    //Executing the ASIC firing
-    ExecuteASICFiring();
+// void HandleFiringCommand(void)
+// {
+//     //Activating the GPIO
+//     SetSVRPin(SVR1);                                                            //Changes for transfer GPIO control from GUI to MCU
+//     SetSVRPin(SVR2);
 
-    //Waiting for a desired/required duration. In my case I have considered that to be 500ms
-    delay(500);
+//     //Executing the ASIC firing
+//     ExecuteASICFiring();
 
-    //Deactivating the GPIO
-    ClearSVRPin(SVR1);
-    ClearSVRPin(SVR2);
-}                                        //Changes
+//     //Waiting for a desired/required duration. In my case I have considered that to be 500ms
+//     delay(500);
+
+//     //Deactivating the GPIO
+//     ClearSVRPin(SVR1);
+//     ClearSVRPin(SVR2);
+// }                                        //Changes
+
+//Option 2: Non-blocking Timer (preferable)
+
+// void GPIODeactivationCallback(void) {
+//     ClearSVRPin(SVR1);
+//     ClearSVRPin(SVR2);     // Callback to deactivate GPIO
+// }
+
+// void HandleFiringCommand(void) {
+//     SetSVRPin(SVR1);
+//     SetSVRPin(SVR2);       // Activate GPIO pins
+//     ExecuteASICFiring();    // Trigger ASIC firing sequence
+//     StartTimer(500, GPIODeactivationCallback); // Schedule deactivation after 500ms
+// }
 
 //Command Processing Logic
-void ProcessCommand(uint8_t* commandData)         //MCU command handler update when firing command is received
+void ProcessCommand(uint8_t* commandData)         //Read incoming commands and trigger firing when required
 {
     if (IsFiringCommand(commandData)) // Check if the received command is a firing command
     {
