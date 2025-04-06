@@ -8,7 +8,7 @@
 /*********************************************************************************************************************/
 #include "IfxPort.h"
 #include "svr.h"
-
+static bool gpioActive = false;
 /*********************************************************************************************************************/
 /*------------------------------------------------------Macros-------------------------------------------------------*/
 /*********************************************************************************************************************/
@@ -68,4 +68,85 @@ void ClearSVRPin(SVRPinsEnum pinIdx)
         default:
             break;
     }
+}
+
+//Changes for GPIO control transfer to MCU are made below     // Function to handle firing command
+
+//Option 1: Blocks the MCU execution for 500ms
+
+// void HandleFiringCommand(void)
+// {
+//     //Activating the GPIO
+//     SetSVRPin(SVR1);                                                            //Changes for transfer GPIO control from GUI to MCU
+//     SetSVRPin(SVR2);
+
+//     //Executing the ASIC firing
+//     ExecuteASICFiring();
+
+//     //Waiting for a desired/required duration. In my case I have considered that to be 1000ms/1second
+//     delay(1000);
+
+//     //Deactivating the GPIO
+//     ClearSVRPin(SVR1);
+//     ClearSVRPin(SVR2);
+// }                                        //Changes
+
+//Option 2: Non-blocking Timer (preferable)
+
+// void GPIODeactivationCallback(void) {
+//     ClearSVRPin(SVR1);
+//     ClearSVRPin(SVR2);     // Callback to deactivate GPIO
+// }
+
+// void HandleFiringCommand(void) {
+//     SetSVRPin(SVR1);
+//     SetSVRPin(SVR2);       // Activate GPIO pins
+//     ExecuteASICFiring();    // Trigger ASIC firing sequence
+//     StartTimer(1000, GPIODeactivationCallback); // Schedule deactivation after 1s
+// }
+
+//Command Processing Logic
+void ProcessCommand(uint8_t* commandData)         //Read incoming commands and trigger firing when required
+{
+    if (IsFiringCommand(commandData)) // Check if the received command is a firing command
+    {
+        HandleFiringCommand(); // Call the new function to handle firing
+    }
+    else
+    {
+      LogError("Invalid command received.");
+        // Optional: Send error status back to GUI
+    }  
+}
+
+// Callback function for timer expiration
+void GPIODeactivationCallback(void)
+{
+    ClearSVRPin(SVR1);
+    ClearSVRPin(SVR2);
+    gpioActive = false;
+    LogStatus("GPIO deactivated after successful firing.");
+}
+
+// Modified HandleFiringCommand with timer-based deactivation            //Changes
+void HandleFiringCommand(void)
+{
+    SetSVRPin(SVR1);
+    SetSVRPin(SVR2);
+
+    ExecuteASICFiring();
+    gpioActive = true;
+
+    // Execute ASIC firing and check for errors
+    ASIC_Status status = ExecuteASICFiring();
+    
+    if (status != ASIC_OK) {
+        // Deactivate GPIO immediately on error
+        ClearSVRPin(SVR1);
+        ClearSVRPin(SVR2);
+        gpioActive = false;
+        LogError("Firing failed! GPIO deactivated.");
+        return;
+
+    StartTimer(1000, GPIODeactivationCallback); // Start a non-blocking timer for 1s
 }

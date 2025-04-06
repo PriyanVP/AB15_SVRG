@@ -17,12 +17,13 @@ namespace AB15_GUI.WPF.Models
         /// <summary>
         /// Property to store SVR1 command
         /// </summary>
-        public SvrCommandValues Svr1Command { get; set; } = SvrCommandValues.SVR_NO_CHANGE;
+        public SvrCommandValues Svr1Command { get; } = SvrCommandValues.SVR_NO_CHANGE;     //GUI no longer has access to modify these commands.
         
         /// <summary>
-        /// Property to store SVR1 command
+        /// Property to store SVR2 command
         /// </summary>
-        public SvrCommandValues Svr2Command { get; set; } = SvrCommandValues.SVR_NO_CHANGE;
+        public SvrCommandValues Svr2Command { get; } = SvrCommandValues.SVR_NO_CHANGE;   //Not completely removed because of Backward Compatibility
+    
 
         /// <summary>
         /// Convert byte list to field values
@@ -56,12 +57,15 @@ namespace AB15_GUI.WPF.Models
         /// Converts payload data to byte list
         /// </summary>
         /// <returns>Empty list</returns>
+        
         public List<byte> Serialize()
         {
-            List<byte> serializedPackage = new List<byte>();
-            serializedPackage.Add((byte)Svr1Command);
-            serializedPackage.Add((byte)Svr2Command);
-            return serializedPackage;
+        //Always sending SVR_NO_CHANGE for both commands to remove the GUI dependency  
+            
+            return new List<byte> {
+                (byte)Svr1CommandValues.SVR_NO_CHANGE,                                    //No accidental receiving of outdated SVR commands
+                (byte)Svr2CommandValues.SVR_NO_CHANGE                //Fail-safe established
+                };
         }
     }
 }

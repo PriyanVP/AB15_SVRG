@@ -1191,7 +1191,7 @@ namespace AB15_GUI.WPF.ViewModels
                 return;
             }
             
-            await EnableSvr1((int)DeviceIDs.SPI1_CS1MASTER);
+            // await EnableSvr1((int)DeviceIDs.SPI1_CS1MASTER);                                 //Removing GUI influence on GPIO           
 
             // == Step 0.2 - disabling monoflop ==
 
@@ -1212,7 +1212,7 @@ namespace AB15_GUI.WPF.ViewModels
             // Validate response
             if (IsResponseValid(mcuResponse02, nameof(FireSimultaneous)) == false)
             {
-                await DisableSvr1((int)DeviceIDs.SPI1_CS1MASTER);
+                // await DisableSvr1((int)DeviceIDs.SPI1_CS1MASTER);                    //MCU handles complete operations. Even in the case of errors GUI doesnt impact GPIO
                 return;
             }
 
@@ -1263,8 +1263,8 @@ namespace AB15_GUI.WPF.ViewModels
             // Validate response
             if (IsResponseValid(mcuResponse1, nameof(FireSimultaneous)) == false)
             {
-                await DisableSvr1((int)DeviceIDs.SPI1_CS1MASTER);
-                return;
+               //  await DisableSvr1((int)DeviceIDs.SPI1_CS1MASTER);            //Didn't comment the whole block because of Backward compatibility
+                return;                                        // ensures stopping GUI execution on error encounter
             }
 
             // == Step 2 - firing ==
@@ -1385,7 +1385,7 @@ namespace AB15_GUI.WPF.ViewModels
             // Validate response
             if (IsResponseValid(mcuResponse2, nameof(FireSimultaneous)) == false)
             {
-                await DisableSvr1((int)DeviceIDs.SPI1_CS1MASTER);
+                // await DisableSvr1((int)DeviceIDs.SPI1_CS1MASTER);            //Change4
                 return;
             }
 
@@ -1433,7 +1433,7 @@ namespace AB15_GUI.WPF.ViewModels
             // Validate response
             if (IsResponseValid(mcuResponse3, nameof(FireSimultaneous)) == false)
             {
-                await DisableSvr1((int)DeviceIDs.SPI1_CS1MASTER);
+               // await DisableSvr1((int)DeviceIDs.SPI1_CS1MASTER);    //Change5
                 return;
             }
 
@@ -1480,7 +1480,7 @@ namespace AB15_GUI.WPF.ViewModels
             // Validate response
             if (IsResponseValid(mcuResponse4, nameof(FireSimultaneous)) == false)
             {
-                await DisableSvr1((int)DeviceIDs.SPI1_CS1MASTER);
+               // await DisableSvr1((int)DeviceIDs.SPI1_CS1MASTER);            //Change 6  Similar reason from above 
                 return;
             }
 
@@ -1503,7 +1503,7 @@ namespace AB15_GUI.WPF.ViewModels
                 }
             }
             
-            await DisableSvr1((int)DeviceIDs.SPI1_CS1MASTER);
+            // await DisableSvr1((int)DeviceIDs.SPI1_CS1MASTER);        //Previously deactivated the GPIO via GUI if error occuerd
 
             // Unlock firing command
             _fireSimultaneousCommand.InProgress = false;
@@ -1707,45 +1707,45 @@ namespace AB15_GUI.WPF.ViewModels
             return IsResponseValid(mcuResponse, nameof(FireSimultaneous));
         }
 
-        private async Task<bool> EnableSvr1(int asicId)
-        {
-            // Create package to MCU
-            var packageToSend = new TransmitCommunicationPackage<SvrPayload>
-            {
-                ASICID = asicId,
-                Cmd = MCUCommand.SET_SVR,
-                PayloadType = typeof(SvrPayload)
-            };
-            packageToSend.Payload.Svr1Command = SvrCommandValues.SVR_ON;
+        // // private async Task<bool> EnableSvr1(int asicId)            //Major commands sending explicit GPIO operations to the MCU
+        // {
+        //     // Create package to MCU
+        //     var packageToSend = new TransmitCommunicationPackage<SvrPayload>
+        //     {
+        //         ASICID = asicId,
+        //         Cmd = MCUCommand.SET_SVR,
+        //         PayloadType = typeof(SvrPayload)
+        //     };
+        //     packageToSend.Payload.Svr1Command = SvrCommandValues.SVR_ON;
 
-            // Send command to MCU and wait for response
-            var mcuResponse = (ReceiveCommunicationPackage<SvrPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
+        //     // Send command to MCU and wait for response
+        //     var mcuResponse = (ReceiveCommunicationPackage<SvrPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
 
-            // Validate response
-            return IsResponseValid(mcuResponse, nameof(FireSimultaneous));
-        }
+        //     // Validate response
+        //     return IsResponseValid(mcuResponse, nameof(FireSimultaneous));
+        // }
         
-        private async Task<bool> DisableSvr1(int asicId)
-        {
-            // Create package to MCU
-            var packageToSend = new TransmitCommunicationPackage<SvrPayload>
-            {
-                ASICID = asicId,
-                Cmd = MCUCommand.SET_SVR,
-                PayloadType = typeof(SvrPayload)
-            };
-            packageToSend.Payload.Svr1Command = SvrCommandValues.SVR_OFF;
+        // private async Task<bool> DisableSvr1(int asicId)
+        // {
+        //     // Create package to MCU
+        //     var packageToSend = new TransmitCommunicationPackage<SvrPayload>
+        //     {
+        //         ASICID = asicId,
+        //         Cmd = MCUCommand.SET_SVR,
+        //         PayloadType = typeof(SvrPayload)
+        //     };
+        //     packageToSend.Payload.Svr1Command = SvrCommandValues.SVR_OFF;
 
-            // Send command to MCU and wait for response
-            var mcuResponse = (ReceiveCommunicationPackage<SvrPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
+        //     // Send command to MCU and wait for response
+        //     var mcuResponse = (ReceiveCommunicationPackage<SvrPayload>?) await serialWrapper.SerialWriteAsync(packageToSend);
 
-            // Validate response
-            return IsResponseValid(mcuResponse, nameof(FireSimultaneous));
-        }
+        //     // Validate response
+        //     return IsResponseValid(mcuResponse, nameof(FireSimultaneous));
+        // }
 
-        #endregion // Commands
+        // #endregion // Commands
 
-        #region ASIC_events
+        // #region ASIC_events
 
         /// <summary>
         /// Event handler that will be called when before loading configuration to ASIC
