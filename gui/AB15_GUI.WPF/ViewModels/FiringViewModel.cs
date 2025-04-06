@@ -1191,7 +1191,7 @@ namespace AB15_GUI.WPF.ViewModels
                 return;
             }
             
-            // await EnableSvr1((int)DeviceIDs.SPI1_CS1MASTER);                                 //Change1           
+            // await EnableSvr1((int)DeviceIDs.SPI1_CS1MASTER);                                 //Removing GUI influence on GPIO           
 
             // == Step 0.2 - disabling monoflop ==
 
@@ -1212,7 +1212,7 @@ namespace AB15_GUI.WPF.ViewModels
             // Validate response
             if (IsResponseValid(mcuResponse02, nameof(FireSimultaneous)) == false)
             {
-                // await DisableSvr1((int)DeviceIDs.SPI1_CS1MASTER);                    //Change2
+                // await DisableSvr1((int)DeviceIDs.SPI1_CS1MASTER);                    //MCU handles complete operations. Even in the case of errors GUI doesnt impact GPIO
                 return;
             }
 
@@ -1263,8 +1263,8 @@ namespace AB15_GUI.WPF.ViewModels
             // Validate response
             if (IsResponseValid(mcuResponse1, nameof(FireSimultaneous)) == false)
             {
-               //  await DisableSvr1((int)DeviceIDs.SPI1_CS1MASTER);            //Change3
-                return;
+               //  await DisableSvr1((int)DeviceIDs.SPI1_CS1MASTER);            //Didn't comment the whole block because of Backward compatibility
+                return;                                        // ensures stopping GUI execution on error encounter
             }
 
             // == Step 2 - firing ==
@@ -1480,7 +1480,7 @@ namespace AB15_GUI.WPF.ViewModels
             // Validate response
             if (IsResponseValid(mcuResponse4, nameof(FireSimultaneous)) == false)
             {
-               // await DisableSvr1((int)DeviceIDs.SPI1_CS1MASTER);            //Chnage6 
+               // await DisableSvr1((int)DeviceIDs.SPI1_CS1MASTER);            //Change 6  Similar reason from above 
                 return;
             }
 
@@ -1503,7 +1503,7 @@ namespace AB15_GUI.WPF.ViewModels
                 }
             }
             
-            // await DisableSvr1((int)DeviceIDs.SPI1_CS1MASTER);        //Change7
+            // await DisableSvr1((int)DeviceIDs.SPI1_CS1MASTER);        //Previously deactivated the GPIO via GUI if error occuerd
 
             // Unlock firing command
             _fireSimultaneousCommand.InProgress = false;
@@ -1707,7 +1707,7 @@ namespace AB15_GUI.WPF.ViewModels
             return IsResponseValid(mcuResponse, nameof(FireSimultaneous));
         }
 
-        // // private async Task<bool> EnableSvr1(int asicId)            //Change8
+        // // private async Task<bool> EnableSvr1(int asicId)            //Major commands sending explicit GPIO operations to the MCU
         // {
         //     // Create package to MCU
         //     var packageToSend = new TransmitCommunicationPackage<SvrPayload>
