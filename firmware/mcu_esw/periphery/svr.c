@@ -70,7 +70,7 @@ void ClearSVRPin(SVRPinsEnum pinIdx)
     }
 }
 
-//Changes for GGPIO control transfer to MCU are made below     // Function to handle firing command
+//Changes for GPIO control transfer to MCU are made below     // Function to handle firing command
 
 void HandleFiringCommand(void)
 {
@@ -81,7 +81,7 @@ void HandleFiringCommand(void)
     //Executing the ASIC firing
     ExecuteASICFiring();
 
-    //Waiting for a desired/required duration. In my case i have considered that to be 500ms
+    //Waiting for a desired/required duration. In my case I have considered that to be 500ms
     delay(500);
 
     //Deactivating the GPIO
@@ -89,7 +89,7 @@ void HandleFiringCommand(void)
     ClearSVRPin(SVR2);
 }                                        //Changes
 
-//COmmand Processing Logic
+//Command Processing Logic
 void ProcessCommand(uint8_t* commandData)         //MCU command handler update when firing command is received
 {
     if (IsFiringCommand(commandData)) // Check if the received command is a firing command
