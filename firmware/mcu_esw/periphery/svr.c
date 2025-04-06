@@ -70,7 +70,7 @@ void ClearSVRPin(SVRPinsEnum pinIdx)
     }
 }
 
-//Changes for GGPIO control transfer to MCU are made below
+//Changes for GGPIO control transfer to MCU are made below     // Function to handle firing command
 
 void HandleFiringCommand(void)
 {
@@ -87,4 +87,31 @@ void HandleFiringCommand(void)
     //Deactivating the GPIO
     ClearSVRPin(SVR1);
     ClearSVRPin(SVR2);
+}                                        //Changes
+
+//COmmand Processing Logic
+void ProcessCommand(uint8_t* commandData)         //MCU command handler update when firing command is received
+{
+    if (IsFiringCommand(commandData)) // Check if the received command is a firing command
+    {
+        HandleFiringCommand(); // Call the new function to handle firing
+    }
+}
+
+// Callback function for timer expiration
+void GPIODeactivationCallback(void)
+{
+    ClearSVRPin(SVR1);
+    ClearSVRPin(SVR2);
+}
+
+// Modified HandleFiringCommand with timer-based deactivation            //Changes
+void HandleFiringCommand(void)
+{
+    SetSVRPin(SVR1);
+    SetSVRPin(SVR2);
+
+    ExecuteASICFiring();
+
+    StartTimer(500, GPIODeactivationCallback); // Start a non-blocking timer for 500ms
 }
