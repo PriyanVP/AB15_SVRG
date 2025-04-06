@@ -17,12 +17,12 @@ namespace AB15_GUI.WPF.Models
         /// <summary>
         /// Property to store SVR1 command
         /// </summary>
-        public SvrCommandValues Svr1Command { get; } = SvrCommandValues.SVR_NO_CHANGE;            // Change
+        public SvrCommandValues Svr1Command { get; } = SvrCommandValues.SVR_NO_CHANGE;     //GUI no longer has access to modify these commands.
         
         /// <summary>
         /// Property to store SVR2 command
         /// </summary>
-        public SvrCommandValues Svr2Command { get; } = SvrCommandValues.SVR_NO_CHANGE;            //Change
+        public SvrCommandValues Svr2Command { get; } = SvrCommandValues.SVR_NO_CHANGE;   //Not completely removed because of Backward Compatibility
     
 
         /// <summary>
@@ -60,11 +60,11 @@ namespace AB15_GUI.WPF.Models
         
         public List<byte> Serialize()
         {
-        //Always sending SVR_NO_CHANGE for both commands to remove the GUI dependency         //Change
+        //Always sending SVR_NO_CHANGE for both commands to remove the GUI dependency  
             
             return new List<byte> {
-                (byte)Svr1CommandValues.SVR_NO_CHANGE,                                    //Change
-                (byte)Svr2CommandValues.SVR_NO_CHANGE
+                (byte)Svr1CommandValues.SVR_NO_CHANGE,                                    //No accidental receiving of outdated SVR commands
+                (byte)Svr2CommandValues.SVR_NO_CHANGE                //Fail-safe established
                 };
         }
     }
